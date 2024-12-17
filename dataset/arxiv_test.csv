@@ -1,0 +1,987 @@
+arxiv_id,reached_out_link,reached_out_success,reached_out_note,num_models,num_datasets,num_spaces,title,github,github_stars,conference_name,upvotes,num_comments,github_mention_hf,has_artifact,submitted_by,date
+2403.08715,,0.0,,1.0,1.0,2.0,SOTOPIA-π: Interactive Learning of Socially Intelligent Language Agents,https://github.com/sotopia-lab/sotopia-pi,,ACL2024,20,1,1.0,True,akhaliq,2024-03-14
+2407.04078,,0.0,,0.0,0.0,0.0,DotaMath: Decomposition of Thought with Code Assistance and Self-correction for Mathematical Reasoning,https://github.com/chengpengli1003/dotamath,24.0,,16,3,0.0,False,dongguanting,2024-07-08
+2402.07865,,0.0,,1.0,0.0,1.0,Prismatic VLMs: Investigating the Design Space of Visually-Conditioned Language Models,https://github.com/tri-ml/prismatic-vlms,,,12,2,1.0,True,akhaliq,2024-02-13
+2410.19609,https://huggingface.co/OpenWebVoyager/OpenWebVoyager-IL/discussions/1,,,0.0,0.0,0.0,"OpenWebVoyager: Building Multimodal Web Agents via Iterative Real-World Exploration, Feedback and Optimization",https://github.com/minorjerry/openwebvoyager,,,14,2,1.0,False,wenlinyao,2024-10-30
+2406.13527,,0.0,,0.0,0.0,0.0,4K4DGen: Panoramic 4D Generation at 4K Resolution,,,,7,1,0.0,False,Rj-Lee,2024-06-24
+2408.07931,,,,0.0,0.0,0.0,Surgical SAM 2: Real-time Segment Anything in Surgical Video by Efficient Frame Pruning,,,,17,2,0.0,False,HeverLaw,2024-08-19
+2401.02994,,0.0,,0.0,0.0,0.0,"Blending Is All You Need: Cheaper, Better Alternative to Trillion-Parameters LLM",,,,47,0,0.0,False,akhaliq,2024-01-09
+2402.05054,,0.0,,16.0,0.0,19.0,LGM: Large Multi-View Gaussian Model for High-Resolution 3D Content Creation,,,ECCV2024,25,3,0.0,True,akhaliq,2024-02-08
+2403.13524,,0.0,,0.0,0.0,0.0,Compress3D: a Compressed Latent Space for 3D Generation from a Single Image,,,ECCV2024,8,2,0.0,False,akhaliq,2024-03-21
+2408.12503,,,,1.0,0.0,0.0,The Russian-focused embedders' exploration: ruMTEB benchmark and Russian embedding model design,,,,18,1,0.0,True,IAMJB,2024-08-23
+2410.06084,,,no code,0.0,0.0,0.0,Diversity-Rewarded CFG Distillation,,,,10,2,0.0,False,alexrame,2024-10-10
+2312.13271,,0.0,,0.0,0.0,0.0,Repaint123: Fast and High-quality One Image to 3D Generation with Progressive Controllable 2D Repainting,https://github.com/junwuzhang19/repaint123,267.0,,4,0,1.0,False,akhaliq,2023-12-21
+2403.10517,,0.0,,0.0,0.0,0.0,VideoAgent: Long-form Video Understanding with Large Language Model as Agent,,,ECCV2024,30,2,0.0,False,akhaliq,2024-03-18
+2406.08659,,0.0,,0.0,0.0,0.0,Vivid-ZOO: Multi-View Video Generation with Diffusion Model,,,NeurIPS2024,8,3,0.0,False,bing-li-ai,2024-06-17
+2401.07049,,0.0,,0.0,0.0,0.0,Quantum Denoising Diffusion Models,,,,12,1,0.0,False,akhaliq,2024-01-17
+2410.09347,,,,2.0,0.0,0.0,Toward Guidance-Free AR Visual Generation via Condition Contrastive Alignment,https://github.com/thu-ml/cca,14.0,,3,2,1.0,True,ChenDRAG,2024-10-18
+2312.11459,,0.0,,1.0,0.0,0.0,VolumeDiffusion: Flexible Text-to-3D Generation with Efficient Volumetric Encoder,https://github.com/checkcrab/volumediffusion,0.0,,5,1,0.0,True,akhaliq,2023-12-19
+2410.17241,https://huggingface.co/ai4colonoscopy/ColonGPT-v1/discussions/1,,,1.0,0.0,0.0,Frontiers in Intelligent Colonoscopy,https://github.com/ai4colonoscopy/intelliscope,36.0,,2,2,1.0,True,DanielJi,2024-10-23
+2408.13010,"https://huggingface.co/cmarvolo/mistral-7b-fed-auto-lora/discussions/1, https://huggingface.co/datasets/cmarvolo/auto_fl/discussions/1",1.0,,1.0,1.0,0.0,A Web-Based Solution for Federated Learning with LLM-Based Automation,,,,7,1,0.0,True,IAMJB,2024-08-26
+2306.16928,,0.0,,3.0,0.0,11.0,One-2-3-45: Any Single Image to 3D Mesh in 45 Seconds without Per-Shape Optimization,https://github.com/One-2-3-45/One-2-3-45,1552.0,NeurIPS2023,37,7,0.0,True,akhaliq,2023-06-30
+2409.14988,,,no code,0.0,0.0,0.0,Beyond Fine-tuning: Unleashing the Potential of Continuous Pretraining for Clinical LLMs,,,,20,2,0.0,False,cchristophe,2024-09-24
+2312.14232,,0.0,,0.0,1.0,0.0,Parrot Captions Teach CLIP to Spot Text,https://github.com/opendatalab/clip-parrot-bias,60.0,ECCV2024,10,1,1.0,True,akhaliq,2023-12-26
+2410.12405,,,,0.0,0.0,0.0,ProSA: Assessing and Understanding the Prompt Sensitivity of LLMs,https://github.com/open-compass/ProSA,12.0,EMNLP2024,13,2,0.0,False,zsytony,2024-10-17
+2402.08093,,0.0,,0.0,0.0,0.0,BASE TTS: Lessons from building a billion-parameter Text-to-Speech model on 100K hours of data,,,,54,9,0.0,False,akhaliq,2024-02-14
+2407.09388,,0.0,,0.0,0.0,0.0,GAVEL: Generating Games Via Evolution and Language Models,,,NeurIPS2024,12,2,0.0,False,akhaliq,2024-07-15
+2402.07207,,0.0,,0.0,0.0,0.0,GALA3D: Towards Text-to-3D Complex Scene Generation via Layout-guided Generative Gaussian Splatting,,,,7,1,0.0,False,akhaliq,2024-02-13
+2405.01481,,0.0,,0.0,0.0,0.0,NeMo-Aligner: Scalable Toolkit for Efficient Model Alignment,https://github.com/nvidia/nemo-aligner,559.0,COLM2024,24,1,1.0,False,akhaliq,2024-05-03
+2409.15127,,,no code,0.0,0.0,0.0,Boosting Healthcare LLMs Through Retrieved Context,,,,18,2,0.0,False,dariog,2024-09-26
+2406.05338,,0.0,,0.0,0.0,0.0,MotionClone: Training-Free Motion Cloning for Controllable Video Generation,https://github.com/bujiazi/motionclone,380.0,,39,3,1.0,False,myownskyW7,2024-06-13
+2409.08270,,,,0.0,0.0,0.0,FlashSplat: 2D to 3D Gaussian Splatting Segmentation Solved Optimally,https://github.com/florinshen/flashsplat,,ECCV2024,8,2,0.0,False,adamdad,2024-09-13
+2407.11784,,0.0,,0.0,0.0,0.0,Data-Juicer Sandbox: A Comprehensive Suite for Multimodal Data-Model Co-development,https://github.com/modelscope/data-juicer,2708.0,,4,2,1.0,False,yxdyc,2024-07-17
+2407.06188,,0.0,,0.0,0.0,0.0,CrowdMoGen: Zero-Shot Text-Driven Collective Motion Generation,,,,1,1,0.0,False,gxyes,2024-07-11
+2311.11255,,0.0,,3.0,0.0,6.0,M^{2}UGen: Multi-modal Music Understanding and Generation with the Power of Large Language Models,https://github.com/shansongliu/M2UGen,442.0,,3,1,1.0,True,akhaliq,2023-11-21
+2407.10223,,0.0,,0.0,0.0,0.0,Practical Unlearning for Large Language Models,,,,4,2,0.0,False,gcyzsl,2024-07-18
+2402.13250,,0.0,,0.0,0.0,0.0,Video ReCap: Recursive Captioning of Hour-Long Videos,https://github.com/md-mohaiminul/VideoRecap,161.0,CVPR2024,22,1,1.0,False,akhaliq,2024-02-21
+2403.04634,,0.0,,0.0,0.0,0.0,Pix2Gif: Motion-Guided Diffusion for GIF Generation,,,ECCV2024,14,1,0.0,False,akhaliq,2024-03-08
+2411.17223,,,no artifacts,0.0,0.0,0.0,DreamMix: Decoupling Object Attributes for Enhanced Editability in Customized Image Inpainting,https://github.com/mycfhs/dreammix,28.0,,5,3,0.0,False,pengxiang,2024-11-27
+2408.16176,https://huggingface.co/datasets/sammarfy/VLM4Bio/discussions/2,1.0,,0.0,1.0,0.0,VLM4Bio: A Benchmark Dataset to Evaluate Pretrained Vision-Language Models for Trait Discovery from Biological Images,https://github.com/sammarfy/vlm4bio,3.0,NeurIPS2024 D&B,7,1,1.0,True,IAMJB,2024-09-02
+2406.17720,,0.0,,1.0,1.0,0.0,Arboretum: A Large Multimodal Dataset Enabling AI for Biodiversity,https://github.com/baskargroup/Arboretum,,,7,1,1.0,True,davanstrien,2024-07-01
+2407.17722,https://huggingface.co/MyloveAB/KDDPST-TeamAoboSama-our_result/discussions/1/files,1.0,,1.0,0.0,0.0,Text-Driven Neural Collaborative Filtering Model for Paper Source Tracing,https://github.com/mylove-xab/kddcupfinal,2.0,,7,2,1.0,True,IAMJB,2024-07-26
+2312.12490,,0.0,,0.0,0.0,0.0,InstructVideo: Instructing Video Diffusion Models with Human Feedback,,,CVPR2024,17,1,0.0,False,akhaliq,2023-12-21
+2412.05552,,,,0.0,0.0,0.0,SAME: Learning Generic Language-Guided Visual Navigation with State-Adaptive Mixture of Experts,https://github.com/gengzezhou/same,,,3,2,0.0,False,ZGZzz,2024-12-13
+2305.02499,,0.0,,0.0,0.0,0.0,AutoML-GPT: Automatic Machine Learning with GPT,,,,3,5,0.0,False,akhaliq,2023-05-05
+2407.15002,,0.0,,0.0,0.0,0.0,GET-Zero: Graph Embodiment Transformer for Zero-shot Embodiment Generalization,,,,4,2,0.0,False,akhaliq,2024-07-23
+2409.12959,https://huggingface.co/datasets/CaraJ/MMSearch/discussions/3,,,0.0,1.0,0.0,MMSearch: Benchmarking the Potential of Large Models as Multi-modal Search Engines,,,,33,2,0.0,True,CaraJ,2024-09-20
+2410.10816,https://github.com/SilentView/LVD-2M/issues/1,,,0.0,0.0,0.0,LVD-2M: A Long-take Video Dataset with Temporally Dense Captions,https://github.com/silentview/lvd-2m,36.0,NeurIPS2024 D&B,18,3,0.0,False,XihuiLiu,2024-10-16
+2312.14187,,0.0,,7.0,0.0,0.0,WaveCoder: Widespread And Versatile Enhanced Instruction Tuning with Refined Data Generation,https://github.com/microsoft/wavecoder,50.0,ACL2024,49,5,0.0,True,akhaliq,2023-12-26
+2410.09732,https://huggingface.co/papers/2410.09732#6713cb72d4668da11035843a,,will be released on HF,0.0,0.0,0.0,LOKI: A Comprehensive Synthetic Data Detection Benchmark using Large Multimodal Models,,,,53,3,0.0,False,beccabai,2024-10-15
+2408.14837,,,no code,0.0,0.0,0.0,Diffusion Models Are Real-Time Game Engines,,,,112,8,0.0,False,akhaliq,2024-08-28
+2410.06885,,,,1.0,1.0,19.0,F5-TTS: A Fairytaler that Fakes Fluent and Faithful Speech with Flow Matching,,,,26,3,0.0,True,akhaliq,2024-10-10
+2308.06125,,0.0,,0.0,0.0,0.0,Improving Joint Speech-Text Representations Without Alignment,,,,7,0,0.0,False,akhaliq,2023-08-14
+2403.17898,,0.0,,0.0,0.0,0.0,Octree-GS: Towards Consistent Real-time Rendering with LOD-Structured 3D Gaussians,https://github.com/city-super/Octree-GS,544.0,,13,1,1.0,False,akhaliq,2024-03-27
+2410.16256,https://huggingface.co/opencompass/CompassJudger-1-32B-Instruct/discussions/1,,,6.0,0.0,2.0,CompassJudger-1: All-in-one Judge Model Helps Model Evaluation and Evolution,https://github.com/open-compass/compassjudger,20.0,,55,2,1.0,True,zsytony,2024-10-22
+2404.16510,,0.0,,0.0,0.0,0.0,Interactive3D: Create What You Want by Interactive 3D Generation,,,CVPR2024,18,1,0.0,False,akhaliq,2024-04-26
+2404.12241,,0.0,,0.0,0.0,0.0,Introducing v0.5 of the AI Safety Benchmark from MLCommons,https://github.com/mlcommons/modelbench,,,10,1,0.0,False,akhaliq,2024-04-19
+2406.14833,,0.0,,0.0,0.0,0.0,Efficient Continual Pre-training by Mitigating the Stability Gap,,,,19,1,0.0,False,YiDuo1999,2024-06-25
+2401.17377,,0.0,,0.0,0.0,1.0,Infini-gram: Scaling Unbounded n-gram Language Models to a Trillion Tokens,https://github.com/AlexWan0/infini-gram,23.0,COLM2024,34,2,0.0,True,akhaliq,2024-02-01
+2311.10775,,0.0,,0.0,0.0,0.0,ToolTalk: Evaluating Tool-Usage in a Conversational Setting,https://github.com/microsoft/ToolTalk,73.0,,7,1,0.0,False,akhaliq,2023-11-21
+2410.22884,,,no code ,0.0,0.0,0.0,Stealing User Prompts from Mixture of Experts,,,,13,2,0.0,False,iliashum,2024-10-31
+2409.06633,,,,0.0,0.0,0.0,SaRA: High-Efficient Diffusion Model Fine-tuning with Progressive Sparse Low-Rank Adaptation,,,,14,2,0.0,False,akhaliq,2024-09-11
+2410.07113,,,,0.0,1.0,0.0,Personalized Visual Instruction Tuning,https://github.com/sterzhang/pvit,,,65,2,1.0,True,renjiepi,2024-10-10
+2406.15339,,0.0,,1.0,0.0,1.0,Image Conductor: Precision Control for Interactive Video Synthesis,,,,8,3,0.0,True,Liangbin,2024-06-26
+2310.09199,,0.0,,100.0,0.0,33.0,"PaLI-3 Vision Language Models: Smaller, Faster, Stronger",,,,24,4,0.0,True,akhaliq,2023-10-16
+2306.01841,,0.0,,0.0,0.0,0.0,Binary and Ternary Natural Language Generation,https://github.com/facebookresearch/ternary_binary_transformer,38.0,ACL2023,2,0,1.0,False,akhaliq,2023-06-06
+2403.17005,,0.0,,0.0,0.0,0.0,TRIP: Temporal Residual Learning with Image Noise Prior for Image-to-Video Diffusion Models,,,CVPR2024,13,1,0.0,False,akhaliq,2024-03-26
+2407.20743,https://huggingface.co/ilsp/Meltemi-7B-Instruct-v1/discussions/5/,1.0,,6.0,0.0,0.0,Meltemi: The first open Large Language Model for Greek,,,,67,2,0.0,True,IAMJB,2024-07-31
+2306.01872,,0.0,,0.0,0.0,0.0,Probabilistic Adaptation of Text-to-Video Models,,,,1,0,0.0,False,akhaliq,2023-06-06
+2407.02869,,0.0,,1.0,1.0,1.0,PicoAudio: Enabling Precise Timestamp and Frequency Controllability of Audio Events in Text-to-audio Generation,https://github.com/picoaudio/picoaudio,,,18,2,1.0,True,akhaliq,2024-07-04
+2307.11418,,0.0,,0.0,0.0,0.0,FaceCLIPNeRF: Text-driven 3D Face Manipulation using Deformable Neural Radiance Fields,,,,7,0,0.0,False,akhaliq,2023-07-24
+2410.19355,,,,0.0,0.0,0.0,FasterCache: Training-Free Video Diffusion Model Acceleration with High Quality,,,,20,2,0.0,False,akhaliq,2024-10-28
+2403.15157,,0.0,,0.0,0.0,0.0,AllHands: Ask Me Anything on Large-scale Verbatim Feedback via Large Language Models,,,,6,2,0.0,False,akhaliq,2024-03-25
+2310.13639,,0.0,,1.0,0.0,0.0,Contrastive Prefence Learning: Learning from Human Feedback without RL,,,,24,2,0.0,True,akhaliq,2023-10-23
+2406.08656,,0.0,,0.0,0.0,0.0,TC-Bench: Benchmarking Temporal Compositionality in Text-to-Video and Image-to-Video Generation,https://github.com/weixi-feng/tc-bench,16.0,,7,1,0.0,False,weixifeng,2024-06-14
+2407.20179,,0.0,,4.0,0.0,1.0,Theia: Distilling Diverse Vision Foundation Models for Robot Learning,https://github.com/bdaiinstitute/theia,151.0,CoRL2024,45,3,1.0,True,Jinghuan,2024-07-30
+2306.04387,,0.0,,0.0,1.0,0.0,M^3IT: A Large-Scale Dataset towards Multi-Modal Multilingual Instruction Tuning,,,,8,1,0.0,True,akhaliq,2023-06-08
+2411.02393,,,,0.0,0.0,0.0,Adaptive Length Image Tokenization via Recurrent Allocation,https://github.com/shivamduggal4/adaptive-length-tokenizer,,,10,1,0.0,False,Ksgk-fy,2024-11-06
+2411.16594,,,no artifacts,0.0,0.0,0.0,From Generation to Judgment: Opportunities and Challenges of LLM-as-a-judge,https://github.com/llm-as-a-judge/awesome-llm-as-a-judge,22.0,,35,2,1.0,False,canyuchen,2024-11-26
+2410.18441,,,no code,0.0,0.0,0.0,The Nature of Mathematical Modeling and Probabilistic Optimization Engineering in Generative AI,,,,5,2,0.0,False,Fulu2024,2024-10-25
+2403.14714,,0.0,,0.0,0.0,0.0,Compiler generated feedback for Large Language Models,,,,4,1,0.0,False,akhaliq,2024-03-25
+2403.09338,,0.0,,0.0,0.0,0.0,LocalMamba: Visual State Space Model with Windowed Selective Scan,https://github.com/hunto/localmamba,197.0,,7,1,0.0,False,akhaliq,2024-03-15
+2311.02805,,0.0,,0.0,0.0,0.0,Tailoring Self-Rationalizers with Multi-Reward Distillation,https://github.com/ink-usc/rationalemultirewarddistillation,,,3,1,0.0,False,akhaliq,2023-11-07
+2407.21705,,0.0,,0.0,0.0,0.0,Tora: Trajectory-oriented Diffusion Transformer for Video Generation,,,,24,2,0.0,False,akhaliq,2024-08-01
+2401.07781,,0.0,,0.0,0.0,0.0,Towards A Better Metric for Text-to-Video Generation,,,,14,5,0.0,False,akhaliq,2024-01-17
+2409.12892,,,,0.0,0.0,0.0,3DGS-LM: Faster Gaussian-Splatting Optimization with Levenberg-Marquardt,,,,5,2,0.0,False,akhaliq,2024-09-20
+2407.00367,,0.0,,0.0,0.0,0.0,SVG: 3D Stereoscopic Video Generation via Denoising Frame Matrix,,,,9,1,0.0,False,akhaliq,2024-07-02
+2306.11932,,0.0,,0.0,0.0,0.0,Opportunities and Risks of LLMs for Scalable Deliberation with Polis,,,,6,0,0.0,False,akhaliq,2023-06-22
+2312.11805,,0.0,,100.0,0.0,100.0,Gemini: A Family of Highly Capable Multimodal Models,,,,45,10,0.0,True,akhaliq,2023-12-20
+2410.05873,,,,0.0,1.0,1.0,MEXA: Multilingual Evaluation of English-Centric LLMs via Cross-Lingual Alignment,https://github.com/cisnlp/mexa,7.0,,3,2,1.0,True,kargaranamir,2024-10-10
+2410.06949,,,no artifacts,0.0,0.0,0.0,Seeker: Enhancing Exception Handling in Code with LLM-based Multi-Agent Approach,https://github.com/XMZhangAI/Seeker,,,5,3,0.0,False,XUANMINGZHANG,2024-10-10
+2409.11211,,,,0.0,0.0,0.0,SplatFields: Neural Gaussian Splats for Sparse 3D and 4D Reconstruction,,,ECCV2024,7,2,0.0,False,akhaliq,2024-09-18
+2305.06404,,0.0,,0.0,0.0,0.0,LACoS-BLOOM: Low-rank Adaptation with Contrastive objective on 8 bits Siamese-BLOOM,,,,1,0,0.0,False,akhaliq,2023-05-12
+2412.04424,https://huggingface.co/jiuhai/florence-vl-8b-sft/discussions/1,,,0.0,0.0,0.0,Florence-VL: Enhancing Vision-Language Models with Generative Vision Encoder and Depth-Breadth Fusion,,,,50,3,0.0,False,jiuhai,2024-12-06
+2306.17319,,0.0,,0.0,0.0,0.0,ReMaX: Relaxing for Better Training on Efficient Panoptic Segmentation,https://github.com/google-research/deeplab2,1003.0,NeurIPS2023,3,0,0.0,False,akhaliq,2023-07-03
+2410.21465,,,no artifacts,0.0,0.0,0.0,ShadowKV: KV Cache in Shadows for High-Throughput Long-Context LLM Inference,https://github.com/bytedance/ShadowKV,10.0,,9,2,1.0,False,preminstrel,2024-10-30
+2406.11612,,0.0,,0.0,6.0,1.0,Long Code Arena: a Set of Benchmarks for Long-Context Code Models,https://github.com/jetbrains-research/lca-baselines,,,20,1,1.0,True,jenyag,2024-06-20
+2403.13787,,0.0,,1.0,1.0,1.0,RewardBench: Evaluating Reward Models for Language Modeling,https://github.com/allenai/reward-bench,389.0,,19,2,1.0,True,akhaliq,2024-03-21
+2311.13141,,0.0,,0.0,0.0,0.0,Diffusion360: Seamless 360 Degree Panoramic Image Generation based on Diffusion Models,https://github.com/archerfmy/sd-t2i-360panoimage,0.0,,12,4,1.0,False,akhaliq,2023-11-23
+2411.09595,https://github.com/nv-tlabs/LLaMA-Mesh/issues/2,,,1.0,0.0,1.0,LLaMA-Mesh: Unifying 3D Mesh Generation with Language Models,,,,60,4,0.0,True,akhaliq,2024-11-15
+2408.15991,https://huggingface.co/SYZhang0805/DisBack/discussions/1,,,0.0,0.0,0.0,Distribution Backtracking Builds A Faster Convergence Trajectory for One-step Diffusion Distillation,https://github.com/syzhang0805/disback,24.0,,15,2,1.0,False,SYZhang0805,2024-08-29
+2409.01944,,,,0.0,0.0,0.0,FuzzCoder: Byte-level Fuzzing Test via Large Language Model,,,,44,3,0.0,False,zhangysk,2024-09-06
+2402.04248,,0.0,,0.0,0.0,0.0,Can Mamba Learn How to Learn? A Comparative Study on In-Context Learning Tasks,https://github.com/krafton-ai/mambaformer-icl,,,28,1,0.0,False,akhaliq,2024-02-07
+2305.10266,,0.0,,0.0,0.0,0.0,Searching for Needles in a Haystack: On the Role of Incidental Bilingualism in PaLM's Translation Capability,,,ACL2023,1,0,0.0,False,akhaliq,2023-05-18
+2406.06911,,0.0,,0.0,0.0,0.0,AsyncDiff: Parallelizing Diffusion Models by Asynchronous Denoising,https://github.com/czg1225/asyncdiff,164.0,NeurIPS2024,10,1,1.0,False,akhaliq,2024-06-12
+2306.15626,,0.0,,0.0,0.0,0.0,LeanDojo: Theorem Proving with Retrieval-Augmented Language Models,https://github.com/lean-dojo/leandojo,,,16,0,0.0,False,akhaliq,2023-06-28
+2311.06242,,0.0,,23.0,1.0,93.0,Florence-2: Advancing a Unified Representation for a Variety of Vision Tasks,,,CVPR2024,77,6,0.0,True,akhaliq,2023-11-13
+2405.00236,,0.0,,0.0,0.0,0.0,STT: Stateful Tracking with Transformers for Autonomous Driving,,,,7,2,0.0,False,akhaliq,2024-05-02
+2411.08034,https://github.com/scaling-diffusion-perception/scaling-diffusion-perception/issues/1,,,0.0,0.0,0.0,Scaling Properties of Diffusion Models for Perceptual Tasks,,,,12,2,0.0,False,zeeshanp,2024-11-13
+2410.21169,,,,0.0,0.0,0.0,"Document Parsing Unveiled: Techniques, Challenges, and Prospects for Structured Information Extraction",,,,26,2,0.0,False,wanderkid,2024-10-29
+2406.13236,,0.0,,0.0,0.0,0.0,Data Contamination Can Cross Language Barriers,https://github.com/shangdatalab/deep-contam,11.0,EMNLP2024,8,2,0.0,False,fengyao1909,2024-06-24
+2408.15792,,,,0.0,0.0,0.0,Efficient LLM Scheduling by Learning to Rank,https://github.com/hao-ai-lab/vllm-ltr,2.0,NeurIPS2024,14,2,0.0,False,Viol2000,2024-08-29
+2407.16607,,0.0,,0.0,0.0,0.0,Data Mixture Inference: What do BPE Tokenizers Reveal about their Training Data?,,,,21,2,0.0,False,eliebak,2024-07-26
+2412.04887,https://github.com/Jixuan-Fan/Momentum-GS/issues/1,,,0.0,0.0,0.0,Momentum-GS: Momentum Gaussian Self-Distillation for High-Quality Large Scene Reconstruction,https://github.com/Jixuan-Fan/Momentum-GS,,,14,3,0.0,False,EthanTaylor,2024-12-09
+2312.14140,,0.0,,0.0,0.0,0.0,HeadCraft: Modeling High-Detail Shape Variations for Animated 3DMMs,,,,6,1,0.0,False,akhaliq,2023-12-22
+2307.01197,,0.0,,0.0,0.0,0.0,Segment Anything Meets Point Tracking,https://github.com/syscv/sam-pt,963.0,,35,2,0.0,False,akhaliq,2023-07-04
+2310.15987,,0.0,,0.0,0.0,0.0,Dissecting In-Context Learning of Translations in GPTs,,,,5,1,0.0,False,akhaliq,2023-10-25
+2406.02539,https://huggingface.co/AIDC-AI/Parrot-14B/discussions/1,0.0,,1.0,1.0,0.0,Parrot: Multilingual Visual Instruction Tuning,,,,35,2,0.0,True,akhaliq,2024-06-06
+2411.00660,,,no code,0.0,0.0,0.0,Physics in Next-token Prediction,,,,14,2,0.0,False,Coder-AN,2024-11-04
+2311.00522,,0.0,,0.0,0.0,0.0,Text Rendering Strategies for Pixel Language Models,,,EMNLP2023,10,1,0.0,False,akhaliq,2023-11-02
+2309.16235,,0.0,,0.0,0.0,0.0,Language models in molecular discovery,,,NeurIPS2023,10,0,0.0,False,akhaliq,2023-09-29
+2306.17107,,0.0,,1.0,1.0,2.0,LLaVAR: Enhanced Visual Instruction Tuning for Text-Rich Image Understanding,https://github.com/SALT-NLP/LLaVAR,,,12,2,1.0,True,akhaliq,2023-06-30
+2308.01825,,0.0,,0.0,0.0,0.0,Scaling Relationship on Learning Mathematical Reasoning with Large Language Models,https://github.com/ofa-sys/gsm8k-screl,,,21,0,1.0,False,akhaliq,2023-08-04
+2410.05954,,,,3.0,0.0,14.0,Pyramidal Flow Matching for Efficient Video Generative Modeling,https://github.com/jy0205/Pyramid-Flow,,,32,2,1.0,True,feifeiobama,2024-10-10
+2403.19655,,0.0,,0.0,0.0,0.0,GaussianCube: Structuring Gaussian Splatting using Optimal Transport for 3D Generative Modeling,,,NeurIPS2024,17,1,0.0,False,akhaliq,2024-03-29
+2402.09727,,0.0,,0.0,0.0,1.0,A Human-Inspired Reading Agent with Gist Memory of Very Long Contexts,,,,35,3,0.0,True,akhaliq,2024-02-16
+2402.03570,,0.0,,0.0,0.0,0.0,Diffusion World Model,,,,7,1,0.0,False,akhaliq,2024-02-07
+2401.00434,,0.0,,1.0,0.0,1.0,GeoGalactica: A Scientific Large Language Model in Geoscience,https://github.com/geobrain-ai/geogalactica,,,7,2,1.0,True,akhaliq,2024-01-02
+2307.07947,,0.0,,0.0,0.0,0.0,Language Conditioned Traffic Generation,https://github.com/Ariostgx/lctgen,,,4,0,0.0,False,akhaliq,2023-07-18
+2406.13663,,0.0,,0.0,0.0,0.0,Model Internals-based Answer Attribution for Trustworthy Retrieval-Augmented Generation,https://github.com/betswish/mirage,16.0,EMNLP2024,7,1,0.0,False,gsarti,2024-06-21
+2410.13334,,,no code,0.0,0.0,0.0,Do LLMs Have Political Correctness? Analyzing Ethical Biases and Jailbreak Vulnerabilities in AI Systems,,,,12,2,0.0,False,hbseong,2024-10-18
+2307.02485,,0.0,,0.0,0.0,0.0,Building Cooperative Embodied Agents Modularly with Large Language Models,,,NeurIPS2023,11,0,0.0,False,akhaliq,2023-07-06
+2308.01300,,0.0,,0.0,0.0,0.0,Revisiting DETR Pre-training for Object Detection,,,,8,0,0.0,False,akhaliq,2023-08-03
+2311.12908,,0.0,,5.0,0.0,39.0,Diffusion Model Alignment Using Direct Preference Optimization,,,CVPR2024,47,3,0.0,True,akhaliq,2023-11-23
+2305.08275,,0.0,,0.0,0.0,0.0,ULIP-2: Towards Scalable Multimodal Pre-training For 3D Understanding,https://github.com/salesforce/ulip,424.0,CVPR2024,2,0,0.0,False,akhaliq,2023-05-16
+2402.02583,,0.0,,1.0,0.0,2.0,DiffEditor: Boosting Accuracy and Flexibility on Diffusion-based Image Editing,https://github.com/mc-e/dragondiffusion,719.0,CVPR2024,7,1,1.0,True,akhaliq,2024-02-06
+2312.17172,,0.0,,0.0,0.0,0.0,"Unified-IO 2: Scaling Autoregressive Multimodal Models with Vision, Language, Audio, and Action",https://github.com/allenai/unified-io-2,564.0,CVPR2024,26,2,0.0,False,akhaliq,2023-12-29
+2411.14794,https://github.com/hshjerry/VideoEspresso/issues/1,,,0.0,0.0,0.0,VideoEspresso: A Large-Scale Chain-of-Thought Dataset for Fine-Grained Video Reasoning via Core Frame Selection,https://github.com/hshjerry/VideoEspresso,8.0,,10,2,0.0,False,JackyZhuo,2024-11-25
+2409.01437,,,,0.0,1.0,0.0,Kvasir-VQA: A Text-Image Pair GI Tract Dataset,https://github.com/simula/Kvasir-VQA,,,68,2,0.0,True,SushantGautam,2024-09-04
+2311.01462,,0.0,,0.0,0.0,0.0,Idempotent Generative Network,,,,24,4,0.0,False,akhaliq,2023-11-03
+2308.01399,,0.0,,0.0,0.0,0.0,Learning to Model the World with Language,,,,34,0,0.0,False,akhaliq,2023-08-04
+2411.14405,,,,3.0,0.0,15.0,Marco-o1: Towards Open Reasoning Models for Open-Ended Solutions,,,,52,3,0.0,True,akhaliq,2024-11-22
+2306.13455,,0.0,,0.0,0.0,0.0,DreamEditor: Text-Driven 3D Scene Editing with Neural Fields,https://github.com/zjy526223908/dreameditor,,,8,0,1.0,False,akhaliq,2023-06-26
+2409.19606,,,no artifacts,0.0,0.0,0.0,Hyper-Connections,,,,15,2,0.0,False,Taoer,2024-10-01
+2401.06080,,0.0,,1.0,3.0,1.0,Secrets of RLHF in Large Language Models Part II: Reward Modeling,https://github.com/openlmlab/moss-rlhf,,,24,4,1.0,True,akhaliq,2024-01-12
+2311.00059,,0.0,,0.0,0.0,0.0,"The Generative AI Paradox: ""What It Can Create, It May Not Understand""",,,,18,5,0.0,False,akhaliq,2023-11-02
+2410.00545,,,,0.0,1.0,0.0,What the Harm? Quantifying the Tangible Impact of Gender Bias in Machine Translation with a Human-centered Study,https://github.com/bsavoldi/post-edit_guidelines,0.0,EMNLP2024,4,2,0.0,True,BSavoldi,2024-10-02
+2405.18503,,0.0,,1.0,0.0,0.0,SoundCTM: Uniting Score-based and Consistency Models for Text-to-Sound Generation,https://github.com/sony/soundctm,,,9,0,1.0,True,akhaliq,2024-05-30
+2407.09025,,0.0,,0.0,0.0,0.0,SpreadsheetLLM: Encoding Spreadsheets for Large Language Models,,,,119,9,0.0,False,akhaliq,2024-07-15
+2308.01320,,0.0,,0.0,0.0,0.0,"DeepSpeed-Chat: Easy, Fast and Affordable RLHF Training of ChatGPT-like Models at All Scales",https://github.com/microsoft/DeepSpeed,,,44,3,1.0,False,akhaliq,2023-08-04
+2412.04445,https://huggingface.co/TencentARC/Moto/discussions/1,,,1.0,0.0,0.0,Moto: Latent Motion Token as the Bridging Language for Robot Manipulation,,,,20,2,0.0,True,ChenYi99,2024-12-09
+2306.17156,,0.0,,0.0,0.0,0.0,"Generative AI for Programming Education: Benchmarking ChatGPT, GPT-4, and Human Tutors",,,,21,1,0.0,False,akhaliq,2023-06-30
+2309.10020,,0.0,,5.0,0.0,2.0,Multimodal Foundation Models: From Specialists to General-Purpose Assistants,https://github.com/computer-vision-in-the-wild/cvinw_readings,,,40,2,1.0,True,akhaliq,2023-09-20
+2309.09958,,0.0,,5.0,0.0,2.0,An Empirical Study of Scaling Instruct-Tuned Large Multimodal Models,https://github.com/haotian-liu/LLaVA,19757.0,NeurIPS2024,18,1,1.0,True,akhaliq,2023-09-19
+2312.12865,,0.0,,0.0,0.0,0.0,RadEdit: stress-testing biomedical vision models via diffusion image editing,,,ECCV2024,3,0,0.0,False,akhaliq,2023-12-21
+2411.18673,,,no code,0.0,0.0,0.0,AC3D: Analyzing and Improving 3D Camera Control in Video Diffusion Transformers,,,,7,2,0.0,False,akhaliq,2024-12-02
+2410.01680,https://huggingface.co/nvidia/RADIO/discussions/12,,,3.0,0.0,1.0,PHI-S: Distribution Balancing for Label-Free Multi-Teacher Distillation,,,,30,4,0.0,True,pmolchanov,2024-10-03
+2406.11939,,0.0,,0.0,0.0,0.0,From Crowdsourced Data to High-Quality Benchmarks: Arena-Hard and BenchBuilder Pipeline,https://github.com/lm-sys/arena-hard-auto,,,5,1,1.0,False,Timmli,2024-06-19
+2407.11963,,0.0,,0.0,1.0,0.0,NeedleBench: Can LLMs Do Retrieval and Reasoning in 1 Million Context Window?,https://github.com/open-compass/opencompass,3916.0,,43,3,1.0,True,akhaliq,2024-07-17
+2407.11385,,0.0,,0.0,0.0,0.0,Grasping Diverse Objects with Simulated Humanoids,,,,5,2,0.0,False,akhaliq,2024-07-17
+2305.06161,,0.0,,81.0,4.0,100.0,StarCoder: may the source be with you!,,,,29,3,0.0,True,akhaliq,2023-05-11
+2308.00951,,0.0,,0.0,0.0,0.0,From Sparse to Soft Mixtures of Experts,https://github.com/google-research/vmoe,,,20,0,0.0,False,akhaliq,2023-08-03
+2401.01974,,0.0,,0.0,0.0,0.0,Towards Truly Zero-shot Compositional Visual Reasoning with LLMs as Programmers,,,,5,1,0.0,False,akhaliq,2024-01-05
+2402.14034,,0.0,,0.0,0.0,0.0,AgentScope: A Flexible yet Robust Multi-Agent Platform,https://github.com/modelscope/agentscope,5029.0,,12,1,0.0,False,akhaliq,2024-02-23
+2404.02733,,0.0,,0.0,0.0,0.0,InstantStyle: Free Lunch towards Style-Preserving in Text-to-Image Generation,https://github.com/instantstyle/instantstyle,1635.0,,20,4,1.0,False,akhaliq,2024-04-04
+2403.06738,,0.0,,0.0,0.0,0.0,V3D: Video Diffusion Models are Effective 3D Generators,https://github.com/heheyas/v3d,450.0,,28,4,0.0,False,akhaliq,2024-03-12
+2411.15466,,,no code yet,0.0,0.0,0.0,Large-Scale Text-to-Image Model with Inpainting is a Zero-Shot Subject-Driven Image Generator,,,,33,2,0.0,False,chaehun,2024-11-26
+2312.14216,,0.0,,0.0,0.0,0.0,DreamDistribution: Prompt Distribution Learning for Text-to-Image Diffusion Models,,,,10,1,0.0,False,akhaliq,2023-12-26
+2406.11069,,0.0,,0.0,1.0,2.0,WildVision: Evaluating Vision-Language Models in the Wild with Human Preferences,,,NeurIPS2024 D&B,13,2,0.0,True,yuchenlin,2024-06-18
+2408.05101,https://huggingface.co/mtspeech/MooER-MTL-5K/discussions/2,1.0,,1.0,0.0,0.0,MooER: LLM-based Speech Recognition and Translation Models from Moore Threads,,,,5,2,0.0,True,IAMJB,2024-08-12
+2312.09251,,0.0,,0.0,1.0,0.0,VL-GPT: A Generative Pre-trained Transformer for Vision and Language Understanding and Generation,https://github.com/ailab-cvc/vl-gpt,,,6,1,0.0,True,akhaliq,2023-12-15
+2406.04333,,0.0,,0.0,0.0,0.0,BitsFusion: 1.99 bits Weight Quantization of Diffusion Model,https://github.com/huggingface/diffusers,26248.0,NeurIPS2024,36,2,1.0,False,akhaliq,2024-06-07
+2307.09112,,0.0,,0.0,0.0,0.0,NU-MCC: Multiview Compressive Coding with Neighborhood Decoder and Repulsive UDF,https://github.com/sail-sg/numcc,12.0,NeurIPS2023,8,0,0.0,False,akhaliq,2023-07-19
+2403.18421,,0.0,,1.0,0.0,28.0,BioMedLM: A 2.7B Parameter Language Model Trained On Biomedical Text,https://github.com/stanford-crfm/biomedlm,,,21,2,1.0,True,akhaliq,2024-03-28
+2307.10172,,0.0,,5.0,2.0,2.0,DialogStudio: Towards Richest and Most Diverse Unified Dataset Collection for Conversational AI,https://github.com/salesforce/DialogStudio,473.0,,11,0,1.0,True,akhaliq,2023-07-20
+2407.19985,,0.0,,0.0,0.0,0.0,Mixture of Nested Experts: Adaptive Processing of Visual Tokens,,,NeurIPS2024,33,3,0.0,False,akhaliq,2024-07-30
+2401.17053,,0.0,,0.0,0.0,0.0,BlockFusion: Expandable 3D Scene Generation using Latent Tri-plane Extrapolation,https://github.com/Tencent/BlockFusion,,,30,1,1.0,False,akhaliq,2024-01-31
+2404.19737,,0.0,,2.0,0.0,0.0,Better & Faster Large Language Models via Multi-token Prediction,,,,73,3,0.0,True,akhaliq,2024-05-01
+2312.06971,,0.0,,0.0,0.0,0.0,CCM: Adding Conditional Controls to Text-to-Image Consistency Models,,,,10,0,0.0,False,akhaliq,2023-12-13
+2411.14430,,,no code,0.0,0.0,0.0,Stable Flow: Vital Layers for Training-Free Image Editing,,,,13,2,0.0,False,omriav,2024-11-22
+2407.10424,,0.0,,3.0,0.0,0.0,CodeV: Empowering LLMs for Verilog Generation through Multi-Level Summarization,,,,6,2,0.0,True,yang-z,2024-07-19
+2403.03507,,0.0,,6.0,0.0,2.0,GaLore: Memory-Efficient LLM Training by Gradient Low-Rank Projection,https://github.com/jiaweizzhao/galore,1402.0,,182,12,1.0,True,akhaliq,2024-03-07
+2411.19527,,,no code yet,0.0,0.0,0.0,DisCoRD: Discrete Tokens to Continuous Motion via Rectified Flow Decoding,,,,8,2,0.0,False,junwann,2024-12-02
+2408.15915,https://github.com/Yaphabates/Rocket/issues/2,,,0.0,0.0,0.0,Leveraging Open Knowledge for Advancing Task Expertise in Large Language Models,,,,19,2,0.0,False,yolay,2024-08-29
+2408.01031,,,,0.0,0.0,0.0,POA: Pre-training Once for Models of All Sizes,https://github.com/qichuzyy/poa,24.0,ECCV2024,26,3,0.0,False,akhaliq,2024-08-05
+2310.18628,,0.0,,0.0,0.0,0.0,Personalised Distillation: Empowering Open-Sourced LLMs with Adaptive Learning for Code Generation,https://github.com/SalesforceAIResearch/PersDistill,,,7,1,0.0,False,akhaliq,2023-10-31
+2406.02543,,0.0,,0.0,0.0,0.0,To Believe or Not to Believe Your LLM,,,,31,1,0.0,False,akhaliq,2024-06-05
+2305.06424,,0.0,,0.0,0.0,0.0,Bot or Human? Detecting ChatGPT Imposters with A Single Question,https://github.com/hongwang600/flair,56.0,COLM2024,1,0,0.0,False,akhaliq,2023-05-12
+2312.05605,,0.0,,0.0,0.0,0.0,TCNCA: Temporal Convolution Network with Chunked Attention for Scalable Sequence Processing,,,,1,0,0.0,False,akhaliq,2023-12-12
+2409.05162,,,,0.0,0.0,0.0,Can OOD Object Detectors Learn from Foundation Models?,https://github.com/cvmi-lab/syncood,,ECCV2024,5,2,0.0,False,jliu-ac,2024-09-13
+2406.18462,,0.0,,0.0,0.0,0.0,GaussianDreamerPro: Text to Manipulable 3D Gaussians with Highly Enhanced Quality,,,,11,3,0.0,False,thewhole,2024-07-01
+2408.03314,,,,0.0,0.0,0.0,Scaling LLM Test-Time Compute Optimally can be More Effective than Scaling Model Parameters,,,,26,3,0.0,False,akhaliq,2024-08-07
+2307.10168,,0.0,,0.0,0.0,0.0,LLMs as Workers in Human-Computational Algorithms? Replicating Crowdsourcing Pipelines with LLMs,,,,9,0,0.0,False,akhaliq,2023-07-20
+2410.10813,https://huggingface.co/datasets/xiaowu0162/longmemeval/discussions/1,,,0.0,0.0,0.0,LongMemEval: Benchmarking Chat Assistants on Long-Term Interactive Memory,https://github.com/xiaowu0162/longmemeval,,,9,2,1.0,False,xiaowu0162,2024-10-15
+2401.13601,,0.0,,0.0,0.0,0.0,MM-LLMs: Recent Advances in MultiModal Large Language Models,,,ACL2024,44,5,0.0,False,akhaliq,2024-01-25
+2312.11556,,0.0,,0.0,0.0,0.0,StarVector: Generating Scalable Vector Graphics Code from Images,https://github.com/visioncortex/vtracer,110.0,,27,1,0.0,False,akhaliq,2023-12-20
+2312.02981,,0.0,,0.0,0.0,0.0,ReconFusion: 3D Reconstruction with Diffusion Priors,,,CVPR2024,8,0,0.0,False,akhaliq,2023-12-06
+2310.13065,,0.0,,0.0,0.0,0.0,Creative Robot Tool Use with Large Language Models,,,NeurIPS2024,8,1,0.0,False,akhaliq,2023-10-23
+2410.09008,,,,2.0,0.0,0.0,SuperCorrect: Supervising and Correcting Language Models with Error-Driven Insights,https://github.com/yangling0818/supercorrect-llm,25.0,,16,3,1.0,True,Lingaaaaaaa,2024-10-14
+2305.20086,,0.0,,0.0,0.0,0.0,Understanding and Mitigating Copying in Diffusion Models,https://github.com/somepago/dcr,103.0,NeurIPS2023,3,0,0.0,False,akhaliq,2023-06-01
+2401.12522,,0.0,,0.0,0.0,0.0,BiTA: Bi-Directional Tuning for Lossless Acceleration in Large Language Models,https://github.com/linfeng93/bita,,,11,1,1.0,False,akhaliq,2024-01-24
+2306.05836,,0.0,,0.0,0.0,0.0,Can Large Language Models Infer Causation from Correlation?,https://github.com/causalnlp/corr2cause,83.0,,6,1,1.0,False,akhaliq,2023-06-12
+2409.13156,,,no code,0.0,0.0,0.0,RRM: Robust Reward Model Training Mitigates Reward Hacking,,,,3,2,0.0,False,TianqiLiuAI,2024-09-25
+2410.13828,,,no code yet,0.0,0.0,0.0,A Common Pitfall of Margin-based Language Model Alignment: Gradient Entanglement,,,,3,2,0.0,False,yokey,2024-10-21
+2410.24159,,,no code yet,2.0,2.0,0.0,GPT or BERT: why not both?,https://github.com/ltgoslo/gpt-bert,,,10,2,0.0,True,stefan-it,2024-11-04
+2411.07140,,,,0.0,1.0,0.0,Chinese SimpleQA: A Chinese Factuality Evaluation for Large Language Models,,,,33,3,0.0,True,CheeryLJH,2024-11-12
+2305.08844,,0.0,,0.0,0.0,0.0,RL4F: Generating Natural Language Feedback with Reinforcement Learning for Repairing Model Outputs,https://github.com/feyzaakyurek/rl4f,60.0,ACL2023,1,0,0.0,False,akhaliq,2023-05-16
+2411.02335,,,,10.0,0.0,0.0,Sparsing Law: Towards Large Language Models with Greater Activation Sparsity,https://github.com/thunlp/SparsingLaw,,,9,1,1.0,True,Raincleared,2024-11-05
+2409.15700,,,,1.0,0.0,3.0,Making Text Embedders Few-Shot Learners,https://github.com/FlagOpen/FlagEmbedding,7156.0,,27,2,0.0,True,akhaliq,2024-09-25
+2306.01160,,0.0,,0.0,0.0,0.0,Faster Causal Attention Over Large Sequences Through Sparse Flash Attention,https://github.com/epfml/dynamic-sparse-flash-attention,,,1,2,0.0,False,akhaliq,2023-06-05
+2411.10836,,,no code yet,0.0,0.0,0.0,AnimateAnything: Consistent and Controllable Animation for Video Generation,,,,20,2,0.0,False,akhaliq,2024-11-19
+2406.04744,https://huggingface.co/papers/2406.04744#66b0afced56379b5d9daf06e,0.0,,0.0,0.0,0.0,CRAG -- Comprehensive RAG Benchmark,,,,40,3,0.0,False,akhaliq,2024-06-10
+2410.20305,,,no artifacts,0.0,0.0,0.0,Accelerating Direct Preference Optimization with Prefix Sharing,https://github.com/frankxwang/dpo-prefix-sharing,23.0,,5,2,0.0,False,fxwang,2024-10-30
+2312.13286,,0.0,,3.0,0.0,2.0,Generative Multimodal Models are In-Context Learners,https://github.com/baaivision/emu,1635.0,CVPR2024,34,0,0.0,True,akhaliq,2023-12-21
+2409.13882,https://huggingface.co/papers/2409.13882#66fafb444ec9dbbeda5e0a34,,,0.0,0.0,0.0,Tabular Data Generation using Binary Diffusion,,,,3,2,0.0,False,vitaliykinakh,2024-09-25
+2409.17058,https://huggingface.co/papers/2409.17058#66feb97e39485e45494ad6ce,,,0.0,0.0,0.0,Degradation-Guided One-Step Image Super-Resolution with Diffusion Priors,https://github.com/arctichare105/s3diff,,,9,2,1.0,False,OAOA,2024-09-26
+2307.01848,,0.0,,0.0,0.0,1.0,Embodied Task Planning with Large Language Models,https://github.com/Gary3410/TaPA,,,5,0,1.0,True,akhaliq,2023-07-06
+2406.07547,,0.0,,1.0,0.0,2.0,Zero-shot Image Editing with Reference Imitation,,,NeurIPS2024,30,1,0.0,True,akhaliq,2024-06-12
+2308.01544,,0.0,,0.0,0.0,0.0,Multimodal Neurons in Pretrained Text-Only Transformers,,,,15,0,0.0,False,akhaliq,2023-08-04
+2404.06091,,0.0,,0.0,0.0,0.0,Hash3D: Training-free Acceleration for 3D Generation,https://github.com/Adamdad/hash3D,152.0,,12,0,0.0,False,akhaliq,2024-04-10
+2410.24213,,,no code yet,0.0,0.0,0.0,Learning Video Representations without Natural Videos,,,,14,2,0.0,False,yossig,2024-11-01
+2401.10241,,0.0,,0.0,0.0,1.0,Zero Bubble Pipeline Parallelism,https://github.com/sail-sg/zero-bubble-pipeline-parallelism,265.0,,22,3,1.0,True,akhaliq,2024-01-22
+2403.02775,,0.0,,0.0,0.0,0.0,EasyQuant: An Efficient Data-free Quantization Algorithm for LLMs,,,EMNLP2023,11,3,0.0,False,akhaliq,2024-03-06
+2403.13372,,0.0,,6.0,0.0,6.0,LlamaFactory: Unified Efficient Fine-Tuning of 100+ Language Models,https://github.com/hiyouga/llama-factory,32532.0,ACL2024,58,2,1.0,True,akhaliq,2024-03-21
+2407.16412,,0.0,,0.0,0.0,0.0,Cross Anything: General Quadruped Robot Navigation through Complex Terrains,,,,4,2,0.0,False,akhaliq,2024-07-24
+2411.06469,https://github.com/canyuchen/ClinicalBench/issues/1,,,0.0,0.0,0.0,ClinicalBench: Can LLMs Beat Traditional ML Models in Clinical Prediction?,,,,16,2,0.0,False,canyuchen,2024-11-15
+2305.06324,,0.0,,0.0,0.0,0.0,Alternating Gradient Descent and Mixture-of-Experts for Integrated Multimodal Perception,,,NeurIPS2023,1,0,0.0,False,akhaliq,2023-05-11
+2402.15491,,0.0,,0.0,0.0,0.0,API-BLEND: A Comprehensive Corpora for Training and Benchmarking API LLMs,https://github.com/ibm/api-blend,13.0,ACL2024,13,3,0.0,False,akhaliq,2024-02-26
+2407.15187,,0.0,,0.0,0.0,0.0,HoloDreamer: Holistic 3D Panoramic World Generation from Text Descriptions,,,,10,2,0.0,False,akhaliq,2024-07-23
+2408.14340,,,,0.0,0.0,0.0,Foundation Models for Music: A Survey,https://github.com/nicolaus625/fm4music,,,35,2,1.0,False,zhangysk,2024-08-27
+2404.14700,,0.0,,0.0,0.0,0.0,FlashSpeech: Efficient Zero-Shot Speech Synthesis,https://github.com/zhenye234/CoMoSpeech,179.0,ACMMM2024,29,4,0.0,False,akhaliq,2024-04-24
+2401.03804,,0.0,,9.0,1.0,1.0,TeleChat Technical Report,,,,7,0,0.0,True,akhaliq,2024-01-09
+2307.07487,,0.0,,0.0,0.0,0.0,DreamTeacher: Pretraining Image Backbones with Deep Generative Models,,,,19,0,0.0,False,akhaliq,2023-07-17
+2409.03810,https://huggingface.co/datasets/banksy235/XCoder-80K/discussions/2,,,0.0,0.0,0.0,How Do Your Code LLMs Perform? Empowering Code Instruction Tuning with High-Quality Data,https://github.com/banksy23/XCoder,29.0,,29,4,0.0,False,dongguanting,2024-09-09
+2309.03905,,0.0,,1.0,0.0,0.0,ImageBind-LLM: Multi-modality Instruction Tuning,https://github.com/opengvlab/llama-adapter,5716.0,,16,5,1.0,True,akhaliq,2023-09-08
+2310.09139,,0.0,,0.0,0.0,0.0,The Consensus Game: Language Model Generation via Equilibrium Search,,,NeurIPS2023,12,3,0.0,False,akhaliq,2023-10-16
+2310.17680,,0.0,,0.0,0.0,0.0,CodeFusion: A Pre-trained Diffusion Model for Code Generation,,,EMNLP2023,69,10,0.0,False,akhaliq,2023-10-30
+2412.09370,,,,4.0,1.0,0.0,Word Sense Linking: Disambiguating Outside the Sandbox,,,,5,2,0.0,True,andreim14,2024-12-13
+2305.10763,,0.0,,0.0,0.0,0.0,CLAPSpeech: Learning Prosody from Text Context with Contrastive Language-Audio Pre-training,,,ACL2023,3,4,0.0,False,akhaliq,2023-05-19
+2307.13854,,0.0,,0.0,0.0,0.0,WebArena: A Realistic Web Environment for Building Autonomous Agents,https://github.com/web-arena-x/webarena,708.0,NeurIPS2024,22,4,0.0,False,akhaliq,2023-07-27
+2410.16930,,,no artifacts,0.0,0.0,0.0,Math Neurosurgery: Isolating Language Models' Math Reasoning Abilities Using Only Forward Passes,https://github.com/bryanchrist/mathneuro,,,4,2,0.0,False,bryanchrist,2024-10-23
+2306.04634,,0.0,,0.0,0.0,0.0,On the Reliability of Watermarks for Large Language Models,https://github.com/jwkirchenbauer/lm-watermarking,,,5,1,1.0,False,akhaliq,2023-06-08
+2411.13550,,,https://huggingface.co/spaces/ziqima/Find3D/discussions/1,0.0,0.0,1.0,Find Any Part in 3D,,,,3,2,0.0,True,liujch1998,2024-11-26
+2403.02151,,0.0,,1.0,0.0,32.0,TripoSR: Fast 3D Object Reconstruction from a Single Image,https://github.com/vast-ai-research/triposr,4433.0,,11,3,1.0,True,akhaliq,2024-03-05
+2408.09085,https://github.com/weihao1115/mm-sam/issues/2,,,0.0,0.0,0.0,Segment Anything with Multiple Modalities,,,,19,2,0.0,False,akhaliq,2024-08-20
+2405.20204,,0.0,,3.0,0.0,3.0,Jina CLIP: Your CLIP Model Is Also Your Text Retriever,,,,29,1,0.0,True,akhaliq,2024-05-31
+2410.05080,,,Will be released on HF,0.0,0.0,0.0,ScienceAgentBench: Toward Rigorous Assessment of Language Agents for Data-Driven Scientific Discovery,,,,18,2,0.0,False,ysu-nlp,2024-10-08
+2402.13573,,0.0,,0.0,0.0,2.0,ToDo: Token Downsampling for Efficient Generation of High-Resolution Images,https://github.com/ethansmith2000/ImprovedTokenMerge,39.0,,8,1,0.0,True,akhaliq,2024-02-22
+2309.05793,,0.0,,1.0,0.0,0.0,PhotoVerse: Tuning-Free Image Customization with Text-to-Image Diffusion Models,,,,50,6,0.0,True,akhaliq,2023-09-13
+2312.10035,,0.0,,0.0,0.0,0.0,"Point Transformer V3: Simpler, Faster, Stronger",https://github.com/pointcept/pointtransformerv3,749.0,CVPR2024,17,2,1.0,False,akhaliq,2023-12-18
+2407.05463,,0.0,,0.0,0.0,0.0,Training Task Experts through Retrieval Based Distillation,,,,6,1,0.0,False,luohy,2024-07-09
+2308.05326,,0.0,,0.0,0.0,0.0,OpenProteinSet: Training data for structural biology at scale,https://github.com/aqlaboratory/openfold,,,10,0,0.0,False,akhaliq,2023-08-11
+2309.06657,,0.0,,0.0,0.0,0.0,Statistical Rejection Sampling Improves Preference Optimization,,,,13,0,0.0,False,akhaliq,2023-09-14
+2411.04335,,,no code,0.0,0.0,0.0,GazeGen: Gaze-Driven User Interaction for Visual Content Generation,,,,14,2,0.0,False,He-Yen,2024-11-08
+2405.16852,,0.0,,0.0,0.0,0.0,EM Distillation for One-step Diffusion Models,,,NeurIPS2024,10,1,0.0,False,akhaliq,2024-05-28
+2306.07179,,0.0,,0.0,0.0,0.0,Benchmarking Neural Network Training Algorithms,https://github.com/mlcommons/algorithmic-efficiency,,,23,1,0.0,False,akhaliq,2023-06-13
+2405.06650,,0.0,,0.0,0.0,0.0,Large Language Models as Planning Domain Generators,https://github.com/IBM/NL2PDDL,12.0,,9,1,0.0,False,akhaliq,2024-05-14
+2409.13690,https://github.com/compphoto/Intrinsic/issues/10,,,0.0,0.0,0.0,Colorful Diffuse Intrinsic Image Decomposition in the Wild,,,,12,3,0.0,False,akhaliq,2024-09-23
+2311.12775,,0.0,,0.0,0.0,0.0,SuGaR: Surface-Aligned Gaussian Splatting for Efficient 3D Mesh Reconstruction and High-Quality Mesh Rendering,https://github.com/Anttwo/SuGaR,2208.0,CVPR2024,28,3,0.0,False,akhaliq,2023-11-22
+2312.11841,,0.0,,0.0,0.0,0.0,MixRT: Mixed Neural Representations For Real-Time NeRF Rendering,,,,10,1,0.0,False,akhaliq,2023-12-20
+2307.13974,,0.0,,0.0,0.0,0.0,Tracking Anything in High Quality,https://github.com/jiawen-zhu/hqtrack,744.0,,13,2,1.0,False,akhaliq,2023-07-27
+2410.21271,,,,0.0,0.0,0.0,EoRA: Training-free Compensation for Compressed LLM with Eigenspace Low-Rank Approximation,,,,6,2,0.0,False,cmhungsteve,2024-10-29
+2403.01487,,0.0,,1.0,0.0,0.0,InfiMM-HD: A Leap Forward in High-Resolution Multimodal Understanding,https://github.com/InfiMM/infimm-hd,15.0,,14,1,0.0,True,akhaliq,2024-03-05
+2305.07447,,0.0,,0.0,0.0,0.0,Universal Source Separation with Weakly Labelled Data,https://github.com/bytedance/uss,326.0,,2,0,1.0,False,akhaliq,2023-05-15
+2406.02844,,0.0,,0.0,0.0,0.0,Item-Language Model for Conversational Recommendation,,,,8,1,0.0,False,akhaliq,2024-06-06
+2406.18521,,0.0,,0.0,1.0,0.0,CharXiv: Charting Gaps in Realistic Chart Understanding in Multimodal LLMs,https://github.com/princeton-nlp/CharXiv,75.0,NeurIPS2024 D&B,25,2,1.0,True,zwcolin,2024-06-27
+2407.21783,,0.0,,2.0,0.0,3.0,The Llama 3 Herd of Models,,,,99,5,0.0,True,akhaliq,2024-08-01
+2411.02844,,,,0.0,0.0,0.0,Correlation of Object Detection Performance with Visual Saliency and Depth Estimation,https://github.com/mbar0075/object-detection-correlation-saliency-vs-depth,,,3,1,0.0,False,mbar0075,2024-11-06
+2311.03629,,0.0,,0.0,0.0,0.0,Random Field Augmentations for Self-Supervised Representation Learning,,,NeurIPS2023,6,0,0.0,False,akhaliq,2023-11-08
+2306.08129,,0.0,,0.0,0.0,0.0,AVIS: Autonomous Visual Information Seeking with Large Language Models,,,NeurIPS2023,5,0,0.0,False,akhaliq,2023-06-16
+2309.12499,,0.0,,0.0,0.0,0.0,CodePlan: Repository-level Coding using LLMs and Planning,,,NeurIPS2024,71,13,0.0,False,akhaliq,2023-09-25
+2410.11779,,,no artifacts,0.0,0.0,0.0,MLLM can see? Dynamic Correction Decoding for Hallucination Mitigation,https://github.com/zjunlp/Deco,13.0,,24,2,1.0,False,Ningyu,2024-10-16
+2305.03040,,0.0,,0.0,0.0,0.0,TUVF: Learning Generalizable Texture UV Radiance Fields,,,,1,0,0.0,False,akhaliq,2023-05-05
+2306.04528,,0.0,,0.0,0.0,0.0,PromptBench: Towards Evaluating the Robustness of Large Language Models on Adversarial Prompts,https://github.com/microsoft/promptbench,2421.0,,3,0,0.0,False,akhaliq,2023-06-08
+2409.18124,https://github.com/EnVision-Research/Lotus/issues/4,,,0.0,0.0,0.0,Lotus: Diffusion-based Visual Foundation Model for High-quality Dense Prediction,,,,23,2,0.0,False,akhaliq,2024-09-27
+2402.13232,,0.0,,1.0,1.0,0.0,"A Touch, Vision, and Language Dataset for Multimodal Alignment",https://github.com/Max-Fu/tvl,,,13,1,1.0,True,akhaliq,2024-02-21
+2410.07536,,,no artifacts,0.0,0.0,0.0,I-Max: Maximize the Resolution Potential of Pre-trained Rectified Flow Transformers with Projected Flow,,,,5,2,0.0,False,RuoyiDu,2024-10-14
+2405.16712,,0.0,,4.0,1.0,1.0,Zamba: A Compact 7B SSM Hybrid Model,,,,19,3,0.0,True,akhaliq,2024-05-28
+2412.06745,,,,0.0,0.0,0.0,ONEBench to Test Them All: Sample-Level Benchmarking Over Open-Ended Capabilities,,,,5,2,0.0,False,adhiraj1998,2024-12-13
+2310.16045,,0.0,,0.0,0.0,0.0,Woodpecker: Hallucination Correction for Multimodal Large Language Models,https://github.com/bradyfu/woodpecker,605.0,,14,1,1.0,False,akhaliq,2023-10-25
+2403.04746,,0.0,,0.0,0.0,0.0,LLMs in the Imaginarium: Tool Learning through Simulated Trial and Error,https://github.com/microsoft/simulated-trial-and-error,115.0,ACL2024,22,1,0.0,False,akhaliq,2024-03-08
+2406.18518,,0.0,,8.0,2.0,0.0,APIGen: Automated Pipeline for Generating Verifiable and Diverse Function-Calling Datasets,,,NeurIPS2024 D&B,22,1,0.0,True,Zuxin,2024-06-26
+2401.06129,,0.0,,0.0,0.0,0.0,Distilling Vision-Language Models on Millions of Videos,,,CVPR2024,14,0,0.0,False,akhaliq,2024-01-12
+2406.15319,,0.0,,0.0,1.0,0.0,LongRAG: Enhancing Retrieval-Augmented Generation with Long-context LLMs,,,,60,6,0.0,True,wenhu,2024-06-24
+2403.14870,,0.0,,0.0,0.0,0.0,VidLA: Video-Language Alignment at Scale,,,CVPR2024,12,1,0.0,False,akhaliq,2024-03-25
+2411.14257,,,,0.0,0.0,1.0,Do I Know This Entity? Knowledge Awareness and Hallucinations in Language Models,,,,9,3,0.0,True,gsarti,2024-11-22
+2406.19215,,0.0,,0.0,0.0,0.0,SeaKR: Self-aware Knowledge Retrieval for Adaptive Retrieval Augmented Generation,https://github.com/thu-keg/seakr,18.0,,29,1,0.0,False,TranSirius,2024-06-28
+2406.11139,,0.0,,0.0,0.0,0.0,Breaking Boundaries: Investigating the Effects of Model Editing on Cross-linguistic Performance,,,,12,1,0.0,False,leowin,2024-06-20
+2406.06612,,0.0,,1.0,0.0,1.0,SEE-2-SOUND: Zero-Shot Spatial Environment-to-Spatial Sound,https://github.com/see2sound/see2sound,,,14,0,1.0,True,akhaliq,2024-06-12
+2312.15821,,0.0,,0.0,0.0,0.0,Audiobox: Unified Audio Generation with Natural Language Prompts,,,,12,1,0.0,False,akhaliq,2023-12-27
+2406.01574,,0.0,,15.0,4.0,12.0,MMLU-Pro: A More Robust and Challenging Multi-Task Language Understanding Benchmark,,,NeurIPS2024 D&B,42,3,0.0,True,akhaliq,2024-06-04
+2310.12773,,0.0,,12.0,0.0,2.0,Safe RLHF: Safe Reinforcement Learning from Human Feedback,https://github.com/pku-alignment/safe-rlhf,,,28,5,1.0,True,akhaliq,2023-10-20
+2411.10442,,,,1.0,1.0,0.0,Enhancing the Reasoning Ability of Multimodal Large Language Models via Mixed Preference Optimization,,,,61,4,0.0,True,Weiyun1025,2024-11-22
+2308.00566,,0.0,,0.0,0.0,0.0,Predicting masked tokens in stochastic locations improves masked image modeling,,,,15,0,0.0,False,akhaliq,2023-08-02
+2401.02400,,0.0,,1.0,0.0,1.0,Learning the 3D Fauna of the Web,,,CVPR2024,9,1,0.0,True,akhaliq,2024-01-05
+2403.20327,,0.0,,0.0,0.0,0.0,Gecko: Versatile Text Embeddings Distilled from Large Language Models,,,,47,4,0.0,False,akhaliq,2024-04-01
+2308.03729,,0.0,,0.0,0.0,0.0,Tiny LVLM-eHub: Early Multimodal Experiments with Bard,https://github.com/opengvlab/multi-modality-arena,459.0,,9,0,0.0,False,akhaliq,2023-08-08
+2402.19469,,0.0,,0.0,0.0,0.0,Humanoid Locomotion as Next Token Prediction,,,NeurIPS2024,25,2,0.0,False,akhaliq,2024-03-01
+2410.06458,,,no code,0.0,0.0,0.0,"LLM Self-Correction with DeCRIM: Decompose, Critique, and Refine for Enhanced Following of Instructions with Multiple Constraints",,,EMNLP2024,7,2,0.0,False,thomas-ferraz,2024-10-10
+2306.06823,,0.0,,0.0,0.0,0.0,Weakly supervised information extraction from inscrutable handwritten document images,,,,4,1,0.0,False,akhaliq,2023-06-13
+2402.10171,,0.0,,0.0,0.0,0.0,Data Engineering for Scaling Language Models to 128K Context,https://github.com/franxyao/long-context-data-engineering,,,21,2,1.0,False,akhaliq,2024-02-16
+2408.10195,,,,0.0,0.0,1.0,SpaRP: Fast 3D Object Reconstruction and Pose Estimation from Sparse Views,,,ECCV2024,9,2,0.0,True,akhaliq,2024-08-20
+2307.13720,,0.0,,0.0,0.0,0.0,Composite Diffusion | whole >= Σparts,,,,8,0,0.0,False,akhaliq,2023-07-27
+2408.00118,,0.0,,0.0,0.0,0.0,Gemma 2: Improving Open Language Models at a Practical Size,,,,72,3,0.0,False,osanseviero,2024-08-02
+2406.11196,,0.0,,0.0,0.0,0.0,Vid3D: Synthesis of Dynamic 3D Scenes using 2D Video Diffusion,https://github.com/rishab-partha/Vid3D,2.0,,8,1,1.0,False,rishab-partha,2024-06-18
+2408.11857,,,,20.0,0.0,10.0,Hermes 3 Technical Report,,,,24,4,0.0,True,akhaliq,2024-08-23
+2305.18729,,0.0,,0.0,0.0,0.0,Real-World Image Variation by Aligning Diffusion Inversion Chain,https://github.com/dvlab-research/rival,142.0,NeurIPS2023,4,1,0.0,False,akhaliq,2023-05-31
+2406.13144,,0.0,,0.0,1.0,0.0,DialSim: A Real-Time Simulator for Evaluating Long-Term Dialogue Understanding of Conversational Agents,https://github.com/jiho283/simulator,13.0,,11,1,0.0,True,jiho283,2024-06-26
+2407.03300,,0.0,,0.0,0.0,0.0,DisCo-Diff: Enhancing Continuous Diffusion Models with Discrete Latents,https://github.com/gcorso/disco-diffdock,,,11,1,0.0,False,AaronXyl,2024-07-04
+2407.03923,,0.0,,0.0,0.0,0.0,CRiM-GS: Continuous Rigid Motion-Aware Gaussian Splatting from Motion Blur Images,,,,7,1,0.0,False,akhaliq,2024-07-08
+2403.17888,,0.0,,0.0,0.0,0.0,2D Gaussian Splatting for Geometrically Accurate Radiance Fields,https://github.com/hbb1/2d-gaussian-splatting,,,26,3,1.0,False,akhaliq,2024-03-27
+2408.13674,https://huggingface.co/papers/2408.13674#66feb746df07d774c52b1ee7,,,0.0,0.0,0.0,GenCA: A Text-conditioned Generative Model for Realistic and Drivable Codec Avatars,,,,17,2,0.0,False,kqsun,2024-08-28
+2406.06316,,0.0,,0.0,0.0,0.0,Tx-LLM: A Large Language Model for Therapeutics,,,,13,0,0.0,False,akhaliq,2024-06-11
+2403.10395,,0.0,,1.0,0.0,0.0,Isotropic3D: Image-to-3D Generation Based on a Single CLIP Embedding,https://github.com/pkunliu/isotropic3d,71.0,,7,1,1.0,True,akhaliq,2024-03-18
+2402.01391,,0.0,,0.0,0.0,0.0,StepCoder: Improve Code Generation with Reinforcement Learning from Compiler Feedback,https://github.com/ablustrund/apps_plus,,,41,3,0.0,False,akhaliq,2024-02-05
+2410.06985,,,,0.0,0.0,0.0,Jointly Generating Multi-view Consistent PBR Textures using Collaborative Control,,,,5,2,0.0,False,CiaraRowles,2024-10-10
+2406.04325,,0.0,,2.0,3.0,4.0,ShareGPT4Video: Improving Video Understanding and Generation with Better Captions,,,NeurIPS2024 D&B,71,4,0.0,True,akhaliq,2024-06-07
+2406.08707,,0.0,,0.0,2.0,0.0,mOSCAR: A Large-scale Multilingual and Multimodal Document-level Corpus,,,,15,2,0.0,True,matthieufp,2024-06-14
+2412.07334,,,,0.0,0.0,0.0,Frame Representation Hypothesis: Multi-Token LLM Interpretability and Concept-Guided Text Generation,https://github.com/phvv-me/frame-representation-hypothesis,,,15,4,1.0,False,pvalois,2024-12-11
+2410.22476,,,no code yet,0.0,0.0,0.0,A Pointer Network-based Approach for Joint Extraction and Detection of Multi-Label Multi-Class Intents,,,EMNLP2024,24,3,0.0,False,abhi1nandy2,2024-11-01
+2410.06154,,,no artifacts,0.0,0.0,0.0,GLOV: Guided Large Language Models as Implicit Optimizers for Vision Language Models,https://github.com/jmiemirza/glov,,,14,2,0.0,False,mdorkenw,2024-10-11
+2411.03312,,,,0.0,0.0,0.0,Inference Optimal VLMs Need Only One Visual Token but Larger Models,https://github.com/locuslab/llava-token-compression,25.0,,5,1,0.0,False,Ksgk-fy,2024-11-06
+2407.05530,,0.0,,0.0,0.0,0.0,This&That: Language-Gesture Controlled Video Generation for Robot Planning,,,,3,1,0.0,False,HikariDawn,2024-07-11
+2309.12424,,0.0,,0.0,0.0,0.0,DualToken-ViT: Position-aware Efficient Vision Transformer with Dual Token Fusion,,,,11,2,0.0,False,akhaliq,2023-09-25
+2405.17430,,0.0,,2.0,0.0,0.0,Matryoshka Multimodal Models,https://github.com/mu-cai/matryoshka-mm,77.0,,30,3,0.0,True,akhaliq,2024-05-28
+2401.13795,,0.0,,0.0,0.0,0.0,Diffuse to Choose: Enriching Image Conditioned Inpainting in Latent Diffusion Models for Virtual Try-All,,,,64,2,0.0,False,akhaliq,2024-01-26
+2312.00252,,0.0,,0.0,0.0,0.0,PyNeRF: Pyramidal Neural Radiance Fields,https://github.com/hturki/pynerf,56.0,NeurIPS2023,8,1,0.0,False,akhaliq,2023-12-04
+2404.06773,,0.0,,0.0,0.0,0.0,Adapting LLaMA Decoder to Vision Transformer,https://github.com/techmonsterwang/illama,,,17,1,1.0,False,akhaliq,2024-04-11
+2406.02886,,0.0,,0.0,0.0,0.0,PLaD: Preference-based Large Language Model Distillation with Pseudo-Preference Pairs,,,ACL2024,7,1,0.0,False,akhaliq,2024-06-06
+2307.06945,,0.0,,0.0,0.0,0.0,In-context Autoencoder for Context Compression in a Large Language Model,https://github.com/getao/icae,,,27,0,1.0,False,akhaliq,2023-07-14
+2409.14674,,,no code yet,0.0,0.0,0.0,RACER: Rich Language-Guided Failure Recovery Policies for Imitation Learning,,,,40,6,0.0,False,tnlin,2024-09-24
+2402.04252,,0.0,,3.0,0.0,1.0,EVA-CLIP-18B: Scaling CLIP to 18 Billion Parameters,https://github.com/baaivision/eva,2266.0,,24,2,1.0,True,akhaliq,2024-02-07
+2405.09798,,0.0,,0.0,0.0,0.0,Many-Shot In-Context Learning in Multimodal Foundation Models,https://github.com/stanfordmlgroup/ManyICL,124.0,,26,2,0.0,False,akhaliq,2024-05-17
+2410.18451,,,,4.0,2.0,1.0,Skywork-Reward: Bag of Tricks for Reward Modeling in LLMs,,,,12,2,0.0,True,chrisliu298,2024-10-25
+2311.07961,,0.0,,0.0,0.0,0.0,"The ART of LLM Refinement: Ask, Refine, and Trust",,,NAACL2023,10,0,0.0,False,akhaliq,2023-11-15
+2410.12183,,,no artifacts,0.0,0.0,0.0,TransAgent: Transfer Vision-Language Foundation Models with Heterogeneous Agent Collaboration,https://github.com/markywg/transagent,17.0,NeurIPS2024,3,2,0.0,False,markywg,2024-10-18
+2311.07885,,0.0,,0.0,0.0,0.0,One-2-3-45++: Fast Single Image to 3D Objects with Consistent Multi-View Generation and 3D Diffusion,,,CVPR2024,39,4,0.0,False,akhaliq,2023-11-15
+2411.14982,,,,0.0,0.0,0.0,Large Multi-modal Models Can Interpret Features in Large Multi-modal Models,https://github.com/EvolvingLMMs-Lab/multimodal-sae,,,14,2,1.0,False,kcz358,2024-11-25
+2310.13065,,0.0,,0.0,0.0,0.0,Creative Robot Tool Use with Large Language Models,,,NeurIPS2023,8,1,0.0,False,akhaliq,2023-10-23
+2311.13384,,0.0,,0.0,0.0,3.0,LucidDreamer: Domain-free Generation of 3D Gaussian Splatting Scenes,https://github.com/luciddreamer-cvlab/LucidDreamer,1342.0,,49,4,0.0,True,akhaliq,2023-11-23
+2403.03870,,0.0,,0.0,0.0,0.0,Learning to Decode Collaboratively with Multiple Language Models,https://github.com/clinicalml/co-llm,101.0,ACL2024,17,4,0.0,False,akhaliq,2024-03-07
+2403.08715,,0.0,,1.0,1.0,2.0,SOTOPIA-π: Interactive Learning of Socially Intelligent Language Agents,https://github.com/sotopia-lab/sotopia-pi,,,20,1,1.0,True,akhaliq,2024-03-14
+2311.03301,,0.0,,2.0,0.0,1.0,Ziya2: Data-centric Learning is All LLMs Need,,,,16,0,0.0,True,akhaliq,2023-11-07
+2403.08764,,0.0,,0.0,0.0,0.0,VLOGGER: Multimodal Diffusion for Embodied Avatar Synthesis,,,,34,3,0.0,False,akhaliq,2024-03-14
+2403.03950,,0.0,,0.0,0.0,0.0,Stop Regressing: Training Value Functions via Classification for Scalable Deep RL,,,,12,1,0.0,False,akhaliq,2024-03-07
+2407.12366,,0.0,,0.0,1.0,0.0,NavGPT-2: Unleashing Navigational Reasoning Capability for Large Vision-Language Models,https://github.com/gengzezhou/navgpt-2,72.0,ECCV2024,4,2,0.0,True,xw-eric,2024-07-18
+2410.05254,,,,0.0,0.0,0.0,GLEE: A Unified Framework and Benchmark for Language-based Economic Environments,https://github.com/eilamshapira/GLEE,,,78,2,0.0,False,EilamSha,2024-10-10
+2407.16198,,0.0,,0.0,0.0,0.0,INF-LLaVA: Dual-perspective Perception for High-Resolution Multimodal Large Language Model,https://github.com/weihuanglin/inf-llava,40.0,,13,3,1.0,False,akhaliq,2024-07-24
+2410.23123,,,,0.0,2.0,0.0,On Memorization of Large Language Models in Logical Reasoning,,,,13,2,0.0,True,alphapav,2024-10-31
+2308.02487,,0.0,,0.0,0.0,1.0,Convolutions Die Hard: Open-Vocabulary Segmentation with Single Frozen Convolutional CLIP,https://github.com/bytedance/fc-clip,282.0,NeurIPS2023,12,0,1.0,True,akhaliq,2023-08-07
+2406.05967,https://huggingface.co/datasets/afaji/cvqa/discussions/3,0.0,,0.0,0.0,0.0,CVQA: Culturally-diverse Multilingual Visual Question Answering Benchmark,,,NeurIPS2024 D&B,5,1,0.0,False,afaji,2024-06-14
+2406.20094,,0.0,,0.0,1.0,0.0,"Scaling Synthetic Data Creation with 1,000,000,000 Personas",https://github.com/tencent-ailab/persona-hub,,,88,5,1.0,True,xywang1,2024-07-01
+2410.10210,,,no code,0.0,0.0,0.0,Minimum Tuning to Unlock Long Output from LLMs with High Quality Data as the Key,,,,3,2,0.0,False,Yingda,2024-10-18
+2408.15881,https://github.com/shufangxun/LLaVA-MoD/issues/2,,,0.0,0.0,0.0,LLaVA-MoD: Making LLaVA Tiny via MoE Knowledge Distillation,https://github.com/shufangxun/llava-mod,28.0,,19,2,0.0,False,akhaliq,2024-08-29
+2403.06634,,0.0,,0.0,0.0,0.0,Stealing Part of a Production Language Model,,,,90,2,0.0,False,akhaliq,2024-03-12
+2401.16677,,0.0,,0.0,0.0,0.0,T3: Transparent Tracking & Triggering for Fine-grained Overlap of Compute & Collectives,,,,3,1,0.0,False,akhaliq,2024-01-31
+2402.12847,,0.0,,0.0,0.0,0.0,Instruction-tuned Language Models are Better Knowledge Learners,https://github.com/edward-sun/pit,7.0,ACL2024,24,1,0.0,False,akhaliq,2024-02-21
+2307.04577,,0.0,,0.0,0.0,0.0,AnyTeleop: A General Vision-Based Dexterous Robot Arm-Hand Teleoperation System,,,,1,0,0.0,False,akhaliq,2023-07-11
+2411.15131,,,no code yet,0.0,0.0,0.0,WildLMa: Long Horizon Loco-Manipulation in the Wild,,,,6,2,0.0,False,akhaliq,2024-11-25
+2410.03617,,,no code,0.0,0.0,0.0,What Matters for Model Merging at Scale?,,,,7,2,0.0,False,tuvu,2024-10-08
+2406.14035,,0.0,,0.0,0.0,0.0,Two Giraffes in a Dirt Field: Using Game Play to Investigate Situation Modelling in Large Multimodal Models,,,,11,1,0.0,False,sherzod-hakimov,2024-06-24
+2309.10706,,0.0,,2.0,0.0,0.0,OpenBA: An Open-sourced 15B Bilingual Asymmetric seq2seq Model Pre-trained from Scratch,https://github.com/opennlg/openba,95.0,,16,1,1.0,True,akhaliq,2023-09-20
+2407.03418,,0.0,,0.0,0.0,0.0,HEMM: Holistic Evaluation of Multimodal Foundation Models,https://github.com/pliang279/hemm,41.0,NeurIPS2024 D&B,8,1,1.0,False,akhaliq,2024-07-08
+2409.10831,,,,0.0,1.0,0.0,PDMX: A Large-Scale Public Domain MusicXML Dataset for Symbolic Music Processing,,,,3,2,0.0,True,ZacharyNovack,2024-09-18
+2412.03565,https://huggingface.co/Inst-IT/LLaVA-Next-Inst-It-Qwen2-7B/discussions/1,,,1.0,2.0,0.0,Inst-IT: Boosting Multimodal Instance Understanding via Explicit Visual Prompt Instruction Tuning,,,,11,2,0.0,True,wjpoom,2024-12-05
+2306.07580,,0.0,,0.0,0.0,0.0,SayTap: Language to Quadrupedal Locomotion,,,,7,0,0.0,False,akhaliq,2023-06-14
+2412.02700,,,no code,0.0,0.0,0.0,Motion Prompting: Controlling Video Generation with Motion Trajectories,,,,12,2,0.0,False,irwinherrmann,2024-12-04
+2411.12814,https://github.com/uni-medical/IMIS-Bench/issues/4,,also https://huggingface.co/datasets/General-Medical-AI/IMed-361M/discussions/4,0.0,0.0,0.0,Interactive Medical Image Segmentation: A Benchmark Dataset and Baseline,https://github.com/uni-medical/imis-bench,81.0,,20,2,1.0,False,1Junlong,2024-11-26
+2409.12136,,,,3.0,0.0,10.0,GRIN: GRadient-INformed MoE,,,,14,3,0.0,True,LiyuanLucasLiu,2024-09-19
+2306.13651,,0.0,,0.0,0.0,0.0,Bring Your Own Data! Self-Supervised Evaluation for Large Language Models,https://github.com/neelsjain/byod,,,15,0,1.0,False,akhaliq,2023-06-26
+2311.04498,,0.0,,0.0,0.0,0.0,"NExT-Chat: An LMM for Chat, Detection and Segmentation",https://github.com/next-chatv/next-chat,,,11,0,1.0,False,akhaliq,2023-11-09
+2306.03872,,0.0,,0.0,0.0,0.0,Deductive Verification of Chain-of-Thought Reasoning,https://github.com/lz1oceani/verify_cot,123.0,NeurIPS2023,6,0,0.0,False,akhaliq,2023-06-07
+2307.05222,,0.0,,1.0,0.0,0.0,Generative Pretraining in Multimodality,https://github.com/baaivision/emu,,,21,0,0.0,True,akhaliq,2023-07-12
+2407.04172,,0.0,,1.0,1.0,8.0,ChartGemma: Visual Instruction-tuning for Chart Reasoning in the Wild,https://github.com/vis-nlp/chartgemma,50.0,,22,4,1.0,True,akhaliq,2024-07-08
+2412.01250,https://github.com/intelligolabs/CoIN/issues/1,,,0.0,0.0,0.0,Collaborative Instance Navigation: Leveraging Agent Self-Dialogue to Minimize User Input,,,,3,2,0.0,False,ftaioli,2024-12-03
+2406.11271,,0.0,,4.0,9.0,3.0,MINT-1T: Scaling Open-Source Multimodal Data by 10x: A Multimodal Dataset with One Trillion Tokens,https://github.com/mlfoundations/mint-1t,774.0,NeurIPS2024 D&B,18,1,0.0,True,davanstrien,2024-06-18
+2305.09664,,0.0,,0.0,0.0,1.0,Understanding 3D Object Interaction from a Single Image,https://github.com/JasonQSY/3DOI,,,1,0,1.0,True,akhaliq,2023-05-17
+2407.00653,,0.0,,0.0,0.0,0.0,Chain-of-Knowledge: Integrating Knowledge Reasoning into Large Language Models by Learning from Knowledge Graphs,,,,11,2,0.0,False,Neph0s,2024-07-02
+2412.04626,,,,0.0,1.0,0.0,BigDocs: An Open and Permissively-Licensed Dataset for Training Multimodal Models on Document and Code Tasks,,,,7,2,0.0,True,joanrodai,2024-12-09
+2401.10404,,0.0,,0.0,0.0,0.0,Inflation with Diffusion: Efficient Temporal Adaptation for Text-to-Video Super-Resolution,,,,10,1,0.0,False,akhaliq,2024-01-22
+2306.07968,,0.0,,0.0,0.0,0.0,arXiVeri: Automatic table verification with GPT,https://github.com/caml-lab/research/tree/main/arxiveri,5.0,NeurIPS2023,6,0,0.0,False,akhaliq,2023-06-14
+2402.12908,,0.0,,0.0,0.0,0.0,RealCompo: Dynamic Equilibrium between Realism and Compositionality Improves Text-to-Image Diffusion Models,https://github.com/yangling0818/realcompo,107.0,NeurIPS2024,7,1,0.0,False,akhaliq,2024-02-21
+2309.06180,,0.0,,2.0,0.0,0.0,Efficient Memory Management for Large Language Model Serving with PagedAttention,https://github.com/vllm-project/vllm,28508.0,,25,1,1.0,True,akhaliq,2023-09-13
+2402.00159,,0.0,,0.0,4.0,0.0,Dolma: an Open Corpus of Three Trillion Tokens for Language Model Pretraining Research,https://github.com/allenai/dolma,,,58,1,1.0,True,akhaliq,2024-02-02
+2401.06105,,0.0,,0.0,0.0,0.0,PALP: Prompt Aligned Personalization of Text-to-Image Models,,,,46,2,0.0,False,akhaliq,2024-01-12
+2312.16218,,0.0,,0.0,0.0,0.0,Hyper-VolTran: Fast and Generalizable One-Shot Image to 3D Object Structure via HyperNetworks,,,,6,1,0.0,False,akhaliq,2023-12-29
+2407.12581,,0.0,,0.0,1.0,0.0,Towards Understanding Unsafe Video Generation,https://github.com/py85252876/uvd,,,0,2,1.0,True,IAMJB,2024-07-18
+2406.11230,,0.0,,0.0,0.0,0.0,Multimodal Needle in a Haystack: Benchmarking Long-Context Capability of Multimodal Large Language Models,https://github.com/wang-ml-lab/multimodal-needle-in-a-haystack,33.0,,34,1,0.0,False,aaronwhy,2024-06-20
+2401.01055,,0.0,,0.0,1.0,0.0,LLaMA Beyond English: An Empirical Study on Language Capability Transfer,,,,53,4,0.0,True,akhaliq,2024-01-03
+2308.15560,,0.0,,0.0,0.0,0.0,WeatherBench 2: A benchmark for the next generation of data-driven global weather models,https://github.com/google-research/weatherbench2,,,8,0,0.0,False,akhaliq,2023-08-31
+2402.12377,,0.0,,0.0,0.0,0.0,Binary Opacity Grids: Capturing Fine Geometric Detail for Mesh-Based View Synthesis,,,,8,1,0.0,False,akhaliq,2024-02-20
+2411.00225,,,no code,0.0,0.0,0.0,Fashion-VDM: Video Diffusion Model for Virtual Try-On,,,,7,2,0.0,False,jskarras,2024-11-04
+2312.00109,,0.0,,0.0,0.0,0.0,Scaffold-GS: Structured 3D Gaussians for View-Adaptive Rendering,https://github.com/city-super/Scaffold-GS,755.0,CVPR2024,9,1,0.0,False,akhaliq,2023-12-04
+2408.02816,,,,0.0,0.0,0.0,Learning to Predict Program Execution by Modeling Dynamic Dependency on Code Graphs,,,,4,2,0.0,False,bdqnghi,2024-08-09
+2410.18084,,,no code yet,0.0,0.0,0.0,DynamicCity: Large-Scale LiDAR Generation from Dynamic Scenes,,,,12,2,0.0,False,hzxie,2024-10-24
+2309.10952,,0.0,,0.0,0.0,0.0,LMDX: Language Model-based Document Information Extraction and Localization,,,ACL2024,63,19,0.0,False,akhaliq,2023-09-21
+2410.03399,,,no artifacts,0.0,0.0,0.0,EBES: Easy Benchmarking for Event Sequences,,,,4,2,0.0,False,dalime,2024-10-09
+2412.05939,https://github.com/LooperXX/MMGiC/issues/1,,,0.0,0.0,0.0,Exploring Multi-Grained Concept Annotations for Multimodal Large Language Models,,,,10,2,0.0,False,LooperXX,2024-12-10
+2407.14358,,0.0,,1.0,0.0,19.0,Stable Audio Open,https://github.com/stability-ai/stable-audio-tools,,,22,5,1.0,True,akhaliq,2024-07-22
+2406.16758,,0.0,,0.0,0.0,0.0,Towards Fast Multilingual LLM Inference: Speculative Decoding and Specialized Drafters,https://github.com/Kthyeon/Multilingual-SpecBench,7.0,EMNLP2024,19,2,0.0,False,Kthyeon,2024-06-25
+2405.18870,,0.0,,0.0,0.0,0.0,LLMs achieve adult human performance on higher-order theory of mind tasks,,,,16,3,0.0,False,akhaliq,2024-05-30
+2308.07931,,0.0,,0.0,0.0,0.0,Distilled Feature Fields Enable Few-Shot Language-Guided Manipulation,https://github.com/f3rm/f3rm,,,7,0,0.0,False,akhaliq,2023-08-17
+2402.13217,,0.0,,0.0,0.0,0.0,VideoPrism: A Foundational Visual Encoder for Video Understanding,,,,21,2,0.0,False,akhaliq,2024-02-21
+2410.06166,https://huggingface.co/datasets/tobiaslee/text_temporal/discussions/2,,,0.0,0.0,0.0,Temporal Reasoning Transfer from Text to Video,,,,12,4,0.0,False,tobiaslee,2024-10-10
+2406.06216,,0.0,,0.0,0.0,0.0,Lighting Every Darkness with 3DGS: Fast Training and Real-Time Rendering for HDR View Synthesis,https://github.com/srameo/le3d,161.0,NeurIPS2024,17,4,0.0,False,akhaliq,2024-06-11
+2312.07504,,0.0,,0.0,0.0,0.0,COLMAP-Free 3D Gaussian Splatting,,,CVPR2024,10,0,0.0,False,akhaliq,2023-12-13
+2410.02426,,,no code,0.0,0.0,0.0,Learning the Latent Rules of a Game from Data: A Chess Story,,,,4,2,0.0,False,BFauber,2024-10-04
+2410.07752,,,,0.0,1.0,0.0,TVBench: Redesigning Video-Language Evaluation,,,,5,2,0.0,True,mdorkenw,2024-10-15
+2408.07055,,,,7.0,1.0,4.0,"LongWriter: Unleashing 10,000+ Word Generation from Long Context LLMs",https://github.com/thudm/longwriter,1415.0,,62,3,1.0,True,akhaliq,2024-08-14
+2401.00246,,0.0,,0.0,0.0,0.0,Boosting Large Language Model for Speech Synthesis: An Empirical Study,,,,10,1,0.0,False,akhaliq,2024-01-02
+2408.05205,https://github.com/jnjaby/KEEP/issues/2,,,0.0,0.0,0.0,Kalman-Inspired Feature Propagation for Video Face Super-Resolution,,,ECCV2024,4,2,0.0,False,akhaliq,2024-08-12
+2406.12275,,0.0,,0.0,0.0,0.0,VoCo-LLaMA: Towards Vision Compression with Large Language Models,https://github.com/Yxxxb/VoCo-LLaMA,78.0,,29,2,1.0,False,akhaliq,2024-06-19
+2311.02772,,0.0,,0.0,0.0,0.0,Attention or Convolution: Transformer Encoders in Audio Language Models for Inference Efficiency,,,,3,1,0.0,False,akhaliq,2023-11-07
+2306.03024,,0.0,,0.0,0.0,0.0,PokemonChat: Auditing ChatGPT for Pokémon Universe Knowledge,,,,2,2,0.0,False,akhaliq,2023-06-06
+2407.09413,,0.0,,0.0,1.0,0.0,SPIQA: A Dataset for Multimodal Question Answering on Scientific Papers,https://github.com/google/spiqa,40.0,NeurIPS2024 D&B,9,3,1.0,True,davanstrien,2024-07-15
+2305.09863,,0.0,,0.0,0.0,0.0,Explaining black box text modules in natural language with language models,https://github.com/microsoft/automated-explanations,37.0,NeurIPS2024,3,0,0.0,False,akhaliq,2023-05-18
+2305.16765,,0.0,,2.0,0.0,2.0,Backpack Language Models,,,ACL2023,2,1,0.0,True,akhaliq,2023-05-29
+2410.18976,https://huggingface.co/datasets/ahmedheakl/arabic_mmmu/discussions/1,,,0.0,1.0,1.0,CAMEL-Bench: A Comprehensive Arabic LMM Benchmark,,,,8,2,0.0,True,ahmedheakl,2024-10-25
+2307.01831,,0.0,,0.0,0.0,0.0,DiT-3D: Exploring Plain Diffusion Transformers for 3D Shape Generation,,,NeurIPS2023,8,0,0.0,False,akhaliq,2023-07-06
+2407.18054,https://huggingface.co/spaces/xiazhi/LKCell/discussions/1/files,1.0,,3.0,0.0,1.0,LKCell: Efficient Cell Nuclei Instance Segmentation with Large Convolution Kernels,https://github.com/hustvl/lkcell,32.0,,10,2,1.0,True,IAMJB,2024-07-26
+2408.06793,,,,0.0,0.0,0.0,Layerwise Recurrent Router for Mixture-of-Experts,https://github.com/qiuzh20/rmoe,13.0,,30,2,0.0,False,akhaliq,2024-08-14
+2407.19548,,0.0,,0.0,0.0,0.0,Cycle3D: High-quality and Consistent Image-to-3D Generation via Generation-Reconstruction Cycle,,,,22,2,0.0,False,akhaliq,2024-07-30
+2305.15717,,0.0,,0.0,0.0,0.0,The False Promise of Imitating Proprietary LLMs,,,,5,0,0.0,False,akhaliq,2023-05-26
+2403.07420,,0.0,,0.0,0.0,0.0,DragAnything: Motion Control for Anything using Entity Representation,https://github.com/showlab/draganything,,ECCV2024,12,1,1.0,False,akhaliq,2024-03-13
+2405.14867,,0.0,,2.0,0.0,2.0,Improved Distribution Matching Distillation for Fast Image Synthesis,https://github.com/tianweiy/DMD2,511.0,NeurIPS2024,11,0,1.0,True,akhaliq,2024-05-24
+2401.12187,,0.0,,0.0,0.0,0.0,WARM: On the Benefits of Weight Averaged Reward Models,,,,17,7,0.0,False,akhaliq,2024-01-23
+2312.00451,,0.0,,0.0,0.0,0.0,FSGS: Real-Time Few-shot View Synthesis using Gaussian Splatting,,,ECCV2024,9,1,0.0,False,akhaliq,2023-12-04
+2312.11535,,0.0,,0.0,0.0,0.0,Customize-It-3D: High-Quality 3D Creation from A Single Image Using Subject-Specific Knowledge Prior,,,,5,3,0.0,False,akhaliq,2023-12-20
+2401.07004,,0.0,,0.0,0.0,0.0,Extending LLMs' Context Window with 100 Samples,https://github.com/gair-nlp/entropy-abf,73.0,,14,1,1.0,False,akhaliq,2024-01-17
+2407.06192,,0.0,,0.0,0.0,0.0,Multi-Object Hallucination in Vision-Language Models,,,,9,1,0.0,False,jedyang97,2024-07-09
+2309.10537,,0.0,,0.0,0.0,0.0,FoleyGen: Visually-Guided Audio Generation,,,,7,1,0.0,False,akhaliq,2023-09-20
+2407.09450,,0.0,,0.0,0.0,0.0,Human-like Episodic Memory for Infinite Context LLMs,,,,56,4,0.0,False,akhaliq,2024-07-15
+2411.19950,https://github.com/THU-LYJ-Lab/AlphaTablets/issues/3,,,0.0,0.0,0.0,AlphaTablets: A Generic Plane Representation for 3D Planar Reconstruction from Monocular Videos,,,,5,2,0.0,False,hyz317,2024-12-02
+2402.13929,,0.0,,1.0,1.0,89.0,SDXL-Lightning: Progressive Adversarial Diffusion Distillation,,,,27,1,0.0,True,akhaliq,2024-02-22
+2412.04403,,,no code yet,0.0,0.0,0.0,Establishing Task Scaling Laws via Compute-Efficient Model Ladders,,,,2,2,0.0,False,liujch1998,2024-12-06
+2306.14896,,0.0,,0.0,0.0,0.0,RVT: Robotic View Transformer for 3D Object Manipulation,https://github.com/NVlabs/RVT,,,2,0,0.0,False,akhaliq,2023-06-27
+2410.07137,,,no artifacts,0.0,0.0,0.0,Cheating Automatic LLM Benchmarks: Null Models Achieve High Win Rates,https://github.com/sail-sg/Cheating-LLM-Benchmarks,42.0,,6,2,0.0,False,SivilTaram,2024-10-11
+2308.07968,,0.0,,0.0,0.0,0.0,Teach LLMs to Personalize -- An Approach inspired by Writing Education,,,,25,0,0.0,False,akhaliq,2023-08-17
+2410.04199,,,no artifacts,0.0,0.0,0.0,LongGenBench: Long-context Generation Benchmark,https://github.com/dominic789654/longgenbench,9.0,EMNLP2024,16,3,0.0,False,Dominic789654,2024-10-09
+2308.16582,,0.0,,0.0,0.0,0.0,Any-Size-Diffusion: Toward Efficient Text-Driven Synthesis for Any-Size HD Images,,,,10,0,0.0,False,akhaliq,2023-09-01
+2410.18977,https://huggingface.co/EvanTHU/MotionCLR/discussions/1,,,1.0,0.0,2.0,MotionCLR: Motion Generation and Training-free Editing via Understanding Attention Mechanisms,,,,13,2,0.0,True,EvanTHU,2024-10-25
+2403.07815,,0.0,,11.0,1.0,6.0,Chronos: Learning the Language of Time Series,https://github.com/amazon-science/chronos-forecasting,,,45,5,1.0,True,akhaliq,2024-03-13
+2410.01440,,,no artifacts,0.0,0.0,0.0,Closed-loop Long-horizon Robotic Planning via Equilibrium Sequence Modeling,https://github.com/singularity0104/equilibrium-planner,9.0,,3,2,1.0,False,feifeiobama,2024-10-03
+2405.21048,,0.0,,0.0,0.0,0.0,Kaleido Diffusion: Improving Conditional Diffusion Models with Autoregressive Latent Modeling,,,NeurIPS2024,12,0,0.0,False,akhaliq,2024-06-03
+2407.01519,,0.0,,0.0,0.0,1.0,DiffIR2VR-Zero: Zero-Shot Video Restoration with Diffusion-based Image Restoration Models,,,,22,2,0.0,True,Koi953215,2024-07-02
+2405.13865,,0.0,,1.0,0.0,0.0,ReVideo: Remake a Video with Motion and Content Control,,,NeurIPS2024,22,3,0.0,True,akhaliq,2024-05-24
+2307.03659,,0.0,,0.0,0.0,0.0,Decomposing the Generalization Gap in Imitation Learning for Visual Robotic Manipulation,,,,5,0,0.0,False,akhaliq,2023-07-10
+2311.06783,,0.0,,5.0,1.0,1.0,Q-Instruct: Improving Low-level Visual Abilities for Multi-modality Foundation Models,https://github.com/Q-Future/Q-Instruct,196.0,CVPR2024,26,2,1.0,True,akhaliq,2023-11-14
+2308.01390,,0.0,,5.0,0.0,2.0,OpenFlamingo: An Open-Source Framework for Training Large Autoregressive Vision-Language Models,https://github.com/mlfoundations/open_flamingo,3697.0,,31,2,1.0,True,akhaliq,2023-08-04
+2305.10320,,0.0,,0.0,0.0,0.0,CostFormer:Cost Transformer for Cost Aggregation in Multi-view Stereo,,,,1,0,0.0,False,akhaliq,2023-05-18
+2308.06259,,0.0,,17.0,5.0,6.0,Self-Alignment with Instruction Backtranslation,,,,40,2,0.0,True,akhaliq,2023-08-14
+2406.11430,,0.0,,0.0,0.0,0.0,A Simple and Effective L_2 Norm-Based Strategy for KV Cache Compression,,,,23,2,0.0,False,yuzhaouoe,2024-06-18
+2412.05270,https://github.com/zhuhanqing/APOLLO/issues/1,,,0.0,0.0,0.0,"APOLLO: SGD-like Memory, AdamW-level Performance",,,,35,2,0.0,False,hanqing666,2024-12-09
+2305.18565,,0.0,,0.0,0.0,0.0,PaLI-X: On Scaling up a Multilingual Vision and Language Model,,,CVPR2024,3,0,0.0,False,akhaliq,2023-05-31
+2311.07587,,0.0,,0.0,0.0,0.0,"Frontier Language Models are not Robust to Adversarial Arithmetic, or ""What do I need to say so you agree 2+2=5?",,,,3,0,0.0,False,akhaliq,2023-11-15
+2407.06946,,0.0,,0.0,0.0,0.0,Self-Recognition in Language Models,https://github.com/trdavidson/self-recognition,4.0,EMNLP2024,23,2,0.0,False,trdavidson,2024-07-12
+2401.01702,,0.0,,0.0,0.0,0.0,Image Sculpting: Precise Object Editing with 3D Geometry Control,,,CVPR2024,18,1,0.0,False,akhaliq,2024-01-04
+2401.11002,,0.0,,0.0,0.0,0.0,Fast Registration of Photorealistic Avatars for VR Facial Animation,,,ECCV2024,1,1,0.0,False,akhaliq,2024-01-23
+2405.00263,,0.0,,0.0,0.0,0.0,Clover: Regressive Lightweight Speculative Decoding with Sequential Knowledge,,,,14,1,0.0,False,akhaliq,2024-05-02
+2410.05255,https://huggingface.co/DwanZhang/SePPO/discussions/1,,,0.0,0.0,0.0,SePPO: Semi-Policy Preference Optimization for Diffusion Alignment,https://github.com/dwanzhang-ai/seppo,10.0,,4,2,1.0,False,DwanZhang,2024-10-08
+2305.18565,,0.0,,0.0,0.0,0.0,PaLI-X: On Scaling up a Multilingual Vision and Language Model,,,,3,0,0.0,False,akhaliq,2023-05-31
+2311.10678,,0.0,,0.0,0.0,0.0,Distilling and Retrieving Generalizable Knowledge for Robot Manipulation via Language Corrections,https://github.com/Stanford-ILIAD/droc,,,5,0,0.0,False,akhaliq,2023-11-20
+2403.10301,,0.0,,0.0,0.0,0.0,Uni-SMART: Universal Science Multimodal Analysis and Research Transformer,,,,50,4,0.0,False,akhaliq,2024-03-18
+2312.11894,,0.0,,1.0,0.0,0.0,3D-LFM: Lifting Foundation Model,https://github.com/mosamdabhi/3dlfm,55.0,CVPR2024,13,2,0.0,True,akhaliq,2023-12-20
+2311.08263,,0.0,,0.0,0.0,0.0,Fast Chain-of-Thought: A Glance of Future from Parallel Decoding Leads to Answers Faster,,,,15,0,0.0,False,akhaliq,2023-11-15
+2409.03718,,,,0.0,0.0,0.0,Geometry Image Diffusion: Fast and Data-Efficient Text-to-3D with Image-Based Surface Representation,,,,23,3,0.0,False,CiaraRowles,2024-09-06
+2406.11251,,0.0,,2.0,1.0,0.0,Unifying Multimodal Retrieval via Document Screenshot Embedding,,,EMNLP2024,7,1,0.0,True,wenhu,2024-06-18
+2408.11457,https://huggingface.co/datasets/LIACC/Emakhuwa-FLORES/discussions/2,1.0,,0.0,1.0,0.0,Expanding FLORES+ Benchmark for more Low-Resource Settings: Portuguese-Emakhuwa Machine Translation Evaluation,,,EMNLP2024,2,1,0.0,True,IAMJB,2024-08-22
+2403.13745,,0.0,,0.0,0.0,0.0,Be-Your-Outpainter: Mastering Video Outpainting through Input-Specific Adaptation,https://github.com/g-u-n/be-your-outpainter,208.0,ECCV2024,11,1,1.0,False,akhaliq,2024-03-21
+2403.18118,,0.0,,0.0,0.0,0.0,EgoLifter: Open-world 3D Segmentation for Egocentric Perception,,,ECCV2024,9,1,0.0,False,akhaliq,2024-03-28
+2308.01317,,0.0,,0.0,0.0,0.0,ELIXR: Towards a general purpose X-ray artificial intelligence system through alignment of large language models and radiology vision encoders,,,,12,1,0.0,False,akhaliq,2023-08-03
+2411.08328,,,no code,0.0,0.0,0.0,Motion Control for Enhanced Complex Action Video Generation,,,,2,2,0.0,False,akhaliq,2024-11-14
+2410.04751,,,no code yet,0.0,0.0,0.0,Intriguing Properties of Large Language and Vision Models,,,,15,4,0.0,False,passing2961,2024-10-11
+2412.09586,,,,0.0,0.0,0.0,Gaze-LLE: Gaze Target Estimation via Large-Scale Learned Encoders,https://github.com/fkryan/gazelle,,,5,2,1.0,False,praeclarumjj3,2024-12-13
+2410.05269,,,,0.0,2.0,0.0,Data Advisor: Dynamic Data Curation for Safety Alignment of Large Language Models,,,EMNLP2024,3,2,0.0,True,fwnlp,2024-10-11
+2405.18515,,0.0,,0.0,0.0,0.0,Atlas3D: Physically Constrained Self-Supporting Text-to-3D for Simulation and Fabrication,,,NeurIPS2024,7,0,0.0,False,akhaliq,2024-05-30
+2407.00617,,0.0,,0.0,0.0,0.0,Iterative Nash Policy Optimization: Aligning LLMs with General Preferences via No-Regret Learning,,,,7,1,0.0,False,MatouK98,2024-07-01
+2310.01557,,0.0,,0.0,0.0,0.0,SmartPlay : A Benchmark for LLMs as Intelligent Agents,https://github.com/microsoft/smartplay,,,12,2,0.0,False,akhaliq,2023-10-04
+2401.16658,,0.0,,3.0,0.0,3.0,OWSM v3.1: Better and Faster Open Whisper-Style Speech Models based on E-Branchformer,,,,12,1,0.0,True,akhaliq,2024-01-31
+2306.04050,,0.0,,0.0,0.0,0.0,LLMZip: Lossless Text Compression using Large Language Models,https://github.com/vcskaushik/LLMzip,,,4,0,0.0,False,akhaliq,2023-06-08
+2407.13709,,0.0,,0.0,0.0,0.0,Understanding Reference Policies in Direct Preference Optimization,,,,15,3,0.0,False,IAMJB,2024-07-19
+2311.03739,,0.0,,0.0,0.0,0.0,Leveraging Large Language Models for Automated Proof Synthesis in Rust,,,,5,0,0.0,False,akhaliq,2023-11-08
+2411.08307,,,no code,0.0,0.0,0.0,PerceiverS: A Multi-Scale Perceiver with Effective Segmentation for Long-Term Expressive Symbolic Music Generation,,,,6,2,0.0,False,akhaliq,2024-11-14
+2309.11523,,0.0,,0.0,0.0,0.0,RMT: Retentive Networks Meet Vision Transformers,https://github.com/qhfan/RMT,277.0,CVPR2024,33,2,0.0,False,akhaliq,2023-09-22
+2311.12454,,0.0,,0.0,0.0,0.0,HierSpeech++: Bridging the Gap between Semantic and Acoustic Representation of Speech by Hierarchical Variational Inference for Zero-shot Speech Synthesis,https://github.com/sh-lee-prml/hierspeechpp,1175.0,,29,1,1.0,False,akhaliq,2023-11-22
+2404.13686,,0.0,,3.0,0.0,21.0,Hyper-SD: Trajectory Segmented Consistency Model for Efficient Image Synthesis,,,NeurIPS2024,27,2,0.0,True,akhaliq,2024-04-23
+2405.12970,,0.0,,2.0,0.0,1.0,Face Adapter for Pre-Trained Diffusion Models with Fine-Grained ID and Attribute Control,,,ECCV2024,22,3,0.0,True,akhaliq,2024-05-22
+2406.06040,https://github.com/mutonix/Vript/issues/8,0.0,,0.0,5.0,1.0,Vript: A Video Is Worth Thousands of Words,https://github.com/mutonix/vript,127.0,NeurIPS2024 D&B,22,0,1.0,True,akhaliq,2024-06-11
+2409.16686,,,no code,0.0,0.0,0.0,MSI-Agent: Incorporating Multi-Scale Insight into Embodied Agents for Superior Planning and Decision-Making,,,EMNLP2024,7,2,0.0,False,dongguanting,2024-09-30
+2408.07410,,,,4.0,0.0,12.0,Aquila2 Technical Report,https://github.com/flagopen/flagscale,,,12,2,1.0,True,akhaliq,2024-08-15
+2410.03959,,,,0.0,0.0,0.0,Grounding Language in Multi-Perspective Referential Communication,https://github.com/zinengtang/MulAgentRef,3.0,EMNLP2024,3,2,0.0,False,ZinengTang,2024-10-08
+2410.13782,https://huggingface.co/airkingbd/dplm_150m/discussions/1,,,0.0,0.0,0.0,DPLM-2: A Multimodal Diffusion Protein Language Model,,,,18,3,0.0,False,chengyenhsieh,2024-10-21
+2306.17154,,0.0,,0.0,0.0,0.0,Generate Anything Anywhere in Any Scene,,,,22,3,0.0,False,akhaliq,2023-06-30
+2411.18499,,,,1.0,0.0,0.0,GATE OpenING: A Comprehensive Benchmark for Judging Open-ended Interleaved Image-Text Generation,,,,17,2,0.0,True,kpzhang996,2024-12-03
+2406.19380,,0.0,,0.0,0.0,0.0,TabReD: A Benchmark of Tabular Machine Learning in-the-Wild,https://github.com/yandex-research/tabred,,,47,3,0.0,False,puhsu,2024-07-04
+2411.12240,,,no code,0.0,0.0,0.0,Evaluating Tokenizer Performance of Large Language Models Across Official Indian Languages,,,,6,2,0.0,False,tamang0000,2024-11-20
+2408.07060,,,,0.0,0.0,0.0,Diversity Empowers Intelligence: Integrating Expertise of Software Engineering Agents,,,,38,3,0.0,False,k1z,2024-08-14
+2305.17493,,0.0,,0.0,0.0,0.0,Model Dementia: Generated Data Makes Models Forget,,,,2,0,0.0,False,akhaliq,2023-05-30
+2409.09213,https://github.com/Sreyan88/ReCLAP/issues/1,,,0.0,0.0,0.0,ReCLAP: Improving Zero Shot Audio Classification by Describing Sounds,https://github.com/sreyan88/reclap,,,10,2,0.0,False,Sreyan88,2024-09-17
+2305.12487,,0.0,,0.0,0.0,0.0,Augmenting Autotelic Agents with Large Language Models,,,,1,0,0.0,False,akhaliq,2023-05-23
+2405.10315,,0.0,,1.0,1.0,0.0,TRANSIC: Sim-to-Real Policy Transfer by Learning from Online Correction,https://github.com/transic-robot/transic,58.0,CoRL2024,10,0,0.0,True,akhaliq,2024-05-17
+2401.15688,,0.0,,0.0,0.0,0.0,Divide and Conquer: Language Models can Plan and Self-Correct for Compositional Text-to-Image Generation,,,,11,0,0.0,False,akhaliq,2024-01-30
+2412.03704,https://huggingface.co/papers/2412.03704,,,0.0,0.0,0.0,Scaling Inference-Time Search with Vision Value Model for Improved Visual Comprehension,,,,6,2,0.0,False,russwang,2024-12-06
+2401.04575,,0.0,,0.0,0.0,0.0,Let's Go Shopping (LGS) -- Web-Scale Image-Text Dataset for Visual Concept Understanding,,,,14,3,0.0,False,akhaliq,2024-01-10
+2410.19100,https://github.com/ljang0/videowebarena/issues/26,,,0.0,0.0,0.0,VideoWebArena: Evaluating Long Context Multimodal Agents with Video Understanding Web Tasks,,,,6,2,0.0,False,ljang0,2024-10-29
+2309.03179,,0.0,,0.0,0.0,0.0,SLiMe: Segment Like Me,https://github.com/aliasgharkhani/slime,,,29,5,0.0,False,akhaliq,2023-09-07
+2408.06327,,,,0.0,0.0,0.0,VisualAgentBench: Towards Large Multimodal Models as Visual Foundation Agents,https://github.com/thudm/visualagentbench,101.0,,13,3,0.0,False,akhaliq,2024-08-13
+2404.12195,,0.0,,3.0,3.0,0.0,"OpenBezoar: Small, Cost-Effective and Open Models Trained on Mixes of Instruction Data",https://bitbucket.org/paladinanalytics/qlora-finetuning,,,11,1,0.0,True,akhaliq,2024-04-19
+2410.10812,https://huggingface.co/mit-han-lab/hart-0.7b-1024px/discussions/1,,,0.0,0.0,0.0,HART: Efficient Visual Generation with Hybrid Autoregressive Transformer,https://github.com/mit-han-lab/hart,211.0,,12,2,1.0,False,akhaliq,2024-10-21
+2406.12649,,0.0,,0.0,0.0,0.0,Probabilistic Conceptual Explainers: Trustworthy Conceptual Explanations for Vision Foundation Models,,,,15,1,0.0,False,aaronwhy,2024-06-20
+2305.15719,,0.0,,0.0,0.0,0.0,Efficient Neural Music Generation,,,NeurIPS2023,2,0,0.0,False,akhaliq,2023-05-26
+2409.07452,https://huggingface.co/hbyang/Hi3D/discussions/1,,,0.0,0.0,0.0,Hi3D: Pursuing High-Resolution Image-to-3D Generation with Video Diffusion Models,https://github.com/yanghb22-fdu/hi3d-official,185.0,ACMMM2024,18,2,0.0,False,akhaliq,2024-09-12
+2406.09371,,0.0,,0.0,0.0,0.0,LRM-Zero: Training Large Reconstruction Models with Synthesized Data,https://github.com/desaixie/zeroverse,119.0,NeurIPS2024,3,1,0.0,False,desaix,2024-06-14
+2410.12771,,,,1.0,1.0,1.0,Open Materials 2024 (OMat24) Inorganic Materials Dataset and Models,,,,5,1,0.0,True,mshuaibi,2024-10-18
+2402.14797,,0.0,,0.0,0.0,0.0,Snap Video: Scaled Spatiotemporal Transformers for Text-to-Video Synthesis,,,CVPR2024,19,1,0.0,False,akhaliq,2024-02-23
+2410.11619,,,no code,0.0,0.0,0.0,MultiVENT 2.0: A Massive Multilingual Benchmark for Event-Centric Video Retrieval,,,,0,2,0.0,False,rekriz11,2024-10-16
+2307.09458,,0.0,,0.0,0.0,0.0,Does Circuit Analysis Interpretability Scale? Evidence from Multiple Choice Capabilities in Chinchilla,,,,10,0,0.0,False,akhaliq,2023-07-19
+2409.01704,https://github.com/Ucas-HaoranWei/GOT-OCR2.0/issues/5,,,0.0,0.0,0.0,General OCR Theory: Towards OCR-2.0 via a Unified End-to-end Model,,,,17,2,0.0,False,HaoranWei,2024-09-04
+2305.09636,,0.0,,0.0,0.0,0.0,SoundStorm: Efficient Parallel Audio Generation,,,,3,6,0.0,False,akhaliq,2023-05-17
+2403.09981,,0.0,,0.0,0.0,0.0,Controllable Text-to-3D Generation via Surface-Aligned Gaussian Splatting,https://github.com/WU-CVGL/MVControl-threestudio,182.0,,6,1,1.0,False,akhaliq,2024-03-18
+2409.13191,,,,2.0,0.0,0.0,An adapted large language model facilitates multiple medical tasks in diabetes care,https://github.com/waltonfuture/Diabetica,19.0,,6,2,1.0,True,WaltonFuture,2024-09-24
+2310.20216,,0.0,,0.0,0.0,0.0,Does GPT-4 Pass the Turing Test?,,,NAACL2023,17,3,0.0,False,akhaliq,2023-11-01
+2305.08809,,0.0,,0.0,0.0,0.0,Interpretability at Scale: Identifying Causal Mechanisms in Alpaca,https://github.com/stanfordnlp/pyvene,619.0,NeurIPS2023,2,0,1.0,False,akhaliq,2023-05-16
+2411.13676,https://huggingface.co/nvidia/Hymba-1.5B-Instruct/discussions/3,,,2.0,0.0,5.0,Hymba: A Hybrid-head Architecture for Small Language Models,,,,37,3,0.0,True,pmolchanov,2024-11-22
+2408.00167,https://huggingface.co/papers/2408.00167#66af3dfe05e2b2771b710e0d,0.0,,0.0,0.0,0.0,Finch: Prompt-guided Key-Value Cache Compression,,,,12,2,0.0,False,giulio98,2024-08-02
+2408.12528,https://github.com/showlab/Show-o/pull/3,,,2.0,0.0,0.0,Show-o: One Single Transformer to Unify Multimodal Understanding and Generation,https://github.com/showlab/show-o,922.0,,47,2,1.0,True,akhaliq,2024-08-23
+2404.14396,,0.0,,1.0,4.0,1.0,SEED-X: Multimodal Models with Unified Multi-granularity Comprehension and Generation,https://github.com/ailab-cvc/seed-x,392.0,,18,2,1.0,True,akhaliq,2024-04-23
+2402.17463,,0.0,,0.0,0.0,0.0,Training-Free Long-Context Scaling of Large Language Models,https://github.com/hkunlp/chunkllama,343.0,,19,2,1.0,False,akhaliq,2024-02-28
+2410.23743,https://github.com/MingLiiii/Layer_Gradient/issues/1,,,0.0,0.0,0.0,What Happened in LLMs Layers when Trained for Fast vs. Slow Thinking: A Gradient Perspective,https://github.com/MingLiiii/Layer_Gradient,40.0,,56,4,0.0,False,zhoutianyi,2024-11-01
+2306.04757,,0.0,,11.0,0.0,43.0,INSTRUCTEVAL: Towards Holistic Evaluation of Instruction-Tuned Large Language Models,https://github.com/declare-lab/instruct-eval,524.0,,5,0,1.0,True,akhaliq,2023-06-09
+2402.08268,,0.0,,4.0,0.0,0.0,World Model on Million-Length Video And Language With RingAttention,,,,36,4,0.0,True,akhaliq,2024-02-14
+2306.09442,,0.0,,0.0,1.0,0.0,"Explore, Establish, Exploit: Red Teaming Language Models from Scratch",https://github.com/thestephencasper/explore_establish_exploit_llms,,,7,1,0.0,True,akhaliq,2023-06-19
+2307.04721,,0.0,,0.0,0.0,0.0,Large Language Models as General Pattern Machines,,,,14,1,0.0,False,akhaliq,2023-07-11
+2410.17247,,,no artifacts,0.0,0.0,0.0,PyramidDrop: Accelerating Your Large Vision-Language Models via Pyramid Visual Redundancy Reduction,https://github.com/cooperx521/pyramiddrop,,,41,2,1.0,False,myownskyW7,2024-10-23
+2312.15258,,0.0,,0.0,0.0,0.0,Human101: Training 100+FPS Human Gaussians in 100s from 1 View,https://github.com/longxiang-ai/human101,106.0,,7,1,0.0,False,akhaliq,2023-12-27
+2411.19542,,,no code,0.0,0.0,0.0,A dynamic parallel method for performance optimization on hybrid CPUs,,,,5,2,0.0,False,Haihao,2024-12-04
+2401.14404,,0.0,,0.0,0.0,0.0,Deconstructing Denoising Diffusion Models for Self-Supervised Learning,,,,16,1,0.0,False,akhaliq,2024-01-26
+2311.10122,,0.0,,36.0,0.0,13.0,Video-LLaVA: Learning United Visual Representation by Alignment Before Projection,https://github.com/PKU-YuanGroup/Video-LLaVA,2911.0,EMNLP2024,26,1,1.0,True,akhaliq,2023-11-20
+2410.02712,https://huggingface.co/lmms-lab/llava-critic-72b/discussions/2,,,4.0,1.0,0.0,LLaVA-Critic: Learning to Evaluate Multimodal Models,,,,30,3,0.0,True,thughost,2024-10-04
+2402.15000,,0.0,,0.0,0.0,0.0,Divide-or-Conquer? Which Part Should You Distill Your LLM?,,,EMNLP2024,22,1,0.0,False,akhaliq,2024-02-26
+2308.03280,,0.0,,0.0,0.0,0.0,Mirror-NeRF: Learning Neural Radiance Fields for Mirrors with Whitted-Style Ray Tracing,,,,6,0,0.0,False,akhaliq,2023-08-08
+2404.02575,,0.0,,0.0,0.0,0.0,Language Models as Compilers: Simulating Pseudocode Execution Improves Algorithmic Reasoning in Language Models,,,EMNLP2024,47,4,0.0,False,akhaliq,2024-04-04
+2305.19012,,0.0,,0.0,0.0,0.0,StyleAvatar3D: Leveraging Image-Text Diffusion Models for High-Fidelity 3D Avatar Generation,https://github.com/icoz69/styleavatar3d,,,4,2,0.0,False,akhaliq,2023-05-31
+2406.07792,,0.0,,0.0,0.0,0.0,Hierarchical Patch Diffusion Models for High-Resolution Video Generation,,,CVPR2024,13,0,0.0,False,akhaliq,2024-06-13
+2404.02060,,0.0,,4.0,1.0,1.0,Long-context LLMs Struggle with Long In-context Learning,https://github.com/tiger-ai-lab/longiclbench,89.0,,34,4,1.0,True,akhaliq,2024-04-03
+2408.01708,,,,0.0,0.0,0.0,AVESFormer: Efficient Transformer Design for Real-Time Audio-Visual Segmentation,https://github.com/MarkXCloud/AVESFormer,3.0,,3,2,0.0,False,MarkWang,2024-08-07
+2409.17066,,,test_jb2,42.0,0.0,2.0,VPTQ: Extreme Low-bit Vector Post-Training Quantization for Large Language Models,https://github.com/microsoft/vptq,522.0,EMNLP2024,22,3,1.0,True,yangwang92,2024-09-30
+2410.18538,,,,0.0,0.0,0.0,SMITE: Segment Me In TimE,,,,13,5,0.0,False,Amirhossein-Alimohammadi,2024-10-25
+2405.16287,,0.0,,0.0,0.0,0.0,LoGAH: Predicting 774-Million-Parameter Transformers using Graph HyperNetworks with 1/100 Parameters,https://github.com/blackzxy/logah,21.0,,10,1,0.0,False,akhaliq,2024-05-28
+2402.04825,,0.0,,0.0,0.0,0.0,Fast Timing-Conditioned Latent Audio Diffusion,https://github.com/stability-ai/stable-audio-tools,,,7,1,1.0,False,akhaliq,2024-02-08
+2405.10300,,0.0,,0.0,0.0,0.0,"Grounding DINO 1.5: Advance the ""Edge"" of Open-Set Object Detection",https://github.com/idea-research/grounding-dino-1.5-api,746.0,,25,2,1.0,False,akhaliq,2024-05-17
+2310.03214,,0.0,,0.0,0.0,0.0,FreshLLMs: Refreshing Large Language Models with Search Engine Augmentation,https://github.com/freshllms/freshqa,325.0,ACL2024,16,1,0.0,False,akhaliq,2023-10-06
+2306.09557,,0.0,,0.0,0.0,0.0,CAJun: Continuous Adaptive Jumping using a Learned Centroidal Controller,,,,3,0,0.0,False,akhaliq,2023-06-19
+2409.08513,https://github.com/Xuan-World/Mamba-YOLO-World/issues/1,,,0.0,0.0,0.0,Mamba-YOLO-World: Marrying YOLO-World with Mamba for Open-Vocabulary Detection,https://github.com/Xuan-World/Mamba-YOLO-World,,,9,2,0.0,False,akhaliq,2024-09-16
+2407.00837,,0.0,,1.0,3.0,0.0,Towards Robust Speech Representation Learning for Thousands of Languages,,,EMNLP2024,9,1,0.0,True,wanchichen,2024-07-02
+2402.05861,,0.0,,0.0,0.0,0.0,Memory Consolidation Enables Long-Context Video Understanding,,,,8,1,0.0,False,akhaliq,2024-02-09
+2408.08189,https://github.com/360CVGroup/FancyVideo/issues/4,,,2.0,0.0,0.0,FancyVideo: Towards Dynamic and Consistent Video Generation via Cross-frame Textual Guidance,,,,13,3,0.0,True,akhaliq,2024-08-16
+2411.10083,https://huggingface.co/XiaoduoAILab/XmodelLM1.5/discussions/1,,,1.0,0.0,0.0,Xmodel-1.5: An 1B-scale Multilingual LLM,https://github.com/XiaoduoAILab/XmodelLM-1.5,9.0,,14,2,1.0,True,akhaliq,2024-11-18
+2403.01422,,0.0,,0.0,0.0,0.0,MovieLLM: Enhancing Long Video Understanding with AI-Generated Movies,https://github.com/Deaddawn/MovieLLM-code,164.0,,26,6,0.0,False,akhaliq,2024-03-05
+2406.18219,,0.0,,0.0,0.0,0.0,A Closer Look into Mixture-of-Experts in Large Language Models,https://github.com/kamanphoebe/look-into-moes,38.0,,14,2,1.0,False,kamanphoebe,2024-06-27
+2307.16888,,0.0,,2.0,0.0,0.0,Virtual Prompt Injection for Instruction-Tuned Large Language Models,,,NeurIPS2024,6,2,0.0,True,akhaliq,2023-08-01
+2310.03094,,0.0,,0.0,0.0,0.0,Large Language Model Cascades with Mixture of Thoughts Representations for Cost-efficient Reasoning,https://github.com/murongyue/llm_mot_cascade,,,12,1,0.0,False,akhaliq,2023-10-06
+2311.00945,,0.0,,0.0,0.0,0.0,E3 TTS: Easy End-to-End Diffusion-based Text to Speech,,,,14,1,0.0,False,akhaliq,2023-11-03
+2306.10968,,0.0,,3.0,0.0,0.0,BayLing: Bridging Cross-lingual Alignment and Instruction Following through Interactive Translation for Large Language Models,https://github.com/ictnlp/bayling,,,7,0,1.0,True,akhaliq,2023-06-21
+2305.12001,,0.0,,0.0,0.0,0.0,OPT-R: Exploring the Role of Explanations in Finetuning and Prompting for Reasoning Skills of Large Language Models,,,ACL2023,1,0,0.0,False,akhaliq,2023-05-23
+2406.16768,,0.0,,0.0,0.0,0.0,WARP: On the Benefits of Weight Averaged Rewarded Policies,,,,22,1,0.0,False,alexrame,2024-06-25
+2410.22394,,,,0.0,1.0,0.0,AAAR-1.0: Assessing AI's Potential to Assist Research,,,,13,3,0.0,True,Reza8848,2024-11-01
+2402.14590,,0.0,,0.0,0.0,0.0,Scaling Up LLM Reviews for Google Ads Content Moderation,,,,7,1,0.0,False,akhaliq,2024-02-23
+2311.10642,,0.0,,0.0,0.0,0.0,Rethinking Attention: Exploring Shallow Feed-Forward Neural Networks as an Alternative to Attention Layers in Transformers,,,,23,1,0.0,False,akhaliq,2023-11-20
+2407.08737,,0.0,,2.0,0.0,4.0,Video Diffusion Alignment via Reward Gradients,https://github.com/mihirp1998/vader,,,47,2,0.0,True,akhaliq,2024-07-12
+2404.12872,,0.0,,0.0,0.0,0.0,LLM-R2: A Large Language Model Enhanced Rule-based Rewrite System for Boosting Query Efficiency,https://github.com/damo-nlp-sg/llm-r2,,,9,1,0.0,False,akhaliq,2024-04-22
+2406.18532,,0.0,,0.0,0.0,0.0,Symbolic Learning Enables Self-Evolving Agents,https://github.com/aiwaves-cn/agents,,,10,1,0.0,False,Wangchunshu,2024-06-27
+2402.08654,,0.0,,0.0,0.0,0.0,Learning Continuous 3D Words for Text-to-Image Generation,https://github.com/ttchengab/continuous_3d_words_code,56.0,CVPR2024,9,4,0.0,False,akhaliq,2024-02-14
+2402.13249,,0.0,,0.0,2.0,0.0,TofuEval: Evaluating Hallucinations of LLMs on Topic-Focused Dialogue Summarization,https://github.com/amazon-science/tofueval,25.0,NAACL2023,10,4,0.0,True,akhaliq,2024-02-21
+2411.12925,,,,1.0,0.0,0.0,Loss-to-Loss Prediction: Scaling Laws for All Datasets,https://github.com/KempnerInstitute/loss-to-loss-notebooks,,,5,2,0.0,True,davidbrandfonbrener,2024-11-21
+2408.02666,,,,0.0,0.0,0.0,Self-Taught Evaluators,,,,21,2,0.0,False,akhaliq,2024-08-06
+2401.14828,,0.0,,0.0,0.0,0.0,TIP-Editor: An Accurate 3D Editor Following Both Text-Prompts And Image-Prompts,,,,7,1,0.0,False,akhaliq,2024-01-29
+2411.00762,https://huggingface.co/hkung/face-anon-simple/discussions/1,,,1.0,0.0,0.0,Face Anonymization Made Simple,https://github.com/hanweikung/face_anon_simple,103.0,,6,3,0.0,True,Tvaranka,2024-11-04
+2403.07487,,0.0,,0.0,0.0,0.0,Motion Mamba: Efficient and Long Sequence Motion Generation with Hierarchical and Bidirectional Selective SSM,https://github.com/steve-zeyu-zhang/MotionMamba,105.0,ECCV2024,13,3,1.0,False,akhaliq,2024-03-13
+2311.00430,,0.0,,50.0,0.0,100.0,Distil-Whisper: Robust Knowledge Distillation via Large-Scale Pseudo Labelling,https://github.com/huggingface/distil-whisper,3568.0,,55,2,1.0,True,akhaliq,2023-11-02
+2406.12753,,0.0,,0.0,1.0,1.0,OlympicArena: Benchmarking Multi-discipline Cognitive Reasoning for Superintelligent AI,https://github.com/gair-nlp/olympicarena,86.0,NeurIPS2024 D&B,14,2,1.0,True,akhaliq,2024-06-19
+2403.08629,,0.0,,0.0,0.0,0.0,Scaling Up Dynamic Human-Scene Interaction Modeling,,,CVPR2024,14,1,0.0,False,akhaliq,2024-03-14
+2408.16245,https://huggingface.co/WeiHua/OmniBioTE/discussions/1,1.0,,1.0,0.0,0.0,Large-Scale Multi-omic Biosequence Transformers for Modeling Peptide-Nucleotide Interactions,https://github.com/nyuolab/omnibiote,,,4,1,0.0,True,IAMJB,2024-09-02
+2406.19238,,0.0,,0.0,1.0,0.0,Revealing Fine-Grained Values and Opinions in Large Language Models,https://github.com/copenlu/llm-pct-tropes,,,14,1,1.0,True,dwright37,2024-07-03
+2411.18363,,,,1.0,0.0,0.0,ChatRex: Taming Multimodal LLM for Joint Perception and Understanding,https://github.com/idea-research/chatrex,38.0,,9,3,0.0,True,Mountchicken,2024-11-28
+2408.11721,https://github.com/ozzafar/count_token_optimization/pull/1,,,0.0,0.0,0.0,Iterative Object Count Optimization for Text-to-image Diffusion Models,,,,4,2,0.0,False,Idan,2024-08-22
+2407.03169,,0.0,,0.0,0.0,0.0,Investigating Decoder-only Large Language Models for Speech-to-text Translation,,,,9,1,0.0,False,chaoweihuang,2024-07-04
+2310.20550,,0.0,,0.0,0.0,0.0,CapsFusion: Rethinking Image-Text Data at Scale,https://github.com/baaivision/capsfusion,192.0,CVPR2024,25,2,1.0,False,akhaliq,2023-11-01
+2409.05152,https://github.com/zjunlp/OneGen/issues/4,,,0.0,0.0,0.0,OneGen: Efficient One-Pass Unified Generation and Retrieval for LLMs,https://github.com/zjunlp/onegen,137.0,EMNLP2024,26,2,0.0,False,Ningyu,2024-09-10
+2401.13974,,0.0,,0.0,0.0,0.0,BootPIG: Bootstrapping Zero-shot Personalized Image Generation Capabilities in Pretrained Diffusion Models,https://github.com/SalesforceAIResearch/bootpig,,,12,1,1.0,False,akhaliq,2024-01-26
+2408.07009,,,,0.0,1.0,0.0,Imagen 3,,,,57,8,0.0,True,akhaliq,2024-08-14
+2407.12982,,0.0,,0.0,0.0,0.0,Retrieval-Enhanced Machine Learning: Synthesis and Opportunities,,,,5,2,0.0,False,mrdrozdov,2024-07-19
+2410.04081,,,no code,0.0,0.0,0.0,ε-VAE: Denoising as Visual Decoding,,,,6,2,0.0,False,garyzhao9012,2024-10-09
+2408.06292,,,,0.0,0.0,0.0,The AI Scientist: Towards Fully Automated Open-Ended Scientific Discovery,https://github.com/sakanaai/ai-scientist,7815.0,,95,5,0.0,False,akhaliq,2024-08-13
+2407.04952,,0.0,,0.0,0.0,0.0,Granular Privacy Control for Geolocation with Vision Language Models,https://github.com/ethanm88/GPTGeoChat,6.0,EMNLP2024,4,1,0.0,False,emendes3,2024-07-08
+2403.14613,,0.0,,0.0,1.0,0.0,DreamReward: Text-to-3D Generation with Human Preference,https://github.com/liuff19/DreamReward,112.0,,34,2,0.0,True,akhaliq,2024-03-22
+2412.02030,,,,1.0,0.0,4.0,NitroFusion: High-Fidelity Single-Step Diffusion through Dynamic Adversarial Training,,,,17,2,0.0,True,ChenDY,2024-12-05
+2408.04619,,,,0.0,0.0,0.0,Transformer Explainer: Interactive Learning of Text-Generative Models,,,,143,6,0.0,False,akhaliq,2024-08-09
+2402.02791,,0.0,,0.0,0.0,0.0,Rethinking Optimization and Architecture for Tiny Language Models,https://github.com/yuchuantian/rethinktinylm,115.0,,12,1,1.0,False,akhaliq,2024-02-06
+2411.14347,,,no code,0.0,0.0,0.0,DINO-X: A Unified Vision Model for Open-World Object Detection and Understanding,https://github.com/idea-research/dino-x-api,,,10,2,0.0,False,EvanTHU,2024-11-22
+2310.12404,,0.0,,0.0,0.0,0.0,Loop Copilot: Conducting AI Ensembles for Music Generation and Iterative Editing,https://github.com/ldzhangyx/loop-copilot,,,15,1,0.0,False,akhaliq,2023-10-20
+2407.19835,https://huggingface.co/datasets/mohamed-khalil/ATHAR/discussions/2/files,0.0,,0.0,1.0,0.0,ATHAR: A High-Quality and Diverse Dataset for Classical Arabic to English Translation,,,,19,1,0.0,True,IAMJB,2024-07-30
+2407.05528,,0.0,,0.0,0.0,0.0,An accurate detection is not all you need to combat label noise in web-noisy datasets,,,ECCV2024,3,1,0.0,False,PAlbert31,2024-07-11
+2407.11282,,0.0,,0.0,0.0,0.0,Uncertainty is Fragile: Manipulating Uncertainty in Large Language Models,https://github.com/qcznlp/uncertainty_attack,11.0,,1,2,0.0,False,Mingyu111,2024-07-17
+2405.10370,,0.0,,0.0,1.0,0.0,Grounded 3D-LLM with Referent Tokens,https://github.com/OpenRobotLab/Grounded_3D-LLM,86.0,,9,1,1.0,True,akhaliq,2024-05-20
+2408.09702,,,,0.0,0.0,0.0,Photorealistic Object Insertion with Diffusion-Guided Inverse Rendering,,,ECCV2024,9,2,0.0,False,akhaliq,2024-08-20
+2412.08629,,,,0.0,0.0,0.0,FlowEdit: Inversion-Free Text-Based Editing Using Pre-Trained Flow Models,,,,7,2,0.0,False,Inbarhub,2024-12-12
+2412.02687,,,no code yet,0.0,0.0,0.0,SNOOPI: Supercharged One-step Diffusion Distillation with Proper Guidance,,,,105,2,0.0,False,viettmab,2024-12-05
+2410.04932,https://huggingface.co/lilelife/OmniBooth/discussions/1,,,0.0,0.0,0.0,OmniBooth: Learning Latent Control for Image Synthesis with Multi-modal Instruction,,,,8,2,0.0,False,lilelife,2024-10-08
+2312.02663,,0.0,,0.0,0.0,0.0,FaceStudio: Put Your Face Everywhere in Seconds,https://github.com/xyynafc/FaceStudio,310.0,,30,1,0.0,False,akhaliq,2023-12-06
+2404.08197,,0.0,,0.0,0.0,0.0,"Scaling (Down) CLIP: A Comprehensive Analysis of Data, Architecture, and Training Strategies",,,,27,1,0.0,False,akhaliq,2024-04-15
+2402.04177,,0.0,,0.0,0.0,0.0,Scaling Laws for Downstream Task Performance of Large Language Models,,,,17,4,0.0,False,akhaliq,2024-02-07
+2312.00845,,0.0,,0.0,0.0,0.0,VMC: Video Motion Customization using Temporal Attention Adaption for Text-to-Video Diffusion Models,,,CVPR2024,36,3,0.0,False,akhaliq,2023-12-05
+2402.14905,,0.0,,2.0,0.0,0.0,MobileLLM: Optimizing Sub-billion Parameter Language Models for On-Device Use Cases,https://github.com/facebookresearch/mobilellm,,,106,10,1.0,True,akhaliq,2024-02-26
+2404.01856,,0.0,,2.0,0.0,2.0,Poro 34B and the Blessing of Multilinguality,,,,12,1,0.0,True,akhaliq,2024-04-03
+2406.04268,,0.0,,0.0,0.0,0.0,Open-Endedness is Essential for Artificial Superhuman Intelligence,,,,11,1,0.0,False,akhaliq,2024-06-07
+2412.05355,https://github.com/gemlab-vt/motionshop/issues/3,,,0.0,0.0,0.0,MotionShop: Zero-Shot Motion Transfer in Video Diffusion Models with Mixture of Score Guidance,,,,6,2,0.0,False,Hidir,2024-12-10
+2406.19741,,0.0,,0.0,0.0,0.0,ROS-LLM: A ROS framework for embodied AI with task feedback and structured reasoning,https://github.com/huawei-noah/hebo,3260.0,,57,3,0.0,False,hba123,2024-07-02
+2308.02560,,0.0,,0.0,0.0,82.0,From Discrete Tokens to High-Fidelity Audio Using Multi-Band Diffusion,,,NeurIPS2023,4,0,0.0,True,akhaliq,2023-08-08
+2407.06397,,0.0,,0.0,0.0,0.0,RRM: Relightable assets using Radiance guided Material extraction,,,,4,2,0.0,False,Jovphi,2024-07-15
+2307.13101,,0.0,,0.0,0.0,0.0,Contrastive Example-Based Control,https://github.com/khatch31/laeo,,,4,0,0.0,False,akhaliq,2023-07-26
+2409.11393,,,no artifacts,0.0,0.0,0.0,LLM-Agent-UMF: LLM-based Agent Unified Modeling Framework for Seamless Integration of Multi Active/Passive Core-Agents,,,,2,2,0.0,False,amine-bh,2024-09-23
+2306.05411,,0.0,,0.0,0.0,0.0,R-MAE: Regions Meet Masked Autoencoders,https://github.com/facebookresearch/r-mae,108.0,,2,0,0.0,False,akhaliq,2023-06-09
+2306.10231,,0.0,,0.0,0.0,0.0,GLIMMER: generalized late-interaction memory reranker,,,,7,0,0.0,False,akhaliq,2023-06-21
+2403.02884,,0.0,,9.0,8.0,0.0,MathScale: Scaling Instruction Tuning for Mathematical Reasoning,,,,15,2,0.0,True,akhaliq,2024-03-06
+2307.08674,,0.0,,0.0,0.0,0.0,"TableGPT: Towards Unifying Tables, Nature Language and Commands into One GPT",,,,47,5,0.0,False,akhaliq,2023-07-18
+2410.14596,https://huggingface.co/esteng/pbt_mistral_7B/discussions/1,,,3.0,0.0,0.0,Teaching Models to Balance Resisting and Accepting Persuasion,https://github.com/esteng/persuasion_balanced_training,,,2,2,1.0,True,esteng,2024-10-21
+2312.09390,,0.0,,0.0,0.0,0.0,Weak-to-Strong Generalization: Eliciting Strong Capabilities With Weak Supervision,,,,32,1,0.0,False,akhaliq,2023-12-18
+2306.14846,,0.0,,0.0,0.0,0.0,ViNT: A Foundation Model for Visual Navigation,,,,5,0,0.0,False,akhaliq,2023-06-27
+2403.13447,,0.0,,0.0,0.0,0.0,HyperLLaVA: Dynamic Visual and Language Expert Tuning for Multimodal Large Language Models,https://github.com/dcdmllm/hyperllava,28.0,,17,1,0.0,False,akhaliq,2024-03-21
+2305.06474,,0.0,,0.0,0.0,0.0,Do LLMs Understand User Preferences? Evaluating LLMs On User Rating Prediction,,,,1,0,0.0,False,akhaliq,2023-05-12
+2405.18144,,0.0,,0.0,0.0,0.0,4-bit Shampoo for Memory-Efficient Network Training,https://github.com/sike-wang/low-bit-shampoo,4.0,NeurIPS2024,7,1,0.0,False,akhaliq,2024-06-03
+2307.01952,,0.0,,51.0,0.0,100.0,SDXL: Improving Latent Diffusion Models for High-Resolution Image Synthesis,https://github.com/stability-ai/generative-models,24367.0,,79,6,1.0,True,akhaliq,2023-07-06
+2405.17405,,0.0,,0.0,0.0,0.0,Human4DiT: Free-view Human Video Generation with 4D Diffusion Transformer,,,,14,0,0.0,False,akhaliq,2024-05-28
+2309.03903,,0.0,,0.0,0.0,0.0,Tracking Anything with Decoupled Video Segmentation,https://github.com/hkchengrex/Tracking-Anything-with-DEVA,,,27,2,0.0,False,akhaliq,2023-09-08
+2407.14679,,0.0,,17.0,0.0,8.0,Compact Language Models via Pruning and Knowledge Distillation,https://github.com/nvlabs/minitron,283.0,NeurIPS2024,35,2,1.0,True,srvm,2024-07-23
+2406.16772,,0.0,,0.0,0.0,0.0,OlympicArena Medal Ranks: Who Is the Most Intelligent AI So Far?,https://github.com/gair-nlp/olympicarena,84.0,,2,2,1.0,False,SinclairWang,2024-06-25
+2312.02179,,0.0,,0.0,0.0,0.0,Training Chain-of-Thought via Latent-Variable Inference,,,NeurIPS2023,8,0,0.0,False,akhaliq,2023-12-06
+2407.08250,,0.0,,0.0,0.0,0.0,Gradient Boosting Reinforcement Learning,https://github.com/nvlabs/gbrl_sb3,82.0,,10,2,0.0,False,akhaliq,2024-07-12
+2403.12957,,0.0,,1.0,0.0,0.0,GVGEN: Text-to-3D Generation with Volumetric Representation,,,ECCV2024,5,1,0.0,True,akhaliq,2024-03-20
+2402.05932,,0.0,,0.0,0.0,0.0,Driving Everywhere with Large Language Model Policy Adaptation,,,CVPR2024,3,1,0.0,False,akhaliq,2024-02-09
+2412.08486,,,,1.0,0.0,1.0,Learning Flow Fields in Attention for Controllable Person Image Generation,https://github.com/franciszzj/leffa,,,14,2,1.0,True,franciszzj,2024-12-12
+2403.13043,,0.0,,1.0,0.0,0.0,When Do We Not Need Larger Vision Models?,https://github.com/bfshi/scaling_on_scales,328.0,ECCV2024,25,2,1.0,True,akhaliq,2024-03-21
+2312.12487,,0.0,,0.0,0.0,0.0,Adaptive Guidance: Training-free Acceleration of Conditional Diffusion Models,,,,9,0,0.0,False,akhaliq,2023-12-21
+2409.18313,,,no code yet,0.0,0.0,0.0,Embodied-RAG: General non-parametric Embodied Memory for Retrieval and Generation,,,,3,2,0.0,False,Quanting,2024-10-02
+2408.04034,https://huggingface.co/spaces/li-qing/SG3D-Demo/discussions/2,,,0.0,0.0,1.0,Task-oriented Sequential Grounding in 3D Scenes,,,,8,2,0.0,True,akhaliq,2024-08-09
+2405.16822,,0.0,,0.0,0.0,0.0,Vidu4D: Single Generated Video to High-Fidelity 4D Reconstruction with Dynamic Gaussian Surfels,,,NeurIPS2024,11,3,0.0,False,akhaliq,2024-05-28
+2306.01736,,0.0,,0.0,0.0,0.0,DaTaSeg: Taming a Universal Multi-Dataset Multi-Task Segmentation Model,,,NeurIPS2023,1,0,0.0,False,akhaliq,2023-06-05
+2404.18243,,0.0,,0.0,0.0,0.0,LEGENT: Open Platform for Embodied Agents,,,ACL2024,21,1,0.0,False,akhaliq,2024-04-30
+2308.04430,,0.0,,0.0,0.0,0.0,SILO Language Models: Isolating Legal Risk In a Nonparametric Datastore,https://github.com/kernelmachine/silo-lm,80.0,NeurIPS2024,9,0,1.0,False,akhaliq,2023-08-09
+2407.17453,,0.0,,0.0,0.0,0.0,VILA^2: VILA Augmented VILA,,,,38,6,0.0,False,Seerkfang,2024-07-25
+2412.08580,,,,0.0,1.0,0.0,LAION-SG: An Enhanced Large-Scale Dataset for Training Complex Image-Text Models with Structural Annotations,,,,25,2,0.0,True,SYZhang0805,2024-12-12
+2311.08469,,0.0,,0.0,1.0,0.0,UNcommonsense Reasoning: Abductive Reasoning about Uncommon Situations,,,NAACL2023,10,0,0.0,True,akhaliq,2023-11-16
+2410.22330,https://huggingface.co/datasets/g-luo/task_vectors_are_cross_modal/discussions/2,,,0.0,0.0,0.0,Task Vectors are Cross-Modal,,,,10,2,0.0,False,g-luo,2024-10-30
+2406.12292,,0.0,,0.0,0.0,0.0,JEN-1 DreamStyler: Customized Musical Concept Learning via Pivotal Parameters Tuning,,,,4,2,0.0,False,akhaliq,2024-06-19
+2310.17022,,0.0,,0.0,0.0,0.0,Controlled Decoding from Language Models,,,NeurIPS2024,14,2,0.0,False,akhaliq,2023-10-27
+2404.13358,,0.0,,0.0,0.0,0.0,Music Consistency Models,,,,12,3,0.0,False,akhaliq,2024-04-23
+2407.07176,,0.0,,0.0,0.0,0.0,Scaling Up Personalized Aesthetic Assessment via Task Vector Customization,,,ECCV2024,3,2,0.0,False,YeolJoo,2024-07-12
+2404.01367,,0.0,,0.0,0.0,0.0,Bigger is not Always Better: Scaling Properties of Latent Diffusion Models,,,,19,1,0.0,False,akhaliq,2024-04-03
+2305.03695,,0.0,,1.0,1.0,1.0,Vera: A General-Purpose Plausibility Estimation Model for Commonsense Statements,https://github.com/liujch1998/vera,13.0,EMNLP2023,3,0,1.0,True,akhaliq,2023-05-08
+2306.17806,,0.0,,0.0,0.0,0.0,Stay on topic with Classifier-Free Guidance,,,,27,3,0.0,False,akhaliq,2023-07-03
+2407.02392,,0.0,,0.0,0.0,0.0,TokenPacker: Efficient Visual Projector for Multimodal LLM,https://github.com/circleradon/tokenpacker,171.0,,21,3,1.0,False,sunshine-lwt,2024-07-04
+2309.06441,,0.0,,0.0,0.0,0.0,Learning Disentangled Avatars with Hybrid 3D Representations,,,,4,0,0.0,False,akhaliq,2023-09-13
+2402.16671,,0.0,,6.0,2.0,1.0,StructLM: Towards Building Generalist Models for Structured Knowledge Grounding,,,COLM2024,26,1,0.0,True,akhaliq,2024-02-27
+2409.10568,,,,0.0,0.0,0.0,On the limits of agency in agent-based models,https://github.com/agenttorch/agenttorch,,,12,2,0.0,False,akhaliq,2024-09-18
+2404.03413,,0.0,,1.0,0.0,2.0,MiniGPT4-Video: Advancing Multimodal LLMs for Video Understanding with Interleaved Visual-Textual Tokens,https://github.com/Vision-CAIR/MiniGPT4-video,542.0,,25,1,1.0,True,akhaliq,2024-04-05
+2402.09668,,0.0,,0.0,15.0,0.0,How to Train Data-Efficient LLMs,,,,38,3,0.0,True,akhaliq,2024-02-16
+2305.11129,,0.0,,3.0,0.0,0.0,mLongT5: A Multilingual and Efficient Text-To-Text Transformer for Longer Sequences,https://github.com/google-research/longt5,178.0,EMNLP2023,2,1,0.0,True,akhaliq,2023-05-19
+2410.05076,,,no artifacts,0.0,0.0,0.0,TidalDecode: Fast and Accurate LLM Decoding with Position Persistent Sparse Attention,,,,6,2,0.0,False,JackFram,2024-10-09
+2306.12925,,0.0,,0.0,0.0,0.0,AudioPaLM: A Large Language Model That Can Speak and Listen,,,,52,5,0.0,False,akhaliq,2023-06-23
+2403.02084,,0.0,,1.0,0.0,2.0,ResAdapter: Domain Consistent Resolution Adapter for Diffusion Models,https://github.com/bytedance/res-adapter,729.0,,13,1,1.0,True,akhaliq,2024-03-05
+2407.14329,,0.0,,2.0,0.0,2.0,Efficient Audio Captioning with Encoder-Level Knowledge Distillation,,,,4,2,0.0,True,akhaliq,2024-07-22
+2307.12981,,0.0,,0.0,1.0,0.0,3D-LLM: Injecting the 3D World into Large Language Models,,,NeurIPS2023,35,3,0.0,True,akhaliq,2023-07-25
+2311.10982,,0.0,,0.0,0.0,0.0,Make Pixels Dance: High-Dynamic Video Generation,,,CVPR2024,67,5,0.0,False,akhaliq,2023-11-21
+2405.14105,,0.0,,0.0,0.0,0.0,Distributed Speculative Inference of Large Language Models,,,,15,0,0.0,False,akhaliq,2024-05-24
+2410.11711,,,,0.0,0.0,0.0,Zero-shot Model-based Reinforcement Learning using Large Language Models,https://github.com/abenechehab/dicl,10.0,,7,3,0.0,False,abenechehab,2024-10-22
+2407.20171,,0.0,,1.0,0.0,0.0,Diffusion Feedback Helps CLIP See Better,https://github.com/baaivision/DIVA,209.0,,34,2,0.0,True,akhaliq,2024-07-30
+2312.13964,,0.0,,0.0,0.0,1.0,PIA: Your Personalized Image Animator via Plug-and-Play Modules in Text-to-Image Models,https://github.com/open-mmlab/PIA,894.0,CVPR2024,18,1,1.0,True,akhaliq,2023-12-22
+2310.00898,,0.0,,0.0,0.0,0.0,Enable Language Models to Implicitly Learn Self-Improvement From Data,,,,22,2,0.0,False,akhaliq,2023-10-03
+2409.11242,,,,0.0,1.0,0.0,Measuring and Enhancing Trustworthiness of LLMs in RAG through Grounded Attributions and Learning to Refuse,https://github.com/declare-lab/trust-align,22.0,,4,2,1.0,True,soujanyaporia,2024-09-18
+2407.02477,,0.0,,0.0,0.0,0.0,Understanding Alignment in Multimodal LLMs: A Comprehensive Study,,,,21,2,0.0,False,j4kn,2024-07-03
+2401.05583,,0.0,,0.0,0.0,0.0,Diffusion Priors for Dynamic View Synthesis from Monocular Videos,,,,7,0,0.0,False,akhaliq,2024-01-12
+2404.04478,,0.0,,0.0,0.0,0.0,Diffusion-RWKV: Scaling RWKV-Like Architectures for Diffusion Models,https://github.com/feizc/diffusion-rwkv,115.0,,12,0,1.0,False,akhaliq,2024-04-09
+2410.04808,,,no code,0.0,0.0,0.0,LPZero: Language Model Zero-cost Proxy Search from Zero,,,EMNLP2024,2,2,0.0,False,pprp,2024-10-11
+2411.08768,,,no code,0.0,0.0,0.0,Sharingan: Extract User Action Sequence from Desktop Recordings,,,,8,2,0.0,False,JueZhang,2024-11-15
+2406.16747,,0.0,,0.0,0.0,0.0,Sparser is Faster and Less is More: Efficient Sparse Attention for Long-Range Transformers,,,,17,1,0.0,False,zlzheng,2024-06-25
+2404.07979,,0.0,,5.0,0.0,0.0,LLoCO: Learning Long Contexts Offline,https://github.com/jeffreysijuntan/lloco,108.0,EMNLP2024,19,2,1.0,True,akhaliq,2024-04-12
+2409.20551,https://huggingface.co/SiyuanH/UniAff-13B/discussions/1,,,0.0,0.0,0.0,UniAff: A Unified Representation of Affordances for Tool Usage and Articulation with Vision-Language Models,,,,13,2,0.0,False,SiyuanH,2024-10-01
+2410.18745,,,no artifacts,0.0,0.0,0.0,Why Does the Effective Context Length of LLMs Fall Short?,,,,15,3,0.0,False,Chancy,2024-10-25
+2408.06941,,,,0.0,0.0,0.0,OpenResearcher: Unleashing AI for Accelerated Scientific Research,https://github.com/gair-nlp/openresearcher,408.0,EMNLP2024,28,4,1.0,False,akhaliq,2024-08-14
+2406.06523,,0.0,,0.0,0.0,3.0,NaRCan: Natural Refined Canonical Image with Integration of Diffusion Prior for Video Editing,https://github.com/koi953215/NaRCan,135.0,NeurIPS2024,50,2,0.0,True,yulunliu,2024-06-13
+2411.10669,https://huggingface.co/MetabrainAGI/Awaker2.5-VL/discussions/1,,,0.0,0.0,0.0,Awaker2.5-VL: Stably Scaling MLLMs with Parameter-Efficient Mixture of Experts,https://github.com/metabrainagi/awaker,19.0,,9,2,1.0,False,akhaliq,2024-11-19
+2411.17467,,,,0.0,1.0,0.0,Learning 3D Representations from Procedural 3D Programs,,,,8,2,0.0,True,Xuweiyi,2024-11-27
+2403.10242,,0.0,,0.0,0.0,0.0,FDGaussian: Fast Gaussian Splatting from Single Image via Geometric-aware Diffusion Model,,,,10,2,0.0,False,akhaliq,2024-03-18
+2402.04141,,0.0,,0.0,0.0,0.0,Multi-line AI-assisted Code Authoring,,,,9,2,0.0,False,akhaliq,2024-02-07
+2309.07749,,0.0,,0.0,0.0,0.0,OmnimatteRF: Robust Omnimatte with 3D Background Modeling,https://github.com/facebookresearch/OmnimatteRF,,,7,0,0.0,False,akhaliq,2023-09-15
+2406.08657,,0.0,,1.0,0.0,0.0,Mistral-C2F: Coarse to Fine Actor for Analytical and Reasoning Enhancement in RLHF and Effective-Merged LLMs,,,,9,2,0.0,True,akhaliq,2024-06-14
+2408.03256,,,,0.0,0.0,0.0,Synthesizing Text-to-SQL Data from Weak and Strong LLMs,,,ACL2024,8,2,0.0,False,davanstrien,2024-08-07
+2410.07062,,,,4.0,3.0,0.0,TinyEmo: Scaling down Emotional Reasoning via Metric Projection,https://github.com/ggcr/tinyemo,4.0,,3,2,1.0,True,ggcristian,2024-10-10
+2305.03514,,0.0,,0.0,0.0,0.0,Can Large Language Models Transform Computational Social Science?,https://github.com/salt-nlp/llms_for_css,,,1,0,1.0,False,akhaliq,2023-05-08
+2407.02371,,0.0,,1.0,1.0,0.0,OpenVid-1M: A Large-Scale High-Quality Dataset for Text-to-video Generation,,,,49,4,0.0,True,yingtai,2024-07-03
+2402.05099,,0.0,,0.0,0.0,0.0,Hydragen: High-Throughput LLM Inference with Shared Prefixes,https://github.com/jordan-benjamin/hydragen,,,17,3,1.0,False,akhaliq,2024-02-08
+2412.03548,,,,0.0,0.0,0.0,Perception Tokens Enhance Visual Reasoning in Multimodal Language Models,,,,13,2,0.0,False,shuaishuaicdp,2024-12-11
+2309.10818,,0.0,,1.0,1.0,0.0,SlimPajama-DC: Understanding Data Combinations for LLM Training,https://github.com/cerebras/modelzoo,,,10,1,0.0,True,akhaliq,2023-09-20
+2311.10090,,0.0,,0.0,0.0,0.0,JaxMARL: Multi-Agent RL Environments in JAX,https://github.com/flairox/jaxmarl,413.0,NeurIPS2024 D&B,6,0,0.0,False,akhaliq,2023-11-17
+2309.00775,,0.0,,0.0,0.0,0.0,Contrastive Feature Masking Open-Vocabulary Vision Transformer,,,,8,0,0.0,False,akhaliq,2023-09-06
+2311.08581,,0.0,,0.0,0.0,0.0,Drivable 3D Gaussian Avatars,,,,46,3,0.0,False,akhaliq,2023-11-16
+2408.12601,,,,0.0,0.0,0.0,DreamCinema: Cinematic Transfer with Free Camera and 3D Character,,,,25,2,0.0,False,Liuff23,2024-08-23
+2401.06066,,0.0,,24.0,0.0,18.0,DeepSeekMoE: Towards Ultimate Expert Specialization in Mixture-of-Experts Language Models,https://github.com/deepseek-ai/deepseek-moe,982.0,ACL2024,41,2,1.0,True,akhaliq,2024-01-12
+2309.04247,,0.0,,0.0,0.0,0.0,Towards Practical Capture of High-Fidelity Relightable Avatars,,,,9,0,0.0,False,akhaliq,2023-09-11
+2305.11854,,0.0,,0.0,0.0,0.0,Multimodal Web Navigation with Instruction-Finetuned Foundation Models,,,,3,0,0.0,False,akhaliq,2023-05-22
+2310.15511,,0.0,,0.0,1.0,0.0,KITAB: Evaluating LLMs on Constraint Satisfaction for Information Retrieval,https://huggingface.co/datasets/microsoft/kitab,,,4,1,0.0,True,akhaliq,2023-10-25
+2402.19481,,0.0,,0.0,0.0,0.0,DistriFusion: Distributed Parallel Inference for High-Resolution Diffusion Models,https://github.com/mit-han-lab/distrifuser,567.0,CVPR2024,20,1,1.0,False,akhaliq,2024-03-01
+2308.07922,,0.0,,0.0,0.0,0.0,RAVEN: In-Context Learning with Retrieval Augmented Encoder-Decoder Language Models,https://github.com/jeffhj/raven,4.0,COLM2024,17,1,1.0,False,akhaliq,2023-08-16
+2408.03326,,,,12.0,2.0,1.0,LLaVA-OneVision: Easy Visual Task Transfer,,,,54,2,0.0,True,akhaliq,2024-08-07
+2310.10645,,0.0,,0.0,0.0,0.0,Interactive Task Planning with Language Models,,,,10,1,0.0,False,akhaliq,2023-10-17
+2404.04465,,0.0,,1.0,0.0,0.0,Aligning Diffusion Models by Optimizing Human Utility,https://github.com/jacklishufan/diffusion-kto,26.0,NeurIPS2024,13,1,0.0,True,akhaliq,2024-04-09
+2410.21411,https://github.com/Mengzibin/SocialGPT/issues/1,,,0.0,0.0,0.0,SocialGPT: Prompting LLMs for Social Relation Reasoning via Greedy Segment Optimization,https://github.com/mengzibin/socialgpt,20.0,NeurIPS2024,19,3,1.0,False,EthanTaylor,2024-10-30
+2410.05355,,,,22.0,0.0,9.0,Falcon Mamba: The First Competitive Attention-free 7B Language Model,,,,26,2,0.0,True,alielfilali01,2024-10-10
+2402.14795,,0.0,,0.0,0.0,0.0,CyberDemo: Augmenting Simulated Human Demonstration for Real-World Dexterous Manipulation,,,CVPR2024,5,1,0.0,False,akhaliq,2024-02-23
+2402.15391,,0.0,,3.0,0.0,0.0,Genie: Generative Interactive Environments,,,,70,7,0.0,True,akhaliq,2024-02-26
+2310.03502,,0.0,,0.0,0.0,2.0,Kandinsky: an Improved Text-to-Image Synthesis with Image Prior and Latent Diffusion,https://github.com/ai-forever/Kandinsky-2,2748.0,EMNLP2023,77,5,1.0,True,akhaliq,2023-10-06
+2305.16291,,0.0,,0.0,0.0,0.0,Voyager: An Open-Ended Embodied Agent with Large Language Models,https://github.com/MineDojo/Voyager,5567.0,NeurIPS2023,9,4,0.0,False,akhaliq,2023-05-26
+2410.01463,,,no code,0.0,0.0,0.0,Selective Aggregation for Low-Rank Adaptation in Federated Learning,,,,18,3,0.0,False,gpx333,2024-10-03
+2311.08667,,0.0,,0.0,0.0,0.0,EDMSound: Spectrogram Based Diffusion Models for Efficient and High-Quality Audio Synthesis,,,,18,1,0.0,False,akhaliq,2023-11-16
+2312.07843,,0.0,,0.0,0.0,0.0,"Foundation Models in Robotics: Applications, Challenges, and the Future",https://github.com/robotics-survey/awesome-robotics-foundation-models,875.0,,14,0,0.0,False,akhaliq,2023-12-14
+2312.14233,,0.0,,0.0,0.0,2.0,VCoder: Versatile Vision Encoders for Multimodal Large Language Models,https://github.com/shi-labs/vcoder,259.0,CVPR2024,15,1,1.0,True,akhaliq,2023-12-26
+2409.15273,https://github.com/yehonathanlitman/MaterialFusion/issues/2,,,0.0,0.0,0.0,MaterialFusion: Enhancing Inverse Rendering with Material Diffusion Priors,,,,9,2,0.0,False,akhaliq,2024-09-24
+2305.05383,,0.0,,0.0,1.0,0.0,Code Execution with Pre-trained Language Models,https://github.com/microsoft/CodeBERT,2207.0,ACL2023,2,1,1.0,True,akhaliq,2023-05-10
+2401.05334,,0.0,,0.0,0.0,0.0,URHand: Universal Relightable Hands,,,CVPR2024,21,0,0.0,False,akhaliq,2024-01-11
+2409.02245,,,,0.0,0.0,0.0,FastVoiceGrad: One-step Diffusion-Based Voice Conversion with Adversarial Conditional Diffusion Distillation,,,,9,2,0.0,False,akhaliq,2024-09-05
+2410.11805,https://huggingface.co/papers/2410.11805#67154f66ade80393bbbfda62,,,0.0,0.0,0.0,NesTools: A Dataset for Evaluating Nested Tool Learning Abilities of Large Language Models,,,,11,2,0.0,False,Spico,2024-10-16
+2307.04008,,0.0,,0.0,0.0,0.0,Toward Interactive Dictation,,,ACL2023,3,0,0.0,False,akhaliq,2023-07-11
+2407.20267,,0.0,,2.0,0.0,0.0,A Large Encoder-Decoder Family of Foundation Models For Chemical Language,https://huggingface.co/ibm/materials.smi-ted,,,31,2,0.0,True,eduardosoares99,2024-07-31
+2406.05649,,0.0,,0.0,0.0,0.0,GTR: Improving Large 3D Reconstruction Models through Geometry and Texture Refinement,,,,7,0,0.0,False,akhaliq,2024-06-11
+2402.07939,,0.0,,0.0,0.0,0.0,UFO: A UI-Focused Agent for Windows OS Interaction,https://github.com/microsoft/UFO,7734.0,,13,3,0.0,False,akhaliq,2024-02-14
+2412.04003,,,no code,0.0,0.0,0.0,Marco-LLM: Bridging Languages via Massive Multilingual Training for Cross-Lingual Enhancement,,,,9,2,0.0,False,akhaliq,2024-12-06
+2404.01954,,0.0,,0.0,0.0,0.0,HyperCLOVA X Technical Report,,,,19,1,0.0,False,akhaliq,2024-04-03
+2306.04009,,0.0,,0.0,0.0,0.0,Triggering Multi-Hop Reasoning for Question Answering in Language Models using Soft Prompts and Random Walks,,,ACL2023,1,0,0.0,False,akhaliq,2023-06-08
+2411.19655,,,,0.0,6.0,0.0,Truth or Mirage? Towards End-to-End Factuality Evaluation with LLM-OASIS,https://github.com/Babelscape/LLM-Oasis,,,18,2,1.0,True,PereLluis13,2024-12-04
+2407.03618,,0.0,,3.0,0.0,0.0,BM25S: Orders of magnitude faster lexical search via eager sparse scoring,https://github.com/xhluca/bm25s,820.0,,10,1,1.0,True,xhluca,2024-07-10
+2404.06507,,0.0,,0.0,0.0,0.0,Reconstructing Hand-Held Objects in 3D,,,,5,0,0.0,False,akhaliq,2024-04-10
+2410.01647,,,,0.0,0.0,0.0,3DGS-DET: Empower 3D Gaussian Splatting with Boundary Guidance and Box-Focused Sampling for 3D Object Detection,https://github.com/yangcaoai/3dgs-det,,,6,2,0.0,False,YangCaoCS,2024-10-03
+2311.12024,,0.0,,0.0,0.0,0.0,PF-LRM: Pose-Free Large Reconstruction Model for Joint Pose and Shape Prediction,,,,18,3,0.0,False,akhaliq,2023-11-22
+2305.02549,,0.0,,0.0,0.0,0.0,FormNetV2: Multimodal Graph Contrastive Learning for Form Document Information Extraction,,,ACL2023,6,2,0.0,False,akhaliq,2023-05-05
+2307.04751,,0.0,,0.0,0.0,0.0,"Shelving, Stacking, Hanging: Relational Pose Diffusion for Multi-modal Rearrangement",,,,3,0,0.0,False,akhaliq,2023-07-11
+2411.12946,,,,2.0,1.0,1.0,A Flexible Large Language Models Guardrail Development Methodology Applied to Off-Topic Prompt Detection,,,,20,2,0.0,True,gabrielchua,2024-11-25
+2402.08939,,0.0,,0.0,0.0,0.0,Premise Order Matters in Reasoning with Large Language Models,,,,24,3,0.0,False,akhaliq,2024-02-15
+2403.09394,,0.0,,1.0,0.0,0.0,GiT: Towards Generalist Vision Transformer through Universal Language Interface,https://github.com/haiyang-w/git,297.0,ECCV2024,25,6,1.0,True,akhaliq,2024-03-15
+2406.04151,,0.0,,1.0,0.0,0.0,AgentGym: Evolving Large Language Model-based Agents across Diverse Environments,https://github.com/woooodyy/agentgym,330.0,,17,1,1.0,True,akhaliq,2024-06-07
+2308.04265,,0.0,,0.0,0.0,0.0,FLIRT: Feedback Loop In-context Red Teaming,,,EMNLP2024,12,0,0.0,False,akhaliq,2023-08-09
+2412.09593,,,,0.0,0.0,0.0,Neural LightRig: Unlocking Accurate Object Normal and Material Estimation with Multi-Light Diffusion,,,,14,3,0.0,False,zxhezexin,2024-12-13
+2404.00345,,0.0,,0.0,0.0,0.0,"MaGRITTe: Manipulative and Generative 3D Realization from Image, Topview and Text",,,,16,10,0.0,False,akhaliq,2024-04-02
+2411.12275,,,no code,0.0,0.0,0.0,"Building Trust: Foundations of Security, Safety and Transparency in AI",,,,10,2,0.0,False,huzaifas-sidhpurwala,2024-11-20
+2406.15193,,0.0,,0.0,0.0,0.0,Reward Steering with Evolutionary Heuristics for Decoding-time Alignment,https://github.com/declare-lab/darwin,,,12,3,0.0,False,hungchiayu,2024-06-24
+2406.17513,,0.0,,0.0,0.0,0.0,Benchmarking Mental State Representations in Language Models,,,,3,1,0.0,False,mb22222,2024-06-28
+2309.10668,,0.0,,0.0,0.0,1.0,Language Modeling Is Compression,https://github.com/google-deepmind/language_modeling_is_compression,,,82,7,0.0,True,akhaliq,2023-09-20
+2305.16843,,0.0,,0.0,0.0,0.0,Randomized Positional Encodings Boost Length Generalization of Transformers,https://github.com/deepmind/randomized_positional_encodings,79.0,ACL2023,2,0,0.0,False,akhaliq,2023-05-29
+2408.14849,https://huggingface.co/HannaAbiAkl/shadow/discussions/1,1.0,,1.0,0.0,0.0,Project SHADOW: Symbolic Higher-order Associative Deductive reasoning On Wikidata using LM probing,,,,3,1,0.0,True,IAMJB,2024-08-28
+2410.15316,,,,1.0,0.0,2.0,Ichigo: Mixed-Modal Early-Fusion Realtime Voice Assistant,https://github.com/homebrewltd/ichigo,,,8,4,1.0,True,HoangHa,2024-10-22
+2409.18943,,,no artifacts,0.0,0.0,0.0,Ruler: A Model-Agnostic Method to Control Generated Length for Large Language Models,https://github.com/geaming2002/ruler,15.0,EMNLP2024,26,2,0.0,False,Lemoncoke,2024-10-01
+2403.09629,,0.0,,17.0,0.0,0.0,Quiet-STaR: Language Models Can Teach Themselves to Think Before Speaking,https://github.com/ezelikman/quiet-star,596.0,COLM2024,55,3,1.0,True,akhaliq,2024-03-15
+2410.14940,https://huggingface.co/PKU-Baichuan-MLSystemLab/Llama3-PBM-Nova-70B/discussions/2,,,0.0,0.0,0.0,Baichuan Alignment Technical Report,,,,46,2,0.0,False,lin5547,2024-10-22
+2309.08172,,0.0,,0.0,0.0,0.0,LASER: LLM Agent with State-Space Exploration for Web Navigation,https://github.com/mayer123/laser,31.0,NeurIPS2023,11,0,0.0,False,akhaliq,2023-09-18
+2412.07744,,,,0.0,0.0,0.0,StyleMaster: Stylize Your Video with Artistic Generation and Translation,,,,12,2,0.0,False,zixuan-ye,2024-12-12
+2309.08637,,0.0,,0.0,0.0,0.0,TextBind: Multi-turn Interleaved Multimodal Instruction-following,,,ACL2024,7,0,0.0,False,akhaliq,2023-09-19
+2404.12347,,0.0,,0.0,0.0,0.0,AniClipart: Clipart Animation with Text-to-Video Priors,,,,12,1,0.0,False,akhaliq,2024-04-19
+2410.07171,,,,1.0,0.0,2.0,IterComp: Iterative Composition-Aware Feedback Learning from Model Gallery for Text-to-Image Generation,https://github.com/yangling0818/itercomp,71.0,,41,2,1.0,True,comin,2024-10-10
+2311.13231,,0.0,,0.0,1.0,0.0,Using Human Feedback to Fine-tune Diffusion Models without Any Reward Model,https://github.com/yk7333/d3po,164.0,CVPR2024,26,5,1.0,True,akhaliq,2023-11-23
+2409.12134,,,,0.0,0.0,0.0,BERT-VBD: Vietnamese Multi-Document Summarization Framework,,,,1,1,0.0,False,IAMJB,2024-09-19
+2404.18796,,0.0,,5.0,0.0,0.0,Replacing Judges with Juries: Evaluating LLM Generations with a Panel of Diverse Models,,,,67,3,0.0,True,akhaliq,2024-04-30
+2311.12983,,0.0,,0.0,1.0,0.0,GAIA: a benchmark for General AI Assistants,,,,181,23,0.0,True,akhaliq,2023-11-23
+2404.09656,,0.0,,0.0,0.0,0.0,Learn Your Reference Model for Real Good Alignment,,,,81,0,0.0,False,akhaliq,2024-04-16
+2405.18047,,0.0,,0.0,0.0,0.0,2BP: 2-Stage Backpropagation,,,,22,3,0.0,False,akhaliq,2024-05-29
+2306.11719,,0.0,,0.0,0.0,0.0,Diffusion with Forward Models: Solving Stochastic Inverse Problems Without Direct Supervision,,,NeurIPS2023,7,1,0.0,False,akhaliq,2023-06-21
+2404.03543,,0.0,,0.0,1.0,0.0,CodeEditorBench: Evaluating Code Editing Capability of Large Language Models,,,,15,1,0.0,True,akhaliq,2024-04-05
+2405.20327,,0.0,,0.0,0.0,0.0,GECO: Generative Image-to-3D within a SECOnd,https://github.com/cwchenwang/geco,56.0,,9,0,0.0,False,akhaliq,2024-05-31
+2307.04087,,0.0,,0.0,3.0,0.0,SVIT: Scaling up Visual Instruction Tuning,https://github.com/baai-dcai/visual-instruction-tuning,,,6,0,1.0,True,akhaliq,2023-07-11
+2311.10709,,0.0,,0.0,0.0,0.0,Emu Video: Factorizing Text-to-Video Generation by Explicit Image Conditioning,,,ECCV2024,24,3,0.0,False,akhaliq,2023-11-20
+2408.10446,,,,0.0,0.0,0.0,The Brittleness of AI-Generated Image Watermarking Techniques: Examining Their Robustness Against Visual Paraphrasing Attacks,,,,4,2,0.0,False,amanchadha,2024-08-21
+2405.10314,,0.0,,0.0,0.0,0.0,CAT3D: Create Anything in 3D with Multi-View Diffusion Models,,,NeurIPS2024,43,2,0.0,False,akhaliq,2024-05-17
+2402.16837,,0.0,,0.0,0.0,0.0,Do Large Language Models Latently Perform Multi-Hop Reasoning?,,,ACL2024,24,1,0.0,False,akhaliq,2024-02-27
+2410.08815,,,no code,0.0,0.0,0.0,StructRAG: Boosting Knowledge Intensive Reasoning of LLMs via Inference-time Hybrid Information Structurization,,,,34,2,0.0,False,tnlin,2024-10-14
+2408.14717,,,no artifacts,0.0,0.0,0.0,Text2SQL is Not Enough: Unifying AI and Databases with TAG,https://github.com/tag-research/tag-bench,552.0,,23,2,0.0,False,akhaliq,2024-08-28
+2410.02362,,,no artifacts,0.0,0.0,0.0,"A Comprehensive Survey of Mamba Architectures for Medical Image Analysis: Classification, Segmentation, Restoration and Beyond",https://github.com/madhavaprasath23/awesome-mamba-papers-on-medical-domain,,,16,4,0.0,False,Madddy,2024-10-07
+2312.05431,,0.0,,0.0,0.0,0.0,Efficient Quantization Strategies for Latent Diffusion Models,,,,11,0,0.0,False,akhaliq,2023-12-12
+2306.01061,,0.0,,0.0,0.0,0.0,Reimagining Retrieval Augmented Language Models for Answering Queries,,,ACL2023,1,0,0.0,False,akhaliq,2023-06-05
+2312.01409,,0.0,,0.0,0.0,0.0,Generative Rendering: Controllable 4D-Guided Video Generation with 2D Diffusion Models,,,CVPR2024,8,2,0.0,False,akhaliq,2023-12-05
+2410.12491,,,no code,0.0,0.0,0.0,Insights from the Inverse: Reconstructing LLM Training Goals Through Inverse RL,,,,3,2,0.0,False,skrishna,2024-10-17
+2306.03438,,0.0,,0.0,0.0,0.0,Large Language Models of Code Fail at Completing Code with Potential Bugs,https://github.com/amazon-science/buggy-code-completion,3.0,NeurIPS2023,2,0,0.0,False,akhaliq,2023-06-07
+2305.10018,,0.0,,0.0,0.0,0.0,Transfer Learning for Fine-grained Classification Using Semi-supervised Learning and Visual Transformers,,,,1,0,0.0,False,akhaliq,2023-05-18
+2406.16845,,0.0,,0.0,2.0,0.0,RaTEScore: A Metric for Radiology Report Generation,https://github.com/MAGIC-AI4Med/RaTEScore,33.0,EMNLP2024,4,1,0.0,True,Angelakeke,2024-07-01
+2305.09148,,0.0,,0.0,0.0,0.0,Dual-Alignment Pre-training for Cross-lingual Sentence Embedding,https://github.com/chillingdream/dap,19.0,ACL2023,1,0,0.0,False,akhaliq,2023-05-17
+2405.11252,,0.0,,0.0,0.0,0.0,Dreamer XL: Towards High-Resolution Text-to-3D Generation via Trajectory Score Matching,https://github.com/xingy038/dreamer-xl,51.0,,11,0,0.0,False,akhaliq,2024-05-21
+2412.03555,,,,31.0,0.0,6.0,PaliGemma 2: A Family of Versatile VLMs for Transfer,,,,109,7,0.0,True,osanseviero,2024-12-05
+2305.11738,,0.0,,0.0,0.0,0.0,CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing,https://github.com/microsoft/ProphetNet,688.0,NeurIPS2024,5,0,0.0,False,akhaliq,2023-05-22
+2311.01455,,0.0,,0.0,0.0,0.0,RoboGen: Towards Unleashing Infinite Data for Automated Robot Learning via Generative Simulation,,,,28,2,0.0,False,akhaliq,2023-11-03
+2306.05424,,0.0,,0.0,0.0,0.0,Video-ChatGPT: Towards Detailed Video Understanding via Large Vision and Language Models,https://github.com/mbzuai-oryx/video-chatgpt,1181.0,ACL2024,7,1,1.0,False,akhaliq,2023-06-09
+2306.07941,,0.0,,0.0,0.0,0.0,GPT-Calls: Enhancing Call Segmentation and Tagging by Generating Synthetic Conversations via Large Language Models,,,,3,0,0.0,False,akhaliq,2023-06-14
+2406.02657,,0.0,,0.0,0.0,0.0,Block Transformer: Global-to-Local Language Modeling for Fast Inference,https://github.com/itsnamgyu/block-transformer,130.0,NeurIPS2024,36,1,1.0,False,akhaliq,2024-06-06
+2401.14196,,0.0,,1.0,2.0,0.0,DeepSeek-Coder: When the Large Language Model Meets Programming -- The Rise of Code Intelligence,https://github.com/deepseek-ai/DeepSeek-Coder,6677.0,,45,2,1.0,True,akhaliq,2024-01-26
+2401.05811,,0.0,,0.0,1.0,0.0,"Tuning LLMs with Contrastive Alignment Instructions for Machine Translation in Unseen, Low-resource Languages",,,ACL2024,5,0,0.0,True,akhaliq,2024-01-12
+2411.05003,,,no code,0.0,0.0,0.0,ReCapture: Generative Video Camera Controls for User-Provided Videos using Masked Video Fine-Tuning,,,,64,5,0.0,False,flavoredquark,2024-11-08
+2401.02411,,0.0,,0.0,0.0,0.0,What You See is What You GAN: Rendering Every Pixel for High-Fidelity Geometry in 3D GANs,,,CVPR2024,12,1,0.0,False,akhaliq,2024-01-05
+2411.00771,https://huggingface.co/TeslaYang123/CityGaussian/discussions/1,,,0.0,0.0,0.0,CityGaussianV2: Efficient and Geometrically Accurate Reconstruction for Large-Scale Scenes,,,,9,2,0.0,False,LogicTrainer,2024-11-04
+2307.16686,,0.0,,0.0,0.0,0.0,Guiding Image Captioning Models Toward More Specific Captions,,,,15,2,0.0,False,akhaliq,2023-08-01
+2410.02743,,,no code yet,0.0,0.0,0.0,MA-RLHF: Reinforcement Learning from Human Feedback with Macro Actions,https://github.com/ernie-research/MA-RLHF,0.0,,5,2,0.0,False,cyk1337,2024-10-09
+2410.05210,https://huggingface.co/ytaek-oh/fsc-clip/discussions/1,,,1.0,0.0,0.0,Preserving Multi-Modal Capabilities of Pre-trained VLMs for Improving Vision-Linguistic Compositionality,https://github.com/ytaek-oh/fsc-clip,6.0,EMNLP2024,9,3,1.0,True,ytaek-oh,2024-10-11
+2404.06512,,0.0,,0.0,0.0,0.0,InternLM-XComposer2-4KHD: A Pioneering Large Vision-Language Model Handling Resolutions from 336 Pixels to 4K HD,https://github.com/internlm/internlm-xcomposer,2527.0,NeurIPS2024,29,1,1.0,False,akhaliq,2024-04-10
+2408.09858,,,,0.0,0.0,0.0,ShortCircuit: AlphaZero-Driven Circuit Design,,,,14,2,0.0,False,hba123,2024-08-20
+2308.13404,,0.0,,0.0,0.0,0.0,Relighting Neural Radiance Fields with Shadow and Highlight Hints,https://github.com/iamNCJ/NRHints,,,8,0,0.0,False,akhaliq,2023-08-28
+2312.17161,,0.0,,0.0,0.0,0.0,Restoration by Generation with Constrained Priors,,,CVPR2024,3,2,0.0,False,akhaliq,2023-12-29
+2306.17492,,0.0,,2.0,0.0,0.0,Preference Ranking Optimization for Human Alignment,https://github.com/AlibabaResearch/DAMO-ConvAI/tree/main/PRO,,,6,4,0.0,True,akhaliq,2023-07-03
+2310.10638,,0.0,,1.0,0.0,0.0,In-Context Pretraining: Language Modeling Beyond Document Boundaries,https://github.com/swj0419/in-context-pretraining,,,28,3,0.0,True,akhaliq,2023-10-17
+2312.02980,,0.0,,0.0,0.0,0.0,GPT4Point: A Unified Framework for Point-Language Understanding and Generation,,,CVPR2024,7,0,0.0,False,akhaliq,2023-12-06
+2412.06699,https://huggingface.co/bruiiii/See3D/discussions/1,,,0.0,0.0,0.0,"You See it, You Got it: Learning 3D Creation on Pose-Free Videos at Scale",,,,9,3,0.0,False,xinlongwang,2024-12-10
+2404.01744,,0.0,,3.0,0.0,6.0,Octopus v2: On-device language model for super agent,,,,55,6,0.0,True,akhaliq,2024-04-03
+2401.16467,,0.0,,0.0,0.0,0.0,ReGAL: Refactoring Programs to Discover Generalizable Abstractions,https://github.com/esteng/regal_program_learning,,,8,2,1.0,False,akhaliq,2024-01-31
+2402.05472,,0.0,,0.0,0.0,0.0,Question Aware Vision Transformer for Multimodal Reasoning,,,CVPR2024,7,2,0.0,False,akhaliq,2024-02-09
+2406.07522,,0.0,,0.0,0.0,0.0,Samba: Simple Hybrid State Space Models for Efficient Unlimited Context Language Modeling,https://github.com/sustcsonglin/flash-linear-attention,793.0,,35,2,1.0,False,renll,2024-06-14
+2309.08646,,0.0,,0.0,0.0,0.0,Cure the headache of Transformers via Collinear Constrained Attention,https://github.com/codefuse-ai/Collinear-Constrained-Attention,58.0,ACL2024,12,4,0.0,False,akhaliq,2023-09-19
+2402.03310,,0.0,,0.0,0.0,0.0,V-IRL: Grounding Virtual Intelligence in Real Life,https://github.com/VIRL-Platform/VIRL,311.0,ECCV2024,15,2,0.0,False,akhaliq,2024-02-06
+2402.00867,,0.0,,0.0,0.0,0.0,AToM: Amortized Text-to-Mesh using 2D Diffusion,,,,10,2,0.0,False,akhaliq,2024-02-02
+2402.11929,,0.0,,1.0,0.0,1.0,DiLightNet: Fine-grained Lighting Control for Diffusion-based Image Generation,,,,9,1,0.0,True,akhaliq,2024-02-20
+2311.03354,,0.0,,0.0,0.0,1.0,CoVLM: Composing Visual Entities and Relationships in Large Language Models Via Communicative Decoding,,,,4,0,0.0,True,akhaliq,2023-11-07
+2305.07804,,0.0,,0.0,0.0,0.0,Dr. LLaMA: Improving Small Language Models in Domain-Specific QA via Generative Data Augmentation,,,,2,1,0.0,False,akhaliq,2023-05-16
+2403.15383,,0.0,,0.0,0.0,0.0,ThemeStation: Generating Theme-Aware 3D Assets from Few Exemplars,https://github.com/3DTopia/ThemeStation,204.0,,13,1,1.0,False,akhaliq,2024-03-25
+2305.17144,,0.0,,0.0,0.0,0.0,Ghost in the Minecraft: Generally Capable Agents for Open-World Enviroments via Large Language Models with Text-based Knowledge and Memory,https://github.com/OpenGVLab/GITM,597.0,,2,0,0.0,False,akhaliq,2023-05-30
+2311.12229,,0.0,,1.0,0.0,0.0,NeuroPrompts: An Adaptive Framework to Optimize Prompts for Text-to-Image Generation,https://github.com/intellabs/multimodal_cognitive_ai,,,26,2,0.0,True,akhaliq,2023-11-22
+2302.06555,,0.0,,0.0,2.0,0.0,Do Vision and Language Models Share Concepts? A Vector Space Alignment Study,https://github.com/jiaangli/vlca,,,9,2,1.0,True,akhaliq,2024-07-11
+2401.10225,,0.0,,45.0,2.0,10.0,ChatQA: Building GPT-4 Level Conversational QA Models,,,NeurIPS2024,32,6,0.0,True,akhaliq,2024-01-19
+2404.00656,,0.0,,0.0,0.0,0.0,WavLLM: Towards Robust and Adaptive Speech Large Language Model,https://github.com/microsoft/speecht5,1204.0,EMNLP2024,9,1,0.0,False,akhaliq,2024-04-02
+2409.02095,https://github.com/wbhu/DepthCrafter/issues/3,,,0.0,0.0,0.0,DepthCrafter: Generating Consistent Long Depth Sequences for Open-world Videos,,,,31,2,0.0,False,akhaliq,2024-09-04
+2410.08968,,,,0.0,0.0,0.0,Controllable Safety Alignment: Inference-Time Adaptation to Diverse Safety Requirements,,,,12,2,0.0,False,jackzhang,2024-10-17
+2407.18907,,0.0,,0.0,0.0,0.0,SHIC: Shape-Image Correspondences with no Keypoint Supervision,,,ECCV2024,38,2,0.0,False,akhaliq,2024-07-29
+2305.09641,,0.0,,0.0,0.0,0.0,FitMe: Deep Photorealistic 3D Morphable Model Avatars,,,CVPR2023,3,2,0.0,False,akhaliq,2023-05-17
+2305.11738,,0.0,,0.0,0.0,0.0,CRITIC: Large Language Models Can Self-Correct with Tool-Interactive Critiquing,https://github.com/microsoft/ProphetNet,688.0,NeurIPS2023,5,0,0.0,False,akhaliq,2023-05-22
+2310.12474,,0.0,,0.0,0.0,0.0,Enhancing High-Resolution 3D Generation through Pixel-wise Gradient Clipping,https://github.com/fudan-zvg/pgc-3d,,,5,1,1.0,False,akhaliq,2023-10-20
+2309.12307,,0.0,,27.0,1.0,7.0,LongLoRA: Efficient Fine-tuning of Long-Context Large Language Models,https://github.com/dvlab-research/longlora,2615.0,,85,9,1.0,True,akhaliq,2023-09-22
+2402.17245,,0.0,,2.0,1.0,63.0,Playground v2.5: Three Insights towards Enhancing Aesthetic Quality in Text-to-Image Generation,,,,10,1,0.0,True,akhaliq,2024-02-28
+2408.01584,,,,0.0,0.0,0.0,"GPUDrive: Data-driven, multi-agent driving simulation at 1 million FPS",https://github.com/Emerge-Lab/gpudrive,209.0,,6,2,0.0,False,akhaliq,2024-08-06
+2406.11617,,0.0,,4.0,0.0,0.0,DELLA-Merging: Reducing Interference in Model Merging through Magnitude-Based Sampling,https://github.com/declare-lab/della,24.0,,7,1,0.0,True,RishabhBhardwaj,2024-06-24
+2306.09479,,0.0,,0.0,0.0,0.0,Inverse Scaling: When Bigger Isn't Better,,,,8,0,0.0,False,akhaliq,2023-06-19
+2411.05830,https://github.com/NizarIslah/GitChameleon/issues/3,,,0.0,0.0,0.0,GitChameleon: Unmasking the Version-Switching Capabilities of Code Generation Models,https://github.com/NizarIslah/GitChameleon,6.0,,20,2,0.0,False,optimass,2024-11-12
+2410.01036,,,,0.0,0.0,0.0,"MOSEL: 950,000 Hours of Speech Data for Open-Source Speech Foundation Model Training on EU Languages",https://github.com/hlt-mt/mosel,146.0,EMNLP2024,14,2,1.0,False,spapi,2024-10-03
+2408.15300,,,,0.0,0.0,0.0,GIFT-SW: Gaussian noise Injected Fine-Tuning of Salient Weights for LLMs,https://github.com/On-Point-RND/GIFT_SW,,,3,3,1.0,False,dalime,2024-09-02
+2410.06508,,,no code,0.0,0.0,0.0,Towards Self-Improvement of LLMs via MCTS: Leveraging Stepwise Knowledge with Curriculum Preference Learning,,,,9,2,0.0,False,freesunshine0316,2024-10-11
+2401.16468,,0.0,,1.0,0.0,8.0,High-Quality Image Restoration Following Human Instructions,https://github.com/mv-lab/InstructIR,505.0,ECCV2024,12,2,1.0,True,akhaliq,2024-01-31
+2412.01253,,,no code,0.0,0.0,0.0,Yi-Lightning Technical Report,,,,21,2,0.0,False,chujiezheng,2024-12-02
+2404.05875,,0.0,,0.0,0.0,0.0,CodecLM: Aligning Language Models with Tailored Synthetic Data,,,NAACL2023,16,0,0.0,False,akhaliq,2024-04-10
+2412.06464,,,no artifacts,0.0,0.0,0.0,Gated Delta Networks: Improving Mamba2 with Delta Rule,https://github.com/NVlabs/GatedDeltaNet,,,6,3,0.0,False,ahatamiz,2024-12-10
+2305.03689,,0.0,,0.0,0.0,0.0,COLA: How to adapt vision-language models to Compose Objects Localized with Attributes?,,,,2,1,0.0,False,akhaliq,2023-05-08
+2309.16650,,0.0,,0.0,0.0,0.0,ConceptGraphs: Open-Vocabulary 3D Scene Graphs for Perception and Planning,,,,9,0,0.0,False,akhaliq,2023-09-29
+2401.04577,,0.0,,8.0,0.0,44.0,Masked Audio Generation using a Single Non-Autoregressive Transformer,,,,41,6,0.0,True,akhaliq,2024-01-10
+2406.10227,,0.0,,0.0,0.0,0.0,VideoGUI: A Benchmark for GUI Automation from Instructional Videos,,,NeurIPS2024 D&B,9,1,0.0,False,KevinQHLin,2024-06-17
+2405.19957,,0.0,,0.0,0.0,0.0,PLA4D: Pixel-Level Alignments for Text-to-4D Gaussian Splatting,https://github.com/MiaoQiaowei/PLA4D.github.io{https:,0.0,,8,0,0.0,False,akhaliq,2024-05-31
+2411.12734,,,no code yet,0.0,0.0,0.0,Soft Robotic Dynamic In-Hand Pen Spinning,,,,9,2,0.0,False,akhaliq,2024-11-20
+2409.18121,,,no code yet,0.0,0.0,0.0,Robot See Robot Do: Imitating Articulated Object Manipulation with Monocular 4D Reconstruction,https://github.com/kerrj/rsrd,52.0,CoRL2024,7,2,0.0,False,akhaliq,2024-09-27
+2411.15221,,,no code,0.0,0.0,0.0,Reflections from the 2024 Large Language Model (LLM) Hackathon for Applications in Materials Science and Chemistry,https://github.com/KKbeckang/LiGPT-Beta,,,20,2,0.0,False,yzimmermann,2024-11-26
+2404.12803,,0.0,,0.0,0.0,0.0,TextSquare: Scaling up Text-Centric Visual Instruction Tuning,,,,29,4,0.0,False,akhaliq,2024-04-22
+2309.07986,,0.0,,0.0,0.0,0.0,Viewpoint Textual Inversion: Unleashing Novel View Synthesis with Pretrained 2D Diffusion Models,https://github.com/jmhb0/view_neti,101.0,ECCV2024,3,1,0.0,False,akhaliq,2023-09-18
+2306.10007,,0.0,,0.0,0.0,0.0,Robot Learning with Sensorimotor Pre-training,,,,13,0,0.0,False,akhaliq,2023-06-19
+2409.02634,,,,0.0,0.0,0.0,Loopy: Taming Audio-Driven Portrait Avatar with Long-Term Motion Dependency,,,,81,10,0.0,False,akhaliq,2024-09-05
+2410.13085,,,no artifacts,0.0,0.0,0.0,MMed-RAG: Versatile Multimodal RAG System for Medical Vision Language Models,https://github.com/richard-peng-xia/mmed-rag,13.0,,20,3,0.0,False,richardxp888,2024-10-18
+2406.14783,,0.0,,0.0,0.0,0.0,Evaluating RAG-Fusion with RAGElo: an Automated Elo-based Framework,,,,15,2,0.0,False,din0s,2024-06-24
+2305.07969,,0.0,,0.0,0.0,1.0,GPT-Sentinel: Distinguishing Human and ChatGPT Generated Content,https://github.com/MarkChenYutian/GPT-Sentinel-public,,,1,0,0.0,True,akhaliq,2023-05-16
+2402.01771,,0.0,,2.0,0.0,0.0,BlackMamba: Mixture of Experts for State-Space Models,https://github.com/zyphra/blackmamba,231.0,,22,5,1.0,True,akhaliq,2024-02-06
+2402.15509,,0.0,,0.0,0.0,0.0,Seamless Human Motion Composition with Blended Positional Encodings,https://github.com/BarqueroGerman/FlowMDM,204.0,CVPR2024,14,1,0.0,False,akhaliq,2024-02-26
+2410.01679,,,,4.0,0.0,0.0,VinePPO: Unlocking RL Potential For LLM Reasoning Through Refined Credit Assignment,https://github.com/mcgill-nlp/vineppo,,,21,2,1.0,True,kazemnejad,2024-10-04
+2312.17244,,0.0,,0.0,0.0,0.0,The LLM Surgeon,https://github.com/qualcomm-ai-research/llm-surgeon,,,9,1,1.0,False,akhaliq,2023-12-29
+2407.11062,,0.0,,99.0,0.0,0.0,EfficientQAT: Efficient Quantization-Aware Training for Large Language Models,https://github.com/OpenGVLab/EfficientQAT,208.0,,7,2,0.0,True,ChenMnZ,2024-07-17
+2410.03864,,,no code yet,0.0,0.0,0.0,DOTS: Learning to Reason Dynamically in LLMs via Optimal Reasoning Trajectories Search,,,,9,2,0.0,False,wenlinyao,2024-10-09
+2310.03744,,0.0,,20.0,2.0,39.0,Improved Baselines with Visual Instruction Tuning,,,CVPR2024,35,7,0.0,True,akhaliq,2023-10-06
+2410.09223,,,no code,0.0,0.0,0.0,The Same But Different: Structural Similarities and Differences in Multilingual Language Modeling,,,,5,2,0.0,False,ruochenz,2024-10-15
+2407.04842,,0.0,,23.0,2.0,1.0,MJ-Bench: Is Your Multimodal Reward Model Really a Good Judge for Text-to-Image Generation?,https://github.com/MJ-Bench/MJ-Bench,,,52,3,1.0,True,yichaodu,2024-07-09
+2401.08671,,0.0,,0.0,0.0,0.0,DeepSpeed-FastGen: High-throughput Text Generation for LLMs via MII and DeepSpeed-Inference,https://github.com/microsoft/DeepSpeed,,,13,2,1.0,False,akhaliq,2024-01-18
+2405.17428,,0.0,,2.0,0.0,9.0,NV-Embed: Improved Techniques for Training LLMs as Generalist Embedding Models,,,,15,0,0.0,True,akhaliq,2024-05-28
+2306.08651,,0.0,,0.0,0.0,0.0,Toward Grounded Social Reasoning,,,,3,0,0.0,False,akhaliq,2023-06-16
+2406.12034,,0.0,,0.0,0.0,0.0,Self-MoE: Towards Compositional Large Language Models with Self-Specialized Experts,,,,13,1,0.0,False,jm-kang,2024-06-20
+2409.06957,,,,0.0,0.0,0.0,Policy Filtration in RLHF to Fine-Tune LLM for Code Generation,https://github.com/swtheing/pf-ppo-rlhf,,,5,2,0.0,False,Swtheking,2024-09-17
+2412.04144,,,no code,0.0,0.0,0.0,"If You Can't Use Them, Recycle Them: Optimizing Merging at Scale Mitigates Performance Tradeoffs",,,,2,2,0.0,False,mkhalifa,2024-12-10
+2406.10149,,0.0,,0.0,2.0,1.0,BABILong: Testing the Limits of LLMs with Long Context Reasoning-in-a-Haystack,https://github.com/booydar/babilong,147.0,NeurIPS2024 D&B,48,4,1.0,True,yurakuratov,2024-06-17
+2410.02241,,,no code,0.0,0.0,0.0,MIGA: Mixture-of-Experts with Group Aggregation for Stock Market Prediction,,,,6,2,0.0,False,zjy2001,2024-10-07
+2409.18964,,,,0.0,0.0,0.0,PhysGen: Rigid-Body Physics-Grounded Image-to-Video Generation,https://github.com/stevenlsw/physgen,,ECCV2024,20,2,1.0,False,akhaliq,2024-09-30
+2407.10910,,0.0,,0.0,0.0,0.0,DataDream: Few-shot Guided Dataset Generation,https://github.com/explainableml/datadream,22.0,ECCV2024,7,2,0.0,False,davanstrien,2024-07-16
+2309.13041,,0.0,,0.0,0.0,0.0,Robotic Offline RL from Internet Videos via Value-Function Pre-Training,,,NeurIPS2023,8,0,0.0,False,akhaliq,2023-09-25
+2404.00987,,0.0,,0.0,0.0,0.0,FlexiDreamer: Single Image-to-3D Generation with FlexiCubes,https://github.com/zhaorw02/FlexiDreamer,,,21,2,0.0,False,akhaliq,2024-04-02
+2403.11703,,0.0,,1.0,0.0,7.0,LLaVA-UHD: an LMM Perceiving Any Aspect Ratio and High-Resolution Images,https://github.com/thunlp/llava-uhd,314.0,ECCV2024,16,1,1.0,True,akhaliq,2024-03-19
+2412.06234,,,,0.0,0.0,0.0,Generative Densification: Learning to Densify Gaussians for High-Fidelity Generalizable 3D Reconstruction,,,,9,1,0.0,False,lelady,2024-12-12
+2312.02949,,0.0,,0.0,0.0,0.0,LLaVA-Grounding: Grounded Visual Chat with Large Multimodal Models,https://github.com/ux-decoder/llava-grounding,345.0,ECCV2024,11,0,0.0,False,akhaliq,2023-12-06
+2411.05990,,,no artifacts,0.0,0.0,0.0,Game-theoretic LLM: Agent Workflow for Negotiation Games,https://github.com/wenyueh/game_theory,20.0,,6,2,0.0,False,wenyueH,2024-11-12
+2305.11147,,0.0,,1.0,0.0,1.0,UniControl: A Unified Diffusion Model for Controllable Visual Generation In the Wild,https://github.com/salesforce/unicontrol,611.0,NeurIPS2023,3,1,1.0,True,akhaliq,2023-05-19
+2411.07180,https://github.com/shauli-ravfogel/lm-counterfactuals/issues/1,,,0.0,0.0,0.0,Counterfactual Generation from Language Models,https://github.com/shauli-ravfogel/lm-counterfactuals,,,5,2,0.0,False,ravfogs,2024-11-12
+2405.15319,,0.0,,1.0,0.0,0.0,Stacking Your Transformers: A Closer Look at Model Growth for Efficient LLM Pre-Training,,,NeurIPS2024,23,1,0.0,True,akhaliq,2024-05-27
+2402.05672,,0.0,,7.0,0.0,100.0,Multilingual E5 Text Embeddings: A Technical Report,https://github.com/microsoft/unilm,19866.0,,18,2,1.0,True,akhaliq,2024-02-09
+2307.08702,,0.0,,0.0,0.0,0.0,Diffusion Models Beat GANs on Image Classification,,,,17,1,0.0,False,akhaliq,2023-07-18
+2312.00093,,0.0,,0.0,0.0,0.0,GraphDreamer: Compositional 3D Scene Synthesis from Scene Graphs,,,CVPR2024,14,1,0.0,False,akhaliq,2023-12-04
+2401.12474,,0.0,,0.0,0.0,0.0,Large Language Models are Superpositions of All Characters: Attaining Arbitrary Role-play via Self-Alignment,https://github.com/ofa-sys/ditto,155.0,ACL2024,33,1,0.0,False,akhaliq,2024-01-24
+2305.04391,,0.0,,0.0,0.0,0.0,A Variational Perspective on Solving Inverse Problems with Diffusion Models,https://github.com/nvlabs/red-diff,,,1,0,0.0,False,akhaliq,2023-05-09
+2411.11504,,,no artifacts,0.0,0.0,0.0,"Search, Verify and Feedback: Towards Next Generation Post-training Paradigm of Foundation Models via Verifier Engineering",https://github.com/icip-cas/Verifier-Engineering,,,19,2,0.0,False,Tigerph,2024-11-19
+2412.09405,,,,1.0,0.0,0.0,Learned Compression for Compressed Learning,https://github.com/danjacobellis/walloc,,,9,2,1.0,True,danjacobellis,2024-12-13
+2406.08414,,0.0,,2.0,0.0,1.0,Discovering Preference Optimization Algorithms with and for Large Language Models,https://github.com/luchris429/DiscoPOP,0.0,NeurIPS2024,12,0,1.0,True,chrlu,2024-06-13
+2306.03203,,0.0,,0.0,0.0,0.0,A Static Evaluation of Code Completion by Large Language Models,,,ACL2023,3,0,0.0,False,akhaliq,2023-06-07
+2306.13631,,0.0,,0.0,0.0,0.0,OpenMask3D: Open-Vocabulary 3D Instance Segmentation,https://github.com/OpenMask3D/openmask3d,182.0,NeurIPS2023,9,0,0.0,False,akhaliq,2023-06-26
+2406.11194,,0.0,,0.0,1.0,0.0,In-Context Editing: Learning Knowledge from Self-Induced Distributions,https://github.com/bigai-ai/ICE,,,15,1,1.0,True,syqi,2024-06-18
+2310.11248,,0.0,,0.0,0.0,0.0,CrossCodeEval: A Diverse and Multilingual Benchmark for Cross-File Code Completion,,,,3,1,0.0,False,akhaliq,2023-10-18
+2312.17653,,0.0,,0.0,0.0,0.0,LARP: Language-Agent Role Play for Open-World Games,,,,29,1,0.0,False,akhaliq,2024-01-01
+2306.01754,,0.0,,0.0,0.0,0.0,"Transformer-based Vulnerability Detection in Code at EditTime: Zero-shot, Few-shot, or Fine-tuning?",,,,1,1,0.0,False,akhaliq,2023-06-06
+2307.05445,,0.0,,0.0,0.0,0.0,AutoDecoding Latent 3D Diffusion Models,https://github.com/snap-research/3dvader,133.0,NeurIPS2023,13,0,0.0,False,akhaliq,2023-07-12
+2407.07895,,0.0,,6.0,0.0,32.0,"LLaVA-NeXT-Interleave: Tackling Multi-image, Video, and 3D in Large Multimodal Models",https://github.com/LLaVA-VL/LLaVA-NeXT,2648.0,,40,2,1.0,True,akhaliq,2024-07-11
+2407.18908,,0.0,,0.0,0.0,0.0,Wolf: Captioning Everything with a World Summarization Framework,,,,30,2,0.0,False,akhaliq,2024-07-29
+2406.04604,,,,0.0,0.0,0.0,Learning Task Decomposition to Assist Humans in Competitive Programming,,,ACL2024,4,2,0.0,False,akhaliq,2024-08-09
+2408.05366,,,,0.0,1.0,0.0,DeepSpeak Dataset v1.0,,,,9,3,0.0,True,matybohacek,2024-08-15
+2411.05005,,,no code,0.0,0.0,0.0,Diff-2-in-1: Bridging Generation and Dense Perception with Diffusion Models,,,,13,2,0.0,False,ShuhongZheng,2024-11-08
+2406.11768,,0.0,,0.0,0.0,2.0,GAMA: A Large Audio-Language Model with Advanced Audio Understanding and Complex Reasoning Abilities,,,EMNLP2024,20,1,0.0,True,Sreyan88,2024-06-18
+2312.02432,,0.0,,0.0,0.0,0.0,Orthogonal Adaptation for Modular Customization of Diffusion Models,,,CVPR2024,12,0,0.0,False,akhaliq,2023-12-06
+2307.12950,,0.0,,0.0,0.0,0.0,RLCD: Reinforcement Learning from Contrast Distillation for Language Model Alignment,,,,9,0,0.0,False,akhaliq,2023-07-25
+2407.10285,,0.0,,0.0,0.0,0.0,Noise Calibration: Plug-and-play Content-Preserving Video Enhancement using Pre-trained Video Diffusion Models,https://github.com/yangqy1110/nc-sdedit,79.0,ECCV2024,4,2,0.0,False,akhaliq,2024-07-16
+2312.12423,,0.0,,0.0,0.0,0.0,"Jack of All Tasks, Master of Many: Designing General-purpose Coarse-to-Fine Vision-Language Model",,,,12,1,0.0,False,akhaliq,2023-12-20
+2309.03409,,0.0,,0.0,0.0,0.0,Large Language Models as Optimizers,https://github.com/google-deepmind/opro,,,75,3,0.0,False,akhaliq,2023-09-08
+2411.08954,,,no artifacts,0.0,0.0,0.0,Inconsistencies In Consistency Models: Better ODE Solving Does Not Imply Better Samples,https://github.com/layer6ai-labs/direct-cms,0.0,,5,2,1.0,False,NoelVouitsis,2024-11-15
+2410.03017,,,no code,0.0,0.0,0.0,Tutor CoPilot: A Human-AI Approach for Scaling Real-Time Expertise,,,,24,4,0.0,False,akhaliq,2024-10-07
+2308.03610,,0.0,,1.0,0.0,0.0,AvatarVerse: High-quality & Stable 3D Avatar Creation from Text and Pose,https://github.com/bytedance/AvatarVerse,,,23,1,1.0,True,akhaliq,2023-08-08
+2406.06424,,0.0,,4.0,3.0,0.0,Margin-aware Preference Optimization for Aligning Diffusion Models without Reference,https://github.com/mapo-t2i/mapo,57.0,,10,0,0.0,True,akhaliq,2024-06-11
+2404.19753,,0.0,,0.0,2.0,0.0,DOCCI: Descriptions of Connected and Contrasting Images,,,ECCV2024,10,1,0.0,True,akhaliq,2024-05-01
+2409.19603,https://github.com/showlab/VideoLISA/issues/1,,,0.0,0.0,0.0,One Token to Seg Them All: Language Instructed Reasoning Segmentation in Videos,https://github.com/showlab/videolisa,33.0,NeurIPS2024,17,2,0.0,False,ZechenBai,2024-10-02
+2305.18247,,0.0,,0.0,0.0,0.0,TaleCrafter: Interactive Story Visualization with Multiple Characters,https://github.com/videocrafter/talecrafter,,,4,0,0.0,False,akhaliq,2023-05-30
+2401.17574,,0.0,,0.0,0.0,0.0,Scavenging Hyena: Distilling Transformers into Long Convolution Models,,,,15,1,0.0,False,akhaliq,2024-02-01
+2409.01083,,,,0.0,0.0,0.0,Affordance-based Robot Manipulation with Flow Matching,,,,8,2,0.0,False,Fanzhri,2024-09-05
+2306.00008,,0.0,,0.0,0.0,0.0,Brainformers: Trading Simplicity for Efficiency,,,,1,1,0.0,False,akhaliq,2023-06-02
+2411.17787,,,,1.0,0.0,0.0,Collaborative Decoding Makes Visual Auto-Regressive Modeling Efficient,https://github.com/czg1225/code,31.0,,11,2,0.0,True,Zigeng,2024-11-28
+2406.17563,,0.0,,0.0,0.0,0.0,Multi-property Steering of Large Language Models with Dynamic Activation Composition,https://github.com/danielsc4/dynamic-activation-composition,7.0,EMNLP2024,4,1,1.0,False,gsarti,2024-06-26
+2410.01257,https://huggingface.co/nvidia/Llama-3.1-Nemotron-70B-Reward/discussions/1,,,2.0,1.0,1.0,HelpSteer2-Preference: Complementing Ratings with Preferences,,,,7,3,0.0,True,akhaliq,2024-10-03
+2410.13276,,,no code yet,0.0,0.0,0.0,SeerAttention: Learning Intrinsic Sparse Attention in Your LLMs,,,,24,2,0.0,False,Shijie,2024-10-21
+2311.05772,,0.0,,0.0,0.0,0.0,ADaPT: As-Needed Decomposition and Planning with Language Models,,,NAACL2023,10,1,0.0,False,akhaliq,2023-11-13
+2305.03937,,0.0,,0.0,0.0,0.0,Residual Prompt Tuning: Improving Prompt Tuning with Residual Reparameterization,https://github.com/arazd/residualprompts,51.0,ACL2023,1,0,0.0,False,akhaliq,2023-05-09
+2411.11045,,,,1.0,1.0,0.0,StableV2V: Stablizing Shape Consistency in Video-to-Video Editing,https://github.com/alonzoleeeooo/stablev2v,,,10,2,1.0,True,AlonzoLeeeooo,2024-11-19
+2405.14847,,0.0,,0.0,0.0,0.0,Neural Directional Encoding for Efficient and Accurate View-Dependent Appearance Modeling,,,CVPR2024,6,0,0.0,False,akhaliq,2024-05-24
+2405.11157,,0.0,,0.0,0.0,0.0,Towards Modular LLMs by Building and Reusing a Library of LoRAs,,,,25,2,0.0,False,akhaliq,2024-05-21
+2312.14239,,0.0,,0.0,0.0,0.0,PlatoNeRF: 3D Reconstruction in Plato's Cave via Single-View Two-Bounce Lidar,,,CVPR2024,10,1,0.0,False,akhaliq,2023-12-26
+2311.07446,,0.0,,0.0,0.0,0.0,Story-to-Motion: Synthesizing Infinite and Controllable Character Animation from Long Text,,,,28,0,0.0,False,akhaliq,2023-11-14
+2409.01083,,,,0.0,0.0,0.0,Affordance-based Robot Manipulation with Flow Matching,https://github.com/michaelyuancb/general_flow,35.0,CoRL2024,8,2,0.0,False,Fanzhri,2024-09-05
+2406.10324,,0.0,,0.0,0.0,0.0,L4GM: Large 4D Gaussian Reconstruction Model,,,NeurIPS2024,13,1,0.0,False,akhaliq,2024-06-18
+2410.11623,,,no code,0.0,0.0,0.0,VidEgoThink: Assessing Egocentric Video Understanding Capabilities for Embodied AI,,,,45,2,0.0,False,SijieCheng,2024-10-17
+2411.19799,,,,0.0,2.0,0.0,INCLUDE: Evaluating Multilingual Language Understanding with Regional Knowledge,,,,9,2,0.0,True,atcbosselut,2024-12-03
+2411.17459,https://huggingface.co/chestnutlzj/WF-VAE-L-16Chn/discussions/1,,,1.0,0.0,0.0,WF-VAE: Enhancing Video VAE by Wavelet-Driven Energy Flow for Latent Video Diffusion Model,https://github.com/pku-yuangroup/wf-vae,86.0,,10,2,1.0,True,BestWishYsh,2024-12-03
+2406.08845,,0.0,,0.0,0.0,0.0,"Rethinking Human Evaluation Protocol for Text-to-Video Models: Enhancing Reliability,Reproducibility, and Practicality",https://github.com/ztlmememe/T2VHE,5.0,,8,1,0.0,False,wqshao126,2024-06-17
+2406.09308,,0.0,,0.0,0.0,0.0,Transformers meet Neural Algorithmic Reasoners,,,,43,1,0.0,False,akhaliq,2024-06-14
+2410.06264,https://huggingface.co/sulinliu/ddpd/discussions/1,,,1.0,0.0,0.0,Think While You Generate: Discrete Diffusion with Planned Denoising,https://github.com/liusulin/ddpd,13.0,,8,3,1.0,True,AaronXyl,2024-10-14
+2404.16845,,0.0,,0.0,0.0,0.0,HaLo-NeRF: Learning Geometry-Guided Semantics for Exploring Unconstrained Photo Collections,https://github.com/TAU-VAILab/HaLo-NeRF,14.0,,6,1,0.0,False,akhaliq,2024-04-29
+2306.17194,,0.0,,1.0,0.0,0.0,On the Exploitability of Instruction Tuning,https://github.com/azshue/autopoison,57.0,NeurIPS2023,9,0,0.0,True,akhaliq,2023-07-03
+2403.17237,,0.0,,0.0,0.0,0.0,DreamPolisher: Towards High-Quality Text-to-3D Generation via Geometric Diffusion,https://github.com/yuanze-lin/DreamPolisher,44.0,,8,1,0.0,False,akhaliq,2024-03-27
+2401.16465,,0.0,,0.0,0.0,0.0,DressCode: Autoregressively Sewing and Generating Garments from Text Guidance,https://github.com/IHe-KaiI/DressCode,184.0,,10,1,0.0,False,akhaliq,2024-04-30
+2404.04346,,0.0,,0.0,0.0,1.0,Koala: Key frame-conditioned long video-LLM,,,CVPR2024,5,2,0.0,True,akhaliq,2024-04-09
+2305.11840,,0.0,,0.0,0.0,0.0,SeeGULL: A Stereotype Benchmark with Broad Geo-Cultural Coverage Leveraging Generative Models,https://github.com/google-research-datasets/seegull,32.0,ACL2023,1,0,0.0,False,akhaliq,2023-05-22
+2306.11565,,0.0,,0.0,0.0,0.0,HomeRobot: Open-Vocabulary Mobile Manipulation,,,NeurIPS2023,15,0,0.0,False,akhaliq,2023-06-21
+2307.05591,,0.0,,0.0,0.0,0.0,SITTA: A Semantic Image-Text Alignment for Image Captioning,,,,5,0,0.0,False,akhaliq,2023-07-13
+2410.09045,,,,0.0,1.0,0.0,MiRAGeNews: Multimodal Realistic AI-Generated News Detection,https://github.com/nosna/miragenews,6.0,EMNLP2024,4,2,0.0,True,liamdugan,2024-10-14
+2306.08707,,0.0,,0.0,0.0,0.0,VidEdit: Zero-Shot and Spatially Aware Text-Driven Video Editing,,,,6,0,0.0,False,akhaliq,2023-06-16
+2411.15411,https://huggingface.co/hhua2/finecaption/discussions/1,,,0.0,1.0,0.0,FINECAPTION: Compositional Image Captioning Focusing on Wherever You Want at Any Granularity,,,,7,2,0.0,True,hhua2,2024-11-27
+2312.15770,,0.0,,0.0,0.0,0.0,A Recipe for Scaling up Text-to-Video Generation with Text-free Videos,,,CVPR2024,12,1,0.0,False,akhaliq,2023-12-27
+2409.15997,,,no code,0.0,0.0,0.0,Improvements to SDXL in NovelAI Diffusion V3,,,,10,3,0.0,False,julien-c,2024-09-25
+2312.11514,,0.0,,0.0,0.0,1.0,LLM in a flash: Efficient Large Language Model Inference with Limited Memory,,,ACL2024,256,8,0.0,True,akhaliq,2023-12-20
+2404.12318,,0.0,,0.0,0.0,0.0,Reuse Your Rewards: Reward Model Transfer for Zero-Shot Cross-Lingual Alignment,,,EMNLP2024,14,1,0.0,False,akhaliq,2024-04-19
+2403.18814,,0.0,,11.0,0.0,5.0,Mini-Gemini: Mining the Potential of Multi-modality Vision Language Models,https://github.com/dvlab-research/minigemini,3192.0,,42,4,1.0,True,akhaliq,2024-03-28
+2403.01823,,0.0,,0.0,0.0,0.0,RT-H: Action Hierarchies Using Language,,,,7,1,0.0,False,akhaliq,2024-03-05
+2307.14334,,0.0,,0.0,0.0,0.0,Towards Generalist Biomedical AI,,,,11,0,0.0,False,akhaliq,2023-07-27
+2406.10111,,0.0,,0.0,0.0,0.0,GaussianSR: 3D Gaussian Super-Resolution with 2D Diffusion Priors,,,,6,1,0.0,False,deeptimhe,2024-06-17
+2411.09009,,,no artifacts,0.0,0.0,0.0,Cut Your Losses in Large-Vocabulary Language Models,https://github.com/apple/ml-cross-entropy,,,29,4,0.0,False,akhaliq,2024-11-15
+2401.13923,,0.0,,0.0,1.0,0.0,Towards 3D Molecule-Text Interpretation in Language Models,https://github.com/lsh0520/3d-molm,38.0,,9,1,1.0,True,akhaliq,2024-03-21
+2411.17116,,,no artifacts,0.0,0.0,0.0,Star Attention: Efficient LLM Inference over Long Sequences,https://github.com/NVIDIA/Star-Attention,,,42,2,1.0,False,shantanuacharya,2024-11-27
+2411.17188,https://huggingface.co/datasets/shuaishuaicdp/ISG-Bench/discussions/2,,,0.0,1.0,0.0,Interleaved Scene Graph for Interleaved Text-and-Image Generation Assessment,,,,20,2,0.0,True,shuaishuaicdp,2024-11-28
+2406.08451,,0.0,,0.0,1.0,0.0,GUI Odyssey: A Comprehensive Dataset for Cross-App GUI Navigation on Mobile Devices,https://github.com/opengvlab/gui-odyssey,60.0,,23,1,1.0,True,wqshao126,2024-06-17
+2402.10893,,0.0,,0.0,0.0,1.0,RLVF: Learning from Verbal Feedback without Overgeneralization,https://github.com/austrian-code-wizard/c3po,,,10,2,0.0,True,akhaliq,2024-02-19
+2312.09244,,0.0,,0.0,1.0,0.0,Helping or Herding? Reward Model Ensembles Mitigate but do not Eliminate Reward Hacking,https://github.com/google-deepmind/reward-ensembles,7.0,COLM2024,5,1,0.0,True,akhaliq,2023-12-15
+2305.02783,,0.0,,0.0,0.0,0.0,Automated Code generation for Information Technology Tasks in YAML through Large Language Models,,,,1,0,0.0,False,akhaliq,2023-05-05
+2409.12903,,,,0.0,0.0,0.0,Scaling Smart: Accelerating Large Language Model Pre-training with Small Model Initialization,,,,19,3,0.0,False,Ksgk-fy,2024-09-20
+2410.10672,,,no artifacts,0.0,0.0,0.0,Large Language Model Evaluation via Matrix Nuclear-Norm,https://github.com/mlgroupjlu/matrixnuclearnorm,3.0,,18,2,0.0,False,WhiteCatY,2024-10-17
+2408.00690,,0.0,,3.0,0.0,0.0,Improving Text Embeddings for Smaller Language Models Using Contrastive Fine-tuning,https://github.com/trapoom555/Language-Model-STS-CFT,57.0,,21,4,0.0,True,akhaliq,2024-08-02
+2410.01999,,,will be released on HF,0.0,0.0,0.0,CodeMMLU: A Multi-Task Benchmark for Assessing Code Understanding Capabilities of CodeLLMs,,,,9,2,0.0,False,bdqnghi,2024-10-07
+2403.13064,,0.0,,0.0,0.0,0.0,SceneScript: Reconstructing Scenes With An Autoregressive Structured Language Model,,,ECCV2024,31,2,0.0,False,akhaliq,2024-03-21
+2409.11355,,,,0.0,0.0,3.0,Fine-Tuning Image-Conditional Diffusion Models is Easier than You Think,,,,25,2,0.0,True,akhaliq,2024-09-18
+2401.14405,,0.0,,0.0,0.0,0.0,Multimodal Pathway: Improve Transformers with Irrelevant Data from Other Modalities,https://github.com/ailab-cvc/m2pt,90.0,CVPR2024,11,2,0.0,False,akhaliq,2024-01-26
+2407.09435,,0.0,,0.0,0.0,0.0,MUSCLE: A Model Update Strategy for Compatible LLM Evolution,,,EMNLP2024,20,2,0.0,False,akhaliq,2024-07-15
+2402.10524,,0.0,,0.0,0.0,0.0,LLM Comparator: Visual Analytics for Side-by-Side Evaluation of Large Language Models,,,,21,2,0.0,False,akhaliq,2024-02-19
+2404.12253,,0.0,,0.0,0.0,0.0,"Toward Self-Improvement of LLMs via Imagination, Searching, and Criticizing",,,NeurIPS2024,52,3,0.0,False,akhaliq,2024-04-19
+2410.06241,,,no code,0.0,0.0,0.0,BroadWay: Boost Your Text-to-Video Generation Model in a Training-free Way,,,,10,2,0.0,False,myownskyW7,2024-10-10
+2312.17243,,0.0,,0.0,0.0,0.0,Unsupervised Universal Image Segmentation,https://github.com/u2seg/u2seg,171.0,CVPR2024,19,2,0.0,False,akhaliq,2023-12-29
