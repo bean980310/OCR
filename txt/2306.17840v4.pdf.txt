@@ -1,0 +1,1703 @@
+arXiv:2306.17840v4 [cs.RO] 20 May 2024
+Statler: State-Maintaining Language Models for Embodied Reasoning
+Takuma Yoneda*1, Jiading Fang*1, Peng Li*², Huanyu Zhang*³, Tianchong Jiang³, Shengjie Lin¹,
+Ben Picker³, David Yunis¹, Hongyuan Mei¹, and Matthew R. Walter¹
+State
+Toyota Technological Institute at Chicago
+{takuma, fjd, slin, dyunis, hongyuan, mwalter}@ttic.edu
+2Fudan University
+lip21@m.fudan.edu.cn
+3 University of Chicago
+{huanyu, tianchongj, bpicker}@uchicago.edu
+# state = {
+# "objects": ("rubiks cube", "toy duckie", "toy wheel", "yellow block"),
+# "covers": ("red cup", "green cup", "blue cup", "black cup"),
+# "rubiks cube": {"under": "blue cup"},
+# "toy wheel": { "on": "yellow block"},
+# "yellow block": {"under": "toy wheel"},
+# "blue cup":{"on": "rubiks cube"},}
+User Query
+Put the toy wheel on
+the Rubik's cube.
+Code
+World State Writer
+World State Reader
+say("The Rubik's cube is under the blue cup. I shall put away
+the blue cup first.")
+put_first_on_second("blue cup", "empty space")
+update_wm("Put the blue cup on the empty space.")
+say("Now I can put the toy wheel on the Rubik's cube.")
+put_first_on_second("toy wheel", "rubiks cube")
+update_wm("Put the toy wheel on the Rubik's cube.")
+Fig. 1: Our Statler framework enables robots to carry out complex tasks specified in natural language that require reasoning
+over long time horizons. Integral to our model are its world-state writer and world-state reader, two instances of general
+LLMs responsible for maintaining the explicit world state and generating code that enables the robot to carry out the task.
+Abstract―There has been a significant research interest in
+employing large language models to empower intelligent robots
+with complex reasoning. Existing work focuses on harnessing
+their abilities to reason about the histories of their actions and
+observations. In this paper, we explore a new dimension in
+which large language models may benefit robotics planning.
+In particular, we propose Statler, a framework in which large
+language models are prompted to maintain an estimate of
+the world state, which are often unobservable, and track its
+transition as new actions are taken. Our framework then
+conditions each action on the estimate of the current world
+state. Despite being conceptually simple, our Statler framework
+significantly outperforms strong competing methods (e.g., Code-
+as-Policies) on several robot planning tasks. Additionally, it
+has the potential advantage of scaling up to more challenging
+long-horizon planning tasks. We release our code here.
+I. INTRODUCTION
+Large language models (LLMs) exhibit strong reasoning
+capabilities that are harnessed to perform a wide range of
+downstream tasks such as dialogue and code generation [1-
+3]. The robotics community has recently seen a significant
+interest in empowering robots with LLMs, enabling them to
+*Denotes equal contribution; Contribution by each author can be found in
+the appendix.
+understand natural language commands and perform tasks
+that require sophisticated reasoning [4-7]. However, existing
+methods are model-free: they use LLMs as policy functions
+that generate future actions only conditioned on previous
+actions and observations.
+In this paper, we propose a simple yet effective model-
+based approach. Our framework-named Statler―maintains
+a running estimate of the world state by prompting large
+language models and performs multistep embodied reasoning
+conditioned on the estimated state. Figure 1 illustrates this
+framework. In particular, Statler utilizes a pair of prompted
+LLMs: instructed by a few demonstrations, the world-state
+reader takes as input the user query, reads the estimated world
+state, and generates an executable action (e.g, a code snippet);
+instructed by another set of demonstrations, the world-state
+writer updates the world state estimate based on the action.
+This mechanism resembles how a domain-specific formal
+language tracks a symbolic world state [8], but enjoys greater
+flexibility since pretrained large language models are known
+to be domain-agnostic. As we will see soon in Section IV,
+the prompts in our experiments are generic and users of our
+framework will have minimal design workload.
+Our Statler framework is primarily inspired by classical
+1 #23 Initial state
+2 cups [False, True, False]
+3 Swapping cup 1 with cup 2
+4 Swapping cup 0 with cup 2
+5 Swapping cup 1 with cup 2
+6 cups = [True, False, False]
+7
+8
+1 #3 Initial state
+2 cups [False, True, False]
+3 Swapping cup 1 with cup 2
+4 Swapping cup 0 with cup 2
+5 Swapping cup 1 with cup 2
+6 cups = [False, False, True]
+7 cups = [True, False, False]
+8 cups = [True, False, False]
+1 # Initial state
+2 cups [False, True, False]
+3 Swapping cup 1 with cup 2
+4 cups [False, False, True]
+5 Swapping cup 0 with cup 2
+6 cups [True, False, False]
+7 Swapping cup 1 with cup 2
+8 cups [True, False, False]
+Prompt 1: The prompt and desired output Prompt 2: The prompt and desired output Prompt 3: The prompt and desired output
+of a vanilla LLM.
+of LLM+COT.
+model-based reinforcement learning. In a model-based ap-
+proach, an environment (or world) model learns to capture
+the dynamics of the environment (e.g., possible outcomes
+of an action) so that the policy conditioned on the model
+state will take more informed actions [9]. In our framework,
+the LLMs have acquired massive amounts of commonsense
+knowledge from pretraining, and they are elicited—by a
+few demonstrations—to behave as an environment model,
+estimating the world state and facilitating decision making.
+Another motivation of our design is to handle missing data.
+In robotics tasks, we often have to cope with latent world
+dynamics that are not directly observable. In such scenarios,
+explicitly maintaining an estimated world state improves
+decision making, although the estimates might be imperfect.
+This is analogous to graphical models with latent variables:
+spelling out latent variables and imputing their values is often
+helpful for reasoning about the target variables, although the
+imputation may not be perfect [10].
+The final motivation of our state-maintaining design is
+its potential to scale up to long-horizon planning tasks. In
+multistep reasoning and planning, an LLM has to implicitly
+maintain the world state in its internal representation, which
+has been demonstrated to be difficult in previous work [11–
+17]. By explicitly maintaining an estimated world state, our
+framework makes it easier to track and consult the world
+state at any step of reasoning and planning, thus carrying a
+higher chance of success in long-horizon tasks.
+In the following sections, we will show that our framework
+performs as expected: in Section II, we demonstrate the
+concept with a pedagogical example; in Section III, we
+introduce the Statler framework; in Section IV, we present
+the experiments, in which our framework significantly outper-
+forms strong competing methods such as Code-as-Policies [5].
+II. MOTIVATING EXAMPLE
+We use three-cups-and-a-ball, a simple shell game, to
+demonstrate the effectiveness of our state-maintaining idea.
+In this game, a ball is covered under one of three identical
+cups and the initial position of the ball is known to the player.
+In each of K rounds, we randomly swap two cups' positions.
+Finally, we ask the player to guess the position of the ball.
+We present three separate cases of using LLMs to play this
+game using GPT-3 (precisely, text-davinci-003). Prompt 1
+demonstrates the simplest case: We represent the state with
+Boolean variables with True indicating “ball is here”. We
+feed the initial state and the K rounds of swaps into GPT-
+3, instructing it to complete the final state. Prompt 2 is an
+improved way: after reading K rounds of swaps, GPT-3
+Absolute Accuracy
+of LLM+State.
+1.0
+1.0
+10.8.
+0.8
+0.6.
+LLM
+-0.6
+LLM+COT
+0.4
+LLM+State
+0.4
+J0.2
+-0.2
+0.0
+0.0
+Number of swaps
+Relative Accuracy:
+Fig. 2: Model accuracies on the three-cups-and-a-ball shell
+game. LLM+State is a simplified version of our proposed
+Statler framework. For each method, the solid line shows
+how its accuracy a(n) changes with the number of swaps n.
+The dashed line is the relative accuracy: r(n) = a(n)/a(1).
+Intuitively, it measures how fast the performance decreases
+from a hypothetically perfect one-swap performance. Note
+that LLM+State indeed achieves a(1) = 100%
+is asked to give all the intermediate states over the game.
+This version is inspired by Chain-of-Thought prompting [18],
+which improves the performance of an LLM by requesting it
+to spell out its intermediate reasoning steps. Finally, Prompt 3
+is a simple instantiation of our state-maintaining idea: we ask
+GPT-3 to return the current state immediately after reading
+each round of swaps, stimulating the model to track and
+update the state as the game progresses.
+We evaluate these methods with a range of K; for each K
+and each method, we feed 30 demonstrations with various
+numbers of swaps to the model, and repeat the experiment
+100 times. Figure 2 visualizes the average accuracies. The
+state-maintaining method significantly outperforms the other
+methods, with the performance gap increasing with K.
+III. METHOD
+As exemplified in Section II, the key to our approach is to
+allow the LLM to describe the next state while responding
+to each user query. The motivating example is simple in that
+the next state is the response. Instead, we now consider more
+general scenarios where there is a significant burden on the
+LLM to track the state updates as well as generate responses.
+(Fig. 3). For the general cases, we propose to split the
+burden across multiple different prompted LLMs. Precisely,
+we maintain a separate prompt that includes instructions and
+demonstrations for each subtask (i.e., state-tracking or query-
+put a block in the blue bowl so that the total weight of
+blocks in the blue bowl is less than what is in the gray bowl
+9.0
+1
+# state = {
+2 #
+"objects": ["cyan block", "yellow block", "brown block",
+"purple block", "blue block", "green bowl", "red bowl", "
+disinfector"],
+3
+#
+4 #
+€9.0
+9.0
+5 #
+6 #
+7 #
+8.0
+8
+#
+9 #
+10 #
+Statler (ours)
+11 #
+12 # }
+6.0
+6.0
+2.0
+2.0
+Initial State
+Code-as-Policies
+put blocks in the purple bowl so that their total weight
+becomes identical to what is in the gray bowl
+1.0
+4.0
+4.0
+4.0
+2.0
+2.0
+1.0
+2.0
+Initial State
+Code-as-Policies
+put all the dirty blocks on the table
+"relations": [],
+"disinfector": {"contains": []},
+"cyan block": {"is": ["dirty"]},
+"yellow block": {"is": ["clean"]},
+"brown block": {"is": ["clean"]},
+"purple block": {"is": ["dirty"]},
+"blue block": {"is": ["clean"]},
+"green bowl": {},
+"red bowl": {}
+13 # query: Put the cyan block on the yellow block
+14 put_first_on_second("cyan block", "yellow block")
+15 update_wm("Put the cyan block on the yellow block")
+Prompt 4: World-state reader. The text highlighted in green
+represents the part that the model is expected to generate.
+# state = {
+4.0
+1
+2
+#
+"objects": ["cyan block", "yellow block", "brown block",
+"purple block", "blue block", "green bowl", "red bowl", "
+disinfector"],
+"relations": [],
+"disinfector": {"contains": []},
+"cyan block": {"is": ["dirty"]},
+"yellow block": {"is": ["clean"]},
+"brown block": {"is": ["clean"]},
+"purple block": {"is": ["dirty"]},
+Statler (ours)
+3
+#
+4
+#
+5 #
+6 #
+7 #
+8 #
+9 #
+10 #
+"blue block": {"is": ["clean"]},
+"green bowl": {},
+11 #
+12 # }
+Initial State
+Code-as-Policies
+Statler (ours)
+"red bowl": {}
+13 # query: Put the cyan block on the yellow block.
+14 # state = {
+15 #
+"objects": ["cyan block", "yellow block", "brown block",
+"purple block", "blue block", "green bowl", "red bowl",
+"disinfector"],
+"relations": [["cyan block is on yellow block"]],
+"disinfector": {"contains": []},
+Fig. 3: Examples of simulations that show the result of
+executing different natural language instructions using Code-
+as-Policies and our state-maintaining Statler algorithm.
+responding) and then use the prompt to elicit an LLM to
+perform the particular subtask. As we discuss shortly, our
+framework includes a world-state reader that responds to
+the user query and a world-state writer that is responsible
+for updating the state representation. Our framework (Fig. 1)
+does not pose any fundamental limitation on which domain it
+can be applied to. Our approach can be regarded as a model-
+based extension of Code-as-Policies (CaP) in the sense that
+it keeps the core capabilities of CaP (e.g., hierarchical code
+generation) and incorporates a means to explicitly maintain
+an estimated world state.
+It is useful to consider example prompts to understand
+the operation of the reader and writer models. Prompt 4
+is an example of the input passed to the world-state reader.
+Initially, we initialize a JSON-formatted state with a reference
+to object-oriented principles. Given a user query “Put the
+cyan block on the yellow block" (Line 13) and the current
+state representation (Lines 1-12), the world-state reader
+should generate the code that responds to the query, taking
+into account the current state. The expected code to be
+generated is highlighted in green. After generating the code,
+our model executes it to complete the query. When the state
+needs to be updated, the generated code will contain an
+update_wm function that triggers the world-state writer with
+16 #
+17 #
+18 #
+19 #
+20 #
+21 #
+22 #
+"cyan block": {"is": ["dirty"]},
+"yellow block": {"is": ["dirty"]},
+"brown block": {"is": ["clean"]},
+"purple block": {"is": ["dirty"]},
+"blue block": {"is": ["clean"]},
+"green bowl": {},
+23 #
+24 #
+25 # }
+"red bowl": {},
+Prompt 5: World-state writer. The text rendered in blue
+highlights the updated part of the state.
+the query specified in its argument. In Prompt 5, we show
+the corresponding example for the world-state writer. Similar
+to the reader, we prepend the current state representation
+before the user query and the model generates the updated
+state representation (highlighted in green). Whenever the
+writer updates the state representation, we store it in external
+memory and refer to it as the current state.
+IV. EXPERIMENTS
+We evaluate the capabilities of Statler alongside state-of-
+the-art LLM models on three tabletop manipulation domains
+(Fig. 4): pick-and-place, block disinfection, and relative
+weight reasoning. For each domain, we design in-context
+examples and consider 20 evaluation episodes each of which
+consists of 5-16 consecutive steps of user queries. Every
+episode contains at least one query that requires reasoning
+over the interaction history (i.e., requires "memory" across
+steps), which makes the task significantly challenging.
+What is the color of the block right above the blue block?
+Code-as-Policies: fails to generate
+anything
+(a) Pick-and-place
+(b) Disinfection
+(c) Weight reasoning
+Fig. 4: The simulated domains we consider include (a) Pick-
+and-Place; (b) Block Disinfection, where the translucent
+sphere around a block represents its dirtiness (this is not
+visible to the robot); and (c) Relative Weight Reasoning,
+where the radius of the disk under each block indicates its
+weight (this is not visible to the robot).
+A. Simulated Tabletop Manipulation Domains
+The Pick-and-Place domain involves scenarios that require
+a robot arm to sequentially pick up and place a block
+onto another block, bowl, or the table. The model needs to
+remember and reason over the block locations. The example
+user queries are “Put the green block in the red bowl.", "What
+is the color of the block under the pink block?", and "How
+many blocks are in the green bowl?".
+In the Block Disinfection domain, we consider a scenario
+in which a block can be either dirty or clean, the state of which
+is not observable by the robot. When a clean block touches a
+dirty block (e.g., as a result of stacking one block on another),
+the clean block becomes dirty. There is a disinfector on the
+table that cleans any block placed inside it. This scenario
+emulates a clean-up task in which you might ask a robot to
+put dirty dishes in a dishwasher or dirty clothes in a washing
+machine. The user query contains pick-and-place commands
+similar to those in the pick-and-place domain as well as
+textual utterances that require reasoning over which blocks
+are clean and dirty, such as “Put all the clean blocks in the
+green bowl." This domain presents a particular challenge
+as the model must track the cleanliness of each block and
+accurately capture the state mutations that happen when a
+dirty block comes into contact with another clean block.
+Relative Weight Reasoning involves memorizing and
+reasoning over the relative weights of the blocks. User queries
+provide information about the weight of blocks (e.g., "The red
+block is twice the weight of the bronze block.”), which are
+followed by queries that require reasoning over the weights
+(e.g., "Put blocks in the purple bowl so that their total weight
+becomes identical to what is in the gray bowl.").
+We compare our proposed approach, Statler, to two strong
+competing methods: Code-as-Policies [5] (CaP) and CaP with
+Chain-of-Thought prompting [18] (CaP+CoT).CaP generates
+code for the current question at each step based on the past
+actions, but it does not maintain a state. Following the CoT
+framework, at every step, CaP+CoT deduces the intermediate
+states based on an initial state and past actions, which are
+considered as its thoughts, to generate the current code. But
+it leads to redundant reasoning and increases the length of the
+prompt, which may then exceed the LLM's context window
+Statler (ours): "red"
+How many blocks are not in the bowls?
+Code-as-Policies: "There are two
+blocks not in the bowls: brown block
+and yellow block."
+Statler (ours): "three blocks"
+Fig. 5: Examples that show the result of querying LLMs with
+and without maintained state. In the first scenario, CaP fails
+to produce an answer, while our Statler model produces the
+correct response. In the second example, one block is not
+visible and CaP incorrectly identifies two blocks as not being
+a bowl. By maintaining a persistent world state, our method
+is aware of the third block and correctly answers the query.
+size limitations. Furthermore, longer reasoning also demands
+longer, more intricate demo example prompts, contributing to
+increased developer effort. We ensure that the demonstrations
+(i.e., in-context examples) given to each of the models are
+equivalent. Namely, we use the same sequence of user queries
+and code snippets, except for necessary differences due to
+their designs such as state representation.
+TABLE I: Episode success rates and individual step success
+rates (in parentheses) for each sequential task. *indicates that
+the context limit was often exceeded.
+CaP
+CaP+COT
+Statler (ours)
+Disinfection
+Pick & Place
+0.00 (0.54)
+0.25 (0.76)
+0.50 (0.88)
+Weight
+0.00 (0.68)
+0.00 (0.84)
+0.00 (0.20)†
+0.40 (0.82)
+0.30 (0.88)
+0.55 (0.93)
+Table I reports the episode success rates of each method
+along with the the success rate for individual steps. An episode
+is considered to be a failure if a model fails to respond
+to one of the user queries in the episode. While the Cap
+baseline correctly processes more than half of the individual
+steps in each domain, it fails to successfully complete any
+of the episodes. As we show later, CaP correctly processes
+most queries that do not require reasoning over previous
+steps (e.g., "Put the red block on the blue block."), but tends
+to generate incorrect (or no) code in response to queries
+that require reasoning over the history (e.g., “Put all the
+dirty blocks in the pink bowl.” and “What is the color of
+the block under the purple block?") (see Figure 5 (top)).
+CaP+CoT fares slightly better in the Pick-and-Place and
+Relative Weight Reasoning, but still fails in most episodes.
+In contrast, Statler successfully handles the majority of these
+queries, demonstrating strong improvement over the others.
+It should be noted we explicitly chose queries that were
+challenging for LLM-based models, which partially accounts
+for why our model's scores show room for improvement.
+TABLE II: Success rates of Code-as-Policies (CaP) and Statler
+for non-temporal and temporal queries.
+Non-temporal
+Temporal
+CaP
+Code-as-Policies
+Put the black cup on the yellow block.
+Put the yellow block on the Rubik's cube.
+Pick & Place
+Disinfection
+Weight
+CaP
+Statler (ours)
+1.00 (62/62) 1.00 (68/68)
+0.99 (148/149) 0.98 (164/168)
+1.00 (107/107) 1.00 (107/107)
+Statler (ours)
+0.31 (9/29) 0.83 (48/58)
+0.05 (1/20) 0.65 (15/23)
+0.00 (0/20) 0.55 (11/20)
+In order to better understand the behavior of Statler in
+comparison to Code-as-Policies, we analyze the success rates
+based on the type of user queries. Specifically, we categorize
+each query as either temporal or non-temporal depending
+on whether responding to the query necessitates temporal
+reasoning. We emphasize that contemporary methods, includ-
+ing the baselines that we consider, use non-temporal queries
+for evaluation. Table II summarizes the resulting accuracy.
+The models often fail at different steps in an episode. We
+note that, when calculating accuracy we only consider the
+sequence of steps until the model fails to generate the correct
+code, which explains the mismatch in the denominators.
+We see that both models achieve near-perfect performance
+on commands that do not require temporal reasoning. How-
+ever, the performance of CaP noticeably decreases for tasks
+that require reasoning over the past. In contrast, Statler
+achieves success rates of 83% (vs. 31% for CaP) on Pick-
+and-Place, 65% (vs. 5% for CaP) on Block Disinfection, and
+55% (vs. 0% for CaP) on Relative Weight Reasoning.
+Although our method enjoys a better robustness than the
+baseline methods, it inherits some issues of large language
+models, which hinders its performance. For example, it
+hallucinates block conditions (e.g., clean or dirty) or loca-
+tions when the cleanliness of the block is never explicitly
+described. Moreover, the model's reasoning strategy seems to
+predominantly treat weight as an abstract concept, e.g. light vs.
+heavy, rather than executing mathematical computations. This
+weakness is evident when asking the model to accumulate
+blocks in a bowl until their total weight surpasses that of
+another bowl, yet the model underfills the bowl. In the
+disinfection domain, our model struggles to comprehend
+ambiguous terms like “other” in queries such as "the other
+blocks are clean." It can also wrongly infer from the training
+prompt that a block at the bottom becomes dirty when a block
+is placed on top of it, irrespective of the latter's cleanliness.
+B. Real Robot Experiments
+In order to validate Statler on a real robot, we implement it
+on a UR5 arm in a similar tabletop domain as the simulated
+experiments. We use MDETR [19], an open-vocabulary
+segmentation model, to obtain segmentation masks for objects
+within an RGB image captured by a RealSense camera
+mounted on the gripper. Using the predicted object mask
+and the depth image, the object point-cloud can be obtained,
+from which we estimate its center position and bounding box.
+All of the primitive functions are identical to those used in
+simulation. In this domain, the robot is asked to stack objects
+Time
+Fig. 6: A comparison of the resulting behavior for (top) Code-
+as-Policies and (bottom) our Statler model for the real robot
+experiments for the given multi-sentence instruction. Frames
+correspond to instances when the robot has placed an object.
+In order to successfully carry out the instruction, the robot
+must subsequently remove the black cup immediately after
+using it to cover the yellow block so that it can place the
+yellow block on the Rubik's cube. However, the the baseline
+Code-as-Policies (top row, third frame) fails to move the
+black cup aside, leaving the yellow block covered. It then
+places a wrong object on top of the Rubik's cube.
+1 Your task is to maintain the status of these items using a
+JSON dictionary and update the status of the corresponding
+items after a new query.
+2 This JSON dictionary will be commented, meaning that the
+starting character of each line is #.
+Prompt 6: Portion of Statler-Auto prompt.
+and cover objects with different colored cups. At any point,
+an object is only permitted to be covered by at most a single
+object or cover. If the robot is asked to manipulate the bottom
+object, it must put away the top one. If a new cover or object
+is to be stacked on it, the existing one must be removed.
+We evaluate the performance of Statler vs. CaP in the real
+robot domain using 10 episodes. Statler achieves episode and
+step (in parentheses) success rate of 40% (70%), where 67%
+of the failure cases are due to LLM reasoning while others
+are caused by either perception or manipulation issues. The
+success rate for CaP is 20% (46%), where LLM reasoning
+accounts for 88% of failures. In Figure 6, we also provide a
+short example where the CaP baseline fails. The difficulty is
+in recognizing that yellow block is hidden under the black
+cup, which must be removed before picking up the yellow
+block as Statler correctly spots. Instead, CaP is not aware of
+this and tries to pick up the yellow block nonetheless, which
+leads MDETR to incorrectly detect the toy wheel that has
+yellow color in it as the yellow block.
+C. State-Maintenance Ablations
+To better understand Statler's state-maintenance strategy,
+we consider three different approaches to tracking the state.
+The first (Statler-Unified) employs a single LLM as both the
+world-state reader and writer using a prompt that interleaves
+Statler's reader and writer prompts. At each step, the LLM
+first generates the action and then predicts the state that results
+from executing that action. The LLM then uses the resulting
+state when reasoning over the next query. Using a single
+LLM is conceptually simple, but it incurs an added burden for
+reasoning and generalization. Inspired by InstructGPT [20],
+the second (Statler-Auto) does not receive any in-context
+state-update examples for the world-state writer. Instead, we
+provide a natural language description of how the state should
+be maintained. Prompt 6 shows the relevant portion of the
+prompt. With an instruction and no in-context state-update
+examples, we ran our model on the same set of tasks. The
+third (Statler w/o State) ablates the world-state maintenance
+components of Statler entirely, resulting in a model that
+reduces to Code-as-Policies.
+TABLE III: Ablation episode (individual step) success rates.
+Pick & Place Disinfection
+Weight
+Statler w/o State
+Statler-Unified
+0.00 (0.54)
+0.00 (0.68)
+0.40 (0.85)
+0.35 (0.79)
+Statler-Auto
+0.75 (0.88)
+Statler (ours)
+0.50 (0.88)
+0.45 (0.82)
+0.40 (0.82)
+0.00 (0.84)
+0.50 (0.92)
+0.40 (0.90)
+0.55 (0.93)
+Table III compares the performance of Statler to the three
+variations in terms of both their full-episode completion rates
+(using 20 episodes for each domain) as well their individual
+step success rates. Without maintaining the world-state, Statler
+w/o State fails to complete any episodes (recall that an episode
+is considered to be a failure if the model fails to respond
+to one of the user queries during the episode) and results
+in individual step success rates that are significantly lower
+than Statler. Meanwhile, we see that Statler's use of separate
+LLMs for the world-state reader and world-state writer results
+in consistently higher episode success rates compared with
+the use of a unified reader and writer (Statler-Unified). The
+individual step success rates are higher for Pick-and-Place
+and Block Disinfection, and comparable for Relative Weight
+Reasoning. With regards to Statler's use of separate LLMs
+for the world-state writer and reader, we note that in-context
+learning has been shown to be sensitive to variations in prompt
+templates, the order of examples, and the examples used
+[21, 22]. In light of this, it is plausible that the performance
+gains that we achieve by dividing our reader and writer
+may be attributed in part to this sensitivity, allowing the
+models to, in effect, become specialized at their respective
+tasks. Interestingly, Statler-Auto performs noticeably better
+than Statler and Statler-Unified with regards to the episode
+success rate on the Pick-and-Place and Block Disinfection
+domains, but comparable to Statler in terms of the individual
+success rates, and worse for Relative Weight Reasoning.
+V. RELATED WORK
+Language Understanding for Robotics A common
+approach for language understanding for robotic agents
+involves symbol grounding [23], whereby phrases are mapped
+to symbols in the robot's world model. Early work [24, 25]
+relies upon hand-engineered rules to perform this mapping.
+More recent methods replace these rules with statistical
+models the parameters of which are trained on annotated
+corpora [26-37]. Other methods use neural network-based
+architectures to jointly reason over natural language utterances
+and the agent's (visual) observations of the scene [38-42].
+LLMs for Robotics Since LLMs are trained with Internet-
+scale corpora, their infused common sense have shown to
+help in the domain of robotics in terms of high-level planning
+from natural language instructions [4, 5, 43] for both object
+manipulation [44, 45] and navigation tasks [46-49]. Combin-
+ing LLMs with expressive visual-language embeddings also
+enables impressive capabilities [50]. This has led to efforts to
+push for general multi-modality embodied models [51, 52].
+Code Generation with LLMS Code generation has been
+one of the most successful use cases for LLMs [2, 3, 53–
+56]. Since code can connect with executable APIs for tasks
+including computation, vision and manipulation, a large chunk
+of work has focused on code generation with different tools
+[57-59]. In particular, Code-as-policies [5] is one of the first
+to use code generation within a robotics context.
+State Representation in Reasoning The use of state
+representations have been shown to help in algorithmic
+reasoning tasks [60, 61]. Instead of using one forward pass
+to predict the execution result for the entire code snippet,
+Nye et al. [60] proposes to spell out step-by-step intermediate
+outputs to help infer the final execution results. Also relevant
+are research efforts that aim to enhance language modeling
+by rolling out possible future tokens [62].
+Language Models and Planning Recent work shows that
+vanilla and instruction-tuned LLMs plan poorly [14, 16, 17].
+Some works propose using the LLM as an intermediary
+between natural language and a domain-specific programming
+language, and then uses a traditional planner [15, 16, 63].
+Silver et al. [17] employ Chain-of-Thought and iterative
+reprompting with feedback on generated plans, but require
+GPT-4 for good performance. Xiang et al. [64] use parameter-
+efficient finetuning of LLMs on top of traces from a world-
+model and show improved performance on related tasks.
+VI. CONCLUSION
+We presented Statler, a language model that maintains
+an explicit representation of state to support longer-horizon
+robot reasoning tasks. Integral to Statler are a world-state
+reader that responds to a user query taking into account the
+current internal state, and a world-state writer that maintains
+the world state. Evaluations on various simulated and real
+robot manipulation tasks reveal that Statler significantly
+outperforms contemporary models on non-trivial tasks that
+require reasoning over the past. Ablations demonstrate the
+contributions of our world-state reader and writer, and suggest
+Statler's flexibility to the state representation.
+VII. ACKNOWLEDGEMENTS
+We are grateful to National Science Foundation for enabling
+this work under HDR TRIPODS (No. 2216899), and to Adobe
+for supporting Hongyuan Mei through an Adobe Research
+gift. We thank Luzhe Sun and Richard Xu for their help at
+the early stage of the project.
+REFERENCES
+[1] T. Kojima, S. S. Gu, M. Reid, Y. Matsuo, and Y. Iwa-
+sawa, "Large language models are zero-shot reasoners,"
+arXiv preprint arXiv:2205.11916, 2022.
+[2] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P.
+de Oliveira Pinto, J. Kaplan, H. Edwards, Y. Burda,
+N. Joseph, G. Brockman, A. Ray, R. Puri, G. Krueger,
+M. Petrov, H. Khlaaf, G. Sastry, P. Mishkin, B. Chan,
+S. Gray, N. Ryder, M. Pavlov, A. Power, L. Kaiser,
+M. Bavarian, C. Winter, P. Tillet, F. P. Such, D. Cum-
+mings, M. Plappert, F. Chantzis, E. Barnes, A. Herbert-
+Voss, W. H. Guss, A. Nichol, A. Paino, N. Tezak, J. Tang,
+I. Babuschkin, S. Balaji, S. Jain, W. Saunders, C. Hesse,
+A. N. Carr, J. Leike, J. Achiam, V. Misra, E. Morikawa,
+A. Radford, M. Knight, M. Brundage, M. Murati,
+K. Mayer, P. Welinder, B. McGrew, D. Amodei, S. Mc-
+Candlish, I. Sutskever, and W. Zaremba, “Evaluating
+large language models trained on code," arXiv preprint
+arXiv:2107.03374, 2021.
+[3] OpenAI, “GPT-4 technical report,” arXiv preprint
+arXiv:2303.08774, 2023.
+[4] M. Ahn, A. Brohan, N. Brown, Y. Chebotar, O. Cortes,
+B. David, C. Finn, C. Fu, K. Gopalakrishnan, K. Haus-
+man, A. Herzog, D. Ho, J. Hsu, J. Ibarz, B. Ichter,
+A. Irpan, E. Jang, R. J. Ruano, K. Jeffrey, S. Jesmonth,
+N. J. Joshi, R. Julian, D. Kalashnikov, Y. Kuang, K.-H.
+Lee, S. Levine, Y. Lu, L. Luu, C. Parada, P. Pastor,
+J. Quiambao, K. Rao, J. Rettinghouse, D. Reyes, P. Ser-
+manet, N. Sievers, C. Tan, A. Toshev, V. Vanhoucke,
+F. Xia, T. Xiao, P. Xu, S. Xu, M. Yan, and A. Zeng, "Do
+as I can, not as I say: Grounding language in robotic
+affordances," arXiv preprint arXiv:2204.01691, 2022.
+[5] J. Liang, W. Huang, F. Xia, P. Xu, K. Hausman,
+B. Ichter, P. R. Florence, and A. Zeng, “Code as policies:
+Language model programs for embodied control," arXiv
+preprint arXiv:2209.07753, 2022.
+[6] W. Huang, F. Xia, T. Xiao, H. Chan, J. Liang, P. R.
+Florence, A. Zeng, J. Tompson, I. Mordatch, Y. Chebotar,
+P. Sermanet, N. Brown, T. Jackson, L. Luu, S. Levine,
+K. Hausman, and B. Ichter, “Inner monologue: Embod-
+ied reasoning through planning with language models,"
+in Proceedings of the Conference on Robot Learning
+(CORL), 2022.
+[7] S. Yang, O. Nachum, Y. Du, J. Wei, P. Abbeel,
+and D. Schuurmans, “Foundation models for decision
+making: Problems, methods, and opportunities,” arXiv
+preprint arXiv:2303.04129, 2023.
+[8] A. Nordmann, N. Hochgeschwender, and S. B. Wrede,
+"A survey on domain-specific languages in robotics,"
+in Simulation, Modeling, and Programming for Au-
+tonomous Robots, 2014.
+[9] R. S. Sutton and A. G. Barto, Reinforcement Learning:
+An Introduction. Cambridge, MA: MIT Press, 1998.
+[10] D. Koller and N. Friedman, Probabilistic graphical
+models: principles and techniques, 2009.
+[11] "Anthropic introducing 100k Context windows," https:
+//www.anthropic.com/index/100k-context-windows, ac-
+cessed: 2023-05-11.
+[12] N. F. Liu, K. Lin, J. Hewitt, A. Paranjape, M. Bevilacqua,
+F. Petroni, and P. Liang, “Lost in the middle: How
+language models use long contexts," arXiv preprint
+arXiv:2307.03172, 2023.
+[13] S. Sun, K. Krishna, A. Mattarella-Micke, and M. Iyyer,
+"Do long-range language models actually use long-range
+context?" arXiv preprint arXiv: 2109.09115, 2021.
+[14] K. Valmeekam, S. Sreedharan, M. Marquez, A. Olmo,
+and S. Kambhampati, “On the planning abilities of large
+language models (a critical investigation with a proposed
+benchmark)," arXiv preprint arXiv:2302.06706, 2023.
+[15] L. Guan, K. Valmeekam, S. Sreedharan, and S. Kamb-
+hampati, “Leveraging pre-trained large language models
+to construct and utilize world models for model-based
+task planning,” arXiv preprint arXiv:2305.14909, 2023.
+[16] B. Liu, Y. Jiang, X. Zhang, Q. Liu, S. Zhang, J. Biswas,
+and P. Stone, “Llm+ p: Empowering large language mod-
+els with optimal planning proficiency,” arXiv preprint
+arXiv:2304.11477, 2023.
+[17] T. Silver, S. Dan, K. Srinivas, J. B. Tenenbaum, L. P.
+Kaelbling, and M. Katz, “Generalized planning in PDDL
+domains with pretrained large language models,” arXiv
+preprint arXiv:2305.11014, 2023.
+[18] J. Wei, X. Wang, D. Schuurmans, M. Bosma, B. Ichter,
+F. Xia, E. H. Chi, Q. V. Le, and D. Zhou, "Chain-of-
+thought prompting elicits reasoning in large language
+models," in Advances in Neural Information Processing
+Systems (NeurIPS), 2022.
+-
+[19] A. Kamath, M. Singh, Y. LeCun, G. Synnaeve, I. Misra,
+and N. Carion, "MDETR Modulated detection for
+end-to-end multi-modal understanding,” in Proceedings
+of the International Conference on Computer Vision
+(ICCV), 2021.
+[20] L. Ouyang, J. Wu, X. Jiang, D. Almeida, C. L. Wain-
+wright, P. Mishkin, C. Zhang, S. Agarwal, K. Slama,
+A. Ray, J. Schulman, J. Hilton, F. Kelton, L. Miller,
+M. Simens, A. Askell, P. Welinder, P. Christiano,
+J. Leike, and R. Lowe, “Training language models to
+follow instructions with human feedback," 2022.
+[21] Q. Dong, L. Li, D. Dai, C. Zheng, Z. Wu, B. Chang,
+X. Sun, J. Xu, and Z. Sui, “A survey for in-context
+learning," arXiv preprint arXiv:2301.00234, 2022.
+[22] Z. Zhao, E. Wallace, S. Feng, D. Klein, and S. Singh,
+"Calibrate before use: Improving few-shot performance
+of language models," in International Conference on
+Machine Learning. PMLR, 2021, pp. 12697–12706.
+[23] S. Harnad, "The symbol grounding problem," Physica
+D, vol. 42, pp. 335–346, 1990.
+[24] T. Winograd, “Procedures as a representation for data
+in a computer program for understanding natural lan-
+guage," Ph.D. dissertation, Massachusetts Institute of
+Technology, 1971.
+[25] M. MacMahon, B. Stankiewicz, and B. Kuipers, "Walk
+the talk: Connecting language, knowledge, and action
+in route instructions,” in Proceedings of the National
+Conference on Artificial Intelligence (AAAI), 2006.
+[26] T. Kollar, S. Tellex, D. Roy, and N. Roy, "Toward un-
+derstanding natural language directions,” in Proceedings
+of the ACM/IEEE International Conference on Human-
+Robot Interaction (HRI), 2010.
+[27] C. Matuszek, D. Fox, and K. Koscher, "Following
+directions using statistical machine translation," in
+Proceedings of the ACM/IEEE International Conference
+on Human-Robot Interaction (HRI), 2010.
+[28] D. L. Chen and R. J. Mooney, “Learning to interpret
+natural language navigation instructions from observa-
+tions," in Proceedings of the National Conference on
+Artificial Intelligence (AAAI), 2011.
+[29] S. Tellex, T. Kollar, S. Dickerson, M. R. Walter,
+A. G. Banerjee, S. Teller, and N. Roy, “Understanding
+natural language commands for robotic navigation and
+mobile manipulation,” in Proceedings of the National
+Conference on Artificial Intelligence (AAAI), 2011.
+[30] C. Matuszek, E. Herbst, L. Zettlemoyer, and D. Fox,
+"Learning to parse natural language commands to a robot
+control system,” in Proceedings of the International
+Symposium on Experimental Robotics (ISER), 2012.
+[31] J. Thomason, S. Zhang, R. J. Mooney, and P. Stone,
+"Learning to interpret natural language commands
+through human-robot dialog,” in Proceedings of the
+International Joint Conference on Artificial Intelligence
+(IJCAI), 2015.
+[32] T. M. Howard, S. Tellex, and N. Roy, "A natural
+language planner interface for mobile manipulators,"
+in Proceedings of the IEEE International Conference
+on Robotics and Automation (ICRA), 2014.
+[33] D. K. Misra, J. Sung, K. Lee, and A. Saxena, "Tell me
+Dave: Context-sensitive grounding of natural language
+to manipulation instructions,” International Journal
+of Robotics Research, vol. 35, no. 1-3, pp. 281-300,
+January 2016.
+[34] J. Thomason, J. Sinapov, M. Svetlik, P. Stone, and R. J.
+Mooney, “Learning multi-modal grounded linguistic
+semantics by playing “I spy”,” in Proceedings of the
+International Joint Conference on Artificial Intelligence
+(IJCAI), 2016.
+[35] J. Thomason, J. Sinapov, R. J. Mooney, and P. Stone,
+"Guiding exploratory behaviors for multi-modal ground-
+ing of linguistic descriptions,” in Proceedings of the
+National Conference on Artificial Intelligence (AAAI),
+2018.
+[36] M. Shridhar and D. Hsu, “Interactive visual grounding
+of referring expressions for human-robot interaction,” in
+Proceedings of Robotics: Science and Systems (RSS),
+2018.
+[37] R. Paul, J. Arkin, D. Aksaray, N. Roy, and T. M. Howard,
+"Efficient grounding of abstract spatial concepts for
+natural language interaction with robot platforms,” Inter-
+national Journal of Robotics Research, vol. 37, no. 10,
+pp. 1269-1299, June 2018.
+[38] H. Mei, M. Bansal, and M. Walter, “Listen, attend,
+and walk: Neural mapping of navigational instructions
+to action sequences,” in Proceedings of the National
+Conference on Artificial Intelligence (AAAI), 2016.
+[39] P. Anderson, Q. Wu, D. Teney, J. Bruce, M. Johnson,
+N. Sünderhauf, I. D. Reid, S. Gould, and A. van den
+Hengel, “Vision-and-language navigation: Interpreting
+visually-grounded navigation instructions in real envi-
+ronments,” in Proceedings of the IEEE/CVF Conference
+on Computer Vision and Pattern Recognition (CVPR),
+2017.
+[40] D. Fried, R. Hu, V. Cirik, A. Rohrbach, J. Andreas, L.-
+P. Morency, T. Berg-Kirkpatrick, K. Saenko, D. Klein,
+and T. Darrell, “Speaker-follower models for vision-and-
+language navigation," in Advances in Neural Information
+Processing Systems (NeurIPS), Dec. 2018.
+[41] F. Zhu, Y. Zhu, X. Chang, and X. Liang, “Vision-
+language navigation with self-supervised auxiliary rea-
+soning tasks,” in Proceedings of the IEEE/CVF Con-
+ference on Computer Vision and Pattern Recognition
+(CVPR), Jun. 2020.
+[42] S. Y. Min, D. S. Chaplot, P. Ravikumar, Y. Bisk,
+and R. Salakhutdinov, “FILM: Following instructions
+in language with modular methods,”" arXiv preprint
+arXiv:2110.07342, 2021.
+[43] W. Huang, P. Abbeel, D. Pathak, and I. Mordatch,
+"Language models as zero-shot planners: Extracting
+actionable knowledge for embodied agents,” in Pro-
+ceedings of the International Conference on Machine
+Learning (ICML), 2022.
+[44] R. Wang, J. Mao, J. Hsu, H. Zhao, J. Wu, and Y. Gao,
+"Programmatically grounded, compositionally general-
+izable robotic manipulation,” in Proceedings of the
+International Conference on Learning Representations
+(ICLR), 2023.
+[45] A. Z. Ren, B. Govil, T.-Y. Yang, K. R. Narasimhan,
+and A. Majumdar, “Leveraging language for accelerated
+learning of tool manipulation,” in Proceedings of the
+Conference on Robot Learning (CoRL), 2023.
+[46] A. Majumdar, A. Shrivastava, S. Lee, P. Anderson,
+D. Parikh, and D. Batra, “Improving vision-and-
+language navigation with image-text pairs from the
+Web," in Proceedings of the European Conference on
+Computer Vision (ECCV), 2020.
+[47] S. Y. Gadre, M. Wortsman, G. Ilharco, L. Schmidt, and
+S. Song, "Cows on pasture: Baselines and benchmarks
+for language-driven zero-shot object navigation,” in
+Proceedings of the IEEE/CVF Conference on Computer
+Vision and Pattern Recognition (CVPR), 2023.
+[48] D. Shah, B. Osiński, S. Levine et al., “LM-Nav: Robotic
+navigation with large pre-trained models of language,
+vision, and action,” in Proceedings of the Conference
+on Robot Learning (CoRL), 2023.
+[49] C. Huang, O. Mees, A. Zeng, and W. Burgard, "Visual
+language maps for robot navigation," arXiv preprint
+arXiv:2210.05714, 2022.
+[50] M. Shridhar, L. Manuelli, and D. Fox, “CLIPort: What
+and where pathways for robotic manipulation,” arXiv
+preprint arXiv:2109.12098, 2021.
+[51] A. Zeng, A. S. Wong, S. Welker, K. Choromanski,
+F. Tombari, A. Purohit, M. S. Ryoo, V. Sindhwani,
+J. Lee, V. Vanhoucke, and P. R. Florence, "Socratic
+models: Composing zero-shot multimodal reasoning
+with language," arXiv preprint arXiv:2204.00598, 2022.
+[52] D. Driess, F. Xia, M. S. Sajjadi, C. Lynch, A. Chowdhery,
+B. Ichter, A. Wahid, J. Tompson, Q. Vuong, T. Yu et al.,
+"PALM-E: An embodied multimodal language model,"
+arXiv preprint arXiv:2303.03378, 2023.
+[53] D. Hendrycks, S. Basart, S. Kadavath, M. Mazeika,
+A. Arora, E. Guo, C. Burns, S. Puranik, H. He,
+D. X. Song, and J. Steinhardt, "Measuring coding
+challenge competence with APPS," arXiv preprint
+arXiv:2105.09938, 2021.
+[54] Y. Li, D. H. Choi, J. Chung, N. Kushman, J. Schrit-
+twieser, R. Leblond, Tom, Eccles, J. Keeling, F. Gimeno,
+A. D. Lago, T. Hubert, P. Choy, C. de, M. d'Autume,
+I. Babuschkin, X. Chen, P.-S. Huang, J. Welbl, S. Gowal,
+Alexey, Cherepanov, J. Molloy, D. J. Mankowitz, E. S.
+Robson, P. Kohli, N. de, Freitas, K. Kavukcuoglu, and
+O. Vinyals, "Competition-level code generation with
+AlphaCode," Science, vol. 378, pp. 1092–1097, 2022.
+[55] B. Chen, F. Zhang, A. Nguyen, D. Zan, Z. Lin, J.-G. Lou,
+and W. Chen, "CodeT: Code generation with generated
+tests," arXiv preprint arXiv:2207.10397, 2022.
+[56] T. B. Brown, B. Mann, N. Ryder, M. Subbiah, J. Kaplan,
+P. Dhariwal, A. Neelakantan, P. Shyam, G. Sastry,
+A. Askell, S. Agarwal, A. Herbert-Voss, G. Krueger,
+T. J. Henighan, R. Child, A. Ramesh, D. M. Ziegler,
+J. Wu, C. Winter, C. Hesse, M. Chen, E. Sigler,
+M. Litwin, S. Gray, B. Chess, J. Clark, C. Berner,
+S. McCandlish, A. Radford, I. Sutskever, and D. Amodei,
+"Language models are few-shot learners,” arXiv preprint
+arXiv:2005.14165, 2020.
+[57] T. Schick, J. Dwivedi-Yu, R. Dessì, R. Raileanu,
+M. Lomeli, L. Zettlemoyer, N. Cancedda, and
+T. Scialom, "Toolformer: Language models can
+teach themselves to use tools," arXiv preprint
+arXiv:2302.04761, 2023.
+[58] D. Sur'is, S. Menon, and C. Vondrick, "ViperGPT:
+Visual inference via Python execution for reasoning,"
+arXiv preprint arXiv:2303.08128, 2023.
+[59] S. G. Patil, T. Zhang, X. Wang, and J. E. Gonzalez,
+"Gorilla: Large language model connected with massive
+APIs," arXiv preprint arXiv:2305.15334, 2023.
+[60] M. Nye, A. Andreassen, G. Gur-Ari, H. Michalewski,
+J. Austin, D. Bieber, D. Dohan, A. Lewkowycz,
+M. Bosma, D. Luan, C. Sutton, and A. Odena,
+"Show your work: Scratchpads for intermediate com-
+putation with language models," arXiv preprint
+arXiv:2112.00114, 2021.
+[61] A. J. H. Nam, M. Ren, C. Finn, and J. L. McClelland,
+"Learning to reason with relational abstractions," arXiv
+preprint arXiv:2210.02615, 2022.
+[62] L. Du, H. Mei, and J. Eisner, “Autoregressive
+modeling with lookahead attention,” arXiv preprint
+arXiv:2305.12272, 2023.
+[63] L. Wong, G. Grand, A. K. Lew, N. D. Goodman, V. K.
+Mansinghka, J. Andreas, and J. B. Tenenbaum, “From
+word models to world models: Translating from natural
+language to the probabilistic language of thought,” arXiv
+preprint arXiv:2306.12672, 2023.
+[64] J. Xiang, T. Tao, Y. Gu, T. Shu, Z. Wang, Z. Yang, and
+Z. Hu, "Language models meet world models: Embodied
+experiences enhance language models," arXiv preprint
+arXiv:2305.10626, 2023.
+APPENDIX I
+AUTHOR CONTRIBUTIONS
+• Takuma Yoneda led the project. He discussed and came
+up with the seed idea with Jiading Fang. He also provided
+experiment designs from the early stages, and led the
+discussion and effort throughout the project.
+•
+•
+•
+•
+•
+Jiading Fang initiated the hackathon that was the
+impetus to this project, shared the seed idea, contributed
+to writing.
+Peng Li implemented and conducted motivational exper-
+iments. He also designed and conducted the large part
+of our ablation experiments.
+Huanyu Zhang designed the evaluation episodes from
+the early stage of the project, and performed quantitative
+and qualitative analysis.
+Tianchong Jiang developed the PyBullet simulation
+environments for our experiments and created the corre-
+sponding visualizations.
+Shengjie Lin led the real robot experiments with
+regards to task design, prompt development, perception
+integration, and evaluation execution.
+⚫ Ben Picker designed the evaluation episodes and helped
+with the partial automation of their generation and
+evaluation. Also contributed to research of related works
+and paper editing.
+• David Yunis developed and executed the real robot
+experiments with Shengjie Lin. He also identified and
+compiled relevant works, and wrote most of the related
+work discussion as well as the real robot experiment
+section.
+•
+Hongyuan Mei supervised the project. He also con-
+tributed significantly to restructuring the abstract and
+introduction.
+• Matthew R. Walter supervised and guided the project
+from the initial hackathon through paper submission.
+He also helped Takuma to manage and distribute the
+workload between project members, which was critical
+to facilitate collaboration at this scale.
+APPENDIX II
+EXAMPLE EPISODE SEQUENCES
+In this section, we show three example evaluation episodes
+(one per domain), to give a better idea of what Statler is tasked
+to handle at test time. The episodes are shown in Prompt 7, 8
+and 9. The temporal queries that require temporal reasoning
+to answer correctly are highlighted in blue. Python snippet
+under [Gold Code] shows the “correct” code the model is
+expected to generate. We note that the model can also output
+comments, noop and update_wm functions (in the case of
+Statler) that are not included in the gold code here.
+The whole set of episodes (20 episodes per domain) can
+be found in our GitHub repository at https://github.
+com/ripl/statler.
+1
+2
+3 #
+"
+[Initial State]
+# state = {
+"objects": ["green block", "orange block", "white block",
+cyan block", "golden bowl", "red bowl"],
+"relations": [],
+"green block": {},
+4 #
+5 #
+6 #
+"orange block": {},
+7 #
+"white block": {},
+8 #
+"cyan block": {},
+9
+#
+10 #
+11 # }
+"golden bowl": {},
+"red bowl": {},
+12 [User Query 1] put the white block in the golden bowl
+13 [Gold Code]
+14 put_first_on_second("white block", "golden bowl")
+[User Query 2] put the cyan block on the green block
+16 [Gold Code]
+15
+17
+put_first_on_second("cyan block", "green block")
+[User Query 3] put the orange block in the empty bowl
+19 [Gold Code]
+18
+20
+21
+put_first_on_second("orange block", "red bowl")
+[User Query 4] put the block in the golden bowl on the block
+in the red bowl
+22 [Gold Code]
+put_first_on_second("white block", "orange block")
+[User Query 5] is the green block in a higher position than
+the white block
+23
+24
+25
+[Gold Code]
+26
+say ("no")
+27 [User Query 6] is the green block right above the orange block
+28 [Gold Code]
+29
+say("no")
+Prompt 7: Example evaluation episode (Pick-and-place
+domain). The queries in blue require temporal reasoning.
+[Initial State]
+# state = {
+"objects": ["teal block", "black block", "cyan block", "
+blue block", "tan bowl", "disinfector"],
+"relations": [],
+"disinfector": {"contains": []},
+1
+2
+3 #
+4 #
+5 #
+6 #
+"teal block": {},
+7 #
+"black block": {},
+8
+#
+"cyan block": {},
+9 #
+"blue block": {},
+10 #
+"tan bowl": {}
+11 # }
+12 [User Query 1] the teal block and the black block are dirty.
+[User Query 2] The other blocks are clean
+13
+14 [User Query 3] Woops, somebody accidentally polluted the cyan
+block and the blue block
+15 [User Query 4] Put the cyan block on the teal block
+16 [Gold Code]
+17
+put_first_on_second("cyan block", "teal block")
+18 [User Query 5] Put the blue block and the black block in the
+disinfector
+19 [Gold Code]
+20
+21
+put_first_on_second("blue block", "disinfector")
+put_first_on_second("black block", "disinfector")
+22 [User Query 6] Put the blue block in the tan bowl
+23 [Gold Code]
+24
+put_first_on_second("blue block", "tan bowl")
+25 [User Query 7] Put the blue block on the table.
+26 [Gold Code]
+27
+put_first_on_second("blue block", "table")
+28 [User Query 8] Put the black block on the blue block
+29 [Gold Code]
+30
+put_first_on_second("black block", "blue block")
+31 [User Query 9] Put all the dirty blocks on the table.
+[Gold Code]
+32
+33
+34
+put_first_on_second("teal block", "table")
+put_first_on_second("cyan block", "table")
+Prompt 8: Example evaluation episode (Disinfection domain).
+The query in blue requires temporal reasoning.
+1
+2
+༣
+[Initial State]
+# state = {
+4
+#
+5
+6
+#
+7 #
+"objects": ["black block", "orange block", green block",
+"red block", "gray bowl", "blue bowl"],
+"relations": [],
+"black block": {},
+"orange block": {},
+"green block": {},
+"red block": {},
+"gray bowl": {},
+marks them “dirty” by mistake (highlighted in red). This error
+1 In the following, the robot deals with dirty and clean blocks.
+2 A clean block becomes dirty when it touches another dirty
+block.
+3 This includes when a dirty block is stacked on top of a clean
+block, and also when a dirty block is right under a clean
+block.
+4
+5
+8
+9 #
+10
+#
+"blue bowl": {},
+11
+# }
+12
+13
+[User Query 1] The black block is twice the weight of the
+green block
+6
+14 [User Query 2] Put the orange block in the gray bowl
+15
+[Gold Code]
+16
+put_first_on_second("orange block", "gray bowl")
+17 [User Query 3] The red block is twice the weight of the orange
+block
+18 [User Query 4] The red block has the same weight of the black
+block
+19 [User Query 5] Put the red block in the gray bowl
+20 [Gold Code]
+21
+put_first_on_second("red block", "gray bowl")
+22 [User Query 6] Put blocks in the blue bowl so that their total
+weight becomes identical to what is in the gray bowl
+23 [Gold Code]
+24
+25
+put_first_on_second("black block", "blue bowl")
+put_first_on_second("green block", "blue bowl")
+Prompt 9: Example evaluation episode (Relative Weight
+domain). The query in blue requires temporal reasoning.
+APPENDIX III
+PROMPTS
+For each domain, we provide tailored prompt that consists
+of example sequence of user queries and expected Python
+code. To provide a concrete idea of our prompt design,
+we show our prompt of Code-as-Policies and Statler for
+disinfection domain on Prompt 10 and 11.
+APPENDIX IV
+EXAMPLE FAILURE CASES
+We manually looked into examples that Statler fails.
+Although providing insights on when and why the model
+fails would be helpful, we find that in many cases it is not
+trivial to interpret the model's mistakes. In this section, we
+show three episodes (one per each domain) that the model
+failed, just to give some ideas on its failure modes.
+A. Pick-and-Place
+The episode with the generated state and code is shown
+in Prompt 12. Given the fifth user query, "Is the green block
+in a higher position than the white block?" The current state
+correctly identifies the positions of both the white and green
+blocks (i.e., the white block is on the orange block, which
+is inside the red bowl, and the green block is on the table).
+However, with this information correctly absorbed as shown
+in its thinking process, the state reader still fails to recognize
+that the green block is in a lower position.
+B. Disinfection
+The episode with generated state and code is on Prompt 13.
+Given the eighth user query “Put the black block on the blue
+block", even though the current state correctly recognizes the
+both (black and blue) blocks to be clean, generated next state
+The table, bowls and the robot gripper are protected from any
+dirtiness, so they stay clean forever.
+When a dirty block is put into the disinfector, it becomes
+clean immediately.
+7 Instruction:
+8 Aside from the built-in python functions and statements, the
+robot can only run the following functions:
+'put_first_on_second', 'say' and 'noop'.
+9
+10
+11 Each code is carefully designed by professionals to meet all
+of these requirements.
+12
+===
+13 # objects = ["cyan block", "yellow block", "brown block",
+purple block", "blue block", "green bowl", "red bowl",
+disinfector"]
+14 # query: The cyan block and purple block are dirty
+15 noop()
+16 # query: The other blocks are clean
+17 noop()
+18 # query: Put the cyan block on the yellow block
+19 put_first_on_second("cyan block", "yellow block")
+20 # query: Put the brown block in the green bowl
+21 put_first_on_second("brown block", "green bowl")
+"
+22 # query: Woops, somebody took out the brown block and dropped
+it on a dirty area
+23 noop()
+24 # query: Pick the cyan block and put it on the table
+25 put_first_on_second("cyan block", "table")
+26 # query: Move the yellow block into the disinfector
+27 put_first_on_second("yellow block", "disinfector")
+28 # query: Place all the clean blocks in the green bowl
+29 # THINK: The clean blocks are yellow block and purple block
+30 put_first_on_second("blue block", "green bowl")
+31 put_first_on_second("yellow block", "green bowl")
+32 # query: Put the cyan and purple block in the disinfector
+33 put_first_on_second("cyan block", "disinfector")
+34 put_first_on_second ("purple block", "disinfector")
+35 # query: Put the dirty blocks in the red bowl
+36 # THINK: The only dirty block is the brown block
+37 put_first_on_second("brown block", "red bowl")
+38 # query: Pick the blue block and put it on the table.
+39 put_first_on_second("blue block", "table")
+40 # query: Put the yellow block on the table
+41 put_first_on_second("yellow block", "table")
+42 # query: Put the brown block in the green bowl
+43 put_first_on_second("cyan block", "green bowl")
+44 # query: How many blocks are in the red bowl.
+45 # THINK: the red bowl is empty
+46 say ("There is no block in the red bowl")
+47 ===
+Prompt 10: Prompt for Code-as-Policies (Disinfection
+domain)
+by the state writer causes the failure of the code generation
+at the next step.
+C. Relative weight reasoning
+The episode with generated state and code is on Prompt 14.
+The model succeeds up to user query 5. Given the next user
+query "Put blocks in the blue bowl so that their total weight
+becomes identical to what is in the gray bowl", the reasoning
+process that we can observe from #3 THINK: comments on
+the generated code contains hallucination (highlighted in red).
+While the current state correctly identifies that the blue bowl
+is empty, the model thinks the green block is in it, and as a
+result fails to move it over to the blue bowl.
+1 In the following, the robot deals with dirty and clean blocks.
+2 A clean block becomes dirty when it touches another dirty
+block.
+3 This includes when a dirty block is stacked on top of a clean
+block, and also when a dirty block is right under a clean
+block.
+4 The table, bowls and the robot gripper are protected from any
+dirtiness, so they stay clean forever.
+5 When a dirty block is put into the disinfector, it becomes
+6
+clean immediately.
+7 Instruction:
+8 Aside from the built-in python functions and statements, the
+robot can only run the following functions:
+9 'put_first_on_second', 'say' and 'update_wm'.
+10
+11 Each code is carefully designed by professionals to meet all
+of these requirements.
+12 ===
+# state = {
+13
+14
+#
+"objects" ["cyan block", "yellow block", "brown block",
+"purple block", "blue block", "green bowl", "red bowl", "
+disinfector"],
+15 #
+16 #
+17 #
+18
+#
+19 #
+20 #
+21 #
+22 #
+23 #
+24 # }
+"relations": [],
+"disinfector": {"contains": []},
+"cyan block": {},
+"yellow block": {},
+"brown block": {},
+"purple block": {},
+"blue block": {},
+"green bowl": {},
+"red bowl": {}
+25 # query: The cyan block and purple block are dirty
+26 update_wm("The cyan and purple blocks are dirty")
+27 #3 state = { omitted ...
+28 # query: The other blocks are clean
+29 update_wm("The brown block, yellow block, and blue block are
+clean")
+30 #23 state = { omitted ...
+31 # query: Put the cyan block on the yellow block
+32 put_first_on_second("cyan block", "yellow block")
+33 update_wm("Put the cyan block on the yellow block.")
+34 # state = {
+35 #
+"
+"objects" ["cyan block", "yellow block", "brown block",
+"purple block", "blue block", "green bowl", "red bowl",
+disinfector"],
+36 # "relations": [["cyan block is on yellow block"]],
+"disinfector": {"contains": []},
+37 #
+38 #
+39 #
+40 #
+41
+#
+42 #
+43 #
+44 #
+45 # }
+"cyan block": {"is": ["dirty"]},
+"yellow block": {"is": ["dirty"]},
+"brown block": {"is": ["clean"]},
+"purple block": {"is": ["dirty"]},
+"blue block": {"is": ["clean"]},
+"green bowl": {},
+"red bowl": {}
+46 # query: Put the brown block in the green bowl
+47 put_first_on_second ("brown block", "green bowl")
+48 update_wm("Put the brown block in the green bowl")
+49 # state = { omitted . . .
+50 # query: Woops, somebody took out the brown block and dropped
+it on a dirty area
+51 update_wm("Put the brown block on the table, and make it dirty
+")
+52 #23 state = { . . . omitted . . .
+53 # query: Pick the cyan block and put it on the table.
+54 put_first_on_second("cyan block", "table")
+55 update_wm("Put the cyan block on the table")
+56
+# state = { omitted . . .
+57 # query: Move the yellow block into the disinfector
+58 put_first_on_second("yellow block", "disinfector")
+59 update_wm("Put the yellow block in the disinfector")
+60
+61
+62
+# state = { omitted ...
+omitted
+# query: Put the brown block in the green bowl
+63 put_first_on_second("cyan block", "green bowl")
+64 update_wm("Put the cyan block in the green bowl")
+65 #state = { omitted . . .
+66 # query: How many blocks are in the red bowl
+67
+# THINK: the red bowl is empty
+68 say ("There is no block in the red bowl")
+1 [Initial State]
+# state = {
+2
+3
+#
+"objects": ["green block", "orange block", "white block",
+"cyan block", "golden bowl", "red bowl"],
+"relations": [],
+"green block": {},
+4
+#
+5
+#
+6 #
+"orange block": {},
+7 #
+"white block": {},
+8 #
+"cyan block": {},
+9 #
+10 #
+11
+# }
+12
+"golden bowl": {},
+"red bowl": {},
+13 #state = {
+omitted
+"objects": ["green block", "orange block", "white block",
+"cyan block", "golden bowl", "red bowl"],
+"relations": ["cyan block is on green block", "white
+block is on orange block"],
+14 #
+15 #
+16 #
+"green block": {},
+17 #
+"orange block": {},
+18 #
+"white block": {},
+19 #
+"cyan block": {},
+20 #
+21 #
+22 # }
+"golden bowl": {},
+"red bowl": {"contains": ["orange block"]},
+23 [User Query 5] is the green block in a higher position than
+the white block
+24 [Generated Code]
+25
+# THINK: The cyan block is on the green block which is on the
+table
+26 # THINK: The white block is on the orange block which is in
+the red bowl
+27 # THINK: Thus the green block is in a higher position
+28 say ("yes")
+29
+30 [Gold Code]
+31 say ("no (white block is on the orange block is in the red bowl,
+green block is on the table)")
+32
+33
+omitted
+Prompt 12: Generated states and code on an evaluation
+episode (pick and place domain). Incorrect portions are
+highlighted in red.
+69
+# state = { omitted ...
+70
+===
+Prompt 11: Prompt for Statler (Disinfection domain). To
+avoid getting cluttered, many lines are omitted (denoted with
+"omitted"). Please check our repository for full version.
+1 [Initial State]
+4
+5 #
+6 #
+7
+"black block": {},
+8
+#
+"cyan block": {},
+"blue block": {},
+10 #
+"tan bowl": {}
+11
+#3 }
+12
+omitted
+13
+# state = {
+14
+#
+2
+#23 state = {
+3
+#
+"objects": ["teal block", "black block", "cyan block",
+blue block", "tan bowl", "disinfector"],
+"relations":
+[],
+"disinfector": {"contains": []},
+"teal block": {},
+15 #
+16 #
+17 #
+"teal block": {"is": ["dirty"]},
+18 #
+19
+#
+"objects": ["teal block", "black block", "cyan block", "
+blue block", "tan bowl", "disinfector"],
+"relations": [["cyan block is on teal block"]],
+"disinfector": {"contains": ["black block"]},
+"black block": {"is": ["clean"]},
+"cyan block": {"is": ["dirty"]},
+4
+#
+5 #
+6 #
+"orange block": {},
+7 #
+"green block": {},
+8 #
+"red block": {},
+9 #
+"gray bowl": {},
+10 #
+"blue bowl": {},
+11 # }
+12
+omitted
+[Initial State]
+# world state = {
+1
+2
+3
+#
+"objects": ["black block", "orange block", green block",
+"red block", "gray bowl", "blue bowl"],
+"relations": [],
+"black block": {},
+15 #
+20 #
+21 #
+"blue block": {"is": ["clean"]},
+"tan bowl": {}
+16 #
+13 [Generated State]
+14 # state = {
+"objects": ["black block", "orange block", green block",
+"red block", "gray bowl", "blue bowl"],
+"relations": [],
+17 #
+"black block": {"weight": red_block.weight},
+22 # }
+18 #
+23 [User Query 8] Put the black block on the blue block
+24 [Generated Code]
+19 #
+20 #
+"orange block": {"weight": red_block. weight / 2},
+"green block": {"weight": black_block. weight / 2},
+"red block": {"weight": black_block. weight},
+25
+put_first_on_second("black block", "blue block")
+21 #
+"gray bowl": {"contains": ["orange block", "red block"]},
+26 update_wm("Put the black block on the blue block")
+27 [Gold Code]
+28
+put_first_on_second("black block", "blue block")
+29 [Generated State]
+30 # state = {
+31 #
+"objects": ["teal block", "black block", "cyan block", "
+blue block", "tan bowl", "disinfector"],
+32 #
+"relations": [["cyan block is on teal block"], ["black
+block is on blue block"]],
+"disinfector": {"contains": []},
+"teal block": {"is": ["dirty"]},
+33 #
+34 #
+35 #
+"black block": {"is": ["dirty"]},
+36 #
+"cyan block": {"is": ["dirty"]},
+37 #
+38 #
+"blue block": {"is": ["dirty"]},
+"tan bowl": {}
+39 # }
+22 #
+23 # }
+"blue bowl": {},
+24 [User Query 6] Put blocks in the blue bowl so that their total
+weight becomes identical to what is in the gray bowl
+[Generated Code]
+25
+26
+# THINK: In the gray bowl, we have orange block and red
+block
+27
+# THINK: In the blue bowl, we have green block
+28
+# THINK: The orange block has half the weight of the red
+block
+29
+# THINK: The green block has half the weight of the black
+block
+30
+# THINK: We need to place a block that has 'red_block.weight
+/ 2'
+31
+# THINK: The block that has the weight 'red_block. weight / 2'
+is black block
+32
+put_first_on_second("black block", "blue bowl")
+33
+34
+update_wm("Put the black block in the blue bowl")
+35 [Gold Code]
+put_first_on_second("black block", "blue bowl")
+put_first_on_second("green block", "blue bowl")
+41
+40 [User Query 9] Put all the dirty blocks on the table.
+[Generated Code]
+42
+put_first_on_second("teal block", "table")
+43
+put_first_on_second("black block", "table")
+44
+put_first_on_second("cyan block", "table")
+45
+46
+put_first_on_second("blue block", "table")
+update_wm("Put all the dirty blocks on the table")
+36
+37
+47
+48 [Gold Code]
+49
+put_first_on_second("teal block", "table")
+50
+put_first_on_second("cyan block", "table")
+Prompt 13: Generated states and code on an evaluation
+episode (disinfection domain). Incorrect portions
+highlighted in red.
+are
+Prompt 14: Generated states and code on an evaluation
+episode (relative weight reasoning domain). Incorrect portions
+are highlighted in red.

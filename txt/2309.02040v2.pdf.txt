@@ -1,0 +1,855 @@
+arXiv:2309.02040v2 [cs.LG] 18 Sep 2023
+Diffusion Generative Inverse Design
+Marin Vlastelica
+12
+Tatiana López-Guevara² Kelsey Allen² Peter Battaglia² Arnaud Doucet²
+Kimberly Stachenfeld 23
+Abstract
+Inverse design refers to the problem of optimiz-
+ing the input of an objective function in order to
+enact a target outcome. For many real-world en-
+gineering problems, the objective function takes
+the form of a simulator that predicts how the sys-
+tem state will evolve over time, and the design
+challenge is to optimize the initial conditions that
+lead to a target outcome. Recent developments
+in learned simulation have shown that graph neu-
+ral networks (GNNs) can be used for accurate,
+efficient, differentiable estimation of simulator
+dynamics, and support high-quality design op-
+timization with gradient- or sampling-based op-
+timization procedures. However, optimizing de-
+signs from scratch requires many expensive model
+queries, and these procedures exhibit basic fail-
+ures on either non-convex or high-dimensional
+problems. In this work, we show how denoising
+diffusion models (DDMs) can be used to solve
+inverse design problems efficiently and propose
+a particle sampling algorithm for further improv-
+ing their efficiency. We perform experiments on
+a number of fluid dynamics design challenges,
+and find that our approach substantially reduces
+the number of calls to the simulator compared to
+standard techniques.
+1. Introduction
+Substantial improvements to our way of life hinge on devis-
+ing solutions to engineering challenges, an area in which
+Machine Learning (ML) advances is poised to provide posi-
+tive real-world impact. Many such problems can be formu-
+lated as designing an object that gives rise to some desirable
+physical dynamics (e.g. designing an aerodynamic car or
+a watertight vessel). Here we are using ML to accelerate
+'Max Planck Institute for Intelligent Systems, Tübingen,
+Germany Google DeepMind, London, UK 3 Columbia Uni-
+versity, New York, NY. Correspondence to: Marin Vlastel-
+ica <marin.vlastelica@tue.mpg.de>, Kimberly Stachenfeld
+<stachenfeld@deepmind.com>.
+Preprint. Copyright 2023 by the authors.
+this design process by learning both a forward model of the
+dynamics and a distribution over the design space.
+Prior approaches to ML-accelerated design have used neural
+networks as a differentiable forward model for optimization
+(Challapalli et al., 2021; Christensen et al., 2020; Gómez-
+Bombarelli et al., 2018). We build on work in which the
+forward model takes the specific form of a GNN trained
+to simulate fluid dynamics (Allen et al., 2022). Since the
+learned model is differentiable, design optimization can
+be accomplished with gradient-based approaches (although
+these struggle with zero or noisy gradients and local minima)
+or sampling-based approaches (although these fare poorly
+in high-dimensional design spaces). Both often require
+multiple expensive calls to the forward model. However,
+generative models can be used to propose plausible designs,
+thereby reducing the number of required calls (Forte et al.,
+2022; Zheng et al., 2020; Kumar et al., 2020).
+In this work, we use DDMs to optimize designs by sampling
+from a target distribution informed by a learned data-driven
+prior. DDMs have achieved extraordinary results in im-
+age generation (Song et al., 2020a;b; Karras et al., 2022;
+Ho et al., 2020), and has since been used to learn efficient
+planners in sequential decision making and reinforcement
+learning (Janner et al., 2022; Ajay et al., 2022), sampling
+on manifolds (De Bortoli et al., 2022) or constrained opti-
+mization formulations (Graikos et al., 2022). Our primary
+contribution is to consider DDMs in the setting of physi-
+cal problem solving. We find that such models combined
+with continuous sampling procedures enable to solve de-
+sign problems orders of magnitude faster than off-the-shelf
+optimizers such as CEM and Adam. This can be further
+improved by utilizing a particle sampling scheme to update
+the base distribution of the diffusion model which by cheap
+evaluations (few ODE steps) with a learned model leads
+to better designs in comparison to vanilla sampling proce-
+dures. We validate our findings on multiple experiments in
+a particle fluid design environment.
+2. Method
+Given some task specification c, we have a target distribu-
+tion of designs (x) which we want to optimize w.r.t. x. To
+simplify notation, we do not emphasize the dependence of
+a
+Generating and Evaluating Designs
+Diffusion Generative Model
+Diffusion Generative Inverse Design
+G
+Learned Simulator
+x,~ N(0,1)
+x ~π(x)
+FM
+Ꮎ
+IC
+Ꮎ
+E
++
+b Diffusion Model Trained on Prior Optimized Designs
+Reverse diffusion
+x
+G
+Diffusion
+C Optimizing design samples for reward
+Conditioned
+Sampling
+E
+...
+Guided
+Sampling
+Energy
+Function
+E
+E
+VE
+Figure 1. (a) Given initial conditions governed by Orc, energy function parameters OE, and learned GNN dynamics model fм, design
+samples x from the diffusion model are assigned a cost E(x). (b) Schematic of the DDM training (c) Gradients VE and conditioning set
+(0E and E) inform energy and conditional guidance, resp.
+Ton c. This distribution is a difficult object to handle, since
+a highly non-convex cost landscape might hinder efficient
+optimization. We can capture prior knowledge over 'sen-
+sible' designs in form of a prior distribution p(x) learned
+from existing data. Given a prior, we may sample from the
+distribution
+ñ(x) xp(x)π(x),
+(1)
+which in this work is achieved by using a diffusion method
+with guided sampling. The designs will subsequently be
+evaluated by a learned forward model comprised of a pre-
+trained GNN simulator and a reward function (Allen et al.,
+2022; Pfaff et al., 2021; Sanchez-Gonzalez et al., 2020) (see
+Appendix A).
+Let E : X ↔ R be the cost (or "energy") of a design x Є X
+for a specific task c under the learned simulator (dependence
+of E on c is omitted for simplicity). The target distribution
+of designs π(x) is defined by the Boltzmann distribution
+π(x):
+=:
+1
+== exp (− E(x)),
+Z
+T
+(2)
+where Z denotes the unknown normalizing constant and & a
+temperature parameter. As T →0, this distribution concen-
+trates on its modes, that is on the set of the optimal designs
+for the cost Ec (x). Direct methods to sample from 7(x)
+rely on expensive Markov chain Monte Carlo techniques or
+variational methods minimizing a reverse KL criterion.
+We will rely on a data-driven prior learned by the diffu-
+sion model from previous optimization attempts. We col-
+lect optimization trajectories of designs for different task
+parametrizations c using Adam (Kingma & Ba, 2015) or
+CEM (Rubinstein, 1999) to optimize x. Multiple entire
+optimization trajectories of designs are included in the train-
+ing set for the generative model, providing a mix of design
+quality. These optimization trajectories are initialized to
+flat tool(s) below the fluid (see Figure 5), which can be
+more easily shaped into successful tools than a randomly
+initialized one. Later, when we compare the performance
+of the DDM to Adam and CEM, we will be using randomly
+initialized tools for Adam and CEM, which is substantially
+more challenging.
+2.1. Diffusion generative models
+We use DDMs to fit p(x) (Ho et al., 2020; Song et al.,
+2020b). The core idea is to initialize using training data
+x0~
+p, captured by a diffusion process (xt) tε [0,1] defined
+by
+dxt ==
+(3)
+-Btxt dt + √2ẞtdwt,
+where (wt)te[0,1] denotes the Wiener process. We denote by
+Pt(x) the distribution of x+ under (3). For ẞt large enough,
+P1(x)N(x; 0, 1). The time-reversal of (3) satisfies
+dxt = −ßt[xt +2Vx log pt(xt)]dt + √√2ßw, (4)
+=
+where (w₁¯ )te[0,1] is a Wiener process when time flows
+backwards from t = 1 to t 0, and dt is an in-
+finitesimal negative timestep. By initializing (4) using
+x1 P1, we obtain x0 ~ p. In practice, the gener-
+ative model is obtained by sampling an approximation
+of (4), replacing p1(x) by N(x; 0, I) and the intractable
+score Vx log pt (x) by se (x, t). The score estimate so (x, t)
+is learned by denoising score matching, i.e. we use the
+fact that Vlog Pt(x) √ √x log p(x+|xo)p(x0|x+)dxo
+where p(x+|xo) N(xt; √√atxo, √√1 - α+I) is the tran-
+sition density of (3), at being a function of (ẞs)se[0,t]
+(Song et al., 2020b). It follows straightforwardly that the
+score satisfies Vlog pt(x) = −E[e|x₁ = x]/√√1 − αt for
+=
+=
+Ꮖ
+Diffusion Generative Inverse Design
+xt = √√α+x+ √√1 - αe. We then learn the score by
+minimizing
+L(0) = Exo~p,t~U(0,1),€~N(0,1)||€0(xt, t) — e||², (5)
+Algorithm 1 Particle optimization of base distribution.
+input energy function E, diffusion generative model po, temperature 7, noise
+scale σ, rounds K.
+2: S = {x}
+i.i.d.
+for (0, 1)
+So = 0, S₁ = 0 # t = 0 and t = 1 sample sets
+4: for k{0... K} do
+=
+x]. The
+6:
+where (x, t) is a denoiser estimating E[ext
+score function se (x, t) ≈ Vx log pt (x) is obtained using
+so (x,t)
+=
+€0 (x, t)
+- αt
+Compute S = {x}₁ from S by solving reverse ODE in Eq. (7).
+So = So US, S₁ = S₁ US
+Compute normalized importance weights
+W = {w | w x exp (− E(x0)), xo € So}
+(6)
+8:
+Set 5+1 = {{ }
+for
+Set S+1 = {}
+Going forward, V refers to V unless otherwise stated. We
+can also sample from p(x) using an ordinary differential
+equation (ODE) developed in (Song et al., 2020b).
+=
+~
+=
+~
+Let us define t xt/√√at and ot √√1 – at/√√at.
+Then by initializing x1 N(0, 1), equivalently 1
+N(0, a¹I) and solving backward in time
+α
+10: end for
+| $1 |
+wi
+δ 
+(x)
+for ã² ~N(x; ã¹₁, o² I)
+return arg minЄSO E(x)
+then xo=
+dat =
+(t)
+€0
+xt
+dot,
+(7)
+at xo is an approximate sample from p(x).
+2.2. Approximately sampling from target ~(x)
+We want to sample ~(x) defined in (1) where p(x) can be
+sampled from using the diffusion model. We describe two
+possible sampling procedures with different advantages for
+downstream optimization.
+Energy guidance. Observe that
+it(at) = | i (20)p(+20)do,
+and the gradient satisfies
+Vlog(x) = Vlogpt(xt) + Vlogπt(x+),
+where πt(x+) =
+f(x0)p(x0| x+)dxo. We approximate
+this term by making the approximation
+xt
+(x, t)
+=
+√√1 - α+€ (x, t)
+√at
+(8)
+"estimated o"
+Tt(2t)
+≈ π(xt(x,t)).
+Now, by (6), and the identity V logπ(x) = −¯¯¹VE(x),
+we may change the reverse sampling procedure by a modi-
+fied denoising vector
+Ĕø (xt,t) = €0 (xt, t) + \¯¯¯¹ √1 − α₁VE(â(x,t)), (9)
+with being an hyperparameter. We defer the results on
+energy guidance Appendix E.
+Conditional guidance. Similarly to classifier-free guid-
+ance (Ho & Salimans, 2022), we explore conditioning on
+cost (energy) e and task c. A modified denoising vector in
+the reverse process follows as a combination between the
+denoising vector of a conditional denoiser Еф and uncondi-
+tional denoiser Є
+Ĕ(xt, c, e,t) = (1 + \)€ (xt, c, e, t) — \ep(x, t), (10)
+where €
+is learned by conditioning on c and cost e from op-
+timization trajectories. In our experiments we shall choose
+c to contain the design cost percentile and target goal desti-
+nation OE for fluid particles (Figure 1c).
+2.3. A modified base distribution through particle
+sampling
+Our generating process initializes samples at time t = 1
+from N(x; 0, 1) ≈ p₁(x). The reverse process with modifi-
+cations from subsection 2.2 provides approximate samples
+from 7(x) at t = 0. However, as we are approximately
+solving the ODE of an approximate denoising model with
+an approximate cost function, this affects the quality of sam-
+ples with respect to E¹. Moreover, “bad” samples from
+N(x; 0, 1) are hard to correct by guided sampling.
+1
+To mitigate this, instead of using samples from N(x; 0, I) to
+start the reverse process of 7(x), we use a multi-step particle
+sampling scheme which evaluates the samples {x}}₁ by a
+rough estimate of the corresponding {x}₁ derived from a
+few-step reverse process and evaluation with E. The particle
+procedure relies on re-sampling from a weighted particle
+approximation of 7(x) and then perturbing the resampled
+particles, see 1. This heuristic does not provide samples
+from π but we found that it provides samples of lower energy
+samples across tasks. However, with N samples in each
+of the k rounds, it still requires O(Nk) evaluations of E,
+which may be prohibitively expensive depending on the
+choice of E.
+¹Ideally at test time we would evaluate the samples with the
+ground-truth dynamics model, but we have used the approximate
+GNN model due to time constraints on the project.
+Cost
+-500
+-1000
+-1500
+-2000
+0
+200
+without shift
+Cost
+Diffusion Generative Inverse Design
+with shift
+Diff
+CEM
+Adam
+600 800
+0
+200
+400
+# queries
+400 600 800
+# queries
+Figure 2. Performance of the different optimization methods in the
+angle optimization task. We observe that the diffusion generative
+model requires a small number of model queries, whereas Adam
+in comparison requires many expensive model queries.
+3. Experiments
+We evaluate our approach on a 2D fluid particle environment
+with multiple tasks of varying complexity, which all involve
+shaping the tool (Figure 1a, black lines) such that the fluid
+particles end up in a region of the scene that minimizes the
+cost E (Allen et al., 2022). As baselines, we use the Adam
+optimizer combined with a learned model of the particles
+and the CEM optimizer which also optimizes with a learned
+model. For all experiments we have used a simple MLP as
+the denoising model and GNN particle simulation model for
+evaluation of the samples.
+The first task is a simple “Contain” task with a single source
+of water particles, a goal position above the floor speci-
+fied by c = : (x,y), and an articulated tool with 16 joints
+whose angles are optimized to contain the fluid near the
+goal (see Allen et al. (2022)). In Figure 2a, we see that
+both the Adam optimizer and CEM are able to optimize the
+task. However with training a prior distribution on optimiza-
+tion trajectories and guided sampling we are able to see the
+benefits of having distilled previous examples of optimized
+designs into our prior, and achieve superior performance
+with fewer samples in unseen tasks sampled in-distribution.
+Reward (-E)
+Effect of Design Dataset Cost Cutoff
+2000
+Cutoff
+1700
+1750
+1500
+1250
+| 1000
+500
+0
+1000
+750
+500
+If we modify the task by introducing a parameter controlling
+x, y shift parameter, we observe that Adam fails. This is
+because there are many values of the shift for which the
+tool makes no contact with the fluid (see Figure 2b), and
+therefore gets no gradient information from E. We provide
+results for more complex tasks in Appendix C (Figure 5).
+Overall, we find that this approach is capable of tackling
+a number of different types of design challenges, finding
+effective solutions when obstacles are present, for multi-
+modal reward functions, and when multiple tools must be
+coordinated.
+3.1. Dataset quality impact
+We analyzed how the model performs with conditional guid-
+ance when trained on optimization trajectories of CEM that
+optimize the same task (matching), a different task (non-
+matching), or a mix of tasks (Figure 3). The two tasks were
+"Contain" (described above) and “Ramp” (transport fluid to
+the far lower corner). Unsurprisingly, the gap between de-
+signs in the training dataset and the solution for the current
+task has a substantial impact on performance. We also con-
+trol the quality of design samples by filtering out samples
+above a certain cost level for the c with which they were gen-
+erated. Discarding bad samples from the dataset does not
+improve performance beyond a certain point: best perfor-
+mance is obtained with some bad-performing designs in the
+dataset. Intuitively, we believe this is because limiting the
+dataset to a small set of optimized designs gives poor cov-
+erage of the design space, and therefore generalizes poorly
+even to in-distribution test problems. Further, training the
+generative model on samples from optimization trajectories
+of only a non-matching task has a substantial negative im-
+pact on performance. We expect the energy guidance not to
+suffer from the same transfer issues as conditional guidance,
+since more information about the task is given through the
+energy function. Since we indeed obtain data to fit p(x)
+from Adam and CEM runs, why is diffusion more efficient?
+We discuss this in Appendix B.
+3.2. Particle optimization in base distribution
+We also observe performance improvements by using the
+particle search scheme from subsection 2.3, see Figure 4.
+Gauss
+― PS
+250
+0
+Both Matching Non-match
+Figure 3. Generative models were trained on a dataset of designs
+produced from CEM- and Adam-optimized designs on either of
+two tasks Matching, Non-matching, or Both. Designs in the train
+dataset were filtered to have costs below the specified cutoff.
+-1800
+-1850
+-1900
+-1950
+-2000
+4
+8
+16
+32
+# Samples
+Figure 4. Gaussian base distribution vs. particle sampling (PS).
+Diffusion Generative Inverse Design
+We hypothesize that the reason for this is because of func-
+tion approximation. Since we are dealing with approxi-
+mate scores, is hard for the learned generative model to
+pinpoint the optima, therefore a sampling-based search ap-
+proach helps. We note that the evaluation of a sample with
+E requires solving the ODE for sample x1, we use a 1-step
+reverse process making use of the relation in (8). Conse-
+quently, we can expect that linearizing the sampling will
+improve the particle search.
+4. Conclusion
+In this work we have demonstrated the benefits of using
+diffusion generative models in simple inverse designs tasks
+where we want to sample from high probability regions
+of a target distribution π(x) defined via E, while having
+access to optimization data. We analyzed energy-based and
+conditional guidance where the energy function involves
+rolling out a GNN. We find that energy guidance is a viable
+option, but conditional guidance works better in practice,
+and that performance depends heavily on the generative
+model's training data. Finally, we have introduced particle
+search in the base distribution as a means to improve quality
+of the samples and demonstrated this on multiple tasks.
+5. Acknowledgments
+We would like to thank Conor Durkan, Charlie Nash, George
+Papamakarios, Yulia Rubanova, and Alvaro Sanchez-
+Gonzalez for helpful conversations about the project. We
+would also like to thank Alvaro Sanchez-Gonzalez for com-
+ments on the manuscript.
+References
+Ajay, A., Du, Y., Gupta, A., Tenenbaum, J. B., Jaakkola,
+T. S., and Agrawal, P. Is conditional generative modeling
+all
+you need for decision-making? In NeurIPS 2022
+Foundation Models for Decision Making Workshop, 2022.
+Allen, K. R., Lopez-Guevara, T., Stachenfeld, K. L.,
+Sanchez-Gonzalez, A., Battaglia, P. W., Hamrick, J. B.,
+and Pfaff, T. Physical design using differentiable learned
+simulators. CORR, abs/2202.00728, 2022. URL https:
+//arxiv.org/abs/2202.00728.
+Battaglia, P. W., Hamrick, J. B., Bapst, V., Sanchez-
+Gonzalez, A., Zambaldi, V., Malinowski, M., Tacchetti,
+A., Raposo, D., Santoro, A., Faulkner, R., et al. Rela-
+tional inductive biases, deep learning, and graph networks.
+arXiv preprint arXiv:1806.01261, 2018.
+Challapalli, A., Patel, D., and Li, G. Inverse machine learn-
+ing framework for optimizing lightweight metamaterials.
+Materials & Design, 208:109937, 2021.
+Christensen, T., Loh, C., Picek, S., Jakobović, D., Jing, L.,
+Fisher, S., Ceperic, V., Joannopoulos, J. D., and Soljačić,
+M. Predictive and generative machine learning models
+for photonic crystals. Nanophotonics, 9(13):4183-4192,
+2020.
+De Bortoli, V., Mathieu, E., Hutchinson, M., Thornton, J.,
+Teh, Y. W., and Doucet, A. Riemannian score-based
+generative modelling. In Advances in Neural Information
+Processing Systems, 2022.
+Forte, A. E., Hanakata, P. Z., Jin, L., Zari, E., Zareei, A.,
+Fernandes, M. C., Sumner, L., Alvarez, J. T., and Bertoldi,
+K. Inverse design of inflatable soft membranes through
+machine learning. Advanced Functional Materials, 32,
+2022.
+Gilmer, J., Schoenholz, S. S., Riley, P. F., Vinyals, O., and
+Dahl, G. E. Neural message passing for quantum chem-
+istry. In International Conference on Machine Learning,
+2017.
+Gómez-Bombarelli, R., Wei, J. N., Duvenaud, D.,
+Hernández-Lobato, J., Sánchez-Lengeling, B., Sheberla,
+D., Aguilera-Iparraguirre, J., Hirzel, T. D., Adams, R. P.,
+and Aspuru-Guzik, A. Automatic chemical design us-
+ing a data-driven continuous representation of molecules.
+ACS Central Science, 4(2):268–276, 02 2018.
+Graikos, A., Malkin, N., Jojic, N., and Samaras, D. Dif-
+fusion models as plug-and-play priors. In Advances in
+Neural Information Processing Systems, 2022.
+Ho, J. and Salimans, T. Classifier-free diffusion guidance.
+arXiv preprint arXiv:2207.12598, 2022.
+Ho, J., Jain, A., and Abbeel, P. Denoising diffusion proba-
+bilistic models. Advances in Neural Information Process-
+ing Systems, 33:6840-6851, 2020.
+Janner, M., Du, Y., Tenenbaum, J., and Levine, S. Plan-
+ning with diffusion for flexible behavior synthesis. In
+International Conference on Machine Learning, 2022.
+Karras, T., Aittala, M., Aila, T., and Laine, S. Elucidating
+the design space of diffusion-based generative models.
+In Advances in Neural Information Processing Systems,
+2022.
+Kingma, D. P. and Ba, J. Adam: A method for stochastic
+optimization. In International Conference on Learning
+Representations, 2015.
+Kumar, S., Tan, S., Zheng, L., and Kochmann, D. M.
+Inverse-designed spinodoid metamaterials. npj Computa-
+tional Materials, 6:1-10, 2020.
+Diffusion Generative Inverse Design
+Pfaff, T., Fortunato, M., Sanchez-Gonzalez, A., and
+Battaglia, P. Learning mesh-based simulation with graph
+networks. In International Conference on Learning Rep-
+resentations, 2021.
+Rubinstein, R. The cross-entropy method for combinatorial
+and continuous optimization. Methodology and Comput-
+ing in Applied Probability, 1:127–190, 1999.
+Sanchez-Gonzalez, A., Godwin, J., Pfaff, T., Ying, R.,
+Leskovec, J., and Battaglia, P. Learning to simulate
+complex physics with graph networks. In International
+Conference on Machine Learning, 2020.
+Song, J., Meng, C., and Ermon, S. Denoising diffusion
+implicit models. In International Conference on Learning
+Representations, 2020a.
+Song, Y., Sohl-Dickstein, J., Kingma, D. P., Kumar, A., Er-
+mon, S., and Poole, B. Score-based generative modeling
+through stochastic differential equations. In International
+Conference on Learning Representations, 2020b.
+Zheng, L., Kumar, S., and Kochmann, D. M. Data-driven
+topology optimization of spinodoid metamaterials with
+seamlessly tunable anisotropy. ArXiv, abs/2012.15744,
+2020.
+Diffusion Generative Inverse Design
+Appendix for Diffusion Generative Inverse Design
+A. Learned simulation with graph neural
+networks
+As in Allen et al. (2022), we rely on the recently developed
+MESHGNN model (Pfaff et al., 2021), which is an exten-
+sion of the GNS model for particle simulation (Sanchez-
+Gonzalez et al., 2020). MESHGNN is a type of message-
+passing graph neural network (GNN) that performs both
+edge and node updates (Battaglia et al., 2018; Gilmer et al.,
+2017), and which was designed specifically for physics sim-
+ulation.
+We consider simulations over physical states represented
+as graphs GE G. The state G = (V,E) has nodes V
+connected by edges E, where each node v EV is associated
+with a position u₁, and additional dynamical quantities qv.
+In this environment, each node corresponds to a particle and
+edges are computed dynamically based on proximity.
+The simulation dynamics on which the model is trained
+are given by a “ground-truth” simulator which maps the
+state Gt at time t to the state Gt+1 at time t + At. The
+simulator can be applied iteratively over K time steps to
+yield a trajectory of states, or a “rollout,” which we denote
+(Go,, GtK). The GNN model M is trained on these
+trajectories to imitate the ground-truth simulator fs. The
+learned simulator fм can be similarly applied to produce
+rollouts (Ĝto, Ĝt1, ..., GtK), where Ğto Gto represents
+initial conditions given as input.
+=
+B. Further discussion on results
+We trained the diffusion model on data generated from
+Adam and CEM optimization runs and noticed an improve-
+ment over Adam and CEM on the evaluation tasks. The
+reason for this is that both Adam and CEM need good ini-
+tializations to solve the tasks efficiently, for example in Fig-
+ure 2 for each run the initial design for Adam has uniformly
+sampled angles and x, y coordinates within the bounds of
+the environment, which would explain why we obtain worse
+results on average for Adam than Allen et al. (2022). Sim-
+ilarly, for CEM we use a Gaussian sampling distribution
+which is initialized with zero mean and identity covariance.
+If most of the density of the initial CEM distribution is not
+concentrated near the optimal design, then CEM will require
+many samples to find it.
+In comparison, the diffusion model learns good initializa-
+tions of the designs through p(x) which can further be
+improved via guided sampling, as desired.
+C. Particle environments
+For evaluation, we consider similar fluid particle-simulation
+environments as in Allen et al. (2022). The goal being to
+design a 'tool' that brings the particles in a specific configu-
+ration. We defined the energy as the radial basis function
+E(x) = exp
+РЕР
+||xx|||
+σ
+Initial
+Initial
+Joint Angle + Shift
+With obstacle
+Bi-modal
+Optimized
+Initial
+Optimized
+Multi-tool
+Optimized
++
+Initial
+Optimized
+Figure 5. Examples of guided-diffusion generated designs for different tasks c that we consider in this work. The initial designs start off
+completely at random, and the optimized ones solve the task.
+Optimized
+Joint Angles + Shift
+Optimized
+Joint Angles
+Diffusion Generative Inverse Design
+Adam
+CEM
+Diffusion
+Figure 6. Examples of designs optimized with Adam, CEM, and guided diffusion using the generative model. Designs are initialized as
+random joint angles. Each design shown is the top scoring design for that optimizer, evaluated under the learned model, after having been
+trained on 1000 calls to the simulator (the limit of the x-axis in Figure 2).
+where xt are the coordinates of particle p after rolling out
+the simulation with the model fм with initial conditons OIC
+and parameters E. Note that the energy is evaluated on the
+last state of the simulation, hence VE needs to propagate
+through the whole simulation rollout.
+In additon to the "Contain" environments described in sec-
+tion 3, we provide further example environments that we
+used for evaluation with the resulting designs from guided
+diffusion can be seen in Figure 5.
+The task with the obstacle required that the design is fairly
+precise in order to bring the fluid into the cup, this is to high-
+light that the samples found from the diffusion model with
+conditional guidance + particle sampling in base distribution
+are able to precisely pinpoint these types of designs.
+For the bi-modal task, where we have two possible minima
+of the cost function, we are able to capture both of the modes
+with the diffusion model.
+In the case where we increase the dimensionality of the
+designs where we have x, y shift parameters for each of the
+tool joints, and the tools are disjoint, the diffusion model
+is able to come up with a parameterization that brings the
+particles in a desired configuration. However, the resulting
+designs are not robust and smooth, indicating that further
+modifications need to be made in form of constraints or
+regularization while guiding the reverse process to sample
+from 7(x).
+D. Discussion on choice of guidance
+As we will see in section 3, conditional guidance with cor-
+rected base distribution sampling tends to work better than
+energy guidance. In cases where the gradient of the energy
+function is expensive to evaluate, an energy-free alternative
+might be better, however this requires learning a conditional
+Rand shooting spacing
+16
+8 samples
+per task
+samples
+per task
+32
+samples
+per task
+Gauss
+-
+PS
+Figure 7. Sampling (random search) from p₁ (x) and particle sam-
+pling in the bi-modal environment. We observe that even after
+increasing the number of samples, particle search further improves
+performance with same number of samples.
+model, i.e. necessitates access to conditional samples.
+E. Energy guidance
+We have found that using the gradient of the energy function
+as specified in equation (9) is a viable way of guiding the
+samples, albeit coming with the caveat of many expensive
+evaluations, see Figure 8. The guidance is very sensitive
+to the choice of the scaling factor X, in our experiments
+we have found that a smaller scaling factor with many
+tegration steps achieves better sample quality. Intuitively,
+this follows from the fact that it is difficult to guide 'bad'
+samples in the base distribution p₁1(x), which motivates
+the particle energy-based sampling scheme introduced in
+algorithm 1.
+in-
+Further, we have looked at how to combine the gradient of
+the
+energy with the noised marginal score. We have found
+that re-scaling to have the same norm as the noised marginal
+improves the stability of guidance, as shown in Figure 8.
+Here, we have analyzed multiple functions with which we
+combined the energy gradient and the noised marginal score,
+we have looked at the following variants:
+Diffusion Generative Inverse Design
+°
+-250
+-500
+-750
+-1000
+-1250
+-1500
+-1750
+-2000
+0.2
+0.4
+0.6
+0.8
+1.0
+linear - linear-unit
+linear-norm
+CVX
+Figure 8. Performance of energy guidance depending on guidance
+scale (x axis) for different modifications to score of noised
+marginal.
+• linear - simple linear addition of AVE.
+VE
+• linear-unit - linear addition of || *
+•
+cvx-convex combination of VE and ep.
+•
+linear-norm - linear addition of X
+VE|| €0 ||
+||| VE|||
+Diffusion Generative Inverse Design
+Contain
+Ramp
+With obstacle
+Bi-modal
+Multi-tool
+Environment size
+1x1
+1x1
+1x1
+1x1
+1x1
+Rollout length
+150
+150
+150
+150
+150
+Initial fluid box(es)
+left
+0.2
+right
+0.3
+bottom
+0.5
+top
+0.6
+2336
+0.2
+0.45
+0.25, 0.65
+0.3
+0.55
+0.35, 0.75
+0.5
+0.5
+0.5
+0.6
+0.6
+0.6
+2332
+0.2
+0.3
+0.5
+0.6
+Reward sampling box
+left
+0.4
+0.8
+0.2
+0.25, 0.65
+right
+0.6
+1.0
+0.2
+0.35, 0.75
+bottom
+0.1
+0.0
+0.2
+0.1
+top
+0.3
+0.2
+0.2
+0.2
+Reward o
+0.1
+0.1
+0.05
+0.1
+PAPER
+0.2
+0.3
+0.2
+0.5
+0.1
+# tools
+1
+1
+1
+1
+16
+# joint angles
+Design parameters
+16
+16
+joint angles,
+shift (optional)
+joint angles
+16
+joint angles,
+shift
+16
+1
+joint angles,
+shift
+shift
+Tool position (left)
+[0.15, 0.35]
+[0.15, 0.35]
+[0.25, 0.35]
+[0.3, 0.6]
+[0.15-0.2, 0.35-0.4]
+Tool Length
+0.8
+0.8
+0.6
+0.4
+0.1
+Additional obstacles
+--
+barrier halfway
+jay -
+between cup and fluid,
+cup around goal
+Table 1. Task Parameters.

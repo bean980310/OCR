@@ -1,0 +1,873 @@
+arXiv:2305.15779v1 [cs.CV] 25 May 2023
+Custom-Edit: Text-Guided Image Editing with Customized Diffusion Models
+Jooyoung Choil
+Yunjey Choi² Yunji Kim²
+Junho Kim²,*
+Sungroh Yoon¹,*
+1 Data Science and AI Laboratory, ECE, Seoul National University
+2 NAVER AI Lab
+Abstract
+Reference
+Source
+BLIP-Edit
+Custom-Edit
+Text-to-image diffusion models can generate diverse,
+high-fidelity images based on user-provided text prompts.
+Recent research has extended these models to support
+text-guided image editing. While text guidance is an in-
+tuitive editing interface for users, it often fails to ensure
+the precise concept conveyed by users. To address this is-
+sue, we propose Custom-Edit, in which we (i) customize
+a diffusion model with a few reference images and then
+(ii) perform text-guided editing. Our key discovery is that
+customizing only language-relevant parameters with aug-
+mented prompts improves reference similarity significantly
+while maintaining source similarity. Moreover, we provide
+our recipe for each customization and editing process. We
+compare popular customization methods and validate our
+findings on two editing methods using various datasets.
+1. Introduction
+Recent work on deep generative models has led to
+rapid advancements in image editing. Text-to-image mod-
+els [19, 22] trained on large-scale databases [23] allow intu-
+itive editing [7, 15] of images in various domains. Then,
+to what extent can these models support precise editing
+instructions? Can a unique concept of the user, especially
+one not encountered during large-scale training, be utilized
+for editing? Editing with a prompt acquired from a well-
+performing captioning model [13] fails to capture the ap-
+pearance of reference, as shown in Fig. 1.
+We propose Custom-Edit, a two-step approach that in-
+volves (i) customizing the model [6, 12, 21] using a few
+reference images and then (ii) utilizing effective text-guided
+editing methods [7, 15, 16] to edit images. While prior cus-
+tomization studies [6, 12, 21] deal with the random genera-
+tion of images (noise→image), our work focuses on image
+editing (image→image). As demonstrated in Fig. 1, cus-
+tomization improves faithfulness to the reference's appear-
+ance by a large margin. This paper shows that customizing
+*
+Corresponding Authors
+V* cat figurine
+A black cat...
+A colorful ceramic cat A V* cat figurine...
+figurine...
+V* patterned teapot
+Strawberry cup...
+Red and gold
+tea kettle...
+V* patterned
+teapot...
+Figure 1. Our Custom-Edit allows high-fidelity text-guided edit-
+ing, given a few references. Edited images with BLIP2 [13] cap-
+tions show the limitation of textual guidance in capturing the fine-
+grained appearance of the reference.
+only language-relevant parameters with augmented prompts
+significantly enhances the quality of edited images. More-
+over, we present our design choices for each customization
+and editing process and discuss the source-reference trade-
+off in Custom-Edit.
+2. Diffusion Models
+Throughout the paper, we use Stable Diffusion [19], an
+open-source text-to-image model. The diffusion model [5,
+8, 24, 26] is trained in the latent space of a VAE [11], which
+downsamples images for computation efficiency. The model
+is trained to reconstruct the clean latent representation xo
+from a perturbed representation xt given the text condition
+c, which is embedded with the CLIP text encoder [18]. The
+diffusion model is trained with the following objective:
+T
+Σ Exo, e [|| € – €0 (xt, t, c)||²],
+t=1
+-
+(1)
+where is an added noise, t is a time step indicating a
+perturbed noise level, and to is a diffusion model with a
+U-Net [20] architecture with attention blocks [27]. During
+training, the text embeddings are projected to the keys and
+1
+t
+...V* patterned teapot ... 0
+000000
+t-1
+t
+V* patterned teapot... *
+000000
+-
+Trainable ☐ Fixed
+t-1
+Reference
+Prior
+Conv
+Attention
+Conv
+Attention
+KV
+KV
+Diffusion U-Net
+Diffusion U-Net
+Conv
+Attention
+07-
+KV
+Conv
+Attention
+0000000
+.. patterned teapot ...
+- Q
+이
+(a) Customization process
+Conv
+Attention
+KV
+Conv
+Attention
+Diffusion U-Net
+Reference
+Output
+Injection
+Injection
+(P2P)
+(P2P)
+Prior
+Source
+Conv
+Attention
+KV
+Diffusion U-Net
+000000
+... strawberry cup...
+(b) Editing process
+Conv
+Attention
+Q
+Output
+Source
+0*
+Figure 2. Our Custom-Edit consists of two processes: the customization process and the editing process. (a) Customization. We customize
+a diffusion model by optimizing only language-relevant parameters (i.e., custom embedding V* and attention weights) on a given set of
+reference images. We also apply the prior preservation loss to alleviate the language drift. (b) Editing. We then transform the source image
+to the output using the customized word. We leverage the P2P and Null-text inversion methods [7, 16] for this process.
+values of cross-attention layers, and the text encoder is kept
+frozen to preserve its language understanding capability.
+Imagen [22] and eDiffi [1] have shown that leveraging rich
+language understandings of large language models by freez-
+ing them is the key to boosting the performance.
+3. Custom-Edit
+Our goal is to edit images with complex visual instruc-
+tions given as reference images (Fig. 1). Therefore, we pro-
+pose a two-step approach that (i) customizes the model on
+given references (Sec. 3.1) and (ii) edits images with textual
+prompts (Sec. 3.2). Our method is presented in Fig. 2.
+3.1. Customization
+Trainable Parameters. We optimize only the keys and
+values of cross-attention and the '[rare token]', following
+Custom-Diffusion [12]. As we discuss in Sec. 4, our results
+indicate that training these language-relevant parameters is
+crucial for successfully transferring reference concepts to
+source images. Furthermore, training only these parameters
+requires less storage than Dreambooth [21].
+Augmented Prompts. We fine-tune the abovementioned
+parameters by minimizing Eq. (1). We improve Custom-
+Diffusion for editing by augmenting the text input as ‘[rare
+token] [modifier] [class noun]' (e.g., 'V* patterned teapot').
+We find that '[modifier]' encourages the model to focus on
+learning the appearance of the reference.
+Datasets. To keep the language understanding while fine-
+tuning on the reference, we additionally minimize prior
+preservation loss [21] over diverse images belonging to the
+same class as the reference. Thus, we use CLIP-retrieval [3]
+to retrieve 200 images and their captions from the LAION
+dataset [23] using the text query ‘photo of a [modifier]
+[class noun]'.
+3.2. Text-Guided Image Editing
+Prompt-to-Prompt. We use Prompt-to-Prompt [7] (P2P),
+a recently introduced editing framework that edits images
+by only modifying source prompts. P2P proposes attention
+injection to preserve the structure of a source image. For
+each denoising step t, let us denote the attention maps of
+the source and edited image as M₁ and M+*, respectively.
+P2P then injects a new attention map Edit(Mt, Mt*, t) into
+the model ee. Edit is an attention map editing operation,
+including prompt refinement and word swap. Additionally,
+P2P enables local editing with an automatically computed
+mask. P2P computes the average of cross-attention Mt,w
+and M related to the word w and thresholds them to pro-
+duce the binary mask B(Mt) UB(M*). Before editing with
+P2P, we utilize Null-Text Inversion [16] to boost the source
+preservation. Refer to Sec. C for a more description.
+Operation Choice. Due to the limited number of reference
+images, the customized words favor only a limited variety of
+structures. This inspired us to propose the following recipe.
+First, we use prompt refinement for the Edit function. Word
+swap fails when the customized words do not prefer the
+swapped attention map. Second, we use mask B(Mt) rather
+than B(M) UB(M*), as the customized words are likely
+to generate incorrect masks.
+t, w
+Source-Reference Trade-Off. A key challenge in image
+editing is balancing the edited image's source and reference
+similarities. We refer to T/T as strength, where P2P injects
+self-attention from t = T tot 7. In P2P, we observed that
+a critical factor in controlling the trade-off is the injection
+2
+Reference
+Source
+Edited
+Source
+Edited
+V* wooden pot
+A bottle of wine and
+a glass on a table
+A V* wooden pot
+of wine...
+V* tortoise plushy
+A sea turtle
+swimming under the
+surface of the water
+A cactus wearing
+sunglasses and a
+hat in the desert
+A V* wooden pot
+wearing...
+A V* tortoise plushy
+swimming...
+A painting of a
+raccoon wearing a
+crown
+...a V* tortoise plushy
+wearing...
+V* ceramic bird
+Two small birds
+sitting on a branch
+Two V* ceramic bird
+sitting...
+A blue jay perched
+on top of a basket
+full of macarons
+A V* ceramic bird
+perched...
+V* pencil drawing
+Photo of a giraffe
+drinking from a blue
+bucket
+V* pencil drawing
+of a giraffe...
+Photo of an old man
+in a cowboy hat
+smoking a cigar
+V* pencil drawing of
+an old...
+V* cat
+Two cats are sitting
+on a mirror in front
+of a bathroom
+Two V* cat are
+sitting...
+A basket filled with
+apples sits on a
+wooden chair
+filled with
+V* cat sits...
+Figure 3. Custom-Edit results. Our method transfers the reference's appearance to the source image with unprecedented fidelity. The
+structures of the source are well preserved. We obtain source prompts using BLIP2 [13]. Except for the pencil drawing example, we use
+local editing of P2P with automatically generated masks.
+3
+of self-attention rather than cross-attention. Higher strength
+denotes higher source similarity at the expense of reference
+similarity. In Sec. 4, we also show results with SDEdit [15],
+which diffuses the image from t = 0 to t = T and denoises
+it back. As opposed to P2P, higher strength in SDEdit means
+higher reference similarity.
+4. Experiment
+In this section, we aim to validate each process of
+Custom-Edit. Specifically, we assess our design choices for
+customization by using Textual Inversion [6] and Dream-
+booth [21] in the customization process. We compare their
+source-reference trade-off in the editing process. As well as
+P2P, we use SDEdit [15] for experiments.
+Baselines. Textual Inversion learns a new text embedding
+V*, initialized with a class noun (e.g., 'pot'), by minimizing
+Eq. (1) for the input prompt ‘V*'. Dreambooth fine-tunes
+the diffusion model while the text encoder is frozen. Eq. (1)
+is minimized over a few images given for input prompt
+*[rare token] [class noun]' (e.g., ‘ktn teapot'). SDEdit is the
+simplest editing method that diffuse-and-denoise the image.
+Datasets. We use eight references in our experiments, in-
+cluding two pets, five objects, and one artwork. For each
+reference, we used five source images on average.
+Metrics. We measure the source and reference similarities
+with CLIP VIT-B/32 [18]. We use strengths [0.2, 0.4, 0.6,
+0.8] for P2P and [0.5, 0.6, 0.7, 0.8] for SDEdit results.
+We generated two P2P samples with cross-attention injec-
+tion strengths [0.2, 0.6], and three SDEdit samples for each
+strength and source image from different random seeds.
+Inference Details. We employ a guidance scale of 7.5 and
+50 inference steps. We acquire all source prompts using
+BLIP2 [13]. More details are available in Sec. B.
+4.1. Qualitative Results
+Fig. 3 illustrates the selected results. Custom-Edit trans-
+fers the reference's detailed appearance to the source while
+preserving the overall structure. For example, Custom-Edit
+generates a horizontally elongated V* wooden pot from the
+wine bottle (first row). In the second row, Custom-Edit gen-
+erates a V* tortoise plushy wearing a hat with the texture of
+its shell. The blue jay in the third row became a V* ceramic
+bird with perfectly preserved macarons. In the last row, the
+V* cat is sitting in a pose that does not exist in the reference
+set. We show qualitative comparisons in Sec. A.1.
+4.2. Quantitative Results
+Fig. 4 shows average trade-off curves on P2P and
+SDEdit. Our improved Custom-Diffusion yields the best
+trade-off, while Textual Inversion shows similar source
+similarity but lower reference similarity. Dreambooth has
+higher source similarity but lower reference similarity, sug-
+gesting that it is ineffective in modifying images. SDEdit
+Reference Similarity
+Reference Similarity
+70
+66
+60
+Prompt-to-Prompt
+60
+80 82
+84 86 88
+78
+76
+ཎྜ ཇཱ ཛ ཎ ➢ ཤྩ 。 ¢
+66
+64
+Custom Diffusion
+Dreambooth
+Textual Inversion
+90 92 94 96
+Source Similarity
+SDEdit
+Custom Diffusion
+Dreambooth
+Textual Inversion
+70.0 72.5 75.0 77.5 80.0 82.5 85.0 87.5
+Source Similarity
+Figure 4. Source-Reference Trade-Off. Custom-Diffusion shows
+the best trade-off, indicating the effectiveness of training only
+language-relevant parameters. We exhibit qualitative comparisons
+and samples with various strengths in Sec. A.2.
+results also show a similar tendency, supporting our claim
+that customizing language-relevant parameters is effective
+for editing. Note that SDEdit shows lower source similarity
+than P2P, indicating the superiority of P2P and our opera-
+tion choices in text-guided editing.
+5. Discussion
+We propose Custom-Edit, which allows fine-grained
+editing with textual prompts. We present our design choices
+for each process, which can benefit future customization
+and editing work. Additionally, we discuss the trade-off be-
+tween source and reference in diffusion-based editing.
+Although Custom-Edit shows various successful edit-
+ing results, there are some failure cases, as presented
+in Sec. A.3. Custom-Edit sometimes edits undesired regions
+or fails to edit complex backgrounds. We hypothesize that
+this is due to the inaccurate attention maps of Stable Dif-
+fusion [7, 16] and the limited controllability of the text in-
+put. Potential solutions are to apply Custom-Edit on text-to-
+image models with larger text encoders [1, 22] or extended
+controllability [14, 28].
+4
+Acknowledgements: This work was supported by the Na-
+tional Research Foundation of Korea (NRF) grants funded
+by the Korea government (Ministry of Science and ICT,
+MSIT) (2022R1A3B1077720), Institute of Information &
+communications Technology Planning & Evaluation (IITP)
+grants funded by the Korea government (MSIT) (2021-0-
+01343: AI Graduate School Program, SNU), and the BK21
+FOUR program of the Education and Research Program for
+Future ICT Pioneers, Seoul National University in 2023.
+References
+[1] Yogesh Balaji, Seungjun Nah, Xun Huang, Arash Vahdat,
+Jiaming Song, Karsten Kreis, Miika Aittala, Timo Aila,
+Samuli Laine, Bryan Catanzaro, et al. ediffi: Text-to-image
+diffusion models with an ensemble of expert denoisers. arXiv
+preprint arXiv:2211.01324, 2022. 2, 4, 6
+[2] Omer Bar-Tal, Dolev Ofri-Amar, Rafail Fridman, Yoni Kas-
+ten, and Tali Dekel. Text2live: Text-driven layered image
+and video editing. In Computer Vision-ECCV 2022: 17th
+European Conference, Tel Aviv, Israel, October 23-27, 2022,
+Proceedings, Part XV, pages 707–723. Springer, 2022. 6
+[3] Romain Beaumont. Clip retrieval: Easily compute
+clip embeddings and build a clip retrieval system with
+them. https://github.com/rom1504/clip-
+retrieval, 2022. 2
+[4] Huiwen Chang, Han Zhang, Jarred Barber, AJ Maschinot,
+Jose Lezama, Lu Jiang, Ming-Hsuan Yang, Kevin Mur-
+phy, William T Freeman, Michael Rubinstein, et al. Muse:
+Text-to-image generation via masked generative transform-
+ers. arXiv preprint arXiv:2301.00704, 2023. 6
+[5] Prafulla Dhariwal and Alexander Nichol. Diffusion models
+beat gans on image synthesis. Advances in Neural Informa-
+tion Processing Systems, 34:8780-8794, 2021. 1
+[6] Rinon Gal, Yuval Alaluf, Yuval Atzmon, Or Patashnik,
+Amit H Bermano, Gal Chechik, and Daniel Cohen-Or. An
+image is worth one word: Personalizing text-to-image gener-
+ation using textual inversion. In International Conference on
+Learning Representations, 2022. 1, 4, 6
+[7] Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman,
+Yael Pritch, and Daniel Cohen-Or. Prompt-to-prompt image
+editing with cross attention control. In International Confer-
+ence on Learning Representations, 2022. 1, 2, 4, 6
+[8] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffu-
+sion probabilistic models. Advances in Neural Information
+Processing Systems, 33:6840-6851, 2020. 1
+[9] Jonathan Ho and Tim Salimans. Classifier-free diffusion
+guidance. arXiv preprint arXiv:2207.12598, 2022. 11
+[10] Bahjat Kawar, Shiran Zada, Oran Lang, Omer Tov, Huiwen
+Chang, Tali Dekel, Inbar Mosseri, and Michal Irani. Imagic:
+Text-based real image editing with diffusion models. In
+CVPR, 2023. 6
+[11] Diederik P Kingma and Max Welling. Auto-encoding varia-
+tional bayes. arXiv preprint arXiv:1312.6114, 2013. 1
+[12] Nupur Kumari, Bingliang Zhang, Richard Zhang, Eli Shecht-
+man, and Jun-Yan Zhu. Multi-concept customization of text-
+to-image diffusion. In CVPR, 2023. 1, 2, 6
+[13] Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi.
+Blip-2: Bootstrapping language-image pre-training with
+frozen image encoders and large language models. arXiv
+preprint arXiv:2301.12597, 2023. 1, 3, 4
+[14] Yuheng Li, Haotian Liu, Qingyang Wu, Fangzhou Mu, Jian-
+wei Yang, Jianfeng Gao, Chunyuan Li, and Yong Jae Lee.
+Gligen: Open-set grounded text-to-image generation. In
+CVPR, 2023. 4,6
+[15] Chenlin Meng, Yutong He, Yang Song, Jiaming Song, Jia-
+jun Wu, Jun-Yan Zhu, and Stefano Ermon. Sdedit: Guided
+image synthesis and editing with stochastic differential equa-
+tions. In International Conference on Learning Representa-
+tions, 2021. 1,4
+[16] Ron Mokady, Amir Hertz, Kfir Aberman, Yael Pritch, and
+Daniel Cohen-Or. Null-text inversion for editing real
+images using guided diffusion models. arXiv preprint
+arXiv:2211.09794, 2022. 1, 2, 4, 6, 11
+[17] Utkarsh Ojha, Yijun Li, Jingwan Lu, Alexei A Efros,
+Yong Jae Lee, Eli Shechtman, and Richard Zhang. Few-shot
+image generation via cross-domain correspondence. In Pro-
+ceedings of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition, pages 10743-10752, 2021.6
+[18] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
+Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry,
+Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learning
+transferable visual models from natural language supervi-
+sion. In International conference on machine learning, pages
+8748-8763. PMLR, 2021. 1,4
+[19] Robin Rombach, Andreas Blattmann, Dominik Lorenz,
+Patrick Esser, and Björn Ommer. High-resolution image
+synthesis with latent diffusion models. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition, pages 10684-10695, 2022. 1
+[20] Olaf Ronneberger, Philipp Fischer, and Thomas Brox. U-
+net: Convolutional networks for biomedical image segmen-
+tation. In International Conference on Medical image com-
+puting and computer-assisted intervention, 2015. 1
+[21] Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch,
+Michael Rubinstein, and Kfir Aberman. Dreambooth: Fine
+tuning text-to-image diffusion models for subject-driven
+generation. arXiv preprint arXiv:2208.12242, 2022. 1, 2,
+4
+[22] Chitwan Saharia, William Chan, Saurabh Saxena, Lala
+Li, Jay Whang, Emily Denton, Seyed Kamyar Seyed
+Ghasemipour, Raphael Gontijo-Lopes, Burcu Karagol Ayan,
+Tim Salimans, et al. Photorealistic text-to-image diffusion
+models with deep language understanding. In Advances in
+Neural Information Processing Systems. 1, 2, 4, 6
+[23] Christoph Schuhmann, Romain Beaumont, Richard Vencu,
+Cade W Gordon, Ross Wightman, Mehdi Cherti, Theo
+Coombes, Aarush Katta, Clayton Mullis, Mitchell Worts-
+man, et al. Laion-5b: An open large-scale dataset for train-
+ing next generation image-text models. In Thirty-sixth Con-
+ference on Neural Information Processing Systems Datasets
+and Benchmarks Track. 1,2
+[24] Jascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan,
+and Surya Ganguli. Deep unsupervised learning using
+nonequilibrium thermodynamics. In International Confer-
+ence on Machine Learning, pages 2256-2265. PMLR, 2015.
+1
+[25] Jiaming Song, Chenlin Meng, and Stefano Ermon. Denois-
+5
+ing diffusion implicit models. In International Conference
+on Learning Representations, 2021. 11
+[26] Yang Song and Stefano Ermon. Generative modeling by es-
+timating gradients of the data distribution. In NeurIPS, 2019.
+1
+[27] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
+reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia
+Polosukhin. Attention is all you need. Advances in neural
+information processing systems, 30, 2017. 1
+[28] Lvmin Zhang and Maneesh Agrawala. Adding conditional
+control to text-to-image diffusion models. arXiv preprint
+arXiv:2302.05543, 2023. 4
+A. Additional Results
+Additional Custom-Edit results are shown in Fig. A.
+A.1. Qualitative Comparisons
+Comparisons of customization methods on P2P are
+shown in Fig. B. Dreambooth fails to modify the source im-
+ages. Textual Inversion results do not capture details of the
+references. Comparisons on SDEdit are shown in Fig. C.
+Similar to the results on P2P, Dreambooth and Textual In-
+version fail to capture the detailed appearance of the refer-
+ence.
+A.2. Strength Control
+We show how the strength of P2P (Fig. D) and SDEdit
+(Fig. E) affect the results. By controlling the strength
+of these methods, users can choose samples that match
+their preferences. Our empirical findings suggest that P2P
+strengths between 0.4 and 0.6, and SDEdit strengths be-
+tween 0.6 and 0.7 produce good samples.
+A.3. Failure Cases
+Failure cases are shown in Fig. F. In the first row, the
+cake turns into the V* cat instead of the coffee. Replacing
+‘A cup' with 'V* cat' resolves the issue. We speculate that
+Stable Diffusion is not familiar with a cat sitting in coffee,
+which causes the word 'cat' to fail to attend to coffee. Re-
+cent works [7, 16] have noted that attention maps of Stable
+Diffusion are less accurate than those of Imagen [22].
+Turning the dolphin into the V* tortoise plushy in the
+second row is easy. However, we cannot turn rocks into the
+V* tortoise plushy. The rocks are scattered in the complex
+scene so, the model requires clarification on which rock to
+modify. Applying Custom-Edit on extended text-to-image
+models such as GLIGEN [14], which is a model extended
+to the grounding inputs, may solve this problem.
+A.4. Text Similarity
+In addition to the source-reference trade-off shown in
+the main paper, we show the trade-off between text simi-
+larity and source similarity in Fig. G. We measure text sim-
+ilarity using CLIP ViT-B/32 between the edited image and
+the target text (with V* omitted). Our improved Custom-
+Diffusion achieves significantly better text similarity com-
+pared to other methods.
+B. Implementation Details
+B.1. Customization
+Dreambooth and Custom-Diffusion. We train a model
+for 500 optimization steps on a batch size of 2. We use same
+dataset for prior preservation loss. During training, we aug-
+ment text input with the following templates:
+•
+•
+• "photo of a V* [modifier] [class]"
+• "rendering of a V* [modifier] [class]"
+• "illustration of a V* [modifier] [class]"
+•
+• "depiction of a V* [modifier] [class]"
+• "rendition of a V* [modifier] [class]"
+For 1 out of 3 training iterations, we randomly crop im-
+ages and augment text input with the following templates:
+• "zoomed in photo of a V* [modifier] [class]"
+• "close up in photo of a V* [modifier] [class]"
+•
+"cropped in photo of a V* [modifier] [class]"
+We would like to note that for two pet categories (cat
+and dog), customizing without ‘[modifier]' token already
+offered good results.
+Textual Inversion. We train a single token for 2000 op-
+timization steps on a batch size of 4. We used the text tem-
+plate from [6].
+B.2. Dataset
+Reference sets are collected from prior customization
+works. Wooden pot, tortoise plushy, cat, and dog from [12],
+ceramic bird, cat figurine, patterned teapot from [6], and
+pencil drawing from [17].
+Source images are collected from Imagen [22], eDiff-
+I [1], Imagic [10], Muse [4], Null-Text Inversion [16], and
+Text2Live [2]. We provide source-reference pairs used for
+quantitative comparisons in the supplementary material.
+C. Additional Background
+C.1. Prompt-to-Prompt
+The attention map editing operation Edit includes two
+sub-operations, namely prompt refinement and word swap.
+word swap refers to replacing cross-attention maps of words
+in the original prompt with other words, while prompt re-
+finement refers to adding cross-attention maps of new words
+to the prompt while preserving attention maps of the com-
+mon words.
+6
+Reference
+Source
+Edited
+Source
+Edited
+eDiff-I
+V* patterned
+teapot pot with
+panda...
+eDil)
+Two cats are sitting
+on a mirror in front
+of a bathroom
+Two V* patterned
+teapot themed cat
+sculpture are...
+V* patterned teapot
+Two teapots with
+panda faces painted
+on them
+V* cat figurine
+A statue of a koala
+with headphones on
+its head
+NVIDIA
+ROCKS
+...of a V* cat
+figurine with...
+A painting of a
+raccoon wearing a
+crown
+...of a V* cat
+figurine wearing...
+NVIDIA
+ROCKS
+ODINI
+A dog playing a
+trumpet in the
+mountains
+eDiff-l
+Diff
+A V* dog playing...
+V* dog
+A golden retriever
+wearing a nvidia
+rocks shirt
+A V* dog wearing...
+1+1=2
+VD-pl
+Uv
+Hod
+U-Ho
+V* physics mug
+A young man is
+wearing a black
+t-shirt
+...wearing a V*
+physics mug t-shirt
+Strawberry cup with
+coffee beans in it on
+top of water
+V* physics mug
+with...
+V* cartoon person
+Photo of a woman
+Photo of a V*
+Photo of a man
+cartoon person
+Figure A. Additional Custom-Edit results.
+7
+Photo of a V*
+cartoon person
+Reference
+Source
+Custom
+Dreambooth
+Textual Inversion
+V* wooden pot
+A bottle of wine and
+a glass on a table
+A V* wooden pot
+of wine...
+A ktn wooden pot
+A V* of wine...
+of wine...
+V* tortoise plushy
+A sea turtle
+swimming under the
+surface of the water
+A V* tortoise plushy
+swimming...
+A ktn tortoise plushy
+swimming...
+A V* swimming...
+V* ceramic bird
+Two small birds
+sitting on a branch
+Two V* ceramic bird Two ktn ceramic bird
+sitting...
+Two V* sitting...
+sitting...
+V* pencil drawing
+Photo of a giraffe
+drinking from a blue
+bucket
+V* pencil drawing ktn pencil drawing of
+of a giraffe...
+a giraffe...
+V* of a giraffe...
+V* cat
+Two cats are sitting
+on a mirror in front
+of a bathroom
+Two V* cat are
+sitting...
+Two ktn cat are
+sitting...
+Two V* are
+sitting...
+Figure B. Qualitative comparison on P2P. While the Custom-Diffusion successfully transfers the reference to the source image, both
+Dreambooth and Textual Inversion fail to capture the precise appearance of the reference. On each row, we use the same strength. We use
+strength [0.4, 0.8, 0.2, 0.4, 0.8] in order from the first row.
+8
+Reference
+Source
+Custom
+Dreambooth
+Textual Inversion
+V* wooden pot
+A V* wooden pot
+of wine and a glass
+on a table
+A ktn wooden pot
+of wine...
+A V* of wine...
+V* tortoise plushy
+A V* tortoise plushy
+swimming under the
+surface of the water
+A ktn tortoise plushy
+swimming...
+AV* swimming...
+V* ceramic bird
+Two V* ceramic bird Two ktn ceramic bird
+sitting on a branch
+Two V* sitting...
+sitting...
+V* pencil drawing
+V* cat
+V* pencil drawing of ktn pencil drawing of
+a giraffe drinking
+from a blue bucket
+a giraffe...
+V* of a giraffe...
+Two V* cat are
+sitting on a mirror in
+front of a bathroom
+Two ktn cat are
+sitting...
+Two V* are
+sitting...
+Figure C. Qualitative comparison on SDEdit. Custom-Diffusion successfully edits the source with some changes in the background since
+SDEdit diffuses the background as well. Dreambooth and Textual Inversion fail to capture the precise appearance of the reference. On each
+row, we use the same strength. We use strength [0.8, 0.6, 0.6, 0.8, 0.5] in order from the first row.
+9
+Textual Inversion
+Dreambooth
+Custom-Diffusion
+Textual Inversion
+Reference
+Dreambooth
+Custom-Diffusion
+Reference
+Source
+Strength 0.8
+Strength 0.6
+Strength 0.4
+Strength 0.2
+V* patterned teapot
+Strawberry cup with
+coffee beans in it on
+top of water
+V* pattered teapot
+with...
+ktn patterned teapot
+Strawberry cup with
+coffee beans in it on
+top of water
+ktn pattered teapot
+with...
+V*
+Strawberry cup with
+coffee beans in it on
+top of water
+V* with...
+Figure D. Varying strength of P2P. Red box indicates the best sample.
+Source
+Strength 0.5
+Strength 0.6
+Strength 0.7
+Strength 0.8
+da
+Noct
+V* patterned teapot
+Strawberry cup with
+coffee beans in it on
+top of water
+V* pattered teapot
+with...
+ktn patterned teapot
+Strawberry cup with
+coffee beans in it on
+top of water
+ktn pattered teapot
+with...
+V*
+Strawberry cup with
+coffee beans in it on
+top of water
+V* with...
+Figure E. Varying strength of SDEdit. Red box indicates the best sample.
+10
+10
+Reference
+Source
+Failure
+Success
+V* cat
+A cup of coffee and a
+slice of cake on a table
+A cup of V* cat
+and a...
+V* cat of coffee
+and a...
+V* tortoise plushy
+A dolphin jumping
+out of the water in
+...in front of V*
+tortoise plushy
+A V* tortoise
+plushy jumping...
+front of rocks
+Text Similarity
+Text Similarity
+35
+34
+33
+2
+31
+Figure F. Failure cases.
+Prompt-to-Prompt
+Custom Diffusion
+Dreambooth
+Textual Inversion
+30
+80
+82
+84 86 88 90
+92
+94 96
+35
+34
+33
+31
+30
+70.0 72.5
+Source Similarity
+SDEdit
+Custom Diffusion
+Dreambooth
+Textual Inversion
+75.0 77.5 80.0 82.5 85.0 87.5
+Source Similarity
+Figure G. Source-Text Similarity Trade-off.
+C.2. Null-Text Inversion
+Editing a real image requires deterministic mapping of
+the image to noise. However, deterministic DDIM inver-
+sion [25] fails to reconstruct the source image due to the
+accumulated error caused by classifier-free guidance [9].
+11
+Null-text inversion [16] addresses this issue by optimizing
+unconditional text embeddings, which take only a minute
+for a source image. Note that the diffusion model is not
+trained; therefore, the model maintains its knowledge.
