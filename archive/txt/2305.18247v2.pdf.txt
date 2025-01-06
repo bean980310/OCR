@@ -1,0 +1,888 @@
+arXiv:2305.18247v2 [cs.CV] 30 May 2023
+Tom
+TaleCrafter: Interactive Story Visualization with Multiple Characters
+YUAN GONG, Tsinghua Shenzhen International Graduate School, Tsinghua University, China
+YOUXIN PANG, NLPR, Institute of Automation, Chinese Academy of Sciences, China
+XIAODONG CUN, Tencent Al Lab, China
+MENGHAN XIA, Tencent Al Lab, China
+YINGQING HE, Hong Kong University of Science and Technology, China
+HAOXIN CHEN, Tencent Al Lab, China
+LONGYUE WANG, Tencent Al Lab, China
+YONG ZHANG*, XINTAO WANG, and YING SHAN, Tencent Al Lab, China
+YUJIU YANG*, Tsinghua Shenzhen International Graduate School, Tsinghua University, China
+Prince
+#1 The prince lives in
+a beautiful castle.
+#2 The cat is basking
+in the sun on the
+grassland.
+#3 The prince comes
+across the cat in the
+garden.
+#4 The cat is exploring #5 The prince and the
+the forest.
+cat pass through a
+glittering silver grove.
+#6 The prince and the
+cat find the way
+home.
+Cat
+Amy
+#1 Tom and Amy live
+in a room.
+#2 Amy finds a map in #3 Tom and Amy are #4 Tom and Amy are
+the attic.
+searching in the library. standing in the maze.
+#5 Tom is reading a
+letter.
+#6 Tom and Amy are
+standing together.
+Fig. 1. The visual examples of our story visualization system. Given the story and multiple characters, the S2P component first generates a series of prompts
+from the story using GPT-4. Then the T2L component creates a reasonable layout given a generated prompt. The core C-T21 component takes multi-modality
+inputs, such as prompt, layout, and sketch, to render an image with the specified characters, locations, and local structures. Finally, the 12V component
+animates those generated images. The style is specified by "oil painting". Video results can be found in the supplementary materials.
+Accurate Story visualization requires several necessary elements, such as
+identity consistency across frames, the alignment between plain text and
+visual content, and a reasonable layout of objects in images. Most previous
+works endeavor to meet these requirements by fitting a text-to-image (T2I)
+model on a set of videos in the same style and with the same characters,
+e.g., the FlintstonesSV dataset. However, the learned T2I models typically
+struggle to adapt to new characters, scenes, and styles, and often lack the flex-
+ibility to revise the layout of the synthesized images. This paper proposes
+a system for generic interactive story visualization, capable of handling
+multiple novel characters and supporting the editing of layout and local
+structure. It is developed by leveraging the prior knowledge of large lan-
+guage and T2I models, trained on massive corpora. The system comprises
+four interconnected components: story-to-prompt generation (S2P), text-to-
+layout generation (T2L), controllable text-to-image generation (C-T2I), and
+image-to-video animation (12V). First, the S2P module converts concise story
+information into detailed prompts required for subsequent stages. Next, T2L
+*Corresponding authors.
+Project: https://github.com/VideoCrafter/TaleCrafter
+generates diverse and reasonable layouts based on the prompts, offering
+users the ability to adjust and refine the layout to their preference. The
+core component, C-T2I, enables the creation of images guided by layouts,
+sketches, and actor-specific identifiers to maintain consistency and detail
+across visualizations. Finally, I2V enriches the visualization process by ani-
+mating the generated images. Extensive experiments and a user study are
+conducted to validate the effectiveness and flexibility of interactive editing
+of the proposed system.
+1
+INTRODUCTION
+Story visualization, also known as visual storytelling, is a vital
+method for effectively conveying narrative content to a diverse
+range of audiences. It has a wide range of applications in education
+and entertainment [Yin et al. 2022], e.g., children's comic books. In
+this work, story visualization is formulated as such a problem, i.e.,
+given a story in plain text and the portrait images of a few characters,
+generate a series of images to express the story visually.
+2.
+Yuan Gong, Youxin Pang, Xiaodong Cun, Menghan Xia, Yingqing He, Haoxin Chen, Longyue Wang, Yong Zhang, Xintao Wang, Ying Shan, and Yujiu Yang
+An eligible story visualization should meet several essential re-
+quirements to provide an accurate visual representation of a narra-
+tive. First, identity consistency. Maintaining consistent depictions
+of characters and environments across all frames or scenes is cru-
+cial. Second, text-visual alignment. The visual content should align
+closely with the textual narrative, accurately representing the events
+and interactions described in the story. Third, clear and logical lay-
+out. Objects and characters within the generated images should be
+arranged in a reasonable and logical layout. This organization helps
+to guide the viewer's attention seamlessly through the narrative,
+making it easier to understand.
+Pioneer works in story visualization typically train models on
+specific datasets containing characters and styles that are consis-
+tent throughout. Two popular datasets include PorotoSV [Li et al.
+2019a] and FlintstonesSV [Maharana and Bansal 2021], which fea-
+ture cartoon styles and limited character variation. Most earlier
+approaches [Chen et al. 2022; Li 2022; Li et al. 2019a; Maharana and
+Bansal 2021; Maharana et al. 2021, 2022] rely on GAN or VAE-based
+methods, incorporating text encoders to project text into a latent
+space, decoders to generate images conditioned on the text, and
+image and story-level discriminators to retain visual quality and
+consistency. Some studies now leverage diffusion models to capture
+conditional distribution, often using a pre-trained T2I model for
+initialization. For instance, AR-LDM [Pan et al. 2022] introduces a
+latent diffusion model, autoregressively conditioned on historical
+captions and synthesized images to predict current frames. Make-A-
+Story [Rahman et al. 2022] proposes an autoregressive model with
+a visual memory module, capturing actor and background context
+across generated frames for content consistency.
+However, these methods encounter two unavoidable limitations.
+First, they face challenges in generalizing to new actors and scenes,
+as they are trained on specific datasets to fulfill the primary two
+requirements. Recent work [Jeong et al. 2023] investigates the po-
+tential of zero-shot story visualization using a pre-trained T2I model
+to enable adaptation to any new character and scene. The process
+involves generating an image and subsequently replacing the hu-
+man face with a supplied one. Unfortunately, this approach neither
+accommodates multiple characters nor supports objects apart from
+the human face. Second, none of these methods take into account
+the third requirement, i.e., the layout of the generated image or
+local object structure, with all information implicitly controlled by
+the text. Although several text-to-image and layout-to-image meth-
+ods [Hong et al. 2018; Li et al. 2023; Liang et al. 2023; Rombach et al.
+2022; Zhang et al. 2017] incorporate layout as input or intermediate
+result, their focus lies solely on single image generation rather than
+story visualization, without considering cross-frame consistency.
+In this work, we introduce a versatile interactive story visualiza-
+tion system that satisfies all three requirements, building on the
+knowledge of large-scale language and text-to-image (T2I) models
+trained on extensive corpora. This system can adapt to various new
+characters and support layout and local structure editing beyond
+the capabilities of previous methods. Our system consists of four
+components: story-to-prompt generation (S2P), text-to-layout gen-
+eration (T2L), controllable text-to-image generation (C-T2I), and
+image-to-video animation (I2V). Given a story, S2P leverages a large
+language model to generate prompts that depict the visual content
+of images based on instructions, including events, scenes, and char-
+acters. Subsequently, T2L utilizes the prompt to create an image
+layout that offers location guidance for the main subjects, while
+allowing interactive refinement of the layout. The core component,
+C-T2I, renders images conditioned on the layout, local sketch, and
+prompt, while preserving the identity of multiple characters. The
+prompt conveys the image content, whereas the layout and local
+sketch represent the subjects' locations and detailed local structures,
+respectively. To preserve identity, the model learns a small set of
+personalized weights for each character. C-T2I facilitates interactive
+editing of local structures and seamless replacement of characters
+with new ones. Finally, I2V enriches the visualization process by
+animating generated images for more vivid presentation. Visual
+results are shown in Fig. 1.
+Our main contributions are in two key aspects:
+• We propose a versatile and generic story visualization sys-
+tem that leverages large language and pre-trained T2I mod-
+els for generating a video from a story in plain text. This
+system can handle multiple novel characters and scenes.
+• We develop a controllable, multi-modality text-to-image gen-
+eration module, C-T2I, which serves as the core component
+of the visualization system. This module focuses on iden-
+tity preservation for multiple characters and emphasizes
+structure control in terms of layout and local structure.
+2 RELATED WORK
+2.1 Story Visualization
+The earlier works in the field of story visualization primarily relied
+on GAN or VAE-based approaches [Chen et al. 2022; Li 2022; Li et al.
+2019a; Maharana and Bansal 2021; Maharana et al. 2021; Song et al.
+2020]. For instance, StoryGAN [Li et al. 2019a] uses both the full
+story and individual sentences as inputs to generate contextually
+relevant images, employing image and story discriminators. DUCO-
+StoryGAN [Maharana et al. 2021], on the other hand, introduces a
+dual learning framework that utilizes video captioning to enhance
+semantic alignment between stories and generated images. Several
+studies take advantage of the long-range dependence properties of
+transformers, such as VP-CSV [Chen et al. 2022] and StoryDALL-
+E [Maharana et al. 2022]. The latter adapts a pre-trained model to a
+specific dataset to leverage the prior knowledge.
+Recently, diffusion models have shown success in various appli-
+cations, including image, video, and audio generation [Ho et al.
+2022; Liu et al. 2023; Rombach et al. 2022]. Several works inte-
+grate diffusion models into story visualization, replacing GANs [Pan
+et al. 2022; Rahman et al. 2022]. AR-LDM [Pan et al. 2022] adopts
+StoryDALL-E's setup for story continuation, and utilizes latent dif-
+fusion models as image generators while aggregating information
+from current and previous prompts using an autoregressive model.
+Make-A-Story [Rahman et al. 2022] proposes an autoregressive
+diffusion-based framework featuring a visual memory module. Sim-
+ilar to AR-LDM, it leverages historical results, albeit relying on
+the cross attention mechanism and interacting in the feature space,
+rather than text embedding.
+However, these methods often struggle to generalize to novel
+characters and scenes, as they inherently fit the model to specific
+instruction
+"generate K prompts from the story for stable
+diffusion to generate images, depicting the
+event, character, and scene"
+sketch
+P1: "a cat and a dog...
+TaleCrafter: Interactive Story Visualization with Multiple Characters
+Multiple Characters
+P1: "a cat and a dog..."
+layout
+S2P
+TXT
+P2: "... walking in forest..."
+Pk: "...play a ball..."
+T2L
+C-T21
+dog cat
+image
+12V
+video
+3
+story
+Fig. 2. The pipeline of our interactive story visualization system. The system comprises four components. (a) Story-to-prompt (S2P): a large language model is
+utilized to bridge the gap between the literary and artistic descriptions and the descriptions fed into T2l models. It comprehends the content in the given story
+and converts it into prompts suitable for T2l models, following the given instructions. (b) Text-to-layout (T2L): generates a reasonable layout for the main
+subjects in the prompt. (c) Controllable text-to-image (C-T2I): given various conditions such as prompt, layout, sketch, and a few images of each character,
+generates consistent-character images. It enables interactive editing of character, layout, and local structure through sketches. (d) Image-to-video (12V):
+extracts depth from the image and converts it into a video by setting the camera path for novel view synthesis.
+datasets like FlintstonesSV. Consequently, the model can only recall
+the characters and scenes from the training dataset. Aiming to elim-
+inate this limitation, one recent study [Jeong et al. 2023] focuses
+on zero-shot story visualization supporting novel characters and
+scenes, proposing a method for character identity replacement in
+images using diffusion models-an approach reminiscent of face
+swapping. However, this method's scope is limited to single human
+faces, and the identity preservation and consistency across images
+remain unsatisfactory. Our method targets zero-shot story visual-
+ization as well, supporting multiple novel characters and scenes.
+To ensure identity consistency, we optimize a small set of model
+weights for each characte and propose a personalized inpainting
+method to compose multiple characters. Moreover, our approach
+allows control over layout and local object structures, surpassing
+the capabilities of previous works.
+2.2
+Text-to-image Generation
+A significant number of Text-to-Image (T2I) methods are founded
+upon GANS [Reed et al. 2016; Xu et al. 2018; Zhang et al. 2017]. Typ-
+ically, these methods involve a text encoder and an image generator.
+Some approaches [Hong et al. 2018; Li et al. 2019b; Qiao et al. 2021]
+employ intermediate layout generation to simplify image generation
+directly from text. Recently, diffusion models have demonstrated po-
+tential in image and video generation, with several studies [Ramesh
+et al. 2022, 2021; Rombach et al. 2022; Saharia et al. 2022] improving
+image quality and diversity using diffusion models. However, these
+methods mainly concentrate on the alignment between text and a
+single generated image, without considering identity consistency
+across multiple images.
+Despite the success of inversion methods [Gal et al. 2022; Ruiz
+et al. 2022; Shi et al. 2023; Yang et al. 2023] in maintaining identity
+in diffusion-based T2I generation, they typically excel with single
+concepts while struggling to cope with multiple concepts. Custom
+Diffusion [Kumari et al. 2022] aims to compose multiple concepts but
+falters when dealing with similar-looking concepts, such as cats and
+dogs. Since composing multiple concepts or characters in an image
+using inversion remains a challenge, we propose a controllable T21
+model for personalized inpainting, which tackles composition from
+a different perspective.
+3 METHOD
+We propose an interactive story visualization system that supports
+interactive editing of character, layout, and local structure. Different
+from most previous works, it can handle consistent generation of
+multiple characters and generalize to novel characters and scenes. As
+shown in Fig. 2, the system comprises four components, i.e., story-
+to-prompt (S2P), text-to-layout (T2L), controllable text-to-image
+(C-T2I), and image-to-video (I2V).
+3.1
+Story-to-prompt Generation
+The given story could be a brief sentence, e.g., "a cat and a dog have
+a wonderful day.", or it could be a long detailed one with literary
+techniques. Both might not fit the taste of current T2I models that
+are trained with captions depicting the events, scenes, and objects
+in images. Recently, amazing breakthroughs have been achieved
+in the development of large language models, such as GPT-4 [Ope-
+nAI 2023] and PaLM 2 [et al 2023]. GPT-4 is trained on a massive
+multi-modality corpus, including vision and language, which is an
+appropriate tool to bridge the gap between literary descriptions and
+the descriptions for T2I models. We use GPT-4 in this work.
+The instruction matters in GPT-4. The basic elements in the de-
+scription for T2I models are event, scene, and object. Hence, for a
+given story, we use the instruction, like "generate K prompts from the
+story for Stable Diffusion to generate images, depicting event, charac-
+ter, and scene." Leveraging the capability of pre-trained T2I models,
+we exploit key words in text to control the style, e.g., using "in oil
+painting style" as a suffix of the prompts.
+Let S denote a story in plain text. Let R and F denote the instruc-
+tion and style, respectively. The function of the S2P component can
+be defined as
+=
+[P1, P2, PK] S2P(S, R, F, K),
+(1)
+where K is the number of prompts to generate. pi is the i-th prompt.
+4.
+Yuan Gong, Youxin Pang, Xiaodong Cun, Menghan Xia, Yingqing He, Haoxin Chen, Longyue Wang, Yong Zhang, Xintao Wang, Ying Shan, and Yujiu Yang
+3.2 Text-to-layout Generation
+Transformers are the most widely used techniques to capture layout
+distribution [Gupta et al. 2021; Jiang et al. 2022]. However, autore-
+gressive decoders are revealed to be inflexible for handling partial
+inputs [Kong et al. 2022] due to its fixed generation order. Recently,
+discrete diffusion models [Austin et al. 2021; Gu et al. 2022] are
+introduced by LayoutDM [Inoue et al. 2023] for layout generation.
+It achieves satisfying performance and allows various constraints.
+Following LayoutDM, we exploit discrete diffusion models for
+text-to-layout generation. Let L = {B;}\\₁ denote the layout with N
+objects, where B₁ = (bi, li). b¡ = (xi, Yi, Wi, hi) = {1, ..., M}4 repre-
+sents the bounding box with (xi, yi) as the center and (wi, h;) as the
+width and height. The coordinates are normalized and quantized,
+and M is the number of bins. li; = {1, 2, ..., C} is the object category.
+C is the number of object categories. The flattened discrete vector
+L= {x1,y1, W1, h1, 11, x2, y2, ...} is treated as the latent variable with
+a variable length.
+Following the definition of discrete diffusion models in D3PM [Austin
+et al. 2021], the forward diffusion process for a discrete scalar with
+D categories at timestep t, zt = {1, 2, ..., D}, can be defined as:
+q(zt|zt−1) = v(zt)TQtv(zt−1)T,
+(2)
+where v(z+) is one-hot vector of zt and Qt Є [0,1] DXD is the
+transition matrix. When Z₁ = {1, 2, ..., D}N is a vector, the forward
+process is applied to each of its element independently. Similar to
+DDPM [Ho et al. 2020], the reverse denoising process is estimated by
+a network, i.e., på(Zt−1|Zt) € [0,1] N×D¸ 0 denotes the parameters
+of a bidirectional Transformer. DP3M decomposes po(Zt-1|Zt) as
+follows and learns to estimate pe (zo|zt) instead:
+α
+Po(Zt-1|Zt) ∞ Σ9(Zt−1|Zt, Zo)Ã¤(Zo|Zt),
+Zo
+(3)
+where q(Zt-1 Zt, Zo) has a closed-form solution according the def-
+inition of the diffusion process. As the flattened L has a variable
+length, we exploit the padding trick of LayoutDM to handle it.
+We use the training objective in D3PM, including a widely used
+variational lower bound Lvb and an extra loss, i.e.,
+Ls2p = Lvb + Eq(zo) Eq(zt |zo) [— log pe(zo|zt)],
+where is a trade-off hyperparameter.
+(4)
+Since the purpose of T2L is to generate a layout according the
+given text, the above formulation cannot be directly applied. We use
+a language processing tool [Liu et al. 2021] to extract nouns from
+the text and treat them as the target objects. To convert the nouns
+into categorical labels, we use the class names in the Object365
+dataset [Shao et al. 2019]. As Object365 provides the bounding boxes
+and categorical labels of objects in image, we use it to train our T2L
+model. The function of the T2L component can be represented as
+L = = {Bi}\₁ = T2L(p),
+(5)
+where p is the generated prompt from the S2P component.
+3.3
+Controllable Text-to-image Generation
+C-T2I is the core component of the story visualization system (see
+Fig. 3), which has multi-modality inputs and generates an image
+with multi-level controls, including the identity, location, and local
+prompt:
+embedding
+"a cat and a dog..."
+Ет
+sketch
+Zt
+dog
+ResBlock
+ET
+cat
+<box, text>
+Es
+Cross-Att
+Aug
+Self-Att
+Add
+Aq BQ Ax Bx
+Ay By
+Q K V
+Unet Block
+Zt-1
+C-T21
+Fig. 3. The structure of the C-T2I component. It takes a noisy image as
+input and generates an image through a single denoising step, conditioning
+on multiple types of guidance, including prompt, sketch, and bounding
+box with description. For identity consistency, we use LORA to learn the
+personalized weights in self and cross-attention layers as well as a specific
+token for each character.
+structure. Though many works focus on individual tasks of text-
+to-image [Rombach et al. 2022], layout-to-image [Li et al. 2023],
+sketch-to-image [Voynov et al. 2022], and identity-preservation [Ku-
+mari et al. 2022], they cannot simultaneously handle the multi-level
+controls that are essential capabilities of interactive story visualiza-
+tion. For example, [Li et al. 2023] is a layout-to-image method with
+the guidance of text. It can locate the objects with input boxes, but
+it has no control over the local structure and identity. [Chen et al.
+2023] can specify the location of one specified object, but cannot
+handle multiple objects. [Kumari et al. 2022] attempts to put two
+objects in an image, but cannot specify their locations and poses.
+Inspired by the latent diffusion model (LDM) [Rombach et al.
+2022], our multi-modality conditional generation model is learned
+in the latent space, and the distribution is captured using diffusion
+models. The structure of C-T21 is shown in Fig. 3. To allow the
+injection of multiple types of input, we modify the structure of the
+original UNet in LDM. In each UNet block, we upgrade the self and
+cross-attention block and additionally introduce an addition block.
+Identity Preservation. We exploit the pre-trained CLIP [Radford
+et al. 2021] as the text encoder E to map the input prompt to an
+embedding. The embedding is fed into the cross-attention module to
+interact with spatial features. For identity preservation, unlike [Ruiz
+et al. 2022] and [Kumari et al. 2022], we use LORA to update addi-
+tional low-rank weights in the self and cross-attention layers instead
+of fine-tuning all the parameters of a learned T2I model. Note that
+LORA is only applied to the MLPs of the query, key, and value map-
+pings. It can alleviate the overfitting issue and concept forgetting
+because the original weights are retained, and only a very small set
+of parameters are learned. Given a few images of a character, a token,
+and a set of LORA weights are trained specifically. The weights are
+not optimized for multiple characters jointly because the success
+rate of composing two characters is not satisfying, especially for
+characters with similar appearance.
+Let W € Rdxk denote the parameters of a linear mapping, where
+d and k are the dimensions of the input and output vectors, re-
+spectively. Let h = Wx denote the output vector. x = Rk is the
+TaleCrafter: Interactive Story Visualization with Multiple Characters 5
+input vector. Using LORA to remember a new concept, we learn two
+low-rank matrices A = Rdxr and B = Rrk instead of updating W,
+where r < min(d, k). A and B have many fewer parameters than W
+when r is small. The forward pass can be rewritten as: h = Wx+BAX.
+Object Localization. In the text-to-layout component, the layout
+contains the coordinates and category. In the C-I2I component, we
+replace the category with a phrase that depicts the object while
+injecting the learned character token. For example, we replace "dog"
+with "sks dog" for personalization where sks is the learned token.
+Inspired by [Li et al. 2023], the text embedding is extracted using
+CLIP, while the coordinates are encoded using the Fourier embed-
+ding [Mildenhall et al. 2021]. The two embeddings are concatenated,
+go through an MLP layer for information alignment, and then fed
+into the augmented self-attention module that comprises two self-
+attention layers. One is a typical self-attention layer that contains
+only the interaction among visual features. The other contains the
+interaction between visual features and the location embedding to
+inject object location.
+=
+Let f denote the visual features. Let eg [ET (p), Fourier (b)]
+denote the concatenated embeddings of grounding text p and box
+b = (x, y, w, h). The first self-attention can be written as: f ←
+f+SA(f), where SA(·) denotes the self-attention operation. The
+second gated self-attention can be written as : f ← f + tanh(α) ·
+TS(SA([f, eg])), where a is a variable with 0 as the initialization.
+TS() selects the visual features after the interaction.
+Local Structure Control. Almost all current story visualization
+works do not take the local structure control of objects into consid-
+eration. The layout and object structure are implicitly determined
+solely by the text. To introduce the flexibility of structure control
+and interactive editing, we use a sketch as one input. Inspired by
+T21 Adapter [Mou et al. 2023], we use a visual encoder Es to map
+the input sketch into the feature space of the UNet. The encoder
+is a stack of four residual blocks [He et al. 2016]. The predicted
+sketch features are combined with visual features by an addition
+module. Note that we first translate and resize the input sketch Is
+on a blank canvas according to its corresponding bounding box.
+Then, the created sketch image Ĩs is fed into Es. fs = Es (Is) denotes
+the features extracted by Es. The local structure control is realized
+by the addition of the visual features f and the generated features
+f, i.e., f ← f + ßfs, where ẞ is a parameter to control the strength
+of applying the structure constraint. It is set to ß = 1 for training,
+while it can be tuned during inference. Note that when ẞ
+inference, this means the sketch input is not required.
+= 0 for
+Iterative Generation. As each character has its own personalized
+weights, during inference for multiple characters, their tokens and
+LORA weights are iteratively applied along with the modules for
+other modalities. For example, given the text "a dog and a cat in a
+forest", and the boxes and sketches of dog and cat, we first generate
+an image with the personalized weights of dog and the modified
+text “a <sks> dog and a cat in a forest". “<sks>" is the learned token
+for dog. The text of the dog box is set to "<sks> dog". Since we have
+the box of cat, we then inpaint the content of the box with the
+text "<yty> cat". "<yty>" is the learned token of cat. The inpainting
+model is a variant of C-T2I with augmented inputs. The difference
+is that we concatenate the noisy image, the original image, and
+the region mask of the box to form the input with 9 channels. The
+training procedure is the same as C-T2I.
+Training Objective. Following LDM [Rombach et al. 2022], we use
+the variational lower bound for training,
+(6)
+LC-T21 = Ez~E1(x),€~N(0,1),t [||€ – €g (Zt, t, C)||],
+where x here represents an image and E1 (·) is the image encoder
+that projects image into latent space. Є is the sampled noise while
+E() is the predicted noise. t is the timestep and zt is the noisy
+image. C = {ET (p), Es (Ĩs), ET (L)} represents the embeddings of
+the conditions, i.e., prompt, sketch, and layout.
+3.4
+Image-to-video Generation
+To make story visualization vivid, we introduce an image-to-video
+component into the system. In this component, we mainly focus
+on the camera movement to generate a video with considering the
+image depth. We exploit a 3D photography method [Shih et al. 2020]
+to extract the depth and synthesize images under novelty views,
+which can enhance stereognosis detail and make the scene more
+realistic than a static image. This approach allows setting the camera
+path for various effects, such as zoom-in, circle, and swing.
+4
+4.1
+EXPERIMENTS
+Settings
+Datasets. For the training of the T2L component, we use the Ob-
+ject365 dataset [Shao et al. 2019] that contains 365 classes, 2 million
+images, and 30 million bounding boxes. For the C-T2I component,
+we use the pre-trained Stable Diffusion (v1.4) [Rombach et al. 2022]
+on LAION-5B [Schuhmann et al. 2022] as the prior model, including
+the CLIP encoder, the image auto-encoder, and the diffusion model.
+The sketch encoder and the augmented self-attention module is
+trained on the Flickr dataset [Plummer et al. 2015]. The sketches
+are extracted by PiDiNet [Su et al. 2021]. To reduce the training
+difficulty of these two parts, we use the encoder weights of T2I
+Adapter [Mou et al. 2023] and gated self-attention weights of GLI-
+GEN [Li et al. 2023] as initialization for training. Then, based on
+the resulting model, we train the personalized LORA weights for
+each character with the given 5-9 images. For the story-to-prompt
+generation, we use the large language model GPT-4.
+Evaluation Metrics. We evaluate our method along two dimen-
+sions. First, we employ text-image similarity in the CLIP feature
+space to appraise the text alignment of generated images [Hessel
+et al. 2021]. Subsequently, to gauge the consistency of characters, we
+utilize image-image similarity in the CLIP image feature space [Gal
+et al. 2022]. Besides, we also conduct a human preference study for
+evaluation.
+Baselines. We compare our method with three approaches: Custom-
+Diffusion [Kumari et al. 2022], Paint-by-Example [Yang et al. 2022],
+and Make-a-Story [Rahman et al. 2022]. Custom-Diffusion employs
+a fine-tuning technique for T2I models and enables joint training
+for multiple concepts and their composition within a single image.
+Paint-by-Example constitutes an exemplar-guided image editing
+Prompts
+#1 The girl lives in a
+serene small town.
+6.
+Yuan Gong, Youxin Pang, Xiaodong Cun, Menghan Xia, Yingqing He, Haoxin Chen, Longyue Wang, Yong Zhang, Xintao Wang, Ying Shan, and Yujiu Yang
+Cat
+Girl
+Ours
+Paint-by-Example
+Custom-Diffusion
+ALE
+MOHOL
+TIE THE CIERZALDWE
+#2 The girl and a cat
+are watching rainbow
+arcs in the distance.
+#3 The girl and a cat enter
+fantastical world, cotton-like
+clouds floated, colorful
+butterflies filled the air.
+#4 The girl is dancing
+in the wind.
+#5 The girl is going to
+the school.
+# 6 The girl is dancing in
+the town square
+attracting many
+spectators.
+Fig. 4. Comparison with Custom-Diffusion and Paint-by-Example. One character is an Anime character and the other is a real cat. The style is specified by
+"Ghibli" for all the three methods.
+method, which facilitates character insertion into images for story-
+telling purposes. Make-a-Story introduces an autoregressive deep
+generative framework designed to create stories that exhibit en-
+hanced character and background consistency. However, due to its
+reliance on extensive story data for training and incompatibility
+with our limited dataset, we conduct only qualitative experiments.
+Implementation Details. Both our model and Custom-Diffusion
+are trained using the same target dataset and regularization dataset,
+with learning rates of 1e-4 and 1e-5, respectively. For each story, we
+jointly train Custom-Diffusion on two characters. Considering that
+Paint-by-Example constitutes a zero-shot image editing method, we
+use target images from the training set to edit on identical back-
+ground images and bounding boxes. To ensure fairness, we omit
+sketch guidance when comparing with them.
+4.2 Qualitative Comparisons.
+In Fig. 4 and Fig. 5, we furnish a qualitative assessment of our pro-
+posed method compared to the state-of-the-art baselines. To com-
+pare with Make-a-Story, we utilize examples from the Make-a-Story
+paper to generate content using the same prompts and characters.
+The results are shown in Fig. 5. Our method has higher image quality
+with fewer artifacts, while better preserving the characters' identi-
+ties. It can be observed that the lady's dress changes across images
+in the results of Make-a-Story. While our results are more consistent.
+Besides, as our method is a generic method that does not require
+training on a specific data such as FlintstonesSV, it can generate
+novel scenes out of the range of FlintstonesSV.
+Prompts
+man
+lady
+Make-a-Story
+Custom-Diffusion
+Paint-by-Example
+Ours
+# 1 The man and the lady are #2 The man is standing in a
+standing in the room, talking room speaking with an
+to each other, and the man is exasperated expression and
+holding a suitcase, oil holding a pile of clothes, oil
+painting.
+painting
+#3 The lady is
+standing in a room,
+oil painting.
+# 4 The lady is standing
+in a room and giggling,
+oil painting.
+Fig. 5. Comparisons with Make-a-Story, Custom-Diffusion, and Paint-by-
+Example using characters from the FlintsonesSV dataset.
+Fig. 4 shows the story visualization results of an Anime girl and a
+real cat. Paint-by-Example and Custom-Diffusion perform poorly in
+Method
+Custom-Diffusion
+text-image sim.
+0.7422
+image-image sim.
+0.6323
+Paint-by-Example Ours
+0.7087
+0.6104
+0.7676
+0.6758
+Table 1. Quantitative comparisons. The text-image and image-image simi-
+larity are computed in the CLIP feature space.
+Method
+Custom-Diffusion Paint-by-Example
+Ours
+Correspondence 1.561
+1.566
+2.873
+Coherence
+1.852
+1.498
+2.651
+Quality
+1.661
+1.614
+2.725
+TaleCrafter: Interactive Story Visualization with Multiple Characters
+Reference
+Mask
+GLIGEN
+Ours
+7
+Table 2. User study on text-image alignment, identity preservation, and
+image quality. Higher score indicates better performance.
+identity preservation. They always miss the kerchief or generate an
+inaccurate one. Besides, Paint-by-Example fails to convert the cat
+into an Anime cat according to the image style. Custom-Diffusion
+has a low probability of composing the two characters, as in the
+second column. Differently, our method performs better in pre-
+serving identity cross images and can also harmoniously compose
+characters based on the image style.
+4.3 Quantitative Comparisons.
+We evaluate on 5 stories, encompassing 35 prompts with 20 samples
+per prompt, yielding a total of 700 generated images. We employ
+DDIM sampling consisting of 50 steps, and a classifier-free guidance
+value of 6 across all approaches. The text-image similarity in CLIP
+feature space is used to measure the alignment between the prompt
+and the generated image. The image-image similarity measures
+the performance of identity preservation. We compute the average
+embedding of the given character images and then compute the
+similarity between it and generated images. As demonstrated in
+Table 1, our method surpasses the competing methods. Securing
+the highest text-image and image-image similarity, our method
+demonstrates an enhanced accuracy in generating stories.
+4.4 User Study
+We perform a user study on the visualization results of 9 stories by
+Custom-Diffusion, Paint-by-Example, and ours. Each story has 3
+prompts, resulting in 3 generated images. For each given story,
+50 participants are asked to rank the performance of the three
+competing methods from the following three aspects. First, whether
+the generated image accurately reflects the input text description.
+Second, whether the images consistently preserve the character
+identities. Third, the visual quality of the generated images. The
+score ranges from 1 to 3. A higher score indicates better performance.
+The average scores in the three aspects are shown in Table 2. In
+general, our approach achieves the highest scores in all aspects,
+demonstrating the efficacy of our proposed framework.
+4.5 Interactive Editing and Image Animation
+Interactive Editing. Our system allows the interactive editing of
+layout, character, and local structure. Here, we present the control
+capability of character and local structure. As shown in Fig. 6, we
+present a comparison of the identity preservation in GLIGEN. GLI-
+GEN takes the reference images as input to fill the masked region
+while our method uses the personalized token and weights. It can be
+Fig. 6. Comparison with GLIGEN on identity control.
+Fig. 7. Visualization of sketch controlling. Our model can generate images
+with the control on local object structure based on the input sketch.
+observed that our generated character resembles the reference more
+than GLIGEN. The verification of the structure control is shown
+in Fig. 7. Given different sketches, the synthesized characters are
+under the corresponding poses and gestures.
+Image Animation. Our 12V component converts an image to a
+video by extracting depth from the image and setting a camera
+path. We also use text-to-speech to convert the story to audio and
+combine it with the generated video. Video results are presented
+in the supplementary.
+5 LIMITATIONS
+Our system builds on the pre-trained Stable Diffusion. The quality
+of synthesized images heavily relies on the capability of the pre-
+trained model. Since Stable Diffusion (v1.4) performs poorly in face
+generation, especially when the face covers only a small region in
+the image, our system inherits this drawback. Another limitation is
+that the sketch needs to be provided currently. The source sketch can
+come from image retrieval, drawing, 3D rendering, or T2I generated
+image. Automatic sketch generation based on reference images and
+text can be treated as our future work.
+6
+CONCLUSION
+We present an innovative system for generic interactive story vi-
+sualization capable of handling novel characters and scenes while
+8.
+Yuan Gong, Youxin Pang, Xiaodong Cun, Menghan Xia, Yingqing He, Haoxin Chen, Longyue Wang, Yong Zhang, Xintao Wang, Ying Shan, and Yujiu Yang
+maintaining identity consistency, alignment between text and vi-
+sual content, and reasonable object layouts. The system's four in-
+terconnected components - story-to-prompt generation (S2P), text-
+to-layout generation (T2L), controllable text-to-image generation
+(C-T2I), and image-to-video animation (12V) - work harmoniously
+to create an interactive and flexible visualization solution. Extensive
+experiments and a user study have demonstrated the effectiveness
+of the proposed system in story visualization.
+REFERENCES
+Jacob Austin, Daniel D Johnson, Jonathan Ho, Daniel Tarlow, and Rianne van den Berg.
+2021. Structured denoising diffusion models in discrete state-spaces. Advances in
+Neural Information Processing Systems 34 (2021), 17981-17993.
+Hong Chen, Rujun Han, Te-Lin Wu, Hideki Nakayama, and Nanyun Peng. 2022.
+Character-centric story visualization via visual planning and token alignment. arXiv
+preprint arXiv:2210.08465 (2022).
+Minghao Chen, Iro Laina, and Andrea Vedaldi. 2023. Training-Free Layout Control
+with Cross-Attention Guidance. arXiv preprint arXiv:2304.03373 (2023).
+Rohan Anil et al. 2023. PaLM 2 Technical Report. arXiv:2305.10403 [cs.CL]
+Rinon Gal, Yuval Alaluf, Yuval Atzmon, Or Patashnik, Amit H Bermano, Gal Chechik,
+and Daniel Cohen-Or. 2022. An image is worth one word: Personalizing text-to-
+image generation using textual inversion. arXiv preprint arXiv:2208.01618 (2022).
+Shuyang Gu, Dong Chen, Jianmin Bao, Fang Wen, Bo Zhang, Dongdong Chen, Lu
+Yuan, and Baining Guo. 2022. Vector quantized diffusion model for text-to-image
+synthesis. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition. 10696-10706.
+Kamal Gupta, Justin Lazarow, Alessandro Achille, Larry S Davis, Vijay Mahadevan,
+and Abhinav Shrivastava. 2021. Layouttransformer: Layout generation and comple-
+tion with self-attention. In Proceedings of the IEEE/CVF International Conference on
+Computer Vision. 1004-1014.
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun. 2016. Deep residual learning
+for image recognition. In Proceedings of the IEEE conference on computer vision and
+pattern recognition. 770-778.
+Jack Hessel, Ari Holtzman, Maxwell Forbes, Ronan Le Bras, and Yejin Choi. 2021.
+Clipscore: A reference-free evaluation metric for image captioning. arXiv preprint
+arXiv:2104.08718 (2021).
+Jonathan Ho, William Chan, Chitwan Saharia, Jay Whang, Ruiqi Gao, Alexey Gritsenko,
+Diederik P Kingma, Ben Poole, Mohammad Norouzi, David J Fleet, et al. 2022.
+Imagen video: High definition video generation with diffusion models. arXiv preprint
+arXiv:2210.02303 (2022).
+Jonathan Ho, Ajay Jain, and Pieter Abbeel. 2020. Denoising diffusion probabilistic
+models. Advances in Neural Information Processing Systems 33 (2020), 6840-6851.
+Seunghoon Hong, Dingdong Yang, Jongwook Choi, and Honglak Lee. 2018. Inferring
+semantic layout for hierarchical text-to-image synthesis. In Proceedings of the IEEE
+conference on computer vision and pattern recognition. 7986-7994.
+Naoto Inoue, Kotaro Kikuchi, Edgar Simo-Serra, Mayu Otani, and Kota Yamaguchi.
+2023. LayoutDM: Discrete Diffusion Model for Controllable Layout Generation.
+arXiv preprint arXiv:2303.08137 (2023).
+Hyeonho Jeong, Gihyun Kwon, and Jong Chul Ye. 2023. Zero-shot Generation of
+Coherent Storybook from Plain Text Story using Diffusion Models. arXiv preprint
+arXiv:2302.03900 (2023).
+Zhaoyun Jiang, Shizhao Sun, Jihua Zhu, Jian-Guang Lou, and Dongmei Zhang. 2022.
+Coarse-to-Fine Generative Modeling for Graphic Layouts. In Proceedings of the AAAI
+Conference on Artificial Intelligence, Vol. 36. 1096-1103.
+Xiang Kong, Lu Jiang, Huiwen Chang, Han Zhang, Yuan Hao, Haifeng Gong, and Irfan
+Essa. 2022. BLT: bidirectional layout transformer for controllable layout generation.
+In Computer Vision-ECCV 2022: 17th European Conference, Tel Aviv, Israel, October
+23-27, 2022, Proceedings, Part XVII. Springer, 474-490.
+Nupur Kumari, Bingliang Zhang, Richard Zhang, Eli Shechtman, and Jun-Yan Zhu.
+2022. Multi-Concept Customization of Text-to-Image Diffusion. arXiv preprint
+arXiv:2212.04488 (2022).
+Bowen Li. 2022. Word-Level Fine-Grained Story Visualization. In Computer Vision-
+ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23-27, 2022, Proceedings,
+Part XXXVI. Springer, 347-362.
+Wenbo Li, Pengchuan Zhang, Lei Zhang, Qiuyuan Huang, Xiaodong He, Siwei Lyu,
+and Jianfeng Gao. 2019b. Object-driven text-to-image synthesis via adversarial
+training. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
+Recognition. 12174-12182.
+Yitong Li, Zhe Gan, Yelong Shen, Jingjing Liu, Yu Cheng, Yuexin Wu, Lawrence Carin,
+David Carlson, and Jianfeng Gao. 2019a. Storygan: A sequential conditional gan for
+story visualization. In Proceedings of the IEEE/CVF Conference on Computer Vision
+and Pattern Recognition. 6329-6338.
+Yuheng Li, Haotian Liu, Qingyang Wu, Fangzhou Mu, Jianwei Yang, Jianfeng Gao,
+Chunyuan Li, and Yong Jae Lee. 2023. GLIGEN: Open-Set Grounded Text-to-Image
+Generation. arXiv preprint arXiv:2301.07093 (2023).
+Jiadong Liang, Wenjie Pei, and Feng Lu. 2023. Layout-bridging text-to-image synthesis.
+IEEE Transactions on Circuits and Systems for Video Technology (2023).
+Haohe Liu, Zehua Chen, Yi Yuan, Xinhao Mei, Xubo Liu, Danilo Mandic, Wenwu
+Wang, and Mark D Plumbley. 2023. Audioldm: Text-to-audio generation with latent
+diffusion models. arXiv preprint arXiv:2301.12503 (2023).
+Lemao Liu, Haisong Zhang, Haiyun Jiang, Yangming Li, Enbo Zhao, Kun Xu, Linfeng
+Song, Suncong Zheng, Botong Zhou, Jianchen Zhu, Xiao Feng, Tao Chen, Tao Yang,
+Dong Yu, Feng Zhang, Zhanhui Kang, and Shuming Shi. 2021. TexSmart: A System
+for Enhanced Natural Language Understanding. In ACL-IJCNLP.
+Adyasha Maharana and Mohit Bansal. 2021. Integrating visuospatial, linguistic and
+commonsense structure into story visualization. arXiv preprint arXiv:2110.10834
+(2021).
+Adyasha Maharana, Darryl Hannan, and Mohit Bansal. 2021. Improving generation and
+evaluation of visual stories via semantic consistency. arXiv preprint arXiv:2105.10026
+(2021).
+Adyasha Maharana, Darryl Hannan, and Mohit Bansal. 2022. Storydall-e: Adapting
+pretrained text-to-image transformers for story continuation. In Computer Vision-
+ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23-27, 2022, Proceedings,
+Part XXXVII. Springer, 70-87.
+Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik, Jonathan T Barron, Ravi Ra-
+mamoorthi, and Ren Ng. 2021. Nerf: Representing scenes as neural radiance fields
+for view synthesis. Commun. ACM 65, 1 (2021), 99–106.
+Chong Mou, Xintao Wang, Liangbin Xie, Jian Zhang, Zhongang Qi, Ying Shan, and
+Xiaohu Qie. 2023. T2i-adapter: Learning adapters to dig out more controllable ability
+for text-to-image diffusion models. arXiv preprint arXiv:2302.08453 (2023).
+OpenAI. 2023. GPT-4 Technical Report. arXiv:2303.08774 [cs.CL]
+Xichen Pan, Pengda Qin, Yuhong Li, Hui Xue, and Wenhu Chen. 2022. Synthesizing
+Coherent Story with Auto-Regressive Latent Diffusion Models. arXiv preprint
+arXiv:2211.10950 (2022).
+Bryan A Plummer, Liwei Wang, Chris M Cervantes, Juan C Caicedo, Julia Hocken-
+maier, and Svetlana Lazebnik. 2015. Flickr30k entities: Collecting region-to-phrase
+correspondences for richer image-to-sentence models. In Proceedings of the IEEE
+international conference on computer vision. 2641-2649.
+Yanyuan Qiao, Qi Chen, Chaorui Deng, Ning Ding, Yuankai Qi, Mingkui Tan, Xincheng
+Ren, and Qi Wu. 2021. R-GAN: Exploring human-like way for reasonable text-to-
+image synthesis via generative adversarial networks. In Proceedings of the 29th ACM
+International Conference on Multimedia. 2085-2093.
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini
+Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. 2021.
+Learning transferable visual models from natural language supervision. In Interna-
+tional conference on machine learning. PMLR, 8748-8763.
+Tanzila Rahman, Hsin-Ying Lee, Jian Ren, Sergey Tulyakov, Shweta Mahajan, and
+Leonid Sigal. 2022. Make-A-Story: Visual Memory Conditioned Consistent Story
+Generation. arXiv preprint arXiv:2211.13319 (2022).
+Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and Mark Chen. 2022.
+Hierarchical text-conditional image generation with clip latents. arXiv preprint
+arXiv:2204.06125 (2022).
+Aditya Ramesh, Mikhail Pavlov, Gabriel Goh, Scott Gray, Chelsea Voss, Alec Rad-
+ford, Mark Chen, and Ilya Sutskever. 2021. Zero-shot text-to-image generation. In
+International Conference on Machine Learning. PMLR, 8821-8831.
+Scott Reed, Zeynep Akata, Xinchen Yan, Lajanugen Logeswaran, Bernt Schiele, and
+Honglak Lee. 2016. Generative adversarial text to image synthesis. In International
+conference on machine learning. PMLR, 1060-1069.
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer.
+2022. High-resolution image synthesis with latent diffusion models. In Proceedings of
+the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 10684-10695.
+Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch, Michael Rubinstein, and Kfir
+Aberman. 2022. Dreambooth: Fine tuning text-to-image diffusion models for subject-
+driven generation. arXiv preprint arXiv:2208.12242 (2022).
+Chitwan Saharia, William Chan, Saurabh Saxena, Lala Li, Jay Whang, Emily L Denton,
+Kamyar Ghasemipour, Raphael Gontijo Lopes, Burcu Karagol Ayan, Tim Salimans,
+et al. 2022. Photorealistic text-to-image diffusion models with deep language under-
+standing. Advances in Neural Information Processing Systems 35 (2022), 36479-36494.
+Christoph Schuhmann, Romain Beaumont, Richard Vencu, Cade Gordon, Ross Wight-
+man, Mehdi Cherti, Theo Coombes, Aarush Katta, Clayton Mullis, Mitchell Worts-
+man, et al. 2022. Laion-5b: An open large-scale dataset for training next generation
+image-text models. arXiv preprint arXiv:2210.08402 (2022).
+Shuai Shao, Zeming Li, Tianyuan Zhang, Chao Peng, Gang Yu, Xiangyu Zhang, Jing
+Li, and Jian Sun. 2019. Objects365: A large-scale, high-quality dataset for object
+detection. In Proceedings of the IEEE/CVF international conference on computer vision.
+8430-8439.
+Jing Shi, Wei Xiong, Zhe Lin, and Hyun Joon Jung. 2023. Instant Booth: Personalized Text-
+to-Image Generation without Test-Time Finetuning. arXiv preprint arXiv:2304.03411
+TaleCrafter: Interactive Story Visualization with Multiple Characters
+9
+(2023).
+Meng-Li Shih, Shih-Yang Su, Johannes Kopf, and Jia-Bin Huang. 2020. 3d photogra-
+phy using context-aware layered depth inpainting. In Proceedings of the IEEE/CVF
+Conference on Computer Vision and Pattern Recognition. 8028-8038.
+Yun-Zhu Song, Zhi Rui Tam, Hung-Jen Chen, Huiao-Han Lu, and Hong-Han Shuai.
+2020. Character-preserving coherent story visualization. In Computer Vision-ECCV
+2020: 16th European Conference, Glasgow, UK, August 23-28, 2020, Proceedings, Part
+XVII 16. Springer, 18-33.
+Zhuo Su, Wenzhe Liu, Zitong Yu, Dewen Hu, Qing Liao, Qi Tian, Matti Pietikäinen, and
+Li Liu. 2021. Pixel difference networks for efficient edge detection. In Proceedings of
+the IEEE/CVF international conference on computer vision. 5117-5127.
+Andrey Voynov, Kfir Aberman, and Daniel Cohen-Or. 2022. Sketch-Guided Text-to-
+Image Diffusion Models. arXiv preprint arXiv:2211.13752 (2022).
+Tao Xu, Pengchuan Zhang, Qiuyuan Huang, Han Zhang, Zhe Gan, Xiaolei Huang, and
+Xiaodong He. 2018. Attngan: Fine-grained text to image generation with attentional
+generative adversarial networks. In Proceedings of the IEEE conference on computer
+vision and pattern recognition. 1316-1324.
+Binxin Yang, Shuyang Gu, Bo Zhang, Ting Zhang, Xuejin Chen, Xiaoyan Sun, Dong
+Chen, and Fang Wen. 2022. Paint by Example: Exemplar-based Image Editing with
+Diffusion Models. arXiv preprint arXiv:2211.13227 (2022).
+Jianan Yang, Haobo Wang, Ruixuan Xiao, Sai Wu, Gang Chen, and Junbo Zhao. 2023.
+Controllable Textual Inversion for Personalized Text-to-Image Generation. arXiv
+preprint arXiv:2304.05265 (2023).
+Fei Yin, Yong Zhang, Xiaodong Cun, Mingdeng Cao, Yanbo Fan, Xuan Wang, Qingyan
+Bai, Baoyuan Wu, Jue Wang, and Yujiu Yang. 2022. StyleHEAT: One-shot high-
+resolution editable talking face generation via pre-trained StyleGAN. In Computer
+Vision-ECCV 2022: 17th European Conference, Tel Aviv, Israel, October 23-27, 2022,
+Proceedings, Part XVII. Springer, 85-101.
+Han Zhang, Tao Xu, Hongsheng Li, Shaoting Zhang, Xiaogang Wang, Xiaolei Huang,
+and Dimitris N Metaxas. 2017. Stackgan: Text to photo-realistic image synthesis with
+stacked generative adversarial networks. In Proceedings of the IEEE international
+conference on computer vision. 5907-5915.

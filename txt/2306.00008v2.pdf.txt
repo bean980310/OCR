@@ -1,12 +1,13 @@
+--- Page 1 ---
 arXiv:2306.00008v2 [cs.LG] 25 Apr 2024
+
 Brainformers: Trading Simplicity for Efficiency
-1
-1 Da Huang
-Yanqi Zhou Nan Du¹ Yanping Huang¹ Daiyi Peng¹ Chang Lan
-1 Siamak Shakeri¹ David So
-Andrew Dai Yifeng Lu¹ Zhifeng Chen ¹ Quoc Le¹ Claire Cui¹ James Laudon¹ Jeff Dean¹
-1
+
+Yanqi Zhou! Nan Du! Yanping Huang! Daiyi Peng! Chang Lan! Da Huang! Siamak Shakeri! David So!
+Andrew Dai! Yifeng Lu! Zhifeng Chen! Quoc Le! Claire Cui! James Laudon! Jeff Dean!
+
 Abstract
+
 Transformers are central to recent successes in
 natural language processing and computer vision.
 Transformers have a mostly uniform backbone
@@ -24,73 +25,77 @@ vation functions. Brainformer consistently outper-
 forms the state-of-the-art dense and sparse Trans-
 formers, in terms of both quality and efficiency. A
 Brainformer model with 8 billion activated param-
-eters per token demonstrates 2× faster training
-convergence and 5× faster step time compared to
-its GLAM counterpart. In downstream task evalu-
+eters per token demonstrates 2 faster training
+convergence and 5x faster step time compared to
+its GLaM counterpart. In downstream task evalu-
 ation, Brainformer also demonstrates a 3% higher
 SuperGLUE score with fine-tuning compared to
-GLAM with a similar number of activated param-
+GLaM with a similar number of activated param-
 eters. Finally, Brainformer largely outperforms a
 Primer dense model derived with NAS with simi-
 lar computation per token on fewshot evaluations.
+
 1. Introduction
+
 In recent years, large neural networks derived from from
-the Transformer architecture (Vaswani et al., 2017) have
+the Transformer architecture have
 demonstrated superior results on language understanding
 and generative tasks. Many improvements on Transformer
-variants have come from scaling the size of models (Raf-
-fel et al., 2020; Brown et al., 2020a; Shoeybi et al., 2019;
-Chowdhery et al., 2022), scaling the training tokens (Hoff-
-'Google Deepmind. Correspondence to: Yanqi Zhou <yan-
-qiz@google.com>.
-Proceedings of the 40th International Conference on Machine
-Learning, Honolulu, Hawaii, USA. PMLR 202, 2023. Copyright
+variants have come from scaling the size of models {Raf}
+
+fel et al.|[2020 2020a} |Shoeybi et al.}/2019
+(Chowdhery et al.}|2022), scaling the training tokens (Hoff
+
+Google Deepmind. Correspondence to: Yangi Zhou <yan:
+
+ing, Honolulu, Hawaii, USA. PMLR 202, 2023. Copyright|
 2023 by the author(s).
-1
-Log Perplexity
+
 Scaling
-2.7
+274 NQUt tte ee
+niet 2.00
 2.6
-2.5
-2.4
-2.3
-2.2
-Branformer Perplexity
-2.1
-GLAM Perplexity
-Brainformer Steps Per Sec
-GLAM Steps Per Sec
-2.25
-2.0
-2.50 2.75 3.00 3.25 3.50 3.75 4.00
-Acticated Params (Millions) in Log Scale
-2.00
 1.75
-1.50
-1.25
-1.00
-0.75
+25 2
+2 1.50 §
+224 a
+i
+& 1.25 2
+23 a
+2 a
+4 1.00
+2.2 . na
+—® Branformer Perplexity 0.75
+2.14 —@ GLaM Perplexity
+-¢- Brainformer Steps Per Sec
 0.50
-Steps Per Second
+2.01 -¢- GLaM Steps Per Sec
+2.25 2.50 2.75 3.00 3.25 3.50 3.75 4.00
+Acticated Params (Millions) in Log Scale
 Figure 1: Brainformer Vs. GLaM in Scaling. Brainformer
+
 improves model quality at much faster training step time.
-mann et al., 2022; Shoeybi et al., 2019), better training data
-quality (Du et al., 2022), and sparsely activated model archi-
-tectures (Du et al., 2022; Lepikhin et al., 2021; Roller et al.,
-2021; Lewis et al., 2021).
-Among the efficient transformer language models (Wang
-et al., 2020; Choromanski et al., 2020; Tay et al., 2021; Hua
-et al., 2022), there is a focus on improving attention-layer
+
+mann et al.|[2022}|Shoeybi et al. 2019}, better training data
+quality (Du et al}[2022}, and sparsely activated model archi-
+
+2021 2021).
+
+Among the efficient transformer language models (Wang]
+
+20
+, there is a focus on improving attention-layer
 efficiency using low-rank approaches or approximations.
 However, recent work has also identified that dense feed-
 forward layers constitute most of the computational cost
 for common sequence lengths (<2048), particularly when
-the model is large (Du et al., 2022; Zhou et al., 2022). To
-further improve compute efficiency such as total FLOPS
+the model is large {Du et al.][2022] [Zhou et al|[2022). To
+further improve compute efficiency such as total FLOPs
 used during training to reach convergence, sparsely gated
-Mixture-of-Experts (Lepikhin et al., 2021; Fedus et al.,
-2021; Du et al., 2022; Zhou et al., 2022; Roller et al., 2021;
-Lewis et al., 2021; Jaszczur et al., 2021) have become preva-
+
+Mixture-of-Experts (Lepikhin et al.} [2021] :
+2021} [Du et al. 2022} Zhou et al.|/2022}|Roller et al.}|2021
+
 lent, giving the model a larger overall capacity to improve
 quality while holding computational cost fixed. Sparsely
 activated models not only reduce the computational cost, but
@@ -99,39 +104,47 @@ on different data distributions through the use of a routing
 function without reducing the effective training time for
 each expert. The MoE architectures in this line of work are
 based on uniform transformer blocks or interleaving dense
-and sparse layers (Du et al., 2022) and a fixed top-k routing.
-Vanilla Transformer
+
+and sparse layers and a fixed top-k routing.
+
+
+--- Page 2 ---
 Brainformers: Trading Simplicity for Efficiency
-afafafafafafafafafafafaf
+
+Vanilla Transformer
+
 Sandwich Transformer
-aaaaaafafafafafafaffffff
-GLAM
-agafagafagafagafagafagaf
+
+GLaM
+
 Stackable Brainformer
-agfgfgagfgfgagfgfgagfgfg
-Figure 2: High-level Comparison with Related Work. 'a': at-
-tention, 'f': feed-forward, 'g': sparsely gated feed-forward.
-GLAM interleaves dense transformer blocks with sparse
+
+Figure 2: High-level Comparison with Related Work. ’a’: at-
+tention, ’f’: feed-forward, ’g’: sparsely gated feed-forward.
+GLaM interleaves dense transformer blocks with sparse
 transformer blocks. Brainformer reduces the frequency of
 attention and changes layer widths together with layer types.
+
 Resonating with the layer-wise architecture stacking in Ef-
-ficientNet (Tan & Le, 2019) and layer reordering in the
-sandwich transformer (Press et al., 2019), we propose a non-
+ficientNet (Tan & Le} 2019) and layer reordering in the
+sandwich transformer (Press et al|| 2019}, we propose a non-
 uniform architecture with sparsity where there is no strict
-layer interleaving as in the vanilla transformer in fig. 2. We
+layer interleaving as in the vanilla transformer in fig. 2] We
 trade off architecture regularity by allowing the search space
 to compose different sub-layers in different orders. For bet-
 ter scaling, we introduce sparsity in the search space with a
 sparsely gated feed-forward layer (MoE layer) coupled with
 different gating mechanisms.
+
 We find that optimizing the architecture, sparsity, and rout-
 ing mechanism in sparse layers is critical to achieve near-
-perfect log-scale scaling in quality. Figure 1 shows that
+perfect log-scale scaling in quality. Figure [I] shows that
 Brainformer scales much better than GLaM (manually
-crafted I sparse transformer). Brainformer consistently im-
+crafted sparse transformer). Brainformer consistently im-
 proves training perplexity while keeps example rate almost
-constant when increasing model capacity, however, GLAM
+constant when increasing model capacity, however, GLaM
 has a much worse example rate when scaled up.
+
 We only treat the MoE layer as a general method to sparsify
 the model. In practice, any conditional computation method
 can be blended in. We apply a simple evolutionary search to
@@ -140,139 +153,162 @@ layers and layer capacities, when to fuse layers, and when to
 specialize layers with MoE modules. For ease of scaling, we
 propose a block-wise sub-layer grouping, such that stacking
 a variable number of blocks produces models of different
-scales, as illustrated in Stackable Brainformer in fig. 2. As
-our results in Section 5 show, this approach has proven
+scales, as illustrated in Stackable Brainformer in fig. 2] As
+our results in Section [5] show, this approach has proven
 effective in our evaluation at multiple model scales.
+
 2. Related Work
+
 Large Language Models: Language models have demon-
 strated strong performance for many natural language pro-
-2
-cessing tasks (Mikolov et al., 2010; Sutskever et al., 2011;
-Dai & Le, 2015). Scaling up model capacity and number
-of training tokens has shown huge success in enhancing
-the performance of computer vision architectures (He et al.,
-2016a;b; Ghiasi et al., 2019; Dai et al., 2021) as well as
-neural language models (Radford et al., 2018; Brown et al.,
-2020b; Kaplan et al., 2020; Raffel et al., 2020; Shoeybi
-et al., 2019; Hoffmann et al., 2022).
+
+2015). Scaling up model capacity and number
+
+of training tokens has shown huge success in cranes
+the Seas CHa ora of computer aan Coo se etal
+
+Sok el models (Radford et al] 2018
+
+Mor et al.
+
 Sparsely Activated Models: Conditional computation ef-
 fectively increases the capacity of a deep neural network
 without increasing the total amount of computation, by ac-
 tivating certain parameters and computation on demand,
-based off the input token or sequence (Cho & Bengio, 2014;
-Puigcerver et al., 2020; Lin et al., 2019). The gating deci-
+based off the input token or sequence (Cho & Bengio|[2014}
+[Puigcerver et al.]{2020} [Lin et al|[2019). The gating deci-
 sions may be binary or sparse and continuous, stochastic
 or deterministic. In a multi-device setting, sparsely-gated
-MOE (Shazeer et al., 2017) demonstrates massive improve-
+MoE demonstrates massive improve-
 ments in model capacity, training time, or model quality
 with gating. Various MoE architectures including Switch
-Transformer (Fedus et al., 2021) and GLaM (Du et al., 2022)
+Transformer and GLaM 22)
 have been proposed. They adopt a token-based gating where
 an auxiliary loss is imposed to counter load imbalance issues.
 Recently, more advanced gating functions are devised to
 ameliorate load imbalance, improve speed, and downstream
-generalization (Roller et al., 2021; Dua et al., 2021; Zuo
-et al., 2021; Gross et al., 2017; Zhou et al., 2022; Jaszczur
-et al., 2021).
+
+generalization (Roller et al.|[2021} [Dua et al.|[2021}|Zuo
+fetal,] 2021] Bory 023
+fecal] 2021).
+
 Non-uniform Architectures: EfficientNet represents one
 of the very early non-uniform architectures that leverages
 layer heterogeneity to achieve SoTA. Instead of searching
 for a new operator or a new block of operators, EfficientNet
 focuses on optimizing the layer compound coefficients to
 scale the model effectively. This heterogeneity leads to a
-model more than 8× smaller and more than 6× faster on in-
-ference (Tan & Le, 2019). Sandwich Transformer promotes
+model more than 8x smaller and more than 6x faster on in-
+ference (Tan & Le|[2019). Sandwich Transformer promotes
 a non-interleaved, non-uniform architecture for language
 modeling tasks. However, the sandwich reordering pattern
 does not guarantee performance gains across every task.
-Residual MoE (Wu et al., 2022) factorized the weights into
+Residual MoE factorized the weights into
 an input-independent core and an input-dependent residual,
 thus achieves comparable results with the upper-bound MoE
 training while only introducing minor additional training
 cost than the lower-bound non-MoE training. In this work,
 we take inspiration from the earlier work but further improve
 scaling and generalization via automatic model discoveries.
+
 3. Method
 3.1. Deriving Our Model Components
+
 There are various forms of computation factorization that
 can lead to lower computation cost or faster computation
-without penalizing model quality. As indicated in fig. 3,
+without penalizing model quality. As indicated in fig. B}
+
+--- Page 3 ---
 Brainformers: Trading Simplicity for Efficiency
+
 low-rank and multi-expert layers are two major methods
 for factorizing a matrix multiplication, both of which re-
 duces FLOPs by half while not sacrificing model capacity.
 When devising an efficient neural network, as indicated
-in fig. 4, low-rank and multi-expert can be combined and
+in fig. [4] low-rank and multi-expert can be combined and
 stacked to achieve more interesting model architectures that
 are computationally efficient. Finally, by also coupling a
-temporal mixture layer (e.g. attention (Vaswani et al., 2017),
-gMLP (Liu et al., 2021) or MLP mixer (Tolstikhin et al.,
-2021)) which captures the causal relations between tokens,
+temporal mixture layer (e.g. attention (Vaswani et al.]
+(2021p) which captures the causal relations between tokens,
 the network becomes a multi-expert transformer variant.
-low-rank bottleneck
-Smaller
-low-rank layers
-Split into more
-experts
-Half FLOPS
-Dense
-y = M *x
-y = V * (U*x)
+
+low-rank / bottleneck
+
+7 N
+y=M*x y=V*(U*x)
+
 multi-branch / multi-expert
-Dense
-Half FLOPS
-y = M *x
-x1, x2 = split(x)
-y = concat(M1 * x1, M2 * x2)
+
+X1, x2 = split(x)
+
+y=M*x y =concat(M1 * x1, M2 * x2)
+
 Figure 3: Two methods of matrix factorization: Low-rank
 and Multi-branch.
+
 However, constructing an efficient network does not require
 conforming to the uniformity of the model architecture as
-illustrated in the last figure of fig. 4. By carefully selecting
+illustrated in the last figure of fig. [4] By carefully selecting
 layer types and layer interleaving, as well as other hyper-
 parameters layers, we could achieve higher quality, train-
 ing efficiency, as well as better scaling. This leads our
 exploration towards a more training-efficient architecture by
 adopting low-rank and multi-expert compression methods
 with coarse-grain sparsity.
+
 3.2. Block-wise Architecture
+
 We largely take inspiration from the layer-wise compound
-scaling in EfficientNet (Tan & Le, 2019). For the easi-
+scaling in EfficientNet [2019). For the easi-
 ness of scaling, We construct a block-wise search space
 where the restriction of uniformly stacking layers is re-
 moved. Instead, we create a generic layer as a function
-Yi
-=
-Fi(Xi), FiЄ {Fattn, Fmoe, Fffn} where Fi is an
+Y; = Fi(Xi),Fi € {Fattn, Fmoe; Fain} where F; is an
 operator selected from the operation set consisting of self at-
-tention, sparsely gated feed-forward (MOE), and dense feed-
-forward sub-layers as depicted in eq. (3). Input X¿ has a
-tensor shape of {B,L, H} and H = {¾½, 1, 3}× Hmodel_dim
-3
-Stack more
+tention, sparsely gated feed-forward (MoE), and dense feed-
+forward sub-layers as depicted in eq. QB). Input X; has a
+tensor shape of {B, L, H} and H € {3 1, 3} x Hodel_dim
+
+Split into more
+
+layers experts
+
+Stac
 compressions
+
+more
+
 Mixture Layers
+
 Figure 4: Evolving matrix factorization into transformer-
 styled model architecture.
+
 where B is the batch size, L is the sequence length, and H
 is a tunable model dimension. The intuition behind tun-
 ing model dimension is to enable more flexible network
 topologies with various factorization methods as described
-in section 3.1. For example, we could instantiate a model
+in section 3.1] For example, we could instantiate a model
 with wider hidden dimensions or a model with experts but
 each expert being narrow.
+
 Unlike a traditional simple, uniform transformer block, a
-Brainformer block is a complex block N that can be repre-
-sented by a list of composed layers in eq. (1):
-N = Fk ○ ... © F₂ © F₁(X1) = ○ F;(X1) (1)
-j=1...k
+Brainformer block is a complex block WV that can be repre-
+sented by a list of composed layers in eq. (t):
+
+© Film)
+
+j=il...k
+
+N =F ©... © Fo OFi(X1) =
+
 We can stack an arbitrary number of Brainformer blocks
 to create a target model. The search objective is to find
-an optimal layer architecture F¿, and model scaling multi-
+an optimal layer architecture F;, and model scaling multi-
 pliers for multiple model inner dimensions that minimizes
-the perplexity. Table 1 summarizes the search space in a
+the perplexity. Table [I] summarizes the search space in a
 Brainformer architecture.
-Figure 5 and Algorithm 1 illustrate the two phases that we
+
+Figure[5Jand Algorithm[Iillustrate the two phases that we
 use to discover compute-efficient Brainformer models. Dur-
 ing the search, a regularized evolutionary search algorithm
 samples block architectures from the search space and trains
@@ -281,106 +317,129 @@ training task, a small 100M32E architecture is instantiated
 by stacking the sampled block three times. This matches
 the number of layers in a baseline GLaM architecture. We
 apply early stopping during the proxy training, where un-
+
+--- Page 4 ---
+Brainformers: Trading Simplicity for Efficiency
+
 Block-wise
 Search Space
-SO
-Brainformers: Trading Simplicity for Efficiency
+
 Block Search
-Block Scale
-Block Stack & Eval
 Proxy task population
-Proxy Task
-Early stopping on
-inference time
-@ 100M32E
-Top-k models
-I
-Early stopping on accuracy
-@train_steps = 1/4 T_max
-@train_steps = T_max:
+
+Early stopping
+<< inigrence time :
+
 Get Reward & Evolve
-{SO}×3
-S2
-1B64E
-8B64E
-{S1}x6
-{S2}x8
+
+Block Scale
+
+Block Stack & Eval
+
+1B64E 8B64E
+—O 7 TWAT.
+I g 1 1
+I 1 i
+! 1
+1 1 i 1
+‘ss =s NSt st
+t AY -—=— = =
+1 1 © 7
+be 4 t q
+aene (OO)
+{S1}x6 {S2}x8
+
 Figure 5: Block-wise architecture search and stacking.
+
 Table 1: Search Space Table: Fattn is a self-attention layer,
-Fmoe is a sparsely gated FFN layer, and Fffm is a regular
+Finoe iS a sparsely gated FFN layer, and Fig, is a regular
 dense FFN layer. The baseline is a 100M 12-layer dense
-transformer model with Hmodel_dim = 768.
-Layer Type (Fi)
+transformer model with Hyodel_dim = 768.
+
+Search Item Search Space
+
 Algorithm 1 Brainformer Block Search
+
 Require: A Block-wise architecture search space B. An
 evolutionary search algorithm with population size p.
-1: fort1 to To do
-for B() in SamplePopulation (B, p) do
-G(i) Stack Three Times (B(¹))
-if Early Stopping (G(i)) then
-R(i) = −1
-Ai, TiTrain (G(i), Tmax)
-R(i) ← f(A², Ti)
-2:
-Search Item
-Search Space
-3:
-Fattn, Fmoe, Fffn
-4:
+for t= 1 to Ty do
+for B® in SamplePopulation(B, p) do
+Gg & StackThreeTimes(B“)
+
+Layer Type (F;)
+
 Model Dim. (d)
-512, 768, 1024
-5:
+
 MoE Hidden Dim. (dmoe)
+FEN Hidden Dim. (dgy)
+
+Fattns Fmoe, Fttn
+
+512, 768, 1024
+
 1536, 2048, 3072, 4096
-6:
-else
 1536, 2048, 3072, 4096
-7:
-12, 16, 20
-8:
-Top-2, Expert Choice
-9:
-end if
-1, 2, 3, 4
-10:
-end for
-Gated Re/GeLU, ReLU, GeLU 11: end for
-12: Gtopk
-TopK({G(¹), R(i)})
-13: for G() in Gtopk do
-14:
-G(i)
-15:
-G(i)
-FFN Hidden Dim. (dffin)
-Attention Heads. (h)
-Gating Func. (g)
-Capacity Factor (c)
-Activation Func. (a)
+
+Attention Heads. (h) 12, 16, 20
+Gating Func. (9) Top-2, Expert Choice
+Capacity Factor (c) 1,2, 3,4
+
+Activation Func. (a) Gated Re/GeLU, ReLU, GeLU
+
 promising models are pruned early due to the violation of
 inference time constraint or perplexity constraint at 25%
 of the maximum training steps, compared to the baseline
-GLAM architecture.
+GLaM architecture.
+
 At the end of evolution, top-k block architectures with the
 highest rewards are evaluated at multiple target scales. In
 our evaluation, we first scale the model dimension and hid-
 den dimension 2x and 4x, following the scaling factors
 presented in GLaM, to create block S1 and S2 targeting
-1B and 8B model scale. Then we stack block S1 and S2
+1B and 8B model scale. Then we stack block S1 and $2
 respectively to create 1B64E and 8B64E model variants. N
-in Algorithm 1 can be determined mathematically according
+in Algorithm{[T]can be determined mathematically according
 to the target total activated parameters. Our final evalua-
 tions are based on comparisons with baseline architectures
 at multiple scales.
+
+if EarlyStopping(G) then
+RY =-1
+
+else
+A‘,Ti & Train(G , Tax)
+RY & f(A4,T*)
+
+end if
+
+10: end for
+
+11: end for
+
+12: Geopk — TopK({G, R})
+
+13: for G in Gtopk do
+
+1:
+2
+3
 4
-16:
-ScaleModelDim (G(²))
-StackNTimes (G(²))
-A², Ti ← Train(G(i))
+5:
+6
+7
+8
+9
+
+4, GOe ScaleModelDim(G“ )
+5 GOe StackNTimes(G“)
+16 At“ Tie Train(G)
+
 17: end for
+
 3.3. Fair Comparisons Across Model Architectures
-Prior NLP model scaling studies (Raffel et al., 2020; Rad-
-ford et al., 2018; Brown et al., 2020b; Rae et al., 2021)
+
+Prior NLP model scaling studies (Raffel et al.}[2020} [Rad]
+OTs} BOI POST)
 typically explore quality scaling with fixed model capacity
 and training steps/tokens. For example, a scaling plot typ-
 ically fixes training steps/tokens while varying the model
@@ -388,48 +447,29 @@ parameters. However, when training a model, users typi-
 cally have a fixed budget and can trade-off training time,
 compute resources, and quality to stay within that budget.
 If what we care about is computational cost and training
-Experts
-Tokens
-3.13 0.14
-0.01 |||3.90
-Select Top-K
-|-0.25||||-0.21|| | 0.21
-3.10 2.65 -0.11
-0.25 0.02 0.22 1.24
-Experts
-Tokens
-min
+
+--- Page 5 ---
 Brainformers: Trading Simplicity for Efficiency
-L(N(F1k, d, dmoe, dffn, h, g, c, a))
-F1:k,d,dmoe, dffn,h,g,c,a
-0.26Select Top-K 3.90
-(2)
-0.02 -0.25 2.50 0.21
-Fd,h,a,
-2
-if Ƒ¡ = Fattn
--0.52 3.10 2.65 -0.11
-=
-Fida
-2
-else if F₁ = Fffn
-(3)
-Fd,dmoe,9,
-,g,
-c,a otherwise F₁ = Fmoe
-0.25 0.02 0.22 -0.24
-2
+
+Tokens Tokens
+3.13 }]0.14 |}]0.01|]|3.90 {o 2eSelect Top-K » <0]
+T=
+2 |o8> |||-0.25]| -o.211I10.21 2 (0.02 -0.25] 2.50 0.21]
+a G2 ]3.10 || [2.65 ||-0.11 a 0.52 3.10 | 2.65 0.11)
+7)
+0.25 |!J0.02 |} 0.22 11.24 (0.25 0.02 | 0.22 |-0.24]
+Je
+
 Figure 6: Token-based routing vs. Expert-based routing.
-s.t. N(F1:k, d, dmoe, dƒƒ, h, g, c, a) = ○ Fi(X1)
-i=1...k
+
 convergence time, then comparing model qualities while
 fixing total parameters is not fair, particularly when com-
 paring across model architectures and model families. For
 example, it may discriminate against models with more to-
-tal parameters that consume fewer computational FLOPS,
-such as sparsely activated models. The GLaM
-paper (Du
-et al., 2022) addresses this by conducting a scaling study on
+tal parameters that consume fewer computational FLOPs,
+such as sparsely activated models. The GLaM paper
+
+t addresses this by conducting a scaling study on
 activated memory (which approximates the computational
 cost), rather than the total parameter size, on a fixed number
 of training tokens. However, comparing models with a fixed
@@ -437,7 +477,7 @@ amount of training tokens may still also not be fair as some
 smaller models can benefit more from additional training
 data and outperform a bigger model with the same total
 training cost (e.g. GPU hours, TPU hours, etc.). The Chin-
-chilla paper (Hoffmann et al., 2022) is the first to suggest
+chilla paper is the first to suggest
 compute-efficient scaling, which varies both model capacity
 and training tokens at a fixed computational cost. Resonat-
 ing with compute-efficient model scaling, we further take
@@ -447,33 +487,47 @@ convergence and inference time. More particularly, we com-
 pare across models with a fixed training cost and model
 inference time, which allows the search algorithm to trade
 off between model capacity and training tokens.
+
 3.4. Training Time Constrained Search
+
 We fix the wall clock time for each search trial which en-
 courages models with faster training convergence being
 discovered. The objective is to find model architectures that
 yield higher accuracy with a fixed training budget (number
 of chips times training hours). In an evolution search, a con-
 troller minimizes the pre-training validation cross-entropy
-loss in eq. (2) while meeting an inference time constraint
-in eq. (5). The block architecture is defined around a 100M
-vanilla transformer architecture, as illustrated in Table 2.
+loss in eq. while meeting an inference time constraint
+in eq. 5). The block architecture is defined around a 100M
+vanilla transformer architecture, as illustrated in Table
 Each trial is trained with a fixed wall clock time so that
 faster models can be compensated with more training steps.
 We empirically find that fixing training wall clock time
 while meeting a inference time constraint yields models
 with faster training convergence and higher quality.
-5
-Step Time(N) ≤ baseline_step_time
+
+Fenced naga N Fake d,dmoe, ds fn, h, g,¢,@))
+(2)
+d,h,a .
+F; ; if Fy = Fatin
+Fea QFE elseif Fi =Fypn (3)
+Fito" otherwise Fi = Finoe
+
+st. N(Fie.d,dmoe, dyp,h,9,0,0) = ©) Fi(X1)
+i=1...k
+
 (4)
-(5)
+Step_Time(N) < baseline_step_time (5)
+
 4. Token-based Routing Versus Expert-based
 Routing
+
 While there are various routing methods in existing MoE
 literature, we primarily focus on two classes of routing:
 token-based routing and expert-based routing, to illustrate
 the idea that routing strategy can change the optimal model
 architecture when sparsely activated layers are introduced.
-As an example, in Figure 6, the rows and columns contain
+
+As an example, in Figure[6] the rows and columns contain
 un-normalized scores computed for four tokens and four
 experts. Each value is produced by the dot product of the
 token embedding and the expert embedding. Once the token-
@@ -482,249 +536,155 @@ to decide which experts each token should be routed to. In
 token-based routing, the model routes to the top-k experts
 for each token, while in an expert-based routing, the experts
 choose top-k tokens. More particularly, we follow the top-2
-gating approach used in GShard (Lepikhin et al., 2021) and
-GLAM (Du et al., 2022) as top-2 has demonstrated stronger
+gating approach used in GShard (Lepikhin et al] [2021} and
+GLaM (Du et al} (2022) as top-2 has demonstrated stronger
 empirical performance than top-1 gating. For the expert-
-based gating, we follow the Expert Choice gating (Zhou
-et al., 2022) where perfect load balance is achieved with
+based gating, we follow the Expert Choice gating
+2) where perfect load balance is achieved with
 heterogeneous parameter allocation.
+
 There are various ways of generating the token-to-expert
 affinity scores. One possible way is to create a trainable
-gating matrix Wg that projects the input feature space to
+gating matrix W, that projects the input feature space to
 a token-to-expert score. The score should be normalized
 either along the token dimension or the expert dimension.
 To avoid causal leakage in decoding mode, we suggest nor-
 malizing along the expert dimension for both token-based
 routing and expert-based routing.
+
 5. Evaluation
-Setup: Table 2 summarizes the hyperparameter settings
+
+Setup: Table [2] summarizes the hyperparameter settings
 of different baseline MoE models. In the baseline MoE
-GLAM (Du et al., 2022) model, we interleave transformer
+GLaM model, we interleave transformer
 blocks with regular dense FFNs and transformer blocks with
 sparsely gated FFNs (MoE layer). As a reference point, we
 also include the respective dense model configurations with
-Eval Perplexity
+
+
+--- Page 6 ---
 Brainformers: Trading Simplicity for Efficiency
-Table 2: Sizes and architectures of baseline dense models and MoE (GLAM) models. Models are grouped by the number of
+
+Table 2: Sizes and architectures of baseline dense models and MoE (GLaM) models. Models are grouped by the number of
+
 activated parameters per token.
-Model
-Туре
-nparams
-nact-params
-L
-M
-H
-nheads
-dhead
-E
-0.1B
-Dense 130M
-0.1B/32E MOE 1.9B
-1.7B
-1.7B/64E
-Dense 1.7B
-MoE 27B
-130M
-145M
-1.700B
-1.879B
-12 768
-3,072
-12
-64
-32
--
-24 2,048
-8,192
-16
-128
-64
-8B
-Dense
-8.7B
-8.7B
-32
-4,096
-16,384
-32
-128
-8B/64E
-MOE
-143B
-9.8B
-64
-3.3
-3.2
-3.1
-3.0
-GLAM
-Search-w-top2
-Brainformer-1
-2.8
-Brainformer-2
-GLAM
-ExpertChoice
-Brainformer-1
-3.0
-2.9
-2.8
-Eval Perplexity
-2.6
-2.4
+
+Model Type = Mparams — Mact-params = M AH Meads dhe  E
+0.1B Dense 130M 130M -
+0.1BB2E MoB 19B 145M /2 768 3,072, 12 64
+1.7B Dense 1.7B 1.700B -
+L7B/64E MoE 278 -1.879B 740488192 16g
+8B Dense _8.7B 8.7B -
+SB/64E MoE 143B 9.8B > 4096 16,384 32128 gg
+3.3 — Glam 3.0 — Glam
+— Search-w-top2 — ExpertChoice
+3.2 — Brainformer-1 2.8 — Brainformer-1
+33.1 —— Brainformer-2 2
+52.6
+7
+o
+a
+g24
+>
+wi
 2.2
-2.7
-2.6
 2.0
-0
-100
-200
-300 400
-K Steps
-(a)
-500
-0
-250 500 750 1000 1250 1500 1750
-K Steps
-(b)
+0 100 200 300 400 500 0 250 500 750 1000125015001750
+K Steps K Steps
+(a) (b)
+
 Figure 7: (a) Pre-training perplexity comparison for 100M32E (100M parameters per expert, 32 experts). Search-w-top2
 is the model found by using neural architecture search but with fixed top-2 token-based gating. (b) Training perplexity
 comparison for 8B64E (8B parameters per experts, 64 experts). Expert Choice is the GLaM architecture with expert-based
+
 gating function.
+
 comparable numbers of activated parameters per-token dur-
 ing inference in the table. With a similar number of activated
 parameters as a 0.1B dense model, 0.1B/32E represents the
 sparse model with every other transformer layer replaced by
 a 32-expert MoE layer. While nparams is the total number
-of trainable parameters, nact—params represents the number
-of activated parameters per token. Nact-params roughly ap-
+of trainable parameters, Nact—params represents the number
+of activated parameters per token. Mact—params roughly ap-
 proximates the computational expensive of a model. L is the
 total number of Transformer layers, M is the model dimen-
 sion, H is the hidden dimension after the projection in each
-transformer layer, nheads is the number of attention heads,
-and dhead is the hidden dimension of each attention head.
+transformer layer, Nheads 1s the number of attention heads,
+and dieaq is the hidden dimension of each attention head.
 We train and evaluate our Brainformer models and baseline
 models on 64 Cloud TPU-V4 chips, except for models at
 the 8B-scale which take 512 Cloud TPU-V4 chips to train.
+
 Dataset: We use the high-quality dataset from GLaM of
-1.6 trillion tokens that are representative of a wide range
-of
+1.6 trillion tokens that are representative of a wide range of
 natural language use cases. This dataset consists of a high-
+
 quality filtered subset of webpages that are combined with
 smaller corpora of books, Wikipedia pages, conversations,
 forums, and news to create the final dataset. A more detailed
 description of the dataset including the data and mixture
-weights can be found in the GLaM paper (Du et al., 2022).
+
+weights can be found in the GLaM paper 2022).
+
 Model Training: We train a few decoder-only models using
 the searched best Brainformer blocks and related baselines.
 Brainformer-1 and Brainformer-2 are two selected best mod-
 els. With limited computational resources, we only scale
 Brainformer-1 to 1B and 8B scales. Our model training
-follows the setup of GLAM where a maximum sequence
+follows the setup of GLaM where a maximum sequence
 length of 1024 tokens is used. We use an Adafactor op-
-timizer (Shazeer & Stern, 2018) with first-moment decay
-ẞ1 O and second-moment decay ẞ2 = 0.99. The learning
+timizer with first-moment decay
+8, = 0 and second-moment decay 82 = 0.99. The learning
 rate is kept constant for the first 10K training steps, then
 is decayed with an inverse square root schedule. We use
-the Sentence Piece subword tokenizer with a vocabulary of
+the SentencePiece subword tokenizer with a vocabulary of
 size of 256K. The 100M-scale models and 1B-scale models
-―
-6
+
+--- Page 7 ---
 Brainformers: Trading Simplicity for Efficiency
+
 Table 3: Training efficiency comparison. Brainformer models have better training convergence and faster step times,
-compared to GLAM, fixed gating search, and expert-based gating but with fixed architecture. Brainformer-1 and Brainformer-
+compared to GLaM, fixed gating search, and expert-based gating but with fixed architecture. Brainformer-1 and Brainformer-
 2 are two selected best models. With limited computational resources, we only scale Brainformer-1 to 1B and 8B scales.
-Model
+
+Model Total Params Activated Params Train Steps Steps/Sec PPLX
 100M32E
-Total Params Activated Params
-Train Steps Steps/Sec
-PPLX
-GLAM
-1B
-145M
-0.5M
-1.92
-2.73 +/- 0.002
-Search-w-Top2
-1.87B
-210M
-0.5M
-2.03
-2.67 +/- 0.005
-Brainformer-1
-3.19B
-156M
-0.5M
-2.03
-2.57 +/- 0.003
-Brainformer-2
-3.33B
-266M
-0.5M
-2.16
-2.59 +/- 0.005
+GLaM 1B 145M 0.5M 1.92 2.73 +/- 0.002
+Search-w-Top2 1.87B 210M 0.5M 2.03 2.67 +/- 0.005
+Brainformer-1 3.19B 156M 0.5M 2.03 2.57 +/- 0.003
+Brainformer-2 3.33B 266M 0.5M 2.16 2.59 +/- 0.005
 1B64E
-GLAM
-27B
-1.88B
-1.0M
-1.23
-2.25 +/- 0.004
-Search-w-Top2
-27B
-3.05B
-1.0M
-1.27
-2.21 +/- 0.003
-Brainformer-1
-30B
-1.38B
-1.0M
-2.00
-2.25 +/- 0.002
-Brainformer-2
-52B
-1.31B
-1.0M
-1.76
-2.23 +/- 0.001
+GLaM 27B 1.88B 1.0M 1.23 2.25 +/- 0.004
+Search-w-Top2 27B 3.05B 1.0M 1.27 2.21 +/- 0.003
+Brainformer-1 30B 1.38B 1.0M 2.00 2.25 +/- 0.002
+Brainformer-2 52B 1.31B 1.0M 1.76 2.23 +/- 0.001
 8B64E
-GLAM
-143B
-9.8B
-1.5M
-0.39
-2.12 +/- 0.002
-Expert-based Gating
-143B
-9.8B
-1.5M
-0.50
-Brainformer-1
-158B
-7.4B
-1.5M
-1.96
-2.03 +/- 0.005
-1.99 +/- 0.002
+GLaM 143B 9.8B 1.5M 0.39 2.12 +/- 0.002
+Expert-based Gating 143B 9.8B 1.5M 0.50 2.03 +/- 0.005
+Brainformer-1 158B 7.4B 1.5M 1.96 1.99 +/- 0.002
+
 are trained with 64 TPU V4 chips, while the largest model
 (8B/64E) evaluated is trained on 512 TPU V4 chips. We
-don't use any dropout during training because the training
+don’t use any dropout during training because the training
 corpus is large enough that each sample is only encountered
 once.
+
 Model Evaluation: We mainly focus on two types of down-
 stream evaluation: 1) Fine-tuning performance on 11 se-
 lected classification tasks from the GLUE and SuperGLUE
-benchmarks (Wang et al., 2018; 2019). 2) We evaluate
+benchmarks (2019). 2) We evaluate
 oneshot performance with five language generation tasks
 focused on question answering.
+
 5.1. Training Convergence
+
 In this section, we evaluate Brainformer top models with
 related baselines including 1) Top-2 gating based model ar-
-chitecture search (Search-w-Top2) and 2) GLaM (Du et al.,
-2022), a manually crafted architecture with fixed top-2 gat-
+chitecture search (Search-w-Top2) and 2) GLaM
+(2022), a manually crafted architecture with fixed top-2 gat-
 ing. Providing the flexibility of tuning the gating function
 and network architecture significantly improves pre-training
-efficiency. As shown in table 3, our searched best Brain-
+efficiency. As shown in table B] our searched best Brain-
 former models outperform the baselines in terms of com-
 putational cost (activated parameters), training step time
 (steps/sec), and training perplexity (PPLX) for fixed train-
@@ -734,119 +694,94 @@ and 2x faster in training convergence using the same hard-
 ware configuration (512 Cloud TPU-V4 chips). With a fixed
 600B training tokens, Brainformer is much more accurate
 than the baselines at 8B scale.
+
 5.2. Finetuning Results
+
 We pretrain the models for a total fixed wall clock time as
 the baseline GLaM model. We then finetune the models with
 eleven selected GLUE and SuperGLUE classification tasks.
-At two different scales, 100M64E and 1B64E, Brainform-
+At two different scales, 1OOM64E and 1B64E, Brainform-
 ers outperform the baseline GLaM model by a significant
 margin of 2-4% average score. The fine-tuning results in
-table 4 indicates that Brainformer not only excels at training
+table[A]indicates that Brainformer not only excels at training
 convergence but also generalizes well to downstream tasks.
+
 5.3. Fewshot Results
+
 Aligned with prior work in fewshot in-context learning, we
 compare Brainformer oneshot performance on five selected
-generative tasks in table 5: Natural Questions (Kwiatkowski
-et al., 2019), TriviaQA (Joshi et al., 2017), Web Ques-
-tions (Berant et al., 2013), Squadv2 (Rajpurkar et al., 2018),
-and Lambada (Paperno et al., 2016), with a sparse model
-GLAM and a dense model Primer (So et al., 2021) of similar
+
+generative tasks in table[5} Natural Questions
+(2019), TriviaQA [2017), Web Ques-
+tions ae (Rajpurkar et al] (2018,
+and Lambada (Paperno et al.|[2016), with a sparse model
+GLaM and a dense model Primer {So et al] of similar
 activated memory size. Brainformer outperforms Primer
-and GLAM by a large margin on all the tasks except Nqs
+and GLaM by a large margin on all the tasks except Nqs
 being slightly worse than GLaM. GLaM yields competitive
 scores while being 2x slower than Brainformer.
+
 6. Discussion
 6.1. Visualizing a Brainformer Block
-In this section, fig. 9 provides a visualization of a Brain-
+
+In this section, fig. | provides a visualization of a Brain-
 former architecture block. Unlike a conventional trans-
 former block, where there is only an attention layer and
 a dense feed-forward layer, a Brainformer block contains
 8 sub-layers. The Brianformer block is repeated 3 times, 6
-7
+
+--- Page 8 ---
 Brainformers: Trading Simplicity for Efficiency
+
 Table 4: Finetuning Results on GLUE/superGLUE: Brainformers at 100M and 1B significantly outperform GLaM counter-
+
 parts, yielding over 3% gains in overall scores.
-Size
-100M64E
-1B64E
-Model
-GLAM
-Brainformer-1
-GLAM
-0.829
-Brainformer-1 0.859
-Size
-Model
-QQP
-100M64E
-GLAM
-Brainformer-1
-0.907
-0.812
-0.808
-0.840
-BoolQ CB COLA MNLI MRPC QNLI
-0.791 0.859 0.818 0.849 0.833 0.901
-0.812 0.922 0.828 0.855 0.870 0.907
-0.938 0.831 0.860 0.857 0.919
-0.938 0.863 0.896 0.875 0.938
-RTE SST2 WiC WNLI AVG
-0.952 0.687 0.609 0.819
-0.952 0.702
-0.635 0.840
-1B64E
-GLAM
-0.911 0.816
-Brainformer-1 0.917 0.899
-0.945 0.711
-0.972 0.720
-0.547 0.833
-0.719 0.873
+
+Size Model BoolQ CB. CoLA’- MNLI_ MRPC_ QNLI
+GLaM 0.791 0.859 0.818 0.849 0.833 0.901
+
+00M64E Brainformer-1_ 0.812 0.922 0.828 0.855 0.870 (0.907
+Bode GLaM 0.829 0.938 0.831 0.860 0.857 0.919
+Brainformer-1 0.859 0.938 0.863 0.896 0.875. (0.938
+
+Size Model QQP RTE SST2. WiC WNLI AVG
+GLaM 0.907 0.808 0.952 0.687 0.609 0.819
+
+I0OMO4E  rainformer-l 0.812 0.840 0.952 0.702 0.635 0.840
+Bote GLaM 0.911 0816 0.945 O71 0547 0.833
+Brainformer- 0.917 0.899 0.972 0.720 0.719 0.873
+
 Table 5: Oneshot evaluation on five important generative tasks. All models are trained with 200B training tokens.
-Nqs Triviaqa Webqa Squadv2 Lambada Steps/Sec
-Model
-GLAM 1B64E
-9.14
-41.8
-10.8
-46.2
-25.2
-0.55
-Primer 1B (So et al., 2021)
-Brainformer 1B64E
-4.82
-24.7
-6.50
-49.2
-22.6
-1.50
-8.23
-43.4
-12.0
-49.5
-25.7
-1.37
+
+Model Ngs_ Triviaga Webqa Squadv2 Lambada _ Steps/Sec
+GLaM 1B64E 9.14 41.8 10.8 46.2 25.2 0.55
+Primer 1B 2021) 4.82 24.7 6.50 49.2 22.6 1.50
+Brainformer IB64E 8.23 43.4 12.0 49.5 25.7 1.37
+
 times, and 8 times respectively in the 100M, 1B, and 8B
 scale. In a vanilla transformer model, a dense FFN layer has
 an optimized expansion ratio of 4, which results in a hidden
 dimension 4x wider than the model dimension. In the opti-
-mized Brainformer block 1 and 2, the search algorithm picks
+mized Brainformer block | and 2, the search algorithm picks
 a slightly larger model dimension of 1024 (as compared to
 768) and a smaller expansion factor in the dense FFNs and
 MoE layers (as compared to 3072). This is a reasonable
 optimization, as MoE layers effectively widen the network
 with more experts. In the MoE layers, the search algorithm
-picks the expert choice gating function (Zhou et al., 2022)
+picks the expert choice gating function
+
 with a capacity factor of one in Brainformer block 1, result-
 ing in a very sparse network in which each token can be
 routed to a single expert on average. Being much faster in
-step time, block 1 takes more training steps, thus training
+step time, block | takes more training steps, thus training
 data to achieve good quality. Therefore, we also picked
 another strong candidate, Brainformer block 2, in which a
 larger capacity factor in the MoE layers is selected. Block 2
 is lightly slower in step time, but takes fewer training steps
 to get good accuracy, thus is more data efficient.
+
 6.2. Can We Simplify?
+
 We did an ablation study on block simplification. A very
 natural question to ask is whether we can simplify the ar-
 chitecture block. In exploring the answer to this question
@@ -854,63 +789,92 @@ we were able to extrapolate some patterns. We find that
 the ratio of different layer types is critical to model quality:
 replacing a layer with a different layer results in degraded
 quality. However, the network is relatively insensitive to
+
 layer order, such that swapping any two layers would not af-
 fect performance much. For example, to create a simplified
 pattern, we can interleave the dense FFNs and MoE layers
 or simply creating contiguous layers of the same type.
-Attention Heads: 20
-ATTN
-Model Dimension: 1024
+
+Attention Heads : 20
+
+_-]7 | Model Dimension : 1024
+
 FFN
-Dense FFN Dimension: 1536
-MOE
-MOE
-MOE FFN Dimension: 2048
-MOE
-Gating Func: Expert Choice
-FFN
-Gating Capacity Factor: 1
-FFN
-FFN
-Brainformer Block # 1
-Figure 8: Brainformer Block # 1
-FFN
+
 |
-Attention Heads: 16
-ATTN
-Model Dimension: 1024
-MOE
-ATTN
-Dense FFN Dimension : 2048
+
+I
+
+I
+
+| ~~. ff Dense FFN Dimension : 1536
+| MOE |
+
+| MOE
+
+| MoE FEN Dimension : 2048
+
+! MOE _ = L ing Func : Expert Choice
+l FEN Gating Capacity Factor : 1
+
+|
+
+| FEN
+
 FFN
-MOE
-FFN
-MOE FFN Dimension: 2048
-Gating Func Expert Choice
-Gating Capacity Factor: 2
-ATTN
-Brainformer Block # 2
+
+|
+
+| FFN | | Attention Heads : 16
+
+| —
+
+| ATTN ~ ~ 1, Model Dimension : 1024
+
+| MOE y
+
+| Te
+
+| FFN
+
+MOE MoE FEN Dimension : 2048
+a i” Gating Func : Expert Choice
+
+FFN | Gating Capacity Factor : 2
+
+| ATIN, |
+
+I
+
+| Brainformer Block #2
+
 Figure 9: Brainformer Block #2
-8
-7. Conclusion
+
+--- Page 9 ---
 Brainformers: Trading Simplicity for Efficiency
+
+7. Conclusion
+
 Using an evolutionary search algorithm, we have devel-
 oped and evaluated a complex architecture block, named
 Brainformer, that consists of a diverse sequence of layers, in-
 cluding a sparsely gated feed-forward layer. Along with the
 new block, we also propose evaluating using a fixed training
 time search, which enables fair comparisons across model
-families. Brainformer demonstrates up to 2× faster training
-convergence and 5× faster step time compared to its GLAM
+families. Brainformer demonstrates up to 2x faster training
+convergence and 5x faster step time compared to its GLaM
 counterpart. In downstream task evaluation, Brainformer
 also demonstrates a 3% higher SuperGLUE score with fine-
 tuning compared to GLaM, and greatly outperforms Primer
 on oneshot evaluation for five generative tasks.
+
 8. Limitations
+
 In terms of research scope, our empirical results are primar-
 ily on NLP domain, thoroughly on a wide range of NLU and
 NLG tasks. However, we leave it to future work to apply
 Brainformer to computer vision.
+
 When adopting Brainformer targeting different hardware
 platforms, there can be potential intricacies. For example,
 edge devices can impose strict hardware constraints that
@@ -925,6 +889,7 @@ For example, global pooling is not supported on edge TPU.
 But that can be out of scope for this paper, as Brainformer
 aims to construct a compute-efficient model architecture out
 of feasible operators.
+
 Another limitation can be large resource consumption. In
 the Brainformer search, we used 512 TPU v4 for a week
 to arrive at the best solutions. However, worth mentioning
@@ -935,15 +900,18 @@ search identified better model architecture within as early
 as 500 trials. Practically, the resource consumption can
 be small if we only need to identify better but suboptimal
 models.
+
 References
+
 Berant, J., Chou, A., Frostig, R., and Liang, P. Semantic
 parsing on Freebase from question-answer pairs. In Pro-
 ceedings of the 2013 Conference on Empirical Methods
-in Natural Language Processing, pp. 1533–1544, Seattle,
+in Natural Language Processing, pp. 1533-1544, Seattle,
 Washington, USA, October 2013. Association for Com-
-9
-putational Linguistics. URL https://www.aclweb.
-org/anthology/D13-1160.
+
+putational Linguistics. URLfhttps: //www.aclweb]
+org/anthology/D13-1160
+
 Brown, T., Mann, B., Ryder, N., Subbiah, M., Kaplan,
 J. D., Dhariwal, P., Neelakantan, A., Shyam, P., Sastry,
 G., Askell, A., Agarwal, S., Herbert-Voss, A., Krueger,
@@ -954,209 +922,273 @@ McCandlish, S., Radford, A., Sutskever, I., and Amodei,
 D. Language models are few-shot learners. In Larochelle,
 H., Ranzato, M., Hadsell, R., Balcan, M. F., and Lin,
 H. (eds.), Advances in Neural Information Processing
-Systems, volume 33, pp. 1877–1901. Curran Associates,
-Inc.,
-URL https://proceedings.
-neurips.cc/paper/2020/file/
-2020a.
-1457c0d6bfcb4967418bfb8ac142f64a-Paper.
-pdf.
+Systems, volume 33, pp. 1877-1901. Curran Associates,
+Inc., 2020a. URL
+fneurips.cc/paper/2020/file/ sd
+
+pdf]
+
 Brown, T., Mann, B., Ryder, N., Subbiah, M., Kaplan, J. D.,
 Dhariwal, P., Neelakantan, A., Shyam, P., Sastry, G.,
 Askell, A., et al. Language models are few-shot learners.
 Advances in neural information processing systems, 33:
 1877-1901, 2020b.
+
 Cho, K. and Bengio, Y. Exponentially increasing the
 capacity-to-computation ratio for conditional computa-
-tion in deep learning. arXiv preprint arXiv:1406.7362,
+tion in deep learning. arXiv preprint arXiv: 1406.7362,
 2014.
+
 Choromanski, K., Likhosherstov, V., Dohan, D., Song, X.,
 Gane, A., Sarlos, T., Hawkins, P., Davis, J., Mohiuddin,
 A., Kaiser, L., et al. Rethinking attention with performers.
-arXiv preprint arXiv:2009.14794, 2020.
+arXiv preprint arXiv:2009. 14794, 2020.
+
 Chowdhery, A., Narang, S., Devlin, J., Bosma, M., Mishra,
 G., Roberts, A., Barham, P., Chung, H. W., Sutton, C.,
 Gehrmann, S., et al. Palm: Scaling language modeling
 with pathways. arXiv preprint arXiv:2204.02311, 2022.
+
 Dai, A. M. and Le, Q. V. Semi-supervised sequence
 learning. In Cortes, C., Lawrence, N., Lee, D.,
 Sugiyama, M., and Garnett, R. (eds.), Advances in Neural
 Information Processing Systems, volume 28. Curran As-
-sociates, Inc., 2015. URL https://proceedings.
-neurips.cc/paper/2015/file/
-7137debd45ae4d0ab9aa953017286b20-Paper.
-pdf.
+sociates, Inc., 2015. URL|https: //proceedings]
+fmeurips.cc/paper/2015/file7/ sd
+
+7137debd45ae4d0ab9aa953017286b20—-Paper.
+pdf]
+
 Dai, Z., Liu, H., Le, Q. V., and Tan, M. CoAtNet: Marrying
 convolution and attention for all data sizes. In Advances
 in Neural Information Processing Systems, 2021.
+
 Du, N., Huang, Y., Dai, A. M., Tong, S., Lepikhin, D., Xu,
 Y., Krikun, M., Zhou, Y., Yu, A. W., Firat, O., et al. Glam:
 Efficient scaling of language models with mixture-of-
 experts. In International Conference on Machine Learn-
 ing, pp. 5547-5569. PMLR, 2022.
+
+--- Page 10 ---
 Brainformers: Trading Simplicity for Efficiency
+
 Dua, D., Bhosale, S., Goswami, V., Cross, J., Lewis, M.,
 and Fan, A. Tricks for training sparse translation models.
 arXiv preprint arXiv:2110.08246, 2021.
+
 Fedus, W., Zoph, B., and Shazeer, N. Switch transform-
 ers: Scaling to trillion parameter models with simple and
 efficient sparsity, 2021.
+
 Ghiasi, G., Lin, T.-Y., and Le, Q. V. Nas-fpn: Learning
 scalable feature pyramid architecture for object detection.
 In Proceedings of the IEEE/CVF conference on computer
-vision and pattern recognition, pp. 7036–7045, 2019.
+vision and pattern recognition, pp. 7036-7045, 2019.
+
 Gross, S., Ranzato, M., and Szlam, A. Hard mixtures of
 experts for large scale weakly supervised vision. In Pro-
 ceedings of the IEEE Conference on Computer Vision
 and Pattern Recognition, pp. 6865-6873, 2017.
+
 He, K., Zhang, X., Ren, S., and Sun, J. Deep residual learn-
 ing for image recognition. In Proceedings of the IEEE
 conference on computer vision and pattern recognition,
 pp. 770-778, 2016a.
+
 He, K., Zhang, X., Ren, S., and Sun, J. Identity mappings
 in deep residual networks. In European conference on
-computer vision, pp. 630–645. Springer, 2016b.
+computer vision, pp. 630-645. Springer, 2016b.
+
 Hoffmann, J., Borgeaud, S., Mensch, A., Buchatskaya, E.,
 Cai, T., Rutherford, E., Casas, D. d. L., Hendricks, L. A.,
 Welbl, J., Clark, A., et al. Training compute-optimal
 large language models. arXiv preprint arXiv:2203.15556,
 2022.
+
 Hua, W., Dai, Z., Liu, H., and Le, Q. Transformer quality
-in linear time. In International Conference on Machine
+in linear time. In /nternational Conference on Machine
 Learning, pp. 9099-9117. PMLR, 2022.
-Jaszczur, S., Chowdhery, A., Mohiuddin, A., Kaiser, L.,
+
+Jaszezur, S., Chowdhery, A., Mohiuddin, A., Kaiser, L.,
 Gajewski, W., Michalewski, H., and Kanerva, J. Sparse
 is enough in scaling transformers. Advances in Neural
 Information Processing Systems, 34:9895-9907, 2021.
+
 Joshi, M., Choi, E., Weld, D. S., and Zettlemoyer, L. Trivi-
 aqa: A large scale distantly supervised challenge dataset
 for reading comprehension. In Proceedings of the 55th
 Annual Meeting of the Association for Computational
 Linguistics, Vancouver, Canada, July 2017. Association
 for Computational Linguistics.
+
 Kaplan, J., McCandlish, S., Henighan, T., Brown, T. B.,
 Chess, B., Child, R., Gray, S., Radford, A., Wu, J., and
 Amodei, D. Scaling laws for neural language models.
 arXiv preprint arXiv:2001.08361, 2020.
+
 Kwiatkowski, T., Palomaki, J., Redfield, O., Collins, M.,
-Parikh, A., Alberti, C., Epstein, D., Polosukhin, I., Kel-
+Parikh, A., Alberti, C., Epstein, D., Polosukhin, L., Kel-
 cey, M., Devlin, J., Lee, K., Toutanova, K. N., Jones,
 L., Chang, M.-W., Dai, A., Uszkoreit, J., Le, Q., and
+
 10
+
 Petrov, S. Natural questions: a benchmark for question
 answering research. Transactions of the Association of
 Computational Linguistics, 2019.
+
 Lepikhin, D., Lee, H., Xu, Y., Chen, D., Firat, O., Huang, Y.,
 Krikun, M., Shazeer, N., and Chen, Z. GShard: Scaling
 giant models with conditional computation and automatic
 sharding. In International Conference on Learning Rep-
 resentations, 2021.
+
 Lewis, M., Bhosale, S., Dettmers, T., Goyal, N., and Zettle-
 moyer, L. Base layers: Simplifying training of large,
 sparse models. In International Conference on Machine
-Learning, pp. 6265–6274. PMLR, 2021.
+Learning, pp. 6265-6274. PMLR, 2021.
+
 Lin, M., Fu, J., and Bengio, Y. Conditional computation
-for continual learning. arXiv preprint arXiv:1906.06635,
+for continual learning. arXiv preprint arXiv: 1906.06635,
 2019.
+
 Liu, H., Dai, Z., So, D., and Le, Q. V. Pay attention to mlps.
 Advances in Neural Information Processing Systems, 34:
+
 9204-9215, 2021.
-Mikolov, T., Karafiát, M., Burget, L., Cernockỳ, J., and
+
+Mikolov, T., Karafidt, M., Burget, L., Cernocky, J., and
 Khudanpur, S. Recurrent neural network based lan-
-guage model. In Interspeech, volume 2, pp. 1045-1048.
+guage model. In Jnterspeech, volume 2, pp. 1045-1048.
 Makuhari, 2010.
-Paperno, D., Kruszewski, G., Lazaridou, A., Pham, Q. N.,
+
+Paperno, D., Kruszewski, G., Lazaridou, A., Pham, Q.N.,
 Bernardi, R., Pezzelle, S., Baroni, M., Boleda, G., and
-Fernández, R. The lambada dataset: Word prediction
-requiring a broad discourse context, 2016. URL https:
-//arxiv.org/abs/1606.06031.
+Fernandez, R. The lambada dataset: Word prediction
+requiring a broad discourse context, 2016. URL[https 4
+
+7/arxiv.org/abs/1606.06031
+
 Press, O., Smith, N. A., and Levy, O. Improving transformer
 models by reordering their sublayers. arXiv preprint
-arXiv:1911.03864, 2019.
+arXiv: 1911.03864, 2019.
+
 Puigcerver, J., Riquelme, C., Mustafa, B., Renggli, C., Pinto,
 A. S., Gelly, S., Keysers, D., and Houlsby, N. Scal-
 able transfer learning with expert models. arXiv preprint
-arXiv:2009.13239, 2020.
+arXiv:2009. 13239, 2020.
+
 Radford, A., Narasimhan, K., Salimans, T., and Sutskever,
-I. Improving language understanding by generative pre-
+IL. Improving language understanding by generative pre-
 training. 2018.
+
 Rae, J. W., Borgeaud, S., Cai, T., Millican, K., Hoffmann,
 J., Song, F., Aslanides, J., Henderson, S., Ring, R.,
 Young, S., et al. Scaling language models: Methods,
 analysis & insights from training gopher. arXiv preprint
 arXiv:2112.11446, 2021.
+
 Raffel, C., Shazeer, N., Roberts, A., Lee, K., Narang, S.,
 Matena, M., Zhou, Y., Li, W., Liu, P. J., et al. Exploring
 the limits of transfer learning with a unified text-to-text
 transformer. J. Mach. Learn. Res., 21(140):1-67, 2020.
+
+--- Page 11 ---
 Brainformers: Trading Simplicity for Efficiency
-Rajpurkar, P., Jia, R., and Liang, P. Know what you don't
+
+Rajpurkar, P., Jia, R., and Liang, P. Know what you don’t
 know: Unanswerable questions for squad, 2018. URL
-https://arxiv.org/abs/1806.03822.
+
+Inttps: //arxiv.org/abs/1806. 03822]
+
 Roller, S., Sukhbaatar, S., Weston, J., et al. Hash layers
 for large sparse models. Advances in Neural Information
 Processing Systems, 34:17555-17566, 2021.
+
 Shazeer, N. and Stern, M. Adafactor: Adaptive learning
 rates with sublinear memory cost. In International Con-
-ference on Machine Learning, pp. 4596–4604. PMLR,
+ference on Machine Learning, pp. 4596-4604. PMLR,
 2018.
+
 Shazeer, N., Mirhoseini, A., Maziarz, K., Davis, A., Le,
 Q., Hinton, G., and Dean, J. Outrageously large neural
 networks: The sparsely-gated mixture-of-experts layer.
 arXiv preprint arXiv:1701.06538, 2017.
+
 Shoeybi, M., Patwary, M., Puri, R., LeGresley, P., Casper,
 J., and Catanzaro, B. Megatron-lm: Training multi-
 billion parameter language models using model paral-
 lelism. arXiv preprint arXiv: 1909.08053, 2019.
-So, D., Mańke, W., Liu, H., Dai, Z., Shazeer, N., and Le,
+
+So, D., Marke, W., Liu, H., Dai, Z., Shazeer, N., and Le,
 Q. V. Searching for efficient transformers for language
 modeling. Advances in Neural Information Processing
 Systems, 34:6010-6022, 2021.
+
 Sutskever, I., Martens, J., and Hinton, G. E. Generating text
-with recurrent neural networks. In ICML, 2011.
+with recurrent neural networks. In JCML, 2011.
+
 Tan, M. and Le, Q. Efficientnet: Rethinking model scal-
 ing for convolutional neural networks. In International
-conference on machine learning, pp. 6105–6114. PMLR,
+conference on machine learning, pp. 6105-6114. PMLR,
 2019.
+
 Tay, Y., Bahri, D., Metzler, D., Juan, D.-C., Zhao, Z., and
 Zheng, C. Synthesizer: Rethinking self-attention for
-transformer models. In International conference on ma-
-chine learning, pp. 10183–10192. PMLR, 2021.
+transformer models. In /nternational conference on ma-
+chine learning, pp. 10183-10192. PMLR, 2021.
+
 Tolstikhin, I. O., Houlsby, N., Kolesnikov, A., Beyer, L.,
 Zhai, X., Unterthiner, T., Yung, J., Steiner, A., Keysers,
 D., Uszkoreit, J., et al. Mlp-mixer: An all-mlp architec-
 ture for vision. Advances in Neural Information Process-
 ing Systems, 34:24261-24272, 2021.
+
 Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones,
-L., Gomez, A. N., Kaiser, Ł., and Polosukhin, I. At-
+L., Gomez, A. N., Kaiser, £., and Polosukhin, I. At-
 tention is all you need. Advances in neural information
 processing systems, 30, 2017.
-Wang, A., Singh, A., Michael, J., Hill, F., Levy, O., and
+
+Wang, A., Singh, A., Michael, J., Hill, F, Levy, O., and
 Bowman, S. R. Glue: A multi-task benchmark and anal-
 ysis platform for natural language understanding. arXiv
-preprint arXiv:1804.07461, 2018.
+preprint arXiv: 1804.07461, 2018.
+
+11
+
 Wang, A., Pruksachatkun, Y., Nangia, N., Singh, A.,
 Michael, J., Hill, F., Levy, O., and Bowman, S. Super-
 glue: A stickier benchmark for general-purpose language
 understanding systems. Advances in neural information
 processing systems, 32, 2019.
+
 Wang, S., Li, B. Z., Khabsa, M., Fang, H., and Ma, H.
 Linformer: Self-attention with linear complexity. arXiv
-preprint arXiv: 2006.04768, 2020.
+preprint arXiv:2006.04768, 2020.
+
 Wu, L., Liu, M., Chen, Y., Chen, D., Dai, X., and
 Yuan, L. Residual mixture of experts. arXiv preprint
 arXiv:2204.09636, 2022.
+
 Zhou, Y., Lei, T., Liu, H., Du, N., Huang, Y., Zhao, V.,
 Dai, A., Chen, Z., Le, Q., and Laudon, J. Mixture-of-
-experts with expert choice routing, 2022. URL https:
-//arxiv.org/abs/2202.09368.
+
+experts with expert choice routing, 2022. URL[https 4
+//arx org/abs/220 9368
+
 Zuo, S., Liu, X., Jiao, J., Kim, Y. J., Hassan, H., Zhang,
 R., Zhao, T., and Gao, J. Taming sparsely activated
+
 transformer with stochastic experts. arXiv preprint
 arXiv:2110.04260, 2021.
-11
+
+--- Page 12 ---
 Brainformers: Trading Simplicity for Efficiency
+
 A. You can have an appendix here.
+
 You can have as much text here as you want. The main body must be at most 8 pages long. For the final version, one more
 page can be added. If you want, you can use an appendix like this one, even using the one-column format.
+
 12
+

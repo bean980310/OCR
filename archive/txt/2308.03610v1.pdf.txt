@@ -1,0 +1,803 @@
+arXiv:2308.03610v1 [cs.CV] 7 Aug 2023
+Avatar Verse: High-quality & Stable 3D Avatar Creation from Text and Pose
+Huichao Zhang¹*, Bowen Chen¹*, Hao Yang¹, Liao Qu¹, 2, Xu Wang¹
+Li Chen¹, Chao Long¹, Feida Zhu¹, Kang Du¹, Min Zheng¹
+¹ByteDance, Beijing, China.
+2Department of Electrical and Computer Engineering, Carnegie Mellon University, PA, USA.
+{zhanghuichao.hc, chenbowen.cbw, wangxu.ailab, chenli.phd, longchao, zhufeida, dukang.daniel,
+zhengmin.666}@bytedance.com, liaoq@andrew.cmu.edu, yanghao.alexis@foxmail.com
+Abstract
+Creating expressive, diverse and high-quality 3D avatars from
+highly customized text descriptions and pose guidance is a
+challenging task, due to the intricacy of modeling and tex-
+turing in 3D that ensure details and various styles (realistic,
+fictional, etc). We present AvatarVerse, a stable pipeline for
+generating expressive high-quality 3D avatars from nothing
+but text descriptions and pose guidance. In specific, we in-
+troduce a 2D diffusion model conditioned on DensePose sig-
+nal to establish 3D pose control of avatars through 2D im-
+ages, which enhances view consistency from partially ob-
+served scenarios. It addresses the infamous Janus Problem
+and significantly stablizes the generation process. Moreover,
+we propose a progressive high-resolution 3D synthesis strat-
+egy, which obtains substantial improvement over the quality
+of the created 3D avatars. To this end, the proposed Avatar-
+Verse pipeline achieves zero-shot 3D modeling of 3D avatars
+that are not only more expressive, but also in higher quality
+and fidelity than previous works. Rigorous qualitative evalu-
+ations and user studies showcase Avatar Verse's superiority in
+synthesizing high-fidelity 3D avatars, leading to a new stan-
+dard in high-quality and stable 3D avatar creation. Our project
+page is: https://avatarverse3d.github.io/.
+1. Introduction
+The creation of high-quality 3D avatars has garnered sig-
+nificant interest due to their widespread applications in do-
+mains such as game production, social media and com-
+munication, augmented and virtual reality (AR/VR), and
+human-computer interaction. Traditional manual construc-
+tion of these intricate 3D models is a labor-intensive and
+time-consuming process, requiring thousands of hours from
+skilled artists possessing extensive aesthetic and 3D mod-
+eling expertise. Consequently, automating the generation of
+high-quality 3D avatars using only natural language descrip-
+tions holds great research prospects with the potential to
+save resources, which is also the goal of our work.
+In recent years, significant efforts have been made in
+reconstructing high-fidelity 3D avatars from multi-view
+videos (Isik et al. 2023; Jiang et al. 2022; Li et al. 2023b;
+Wang et al. 2023a; Zheng et al. 2023) or reference images
+(Wang et al. 2021; Xiu et al. 2022). These methods pri-
+marily rely on limited visual priors sourced from videos or
+*These authors contributed equally.
+reference images, leading to constrained ability to generate
+creative avatars with complex text prompts. In 2D image
+generation, diffusion models (Rombach et al. 2021; Saharia
+et al. 2022; Zhang and Agrawala 2023) illustrate consider-
+able creativity, primarily due to the availability of large-scale
+text-image pairs. Nevertheless, the scarcity and limited di-
+versity of 3D models present challenges to effectively train-
+ing a 3D diffusion model. Recent studies (Cao et al. 2023;
+Huang et al. 2023; Kolotouros et al. 2023; Poole et al. 2022)
+have investigated the use of pre-trained text-image gener-
+ative models to optimize Neural Radiance Fields (NeRF)
+(Mildenhall et al. 2020) for generating high-fidelity 3D mod-
+els. Yet, stable creation of high-quality 3D avatars exhibit-
+ing various poses, appearances, and shapes remains a diffi-
+cult task. For example, employing common score distillation
+sampling (SDS) (Poole et al. 2022) to guide NeRF optimiza-
+tion without additional control tends to bring in the Janus
+(multi-face) problem. Also, the avatars produced by current
+approaches tend to exhibit noticeable blurriness and coarse-
+ness, leading to the absence of high-resolution local texture
+details, accessories, and other relevant features.
+To cope with these weaknesses, we propose Avatar Verse,
+a novel framework designed for generating high-quality and
+stable 3D avatars from textual descriptions and pose guid-
+ances. We first train a new ControlNet with human Dense-
+Pose condition (Güler, Neverova, and Kokkinos 2018) over
+800K images. SDS loss conditinal on the 2D DensePose sig-
+nal is then implemented on top of the ControlNet. Through
+this way, we obtain precise view correspondence between
+different 2D views as well as between every 2D view and
+the 3D space. Our approach not only enables pose control of
+the generated avatars, but also eliminates the Janus Problem
+suffered by most existing methods. It thus ensures a more
+stable and view-consistent avatar creation
+process. Addition-
+ally, benefiting from the accurate and flexible supervision
+signals provided by DensePose, the generated avatars can be
+highly aligned with the joints of the SMPL model, enabling
+simple and effective skeletal binding and control.
+While relying solely on DensePose-conditioned Control-
+Net may result in local artifacts, we introduce a progres-
+sive high-resolution generation strategy to enhance the fi-
+delity and detail of local geometry. To alleviate the coarse-
+ness of the generated avatar, we incorporate a smoothness
+loss, which regularizes the synthesis procedure by encourag-
+Elsa in Frozen Disney Woody in Toy Story
+Captain America
+Super Saiyan Goku
+Buzz Lightyear
+Nick Wilde from film Zootopia Simba from The Lion King
+a Viking
+a body builder
+wearing a tanktop
+a person dresed at
+the Venice Carnival
+a man wearing a white
+tanktop and shorts
+Link in Zelda
+Spiderman
+Hulk
+Ronald
+Weasley
+Captain Jack
+Sparrow
+Mobile suit
+Gundam
+Jake Sully in Avatar
+series
+The Flash
+Deadpool
+Albus Dumbledore
+a security guard
+a karate master
+wearing a black belt
+Master Chief in
+Halo Series
+Yoda in Star Wars
+Batman
+Stormtrooper
+Series
+Monkey D. Luffy A young man with curly
+hair wearing glasses
+Figure 1: High-quality 3D avatars generated by Avatar Verse based on a simple text description.
+ing a smoother gradient of the density voxel grid within our
+computationally efficient explicit Neural Radiance Fields
+(NeRF).
+The overall contributions are as follows:
+• We present Avatar Verse, a method that can automatically
+create a high-quality 3D avatar accoding to nothing but a
+text description and a reference human pose.
+• We present the DensePose-Conditioned Score Distilla-
+tion Sampling Loss, an approach that facilitates pose-
+aware 3D avatar synthesis and effectively mitigates the
+Janus problem, thereby enhancing system stability.
+• We bolster the quality of the produced 3D avatars via
+a progressive high-resolution generation strategy. This
+method, through a meticulous coarse-to-fine refining pro-
+cess, synthesizes 3D avatars with superior detail, encom-
+passing elements like hands, accessories, and beyond.
+• Avatar Verse delivers exceptional performance, excelling
+in both quality and stability. Rigorous qualitative eval-
+uations, complemented by comprehensive user studies,
+underscore Avatar Verse's supremacy in crafting high-
+fidelity 3D avatars, thereby setting a new benchmark in
+stable, zero-shot 3D avatar creation of the highest quality.
+2. Related work
+2.1. Text-guided 3D content generation
+The success in text-guided 2D image generation has paved
+the way for the development of text-guided 3D content gen-
+eration methods. CLIP-forge (Sanghi et al. 2021), Dream-
+Fields (Jain et al. 2021), and CLIP-Mesh (Khalid et al.
+2022) utilize the CLIP model (Radford et al. 2021) to op-
+timize underlying 3D representations such as meshes and
+NeRF. DreamFusion (Poole et al. 2022) first proposes score
+distillation sampling (SDS) loss to get supervision from a
+pre-trained diffusion model (Saharia et al. 2022) during the
+3D generation. Latent-NeRF (Metzer et al. 2022) improves
+upon DreamFusion by optimizing a NeRF that operates the
+diffusion process in a latent space. TEXTure (Richardson
+et al. 2023) generates texture maps using a depth diffu-
+sion model for a given 3D mesh. ProlificDreamer (Wang
+et al. 2023b) proposes variational score distillation and
+pro-
+duces high-resolution and high-fidelity results. Despite their
+promising performance in 3D general content generation,
+these methods often produce suboptimal results when gener-
+ating avatars, exhibiting issues like low quality, Janus (multi-
+face) problem, and incorrect body parts. In contrast, our
+Avatar Verse enables an accurate and high-quality generation
+of 3D avatars from text prompts.
+2.2. Text-guided 3D Avatar generation
+Avatar-CLIP (Hong et al. 2022) first initializes 3D human
+geometry with a shape VAE network and utilizes CLIP
+(Radford et al. 2021) to facilitate geometry sculpting and
+texture generation. DreamAvatar (Cao et al. 2023) and
+AvatarCraft (Jiang et al. 2023) employ the SMPL model as
+a shape prior and utilize pretrained text-to-image diffusion
+models to generate 3D avatars. DreamFace (Zhang et al.
+2023) introduces a coarse-to-fine scheme to create person-
+alized 3D facial structures. HeadSculpt (Han et al. 2023)
+generates 3D head avatars by leveraging landmark-based
+control and a learned textual embedding representing the
+back view appearance of heads. Concurrent with our work,
+DreamWaltz (Huang et al. 2023) presents 3D-consistent
+occlusion-aware score distillation sampling, which incor-
+porates 3D-aware skeleton conditioning for view-aligned
+supervision. Constrained by the original training data, the
+skeleton-conditioned diffusion model may still exhibit view
+inconsistencies such as failing to generate the backside
+of desired avatars or struggling to generate specific body
+parts when provided with partial skeleton information. Fur-
+thermore, the sparse nature of the skeleton makes it chal-
+lenging for the model to determine avatar contours and
+edges, leading to low-quality results. On the contrary, our
+proposed DensePose-conditioned ControlNet ensures high-
+quality, view-consistent image generation of various view-
+points and body parts, including full body, legs, head, and
+more, guaranteeing superior avatar quality.
+2.3. High-quality 3D Avatar Generation
+Recently, there has been a growing focus on achieving high-
+quality or high-fidelity 3D generation and reconstruction.
+Some methods attempt to generate high-fidelity 3D human
+avatars from multi-view RGB videos (Isik et al. 2023; Jiang
+et al. 2022; Li et al. 2023b; Wang et al. 2023a; Zheng et al.
+2023). There has also been work (Lin et al. 2022) explored
+a coarse-to-fine methodology, specifically by optimizing a
+high-resolution latent diffusion model to refine a textured 3D
+mesh model. In parallel to our work, DreamHuman (Kolo-
+touros et al. 2023) zooms in and renders a 64 × 64 im-
+age for 6 important body regions during optimization. How-
+ever, limited by the computation needs of Mip-NeRF-360,
+it can only produce low-resolution avatars without high-
+resolution details. Also, DreamHuman use SMPL shape for
+direct geometric supervision, which tends to provide skin-
+tight avatars. Our method, on the other hand, is more control-
+lable and flexible, allowing for the creation of a wider range
+of accessories, clothing, and other features. Our Avatar Verse
+introduces a progressive high-resolution generation strategy.
+This involves gradually decreasing the camera's radius and
+focusing on distinct body parts, which facilitates the cre-
+ation of a diverse range of accessories, clothing, and other
+elements. Our use of progressive grid also ensures a fine-
+grained generation.
+3. Methodology
+In this section, we present Avatar Verse, a fully automatic
+pipeline that can make a realistic 3D avatar from nothing but
+a text description and a body pose. After introducing some
+preliminaries, we first explain the DensePose-conditioned
+SDS loss, which facilitates pose-aware 3D avatar synthe-
+sis and effectively mitigates the Janus problem. We then in-
+troduce novel strategies that enhance the synthesis quality:
+the progressive high-resolution generation strategy and the
+avatar surface smoothing strategy.
+densepose
+render
+densepose
+condition
+volume
+render
+LSDS
+explicit NeRF
+V(density)
+V(color)
+Shallow
+MLP
+A DLSR photo of
+Caption
+America
+ControlNet
+shared viewpoint
+i
+(1) progressive grid
+(2) bbox tightening
+P
+(3) progressive radius
+(4) focus mode
+(a) Avatar Generation
+(b) Progressive High-Resolution Generation
+Figure 2: The overview of Avatar Verse. Our network takes a text prompt and DensePose signal as input to optimize an explicit
+NERF via a DensePose-COCO pre-trained ControlNet. We use strategies including progressive grid, progressive radius, and
+focus mode to generate high-resolution and high-quality 3D avatars.
+3.1. Preliminaries
+(1) Score Distillation Sampling, first proposed by DreamFu-
+sion (Poole et al. 2022), distills the prior knowledge from a
+pretrained diffusion model ε into a differentiable 3D repre-
+sentation 0. Given a rendered image x = g(0) from the dif-
+ferentiable NeRF model g, we add random noise € to obtain
+a noisy image. SDS then calculates the gradients of param-
+eter by minimizing the difference between the predicted
+(x+; y, t) and the added noise e:
+noise
+Еф
+= w(t) (Es
+VeLSDS (0, xe) = Et,€ | w(t) (€ (zt; y, t) — €)
+მე
+"
+ae
+(1)
+where zt denotes the noisy image at noise level t, w(t) is a
+weighting function that depends on the noise level t and the
+text prompt y.
+(2) SMPL (Bogo et al. 2016; Loper et al. 2015) is a
+3D parametric human body model. It contains 6,890 body
+vertices and 24 keypoints. By assembling pose parameters
+ε € RK×³ and body shape parameter BE R10, the 3D
+SMPL model can be represented by:
+T(ẞ,) = T+Bs(ß) + Bp(§)
+(3)
+M(ẞ, §) = LBS (T(ß, §), J(ß), §, W),
+where T(B, §) denotes the non-rigid deformation combin-
+ing the mean template shape T from the canonical space,
+the shape-dependent deformations Bs(B) Є RN×3 and the
+pose-dependent deformations Bp (§) € RN×³. LBS(•) rep-
+resents the linear blend skinning function corresponding to
+articulated deformation. It maps T(B, ε) based on the cor-
+responding keypoint positions J (B) Є RN×³,
+pose and
+blend weights W = RNK. The body vertex v under the
+observation pose is
+K
+Vo
+Σ Wk Gk (§, jk),
+k=1
+(4)
+where wk is the skinning weight, Gk (§, jk) is the affine de-
+formation transforms the k-th joint jk from canonical space
+to the observation space.
+(3) DensePose (Güler, Neverova, and Kokkinos 2018)
+is a pioneering technique that facilitates the establishment
+of dense correspondences between a 2D image and a 3D,
+surface-based model of the human body. Leveraging the
+SMPL model (Loper et al. 2015), DensePose can assign
+each triangular face within the SMPL mesh to one of the
+24 pre-defined body parts. This correspondence allows for
+the generation of part-labeled 2D body images from any
+given viewpoint by rendering the associated regions from
+the SMPL mesh.
+3.2. DensePose SDS Loss
+Prior research (Lin et al. 2022; Poole et al. 2022) predomi-
+nantly employs supplementary text prompts, such as "front
+view" or "overhead view”, to enhance view consistency.
+However, reliance solely on text prompts proves inadequate
+for accurately conditioning a 2D diffusion model on arbi-
+trary views. This inadequacy engenders instability in 3D
+model synthesis, giving rise to issues like the Janus prob-
+lem. As a solution, we propose the utilization of DensePose
+(Güler, Neverova, and Kokkinos 2018) as a more robust con-
+trol signal, as depicted in Figure 2.
+(a)
+(b)
+(c)
+Figure 3: Qualitative results of our DensePose-conditioned ControlNet. (a) 10 generated images controlled by DensePose
+with varying viewpoints and body parts. (b) 10 corresponding images with the same viewpoints controlled by human pose
+(Openpose) signals. It often fails to generate the backside of the avatar (4-th (b)) and struggles with part generation (the last
+two columns). (c) non-skin-tight generation results in both realistic and fictional avatars.
+We choose DensePose as the condition because it deliv-
+ers precise localization of 3D body parts in 2D images, af-
+fording intricate details and boundary conditions that may be
+overlooked by skeletal or other types of conditions. Notably,
+it exhibits resilience in challenging scenarios, facilitating ac-
+curate control even when body parts are partially concealed.
+We first train a ControlNet (Zhang and Agrawala 2023)
+conditioned by DensePose part-labeled annotations using
+the DeepFashion (Liu et al. 2016) dataset. Figure 3 illus-
+trates the capabilities of our ControlNet in generating high-
+quality view-consistent images, including various view-
+points and body parts such as full body, legs, head, and more.
+Given a specific camera viewpoint and pose P, we gener-
+ate the DensePose condition image c by rendering the part-
+labeled SMPL model with the corresponding pose P. The
+conditioned SDS loss is shown in the following equation:
+VeLP-SDS (0, x = g(0, P)) = Et,€
+[w(t) (ĉ – €)
+მუ
+ê = € (zt; y, t, c = h(SMPL, P))
+(5)
+(6)
+Here, g and h represent the NeRF render function and
+SMPL render function, respectively. The NeRF model and
+the SMPL pose model share identical camera viewpoints.
+This alignment of viewpoints enables coherent and consis-
+tent representations between the scene captured by NeRF
+and the corresponding human pose modeled by SMPL,
+allowing for better avatar generation. Our DensePose-
+conditioned ControlNet can generate various non-skin-tight
+realistic and fictional avatars as shown in Figure 3 (c).
+3.3. Progressive High-Resolution Generation
+Previous studies commonly apply SDS loss over the en-
+tire body, such global guidance often fails to produce high-
+quality details, especially for areas like hands, face, etc.
+These approaches lack effective guidance mechanisms to en-
+sure the generation of high-quality, detailed geometry and
+textures. To address this limitation, we propose a variety
+of guidance strategies aimed at promoting the generation of
+accurate and detailed representations, including progressive
+grid, focus mode, and progressive radius.
+Progressive grid Progressive training strategy is com-
+monly used in 2d generation and 3d reconstruction method
+(Karras et al. 2019; Liu et al. 2020; Sun, Sun, and Chen
+2021), while we find it critical in our method for neat and
+efficient 3d avatar generation. We set a predetermined num-
+ber of voxels N₁ as the final model resolution and double
+the voxel number after certain steps of optimization. The
+voxel size sy, is updated accordingly. During the early stage
+of training, we only need to generate a rough avatar shape.
+By allocating fewer grids, we can reduce the learning space
+and minimize floating artifacts. This strategy enables a grad-
+ual refinement of the avatar throughout the optimization pro-
+cess, allowing the model to adaptively allocate computa-
+tional resources.
+Also, the early stage of NeRF optimization is dominated
+by free space (i.e., space with low density). Motivated by
+this fact, we aim to find the areas of coarse avatar and allo-
+cate computational and memory resources to these important
+regions. To delineate the targeted area, we employ a density
+threshold to filter the scene and use a bounding box (bbox)
+to tightly enclose this area.
+.
+Let dx, dy, dz represent the lengths of the tightened bbox,
+3 dxxdyxdz
+he voxel size can be computed as sv =
+By
+Nv
+shrinking the lengths of the bbox, the voxel size decreases,
+enabling high-resolution and more voxel around the avatar.
+This would enhance the model's ability to capture and model
+intricate details, such as fine-grained body contours, facial
+features, and clothing folds.
+Progressive Radius Let pg_ckpt be the set of check-
+point steps. When reaching the training step in pg_ckpt,
+we decrease the radius of the camera by 20%. This allows
+for gradual rendering of finer details stage by stage. By ap-
+(a)
+**
+(b)
+DreamFusion
+DreamAvatar
+DreamWaltz
+Ours
+DreamHuman
+Ours
+Figure 4: Qualitative comparisons with four SOTA methods. We show several non-cherry-picked results generated by Avatar-
+Verse. Our method generates higher-resolution details and maintains a fine-grained geometry compared with other methods.
+(a): "Spiderman"; a man wearing a white tanktop and shorts", (b): "Joker"; "a karate master wearing a Black belt”, (c):
+"Stormtrooper"; "a Roman soldier wearing his armor”.
+plying the conditioned SDS loss to smaller regions of the
+avatar, the model can capture and emphasize intricate fea-
+tures, ultimately producing more realistic and visually ap-
+pealing outputs.
+Focus Mode Similarly, to generate better intricacy in spe-
+cific body parts, we introduce a focus mode (as illustrated
+in Fig. 2 (b)) during both the coarse stage and fine stage.
+Thanks to the SMPL prior, we can easily compute the raw
+body parts positions for any given pose. By placing the cam-
+era close to important body parts, loss calculation can be
+performed in a very small avatar region with 512 × 512 res-
+olution. Owing to the stable performance of our DensePose
+ControlNet, as shown in Fig. 2, partial body can be gen-
+erated without additional computational resources. Focus
+mode can thus facilitate the creation of high-quality avatar
+details.
+Mesh Refinement To render fine-grained high-resolution
+avatars within reasonable memory constraints and computa-
+tion budgets, we further incorporate deformable tetrahedral
+grids (Lin et al. 2022; Shen et al. 2021) to learn textured 3D
+meshes of the generated avatars. Similar to (Lin et al. 2022),
+we use the trained explicit NeRF as the initialization for the
+mesh geometry, and optimize the mesh via backpropagation
+using the DensePose conditioned SDS gradient (Eq. 5).
+3.4. Avatar Surface Smoothing
+Maintaining a globally coherent avatar shape for explicit
+grids during optimization can be challenging due to the high
+degree of freedom and lack of spatial coherence. Individual
+optimization of each voxel point limits information sharing
+across the grid, resulting in a less smooth surface for the
+generated avatar and some local minima.
+To address this problem, we follow the definition of the
+Gaussian convolution G in (Wu et al. 2022) and include a
+modified smoothness regularization formulated as:
+Lsmooth (V) = ||G (V, kg, σg) – V ||2|2
+(7)
+Here, kg represents the kernel size, and σg represents
+the standard deviation. We apply this smoothness term to
+the gradient of the density voxel grid, resulting in a gradi-
+ent smoothness loss smooth (VV (density)). This encourages a
+smoother surface and mitigates the presence of noisy points
+in the free space. The overall loss of our approach is defined
+as follows, with \ representing the smoothness coefficient:
+L = LP-SDS+ * smooth (V)
+4. Experiments
+(8)
+In this section, we illustrate the effectiveness of our pro-
+posed method. We demonstrate the efficacy of each pro-
+posed strategy and provide a detailed comparison against
+recent state-of-the-art methods.
+4.1. Implementation Details
+We follow (Sun, Sun, and Chen 2021) to implement the ex-
+plicit NeRF in our method. For each text prompt, we train
+Avatar Verse for 5000 and 4000 iterations in the coarse stage
+and mesh refinement stage, respectively. The whole gener-
+ation process takes around 2 hours on one single NVIDIA
+A100 GPU. We include initialization, densepose training
+and progressive high-resolution generation details in this
+section. For more comprehensive experiment details, we re-
+fer the reader to our Supplementary Material.
+Initialization To aid in the early stages of optimization,
+we adopt a technique inspired by (Poole et al. 2022) and
+introduce a small ellipsoidal density "blob" around the ori-
+gin. The dimensions of the "blob” in the XYZ axes are de-
+termined based on the range of coordinates in the SMPL
+pose model. Furthermore, we incorporate additional SMPL-
+derived density bias (Cao et al. 2023) to facilitate avatar gen-
+eration.
+Dense Pose Training We annotate the DeepFashion
+dataset (Liu et al. 2016) using a pretrained DensePose
+(Güler, Neverova, and Kokkinos 2018) model, resulting in
+over 800K image pairs. The ControlNet is trained using
+these image pairs with BLIP2-generated text prompt (Li
+et al. 2023a). The diffusion model employed in our approach
+is SD1.5.
+Progressive High-Resolution Generation
+For the pro-
+gressive grid, we double the number of voxels at 500, 1500,
+and 2000 iterations at the coarse stage. After 3000 steps in
+the coarse stage, we shrink the bounding box to the region
+where the density exceeds 0.1. Our progressive radius con-
+sists of three stages, where the camera radius ranges from
+1.4 to 2.1, 1 to 1.5, and 0.8 to 1.2 respectively. We reduce
+the radius at 1000 and 2000 iterations across both stages.
+Our focus mode starts from the 1000th step in the coarse
+stage and is consistently employed throughout the mesh re-
+finement phase.
+4.2. Qualitative Results
+Comparison with SOTA methods We present qualitative
+comparisons with DreamFusion (Poole et al. 2022), Drea-
+mAvatar (Cao et al. 2023), DreamWaltz (Huang et al. 2023),
+and DreamHuman (Kolotouros et al. 2023) in Fig. 4. Our
+method consistently outperforms these approaches in terms
+of both geometry and texture quality. The surface of the
+avatars generated by our method is exceptionally clear, ow-
+ing to our progressive high-resolution generation strategy. In
+comparison to DreamHuman, the avatars produced by our
+method exhibit a richer array of details across all cases, en-
+compassing skin, facial features, clothing, and more.
+Flexible Avatar Generation In Fig. 5, we demonstrate the
+capability of our method in generating 3D partial avatars,
+which is not achievable by other existing methods due to
+the absence of the DensePose control. Our method enables
+the partial generation by directly modifying the input Dense-
+Pose signal, eliminating the need for additional descriptive
+information such as "The head of..." or "The upper body
+of...”. This allows us to generate partial avatars of vari-
+ous types thanks to the attached semantics, including full-
+body, half-body, head-only, hand-only, and more. Addition-
+ally, our Avatar Verse is capable of generating avatars in var-
+・
+Figure 5: Flexible Avatar Generation. (a) Partial Genera-
+tion. All results are generated with the same text prompt
+"Stormtrooper" and "Batman". (b) Arbitrary Pose Genera-
+tion.
+ious poses, showcasing our stable control over view consis-
+tency.
+4.3. User Study
+Preference between different methods
+DreamFusion -| 0.5%
+DreamAvatar - 1.5%
+DreamWaltz -
+Ours
+-
+DreamHuman
+13.0%
+85.0%
+-
+19.0%
+81.0%
+Ours -
+0% 20%
+40% 60% 80%
+100%
+Figure 6: Quantitative results of user study.
+To further assess the quality of our generated 3D avatars,
+we conduct user studies comparing the performance of
+our results with four SOTA methods under the same text
+prompts. We randomly select 30 generated outcomes (pre-
+sented as rendered rotating videos) and ask 16 volunteers
+to vote for their favorite results based on geometry and tex-
+ture quality. In Fig. 6, we compare Avatar Verse with Dream-
+Fusion (Poole et al. 2022), DreamAvatar (Cao et al. 2023),
+and DreamWaltz (Huang et al. 2023), demonstrating a sig-
+nificant preference for our method over the other three ap-
+proaches.
+We also compare our method with DreamHuman (Kolo-
+touros et al. 2023) in terms of realistic human. A remarkable
+81% of volunteers voted in favor of our Avatar Verse.
+4.4. Ablation Study
+Effectiveness of Progressive Strategies To evaluate the
+design choices of Avatar Verse, we conduct an ablation study
+on the effectiveness of b) the progressive grid, c) the progres-
+sive radius, d) the focus mode, and e) the mesh refinement.
+We sequentially add these components and report the results
+in Fig. 7. The initial result lacks detail (e.g., no sword in
+the back, no armguards) and exhibits numerous floating ar-
+tifacts. The overall quality is blurry and unclear. Upon in-
+corporating the progressive grid, more voxels are gathered
+around the avatar region, this introduces more details into
+the avatar. By progressively narrowing the camera distance,
+the model can leverage the detail inherent in the latent diffu-
+sion, thereby eliminating a large number of floating artifacts
+and enhancing local details, such as the sword in the back.
+The focus mode further zooms in and utilizes a resolution
+of 512 x 512 to target and optimize certain body parts, gen-
+erating high-definition and intricate local details. The mesh
+refinement further optimize 3D mesh of the coarse avatar,
+resulting in finer avatar texture.
+(c) DensePose
+(b) skeleton
+(a) w/o control
+Figure 8: Impact of control signal. (a) without additional
+control; (b) with skeleton control; (c) with our DensePose
+control. For each type, we show the RGB, normal, depth,
+and the corresponding control signal.
+are greatly improved.
+(a)
++ prog. grid
+(b)
++ prog. rad.
+(c)
+D
+8 B
++ focus mode + mesh refinement
+(d)
+(e)
+(a) w/o surface smoothing
+(b) w/ surface smoothing
+Figure 7: Impact of progressive strategies. (a) none progres-
+sive strategy; (b) add progressive grid; (c) add progressive
+radius upon (b); (d) add focus mode upon (c); (e) add mesh
+refinement, our full method.
+Effectiveness of DensePose Control Figure 8 illustrates
+the influence of various control signals. When conditioned
+by the skeleton, the model can generate avatars that more
+closely resemble human figures. However, the avatar's edges
+appear blurry and still face severe Janus problem. By incor-
+porating DensePose control into our framework, we achieve
+more precise avatar boundaries, intricate details, and stable
+avatar control, resulting in a substantial improvement in the
+overall quality and appearance of the generated avatars.
+Effectiveness of Surface Smoothing Avatar surface
+smoothing plays a critical role in the Avatar Verse frame-
+work, as it guarantees the generated avatars exhibit compact
+geometry and smooth surfaces. As shown in Figure 9, by
+finding a balance between the smooth loss and the condi-
+tioned SDS loss, the visual quality and realism of the avatars
+Figure 9: Impact of surface smoothing strategy. (a) without
+surface smoothing; (b) with surface smoothing. Results are
+generated with the same text prompt.
+Conclusion
+In this paper, we introduce Avatar Verse, a novel framework
+designed to generate high-quality and stable 3D avatars
+from textual prompts and poses. By employing our trained
+DensePose-conditioned ControlNet, we facilitate stable par-
+tial or full-body control during explicit NeRF optimization.
+Our 3D avatar outcomes exhibit superior texture and geom-
+etry quality, thanks to our progressive high-resolution gen-
+eration strategy. Furthermore, the generated avatars are eas-
+ily animatable through skeletal binding, as they exhibit high
+alignment with the joints of the SMPL model. Through com-
+prehensive experiments and user studies, we demonstrate
+that our Avatar Verse significantly outperforms previous and
+contemporary approaches. We believe that our approach re-
+news the generation of high-quality 3D avatars in the neural
+and prompt-interaction era.
+References
+Bogo, F.; Kanazawa, A.; Lassner, C.; Gehler, P.; Romero,
+J.; and Black, M. J. 2016. Keep It SMPL: Automatic Esti-
+mation of 3D Human Pose and Shape from a Single Image.
+ArXiv, abs/1607.08128.
+Cao, Y.; Cao, Y.-P.; Han, K.; Shan, Y.; and Wong, K.-
+Y. K. 2023. DreamAvatar: Text-and-Shape Guided 3D
+Human Avatar Generation via Diffusion Models. ArXiv,
+abs/2304.00916.
+Güler, R. A.; Neverova, N.; and Kokkinos, I. 2018. Dense-
+Pose: Dense Human Pose Estimation in the Wild. 2018
+IEEE/CVF Conference on Computer Vision and Pattern
+Recognition, 7297-7306.
+Han, X.; Cao, Y.; Han, K.; Zhu, X.; Deng, J.; Song, Y.-Z.;
+Xiang, T.; and Wong, K.-Y. K. 2023. HeadSculpt: Crafting
+3D Head Avatars with Text. ArXiv, abs/2306.03038.
+Hong, F.; Zhang, M.; Pan, L.; Cai, Z.; Yang, L.; and Liu, Z.
+2022. AvatarCLIP: Zero-Shot Text-Driven Generation and
+Animation of 3D Avatars. ACM Trans. Graph., 41: 161:1–
+161:19.
+Huang, Y.; Wang, J.; Zeng, A.; Cao, H.; Qi, X.; Shi, Y.; Zha,
+Z.; and Zhang, L. 2023. DreamWaltz: Make a Scene with
+Complex 3D Animatable Avatars. ArXiv, abs/2305.12529.
+Isik, M.; Rünz, M.; Georgopoulos, M.; Khakhulin, T.;
+Starck, J.; de Agapito, L.; and Nießner, M. 2023. HumanRF:
+High-Fidelity Neural Radiance Fields for Humans in Mo-
+tion. ArXiv, abs/2305.06356.
+Jain, A.; Mildenhall, B.; Barron, J. T.; Abbeel, P.; and Poole,
+B. 2021. Zero-Shot Text-Guided Object Generation with
+Dream Fields. 2022 IEEE/CVF Conference on Computer
+Vision and Pattern Recognition (CVPR), 857–866.
+Jiang, R.; Wang, C.; Zhang, J.; Chai, M.; He, M.; Chen, D.;
+and Liao, J. 2023. AvatarCraft: Transforming Text into Neu-
+ral Human Avatars with Parameterized Shape and Pose Con-
+trol. ArXiv, abs/2303.17606.
+Jiang, T.; Chen, X.; Song, J.; and Hilliges, O. 2022. In-
+stantAvatar: Learning Avatars from Monocular Video in 60
+Seconds. ArXiv, abs/2212.10550.
+Karras, T.; Laine, S.; Aittala, M.; Hellsten, J.; Lehtinen, J.;
+and Aila, T. 2019. Analyzing and Improving the Image
+Quality of StyleGAN. 2020 IEEE/CVF Conference on Com-
+puter Vision and Pattern Recognition (CVPR), 8107-8116.
+Khalid, N. M.; Xie, T.; Belilovsky, E.; and Popa, T. 2022.
+CLIP-Mesh: Generating textured meshes from text using
+pretrained image-text models. SIGGRAPH Asia 2022 Con-
+ference Papers.
+Kolotouros, N.; Alldieck, T.; Zanfir, A.; Bazavan, E. G.;
+Fieraru, M.; and Sminchisescu, C. 2023. DreamHuman: An-
+imatable 3D Avatars from Text. ArXiv, abs/2306.09329.
+Li, J.; Li, D.; Savarese, S.; and Hoi, S. 2023a. BLIP-2: Boot-
+strapping Language-Image Pre-training with Frozen Image
+Encoders and Large Language Models. In ICML.
+Li, Z.; Zheng, Z.; Liu, Y.; Zhou, B.; and Liu, Y. 2023b. Pose-
+Vocab: Learning Joint-structured Pose Embeddings for Hu-
+man Avatar Modeling. ArXiv, abs/2304.13006.
+Lin, C.-H.; Gao, J.; Tang, L.; Takikawa, T.; Zeng, X.; Huang,
+X.; Kreis, K.; Fidler, S.; Liu, M.-Y.; and Lin, T.-Y. 2022.
+Magic3D: High-Resolution Text-to-3D Content Creation.
+ArXiv, abs/2211.10440.
+Liu, L.; Gu, J.; Lin, K. Z.; Chua, T.-S.; and Theobalt, C.
+2020. Neural Sparse Voxel Fields. Arxiv, abs/2007.11571.
+Liu, Z.; Luo, P.; Qiu, S.; Wang, X.; and Tang, X. 2016.
+DeepFashion: Powering Robust Clothes Recognition and
+Retrieval with Rich Annotations. 2016 IEEE Conference on
+Computer Vision and Pattern Recognition (CVPR), 1096-
+1104.
+Loper, M.; Mahmood, N.; Romero, J.; Pons-Moll, G.; and
+Black, M. J. 2015. SMPL: a skinned multi-person linear
+model. ACM Trans. Graph., 34: 248:1-248:16.
+Metzer, G.; Richardson, E.; Patashnik, O.; Giryes, R.;
+and Cohen-Or, D. 2022. Latent-NeRF for Shape-Guided
+Generation of 3D Shapes and Textures. arXiv preprint
+arXiv:2211.07600.
+Mildenhall, B.; Srinivasan, P. P.; Tancik, M.; Barron, J. T.;
+Ramamoorthi, R.; and Ng, R. 2020. NeRF: Represent-
+ing Scenes as Neural Radiance Fields for View Synthesis.
+ArXiv, abs/2003.08934.
+Poole, B.; Jain, A.; Barron, J. T.; and Mildenhall, B. 2022.
+DreamFusion: Text-to-3D using 2D Diffusion. ArXiv,
+abs/2209.14988.
+Radford, A.; Kim, J. W.; Hallacy, C.; Ramesh, A.; Goh, G.;
+Agarwal, S.; Sastry, G.; Askell, A.; Mishkin, P.; Clark, J.;
+Krueger, G.; and Sutskever, I. 2021. Learning Transferable
+Visual Models From Natural Language Supervision. In In-
+ternational Conference on Machine Learning.
+Richardson, E.; Metzer, G.; Alaluf, Y.; Giryes, R.; and
+Cohen-Or, D. 2023. TEXTure: Text-Guided Texturing of
+3D Shapes. ArXiv, abs/2302.01721.
+Rombach, R.; Blattmann, A.; Lorenz, D.; Esser, P.; and Om-
+mer, B. 2021. High-Resolution Image Synthesis with La-
+tent Diffusion Models. 2022 IEEE/CVF Conference on
+Computer Vision and Pattern Recognition (CVPR), 10674-
+10685.
+Saharia, C.; Chan, W.; Saxena, S.; Li, L.; Whang, J.; Den-
+ton, E. L.; Ghasemipour, S. K. S.; Ayan, B. K.; Mahdavi,
+S. S.; Lopes, R. G.; Salimans, T.; Ho, J.; Fleet, D. J.;
+and Norouzi, M. 2022. Photorealistic Text-to-Image Dif-
+fusion Models with Deep Language Understanding. ArXiv,
+abs/2205.11487.
+Sanghi, A.; Chu, H.; Lambourne, J.; Wang, Y.; Cheng, C.-
+Y.; and Fumero, M. 2021. CLIP-Forge: Towards Zero-Shot
+Text-to-Shape Generation. 2022 IEEE/CVF Conference on
+Computer Vision and Pattern Recognition (CVPR), 18582–
+18592.
+Shen, T.; Gao, J.; Yin, K.; Liu, M.-Y.; and Fidler, S.
+2021. Deep Marching Tetrahedra: a Hybrid Represen-
+tation for High-Resolution 3D Shape Synthesis. ArXiv,
+abs/2111.04276.
+Sun, C.; Sun, M.; and Chen, H.-T. 2021. Direct Voxel Grid
+Optimization: Super-fast Convergence for Radiance Fields
+Reconstruction. 2022 IEEE/CVF Conference on Computer
+Vision and Pattern Recognition (CVPR), 5449–5459.
+Wang, C.; Chai, M.; He, M.; Chen, D.; and Liao, J. 2021.
+Cross-Domain and Disentangled Face Manipulation With
+3D Guidance. IEEE Transactions on Visualization and Com-
+puter Graphics, 29: 2053-2066.
+Wang, L.; Zhao, X.; Sun, J.; Zhang, Y.; Zhang, H.; Yu, T.;
+and Liu, Y. 2023a. StyleAvatar: Real-time Photo-realistic
+Portrait Avatar from a Single Video. ArXiv, abs/2305.00942.
+Wang, Z.; Lu, C.; Wang, Y.; Bao, F.; Li, C.; Su, H.; and Zhu,
+J. 2023b. ProlificDreamer: High-Fidelity and Diverse Text-
+to-3D Generation with Variational Score Distillation. ArXiv,
+abs/2305.16213.
+Wu, T.; Wang, J.; Pan, X.; Xu, X.; Theobalt, C.; Liu, Z.; and
+Lin, D. 2022. Voxurf: Voxel-based Efficient and Accurate
+Neural Surface Reconstruction. ArXiv, abs/2208.12697.
+Xiu, Y.; Yang, J.; Cao, X.; Tzionas, D.; and Black, M. J.
+2022. ECON: Explicit Clothed humans Obtained from Nor-
+mals. ArXiv, abs/2212.07422.
+Zhang, L.; and Agrawala, M. 2023.
+Adding Condi-
+tional Control to Text-to-Image Diffusion Models. Arxiv,
+abs/2302.05543.
+Zhang, L.; Qiu, Q.; Lin, H.; Zhang, Q.; Shi, C.; Yang, W.;
+Shi, Y.; Yang, S.; Xu, L.; and Yu, J. 2023. DreamFace:
+Progressive Generation of Animatable 3D Faces under Text
+Guidance. ArXiv, abs/2304.03117.
+Zheng, Z.; Zhao, X.; Zhang, H.; Liu, B.; and Liu, Y. 2023.
+AvatarReX: Real-time Expressive Full-body Avatars. Arxiv,
+abs/2305.04789.

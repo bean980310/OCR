@@ -1,7 +1,14 @@
-arXiv:2306.10007v2 [cs.RO] 14 Dec 2023
+--- Page 1 ---
+2306.10007v2 [cs.RO] 14 Dec 2023
+
+arXiv
+
 Robot Learning with Sensorimotor Pre-training
-Ilija Radosavovic Baifeng Shi Letian Fu Ken Goldberg Trevor Darrell† Jitendra Malik+
+
+Ilija Radosavovic Baifeng Shi Letian Fu Ken Goldberg Trevor Darrell’ Jitendra Malik‘
+
 University of California, Berkeley
+
 Abstract: We present a self-supervised sensorimotor pre-training approach for
 robotics. Our model, called RPT, is a Transformer that operates on sequences of
 sensorimotor tokens. Given a sequence of camera images, proprioceptive robot
@@ -15,89 +22,117 @@ collected a dataset of 20,000 real-world trajectories over 9 months using a com-
 bination of motion planning and grasping algorithms. We find that sensorimotor
 pre-training consistently outperforms training from scratch, has favorable scaling
 properties, and enables transfer across different tasks, environments, and robots.
+
 Keywords: Robot Learning, Self-supervised, Sensorimotor, Pre-training
+
 1 Introduction
+
 Over the last couple of years, inspired by vision [1, 2, 3, 4] and language [5, 6, 7], there has been
 an increased interest in pre-training for robotics. For example, we have seen promising results from
 self-supervised visual pre-training on large and diverse image collections [8]. However, robotic data
 contains rich sensory and motor information that is difficult to capture with visual pre-training alone.
 We ask: can we learn good sensorimotor representations from robotic trajectories?
+
 In this paper, we propose a self-supervised sensorimotor pre-training approach for robotics. We for-
 mulate robotic pre-training as a general sensorimotor sequence prediction problem. We instantiate
 this idea through a masked prediction task, similar to the counterparts in natural language process-
 ing and computer vision [6, 3, 4]. We hypothesize that if a robot can predict missing sensorimotor
 content it will have acquired a good model of the physical world that can enable it to act.
+
 Our model, called RPT, is a Transformer [9] that operates on sequences of sensorimotor tokens.
 Given an input sequence of camera images, proprioceptive robot states, and actions, we encode the
 interleaved sequence into tokens, mask out a subset of the sequence, and predict the masked-out
 content from the rest. We perform masking across all modalities and time using a high masking
 ratio, which encourages the model to learn cross-modal, spatio-temporal representations.
+
 We encode camera images using a pre-trained vision encoder [8] and use latent visual representations
 for sensorimotor sequence learning. This enables us to build on strong visual representations, trained
 on large and diverse image collections from the Internet. Compared to prediction in pixel space,
 performing prediction in the latent representation space makes the task more tractable. This design
 decouples the computational vision cost from the sensorimotor context length, making 10 Hz control
 with over 300M parameter models and large context lengths feasible on a physical robot.
-*Equal contribution. Videos are available on our project page.
-Real-World Trajectories
-Sensorimotor Pre-training
+
+{Equal contribution. Videos are available on our project page.
+
+--- Page 2 ---
 Downstream Transfer
-images, proprioception, actions
+
+Re sat Trajectories — & J a ¢
+a El
+a = 4 4 4 4 4
+e42 Sensorimotor Pre-training Ae
+
+2 &, = o zm ot a ;
+faye eee aon eaten : e oe ¢ é a Ve
+
 Figure 1: Robot learning with sensorimotor pre-training. Left: We collect a large dataset of
 real-world trajectories that contain multiview RGB images, proprioceptive robot states, and actions
 to use for sensorimotor pre-training. Middle: Given a sensorimotor trajectory, we mask out a subset
 (shown by striped pattern) and train a Transformer model to predict the masked-out content from the
 rest. Right: We transfer the pre-trained representations to different downstream tasks and robots.
+
+> py, bA,
+
 To study our pre-training approach, we collected a dataset of over 20,000 real-world trajectories
 over 9 months using a combination of motion planning and model-based grasping algorithms. Each
 trajectory is a sequence of multi-view RGB camera images, proprioceptive robot states, and ac-
 tions. We collected trajectories for classic robotic tasks, namely, single object picking, bin picking,
 stacking, and destacking. All of the tasks include variations in object pose, shape, and appearance.
+
 To understand the effect of pre-training, we perform a series of real-world experiments. We find
 that RPT consistently outperforms training from scratch and that the improvements are larger for
-harder tasks (up to 2× for the block stacking task). We also find that our sensorimotor pre-training
+harder tasks (up to 2x for the block stacking task). We also find that our sensorimotor pre-training
 approach enables successful transfer across different tasks, lab environments, and robots. Moreover,
 our approach has favorable scaling properties and benefits from better vision encoders, longer sen-
 sorimotor context lengths, and larger pre-training datasets. Finally, we find that masking across both
 modalities and time, with a high masking ratio, is important for good performance.
+
 2 Robot Learning with Sensorimotor Pre-training
+
 Our approach consists of a pre-training and a fine-tuning stage (Figure 1). We pre-train sensorimotor
 representations with masked prediction on sequences of camera images, proprioceptive states, and
 actions (Figure 2). After pre-training, we transfer representations to downstream tasks (Figure 3).
-2.1
-Sensorimotor Pre-training
-=
+
+2.1 Sensorimotor Pre-training
+
 We begin by describing the pre-training stage of our approach. In the pre-training stage, we are given
-a dataset D of sensorimotor trajectories T. Each sensorimotor trajectory is a sequence of camera
-images, proprioceptive robot states, and actions: T :
-(i1, S1, a1,..., iT, ST, aT). We assume no
+a dataset D of sensorimotor trajectories 7. Each sensorimotor trajectory is a sequence of camera
+images, proprioceptive robot states, and actions: T = (i1, $1, 41,...,i7, 87, a7). We assume no
 access to additional semantic information, like language instructions or task labels. We hypothesize
 that the unlabeled sensorimotor trajectories implicitly encode the structure of the physical world and
 that we can use them to learn sensorimotor representations for downstream robotic tasks.
+
 We formulate robotic pre-training as a general sensorimotor sequence prediction problem, across
 all modalities and time. We instantiate this idea through a masked prediction task, similar to the
 counterparts in vision and language [6, 3, 4]. We mask out a subset of a trajectory and train a model
 to predict the missing content. Specifically, given a sensorimotor sequence of L tokens, we sample
 a mask sub-sequence M C [1, L] and train a model to minimize the mean squared error of the
-masked tokens ™ conditioned on the observed tokens T[1,L]\M. The intuition is that if a robot
+masked tokens Ty conditioned on the observed tokens 7j;,z}\.s- The intuition is that if a robot
 can infill missing sensorimotor content it will have acquired a good model of the physical world
 that can enable it to act. This general formulation enables us to represent many different contextual
 prediction problems by simply using different masking patterns. We consider a number of variants,
 including random masking at the modality, timestep, and token level, as well as causal masking.
-2
-Lo
-↑
-Transformer
-↑ M↑ M M ^ M M ●●● M ↑
-↑
+
+--- Page 3 ---
+t t t t
+t * t t t
+‘Transformer
+* * * t t t t * t t
+M M M M M M
+
+a 6%
+
 Figure 2: Sensorimotor pre-training. Our model is a Transformer that operates on interleaved
 sequence of camera images, proprioceptive robot states, and past robot actions. We encode sensori-
 motor inputs into tokens, mask out a subset, and train a model to predict the missing content.
-2.2 Architecture
+
+2.2. Architecture
+
 Token masking. Given a sequence of sensorimotor tokens we mask out a subset. We represent each
 masked out input using a mask token that is learnt per modality and shared across time. We mask
 the input tokens independently without taking the time step or modality into consideration which
 encourages the model to learn to correlate information across both modalities and time.
+
 Vision latents. Our sensorimotor model must process sequences of high-dimensional images from
 multiple views, which is challenging from both the learning and the computational perspective. To
 overcome this, we use a pre-trained vision encoder to compute visual representations [8] and operate
@@ -105,55 +140,65 @@ in the latent space. This enables us to build on strong visual representations, 
 diverse images collections from the Internet. Compared to prediction in pixel space, prediction in
 the latent space makes the task more tractable. This design also decouples the computational vision
 cost from the sensorimotor context length, making fast inference with large models feasible.
+
 Token encoders. We use a separate linear encoder per modality. Since our modality encoders do not
 share weights, we do not use additional modality embeddings. To represent time, we add positional
 embeddings to each token. All tokens from a single timestep share the positional embedding value.
+
 Transformer model. The encoded and masked sequence of tokens is passed into a Transformer
 model [9]. We follow the standard Transformer design consisting of a series of Transformer blocks
 with multi-head self-attention operations. Our model predicts latent representations for each input.
+
 Prediction heads. We decode the hidden representations into prediction targets using linear project
 layers. Each latent is decoded from the hidden size back to the original modality dimension. We
 make predictions in the original input space for joints and the visual latent space for images.
+
 Masked objective. We compute the mean squared error reconstruction loss between the predictions
 and the ground truth input values. We apply the loss only to the predictions from the latent repre-
 sentations corresponding to the masked inputs. Predictions for the observed inputs incur no loss. To
 weight the importances and scale of different modalities we apply a per-modality loss weight.
-2.3 Downstream Transfer
+
+2.3, Downstream Transfer
+
 Our goal is to learn general sensorimotor representations that can be transferred to different down-
-stream tasks and robots. Inspired by vision and language [6, 3, 4], we explore two settings: (1)
+stream tasks and robots. Inspired by vision and language [6, 3, 4], we explore two settings: (/)
 Fine-tuning. We fine-tune a pre-trained model checkpoint on downstream task data. In this setting
 pre-training can be seen as providing a good initialization for learning. (2) Linear probe. We use
 a frozen pre-trained model to extract sensorimotor features and train a single linear layer to predict
 actions. This enables us to evaluate the quality of the pre-trained representations alone.
-3
-a
-a
-Training
-Frozen
-22222 • • • M^^^^^^...M
-(a) Finetune
-(b) Linear Probe
+
+--- Page 4 ---
+Training Frozen
+
+M M
+(a) Finetune (b) Linear Probe
+
 Figure 3: Downstream transfer. We consider two different settings for evaluating representations
 on downstream tasks: (a) Fine-tuning: We fine-tune the entire pre-trained model on the downstream
 task data; (b) Linear Probe: We freeze the pre-trained model and train a linear action read out layer.
+
 3 Experimental Setup
+
 Robot and tasks. We use a 7-DoF Franka robot with the default 1-DoF parallel jaw gripper. We
 perform joint position control at 10 Hz. We include joint positions and the gripper state in the
 proprioceptive information. We use three RGB cameras, one attached to the robot hand and two on
 the sides (Figure 9). We consider four different tasks: Pick, Bin Pick, Destack, and Stack. To
 study the proposed approach, we collected a dataset of sensorimotor trajectories using a combination
 of motion planning and model-based grasping algorithms (see Appendix A for more details).
+
 Vision encoder. We use the Vision Transformer (ViT) architecture [10] to encode image inputs.
 Specifically, we use the pre-trained models from [8] which were trained via MAE [4] on a collection
 of 4.5M images from Ego4D [11], Epic [12], Something-Something [13], 100 Days of Hands [14],
 and ImageNet [15] images. We extract features from all three cameras using the same model. We
 use the mean pooling of output tokens from the vision encoder as the vision feature.
+
 Sensorimotor transformer. Our sensorimotor model is an encoder-only Transformer with ~1M
 parameters. The transformer has a hidden dimension of 192 and four transformer blocks, each with
 4 heads and an MLP ratio of 2. The sensorimotor input contains multiple steps, each step including
 the visual features from 3 cameras views, the proprioceptive states and actions. Since the input from
 different modalities have different dimensions (e.g., 768 for images and 8 for proprioception and
 actions), we project each modality to the same dimension of 192 using a linear layer per modality.
+
 Pre-training. During sensorimotor pre-training, we first randomly sample a masking probability
 from a fixed range of masking ratios, and then independently mask each input token (visual, propri-
 oception, or action) with the same probability. The default masking ratio range is [0.7, 0.9], which
@@ -161,7 +206,8 @@ we find to work the best empirically. We also study other masking strategies suc
 tokens from a modality or a timestep. Please see ablations on masking strategy and masking ratio in
 Section 4.5. The masked reconstruction loss for each modality is weighted together using a uniform
 weight. All models are pre-trained for 300 epochs with a batch size of 4096 and 50 warm-up epochs.
-We use the AdamW optimizer with a learning rate of 4 × 10−4 and a weight decay of 0.01.
+We use the AdamW optimizer with a learning rate of 4 x 10~4 and a weight decay of 0.01.
+
 Fine-tuning. We initialize the sensorimotor model with the pre-trained weights and fine-tune it with
 behavior cloning on the downstream task. At fine-tuning time, the model takes in a sequence of the
 same length as in pre-training with the action at the last time step replaced with a mask token. To
@@ -169,57 +215,45 @@ predict the action, we use the output token that corresponds to the mask input t
 other predictions. We train a linear layer to predict next 16 actions from the last mask token. We
 fine-tune the model for 900 epochs for the task of Stack and 300 epochs for other tasks. Other
 hyperparameters such as learning rate and batch size stay the same as in pre-training.
+
 Inference. When testing the fine-tuned model, we feed the past sensorimotor trajectory as input and
 the model predicts the actions for the next 16 steps. The predicted actions are passed to the robot
 controller which executes the actions at 10Hz. We experimented with executing one action at the
 time and re-predicting but did not observe a significant difference in performance. After each action
 is executed, the visual observations and the achieved state are recorded and, alongside the executed
 action, are fed back as the sensorimotor inputs for the next prediction in the autoregressive fashion.
-4
+
+
+--- Page 5 ---
 100
-Success (%)
+
 80
+
 60
-60
+
 40
-40
-Pick
-RPT, pre-trained
+
 Destack
-RPT, pre-trained
-MVP, scratch
-Stack
-RPT, pre-trained
-MVP, scratch
-20
-MVP, scratch
-0
-50
-100
-150
-200
-250 100
-200
-300
-Num. Trajectories
-400
-500 100
-200
-300
-Num. Trajectories
-400
-500
-Num. Trajectories
+20 —e RPT, pre-trained e RPT, pre-trained an
+—®- MVP, scratch —®- MVP, scratch
+50 100 150 200 250 100 200 300 400 500 100 200 300 400 500
+Num. Trajectories Num. Trajectories Num. Trajectories
+
+Success (%)
+
 Figure 4: Sample complexity, fine-tuning. We study the effect of sensorimotor pre-training as the
 amount of fine-tuning data increases. We find that sensorimotor pre-training (RPT) brings consistent
 improvements over training the sensorimotor model from scratch (MVP) and that the gains are larger
 for the harder tasks (Stack). Note that the vision encoders are pre-trained and frozen for both [8].
-4
-Experimental Results
+
+4 Experimental Results
+
 We perform evaluations in the real-world and study sample complexity on different tasks, transfer
 across tasks and robots, scaling properties, and different design decisions. For all experiments, we
 report success rates across 16 real-world trials with variations in object positions and orientations.
+
 4.1 Sample Complexity
+
 We begin by studying the effect of sensorimotor pre-training by comparing its fine-tuning perfor-
 mances to training form scratch. As our scratch baseline we use an improved version of MVP [8],
 where the single-step MLP policy is replaced by a multi-step Transformer policy. For fair compar-
@@ -230,92 +264,103 @@ the data from the same task as in fine-tuning and hold out an unseen set for eva
 we show the performance as the number of fine-tuning demonstrations increases. We observe that
 pre-training leads to consistent improvements over training from scratch, across different tasks and
 data regimes. Moreover, the improvements are the largest for the hardest block stacking task.
-4.2 Transfer Across Tasks
+
+4.2. Transfer Across Tasks
+
 In the previous section we used the data from the same
-task for pre-training and fine-tuning. To evaluate if our
+
+task for pre-training and fine-tuning. To evaluate if our 80 Stack
 pre-training approach can learn general sensorimotor rep-
-resentation instead of representation for a specific task,
-we study pre-training and fine-tuning across different
-tasks. Specifically, we first pre-train a model on data from
-different tasks: stacking, picking, successful bin picking
-trajectories, and bin picking trajectories that include fail-
-ure cases. We then fine-tune and evaluate the models on
-stacking. We report the results in Figure 5. We observe
+
+resentation instead of representation for a specific task, ZS 60
+
+we study pre-training and fine-tuning across different =
+
+tasks. Specifically, we first pre-train a model on data from B 40
+
+different tasks: stacking, picking, successful bin picking 8
+
+trajectories, and bin picking trajectories that include fail- 3 20
+
+ure cases. We then fine-tune and evaluate the models on ”
+
+stacking. We report the results in Figure 5. We observe 0
+
 that pre-training on all of stacking, picking, or bin pick-
 ing lead to similar downstream performance on stack-
-ing, which suggests that our sensorimotor pre-training ap-
-proach can learn transferable representations across tasks.
-We also see lower performance when pre-training on all
-of bin picking data that includes failed trajectories, which
-highlights the importance of pre-training data quality.
+ing, which suggests that our sensorimotor pre-training ap- Figure 5: Transfer across tasks. We
+proach can learn transferable representations across tasks. compare pre-training on different tasks
+We also see lower performance when pre-training on all and fine-tuning on stacking. We see that
+of bin picking data that includes failed trajectories, which _pre-training can lead to strong down-
+highlights the importance of pre-training data quality. stream performance even across tasks.
+
+Ss B, B .
+lacy ick Bin icy? al
+
+--- Page 6 ---
+Vision Encoder Context Length Pre-training Data
+
+a
+So
+
+u
+o
+
+&
+fo
+
 Success (%)
-80
-60
-40
-20
-20
+8 6
+
+»
+°
+
 0
-Stack
-Stack
-Pick
-Bin pick
-Bin all
-Figure 5: Transfer across tasks. We
-compare pre-training on different tasks
-and fine-tuning on stacking. We see that
-pre-training can lead to strong down-
-stream performance even across tasks.
-5
-Success (%)
-10
-50
-40
-Vision Encoder
-Context Length
-Pre-training Data
-60
-0
-0
-100
-200
-300 0
-20
-40
-60
-80
-500
-1000
-1500
-2000
-Num. Tokens
+
+0 100 200 300 0 20 40 60 80
+Num. Parameters (M) Num. Tokens
+
+500 1000 1500
+
 Num. Trajectories
-Num. Parameters (M)
+
+2000
+
 Figure 6: Scaling studies. We find that our approach benefits from better vision encoders (left),
 larger context lengths (middle), and more pre-training data (right). Evaluated on block stacking.
+
 4.3 Scaling Studies
+
 Vision encoder. We study the performance of our pre-training approach as the size of the vision
 encoder increases. In all cases, we use a pre-trained and frozen vision encoder from [8] Specifically,
 we consider three ViT variants of increasing size: ViT-S, ViT-B, and ViT-L. We evaluate perfor-
 mance on the block stacking task which requires precise spatial localization. The results are shown
 in Figure 6, left. We observe that the performance improves significantly with better vision models.
 We note that our model is still capable of 10 Hz inference even when using the ViT-L vision encoder.
+
 Context length. We compare sensorimotor pre-training with varying context lengths. Namely, we
 consider context lengths of 1, 4, 8, and 16 timesteps. Note that each timestep contains 5 tokens. In
 Figure 6, middle, we observe that pre-training on larger contexts leads to consistent improvements,
 which may suggest that longer contexts may facilitate richer sensorimotor pre-training problems.
+
 Pre-training data. We study scaling of our approach as the amount of pre-training data increases.
 We consider pre-training on 480, 960, and 1920 trajectories and evaluate downstream performance
 on block stacking. In Figure 6, right, we observe that our approach benefits from more pre-training
 data which is a promising signal for scaling sensorimotor pre-training to larger trajectory collections.
+
 4.4 Transfer Across Robots
-Cross-lab transfer. We evaluate transfer across different
-robots. We first consider transfer to a different instance
-of the same robot type. The downstream robot is in a dif-
-ferent lab that has differences in the environmental condi-
+
+Cross-lab transfer. We evaluate transfer across different pre-train fine-tune _ success (%)
+robots. We first consider transfer to a different instance Franka B 25.0
+of the same robot type. The downstream robot is in a dif- Franka A Franka B 68.8
+
+ferent lab that has differences in the environmental condi- (a) Franka —> Franka. Effective transfer
+
 tions, varying camera placement, background, and light-
 ning. We compare pre-training to training from scratch.
 We report the results in Figure la and observe that pre-
 training outperforms training from scratch considerably.
+
 Cross-robot transfer. Next, we push this setting further
 and evaluate transfer across different robot types. Specifi-
 cally, we pre-train on xArm data from [8] which includes
@@ -328,127 +373,108 @@ pre-training and (b) pre-training on the same amount of
 original Franka data. In Table 1b, we see that pre-training
 on xArm outperforms training from scratch considerably
 and comes very close to pre-training on the same robot.
-pre-train
-Franka A
-fine-tune
-Franka B
-Franka B
-success (%)
-25.0
-68.8
-(a) Franka →→Franka. Effective transfer
+
 from a franka in one lab to another franka
 in a different lab, with differences in cam-
 era positions, background, and lightning.
-pre-train
-fine-tune
-Franka
-success (%)
-25.0
-xArm
-Franka
-Franka
-Franka
-50.0
-56.3
-(b) xArm → Franka. We find that senso-
+
+pre-train fine-tune —_ success (%)
+Franka 25.0
+
+xArm Franka 50.0
+
+Franka Franka 56.3
+
+(b) xArm -> Franka. We find that senso-
 rimotor pre-training can be effective even
 across different robot types and come very
 close to pre-training on the same robot.
+
 Table 1: Transfer across robots. We
 pre-train on data from one robot and
 evaluate downstream transfer to a dif-
 ferent robot. We experiment with both
 cross-lab and cross-robot transfer.
-6
-Partial Fine-tuning
-Masking Type
-Masking Ratio
+
+--- Page 7 ---
+Partial Fine-tuning Masking Type Masking Ratio
+
 Success (%)
-88
-100
-80
-60
-40
-20
-0
-0
-1
-High
-Lin. probe
-Low
-Medium
-Full fine-tune
-Token
+
+Time Modaiiy ken Low — Megiy, m High
+
 4
-Time
-Modality
-3
-2
 Num. Blocks Fine-tuned
+
 Figure 7: Ablation studies. We find that while linear probing achieves non-trivial performance,
 fine-tuning leads to considerably better results and that fine-tuning a larger portion of the model
 leads to higher success (left). We observe that masking across all tokens works considerably better
 than masking all tokens from a timestep or all tokens from a modality at a time (middle). Moreover,
 using a high masking ratio is essential for learning good sensorimotor representations (right).
+
 4.5 Ablation Studies
+
 Linear probe. We evaluate pre-trained sensorimotor representations via linear probing. Namely, we
 extract representations using a frozen sensorimotor model and train a linear layer on top using 120
 trajectories for picking. We report the results in Figure 7, left. We observe that linear probing reaches
 a success rate of 43.75% which is non-trivial but considerably lower than 93.8% with fine-tuning.
+
 Partial fine-tuning. In fine-tuning evaluations we fine-tune the full model by default. Here, we
 study the impact of fine-tuning an increasing number of Transformer blocks. We report the results
 in Figure 7, left. Note that fine-tuning zero blocks and four blocks is equivalent to linear probing and
 full fine-tuning, respectively. We observe that the performance increases with the number of blocks
 fine-tuned and that achieving best performance requires fine-tuning a majority of the blocks.
+
 Masking type. We experiment with different masking strategies (see also Section 4.8). Specifically,
 we consider time-step masking which masks all tokens from a time step, modality masking which
 masks all of the tokens from a modality, and token masking which masks across all tokens indepen-
 dently. In Figure 7, middle, we see that token masking outperforms the alternatives considerably.
+
 Masking ratio. We ablate different values of the masking ratio. As shown in Figure 7, right, there is
 a significant performance drop when masking ratio is low [0.1, 0.9] or medium [0.4, 0.9] compared
 to a high masking ratio [0.7, 0.9]. This suggests a high redundancy between different time steps and
 modalities in the input sensorimotor sequences and a high masking ratio is crucial for learning useful
 representations for downstream tasks. This is consistent with prior work on visual pre-training [4].
+
 4.6 Inference Speed
+
 Our sensorimotor model is designed to operate on latent visual representations that are computed
 per image, which decouples the vision model from the sensorimotor model and makes the vision
 computation cost independent of the context length. This enables us to use large vision models (up
 to ViT-L with 307M parameters) with system level inference speed of 10Hz on a 2080 Ti GPU.
+
 4.7 Emergent Self-Correction
+
 We observe that some of our models that are pre-trained with sensorimotor prediction can exhibit
 an emergent self-correction behavior at test time. For example, if the robot fails to grasp an object
 initially, it would move back, and proceed to grasp the object successfully. Please see the project
 page for videos. Since these models were pre-trained and fine-tuned only with successful trajecto-
 ries, this type of behaviors have not been seen during training. Moreover, some of the states were
 not present in the data at all (e.g., starting a grasp or moving up with a fully closed gripper).
-7
-4.8
-Causal Masking
-We experiment with a variant of our sensorimotor pre-
-training approach that uses causal masking instead of ran-
-dom masking, like in the experiments so far. We make a
-minimal change and simply sort the sampled mask se-
-quences. Note that the self-attention is still bidirectional
-rather than causal. The pre-training prediction problem is
-causal however. We consider two settings: pre-training on
-the same task (pick to pick) and pre-training on a different
-task (pick to stack). We report the results in Figure 8. We
-find that causal pre-training leads to better performance
-on the same task and worse transfer across different tasks.
+
+--- Page 8 ---
+4.8 Causal Masking
+
+We experiment with a variant of our sensorimotor pre- 100 Masking
+training approach that uses causal masking instead of ran- =~ mm Random
+dom masking, like in the experiments so far. We make a & 80 SS Causal
+minimal change and simply sort the sampled mask se- 2 60
+
+quences. Note that the self-attention is still bidirectional (0)
+
+rather than causal. The pre-training prediction problem is oO 40
+
+causal however. We consider two settings: pre-training on a
+
+the same task (pick to pick) and pre-training on a different 20
+
+task (pick to stack). We report the results in Figure 8. We 0
+
+find that causal pre-training leads to better performance Pick > Pick Pick > Stack
+on the same task and worse transfer across different tasks. Figure 8: Causal masking.
+
 5 Related Work
-Success (%)
-100
-80
-60
-40
-20
-0
-Masking
-Random
-Causal
-Pick Pick Pick → Stack
-Figure 8: Causal masking.
+
 Self-supervised learning in robotics. There is a rich body of work on self-supervised learning in
 robotics. [16, 17] learn grasping policies from large-scale self-supervision; [18] learns visuomotor
 policies with self-supervised visual correspondence; [19] calibrates learned grasping policies for
@@ -458,6 +484,7 @@ on human demonstrations; [22] learns goal-conditioned robot policies from teleop
 uses multi-view reconstruction for model learning. Overall, prior work has largely focused on using
 self-supervision for learning a particular robotic task. In contrast, we use self-supervision for pre-
 training general sensorimotor representations that can be transferred to different downstream tasks.
+
 Multi-task and large models for robotics. A number of works have explored learning multi-task
 and large models for robotics. BC-Z [24] performs large-scale vision-based imitation learning; [25]
 trains policies with cross-domain datasets; [26] learns multi-task Transformer policies for manip-
@@ -469,7 +496,9 @@ models but focus on self-supervised learning from sensorimotor trajectories. [30
 models with visual inputs via an embodied visual question answering model. Overall, we share
 the goal of multi-task robot learning and training large models for robotics but propose a general
 self-supervised pre-training approach that learns from real-world sensorimotor trajectories alone.
+
 6 Discussion
+
 Limitations. We note that our work has several important limitations. First, our dataset is collected
 using a single robot in a single lab, which limits the diversity and realism of the data. Scaling to
 more diverse environments and robots remains an important area for future research. Second, the
@@ -478,137 +507,232 @@ place. It would be good to explore more dexterous tasks with complex dynamics an
 our model is pre-trained with the MSE loss and may struggle with multimodality. This is partially
 alleviated with conditional prediction over large context lengths. Nevertheless, it would be good to
 explore a generative model variant. Finally, please see the project page for videos of failure cases.
+
 Conclusion. We describe an approach for robot learning with sensorimotor pre-training. Our model
 is a Transformer that operates on sequences of sensorimotor tokens. We pre-train our model by
 masked prediction. We find that pre-training on this data consistently outperforms training from
-scratch, leads to 2× improvements in the block stacking task, and has favorable scaling properties.
+scratch, leads to 2x improvements in the block stacking task, and has favorable scaling properties.
 Finally, we demonstrate successful transfer across different tasks, lab environments, and robots.
-8
-Workspace Setup
-Trajectory Counts
-8000
-7530
+
+--- Page 9 ---
+Workspace Setup Trajectory Counts
+8000 ——7530
+
 6931
 6000
+
 4000
-3228
-3217
+
+3228 3217
+
 2000
 0
 Pick Bin Pick Stack Destack
-Pick One Object
-Bin Picking
-Stack & Destack
+Pick One Object Bin Picking Stack & Destack
+: : ary ” = S
+— 73s = > |
+is * ¢ qe es ‘a
+s a es J a
+?
+1
+
 Figure 9: Dataset. We collected a dataset of over 20,000 real-world trajectories using a Franka
 robotic arm. Each trajectory is a sequence of high-quality images from three cameras (one attached
 to the hand and two on the sides), proprioceptive robot states, and actions. We consider picking, bin
 bicking, destacking, and stacking tasks, with variations in object position, shape, and appearance.
+
 Appendix A: Data Collection
+
 Hardware. We used a Franka robot with a 7-DOF arm and a parallel jaw gripper (Figure 9, top left).
 We recorded proprioceptive information in the form of joint positions and velocities. The workspace
 is equipped with three high-quality Logitech Brio color cameras. One egocentric camera is attached
 to the robot hand, and two exocentric cameras are attached to the left and the right side of the robot.
 We synchronized the data streams from the cameras and the robot at 60 Hz and saved data at 30 Hz.
+
 (1) Pick: The task is to grasp and lift one out of K cubes from the table. We script a data generation
 scheme where the robot takes in K cubes at randomly generated 3 DoF poses in robot frame, that
 are not in collision, and generates sequences of 3 DoF picks-and-places poses for each of the cubes.
 Then a scripted policy grasps the cube. After grasping, the robot places the grasped cube in the next
 randomly generated pose, moves back to the start joint configuration, and starts the next grasp.
+
 (2) Bin Pick: The robot picks an object from a bin filled with randomly-placed, both soft and rigid,
 objects (see Figure 9). We use [31] to generate grasps from depth images, captured by an overhead
 depth camera. Before each grasp, the robot moves to a joint confguration that does not occlude the
 camera view of the bin. After we obtain a grasp pose, we ise a scripted policy to pick the object. If
 the gripper is not fully closed the end of the trajectory, we consider the trajectory successful.
+
 (3) Stack and (4) Destack: Starting with two cubes of different colors resting on the table, the robot
 is tasked to first move one of the cubes onto the other cube, and then move the stacked cube back
 onto the table. The cube poses are generated in a similar fashion as (1). For stacking, the height of
 the place pose is offset by the height of the cube; similarly, for destacking, the pick pose height is
 offset by the height of the cube. A scripted policy then executes the pick-and-place trajectory.
+
 Statistics. We collected ~20,000 real-world trajectories over the course of 9 months (Figure 9). The
 dataset includes ~7,000 trajectories for both single object and bin picking, as well as ~3,000 trajec-
 tories for stacking and destacking each. The average length of picking and destacking trajectories
 is ~300 while the stacking trajectories are longer at ~600 steps. The dataset contains variations in
 object poses, shape, and appearance. We show frames from example trajectories in Figure 9.
-9
+
+--- Page 10 ---
 Acknowledgments
+
 We thank the anonymous reviewers for helpful feedback and suggestions during the review pro-
 cess. This work was supported in part by DARPA Machine Common Sense program, ONR MURI
-program (N00014-21-1-2801), NVIDIA, Autodesk, and BAIR's industrial alliance programs.
+program (N00014-21-1-2801), NVIDIA, Autodesk, and BAIR’s industrial alliance programs.
+
 References
-[1] A. Krizhevsky, I. Sutskever, and G. E. Hinton. Imagenet classification with deep convolutional
+
+1] A. Krizhevsky, I. Sutskever, and G. E. Hinton. Imagenet classification with deep convolutional
 neural networks. NeurIPS, 2012.
-[2] R. Girshick, J. Donahue, T. Darrell, and J. Malik. Rich feature hierarchies for accurate object
+
+2] R. Girshick, J. Donahue, T. Darrell, and J. Malik. Rich feature hierarchies for accurate object
 detection and semantic segmentation. In CVPR, 2014.
-[3] M. Chen, A. Radford, R. Child, J. Wu, H. Jun, D. Luan, and I. Sutskever. Generative pretraining
-from pixels. In ICML, 2020.
-[4] K. He, X. Chen, S. Xie, Y. Li, P. Dollár, and R. Girshick. Masked autoencoders are scalable
+
+3] M. Chen, A. Radford, R. Child, J. Wu, H. Jun, D. Luan, and I. Sutskever. Generative pretraining
+from pixels. In JCML, 2020.
+
+4
+
+K. He, X. Chen, S. Xie, Y. Li, P. Dollar, and R. Girshick. Masked autoencoders are scalable
 vision learners. arXiv:2111.06377, 2021.
-[5] A. Radford, K. Narasimhan, T. Salimans, and I. Sutskever. Improving language understanding
+
+5
+
+A. Radford, K. Narasimhan, T. Salimans, and I. Sutskever. Improving language understanding
 by generative pre-training. 2018.
-[6] J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova. Bert: Pre-training of deep bidirectional
+
+6
+
+J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova. Bert: Pre-training of deep bidirectional
 transformers for language understanding. In NAACL-HCT, 2019.
-[7] T. B. Brown, B. Mann, N. Ryder, M. Subbiah, J. Kaplan, P. Dhariwal, A. Neelakantan,
+
+7| T. B. Brown, B. Mann, N. Ryder, M. Subbiah, J. Kaplan, P. Dhariwal, A. Neelakantan,
 P. Shyam, G. Sastry, A. Askell, et al. Language models are few-shot learners. NeurIPS,
 2020.
-[8] I. Radosavovic, T. Xiao, S. James, P. Abbeel, J. Malik, and T. Darrell. Real-world robot
+
+8
+
+I. Radosavovic, T. Xiao, S. James, P. Abbeel, J. Malik, and T. Darrell. Real-world robot
 learning with masked visual pre-training. arXiv:2210.03109, 2022.
-[9] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, Ł. Kaiser, and I. Polo-
+
+9
+
+A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit, L. Jones, A. N. Gomez, L. Kaiser, and I. Polo-
 sukhin. Attention is all you need. In NeurIPS, 2017.
+
 [10] A. Dosovitskiy, L. Beyer, A. Kolesnikov, D. Weissenborn, X. Zhai, T. Unterthiner, M. De-
 hghani, M. Minderer, G. Heigold, S. Gelly, et al. An image is worth 16x16 words: Transform-
-ers for image recognition at scale. In ICLR, 2020.
+ers for image recognition at scale. In JCLR, 2020.
+
 [11] K. Grauman, A. Westbury, E. Byrne, Z. Chavis, A. Furnari, R. Girdhar, J. Hamburger,
 H. Jiang, M. Liu, X. Liu, et al. Ego4d: Around the world in 3,000 hours of egocentric video.
 arXiv:2110.07058, 2021.
-[12] D. Damen, H. Doughty, G. M. Farinella,
-A. Furnari, J. Ma, E. Kazakos, D. Moltisanti,
+
+[12] D. Damen, H. Doughty, G. M. Farinella, , A. Furnari, J. Ma, E. Kazakos, D. Moltisanti,
 J. Munro, T. Perrett, W. Price, and M. Wray. Rescaling egocentric vision: Collection, pipeline
-and challenges for epic-kitchens-100. IJCV, 2021.
-[13] R. Goyal, S. Ebrahimi Kahou, V. Michalski, J. Materzynska, S. Westphal, H. Kim, V. Haenel,
-I. Fruend, P. Yianilos, M. Mueller-Freitag, et al. The” something something” video database
-for learning and evaluating visual common sense. In ICCV, 2017.
-[14] D. Shan, J. Geng, M. Shu, and D. F. Fouhey. Understanding human hands in contact at internet
+and challenges for epic-kitchens-100. LJCV, 2021.
+
+w
+
+R. Goyal, S. Ebrahimi Kahou, V. Michalski, J. Materzynska, S. Westphal, H. Kim, V. Haenel,
+IL. Fruend, P. Yianilos, M. Mueller-Freitag, et al. The” something something” video database
+for learning and evaluating visual common sense. In JCCV, 2017.
+
+[14
+
+D. Shan, J. Geng, M. Shu, and D. F. Fouhey. Understanding human hands in contact at internet
 scale. In CVPR, 2020.
+
 [15] J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, and L. Fei-Fei. Imagenet: A large-scale hierar-
 chical image database. In CVPR, 2009.
+
 [16] D. Kalashnikov, A. Irpan, P. Pastor, J. Ibarz, A. Herzog, E. Jang, D. Quillen, E. Holly,
 M. Kalakrishnan, V. Vanhoucke, et al. Qt-opt: Scalable deep reinforcement learning for vision-
-based robotic manipulation. arXiv:1806.10293, 2018.
+based robotic manipulation. arXiv: 1806.10293, 2018.
+
 10
-[17] L. Pinto and A. Gupta. Supersizing self-supervision: Learning to grasp from 50k tries and 700
-robot hours. In ICRA, 2016.
-[18] P. Florence, L. Manuelli, and R. Tedrake. Self-supervised correspondence in visuomotor policy
+
+--- Page 11 ---
+{17]
+
+[18]
+
+[19]
+
+[20]
+
+[21]
+
+[22]
+
+[23]
+
+[24]
+
+[25]
+
+[26]
+
+[27]
+
+[28]
+
+[29]
+
+[30]
+
+[31]
+
+L. Pinto and A. Gupta. Supersizing self-supervision: Learning to grasp from 50k tries and 700
+robot hours. In JCRA, 2016.
+
+P. Florence, L. Manuelli, and R. Tedrake. Self-supervised correspondence in visuomotor policy
 learning. RA-L, 2019.
-[19] M. Danielczuk, A. Balakrishna, D. S. Brown, S. Devgon, and K. Goldberg. Exploratory
+
+M. Danielczuk, A. Balakrishna, D. S. Brown, S. Devgon, and K. Goldberg. Exploratory
 grasping: Asymptotically optimal algorithms for grasping challenging polyhedral objects.
 arXiv:2011.05632, 2020.
-[20] D. Kalashnkov, J. Varley, Y. Chebotar, B. Swanson, R. Jonschkowski, C. Finn, S. Levine, and
+
+D. Kalashnkov, J. Varley, Y. Chebotar, B. Swanson, R. Jonschkowski, C. Finn, S. Levine, and
 K. Hausman. Mt-opt: Continuous multi-task robotic reinforcement learning at scale. arXiv,
 2021.
-[21] A. Zhan, R. Zhao, L. Pinto, P. Abbeel, and M. Laskin. Learning visual robotic control effi-
-ciently with contrastive pre-training and data augmentation. In IROS, 2022.
-[22] Z. J. Cui, Y. Wang, N. Muhammad, L. Pinto, et al. From play to policy: Conditional behavior
+
+A. Zhan, R. Zhao, L. Pinto, P. Abbeel, and M. Laskin. Learning visual robotic control effi-
+ciently with contrastive pre-training and data augmentation. In JROS, 2022.
+
+Z. J. Cui, Y. Wang, N. Muhammad, L. Pinto, et al. From play to policy: Conditional behavior
 generation from uncurated robot data. arXiv:2210.10047, 2022.
-[23] Y. Seo, J. Kim, S. James, K. Lee, J. Shin, and P. Abbeel. Multi-view masked world models for
+
+Y. Seo, J. Kim, S. James, K. Lee, J. Shin, and P. Abbeel. Multi-view masked world models for
 visual robotic manipulation. arXiv:2302.02408, 2023.
-[24] E. Jang, A. Irpan, M. Khansari, D. Kappler, F. Ebert, C. Lynch, S. Levine, and C. Finn. Bc-z:
+
+E. Jang, A. Irpan, M. Khansari, D. Kappler, F. Ebert, C. Lynch, S. Levine, and C. Finn. Be-z:
 Zero-shot task generalization with robotic imitation learning. In Conference on Robot Learn-
 ing, 2022.
-[25] F. Ebert, Y. Yang, K. Schmeckpeper, B. Bucher, G. Georgakis, K. Daniilidis, C. Finn, and
+
+F. Ebert, Y. Yang, K. Schmeckpeper, B. Bucher, G. Georgakis, K. Daniilidis, C. Finn, and
 S. Levine. Bridge data: Boosting generalization of robotic skills with cross-domain datasets.
 arXiv:2109.13396, 2021.
-[26] M. Shridhar, L. Manuelli, and D. Fox. Perceiver-actor: A multi-task transformer for robotic
+
+M. Shridhar, L. Manuelli, and D. Fox. Perceiver-actor: A multi-task transformer for robotic
 manipulation. In Proceedings of the 6th Conference on Robot Learning (CoRL), 2022.
-[27] A. Kumar, A. Singh, F. Ebert, Y. Yang, C. Finn, and S. Levine. Pre-training for robots: Offline
+
+A. Kumar, A. Singh, F. Ebert, Y. Yang, C. Finn, and S. Levine. Pre-training for robots: Offline
 rl enables learning new tasks from a handful of trials. arXiv:2210.05178, 2022.
-[28] S. Reed, K. Zolna, E. Parisotto, S. G. Colmenarejo, A. Novikov, G. Barth-Maron, M. Gimenez,
+
+S. Reed, K. Zolna, E. Parisotto, S. G. Colmenarejo, A. Novikov, G. Barth-Maron, M. Gimenez,
 Y. Sulsky, J. Kay, J. T. Springenberg, et al. A generalist agent. arXiv:2205.06175, 2022.
-[29] A. Brohan, N. Brown, J. Carbajal, Y. Chebotar, J. Dabis, C. Finn, K. Gopalakrishnan, K. Haus-
+
+A. Brohan, N. Brown, J. Carbajal, Y. Chebotar, J. Dabis, C. Finn, K. Gopalakrishnan, K. Haus-
 man, A. Herzog, J. Hsu, et al. Rt-1: Robotics transformer for real-world control at scale.
 arXiv:2212.06817, 2022.
-[30] D. Driess, F. Xia, M. S. Sajjadi, C. Lynch, A. Chowdhery, B. Ichter, A. Wahid, J. Tompson,
+
+D. Driess, F. Xia, M. S. Sajjadi, C. Lynch, A. Chowdhery, B. Ichter, A. Wahid, J. Tompson,
 Q. Vuong, T. Yu, et al. Palm-e: An embodied multimodal language model. arXiv:2303.03378,
 2023.
-[31] V. Satish, J. Mahler, and K. Goldberg. On-policy dataset synthesis for learning robot grasping
+
+V. Satish, J. Mahler, and K. Goldberg. On-policy dataset synthesis for learning robot grasping
 policies using fully convolutional deep networks. RAL, 2019.
+
 11
+

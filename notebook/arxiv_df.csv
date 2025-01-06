@@ -4883,89 +4883,145 @@ arxiv_id,reached_out_link,reached_out_success,reached_out_note,num_models,num_da
 2412.07282,,,no artifacts,0.0,0.0,0.0,HARP: Hesitation-Aware Reframing in Transformer Inference Pass,https://github.com/romsto/harp,,,4,3,1.0,False,romsto,2024-12-11
 2412.06089,,,,1.0,0.0,0.0,GraPE: A Generate-Plan-Edit Framework for Compositional T2I Synthesis,,,,4,2,0.0,True,aggr8,2024-12-11
 2412.07720,https://github.com/thunlp/ACDiT/issues/1,,,0.0,0.0,0.0,ACDiT: Interpolating Autoregressive Conditional Modeling and Diffusion Transformer,https://github.com/thunlp/acdit,,,29,2,0.0,False,JamesHujy,2024-12-11
-2412.07760,,,,0.0,1.0,0.0,SynCamMaster: Synchronizing Multi-Camera Video Generation from Diverse Viewpoints,https://github.com/kwaivgi/syncammaster,,,45,3,1.0,True,jianhongbai,2024-12-12
+2412.07760,,,,0.0,1.0,0.0,SynCamMaster: Synchronizing Multi-Camera Video Generation from Diverse Viewpoints,https://github.com/kwaivgi/syncammaster,,,49,3,1.0,True,jianhongbai,2024-12-12
 2412.07797,,,no code,0.0,0.0,0.0,Mogo: RQ Hierarchical Causal Transformer for High-Quality 3D Human Motion Generation,,,,11,2,0.0,False,Frag1le,2024-12-12
-2412.08580,,,,0.0,1.0,0.0,LAION-SG: An Enhanced Large-Scale Dataset for Training Complex Image-Text Models with Structural Annotations,,,,41,3,0.0,True,SYZhang0805,2024-12-12
+2412.08580,,,,0.0,1.0,0.0,LAION-SG: An Enhanced Large-Scale Dataset for Training Complex Image-Text Models with Structural Annotations,,,,42,3,0.0,True,SYZhang0805,2024-12-12
 2412.07825,,,no code yet,0.0,0.0,0.0,3DSRBench: A Comprehensive 3D Spatial Reasoning Benchmark,,,,12,2,0.0,False,wufeim,2024-12-12
-2412.06234,https://huggingface.co/Xiang12yu/GDM-object/discussions/1,,,0.0,0.0,0.0,Generative Densification: Learning to Densify Gaussians for High-Fidelity Generalizable 3D Reconstruction,,,,17,2,0.0,False,lelady,2024-12-12
-2412.08443,,,,1.0,0.0,1.0,POINTS1.5: Building a Vision-Language Model towards Real World Applications,,,,35,2,0.0,True,YuanLiuuuuuu,2024-12-12
-2412.07744,,,no code yet,0.0,0.0,0.0,StyleMaster: Stylize Your Video with Artistic Generation and Translation,,,,16,3,0.0,False,zixuan-ye,2024-12-12
+2412.06234,https://huggingface.co/Xiang12yu/GDM-object/discussions/1,,,1.0,0.0,0.0,Generative Densification: Learning to Densify Gaussians for High-Fidelity Generalizable 3D Reconstruction,,,,18,2,0.0,True,lelady,2024-12-12
+2412.08443,,,,1.0,0.0,1.0,POINTS1.5: Building a Vision-Language Model towards Real World Applications,,,,38,2,0.0,True,YuanLiuuuuuu,2024-12-12
+2412.07744,,,no code yet,0.0,0.0,0.0,StyleMaster: Stylize Your Video with Artistic Generation and Translation,,,,18,3,0.0,False,zixuan-ye,2024-12-12
 2412.08646,,,no code yet,0.0,0.0,0.0,StreamChat: Chatting with Streaming Video,,,,17,2,0.0,False,jjjjh,2024-12-12
 2412.07147,,,,0.0,1.0,0.0,MIT-10M: A Large Scale Parallel Corpus of Multilingual Image Translation,,,,5,2,0.0,True,liboaccn,2024-12-12
-2412.08486,,,,1.0,0.0,5.0,Learning Flow Fields in Attention for Controllable Person Image Generation,https://github.com/franciszzj/leffa,,,27,3,1.0,True,franciszzj,2024-12-12
+2412.08486,,,,1.0,0.0,5.0,Learning Flow Fields in Attention for Controllable Person Image Generation,https://github.com/franciszzj/leffa,,,31,3,1.0,True,franciszzj,2024-12-12
 2412.08629,,,,0.0,0.0,1.0,FlowEdit: Inversion-Free Text-Based Editing Using Pre-Trained Flow Models,,,,11,4,0.0,True,Inbarhub,2024-12-12
 2412.08503,,,,0.0,0.0,1.0,StyleStudio: Text-Driven Style Transfer with Selective Control of Style Elements,,,,7,2,0.0,True,DrChiZhang,2024-12-12
 2412.06071,,,no artifacts,0.0,0.0,0.0,KaSA: Knowledge-Aware Singular-Value Adaptation of Large Language Models,https://github.com/juyongjiang/kasa,,,7,2,1.0,False,chansung,2024-12-12
 2412.08467,https://github.com/wz0919/VLN-SRDF/issues/1,,new artifacts,0.0,0.0,0.0,Bootstrapping Language-Guided Navigation Learning with Self-Refining Data Flywheel,,,,5,2,0.0,False,ZunWang,2024-12-12
-2412.05467,,,no artifacts,0.0,0.0,0.0,The BrowserGym Ecosystem for Web Agent Research,,,,17,2,0.0,False,xhluca,2024-12-12
-2412.06676,https://github.com/roi-hpi/IDK-token-tuning/issues/2,,new artifacts,0.0,0.0,0.0,I Don't Know: Explicit Modeling of Uncertainty with an [IDK] Token,,,,6,2,0.0,False,roicohen9,2024-12-12
-2412.06016,,,no code,0.0,0.0,0.0,Track4Gen: Teaching Video Diffusion Models to Track Points Improves Video Generation,,,,19,2,0.0,False,hyeonho-jeong-video,2024-12-12
+2412.05467,,,no artifacts,0.0,0.0,0.0,The BrowserGym Ecosystem for Web Agent Research,,,,18,2,0.0,False,xhluca,2024-12-12
+2412.06676,https://github.com/roi-hpi/IDK-token-tuning/issues/2,,new artifacts,0.0,0.0,0.0,I Don't Know: Explicit Modeling of Uncertainty with an [IDK] Token,,,,7,2,0.0,False,roicohen9,2024-12-12
+2412.06016,,,no code,0.0,0.0,0.0,Track4Gen: Teaching Video Diffusion Models to Track Points Improves Video Generation,,,,20,2,0.0,False,hyeonho-jeong-video,2024-12-12
 2412.09551,,,no code,0.0,0.0,0.0,Video Creation by Demonstration,,,,7,2,0.0,False,garyzhao9012,2024-12-12
-2412.09593,,,no code yet,0.0,0.0,0.0,Neural LightRig: Unlocking Accurate Object Normal and Material Estimation with Multi-Light Diffusion,,,,15,3,0.0,False,zxhezexin,2024-12-13
+2412.09593,,,no code yet,0.0,0.0,0.0,Neural LightRig: Unlocking Accurate Object Normal and Material Estimation with Multi-Light Diffusion,,,,17,3,0.0,False,zxhezexin,2024-12-13
 2412.05552,https://github.com/GengzeZhou/SAME/issues/1,,,0.0,0.0,0.0,SAME: Learning Generic Language-Guided Visual Navigation with State-Adaptive Mixture of Experts,https://github.com/gengzezhou/same,,,4,2,0.0,False,ZGZzz,2024-12-13
-2412.09573,https://huggingface.co/spaces/TencentARC/FreeSplatter/discussions/4,,,0.0,0.0,0.0,FreeSplatter: Pose-free Gaussian Splatting for Sparse-view 3D Reconstruction,,,,7,3,0.0,False,bluestyle97,2024-12-13
-2412.08635,,,no code,0.0,0.0,0.0,Multimodal Latent Language Modeling with Next-Token Diffusion,https://github.com/microsoft/unilm/tree/master/LatentLM,,,32,2,0.0,False,unilm,2024-12-13
-2412.09596,,,,1.0,0.0,0.0,InternLM-XComposer2.5-OmniLive: A Comprehensive Multimodal System for Long-term Streaming Video and Audio Interactions,https://github.com/internlm/internlm-xcomposer,,,82,3,1.0,True,myownskyW7,2024-12-13
-2412.08737,,,,2.0,1.0,0.0,Euclid: Supercharging Multimodal LLMs with Synthetic High-Fidelity Visual Descriptions,,,,40,2,0.0,True,oliu-io,2024-12-13
+2412.09573,https://huggingface.co/spaces/TencentARC/FreeSplatter/discussions/4,,,1.0,0.0,1.0,FreeSplatter: Pose-free Gaussian Splatting for Sparse-view 3D Reconstruction,,,,7,3,0.0,True,bluestyle97,2024-12-13
+2412.08635,,,no code,0.0,0.0,0.0,Multimodal Latent Language Modeling with Next-Token Diffusion,https://github.com/microsoft/unilm/tree/master/LatentLM,,,38,2,0.0,False,unilm,2024-12-13
+2412.09596,,,,1.0,0.0,0.0,InternLM-XComposer2.5-OmniLive: A Comprehensive Multimodal System for Long-term Streaming Video and Audio Interactions,https://github.com/internlm/internlm-xcomposer,,,89,3,1.0,True,myownskyW7,2024-12-13
+2412.08737,,,,2.0,1.0,0.0,Euclid: Supercharging Multimodal LLMs with Synthetic High-Fidelity Visual Descriptions,,,,50,2,0.0,True,oliu-io,2024-12-13
 2412.09585,,,,0.0,0.0,1.0,OLA-VLM: Elevating Visual Perception in Multimodal LLMs with Auxiliary Embedding Distillation,https://github.com/shi-labs/ola-vlm,,,10,2,1.0,True,praeclarumjj3,2024-12-13
 2412.09586,https://github.com/fkryan/gazelle/issues/1,,,0.0,0.0,0.0,Gaze-LLE: Gaze Target Estimation via Large-Scale Learned Encoders,https://github.com/fkryan/gazelle,,,5,2,1.0,False,praeclarumjj3,2024-12-13
-2412.09618,,,,1.0,0.0,0.0,EasyRef: Omni-Generalized Group Image Reference for Diffusion Models via Multimodal LLM,,,,20,3,0.0,True,CaraJ,2024-12-13
+2412.09618,,,,1.0,0.0,0.0,EasyRef: Omni-Generalized Group Image Reference for Diffusion Models via Multimodal LLM,,,,21,3,0.0,True,CaraJ,2024-12-13
 2412.09025,,,,1.0,1.0,0.0,Shiksha: A Technical Domain focused Translation Dataset and Model for Indian Languages,,,,4,2,0.0,True,rumourscape,2024-12-13
-2412.09405,,,,1.0,0.0,0.0,Learned Compression for Compressed Learning,https://github.com/danjacobellis/walloc,,,9,2,1.0,True,danjacobellis,2024-12-13
-2412.08905,,,will be on hf,0.0,0.0,0.0,Phi-4 Technical Report,,,,74,4,0.0,False,akhaliq,2024-12-13
-2412.05994,,,no artifacts,0.0,0.0,0.0,PIG: Physics-Informed Gaussians as Adaptive Parametric Mesh Representations,,,,12,2,0.0,False,kangnamgyu27,2024-12-13
+2412.09405,,,,1.0,0.0,0.0,Learned Compression for Compressed Learning,https://github.com/danjacobellis/walloc,,,11,2,1.0,True,danjacobellis,2024-12-13
+2412.08905,,,will be on hf,0.0,0.0,0.0,Phi-4 Technical Report,,,,87,5,0.0,False,akhaliq,2024-12-13
+2412.05994,,,no artifacts,0.0,0.0,0.0,PIG: Physics-Informed Gaussians as Adaptive Parametric Mesh Representations,,,,16,2,0.0,False,kangnamgyu27,2024-12-13
 2412.08972,https://github.com/SkyRiver-2000/RuleArena/issues/1,,,0.0,0.0,0.0,RuleArena: A Benchmark for Rule-Guided Reasoning with LLMs in Real-World Scenarios,https://github.com/skyriver-2000/rulearena,,,9,2,0.0,False,wenyueH,2024-12-13
-2412.09370,,,,4.0,1.0,0.0,Word Sense Linking: Disambiguating Outside the Sandbox,,,,6,2,0.0,True,andreim14,2024-12-13
-2412.09605,,,no code yet,0.0,0.0,0.0,AgentTrek: Agent Trajectory Synthesis via Guiding Replay with Web Tutorials,,,,22,2,0.0,False,ranpox,2024-12-13
-2412.09619,,,no code,0.0,0.0,0.0,SnapGen: Taming High-Resolution Text-to-Image Models for Mobile Devices with Efficient Architectures and Training,,,,19,3,0.0,False,alanspike,2024-12-13
-2412.09501,https://huggingface.co/zszhong/Lyra_Base_9B/discussions/1,,,0.0,0.0,0.0,Lyra: An Efficient and Speech-Centric Framework for Omni-Cognition,,,,32,3,0.0,False,wcy1122,2024-12-13
+2412.09370,,,,4.0,1.0,0.0,Word Sense Linking: Disambiguating Outside the Sandbox,,,,8,2,0.0,True,andreim14,2024-12-13
+2412.09605,,,no code yet,0.0,0.0,0.0,AgentTrek: Agent Trajectory Synthesis via Guiding Replay with Web Tutorials,,,,24,2,0.0,False,ranpox,2024-12-13
+2412.09619,,,no code,0.0,0.0,0.0,SnapGen: Taming High-Resolution Text-to-Image Models for Mobile Devices with Efficient Architectures and Training,,,,20,3,0.0,False,alanspike,2024-12-13
+2412.09501,https://huggingface.co/zszhong/Lyra_Base_9B/discussions/1,,,0.0,0.0,0.0,Lyra: An Efficient and Speech-Centric Framework for Omni-Cognition,,,,43,3,0.0,False,wcy1122,2024-12-13
 2412.09622,,,no code,0.0,0.0,0.0,LoRACLR: Contrastive Adaptation for Customization of Diffusion Models,,,,7,2,0.0,False,enisimsar,2024-12-13
-2412.09013,,,,1.0,0.0,2.0,Arbitrary-steps Image Super-resolution via Diffusion Inversion,https://github.com/zsyoaoa/invsr,,,8,2,1.0,True,OAOA,2024-12-13
-2412.09569,,,,0.0,0.0,1.0,JuStRank: Benchmarking LLM Judges for System Ranking,,,,17,3,0.0,True,arielgera,2024-12-13
-2412.09349,,,,1.0,0.0,0.0,DisPose: Disentangling Pose Guidance for Controllable Human Image Animation,https://github.com/lihxxx/dispose,,,5,2,1.0,True,Yw22,2024-12-13
-2412.09460,,,no code yet,0.0,0.0,0.0,The Impact of Copyrighted Material on Large Language Models: A Norwegian Perspective,,,,4,2,0.0,False,versae,2024-12-13
-2412.08687,,,will be on hf,0.0,0.0,0.0,VisionArena: 230K Real World User-VLM Conversations with Preference Labels,,,,11,2,0.0,False,lisabdunlap,2024-12-13
+2412.09013,,,,1.0,0.0,2.0,Arbitrary-steps Image Super-resolution via Diffusion Inversion,https://github.com/zsyoaoa/invsr,,,10,2,1.0,True,OAOA,2024-12-13
+2412.09569,,,,0.0,0.0,1.0,JuStRank: Benchmarking LLM Judges for System Ranking,,,,18,3,0.0,True,arielgera,2024-12-13
+2412.09349,,,,1.0,0.0,0.0,DisPose: Disentangling Pose Guidance for Controllable Human Image Animation,https://github.com/lihxxx/dispose,,,6,2,1.0,True,Yw22,2024-12-13
+2412.09460,,,no code yet,0.0,0.0,0.0,The Impact of Copyrighted Material on Large Language Models: A Norwegian Perspective,,,,5,2,0.0,False,versae,2024-12-13
+2412.08687,,,will be on hf,1.0,2.0,0.0,VisionArena: 230K Real World User-VLM Conversations with Preference Labels,,,,11,2,0.0,True,lisabdunlap,2024-12-13
 2412.06745,,,will be on hf,0.0,0.0,0.0,ONEBench to Test Them All: Sample-Level Benchmarking Over Open-Ended Capabilities,,,,6,2,0.0,False,adhiraj1998,2024-12-13
-2412.06329,https://github.com/apple/ml-tarflow/issues/2,,new artifacts,0.0,0.0,0.0,Normalizing Flows are Capable Generative Models,https://github.com/apple/ml-tarflow,,,7,2,0.0,False,shuangfei,2024-12-13
-2412.07517,,,,0.0,0.0,1.0,FireFlow: Fast Inversion of Rectified Flow for Image Semantic Editing,https://github.com/holmesshuan/fireflow,,,7,2,1.0,True,MagicBag,2024-12-16
-2412.09624,,,,0.0,0.0,0.0,GenEx: Generating an Explorable World,,,,51,1,0.0,False,jienengchen,2024-12-16
-2412.10047,,,,0.0,0.0,0.0,Large Action Models: From Inception to Implementation,https://github.com/microsoft/UFO,,,17,2,0.0,False,vyokky,2024-12-16
-2412.09626,,,,0.0,0.0,0.0,FreeScale: Unleashing the Resolution of Diffusion Models via Tuning-Free Scale Fusion,,,,11,1,0.0,False,MoonQiu,2024-12-16
-2412.10319,,,,0.0,1.0,0.0,SCBench: A KV Cache-Centric Analysis of Long-Context Methods,,,,3,1,0.0,True,iofu728,2024-12-16
-2412.09283,,,,0.0,1.0,0.0,InstanceCap: Improving Text-to-Video Generation via Instance-aware Structured Caption,,,,16,2,0.0,True,AnonMegumi,2024-12-16
-2412.10360,,,,3.0,0.0,2.0,Apollo: An Exploration of Video Understanding in Large Multimodal Models,,,,62,2,0.0,True,orrzohar,2024-12-16
-2412.09428,https://github.com/wbs2788/VMB/issues/1,,,0.0,0.0,0.0,Multimodal Music Generation with Explicit Bridges and Retrieval Augmentation,https://github.com/wbs2788/vmb,,,5,3,0.0,False,JackyZhuo,2024-12-16
-2412.07769,,,,3.0,0.0,0.0,BiMediX2: Bio-Medical EXpert LMM for Diverse Medical Modalities,https://github.com/mbzuai-oryx/bimedix2,,,20,1,1.0,True,sahalshajim,2024-12-16
-2412.08347,,,,1.0,0.0,0.0,SmolTulu: Higher Learning Rate to Batch Size Ratios Can Lead to Better Reasoning in SLMs,,,,2,1,0.0,True,SultanR,2024-12-16
-2412.09910,https://github.com/yasamin-med/P2P/issues/4,,,0.0,0.0,0.0,Prompt2Perturb (P2P): Text-Guided Diffusion-Based Adversarial Attacks on Breast Ultrasound Images,https://github.com/yasamin-med/p2p,,,1,1,1.0,False,moein99,2024-12-16
-2412.08645,,,,0.0,0.0,0.0,ObjectMate: A Recurrence Prior for Object Insertion and Subject-Driven Generation,,,,8,1,0.0,False,yedid,2024-12-16
-2412.09604,,,,0.0,0.0,0.0,SynerGen-VL: Towards Synergistic Image Understanding and Generation with Vision Experts and Token Folding,,,,24,1,0.0,False,wzk1015,2024-12-16
-2412.09611,,,,0.0,0.0,0.0,FluxSpace: Disentangled Semantic Editing in Rectified Flow Transformers,,,,4,1,0.0,False,ydalva,2024-12-16
-2412.09856,,,,0.0,0.0,0.0,LinGen: Towards High-Resolution Minute-Length Text-to-Video Generation with Linear Computational Complexity,,,,3,1,0.0,False,hongjiewang,2024-12-16
-2412.10345,,,,0.0,0.0,0.0,TraceVLA: Visual Trace Prompting Enhances Spatial-Temporal Awareness for Generalist Robotic Policies,,,,1,1,0.0,False,rzheng12,2024-12-16
-2412.09722,,,,0.0,0.0,0.0,GReaTer: Gradients over Reasoning Makes Smaller Language Models Strong Prompt Optimizers,,,,0,2,0.0,False,sarathismg,2024-12-16
-2412.10208,,,,0.0,0.0,0.0,Efficient Generative Modeling with Residual Vector Quantization-Based Tokens,,,,15,2,0.0,False,jaywalnut310,2024-12-16
-2412.11258,,,,0.0,0.0,0.0,GaussianProperty: Integrating Physical Properties to 3D Gaussians with LMMs,,,,6,1,0.0,False,Xxlbigbrother,2024-12-17
-2412.11919,,,,0.0,0.0,0.0,RetroLLM: Empowering Large Language Models to Retrieve Fine-grained Evidence within Generation,https://github.com/sunnynexus/retrollm,,,19,1,0.0,False,dongguanting,2024-12-17
-2412.11231,,,,0.0,0.0,0.0,Smaller Language Models Are Better Instruction Evolvers,https://github.com/hypherx/evolution-analysis,,,10,1,0.0,False,dongguanting,2024-12-17
-2412.12083,,,,0.0,0.0,0.0,IDArb: Intrinsic Decomposition for Arbitrary Number of Input Views and Illuminations,,,,10,1,0.0,False,lizb6626,2024-12-17
-2412.11586,,,,0.0,0.0,0.0,StrandHead: Text to Strand-Disentangled 3D Head Avatars Using Hair Geometric Priors,https://github.com/XiaokunSun/StrandHead,,,4,1,0.0,False,XiaokunSun,2024-12-17
-2412.11457,,,,0.0,0.0,0.0,MOVIS: Enhancing Multi-Object Novel View Synthesis for Indoor Scenes,,,,1,1,0.0,False,thuhsy,2024-12-17
-2412.11605,,,,0.0,0.0,0.0,SPaR: Self-Play with Tree-Search Refinement to Improve Instruction-Following in Large Language Models,https://github.com/thu-coai/spar,,,9,1,1.0,False,CCCCCC,2024-12-17
-2412.11834,,,,2.0,0.0,0.0,Wonderful Matrices: Combining for a More Efficient and Effective Foundation Model Architecture,https://github.com/losercheems/doge,,,4,1,0.0,True,JingzeShi,2024-12-17
-2412.11815,,,,1.0,0.0,1.0,ColorFlow: Retrieval-Augmented Image Sequence Colorization,,,,11,3,0.0,True,ZyZcuhk,2024-12-17
-2412.12095,,,,0.0,0.0,0.0,Causal Diffusion Transformers for Generative Modeling,https://github.com/causalfusion/causalfusion,,,11,1,0.0,False,Andy1621,2024-12-17
-2412.09645,,,,0.0,0.0,0.0,Evaluation Agent: Efficient and Promptable Evaluation Framework for Visual Generative Models,https://github.com/Vchitect/Evaluation-Agent,,,14,1,1.0,False,Ziqi,2024-12-17
-2412.12091,,,,0.0,0.0,0.0,Wonderland: Navigating 3D Scenes from a Single Image,,,,7,1,0.0,False,jlcao2,2024-12-17
-2412.10316,,,,1.0,0.0,1.0,BrushEdit: All-In-One Image Inpainting and Editing,,,,20,2,0.0,True,ZyZcuhk,2024-12-17
-2412.09871,,,,0.0,0.0,0.0,Byte Latent Transformer: Patches Scale Better Than Tokens,https://github.com/facebookresearch/blt,,,23,2,1.0,False,artidoro,2024-12-17
-2412.10447,,,,0.0,0.0,0.0,TidyBot++: An Open-Source Holonomic Mobile Manipulator for Robot Learning,,,,2,1,0.0,False,jimmyyhwu,2024-12-17
-2412.11689,,,,0.0,0.0,0.0,Just a Simple Transformation is Enough for Data Protection in Vertical Federated Learning,https://github.com/andron00e/jast,,,1,1,0.0,False,Andron00e,2024-12-17
-2412.12094,,,,0.0,0.0,0.0,SepLLM: Accelerate Large Language Models by Compressing One Segment into One Separator,,,,6,1,0.0,False,shihan96,2024-12-17
-2412.11449,,,,0.0,0.0,0.0,Whisper-GPT: A Hybrid Representation Audio Large Language Model,,,,2,1,0.0,False,prateekv,2024-12-17
-2412.12004,,,,0.0,0.0,0.0,The Open Source Advantage in Large Language Models (LLMs),,,,2,1,0.0,False,osanseviero,2024-12-17
-2412.11314,,,,0.0,0.0,0.0,"Reliable, Reproducible, and Really Fast Leaderboards with Evalica",,,,1,1,0.0,False,dustalov,2024-12-17
-2412.11974,,,,0.0,0.0,0.0,Emma-X: An Embodied Multimodal Action Model with Grounded Chain of Thought and Look-ahead Spatial Reasoning,https://github.com/declare-lab/emma-x,,,2,1,1.0,False,emrys-hong,2024-12-17
-2412.11100,,,,0.0,0.0,0.0,DynamicScaler: Seamless and Scalable Video Generation for Panoramic Scenes,,,,0,1,0.0,False,BrandonLiu,2024-12-17
-2412.11279,,,,0.0,0.0,0.0,VividFace: A Diffusion-Based Hybrid Framework for High-Fidelity Video Face Swapping,,,,7,1,0.0,False,deepcs233,2024-12-17
-2412.12098,,,,0.0,0.0,0.0,MaxInfoRL: Boosting exploration in reinforcement learning through information gain maximization,,,,1,1,0.0,False,csferrazza,2024-12-17
+2412.06329,https://github.com/apple/ml-tarflow/issues/2,,new artifacts,0.0,0.0,0.0,Normalizing Flows are Capable Generative Models,https://github.com/apple/ml-tarflow,,,8,2,0.0,False,shuangfei,2024-12-13
+2412.07517,,,,0.0,0.0,1.0,FireFlow: Fast Inversion of Rectified Flow for Image Semantic Editing,https://github.com/holmesshuan/fireflow,,,11,3,1.0,True,MagicBag,2024-12-16
+2412.09624,,,,0.0,0.0,0.0,GenEx: Generating an Explorable World,,,,83,2,0.0,False,jienengchen,2024-12-16
+2412.10047,,,,0.0,0.0,0.0,Large Action Models: From Inception to Implementation,https://github.com/microsoft/UFO,,,26,3,0.0,False,vyokky,2024-12-16
+2412.09626,,,,0.0,0.0,1.0,FreeScale: Unleashing the Resolution of Diffusion Models via Tuning-Free Scale Fusion,,,,19,2,0.0,True,MoonQiu,2024-12-16
+2412.10319,,,,0.0,1.0,0.0,SCBench: A KV Cache-Centric Analysis of Long-Context Methods,,,,8,2,0.0,True,iofu728,2024-12-16
+2412.09283,,,,0.0,1.0,0.0,InstanceCap: Improving Text-to-Video Generation via Instance-aware Structured Caption,,,,19,3,0.0,True,AnonMegumi,2024-12-16
+2412.10360,,,,4.0,0.0,1.0,Apollo: An Exploration of Video Understanding in Large Multimodal Models,,,,130,8,0.0,True,orrzohar,2024-12-16
+2412.09428,https://github.com/wbs2788/VMB/issues/1,,,0.0,0.0,0.0,Multimodal Music Generation with Explicit Bridges and Retrieval Augmentation,https://github.com/wbs2788/vmb,,,7,4,0.0,False,JackyZhuo,2024-12-16
+2412.07769,,,,4.0,0.0,0.0,BiMediX2: Bio-Medical EXpert LMM for Diverse Medical Modalities,https://github.com/mbzuai-oryx/bimedix2,,,26,2,1.0,True,sahalshajim,2024-12-16
+2412.08347,,,,3.0,0.0,0.0,SmolTulu: Higher Learning Rate to Batch Size Ratios Can Lead to Better Reasoning in SLMs,,,,4,2,0.0,True,SultanR,2024-12-16
+2412.09910,https://github.com/yasamin-med/P2P/issues/4,,,0.0,0.0,0.0,Prompt2Perturb (P2P): Text-Guided Diffusion-Based Adversarial Attacks on Breast Ultrasound Images,https://github.com/yasamin-med/p2p,,,1,2,1.0,False,moein99,2024-12-16
+2412.08645,,,,0.0,0.0,0.0,ObjectMate: A Recurrence Prior for Object Insertion and Subject-Driven Generation,,,,11,2,0.0,False,yedid,2024-12-16
+2412.09604,,,,0.0,0.0,0.0,SynerGen-VL: Towards Synergistic Image Understanding and Generation with Vision Experts and Token Folding,,,,35,2,0.0,False,wzk1015,2024-12-16
+2412.09611,,,,0.0,0.0,0.0,FluxSpace: Disentangled Semantic Editing in Rectified Flow Transformers,,,,9,2,0.0,False,ydalva,2024-12-16
+2412.09856,,,,0.0,0.0,0.0,LinGen: Towards High-Resolution Minute-Length Text-to-Video Generation with Linear Computational Complexity,,,,9,2,0.0,False,hongjiewang,2024-12-16
+2412.10345,,,,0.0,0.0,0.0,TraceVLA: Visual Trace Prompting Enhances Spatial-Temporal Awareness for Generalist Robotic Policies,,,,2,2,0.0,False,rzheng12,2024-12-16
+2412.09722,,,,0.0,0.0,0.0,GReaTer: Gradients over Reasoning Makes Smaller Language Models Strong Prompt Optimizers,,,,5,3,0.0,False,sarathismg,2024-12-16
+2412.10208,,,,0.0,0.0,0.0,Efficient Generative Modeling with Residual Vector Quantization-Based Tokens,,,,18,2,0.0,False,jaywalnut310,2024-12-16
+2412.11258,,,,0.0,0.0,0.0,GaussianProperty: Integrating Physical Properties to 3D Gaussians with LMMs,,,,12,2,0.0,False,Xxlbigbrother,2024-12-17
+2412.11919,,,,0.0,0.0,0.0,RetroLLM: Empowering Large Language Models to Retrieve Fine-grained Evidence within Generation,https://github.com/sunnynexus/retrollm,,,33,4,0.0,False,dongguanting,2024-12-17
+2412.11231,,,,0.0,0.0,0.0,Smaller Language Models Are Better Instruction Evolvers,https://github.com/hypherx/evolution-analysis,,,23,2,0.0,False,dongguanting,2024-12-17
+2412.12083,,,,0.0,0.0,0.0,IDArb: Intrinsic Decomposition for Arbitrary Number of Input Views and Illuminations,,,,12,2,0.0,False,lizb6626,2024-12-17
+2412.11586,,,,0.0,0.0,0.0,StrandHead: Text to Strand-Disentangled 3D Head Avatars Using Hair Geometric Priors,https://github.com/XiaokunSun/StrandHead,,,11,2,0.0,False,XiaokunSun,2024-12-17
+2412.11457,,,,0.0,0.0,0.0,MOVIS: Enhancing Multi-Object Novel View Synthesis for Indoor Scenes,,,,5,2,0.0,False,thuhsy,2024-12-17
+2412.11605,,,,0.0,0.0,0.0,SPaR: Self-Play with Tree-Search Refinement to Improve Instruction-Following in Large Language Models,https://github.com/thu-coai/spar,,,15,2,1.0,False,CCCCCC,2024-12-17
+2412.11834,,,,5.0,0.0,0.0,Wonderful Matrices: Combining for a More Efficient and Effective Foundation Model Architecture,https://github.com/losercheems/doge,,,6,2,0.0,True,JingzeShi,2024-12-17
+2412.11815,,,,1.0,0.0,2.0,ColorFlow: Retrieval-Augmented Image Sequence Colorization,,,,26,4,0.0,True,ZyZcuhk,2024-12-17
+2412.12095,,,,0.0,0.0,0.0,Causal Diffusion Transformers for Generative Modeling,https://github.com/causalfusion/causalfusion,,,22,3,0.0,False,Andy1621,2024-12-17
+2412.09645,,,,0.0,0.0,0.0,Evaluation Agent: Efficient and Promptable Evaluation Framework for Visual Generative Models,https://github.com/Vchitect/Evaluation-Agent,,,34,2,1.0,False,Ziqi,2024-12-17
+2412.12091,,,,0.0,0.0,0.0,Wonderland: Navigating 3D Scenes from a Single Image,,,,14,2,0.0,False,jlcao2,2024-12-17
+2412.10316,,,,1.0,0.0,1.0,BrushEdit: All-In-One Image Inpainting and Editing,,,,33,3,0.0,True,ZyZcuhk,2024-12-17
+2412.09871,,,,0.0,0.0,0.0,Byte Latent Transformer: Patches Scale Better Than Tokens,https://github.com/facebookresearch/blt,,,68,6,1.0,False,artidoro,2024-12-17
+2412.10447,,,,0.0,0.0,0.0,TidyBot++: An Open-Source Holonomic Mobile Manipulator for Robot Learning,,,,5,2,0.0,False,jimmyyhwu,2024-12-17
+2412.11689,,,,0.0,0.0,0.0,Just a Simple Transformation is Enough for Data Protection in Vertical Federated Learning,https://github.com/andron00e/jast,,,2,2,0.0,False,Andron00e,2024-12-17
+2412.12094,,,,0.0,0.0,0.0,SepLLM: Accelerate Large Language Models by Compressing One Segment into One Separator,,,,9,2,0.0,False,shihan96,2024-12-17
+2412.11449,,,,0.0,0.0,0.0,Whisper-GPT: A Hybrid Representation Audio Large Language Model,,,,4,2,0.0,False,prateekv,2024-12-17
+2412.12004,,,,0.0,0.0,0.0,The Open Source Advantage in Large Language Models (LLMs),,,,8,2,0.0,False,osanseviero,2024-12-17
+2412.11314,,,,0.0,1.0,1.0,"Reliable, Reproducible, and Really Fast Leaderboards with Evalica",,,,2,2,0.0,True,dustalov,2024-12-17
+2412.11974,,,,1.0,0.0,0.0,Emma-X: An Embodied Multimodal Action Model with Grounded Chain of Thought and Look-ahead Spatial Reasoning,https://github.com/declare-lab/emma-x,,,7,2,1.0,True,emrys-hong,2024-12-17
+2412.11100,,,,0.0,0.0,0.0,DynamicScaler: Seamless and Scalable Video Generation for Panoramic Scenes,,,,5,2,0.0,False,BrandonLiu,2024-12-17
+2412.11279,,,,0.0,0.0,0.0,VividFace: A Diffusion-Based Hybrid Framework for High-Fidelity Video Face Swapping,,,,12,2,0.0,False,deepcs233,2024-12-17
+2412.12098,,,,0.0,0.0,0.0,MaxInfoRL: Boosting exploration in reinforcement learning through information gain maximization,,,,2,2,0.0,False,csferrazza,2024-12-17
+2412.11863,,,,0.0,0.0,0.0,GeoX: Geometric Problem Solving Through Unified Formalized Vision-Language Pre-training,https://github.com/unimodal4reasoning/geox,,,2,2,1.0,False,BoZhang,2024-12-17
+2412.09982,,,,0.0,0.0,0.0,SplineGS: Robust Motion-Adaptive Spline for Real-Time Dynamic 3D Gaussians from Monocular Video,,,,7,3,0.0,False,ozbro,2024-12-17
+2412.09858,,,,0.0,0.0,0.0,RLDG: Robotic Generalist Policy Distillation via Reinforcement Learning,,,,1,2,0.0,False,jianlanluo,2024-12-17
+2412.11423,,,,0.0,0.0,0.0,Nearly Zero-Cost Protection Against Mimicry by Personalized Diffusion Models,,,,1,2,0.0,False,nmhkahn,2024-12-17
+2412.13147,,,,0.0,0.0,0.0,Are Your LLMs Capable of Stable Reasoning?,https://github.com/open-compass/gpassk,,,81,3,0.0,False,zsytony,2024-12-18
+2412.12606,https://github.com/MDI-Benchmark/MDI-Benchmark/issues/1,,,0.0,0.0,0.0,Multi-Dimensional Insights: Benchmarking Real-World Personalization in Large Multimodal Models,,,,40,3,0.0,False,RichardQRQ,2024-12-18
+2412.13018,,,,2.0,3.0,1.0,OmniEval: An Omnidirectional and Automatic RAG Evaluation Benchmark in Financial Domain,https://github.com/ruc-nlpir/omnieval,,,39,2,1.0,True,zstanjj,2024-12-18
+2412.12276,,,no code,0.0,0.0,0.0,Emergence of Abstractions: Concept Encoding and Decoding Mechanism for In-Context Learning in Transformers,,,,14,2,0.0,False,hanseungwook,2024-12-18
+2412.12877,,,,0.0,0.0,0.0,MIVE: New Design and Benchmark for Multi-Instance Video Editing,,,,4,2,0.0,False,ozbro,2024-12-18
+2412.13194,,,,0.0,0.0,0.0,Proposer-Agent-Evaluator(PAE): Autonomous Skill Discovery For Foundation Model Internet Agents,,,,10,2,0.0,False,yifeizhou,2024-12-18
+2412.10704,,,,0.0,0.0,0.0,VisDoM: Multi-Document QA with Visually Rich Elements Using Multimodal Retrieval-Augmented Generation,,,,14,2,0.0,False,Franck-Dernoncourt,2024-12-18
+2412.12527,,,,0.0,0.0,0.0,"When to Speak, When to Abstain: Contrastive Decoding with Abstention",,,,4,2,0.0,False,heyjoonkim,2024-12-18
+2412.13171,,,,0.0,0.0,0.0,Compressed Chain of Thought: Efficient Reasoning Through Dense Representations,,,,29,2,0.0,False,nexync,2024-12-18
+2412.13180,,,,0.0,0.0,0.0,Feather the Throttle: Revisiting Visual Token Pruning for Vision-Language Model Acceleration,,,,12,2,0.0,False,markendo,2024-12-18
+2412.11713,https://github.com/XMZhangAI/Seeker/issues/3,,,0.0,0.0,0.0,Seeker: Towards Exception Safety Code Generation with Intermediate Language Agents Framework,,,,3,2,0.0,False,XUANMINGZHANG,2024-12-18
+2412.10533,,,,0.0,0.0,0.0,SUGAR: Subject-Driven Video Customization in a Zero-Shot Manner,,,,5,2,0.0,False,YfZ,2024-12-18
+2412.13389,,,,0.0,0.0,1.0,Marigold-DC: Zero-Shot Monocular Depth Completion with Guided Diffusion,,,,6,2,0.0,True,toshas,2024-12-18
+2412.14161,,,,0.0,0.0,0.0,TheAgentCompany: Benchmarking LLM Agents on Consequential Real World Tasks,https://github.com/theagentcompany/experiments,,,41,2,0.0,False,yuexiang96,2024-12-19
+2412.13501,,,,0.0,0.0,0.0,GUI Agents: A Survey,https://github.com/vyokky/LLM-Brained-GUI-Agents-Survey,,,17,2,0.0,False,Franck-Dernoncourt,2024-12-19
+2412.13061,,,,1.0,0.0,0.0,VidTok: A Versatile and Open-Source Video Tokenizer,https://github.com/microsoft/vidtok,,,6,2,1.0,True,deeptimhe,2024-12-19
+2412.14168,,,,0.0,0.0,0.0,FashionComposer: Compositional Fashion Image Generation,,,,16,2,0.0,False,xichenhku,2024-12-19
+2412.13746,,,,0.0,0.0,0.0,RAG-RewardBench: Benchmarking Reward Models in Retrieval Augmented Generation for Preference Alignment,https://github.com/jinzhuoran/rag-rewardbench,,,7,2,1.0,False,jinzhuoran,2024-12-19
+2412.14015,,,,0.0,0.0,0.0,Prompting Depth Anything for 4K Resolution Accurate Metric Depth Estimation,,,,11,3,0.0,False,bykang,2024-12-19
+2412.12571,,,,0.0,0.0,0.0,ChatDiT: A Training-Free Baseline for Task-Agnostic Free-Form Chatting with Diffusion Transformers,https://github.com/ali-vilab/chatdit,,,7,2,0.0,False,lhhuang,2024-12-19
+2412.14173,,,,1.0,0.0,2.0,AniDoc: Animation Creation Made Easier,,,,43,2,0.0,True,Yhmeng1106,2024-12-19
+2412.14172,,,,1.0,1.0,0.0,Learning from Massive Human Videos for Universal Humanoid Pose Control,,,,10,2,0.0,True,OliverZhao,2024-12-19
+2412.12953,,,,8.0,0.0,0.0,Efficient Diffusion Transformer Policies with Mixture of Expert Denoisers for Multitask Learning,,,,11,2,0.0,True,mbreuss,2024-12-19
+2412.13795,,,,0.0,0.0,0.0,Mix-LN: Unleashing the Power of Deeper Layers by Combining Pre-LN and Post-LN,https://github.com/pixeli99/mixln,,,18,2,0.0,False,pengxiang,2024-12-19
+2412.14123,,,,1.0,0.0,0.0,"AnySat: An Earth Observation Model for Any Resolutions, Scales, and Modalities",https://github.com/gastruc/anysat,,,11,2,1.0,True,g-astruc,2024-12-19
+2412.13670,,,,0.0,0.0,0.0,AntiLeak-Bench: Preventing Data Contamination by Automatically Constructing Benchmarks with Updated Real-World Knowledge,,,,4,2,0.0,False,bobxwu,2024-12-19
+2412.14042,,,,1.0,0.0,1.0,CAD-Recode: Reverse Engineering CAD Code from Point Clouds,https://github.com/filaPro/cad-recode,,,5,2,1.0,True,filapro,2024-12-19
+2412.13871,,,,1.0,1.0,0.0,LLaVA-UHD v2: an MLLM Integrating High-Resolution Feature Pyramid via Hierarchical Window Transformer,,,,17,2,0.0,True,guozonghao96,2024-12-19
+2412.14171,,,,0.0,1.0,0.0,"Thinking in Space: How Multimodal Large Language Models See, Remember, and Recall Spaces",https://github.com/vision-x-nyu/thinking-in-space,,,19,2,1.0,True,ShushengYang,2024-12-19
+2412.14093,,,,0.0,0.0,0.0,Alignment faking in large language models,https://github.com/redwoodresearch/alignment_faking_public,,,6,2,0.0,False,akhaliq,2024-12-19
+2412.13303,,,,0.0,0.0,0.0,FastVLM: Efficient Vision Encoding for Vision Language Models,,,,12,2,0.0,False,hpouransari,2024-12-19
+2412.11768,,,,0.0,0.0,0.0,No More Adam: Learning Rate Scaling at Initialization is All You Need,https://github.com/anonymousalethiometer/sgd_sai,,,37,2,1.0,False,CodexXiang,2024-12-19
+2412.13663,,,,3.0,0.0,2.0,"Smarter, Better, Faster, Longer: A Modern Bidirectional Encoder for Fast, Memory Efficient, and Long Context Finetuning and Inference",,,,92,6,0.0,True,jph00,2024-12-19
+2412.14169,,,,5.0,0.0,3.0,Autoregressive Video Generation without Vector Quantization,https://github.com/baaivision/nova,,,12,2,1.0,True,Bitterdhg,2024-12-19
+2412.11634,,,,0.0,0.0,0.0,Predicting the Original Appearance of Damaged Historical Documents,https://github.com/yeungchenwa/hdr,,,4,2,1.0,False,yeungchenwa0106,2024-12-19
+2412.14835,,,,0.0,0.0,0.0,Progressive Multimodal Reasoning via Active Retrieval,,,,55,2,0.0,False,dongguanting,2024-12-20
+2412.15204,,,,0.0,1.0,0.0,LongBench v2: Towards Deeper Understanding and Reasoning on Realistic Long-context Multitasks,,,,27,2,0.0,True,bys0318,2024-12-20
+2412.15115,,,,0.0,0.0,0.0,Qwen2.5 Technical Report,,,,286,2,0.0,False,huybery,2024-12-20
+2412.14475,,,,0.0,0.0,0.0,MegaPairs: Massive Data Synthesis For Universal Multimodal Retrieval,,,,47,2,0.0,False,JUNJIE99,2024-12-20
+2412.14462,,,,0.0,0.0,0.0,Affordance-Aware Object Insertion via Mask-Aware Dual Diffusion,https://github.com/kakituken/affordance-aware-any,,,15,2,0.0,False,EthanTaylor,2024-12-20
+2412.15213,,,,1.0,0.0,0.0,Flowing from Words to Pixels: A Framework for Cross-Modality Evolution,,,,19,2,0.0,True,QHL067,2024-12-20
+2412.15200,,,,1.0,0.0,1.0,DI-PCG: Diffusion-based Efficient Inverse Procedural Content Generation for High-quality 3D Asset Creation,,,,8,2,0.0,True,thuzhaowang,2024-12-20
+2412.14689,,,,0.0,0.0,0.0,How to Synthesize Text Data without Model Collapse?,,,,34,2,0.0,False,daixuancheng,2024-12-20
+2412.14642,,,,0.0,0.0,0.0,TOMG-Bench: Evaluating LLMs on Text-based Open Molecule Generation,https://github.com/phenixace/tomg-bench,,,4,2,1.0,False,phenixace,2024-12-20
+2412.15084,,,,0.0,0.0,0.0,AceMath: Advancing Frontier Math Reasoning with Post-Training and Reward Modeling,,,,10,2,0.0,False,ychenNLP,2024-12-20
+2412.14233,,,,0.0,1.0,0.0,Descriptive Caption Enhancement with Visual Specialists for Multimodal Perception,https://github.com/syp2ysy/dce,,,5,2,1.0,True,syp115,2024-12-20
+2412.15216,,,,0.0,0.0,0.0,UIP2P: Unsupervised Instruction-based Image Editing via Cycle Edit Consistency,,,,4,2,0.0,False,enisimsar,2024-12-20
+2412.15214,,,,0.0,0.0,0.0,LeviTor: 3D Trajectory Oriented Image-to-Video Synthesis,,,,12,3,0.0,False,qiuyuu,2024-12-20
+2412.13185,,,,0.0,0.0,0.0,Move-in-2D: 2D-Conditioned Human Motion Generation,,,,1,2,0.0,False,hsinh,2024-12-20
+2412.13377,,,,0.0,0.0,0.0,DateLogicQA: Benchmarking Temporal Biases in Large Language Models,https://github.com/gagan3012/eais-temporal-bias,,,2,2,1.0,False,gagan3012,2024-12-20
+2412.14283,,,,0.0,0.0,0.0,PixelMan: Consistent Object Editing with Diffusion Models via Pixel Manipulation and Generation,,,,3,2,0.0,False,LiyaoJiang,2024-12-20
+2412.15191,,,,0.0,0.0,0.0,AV-Link: Temporally-Aligned Diffusion Features for Cross-Modal Audio-Video Generation,,,,3,2,0.0,False,aliaksandr-siarohin,2024-12-20

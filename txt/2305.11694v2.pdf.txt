@@ -1,11 +1,17 @@
-arXiv:2305.11694v2 [cs.CL] 31 May 2023
+--- Page 1 ---
 QUEST: A Retrieval Dataset of Entity-Seeking Queries
 with Implicit Set Operations
-Chaitanya Malaviya¹, Peter Shaw², Ming-Wei Chang², Kenton Lee², Kristina Toutanova²
-¹University of Pennsylvania ²Google DeepMind
-cmalaviy@seas.upenn.edu
-{petershaw,mingweichang, kentonl, kristout}@google.com
+
+Chaitanya Malaviya!; Peter Shaw”, Ming-Wei Chang’, Kenton Lee’, Kristina Toutanova”
+‘University of Pennsylvania 7>Google DeepMind
+
+cmalaviy@seas.upenn. edu
+{petershaw, mingweichang, kentonl, kristout}@google.com
+
+arX1v:2305.11694v2 [cs.CL] 31 May 2023
+
 Abstract
+
 Formulating selective information needs results
 in queries that implicitly specify set operations,
 such as intersection, union, and difference. For
@@ -34,8 +40,10 @@ ing that they often struggle on such queries.
 Queries involving negation and conjunction are
 particularly challenging and systems are further
 challenged with combinations of these opera-
-tions.¹
+tions.!
+
 1 Introduction
+
 People often express their information needs with
 multiple preferences or constraints. Queries corre-
 sponding to such needs typically implicitly express
@@ -44,41 +52,54 @@ union. For example, a movie-goer might be looking
 for a science-fiction film from the 90s which does
 not feature aliens and a reader might be interested
 in a historical fiction novel set in France. Similarly,
-* Work done during an internship at Google.
-The dataset is available at https://github.com/
+
+*Work done during an internship at Google.
+
+'The dataset is available at https://github.com/
 google-research/language/tree/master/language/
 quest.
-(1) Birds of Venezuelan Andes
-(2)
-Birds of Colombia
-Paraphrasing
+
+(1) Birds of VenezuelanAndes —_ Birds of Colombia
+
+(2) | Paraphrasing
+
 Birds found in the Venezuelan Andes but not in Colombia
-->
-(3) ✔Fluent ✓ Natural
+
+(3) JFluent | Natural
+
 (4) Relevance & Attribution Labeling
-Rose-crowned parakeet
-Mérida sunangel
-✔Partial Evidence
-✔Likely Relevant
-✓Complete Evidence
-✔Definitely Relevant
+
+Partial Evidence
+
+>  Rose-crowned parakeet
+WV Likely Relevant
+
+Complete Evidence
+
+> Mérida sunangel
+J Definitely Relevant
+
+9
+
 Figure 1: The dataset construction process for QUEST.
 First, (1) we sample Wikipedia category names and
 find their corresponding set of relevant entities. (2)
 Then, we compose a query with set operations and have
 this query paraphrased by crowdworkers. (3) These
 queries are then validated for fluency and naturalness.
-(4) Finally, crowdworkers mark the entities' relevance
+(4) Finally, crowdworkers mark the entities’ relevance
 by highlighting attributable spans in their documents.
+
 a botanist attempting to identify a species based
 on their recollection might search for shrubs that
 are evergreen and found in Panama. Further, if
 the set of entities that satisfy the constraints is rela-
 tively small, a reader may like to see and explore
 an exhaustive list of these entities. In addition, to
-verify and trust a system's recommendations, users
+verify and trust a system’s recommendations, users
 benefit from being shown evidence from trusted
 sources (Lamm et al., 2021).
+
 Addressing such queries has been primarily stud-
 ied in the context of question answering with struc-
 tured knowledge bases (KBs), where query con-
@@ -88,6 +109,8 @@ complete and expensive to curate and maintain.
 Meanwhile, advances in information retrieval may
 enable developing systems that can address such
 queries without relying on structured KBs, by
+
+--- Page 2 ---
 matching query constraints directly to supporting
 evidence in text documents. However, queries that
 combine multiple constraints with implicit set op-
@@ -98,6 +121,7 @@ et al., 2019). Also, such datasets do not focus on
 retrieving an exhaustive document set, instead lim-
 iting annotation to the top few results of a baseline
 information retrieval system.
+
 To analyze retrieval system performance on such
 queries, we present QUEST, a dataset with natu-
 ral language queries from four domains, that are
@@ -116,12 +140,13 @@ between property names and document text is often
 subtle and requires sophisticated reasoning to deter-
 mine, representing the natural language inference
 challenge inherent in the task.
+
 Our dataset construction process is outlined in
 Figure 1. The base queries are semi-automatically
 generated using Wikipedia category names. To
 construct complex queries, we sample category
 names and compose them by using pre-defined
-templates (for example, AB \ C). Next, we
+templates (for example, AM B \ C). Next, we
 ask crowdworkers to paraphrase these automati-
 cally generated queries, while ensuring that the
 paraphrased queries are fluent and clearly describe
@@ -135,34 +160,39 @@ mapping query constraints to spans of document
 text. Such annotation could aid the development
 of systems that can make precise inferences from
 trusted sources.
+
 Performing well on this dataset requires sys-
 tems that can match query constraints with cor-
 responding evidence in documents and handle set
 operations implicitly specified by the query (see
+
 Query: Supernatural horror films set in Nevada
-Large
-Document
-Corpus
-mmm...
-mmm...
-Entity: Willy's Wonderland
-Retrieval
-System
+
+Large Retrieval
+Document System
+Corpus | -
+6 -- B
 Retrieved Set
-Document Text: Willy's Wonderland is a 2021
+
+Entity: Willy’s Wonderland
+
+Document Text: Willy’s Wonderland is a 2021
 American action comedy horror film directed by
 Kevin Lewis from a screenplay by G. O. Parsons.
 The film stars Nicolas Cage, who also [...]
+
 It follows a quiet drifter who is tricked into clean-
 ing up an abandoned family entertainment center
 haunted by eight murderous animatronic characters.
 The project was announced in October 2019, [...]
 When his car catches a flat tire on a remote country
 road, a quiet drifter ends up stranded outside of
-Hayesville, Nevada. Mechanic Jed Love picks [...]
+Hayesville, Nevada. Mechanic Jed Love picks [...] _/
+
 Figure 2: An example of a query and relevant entity
 from QUEST. The attribution for different query con-
 straints can come from different parts of the document.
+
 Figure 2), while also efficiently scaling to large
 collections of entities. We evaluate several re-
 trieval systems by finetuning pretrained models on
@@ -178,22 +208,28 @@ tions of set operations. Our error analysis reveals
 that non-relevant false positive entities are often
 caused by the model ignoring negated constraints,
 or ignoring the conjunctive constraints in a query.
+
 2 Related Work
+
 Previous work in question answering and informa-
 tion retrieval has focused on QA over knowledge
 bases as well as open-domain QA and retrieval over
 a set of entities or documents. We highlight how
 these relate to our work below.
+
 Knowledge Base QA Several datasets have been
 proposed for question answering over knowledge
 bases (Berant et al., 2013; Yih et al., 2016; Tal-
 mor and Berant, 2018; Keysers et al., 2020; Gu
 et al., 2021, inter alia). These benchmarks re-
 quire retrieval of a set of entities that exist as nodes
+
+--- Page 3 ---
 or relations in an accompanying knowledge base.
 Questions are optionally supplemented with logical
 forms. Lan et al. (2021) provide a comprehensive
 survey of complex KBQA datasets.
+
 Previous work has simultaneously noted that
 large curated KBs are incomplete (Watanabe et al.,
 2017). Notably, KBQA systems operate over a
@@ -211,6 +247,7 @@ these datasets is also that we do not focus on multi-
 hop reasoning over multiple documents. Instead,
 the relevance of an entity can be determined solely
 based on its document.
+
 Open-Domain QA and Retrieval Many open-
 domain QA benchmarks, which consider QA over
 unstructured text corpora, have been proposed
@@ -231,6 +268,7 @@ on queries that contain implicit set operations over
 exhaustive answer sets. Such queries are not well
 represented in existing datasets because they occur
 in the tail of the query distributions considered.
+
 Multi-Answer Retrieval Related work (Min
 et al., 2021; Amouyal et al., 2022) also studies
 the problem of multi-answer retrieval, where sys-
@@ -238,10 +276,12 @@ tems are required to predict multiple distinct an-
 swers for a query. Min et al. (2021) adapt existing
 datasets (for example, WebQuestionsSP (Yih et al.,
 2016)) to study this setting and propose a new met-
-ric, MRecall @K, to evaluate exhaustive recall of
+ric, MRecall@K, to evaluate exhaustive recall of
 multiple answers. We also consider the problem of
 multi-answer set retrieval, but consider queries that
+
 implicitly contain set constraints.
+
 In concurrent work, RomQA (Zhong et al., 2022)
 proposes an open-domain QA dataset, focusing on
 combinations of constraints extracted from Wiki-
@@ -260,12 +300,15 @@ tribution through more global, document-level in-
 ference. To make human annotation for attribution
 feasible, we limit the answer set size and the evi-
 dence for an answer to a single document.
+
 3 Dataset Generation
+
 QUEST consists of 3357 queries paired with up
 to 20 corresponding entities. Each entity has an
 associated document derived from its Wikipedia
 page. The dataset is divided into 1307 queries for
 training, 323 for validation, and 1727 for testing.
+
 The task for a system is to return the correct
 set of entities for a given query. Additionally, as
 the collection contains 325,505 entities, the task
@@ -274,116 +317,61 @@ We do not allow systems to access additional infor-
 mation outside of the text descriptions of entities at
 inference time. Category labels are omitted from
 all entity documents.
+
 3.1 Atomic Queries
+
 The base atomic queries (i.e., queries without any
 introduced set operations) in our dataset are derived
-from Wikipedia category names². These are hand-
+from Wikipedia category names”. These are hand-
 curated natural language labels assigned to groups
-of related documents in Wikipedia³. Category as-
+of related documents in Wikipedia®. Category as-
 signments to documents allow us to automatically
 determine the set of answer entities for queries with
 high precision and relatively high recall. We com-
 pute transitive closures of all relevant categories to
 determine their answer sets.
+
 However, repurposing these categories for con-
 structing queries poses challenges: 1) lack of evi-
+
 2We use the Wikipedia version from 06/01/2022.
-3 Note that these category labels can sometimes be conjunc-
+3Note that these category labels can sometimes be conjunc-
 tive themselves, potentially increasing complexity.
-Films
-A
-AUB
-AnB
-Books
-A\B
-AUBUC
-An BNC
-AnB\C
-A
-AUB
-An B
-Plants
-A\B
-Domain
-Template
-A
-AUB
-An B
-A\B
-AUBUC
-An BПC
-AnB C
-AUBUC
-Example
-Biographical Italian bandits films
-Dutch crime comedy or romantic comedy films
-Italian crime films set in the 1970's
-Indian sport films that are not about cricket
-Dutch or Swiss war films, or war films from 1945
-2020's drama films shot in cleveland
-Epic films about Christianity not set in Israel
-2004 German novels
-1925 Russian novels or Novels by Ivan Bunin
-1991 Novels set in Iceland
-Novels set in the 1900s not based on real events
-Novels set in Nanjing, Hebei, or Jiangsu
-English language Harper & Brothers Children's fiction books
-Novels that take place in Vietnam that aren't about war
-plants only from Gabon
-Trees of Manitoba or Subarctic America
-Shrubs used in traditional Native American medicine
-Trees from the Northwestern US that can't be found in Canada
-Moths or Insects or Arthropods of Guadeloupe
-Num. Queries
-125
-135
-143
-126
-122
-124
-121
-125
-125
-133
-123
-125
-124
-115
-115
-125
-135
-61
-121
-An BNC
-AnB C
-Plants the Arctic, the United Kingdom, and the Caucasus have in common
-Orchids of Indonesia and Malaysia but not Thailand
-123
-122
-Animals
-A
-AUB
-An B
-A\B
-AUBUC
-An BNC
-115
-121
-111
-110
-114
-104
-An B C
-114
-what are the Rodents of Cambodia
-Animals from Cuba or Jamaica that are extinct
-Neogene mammals of Africa that are Odd-toed ungulates
-Non-Palearctic birds of Mongolia
-Cenozoic birds of Asia or Africa or Paleogene birds of Asia
-Birds of Chile that are also Birds of Peru and Fauna of the Guianas
-mammals found in the Atlantic Ocean and Colombia, but not in Brazil
+
+--- Page 4 ---
+Domain | Template Example Num. Queries
+A Biographical Italian bandits films 125
+AUB Dutch crime comedy or romantic comedy films 135
+ANB Italian crime films set in the 1970's 143
+Films A\B Indian sport films that are not about cricket 126
+AUBUC Dutch or Swiss war films, or war films from 1945 122
+ANBNC 2020's drama films shot in cleveland 124
+ANB\C Epic films about Christianity not set in Israel 121
+re ee A 2004 German novels © 125° 7
+AUB 1925 Russian novels or Novels by Ivan Bunin 125
+ANB 1991 Novels set in Iceland 133
+Books A\B Novels set in the 1900s not based on real events 123
+AUBUC Novels set in Nanjing, Hebei, or Jiangsu 125
+ANBNC English language Harper & Brothers Children’s fiction books 124
+ANB\C Novels that take place in Vietnam that aren’t about war 115
+| i , plants only from Gabon 7 7 11s” 7
+AUB Trees of Manitoba or Subarctic America 125
+ANB Shrubs used in traditional Native American medicine 135
+Plants A\B Trees from the Northwestern US that can’t be found in Canada 61
+AUBUC Moths or Insects or Arthropods of Guadeloupe 121
+AM BMC | Plants the Arctic, the United Kingdom, and the Caucasus have in common 123
+ANB\C Orchids of Indonesia and Malaysia but not
+re A” [7 ~~ ~~ ~~ what are the Rodents of Cambodia 115
+AUB Animals from Cuba or Jamaica that are extinct 121
+ANB Neogene mammals of Africa that are Odd-toed ungulates 111
+Animals A\B Non-Palearctic birds of Mongolia 110
+AUBUC Cenozoic birds of Asia or Africa or Paleogene birds of Asia 114
+ANBNC Birds of Chile that are also Birds of Peru and Fauna of the Guianas 104
+ANB\C mammals found in the Atlantic Ocean and Colombia, but not in Brazil 114
+
 Table 1: Templates used for construction of queries with set operations and examples from the four domains
 considered, along with the count of examples per each domain and template.
+
 dence in documents: documents may not contain
 sufficient evidence for judging their relevance to
 a category, potentially providing noisy signal for
@@ -393,14 +381,16 @@ which they belong. For about half of the dataset, we
 crowdsource relevance labels and attribution based
 on document text, and investigate recall through
 manual error analysis (§5).
+
 We select four domains to represent some diver-
 sity in queries: films, books, animals and plants.
 Focusing on four rather than all possible domains
 enables higher quality control. The former two
 model a general search scenario, while the latter
 two model a scientific search scenario.
-3.2
-Introducing set operations
+
+3.2 Introducing set operations
+
 To construct queries with set operations, we define
 templates that represent plausible combinations of
 atomic queries. Denoting atomic queries as A, B
@@ -411,8 +401,10 @@ set operations (intersection, union and difference).
 They were chosen to ensure unambiguous interpre-
 tations of resulting queries by omitting those com-
 binations of set operations that are non-associative.
+
 Below we describe the logic behind sampling
 atomic queries (i.e., A, B, C) for composing com-
+
 plex queries, with different set operations. In all
 cases, we ensure that answer sets contain between
 2-20 entities so that crowdsourcing relevance judge-
@@ -421,13 +413,15 @@ plate and domain, for a total of 4200 initial queries.
 The dataset is split into train + validation (80-20
 split) and testing equally. In each of these sets, we
 sampled an equal number of queries per template.
+
 Intersection. The intersection operation for a
-template AnB is particularly interesting and poten-
+template AN B is particularly interesting and poten-
 tially challenging when both A and B have large
 answer sets but their intersection is small. We re-
 quire the minimum answer set sizes of each A and
 B to be fairly large (>50 entities), while their inter-
 section to be small (2-20 entities).
+
 Difference. Similar to intersection, we require
 the answer sets for both A and B to be substantial
 (>50 entities), but also place maximum size con-
@@ -435,6 +429,7 @@ straints on both A (<200 entities) and B (<10000
 entities) as very large categories tend to suffer from
 recall issues in Wikipedia. We also limit the inter-
 section of A and B (see reasoning in Appendix B).
+
 Union. For the union operation, we require both
 A and B to be well-represented through the entities
 in the answer set for their union AU B. Hence,
@@ -442,38 +437,33 @@ we require both A and B to have at least 3 entities.
 Further, we require their intersection to be non-zero
 but less than 1/3rd of their union. This is so that A
 and B are somewhat related queries.
-Films Books Plants Animals
-All
-Num. Queries
-Num. Entities
-Avg. Query Len.
-Avg. Doc. Len.
-Avg. Ans. Set Size
-896 870 802 789
-146368 50784 83672 44681
-8.68 7.93 8.94 9.09
-532.2 655.3 258.1 293.1
-3357
-325505
-8.64
-452.2
-8.8
-8.6
-12.2
-12.6
-10.5
+
+--- Page 5 ---
+Films Books Plants Animals All
+Num. Queries 896 870 802 789 3357
+Num. Entities 146368 50784 83672 44681 325505
+Avg. Query Len. 8.68 7.93 8.94 9.09 8.64
+Avg. Doc. Len. 532.2 655.3. 258.1 293.1 452.2
+
+Avg. Ans. Set Size 8.8
+
+8.6 12.2 12.6 10.5
+
 Table 2: Statistics of examples in QUEST across different domains.
+
 For all other templates that contain compositions
 of the above set operations, we apply the same con-
-straints recursively. For example, for AnB\C, we
+straints recursively. For example, for AN B\C, we
 sample atomic queries A and B for the intersection
 operation, then sample C based on the relationship
-between An B and C.
-3.3 Annotation Tasks
+between AM Band C.
+
+3.3. Annotation Tasks
+
 Automatically generating queries based on tem-
 plates results in queries that are not always fluent
 and coherent. Further, entities mapped to a query
-may not actually be relevant and don't always have
+may not actually be relevant and don’t always have
 attributable evidence for judging their relevance.
 We conduct crowdsourcing to tackle these issues.
 The annotation tasks aim at ensuring that 1) queries
@@ -485,15 +475,18 @@ text for each relevant entity. Crowdsourcing is per-
 formed in three stages, described below. More
 annotation details and the annotation interfaces can
 be found in Appendix C.
+
 3.3.1 Paraphrasing
+
 Crowdworkers were asked to paraphrase a tem-
 platically generated query so that the paraphrased
 query is fluent, expresses all constraints in the orig-
 inal query, and clearly describes what a user could
 be looking for. This annotation was done by one
 worker per query.
-3.3.2
-Validation
+
+3.3.2 Validation
+
 This stage is aimed at validating the queries we
 obtain from the paraphrasing stage. Crowdworkers
 were given queries from the first stage and asked to
@@ -504,9 +497,12 @@ real user). This annotation was done by 3 workers
 per query. We excluded those queries which were
 rated as not fluent, unnatural or having a different
 meaning than the original query, based on a ma-
+
 jority vote. Based on the validation, we removed
 around around 11% of the queries from stage 1.
-3.3.3 Relevance Labeling
+
+3.3.3. Relevance Labeling
+
 Next, crowdworkers were asked to provide rele-
 vance judgements for the automatically determined
 answer sets of queries. Specifically, they were
@@ -517,6 +513,7 @@ relevant, definitely relevant). They were asked to
 ensure that relevance should mostly be inferred
 from the document, but they could use some back-
 ground knowledge and do minimal research.
+
 We also asked them to provide attributions for
 document relevance. Specifically, we ask them
 to first label whether the document provides suffi-
@@ -538,29 +535,43 @@ we collected 3 relevance ratings from different an-
 notators for 905 query and document pairs from
 the films domain. In 61.4% of cases, all 3 raters
 judged the document to be “Definitely relevant” or
-"Likely relevant” or all 3 raters judged the docu-
-ment to be "Definitely not relevant” or “Likely not
-relevant". The Fleiss' kappa metric on this data
+“Likely relevant” or all 3 raters judged the docu-
+ment to be “Definitely not relevant” or “Likely not
+relevant”. The Fleiss’ kappa metric on this data
 was found to be K=0.43. We excluded all entities
 which were marked as likely or definitely not rel-
 evant to a query based on the document text from
 its answer set. Around 23.7% of query-document
 pairs from stage 2 were excluded.
+
+--- Page 6 ---
 Retriever
-Relevance
-Query
 (BM25 or T5 Dual
 Encoder)
+
+i
+
+Document Corpus.
+
+Query
+
 Top-100 Candidate
 Documents
+
+|
+
+Relevance
 Classifier
-(T5)
+(15)
+
 Predicted
 Document Set
-Document Corpus
+
 Figure 3: We compare several systems consisting of a retriever for efficiently selecting a set of candidates from the
 document corpus and a document relevance classifier for determining the final predicted document set.
+
 3.4 Dataset Statistics
+
 Basic dataset statistics are reported in Table 2. The
 dataset contains more entities from the films do-
 main, because this domain is more populated in
@@ -578,7 +589,9 @@ knowledge or reasoning). There are on average
 imum attribution text span ranging up to length
 1837 words. Finally, the average answer set size is
 10.5 entities.
+
 3.5 Additional Training Examples
+
 Beyond the annotated data, we generated additional
 synthetic examples for training. We found includ-
 ing such examples improved model performance,
@@ -588,26 +601,35 @@ atomic queries from all domains, ensuring that they
 do not already appear as sub-queries in any of the
 queries in QUEST and use their corresponding enti-
 ties in Wikipedia as their relevant entity set.
+
 4 Experimental Setup
+
 We evaluate modern retrieval systems to establish
 baseline performances. We also perform extensive
 error analysis to understand patterns of model er-
 rors and the quality of the labels in QUEST.
+
 4.1 Task Definition
-We consider a corpus, Ɛ, that contains entities
+
+We consider a corpus, €, that contains entities
 across all domains in the dataset. Each entity is ac-
 companied with a document based on its Wikipedia
 page. An example in our dataset consists of a query,
-x, and an annotated set of relevant entities, y ≤ E.
+
+x, and an annotated set of relevant entities, y C €.
 As described in §3, for all examples |y| < 20. Our
-task is to develop a system that, given & and a query
-x, predicts a set of relevant entities, ŷ Cε.
+task is to develop a system that, given € and a query
+x, predicts a set of relevant entities, 7 C €.
+
 4.2 Evaluation
-Our primary evaluation metric is average F1, which
-averages per-example F₁ scores. We compute F₁
+
+Our primary evaluation metric is average F, which
+averages per-example F| scores. We compute F)
 for each example by comparing the predicted set
-of entities, ŷ, with the annotated set, y.
+of entities, 7, with the annotated set, y.
+
 4.3 Baseline Systems
+
 We evaluated several combinations of retrievers
 and classifiers, as shown in Figure 3. For the re-
 triever component, we consider a sparse BM25
@@ -620,7 +642,7 @@ et al., 2017). Once we have a candidate set, we
 need to determine a set of relevant entities. To clas-
 sify relevance of each candidate document for the
 given query, we consider a cross-attention model
-which consists of a T5 encoder and decoder. 4 We
+which consists of a TS encoder and decoder.+ We
 train the cross-attention classifier using a binary
 cross-entropy loss with negative examples based
 on non-relevant documents in top 1,000 documents
@@ -632,60 +654,40 @@ strict BM25 and the dual encoder to retrieve 100
 candidates which are then considered by the cross-
 attention classifier. As our T5-based dual encoder
 can only efficiently accommodate up to 512 tokens,
-4Scores from BM25 and dual encoders trained with a soft-
+
+“Scores from BM25 and dual encoders trained with a soft-
 max loss are not normalized to provide relevance probabilities
 for documents. We found that naively applying a global thresh-
 old to these scores to produce answer sets did not perform as
 well as using a classifier trained with a binary cross-entropy
 loss to predict document relevance.
-Retriever (K=100)
-Classifier Avg. Precision
-Avg. Recall
-Avg. F1
-BM25
-T5-Base
-0.168
-0.160
-0.141
-BM25
-T5-Large
-0.178
-0.168
-0.150
-T5-Large DE
-T5-Base
-0.153
-0.354
-0.176
-T5-Large DE
-T5-Large
-0.165
-0.368
-0.192
+
+
+--- Page 7 ---
+Retriever (K=100) Classifier Avg. Precision Avg. Recall Avg. Fl
+BM25 T5-Base 0.168 0.160 0.141
+BM25 T5-Large 0.178 0.168 0.150
+T5-Large DE T5-Base 0.153 0.354 0.176
+T5-Large DE T5-Large 0.165 0.368 0.192
+
 Table 3: Average Precision, Recall, and F1 of baseline systems evaluated on the test set.
-Avg. Recall@K
-50
-Retriever
-20
-100 1000
-BM25
-0.104 0.153 0.197
-T5-Base DE 0.255 0.372 0.455
-T5-Large DE 0.265 0.386 0.476
-MRecall@K
-20
-50
-100 1000
-0.395 0.020 0.030 0.037 0.087
-0.726 0.045 0.088 0.127 0.360
-0.757 0.047 0.100 0.142 0.408
+
+Avg. Recall@K MRecall@K
+Retriever 20 50 100 1000 20 50 100 1000
+BM25 0.104 0.153 0.197 0.395 0.020 0.030 0.037 0.087
+T5-Base DE 0.255 0.372 0.455 0.726 0.045 0.088 0.127 0.360
+T5-Large DE 0.265 0.386 0.476 0.757 0.047 0.100 0.142 0.408
+
 Table 4: Average Recall and MRecall of various retrievers.
+
 we truncate document text. We discuss the impact
 of this and alternatives in §5. Further, since T5 was
 pre-trained on Wikipedia, we investigate the impact
 of memorization in Appendix D. Additional details
 and hyperparameter settings are in Appendix A.
+
 4.4 Manual Error Annotation
+
 For the best overall system, we sampled errors and
 manually annotated 1145 query-document pairs
 from the validation set. For the retriever, we sam-
@@ -702,25 +704,30 @@ or classifier) contained sufficient evidence to rea-
 sonably determine relevance. We also annotated
 relevance for each constraint within a query. We
 discuss these results in §5.
+
 5 Results and Analysis
+
 We report the performance of our baseline systems
 on the test set in Table 3. In this section, we sum-
 marize the key findings from our analysis of these
-results and the error annotation described in §4.4.
+results and the error annotation described in $4.4.
+
 Dual encoders outperform BM25. As shown
 in Table 3, the best overall system uses a T5-
 Large Dual Encoder instead of BM25 for retrieval.
 The performance difference is even more signifi-
 cant when comparing recall of Dual Encoders and
 BM25 directly. We report average recall (average
+
 per-example recall of the full set of relevant docu-
 ments) and MRecall (Min et al., 2021) (the percent-
 age of examples where the candidate set contains
 all relevant documents), over various candidate set
 sizes in Table 4.
+
 Retrieval and classification are both challeng-
 ing. As we consider only the top-100 candidates
-from the retriever, the retriever's recall @100 sets
+from the retriever, the retriever’s recall@ 100 sets
 an upper bound on the recall of the overall system.
 Recall @ 100 is only 0.476 for the T5-Large Dual
 Encoder, and the overall recall is further reduced by
@@ -730,6 +737,7 @@ room for improvement from both stages to improve
 overall scores. As performance improves for larger
 T5 sizes for both retrieval and classification, further
 model scaling could be beneficial.
+
 Models struggle with intersection and difference.
 We also analyzed results across different templates
 and domains, as shown in Table 5. Different con-
@@ -741,6 +749,7 @@ the queries with set union have the highest aver-
 age F1 scores. Queries with set intersection have
 the lowest average F1 scores, and queries with set
 difference also appear to be challenging.
+
 To analyze why queries with conjunction and
 negation are challenging, we labeled the relevance
 of individual query constraints (§4.4), where a sys-
@@ -749,62 +758,28 @@ document. The results are summarized in Table 6.
 For a majority of false positive errors involving in-
 tersection, at least one constraint is satisfied. This
 could be interpreted as models incorrectly treating
+
+--- Page 8 ---
 intersection as union when determining relevance.
 Similarly, for a majority of examples with set dif-
 ference, the negated constraint is not satisfied. This
 suggests that the systems are not sufficiently sensi-
 tive to negations.
-# Constraints
-1
-2
-3
-Neg.
-Retriever
-An B
-An BNC
-63.5
-36.5
-56.5 37.0 6.5
-A\B
-80.3 19.7
-59.1
-A
-AUB
-An B
-A\B
-AUBUC
-0.171 0.248 0.165
+
 Template Films Books Plants Animals All
-0.231 0.436 0.209 0.214 0.274
-0.264 0.366 0.229 0.271
-0.282
-0.115 0.138 0.049 0.063
-0.177 0.188 0.216 0.204 0.193
-0.200 0.348 0.306
-An BNC 0.086 0.121 0.07
-An B\C 0.119 0.112 0.121
-All
-An B\C
-47.6 40.5 11.9 26.2
-Classifier
-An B
-83.3
-16.7
-☐
-0.092
-An BNC
-73.2
-22.0
-4.9
-A\B
-38.1
-0.294 0.287
-0.065 0.086
-0.136 0.122
-0.182 0.192
-An B\C
+
+A 0.231 0.436 0.209 0.214 = 0.274
+AUB 0.264 0.366 0.229 0.271 0.282
+ANB 0.115 0.138 0.049 0.063 0.092
+A\B 0.177 0.188 0.216 0.204 = 0.193
+AUBUC 0.200 0.348 0.306 0.294 0.287
+ANBNC 0.086 0.121 0.07 0.065 0.086
+ANB\C 0.119 0.112 0.121 0.136 = 0.122
+All 0.171 0.248 0.165 0.182 0.192
+
 Table 5: F1 of our strongest baseline (T5-Large DE +
 T5-Large Classifier) across templates and domains.
+
 There is significant headroom to improve both
 precision and recall. As part of our manual er-
 ror analysis (§4.4), we made our own judgements
@@ -817,17 +792,19 @@ lower than on randomly selected query-document
 pairs in the dataset. Therefore, it provides a fo-
 cused way to judge the headroom and annotation
 quality of the dataset.
+
 For false negative errors, we judged 91.1% of
 the entities to be relevant for the films and books
 domains, and 81.4% for plants and animals. No-
 tably, we collected relevance labels for the films
 and books domains and removed some entities
-based on these labels, as described in §3, which
+based on these labels, as described in $3, which
 likely explains the higher agreement for false neg-
 atives from these domains. This indicates signifi-
 cant headroom for improving recall as defined by
 QUEST, especially for the domains where we col-
 lected relevance labels.
+
 For false positive errors, we judged 28.8% of
 the entities to be relevant, showing a larger dis-
 agreement with the relevance labels in the dataset.
@@ -839,22 +816,38 @@ fully resolve, as it is not feasible to exhaustively
 label relevance for all entities to correct for recall
 issues in the Wikipedia category taxonomy. Future
 work can use pooling to continually grow the set
-81.0 19.1
-95.5 4.6 0.0 68.2
-Table 6: Analysis of false positive errors from the T5-
+
+# Constraints
+
+1 2 3 Neg.
+
+Retriever
+ANB 63.5 365 — —
+ANBNC 565 370 65 —
+A\B 80.3. 19.7 — | 59.1
+ANB\C 476 405 11.9 | 26.2
+Classifier
+ANB 83.3 167 — —
+ANBNC 73.2 22.0 4.9 _
+A\B 81.0 19.1 — | 38.1
+ANB\C 955 46 0.0 | 68.2
+Table 6: Analysis of false positive errors from the TS-
 Large classifier and cases where a non-relevant docu-
-ment was ranked ahead of a relevant one for the T5-
+
+ment was ranked ahead of a relevant one for the TS-
 Large dual encoder. For queries with conjunction, we
 determined the percentage of cases where 1, 2, or 3
 constraints in the template were not satisfied by the
 predicted document (# Constraints). For queries with
 negation, we measured the percentage of cases where
 the negated constraint (Neg.) was not satisfied.
+
 of relevant documents (Sparck Jones and Van Rijs-
 bergen, 1975). Despite this, our analysis suggests
 there is significant headroom for improving pre-
 cision, as we judged a large majority of the false
 positive predictions to be non-relevant.
+
 Truncating document text usually provides suf-
 ficient context. In our experiments, we truncate
 document text to 512 tokens for the dual encoder,
@@ -867,18 +860,23 @@ for the dual encoder, and 96.1% of the time for the
 classifier. This may explain the relative success of
 this simple baseline for handling long documents.
 We also evaluated alternative strategies but these
-performed worse in preliminary experiments5. Fu-
+performed worse in preliminary experiments*. Fu-
 ture work can evaluate efficient transformer vari-
 ants (Guo et al., 2022; Beltagy et al., 2020).
+
 6 Conclusion
+
 We present QUEST, a new benchmark of queries
 which contain implicit set operations with corre-
 sponding sets of relevant entity documents. Our
 experiments indicate that such queries present a
-5For the dual encoder, we split documents into overlapping
+
+>For the dual encoder, we split documents into overlapping
 chunks of 512 tokens, and aggregated scores at inference (Dai
 and Callan, 2019). For the cross-attention model, we evaluated
 using BM25 to select the top-3 passages of length 128.
+
+--- Page 9 ---
 challenge for modern retrieval systems. Future
 work could consider approaches that have better
 inductive biases for handling set operations in natu-
@@ -890,7 +888,9 @@ of pretrained generative LMs and multi-evidence
 aggregation methods to answer set-seeking selec-
 tive queries, while providing attribution to sources,
 can also be investigated.
+
 7 Limitations
+
 Naturalness. Since our dataset relies on the
 Wikipedia category names and semi-automatically
 generated compositions, it does not represent an
@@ -904,6 +904,7 @@ plausibly correspond to real user search needs and
 system improvements measured on QUEST should
 correlate with improvements on at least a fraction
 of natural search engine queries with set operations.
+
 Recall. We also note that because Wikipedia cat-
 egories have imperfect recall of all relevant enti-
 ties (that contain sufficient evidence in their docu-
@@ -918,6 +919,7 @@ into account and evidence could be aggregated to
 make relevance decisions. RomQA (Zhong et al.,
 2022) takes a step in this latter direction although
 the evidence attribution is not manually verified.
+
 Answer Set Sizes. To ensure that relevance la-
 bels are correct and verifiable, we seek the help
 of crowdworkers. However, this meant that we
@@ -928,7 +930,9 @@ because users may only be interested in a limited
 set of results. On the other hand, our dataset does
 not model a scenario where the answer set sizes are
 much larger.
+
 Acknowledgements
+
 We would like to thank Isabel Kraus-Liang, Ma-
 hesh Maddinala, Andrew Smith, Daphne Domansi,
 and all the annotators for their work. We would also
@@ -936,50 +940,62 @@ like to thank Mark Yatskar, Dan Roth, Zhuyun Dai,
 Jianmo Ni, William Cohen, Andrew McCallum,
 Shib Sankar Dasgupta and Nicholas Fitzgerald for
 useful discussions.
+
 References
+
 Samuel Joseph Amouyal, Ohad Rubin, Ori Yoran,
 Tomer Wolfson, Jonathan Herzig, and Jonathan Be-
 rant. 2022. Qampari:: An open-domain question an-
 swering benchmark for questions with many answers
 from multiple paragraphs. ArXiv, abs/2205.12665.
+
 Iz Beltagy, Matthew E. Peters, and Arman Cohan.
 2020. Longformer: The long-document transformer.
 arXiv:2004.05150.
+
 Jonathan Berant, Andrew Chou, Roy Frostig, and Percy
 Liang. 2013. Semantic parsing on Freebase from
 question-answer pairs. In Proceedings of the 2013
 Conference on Empirical Methods in Natural Lan-
-guage Processing, pages 1533–1544, Seattle, Wash-
+guage Processing, pages 1533-1544, Seattle, Wash-
 ington, USA. Association for Computational Linguis-
 tics.
+
 Nick Craswell, Bhaskar Mitra, Emine Yilmaz, Daniel
 Campos, and Ellen M Voorhees. 2020. Overview of
 the TREC 2019 deep learning track. arXiv preprint
 arXiv:2003.07820.
+
 Zhuyun Dai and Jamie Callan. 2019. Deeper text un-
 derstanding for ir with contextual neural language
 modeling. In Proceedings of the 42nd International
 ACM SIGIR Conference on Research and Develop-
 ment in Information Retrieval, pages 985-988.
+
 Yu Gu, Sue Kase, Michelle Vanni, Brian Sadler, Percy
 Liang, Xifeng Yan, and Yu Su. 2021. Beyond iid:
 three levels of generalization for question answering
 on knowledge bases. In Proceedings of the Web
 Conference 2021, pages 3477-3488.
+
 Mandy Guo, Joshua Ainslie, David Uthus, Santiago On-
 tanon, Jianmo Ni, Yun-Hsuan Sung, and Yinfei Yang.
-2022. LongT5: Efficient text-to-text transformer for
+2022. LongTS: Efficient text-to-text transformer for
 long sequences. In Findings of the Association for
-Computational Linguistics: NAACL 2022, pages 724-
+Computational Linguistics: NAACL 2022, pages 724—
 736, Seattle, United States. Association for Compu-
 tational Linguistics.
+
 Matthew Henderson, Rami Al-Rfou, Brian Strope, Yun-
-Hsuan Sung, László Lukács, Ruiqi Guo, Sanjiv Ku-
+Hsuan Sung, Laszlé Lukacs, Ruiqi Guo, Sanjiv Ku-
 mar, Balint Miklos, and Ray Kurzweil. 2017. Effi-
 cient natural language response suggestion for smart
-reply. arXiv preprint arXiv:1705.00652.
-Daniel Keysers, Nathanael Schärli, Nathan Scales,
+reply. arXiv preprint arXiv: 1705.00652.
+
+Daniel Keysers, Nathanael Schirli, Nathan Scales,
 Hylke Buisman, Daniel Furrer, Sergii Kashubin,
+
+--- Page 10 ---
 Nikola Momchev, Danila Sinopalnikov, Lukasz
 Stafiniak, Tibor Tihon, Dmitry Tsarkov, Xiao Wang,
 Marc van Zee, and Olivier Bousquet. 2020. Measur-
@@ -987,41 +1003,47 @@ ing compositional generalization: A comprehensive
 method on realistic data. In 8th International Confer-
 ence on Learning Representations, ICLR 2020, Addis
 Ababa, Ethiopia, April 26-30, 2020. OpenReview.net.
+
 Daniel Khashabi, Snigdha Chaturvedi, Michael Roth,
 Shyam Upadhyay, and Dan Roth. 2018. Looking
 beyond the surface: A challenge set for reading com-
 prehension over multiple sentences. In Proceedings
 of the 2018 Conference of the North American Chap-
 ter of the Association for Computational Linguistics:
-Human Language Technologies, Volume 1 (Long Pa-
+Human Language Technologies, Volume I (Long Pa-
 pers), pages 252-262, New Orleans, Louisiana. As-
 sociation for Computational Linguistics.
+
 Weize Kong, Swaraj Khadanga, Cheng Li, Shaleen
 Gupta, Mingyang Zhang, Wensong Xu, and Mike
 Bendersky. 2022. Multi-aspect dense retrieval. In
 Proceedings of the 28th ACM SIGKDD Conference
 on Knowledge Discovery and Data Mining.
+
 Tom Kwiatkowski, Jennimaria Palomaki, Olivia Red-
 field, Michael Collins, Ankur Parikh, Chris Alberti,
-Danielle Epstein, Illia Polosukhin, Jacob Devlin, Ken-
+Danielle Epstein, Ilia Polosukhin, Jacob Devlin, Ken-
 ton Lee, Kristina Toutanova, Llion Jones, Matthew
 Kelcey, Ming-Wei Chang, Andrew M. Dai, Jakob
 Uszkoreit, Quoc Le, and Slav Petrov. 2019. Natu-
 ral questions: A benchmark for question answering
 research. Transactions of the Association for Compu-
-tational Linguistics, 7:452–466.
+tational Linguistics, 7:452-466.
+
 Matthew Lamm, Jennimaria Palomaki, Chris Alberti,
 Daniel Andor, Eunsol Choi, Livio Baldini Soares,
 and Michael Collins. 2021. QED: A Framework
 and Dataset for Explanations in Question Answering.
 Transactions of the Association for Computational
 Linguistics, 9:790-806.
+
 Yunshi Lan, Gaole He, Jinhao Jiang, Jing Jiang,
 Wayne Xin Zhao, and Ji-Rong Wen. 2021. A sur-
 vey on complex knowledge base question answering:
 Methods, challenges and solutions. Proceedings of
 the Thirtieth International Joint Conference on Artifi-
 cial Intelligence (IJCAI-21).
+
 Sewon Min, Kenton Lee, Ming-Wei Chang, Kristina
 Toutanova, and Hannaneh Hajishirzi. 2021. Joint
 passage ranking for diverse multi-answer retrieval.
@@ -1029,40 +1051,48 @@ In Proceedings of the 2021 Conference on Empiri-
 cal Methods in Natural Language Processing, pages
 6997-7008, Online and Punta Cana, Dominican Re-
 public. Association for Computational Linguistics.
+
 Tri Nguyen, Mir Rosenberg, Xia Song, Jianfeng Gao,
 Saurabh Tiwary, Rangan Majumder, and Li Deng.
 2016. Ms marco: A human generated machine read-
 ing comprehension dataset. In CoCo@ NIPs.
+
 Jianmo Ni, Chen Qu, Jing Lu, Zhuyun Dai, Gustavo
 Hernandez Abrego, Ji Ma, Vincent Zhao, Yi Luan,
 Keith Hall, Ming-Wei Chang, and Yinfei Yang. 2022.
 Large dual encoders are generalizable retrievers. In
+
 Proceedings of the 2022 Conference on Empirical
 Methods in Natural Language Processing, pages
 9844-9855, Abu Dhabi, United Arab Emirates. As-
 sociation for Computational Linguistics.
+
 Rodrigo Nogueira and Kyunghyun Cho. 2019. Pas-
-sage re-ranking with bert.
-arXiv preprint
+sage re-ranking with bert. arXiv preprint
 arXiv:1901.04085.
+
 Colin Raffel, Noam Shazeer, Adam Roberts, Katherine
 Lee, Sharan Narang, Michael Matena, Yanqi Zhou,
 Wei Li, and Peter J Liu. 2020. Exploring the limits
 of transfer learning with a unified text-to-text trans-
-former. Journal of Machine Learning Research, 21:1-
+former. Journal of Machine Learning Research, 21:1—
 67.
+
 Hannah Rashkin, Vitaly Nikolaev, Matthew Lamm,
 Lora Aroyo, Michael Collins, Dipanjan Das, Slav
 Petrov, Gaurav Singh Tomar, Iulia Turc, and David
 Reitter. 2021. Measuring attribution in natural lan-
 guage generation models.
+
 Stephen Robertson, Hugo Zaragoza, et al. 2009. The
 probabilistic relevance framework: Bm25 and be-
 yond. Foundations and Trends® in Information Re-
 trieval, 3(4):333-389.
+
 K. Sparck Jones and C. J. Van Rijsbergen. 1975. Report
 on the need for and provision of an ideal information
 retrieval test collection.
+
 Haitian Sun, Tania Bedrax-Weiss, and William Cohen.
 2019. PullNet: Open domain question answering
 with iterative retrieval on knowledge bases and text.
@@ -1072,20 +1102,23 @@ Methods in Natural Language Processing and the
 guage Processing (EMNLP-IJCNLP), pages 2380-
 2390, Hong Kong, China. Association for Computa-
 tional Linguistics.
+
 Alon Talmor and Jonathan Berant. 2018. The web as
 a knowledge-base for answering complex questions.
 In Proceedings of the 2018 Conference of the North
 American Chapter of the Association for Computa-
 tional Linguistics: Human Language Technologies,
-Volume 1 (Long Papers), pages 641–651, New Or-
+Volume 1 (Long Papers), pages 641-651, New Or-
 leans, Louisiana. Association for Computational Lin-
 guistics.
-Nandan Thakur, Nils Reimers, Andreas Rücklé, Ab-
+
+Nandan Thakur, Nils Reimers, Andreas Riicklé, Ab-
 hishek Srivastava, and Iryna Gurevych. 2021. BEIR:
 A heterogeneous benchmark for zero-shot evaluation
 of information retrieval models. In Thirty-fifth Con-
 ference on Neural Information Processing Systems
 Datasets and Benchmarks Track (Round 2).
+
 Luke Vilnis, Xiang Li, Shikhar Murty, and Andrew
 McCallum. 2018. Probabilistic embedding of knowl-
 edge graphs with box lattice measures. In Proceed-
@@ -1093,10 +1126,13 @@ ings of the 56th Annual Meeting of the Association for
 Computational Linguistics (Volume 1: Long Papers),
 pages 263-272, Melbourne, Australia. Association
 for Computational Linguistics.
+
+--- Page 11 ---
 Yusuke Watanabe, Bhuwan Dhingra, and Ruslan
 Salakhutdinov. 2017. Question answering from un-
 structured text by retrieval and comprehension. arXiv
 preprint arXiv:1703.08885.
+
 Zhilin Yang, Peng Qi, Saizheng Zhang, Yoshua Bengio,
 William Cohen, Ruslan Salakhutdinov, and Christo-
 pher D. Manning. 2018. HotpotQA: A dataset for
@@ -1105,6 +1141,7 @@ In Proceedings of the 2018 Conference on Empiri-
 cal Methods in Natural Language Processing, pages
 2369-2380, Brussels, Belgium. Association for Com-
 putational Linguistics.
+
 Wen-tau Yih, Matthew Richardson, Chris Meek, Ming-
 Wei Chang, and Jina Suh. 2016. The value of se-
 mantic parse labeling for knowledge base question
@@ -1113,34 +1150,42 @@ ing of the Association for Computational Linguistics
 (Volume 2: Short Papers), pages 201-206, Berlin,
 Germany. Association for Computational Linguis-
 tics.
+
 Victor Zhong, Weijia Shi, Wen-tau Yih, and Luke Zettle-
-moyer. 2022. ROMQA: A benchmark for robust,
+moyer. 2022. RoMQA: A benchmark for robust,
 multi-evidence, multi-answer question answering.
 arXiv preprint arXiv:2210.14353.
+
+--- Page 12 ---
 A Experimental Details and
 Hyperparameters
-All models were fine-tuned starting from T5 1.1
-checkpoints 6. We fine-tune T5 models on 32 Cloud
-TPU v3 cores. Fine-tuning takes less than 8 hours
+
+All models were fine-tuned starting from TS 1.1
+checkpoints °. We fine-tune T5 models on 32 Cloud
+TPU v3 cores’. Fine-tuning takes less than 8 hours
 for all models.
-8
+
 Dual Encoder. We used the t5x_retrieval li-
-brary for implementing dual encoder models. We
+brary ® for implementing dual encoder models. We
 tuned some parameters based on results on the val-
 idation set. Relevant hyperparameters for training
 the dual encoder are:
-•
-•
-•
-Learning Rate: 1e-3
-Warmup Steps: 1500
-Finetuning Steps: 15000
-• Batch Size: 512
-• Max Query Length: 64
-• Max Candidate Length: 512
+
+¢ Learning Rate: le-3
+
+¢ Warmup Steps: 1500
+
+¢ Finetuning Steps: 15000
+
+¢ Batch Size: 512
+
+¢ Max Query Length: 64
+
+* Max Candidate Length: 512
+
 Classifier. For negative examples, we sampled
 250 random non-relevant documents and sampled
-250 non-relevant documents from the top-1000 doc-
+250 non-relevant documents from the top- 1000 doc-
 uments retrieved by BM25. We also replicated
 each positive example 50 times. We found an ap-
 proximately even number of positive and negative
@@ -1151,114 +1196,124 @@ BM25 performed better than using only either in-
 dividual type of negative examples. Additionally,
 selecting negative examples from BM25 performed
 better than selecting negative examples from the
-T5-Large dual encoder.
-For the T5 input we concatenated the query and
+TS5-Large dual encoder.
+
+For the TS input we concatenated the query and
 truncated document text. The T5 output is the
-string "relevant” or “not relevant”. To classify doc-
+string “relevant” or “not relevant”. To classify doc-
 ument relevance at inference time, we applied a
 threshold to the probability assigned to the “rel-
-evant" label, which we tuned on the validation
+evant” label, which we tuned on the validation
 set. When classifying BM25 candidates we used
 a threshold of 0.9 and when classifying the dual
 encoder candidates we used a threshold of 0.95.
+
 Other relevant hyperparameters for training the
 classifier are:
-"https://github.com/google-
+
+°https://github.com/google-
 research/t5x/blob/main/docs/models.md
-https://cloud.google.com/tpu/
-https://github.com/google-research/t5x_retrieval
-B
-•
-•
-•
-Learning Rate: 1e-3
-• Warmup Steps: 1000
-• Finetuning Steps: 10000
-Batch Size: 1024
-Max Source Length: 512
-• Max Target Length: 16
-Set Difference and Recall
+
+Thttps://cloud.google.com/tpu/
+Shttps://github.com/google-research/t5x_retrieval
+
+¢ Learning Rate: le-3
+
+¢ Warmup Steps: 1000
+
+¢ Finetuning Steps: 10000
+* Batch Size: 1024
+
+* Max Source Length: 512
+* Max Target Length: 16
+
+B_ Set Difference and Recall
+
 Notation and Assumptions Let us assume we
 have two sets derived from the Wikipedia category
-graph, Â and B. The Wikipedia category graph
+graph, A and B. The Wikipedia category graph
 can be missing some relevant entities, such that
-Â C A and B C B, where A and B are inter-
-preted as the hypothetical sets containing all rel-
+Ac Aand B C B, where A and B are inter-
+preted as the hypothetical sets containing ail rel-
 evant entities. We quantify the degree of missing
-entities by denoting recall as rA
-and rB,
-such that
-|Â|
-= râ × |A| and |Â| = rB * |B|. We quan-
+entities by denoting recall as r4 and rg, such that
+|A| = r4 *|Al and |B] = rg *|B|. We quan-
 tify the fraction of elements in A that are also in
-B as rò, such that |AB| = rò * |A|. For sim-
-r₁*
+B as rq, such that |AM Bl] = rp * |Al. For sim-
 plicity, we also assume that the overlap between
-A and B is such that |ÂN B| = r₁ * |AB| and
-|Ân B =
-= ˜Â * ˜B * |AB|.
+A and B is such that |AN B| = r4*|AN Bl and
+|ANBl=raxrg*|AN BI.
+
 Derivation What is the recall (r) and precision
-(p) of Â \ Â relative to A \ B as a function of rA,
-TB, and r?
-First, we derive this function for recall:9
-r =
-r =
-|(A \ B) n (Â \ B)|
-|(A \ B)|
-|(Â \ B)|
-r =
-|(A \ B)|
-|Â| - |Ân B
-r =
-|A| – |AB|
-™Ã * |A| − ˜Â * гn *|A|
-r =
-|A| − (r * |A|)
--
-гA * (1 − r) * |A|
-(1 − r) * |A|
+(p) of A\ B relative to A\ B as a function of ra,
+rp, and ra?
+
+First, we derive this function for recall:?
+
+(A\ B)N (A\ B)|
+|(A\ B)
+\(A\ B)
+
+A\ BI
+"* [(A\ BI
+
+r=
+
+_— |Aj-|AnBl
+"* [Al —|An Bl
+
+ra*|Al—ra*rq*|Al
+
+|A] — (rp * |Al)
+rae (=m) *1Al
+[r=Tal
+
 And for precision:
-p =
-r = r A
-|(A \ B) n (Â \ B)|
-|(Â \ B)|
-"We note some useful properties of pairs of sets X and Y:
-X\Y=XY, |X \Y| = |X|-|XY], if X C Y then
-XY = X, and if X CY then Y° C Xc.
-p =
-p =
-|(Â\B)|
-|(Â \ B)|
-|Â| – |ÂNB|
--
-|Â| – LÂn Bà
-ra * |A| − ra * r *|A|
-гA * B * r * |A|
-гA * (1 − r) * |A|
-p =
-TA * |A|
-p =
-TA * (1
--
-p =
-r
-·гB *гn) * |A|
-(1 − r)
-(1 − гB *rn)
-Discussion While recall is simply equal to rA,
-precision is a more complicated function of rB
-and r, and can be very low for large values of
-™. Intuitively, if subtracting Â from Â removes
-most of Â, then the precision of the resulting set
+
+\(A\ B)n(A\ By
+(A\ By
+
+°We note some useful properties of pairs of sets X and Y:
+X\Y=SXNY*,|X\Y| = |X|-|XOY|,if X CY then
+XY = X,andif X C Y then Y° Cc X°.
+
+--- Page 13 ---
+(A\ B)|
+
+p=
+(A\ B)|
+
+ _ IAl-|An B|
+
+P* \Al—|An Bl
+
+ra *|Al—r4*rq*|Al
+
+pP ra*|Al—raxrp*xro* |Al
+
+ra*(1—1T,) *|A|
+
+ra*(l—rp*tp)*|Al
+
+(1—1T»)
+(l—rp*rp)
+
+Discussion While recall is simply equal to r4,
+precision is a more complicated function of rg
+and r,, and can be very low for large values of
+rn. Intuitively, if subtracting B from A removes
+most of A, then the precision of the resulting set
 will be dominated by the relevant entities missing
 from B. This motivates limiting the intersection of
 the two sets used to construct queries involving set
-intersection. For example, if r = 0.95, then with
-rn 0.8, we can ensure p > 0.83.
-C Annotation Details
+intersection. For example, if rg = 0.95, then with
+Tra < 0.8, we can ensure p > 0.83.
+
+C_ Annotation Details
+
 The annotation tasks in QUEST were carried out by
 participants who were paid contractors. They are
-based in Austin, TX and either have a bachelor's
+based in Austin, TX and either have a bachelor’s
 degree (55%) or equivalent work experience (45%).
 They were paid by the hour for their work and were
 recruited from a vendor who screened them for
@@ -1268,30 +1323,31 @@ They received a standard contracted wage, which
 complies with living wage laws in their country of
 employment. The annotation interfaces presented
 to the annotators are shown in Figures 4, 5 and 6.
-D Impact of Memorization of
+
+D_ Impact of Memorization of
 Pre-training Data
-Since the T5 checkpoints we use to initialize our
+
+Since the TS checkpoints we use to initialize our
 models were pre-trained on the C4 corpus (which
 includes Wikipedia), we investigate whether these
 models have memorized aspects of the Wikipedia
 category graph. We compare recall of the T5-based
 dual encoder model for Wikipedia documents that
 were created prior to the pre-training date of the
-T5 checkpoint compared with documents that were
+TS checkpoint compared with documents that were
 added after pre-training. We report these in Ta-
 ble 7, along with the recalls for the same sets of
 documents with a BM25 retriever, for a baseline
-Avg. Recall@100
-Retriever
-Before After
-BM25
-0.183
-0.050
-T5-Large DE
-0.466
-0.171
-Table 7: Average recall @ 100 on the subsets of docu-
-ments created before vs after T5 pre-training.
+
+Avg. Recall@ 100
+
+Retriever Before — After
+BM25 0.183 0.050
+T5-Large DE 0.466 0.171
+
+Table 7: Average recall@100 on the subsets of docu-
+ments created before vs after TS pre-training.
+
 comparison. We note that the ratio of scores be-
 tween the documents added before pre-training to
 documents added after pre-training is similar for
@@ -1300,88 +1356,106 @@ memorization may explain the difference. For ex-
 ample, the documents created before vs. after the
 pre-training date have average lengths of 759.7 vs.
 441.2 words, respectively.
-Instructions
-Thank you for participating in this task! This task involves paraphrasing a query consisting of multiple phrases so that the original query and the new query have the same meaning. For example, you can be given a query such as
-"American horror movies that are not American movies from the 1990s" with two different phrases highlighted. You will need to paraphrase the query to ensure that it is fluent, expresses all the phrases presented in the original
-query, and clearly describes what a user could be looking for. Feel free to change the structure of the query and reword as you see fit. For the above example, one could paraphrase this query as "Horror movies from America
+
+--- Page 14 ---
+Instructions a
+
+‘Thank you for participating in this task! This task involves paraphrasing a query consisting of multiple phrases so that the original query and the new query have the same meaning. For example, you can be given a query such as
+“Ametican horror movies that are not ‘Amerian movies from the 19505" ‘with two different phrases highlighted, You will need to paraphrase the query to ensure that it is fluent, expresses all the phrases presented in the original
+query, and clearly describes what a user could be looking for. Feel free 10 change the structure of the query and reword it as you sce fit. For the above example, one could paraphrase this query as “Horror movies from America
 that are not from the 1990s".
+
 Here are a few good examples:
-• "Live-action films based on comics that are also Comics adapted into films but not Films based on works by Japanese writers" -> "Films based on non-Japanese comics".
-"Snakes of South America that are also Reptiles of Venezuela but not Reptiles of Brazil" -> "Snakes of Venezuela, but not Brazil".
-"Books about Turkey that are not Novels set in Turkey" -> "Books that are about Turkey, but are not novels set in Turkey"
-"Ferns from China that are also Plants from China" -> "Ferns found in China" (because all ferns are plants)
-• "Reptiles from South Africa that are also African Animals" -> "South African reptiles" (because all reptiles are animals, and all South African animals are also African)
+
++ “Live-action films based om comics that. ey | ‘but not EiliSTbSeR (GHMSHRS ESIMapANESE WHEE” —> “Films based on non-Japanese comics”,
++ "Snakes of South America that ar also ‘but not RERSTGOBEaziI” —> “Snakes of Venezuela, but not Brazil
+
++ "Books about Turkey that are “TTT > "Books that are about Turkey, but are not novels set in Turkey”
+
++ "Rem from China that are also Plants from Ching” -> “Ferns found in China” (because all ferns are plants)
+
++ "Repliles ftom SoulhAtiG&|that are also Affican AFINIS” -> “South African reptiles” (because al reptiles are animals, and all South A\vican animals are also African)
+
 Here are a few examples that are not good:
-"Nigerian films that are also horror movies but not about ghosts" -> "Nigerian horror movies". - This misses the constraint "about ghosts".
-• "Italian adventure films that are also superhero movies" -> "French superhero movies that have adventure" - The constraint asks for Italian, not French movies.
-If the meaning of the query is unclear to you or if the query results in an empty set, please feel free to skip. For e.g., queries such as "Birds of Australia that are not animals of Australia" or "French historical novels that are not
-French" do not make sense and should be skipped.
-Query: Novels by Hanya Yanagihara or 2022 American novels or Indian fantasy novels
-New Query:
-Instructions
+
++ °NIGHAATTIFAS chat are also HOFRORAOVIES but not ASGUREKESE™ -> “Nigerian horror movies”. «This misses the constraint “SGUUENOS.
++ “Ttalian adventure fills that are also superh@halmOvies” -> “French superhero movies that have adventure” - The constraint asks for It
+
+If the meaning of the query is unclear to you or if the query results in an empty set, please fee! free to skip. For e.g., queries such as “Birds of Australia that are not animals of Australia” or “French historical novels that are not
+French” do not make sense and should be skipped.
+
+|, not French movies.
+
 Figure 4: Annotation interface for the paraphrasing stage.
-Skip
-Submit
-Thank you for participating in this task! You will be given an original query and a paraphrased version of the query. You will need to judge if the paraphrased query is fluent, precisely expresses an information need, and is natural.
+
+Instructions
+
+‘Thank you for participating in this task! You will be given an original query and a paraphrased version of the query. You will need to judge if the paraphrased query is fluent, precisely expresses an informati
 Please answer the given questions about the new query.
-Original Query: 1960s fantasy drama films or Italian fantasy drama films
-New Query: Horror movies from America that are not from the 1990s
-Q1:How fluent is the query?
-Fluent: It is clear, and grammatically correct.
-Mostly Fluent: It has a few errors or it does not sound natural, but I can understand it.
-Not Fluent: It has many errors and/or I can hardly understand it.
+
+n need, and is natural
+
+Original Query 1960s fantasy drama films or Italian fantasy drama films QU:How fluent is the query?
+© Fluent: Itis clear, and grammatically correct.
+
+New Query : Horror movies from America that are not from the 1990s “Mostly Fluent: has a few errors oF it does not sound natural, but T ean understand it
+> Not Fluent: It has many errors and/or I can hardly understand it
+
 Q2:How closely does the meaning of the paraphrased query match the meaning of the original query?
-Same Meaning: The paraphrased query asks for the same set of items as the original query. All the highlighted clauses are included.
+© Same Meaning: The paraphrased query asks for the same set of items as the original query. All the highlighted clauses are included.
 Different Meaning: The queries ask for different sets of items. One or more of the highlighted clauses in the original query might not
 be represented in the paraphrased query, or the meaning is changed.
-Too Ambiguous: It's too ambiguous to make a reasonable judgement. Under some likely interpretations of the two queries they have
-the same meaning, but under other likely interpretations they have different meanings.
+> Too Ambiguous: It's too ambiguous to make a reasonable judgement. Under some likely interpretat
+the same meaning, but under other likely interpretations they have different meanings,
+
+of the two queries they have
+
 Q3:Could this query be issued to a search engine by a real user?
-Yes - A user could plausibly issue this query.
-Maybe - The query expresses a niche interest, but a user could potentially issue such a query.
-No - This query expresses a very unnatural information need. It seems extremely unlikely that a user would ever issue such a query
-Instructions
+> Yes - A user could plausibly issue this query.
+5 Maybe - The query expresses a niche interest, but a user could potentially issue such a query.
+[No - This query expresses a very unnatural information need. It seems extremely unlikely that a user would ever issue such a query
+
 Figure 5: Annotation interface for the validation stage.
-1995 television film directed by John Erman
-The Sunshine Boys is a 1996 American comedy television film directed by
-John Erman and based on the 1972 play of the same title by Neil Simon
+
+Instructions
+
+1995 television film directed by John Erman = | New Query
+
+‘The Sunshine Boys is @ 1996 American comedy television film directed by
+John Erman and based on the 1972 play of the same title by Neil Simon American television and comedy films shot in New York
+
 about two legendary (and cranky) comics brought together for a reunion and
-revival of their famous act. The film stars Woody Allen and Peter Falk as
-the comedy duo alongside Sarah Jessica Parker. It premiered on December
+revival of their famous act. The film stars Woody Allen and Peter Falk as, aad
+the comedy duo alongside Sarah Jessica Parker. It premiered on December —
+
 28,1997,on "Hallmark Hall of Fame" on CBS.
+
+Rating Evidance Attribution
+
 Plot.
-Al Lewis and Willy Clark are two old comedians who were once a popular
-comedy act known as "Lewis and Clark" and also called the Sunshine Boys.
-After 43 years together,they parted ways 11 years ago on unfriendly terms
-and have not spoken to each other since then. A reunion is planned for a
-major network special on the history of comedy.
+‘Al Lewis and Willy Clark are two old comedians who were once a popular hte cioliaal ‘Complete
+pe ls eee etter ei | the Sistine Boye isse ciny | Olketyrlevant Partial
+Fd ee ae eee ee Ted aoa va ee eT eae OLikely not relevant No evidance
+and have not spoken to each other since then. A reunion is planned for a GDefinitely notrelovant
+
+‘major network special on the history of comedy.
+
 Production.
 In 1995,Simon adapted his play for a Hallmark Entertainment production.
-His teleplay updated the setting and made the two comedians the product of
-the early days of television, the medium in which the playwright got his
-start. Unlike the film adaptation, although they are portrayed as
-cantankerous, their animosity was not a s severe as Matthau's and Burns'
-characters' bad relationship.
-Woody Allen was originally asked to direct the 1975 film adaptation "The
-Sunshine Boys", but he was more interested in playing the role of Lewis and
+
+His teleplay updated the setting and made the two comedians the product of,
+the early days of television.the medium in which the playwright got his
+
+start, Unlike the film adaptation,although they are portrayed as
+
+cantankerous, their animosity was not as severe as Matthau's and Burns!
+characters’ bad relationship.
+
+‘Woody Allen was originally asked to direct the 1975 film adaptation "The
+‘Sunshine Boys", but he was more interested in playing the role of Lewis and
 declined the offer. 20 years later he was cast as Lewis in this television
-adaptation.
-New Query:
-American television and comedy films shot in New York
-Add
-Documents
-The Sunshine Boys (1996 film)
-Rating
-Definitely relevant
-OLikely relevant
-OLikely not relevant
-Definitely not relevant
-Add
-Evidance
-○ Complete
-O Partial
-No evidance
+adaptation, 2
+
 Figure 6: Annotation interface for the relevance labeling stage.
-Attribution
-Skip
-Submit
+
+

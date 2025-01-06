@@ -1,0 +1,1471 @@
+arXiv:2305.02790v1 [cs.LG] 4 May 2023
+BranchNorm: Robustly Scaling Extremely Deep Transformers
+Yijin Liu, Xianfeng Zeng, Fandong Meng* and Jie Zhou
+Pattern Recognition Center, WeChat AI, Tencent Inc, China
+{yijinliu, xianfzeng, fandongmeng, withtomzhou}@tencent.com
+Abstract
+Recently, DeepNorm scales Transformers into
+extremely deep (i.e., 1000 layers) and reveals
+the promising potential of deep scaling. To
+stabilize the training of deep models, Deep-
+Norm (Wang et al., 2022a) attempts to con-
+strain the model update to a constant value.
+Although applying such a constraint can ben-
+efit the early stage of model training, it may
+lead to undertrained models during the whole
+training procedure. In this paper, we propose
+BranchNorm, which dynamically rescales the
+non-residual branch of Transformer in accor-
+dance with the training period. BranchNorm
+not only theoretically stabilizes the training
+with smooth gradient norms at the early stage,
+but also encourages better convergence in the
+subsequent training stage. Experiment results
+on multiple translation tasks demonstrate that
+BranchNorm achieves a better trade-off be-
+tween training stability and converge perfor-
+mance.
+1 Introduction
+In recent years, Transformers (Vaswani et al., 2017)
+have been developed rapidly and achieved state-of-
+the-art (SOTA) performance on a wide range of
+tasks. Meanwhile, the model capacity gets sub-
+stantially expanded by widening the model dimen-
+sion (Devlin et al., 2019; Liu et al., 2019; Goyal
+et al., 2021; Lin et al., 2021; Smith et al., 2022).
+Given that deep neural models learn feature repre-
+sentations with multiple layers of abstraction (Le-
+Cun et al., 2015), it is more attractive to increase
+model capacity by scaling depths than widths. Un-
+fortunately, due to the training instability of Trans-
+formers, the depths of these SOTA models are still
+relatively shallow (Kaplan et al., 2020; Hoffmann
+et al., 2022).
+To stabilize the training of Transformers, there
+have been various efforts on better architec-
+*
+Equal contributions.
++ Corresponding author.
+43
+42
+41
+Performance on the WMT14 En-Fr
+BLEU
+0.03
+0.07
+0.35
+0.27
+0.21
+40
+6
+12
+18
+24
+30
+Depth
+DeepNorm
+Gap with vanilla Transformer
+Figure 1: BLEU(%) scores on the WMT2014 En-Fr
+dataset after models fully converge. 'Gap' refers to
+the performance decline observed after applying Deep-
+Norm on the vanilla Transformer.
+tures (Wang et al., 2019; Shleifer et al., 2021; Wang
+et al., 2022b), or the implementation of proper ini-
+tialization (Zhang et al., 2019a; Huang et al., 2020;
+Wang et al., 2022a). Among them, the most rep-
+resentative approach is DeepNorm (Wang et al.,
+2022a), which first scales Transformers to 1000
+layers and significantly outperforms existing shal-
+low counterparts.
+Specifically, DeepNorm aims to constrain the
+model update to a constant level by upweighting
+the residual connections in Transformer and reduc-
+ing the variance of parameter initialization. As a
+result, the stability of Transformers is improved in
+the early training stage. However, in the subsequent
+training stage, the limitation of the magnitude of
+parameter updates imposed by DeepNorm may ul-
+timately yield undertrained models. To verify the
+above conjecture, we first conduct experiments on
+shallow Transformers to guarantee convergences.
+As shown in Figure 1, it is observed that DeepNorm
+brings a certain degree of performance decline on
+vanilla Transformers, and this issue tends to get
+worse when models get deeper.
+To address the above issue, we propose a simple
+yet effective approach to robustly scale extremely
+deep Transformers, named BranchNorm. Specifi-
+cally, the non-residual branch¹ of the Transformer
+is dynamically rescaled in accordance with the
+training period. In the early stage of model training,
+BranchNorm theoretically stabilizes the training
+with smooth gradient norms. While in the sub-
+sequent training stage, BranchNorm progressively
+degenerates into vanilla Post-LayerNorm (i.e., Post-
+LN) to promote better convergence. Experiments
+on a wide range of translation tasks show that
+BranchNorm brings consistent improvement over
+DeepNorm, and effectively alleviates the above un-
+dertrained issue. Moreover, BranchNorm performs
+more robustly on some key hyperparameters (e.g.,
+warmup) than DeepNorm, which makes it likely to
+be a portable alternative for scaling extremely deep
+Transformers.
+The contributions of this paper can be summa-
+rized as follows:
+• We propose a simple yet effective normaliza-
+tion approach, named BranchNorm, to stabi-
+lize the training of extremely deep Transform-
+ers.
+• BranchNorm achieves a better trade-off be-
+tween training stability and converges perfor-
+mance on a wide range of translation tasks.
+• BranchNorm is demonstrated to alleviate
+the problem of parameter redundancy in ex-
+tremely deep models, from the perspective of
+representing similarity and sparsity of activa-
+tion functions.
+2 Background
+In this section, we first provide a brief overview of
+the difference between Post-LN and Pre-LN, and
+subsequently introduce the approach of DeepNorm.
+Post-LN and Pre-LN. Firstly, Wang et al.
+(2019); Nguyen and Salazar (2019) observe that the
+position of LayerNorm (Ba et al., 2016) has a sig-
+nificant effect on training stability, and propose the
+more stable Pre-LN variant when compared with
+the original Post-LN (Vaswani et al., 2017). An
+'Note that we name the residual connections in Trans-
+former as 'residual branch' and the other branch as 'non-
+residual branch' in this paper.
+Пх
+Layer-Norm
++ <
+Feed Forward
+Layer-Norm
+Self-Attention
+Post-Norm
+Пх
+Layer-Norm
+Feed Forward
+Layer-Norm
+4 MH
+Self-Attention
+Layer-Norm
+Pre-Norm
+Figure 2: The architectures of Pre-Norm (i.e., Pre-LN)
+and Post-Norm (i.e., Post-LN) Transformers.
+example of these two architectures is shown in Fig-
+ure 2. Subsequently, Liu et al. (2020b) further ana-
+lyze that Pre-LN may have an excessive reliance on
+its residual connections, which inhibits the model
+from unleashing its full potential. Motivated by
+the above observation, we base our approach on
+Post-LN in the remainder of our experiments.
+Formally, given the input of the sub-layer in
+the 1-th sub-layer x1, calculates the output x1+1
+is calculated by Post-LN as follows:
+X1+1 =
+LN(x1+ F (x1; 01))
+(1)
+where LN is an abbreviation for LayerNorm², F
+represents the function of the current sub-layer (at-
+tention or feed-forward) and Or denotes the corre-
+sponding parameters of the sub-layer.
+DeepNorm. DeepNorm follows the Post-LN
+Transformer architecture and rescales the residual
+branch with a scalar factor a > 1. Similarly, the l-
+th sub-layer is calculated by DeepNorm as follows:
+X1+1
+=
+· LN(αx₁ + F (x1; 01))
+(2)
+In addition, DeepNorm reduces the variance of the
+initial parameters by scaling factor ß < 1. Both
+the a and ẞ are functions of model depths, which
+are derived from the assumption of constant model
+update. For a strandard Transformer with N-layer
+encoder and M-layer decoder, DeepNorm calculate
+2For brevity, the two learnable parameters in LayerNorm
+are omitted.
+a and as follows:
+aencoder 0.81 (N¹M) 16
+=
+Bencoder = 0.87(N¼M)
+=
+adecoder (3M)
+ẞdecoder = (12M)¯
+16
+(3)
+Note that ẞ merely affects the model initialization,
+while a is used and fixed during the whole pro-
+cedure. Moreover, with the model getting deeper,
+DeepNorm assigns larger value of a, which leads
+to the model outputs x1+1 depend too much on the
+residual branch ax₁ and thus ultimately yields the
+undertrained model parameters Oɩ in Equation (2).
+3 Approaches
+In this section, we first analyze the instability of
+Post-LN from the perspective of gradient norm,
+then demonstrate how DeepNorm can alleviate the
+unbalanced gradients to a certain extent, and finally
+introduce our proposed method BranchNorm.
+3.1 Perspective of Gradient
+Unbalanced gradients are mainly responsible for
+the instability of Transformer³ (Wang et al., 2019;
+Shleifer et al., 2021; Zhu et al., 2021), we firstly
+explore the relation between gradient and model
+depth following Wang et al. (2019). Given a Trans-
+former with L sub-layers and the training loss E,
+the gradient for the 1-th sub-layer is calculated by
+the chain rule4:
+large or very small, which can yield the gradient
+vanishing or exploding.
+Similarly, we analyze the gradient of DeepNorm
+based on Equation (2), and get the gradient of the
+1-th sub-layer is calculated by:
+irreducible
+L-1
+θε
+θε
+δαι
+მxL,
+II
+OLN (axk + F (xk; 01))
+a (axk + F (xk; 01))
+×
+k=l
+LN
+JF (xk; k)
+дхк
+L-1
+II
+k=l
++
+residual
+(5)
+In DeepNorm, a increases with model depth and
+helps with training stability. Theoretically, a can
+go to infinity to represent the upper bound of
+DeepNorm's stability. Here, we introduce this as-
+sumption to simplify the derivation: If a get large
+enough, i.e., a → ∞, the LN item can be approx-
+imated as
+L-1 ƏLN(axk) and the residual item
+ǝ(αxk)
+can be approximated as II-a, we put them into
+Equation (5) and can simplify it as follows:
+"
+L-1
+L-1
+L-1
+θε
+θε
+Эхи
+II
+OLN (axk)
+(axk)
+☑
+II
+k=l
+θαι
+irreducible
+LN
+k=l
+α
+residual
+L-1
+L-1
+θε
+✗
+OLN(k)
+дхк
+☑
+II a
+α
+k=l
+ƏXL
+irreducible
+θε
+ᎥᏆ Ꮮ .
+irreducible
+II
+k=l
+LN
+ĐLN(2k)
+дхк
+L-1
+☑
+II
+k=l
+LN
+residual
+(00+00)
+θε
+L-1
+OLN (F (xk; Ok))
+JF (xk; Ok)
+k=l
+LN
+(4)
+θε
+θαι axL
+irreducible
+L-1
+Π
+II (¹
+k=l
+× II
++
+JF (xk; k)
+дхк
+residual
+where the gradient consists of three terms and the
+last two items are multiplicative with respect to
+the number of model layers L. Once L gets larger,
+the values of the last two items may become very
+3 In recent years, there are also researchers questioning this
+point and providing different perspectives (Liu et al., 2020b;
+Wang et al., 2022a). Given that more explorations and discus-
+sions are needed to make it out, we still conduct analysis from
+the perspective of gradient norm in this paper.
+4 More detailed derivations are in Appendix A.
+(6)
+When compared to the gradient of Post-LN in Equa-
+tion (4), DeepNorm can approximately eliminate
+the final residual item, and thus effectively miti-
+gate the risk of gradient vanishing or exploding.
+Although a larger a in DeepNorm results in more
+stable gradients, it may come at the expense of fi-
+nal convergence performance, as mentioned above.
+Considering that the unbalanced gradients gener-
+ally occur during the early training stage, it may be
+more appropriate if a can be varied based on the
+training period.
+3.2 BranchNorm
+In this section, we summarize the observations
+from previous sections and introduce BranchNorm:
+x1+1
+=
+LN(x1+αF (x1; 01)) (7)
+25.0
+22.5
+20.0
+17.5-
+15.0
+12.5
+10.0
+DeepNet nllloss
+- BranchNorm nllloss
+100
+200
+300
+400
+traing steps.
+DeepNet gnormloss
+BranchNorm gnormloss 10
+500
+Figure 3: Gradient norm (solid line) and negative log
+likelihood loss (nllloss, dotted line) at the very begin-
+ning of training.
+It is analogous to the dual form of DeepNorm, but
+with two key differences: First, BranchNorm uti-
+lizes a dynamic factor (i.e., a) that allows it to nor-
+malize gradients during the early training stage and
+gradually eliminate the negative effects of these nor-
+malizations during the later stage. Second, the a of
+BranchNorm scales on the non-residual branches in
+Transformer, allowing for exactly normalize early
+stage's gradients without the strong assumptions
+of DeepNorm in Equation (5). Specifically, a in
+Equation (7) is a simple factor with respect to the
+number of training step t. Here, we use a simple
+linear incremental approach:
+at =
+min (1.0,t/T)
+(8)
+where T is the maximum number of steps to con-
+duct BranchNorm. At the very beginning of train-
+ing, at is approaching 0, which means that the
+model approximates the constant transformation
+and gets updated with smooth gradients. Follow-
+ing the analysis in the above section, we get the
+gradient of BranchNorm for the 1-th sub-layer:
+L-1
+θε
+θε
+☑
+дх
+ax L
+II
+k=l
+=
+irreducible
+L-1
+II
+ПI 
+(1 + a
+k=l
+θε
+ƏXL
+irreducible
+☑
+QLN(2k+aF (2k;0))
+Ə (xk + αF (xk; 01))
+JF (xk; 01)
+residual
+L-1
+II
+k=l
+дхк
+OLN(2k)
+дхк
+LN
+LN
+(a = 0)
+(9)
+At the very beginning of training, BranchNorm
+can stabilize the gradient norm while DeepNorm
+✗
+requires a relatively strong assumption (a → ∞)
+in Equation (6). Experimentally, as shown in Fig-
+ure 3, we observe corresponding smoother gradi-
+ents of BranchNorm at the very beginning of train-
+ing. Once the training step t reaches the predefined
+maximum step T, BranchNorm degenerates to the
+vanilla Post-LN to achieve better convergence. We
+further validate the hyperparameter insensitivity of
+BranchNorm in Section 5.1.
+4 Experiments and Results
+We conduct extensive experiments on both bilin-
+gual translation and multilingual translation tasks
+to verify our approach. In this section, we will
+describe our experimental settings and present re-
+sults.
+4.1
+Datasets and Evaluations
+We use the standard WMT 2017 English-German
+(En-De), WMT 2014 English-French (En-Fr), and
+IWSLT 2014 German-English (De-En) datasets for
+the bilingual task, which is processed following the
+official scripts of fairseq³. For the multilingual task,
+we conduct experiments on the OPUS-100 (Zhang
+et al., 2020) and MultiUN (Gu et al., 2019) dataset
+and follow the corresponding processing in existing
+studies.
+For evaluation, we set the beam size to 4 and
+the length penalty to 0.6 during inference. We
+use the multibleu.perl to calculate cased sensitive
+BLEU scores for WMT 2017 En-Deб and WMT
+2014 En-Fr. Besides, we use sacreBLEU to cal-
+culate cased sensitive BLEU scores for OPUS-100
+and cased insensitive BLEU scores for MultiUN
+following Wang et al. (2021).
+4.2 Training Settings
+Our experiments are based on the fairseq code-
+base (Ott et al., 2019). For all experiments, we
+use the standard Transformer base setting which
+sets hidden dimensions to 512 and feed-forward
+inner representation to 2048, if not specifically
+noted. We initialize model parameters following
+DeepNorm (Wang et al., 2022a). All experiments
+are conducted on 32 NVIDIA A100 GPUs where
+each is allocated with a batch size of approximately
+16,384 tokens. All Transformer models are trained
+for 100k steps with the early stop for small-scale
+Shttps://github.com/facebookresearch/fairseq
+"For a rigorous comparison, we use the same test set with
+DeepNorm, i.e., newstest2014.
+https://github.com/mjpost/sacrebleu
+Models
+LN
+6L-6L 18L-18L 50L-50L 100L-100L 250L-250L
+Vanilla Post-LN (Vaswani et al., 2017)
+Post
+28.1
+diverged
+DS-Init (Zhang et al., 2019a)
+Post
+27.9
+diverged
+Admin (Liu et al., 2020b)
+Post
+27.9
+28.8
+diverged
+ReZero (Bachlechner et al., 2020)
+No
+26.9
+diverged
+R-Fixup (Zhang et al., 2019b)
+No
+27.5
+28.4
+27.7
+diverged
+diverged
+T-Fixup (Huang et al., 2020)
+No
+27.5
+28.4
+27.9
+diverged
+diverged
+Vanilla Pre-LN (Vaswani et al., 2017)
+Pre
+27.0
+28.1
+28.0
+27.4
+27.5
+DLCL (Wang et al., 2019)
+Pre
+27.4
+28.2
+diverged
+27.5
+27.7
+NormFormer (Shleifer et al., 2021)
+Pre
+27.0
+28.3
+27.8
+diverged
+diverged
+Sub-LN (Wang et al., 2022b) +
+Pre
+27.5
+28.3
+28.7
+27.7
+27.9
+DeepNorm (Wang et al., 2022a)
+Post
+27.8
+28.8
+29.0
+28.9
+DeepNorm (Wang et al., 2022a) †
+Post
+28.6
+29.1
+29.7
+29.3
+29.0
+BranchNorm (ours)
+Post 29.3
+30.3
+30.7*
+29.8
+29.6
+Table 1: BLEU scores (%) on the WMT-17 En-De test set with depth-scaling. † indicates our reimplementations.
+AL-BL refers to a Transformer with A-layer encoder and B-layer decoder. **' means BranchNorm is significantly
+better than DeepNorm with p < 0.03.
+Models
+LN 6L-6L 18L-18L 50L-50L
+100L-100L 250L-250L 500L-500L
+Vanilla Post-LN (2017)
+Pre 41.48
+43.27
+diverged
+Vanilla Pre-LN (2017)
+Pre 40.96
+42.48
+42.70
+43.12
+43.25
+43.18
+DLCL (2019)
+Pre 41.33
+42.81
+43.05
+diverged
+Sub-LN (2022b) †
+Pre
+41.12
+42.68
+43.28
+43.31
+43.42
+43.21
+DeepNorm (2022a) †
+Post 41.47
+42.92
+43.79
+43.93
+43.87
+43.67
+MixNorm (ours)
+BranchNorm (ours)
+Post 41.96
+43.34
+43.81
+43.91
+43.73
+43.41
+Post 41.67
+43.53
+43.89
+44.20
+44.30*
+44.27
+Table 2: BLEU scores (%) on the WMT-14 En-Fr test set with depth-scaling. † indicates our reimplementations.
+AL-BL refers to a Transformer with A-layer encoder and B-layer decoder. *** means BranchNorm is significantly
+better than DeepNorm with p <0.03.
+BLEU (%)
+Performance Curve on WMT2017 En-De
+31.0
+30.5
+30.0
+29.5
+29.0
+28.5
+DeepNorm (baseline)
+BranchNorm (ours)
+28.0
+20000
+40000
+60000
+80000
+Traing steps
+100000
+Figure 4: BLEU score curve of 50L-50L models on the
+WMT 2017 En-De with the increase of training steps.
+datasets. The maximum norm step T of Branch-
+Norm in Equation (8) is set to 4,000 for all experi-
+ments. More details are elaborated in Appendix B.
+4.3 Bilingual Translation Tasks
+We compare several state-of-the-art approaches for
+deep Transformers, including DeepNorm (Wang
+et al., 2022a), Sub-LN (Wang et al., 2022b), Norm-
+Former (Shleifer et al., 2021), ReZero (Bachlech-
+ner et al., 2020) and etc. We implemented Deep-
+Norm and following the original paper (Wang et al.,
+2022a) as the source codes were not publicly avail-
+able when we conducted our experiments. To
+ensure that the training framework is the same
+across different approaches, we followed the of-
+ficial source code of Sub-LN and NormFormer,
+and re-implemented them on Fairseq. Other results
+are directly cited from corresponding papers.
+Results on WMT17 En-De. Table 1 reports the
+results of baselines and our approach on the WMT
+(a) IWSLT2014 De-En 0.16M
+(b) WMT2017 En-De 4.5M
+(c) WMT2014 En-Fr 36M
+45
+31
+34
+33
+32
+30
+30
+28
+44
+43
+41
+27
+DeepNorm
+40
+29
+DeepNorm
+BranchNorm (ours)
+BranchNorm (ours)
+SubLN
+DeepNorm
+BranchNorm (ours)
+SubLN
+28
+26
+39
+6
+12
+24
+50
+100 200
+500 1000
+6
+12
+24
+50
+100 200
+500 1000
+6
+12
+24
+50
+100 200
+500
+1000
+Model Depths
+Model Depths
+Model Depths
+Figure 5: Performance of bilingual translation with different model depths, which are plotted on a logarithmic
+scale.
+2017 En-De dataset. In most cases, the training
+of vanilla Post-LN Transformer get diverged due
+to its own training instability. Meanwhile, previ-
+ous approaches can stabilize the training of deep
+Transformer to varying degrees. Results of our
+re-implemented DeepNorm slightly outperform
+those reported in the original paper, and serve as a
+stronger baseline to make the improvement of our
+approach more convincing. It is noteworthy that all
+approaches show different degradation of BLEU
+score after 200 layers. We preliminarily specu-
+late that this phenomenon is caused by the overfit-
+ting on the small-scale WMT17 En-De after the
+model deepening. In summary, our BranchNorm
+achieves the best results consistently at different
+depths and mitigates the performance degradation
+problem mentioned above Moreover, BranchNorm
+outperforms previous state-of-the-art deep models
+by up to +1.2 BLEU given the same model depths.
+As shown in Figure 4, BranchNorm exhibits faster
+convergence and better convergence performance
+than DeepNorm.
+Results of baselines
+Results on WMT14 En-Fr.
+and BranchNorm on the larger WMT 2014 En-Fr
+dataset are reported in Table 2. We observe similar
+findings with WMT 2014 En-De, namely, Branch-
+Norm bring consistent improvements on models
+with different depths. Notably, our 500 layer model
+outperforms existing deep models and achieves a
+new SOTA performance of 44.3 BLEU.
+Effects of Data Scale. We draw the detailed per-
+formance of three datasets with different scales in
+Figure 5. Overall, we observe that as the model
+deepens, performance on smaller data is compro-
+mised, while larger datasets continue to benefit
+from the scaling of depth. This indicates that
+deeper models tend to require larger data to fit,
+which is consistent with findings on large-scale
+pretraining (Hoffmann et al., 2022).
+Effects of Training Steps. In Figure 4, we plot
+the training curves of BranchNorm and DeepNorm
+for the 50L-50L model on the WMT2017 En-De.
+The results demonstrate that BranchNorm can ef-
+fectively unleash unleash the potential performance
+of deep models and finally yields a better con-
+verge performance. In contrast, DeepNorm suffers
+from the undertraining problem, and performance
+is harmed to a certain extent at larger training steps.
+4.4 Multilingual Translation Tasks
+Results of various models on the OPUS-100 and
+MultiUN datasets are listed in Table 3. As the depth
+increases from 12 to 1000, the BLEU scores are
+increased by +7.8 and +6.1 points respectively on
+the OPUS dataset and MultiUN dataset. Scaling the
+vanilla Pre-LN Transformer to 200 and 1000 layers
+proves to be ineffective, indicating that the vanilla
+Pre-LN Transformer is not effective enough on the
+deep model. BranchNorm consistently outperforms
+DeepNorm across all depths which is coherent with
+the conclusions of the bilingual translations.
+5 Analysis
+In this section, we first verify the robustness of
+BranchNorm to hyperparameter, and then analyze
+the parameter redundancy.
+5.1 Hyperparameter Sensitivity
+Effects of Different T. We conduct experiments
+to evaluate the effect of varying the different maxi-
+mum norm step T in Equation (8) on BranchNorm.
+OPUS 100
+MultiUN
+Models
+#Layers #Params
+X→En
+En→X Avg
+X→En En→X Avg
+12
+133M
+27.5
+21.4
+24.5
+43.8
+52.3
+48.1
+Baseline (Zhang et al., 2020)
+24
+173M
+29.5
+22.9
+26.2
+46.1
+53.9
+50
+48
+254M
+31.4
+24.0
+27.7
+200
+863M
+34.6
+26.4
+30.5
+49.1
+56.3
+52.7
+Pre-LN(Vaswani et al., 2017)
+1000
+3.8B
+34.0
+28.0
+31.0
+50.1
+56.7
+53.4
+200
+863M
+33.2
+29.0
+31.1
+DeepNorm(Wang et al., 2022a)
+1000
+3.8B
+33.9
+30.2
+32.1
+200
+863M
+33.9
+28.2
+31.1
+49.2
+56.9
+53.1
+DeepNorm† (2022a)
+1000
+3.8B
+34.8
+29.4
+32.1
+50.3
+57.2
+53.8
+200
+863M
+34.2
+28.5
+31.4*
+49.7
+57.2
+53.4*
+BranchNorm (ours)
+1000
+3.8B
+35.0
+29.6
+32.3*
+50.8
+57.6
+54.2*
+'*'
+Table 3: Average BLEU score (%) of different models with varying depths on the OPUS-100 and MultiUN test
+sets. † indicates our reimplementations. The bolded scores correspond to the best in the same depths. means
+BranchNorm is significantly better than DeepNorm with p < 0.05.
+BLEU (%)
+10
+30
+40
+(a) Effect of Warmup
+BLEU (%)
+30
+40
+(b) Effect of Learning Rate
+45
+0
+DeepNorm (baseline)
+BranchNorm (ours)
+25-
+DeepNorm (baseline)
+BranchNorm (ours)
+100
+1000
+4000
+5e-4
+8e-4
+1e-3
+1.5e-3
+Warmup Steps
+Learning Rate
+Figure 6: Effects of key hyperparameters (i.e., warmup and learning rate) on training 100L-100L models on the
+WMT 2014 En-Fr dataset.
+alpha
+Alpha on Different Strategies
+1.0
+0.8
+0.6
+0.4
+0.2
+Exp k=0.999
+Linear T-4000
+Sigmoid u=200
+0.0-
+0
+1000
+2000
+3000
+4000
+Training Steps t
+5000
+Figure 7: Different growth strategies of a in Branch-
+Norm. Note tht a is clipped to 1.0 for all strategies.
+A larger value of T corresponds to a slower degra-
+dation of BranchNorm to the vanilla Post-LN, and
+generally yield a more stable training process. We
+vary TЄ [100, 400, 4000, 20000] and observe that
+BranchNorm is insensitive to the variation of T.
+Effects of Different Warmup and Learning
+Rate. We investigate the effect of these key hy-
+perparameters on a 200-layer (i.e., 100L-100L)
+Transformer on WMT14 En-Fr dataset and present
+the results in Figure 6. Our observations indicate
+that BranchNorm is able to stably train a 200-layers
+Transformer without the use of warmup, and ex-
+hibits better tolerance for larger learning rates when
+compared to DeepNorm.
+Effects of Different Growing Strategies of a.
+We investigate the effects of various growing strate-
+gies including the default linear strategy, which is
+illustrated in Figure 7. For 200-layer Transformers
+on WMT14 En-Fr, we respectively obtain 44.20,
+44.15, and 44.21 BLEU on the linear, exp, and
+Similarity
+(a) Encoder Layers
+1.00
+0.95
+0.90
+0.85
+0.80
+0.75
+0.70
+-----
+Similarity
+1.00
+(b) Decoder Layers
+0.95
+0.90
+0.85
+0.65
+DeepNorm (baseline)
+0.60
+BranchNorm (ours)
+0.80
+DeepNorm (baseline)
+BranchNorm (ours)
+1 2 3
+4 5 6 7 8 9 10 11 12 13 14 15 16 17
+Layers
+12
+3 4 5 6 7 8 9 10 11 12 13 14 15 16 17
+Layers
+Figure 8: Representation similarity between adjacent layers. BranchNorm's values are lower than DeepNorm in
+most layers.
+Sparsity
+0.055
+(a) Encoder Layers
+(b) Decoder Layers
+0.10
+0.060
+0.050
+0.045
+0.040
+0.035
+Sparsity
+0.09-
+0.08-
+0.07-
+0.06
+0.05
+0.04-
+0.030
+DeepNorm (baseline)
+BranchNorm (ours)
+0.03
+0.02
+1
+2 3
+4
+5
+6
+7 8 9 10 11 12 13 14 15 16 17 18
+1 2
+3
+5 6
+7
+Layers
+DeepNorm (baseline)
+BranchNorm (ours)
+8 9 10 11 12 13 14 15 16 17 18
+Layers
+Figure 9: The sparsity of activation function of DeepNorm and BranchNorm models. The BranchNorm model is
+sparser than the DeepNorm one in all layers.
+sigmoid strategies, indicating that our method is
+robust to these strategy variants, therefore, we em-
+ploy the simplest linear strategy in all experiments.
+5.2 Parameter Redundancy
+Representation Similarity. Previous stud-
+ies (Liu et al., 2020a) has posited that the Pre-LN
+Transformer has disproportionately large weights
+on its residual branch, which may inhibit its
+potential performance as the model deepens. Our
+hypothesis is that DeepNorm directly augment
+the weights of the residual branches in order
+to enhance the stability of deep model training,
+but may also impede the potential of the deep
+model. In order to verify this assumption, we
+employed a methodology to determine the cosine
+similarity of representations between adjacent
+layers in 200-layer (i.e., 100L-100L) models that
+were respectively trained with DeepNorm and
+BranchNorm.
+The representation similarity of both encoder
+and decoder layers is presented in Figure 8. It is ob-
+served that the similarity score of DeepNorm con-
+sistently exceeds that of BranchNorm, indicating
+that the augmentation of the weights of the residual
+branch results in the model becoming more akin
+to the Pre-LN Transformer. Similar findings about
+sparsity are consistently observed for models with
+different depths and data. This characteristic may
+subsequently contribute to the degradation of the
+deep model and negatively impact performance.
+Therefore, it is essential to revert the weights to
+their original values, as is done in the implementa-
+tion of BranchNorm.
+Sparsity of Activation Function. Li et al.
+(2022) studies the activation function sparsity of
+the Transformer and demonstrates that the sparser
+model comes with better generalization and robust-
+ness. The sparsity is quantified by the percentage
+of nonzero entries after the activation function. As
+shown in Figure 9, we observe the sparsity of two
+models trained with DeepNorm and BranchNorm
+respectively, and find that BranchNorm had a rel-
+atively smaller sparsity. To confirm the effect of
+sparsity on the robustness and generalization of the
+model, we conducted further experiments on the
+MTNT (Michel and Neubig, 2018). MTNT (Ma-
+chine Translation of Noisy Text) consists of noisy
+comments on Reddit (www.reddit.com) and pro-
+fessionally sourced translations and is a testbed for
+robust translation. We evaluate two En-Fr models
+that are trained with DeepNorm and BranchNorm
+on this noise dataset. BranchNorm has a signifi-
+cant improvement of 1.0 BLEU over DeepNorm,
+indicating that our method is able to improve ro-
+bustness by increasing the sparsity of the model.
+6 Conclusion
+In this paper, we first explore the undertraining
+problem of DeepNorm and propose a more flexible
+canonical approach, namely BranchNorm, which
+theoretically stabilizes the training with smooth gra-
+dient norms at the early stage. Once the dangerous
+phase of training instability is passed, BranchNorm
+can then degenerate to a standard Post-LN, thus
+encouraging better convergence performance. Ex-
+periment results on several translation tasks show
+that BranchNorm achieves a better trade-off be-
+tween training stability and converge performance.
+Limitations
+The training of deep Transformers generally re-
+quires large GPU resources, for example, training
+a 1,000-layer WMT14 En-Fr translation model re-
+quires 1000 GPU days. In addition, deeper de-
+coders can lead to slower inference, and more
+model architecture design or compression tech-
+niques need to be further explored to make deep
+models practically deployable for applications.
+References
+Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E Hin-
+ton. 2016. Layer normalization. stat, 1050:21.
+Thomas Bachlechner, Bodhisattwa Prasad Majumder,
+Huanru Henry Mao, Garrison W. Cottrell, and Ju-
+lian J. McAuley. 2020. Rezero is all you need: Fast
+convergence at large depth. CoRR, abs/2003.04887.
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
+Kristina Toutanova. 2019. BERT: Pre-training of
+deep bidirectional transformers for language under-
+standing. In NAACL-HLT 2019, pages 4171-4186.
+Naman Goyal, Jingfei Du, Myle Ott, Giri Ananthara-
+man, and Alexis Conneau. 2021. Larger-scale trans-
+formers for multilingual masked language modeling.
+CORR, abs/2105.00572.
+Jiatao Gu, Yong Wang, Kyunghyun Cho, and Vic-
+tor OK Li. 2019. Improved zero-shot neural ma-
+chine translation via ignoring spurious correlations.
+In Proceedings of the 57th Annual Meeting of the
+Association for Computational Linguistics, pages
+1258-1268.
+Jordan Hoffmann, Sebastian Borgeaud, Arthur Men-
+sch, Elena Buchatskaya, Trevor Cai, Eliza Ruther-
+ford, Diego de Las Casas, Lisa Anne Hendricks,
+Johannes Welbl, Aidan Clark, et al. 2022. Train-
+ing compute-optimal large language models. arXiv
+preprint arXiv:2203.15556.
+Xiao Shi Huang, Felipe Pérez, Jimmy Ba, and Mak-
+sims Volkovs. 2020. Improving transformer op-
+timization through better initialization. In ICML
+2020, volume 119 of Proceedings of Machine Learn-
+ing Research, pages 4475-4483.
+Jared Kaplan, Sam McCandlish, Tom Henighan,
+Tom B Brown, Benjamin Chess, Rewon Child, Scott
+Gray, Alec Radford, Jeffrey Wu, and Dario Amodei.
+2020. Scaling laws for neural language models.
+arXiv preprint arXiv:2001.08361.
+Yann LeCun, Yoshua Bengio, and Geoffrey Hinton.
+2015. Deep learning. nature, 521(7553):436–444.
+Zonglin Li, Chong You, Srinadh Bhojanapalli, Daliang
+Li, Ankit Singh Rawat, Sashank J Reddi, Ke Ye,
+Felix Chern, Felix Yu, Ruiqi Guo, et al. 2022.
+Large models are parsimonious learners: Activa-
+tion sparsity in trained transformers. arXiv preprint
+arXiv:2210.06313.
+Junyang Lin, An Yang, Jinze Bai, Chang Zhou,
+Le Jiang, Xianyan Jia, Ang Wang, Jie Zhang, Yong
+Li, Wei Lin, Jingren Zhou, and Hongxia Yang.
+2021. M6-10T: A sharing-delinking paradigm for
+efficient multi-trillion parameter pretraining. CORR,
+abs/2110.03888.
+Liyuan Liu, Haoming Jiang, Pengcheng He, Weizhu
+Chen, Xiaodong Liu, Jianfeng Gao, and Jiawei Han.
+2020a. On the variance of the adaptive learning rate
+and beyond. In ICLR 2020.
+Liyuan Liu, Xiaodong Liu, Jianfeng Gao, Weizhu
+Chen, and Jiawei Han. 2020b. Understanding the
+difficulty of training transformers. In Proceedings of
+the 2020 Conference on Empirical Methods in Nat-
+ural Language Processing (EMNLP), pages 5747-
+5763, Online. Association for Computational Lin-
+guistics.
+Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Man-
+dar Joshi, Danqi Chen, Omer Levy, Mike Lewis,
+Luke Zettlemoyer, and Veselin Stoyanov. 2019.
+Roberta: A robustly optimized BERT pretraining ap-
+proach. CoRR, abs/1907.11692.
+Paul Michel and Graham Neubig. 2018. MTNT: A
+testbed for machine translation of noisy text. In Pro-
+ceedings of the 2018 Conference on Empirical Meth-
+ods in Natural Language Processing, pages 543-
+553, Brussels, Belgium. Association for Computa-
+tional Linguistics.
+Toan Q. Nguyen and Julian Salazar. 2019. Transform-
+ers without tears: Improving the normalization of
+self-attention. CORR, abs/1910.05895.
+Myle Ott, Sergey Edunov, Alexei Baevski, Angela
+Fan, Sam Gross, Nathan Ng, David Grangier, and
+Michael Auli. 2019. fairseq: A fast, extensible
+toolkit for sequence modeling. In Proceedings of
+the 2019 Conference of the North American Chap-
+ter of the Association for Computational Linguistics:
+Human Language Technologies, NAACL-HLT 2019,
+Minneapolis, MN, USA, June 2-7, 2019, Demonstra-
+tions, pages 48-53. Association for Computational
+Linguistics.
+Sam Shleifer, Jason Weston, and Myle Ott. 2021.
+Normformer: Improved transformer pretraining
+with extra normalization. CoRR, abs/2110.09456.
+Shaden Smith, Mostofa Patwary, Brandon Norick,
+Patrick LeGresley, Samyam Rajbhandari, Jared
+Casper, Zhun Liu, Shrimai Prabhumoye, George
+Zerveas, Vijay Korthikanti, et al. 2022. Using
+deepspeed and megatron to train megatron-turing
+nlg 530b, a large-scale generative language model.
+arXiv preprint arXiv:2201.11990.
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob
+Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz
+Kaiser, and Illia Polosukhin. 2017. Attention is all
+you need. In NeurIPS 2017, pages 5998–6008.
+Hongyu Wang, Shuming Ma, Li Dong, Shaohan
+Huang, Dongdong Zhang, and Furu Wei. 2022a.
+DeepNet: Scaling Transformers to 1,000 layers.
+CORR, abs/2203.00555.
+Hongyu Wang, Shuming Ma, Shaohan Huang,
+Li Dong, Wenhui Wang, Zhiliang Peng, Yu Wu,
+Payal Bajaj, Saksham Singhal, Alon Benhaim,
+Barun Patra, Zhun Liu, Vishrav Chaudhary, Xia
+Song, and Furu Wei. 2022b. Foundation Transform-
+ers. CORR, abs/2210.06423.
+Qiang Wang, Bei Li, Tong Xiao, Jingbo Zhu,
+Changliang Li, Derek F. Wong, and Lidia S. Chao.
+2019. Learning deep transformer models for ma-
+chine translation. In ACL 2019, pages 1810–1822.
+Weizhi Wang, Zhirui Zhang, Yichao Du, Boxing Chen,
+Jun Xie, and Weihua Luo. 2021. Rethinking zero-
+shot neural machine translation: From a perspective
+of latent variables. In Findings of the Association
+for Computational Linguistics: EMNLP 2021, pages
+4321-4327, Punta Cana, Dominican Republic. Asso-
+ciation for Computational Linguistics.
+Biao Zhang, Ivan Titov, and Rico Sennrich. 2019a. Im-
+proving deep transformer with depth-scaled initial-
+ization and merged attention. In EMNLP-IJCNLP
+2019, pages 898-909.
+Biao Zhang, Philip Williams, Ivan Titov, and Rico Sen-
+nrich. 2020. Improving massively multilingual neu-
+ral machine translation and zero-shot translation. In
+ACL 2020, pages 1628-1639. Association for Com-
+putational Linguistics.
+Hongyi Zhang, Yann N. Dauphin, and Tengyu Ma.
+2019b. Fixup initialization: Residual learning with-
+out normalization. In ICLR 2019.
+Chen Zhu, Renkun Ni, Zheng Xu, Kezhi Kong,
+W Ronny Huang, and Tom Goldstein. 2021. Gra-
+dinit: Learning to initialize neural networks for sta-
+ble and efficient training. Advances in Neural Infor-
+mation Processing Systems, 34:16410-16422.
+A Theoretical Proofs
+A.1 Gradients of Post-LN
+Given a Transformer with L sub-layers and the
+training loss E, the gradient for the 1-th sub-layer
+is calculated by the chain rule:
+θε
+θαι
+δε θαι
+θαι θαι
+(10)
+axL in the above equa-
+Recursively decomposing
+tion, we have:
+JXL
+δαι
+XL XL-1
+XL-1 XL-2
+0х1+1
+(11)
+θαι
+Given the Post-LN calculate the x1+1 as:
+x1+1 =
+LN(x1+ F (x1; 01))
+(12)
+If we name the output of residual connection as
+Y₁ = x + F (x1; 01), we can calculate the partial
+derivatives of two adjacent layers as:
+0х1+1
+0х1+1 ду
+θαι
+მყმუ
+(13)
+ƏLN (yi)
+IF (x1; 01)
+1+
+дуг
+Οχι
+We put Equation (13) and Equation (11) into Equa-
+tion (10) and get:
+We let zk = axk and use the chain rule, then get:
+L-1
+θε
+θε
+☑
+θαι
+ƏXL
+II
+OLN (zk)
+дхк
+k=l
+✗
+дхк
+L-1
+Əzk
+× Πα
+L-1
+θε
+θε
+θαι
+ƏXL
+II
+ƏLN (yk)
+дук
+irreducible
+k=l
+L-1
+irreducible
+θε
+LN
+(14)
+=
+✗
+L-1
+k=l
+(1
+II ( 1 +
+OF (xk; k)
+дхк
+residual
+θαι
+irreducible
+θε
+ƏXL
+irreducible
+☑
+II
+k=l
+LN
+OLN(2k)
+дхк
+LN
+k=l
+residual
+L-1
+1) × II a
+Π
+α
+k=1
+residual
+L-1
+II
+ĐLN(2k)
+дхк
+the above gradient consists of three terms and the
+last two items are multiplications with respect to
+the number of model layers L. Once L get larger,
+the gradient of Post-LN will face the risk of vanish-
+ing or exploding.
+A.2 Gradients of DeepNorm
+DeepNorm rescales the residual branch with a
+scalar multiplier a > 1, and calculates the sub-
+layer as follows:
+k=l
+LN
+(18)
+When compared with the gradient of Post-LN in
+Equation (14), DeepNorm can approximately elimi-
+nate the final multiplication item, and thus mitigate
+the risk of gradient vanishing or exploding to a
+certain degree.
+A.3 Gradients of BranchNorm
+BranchNorm directly rescale the non-residual
+branch in Transformer and conduct calculations
+for the 1-th sub-layer as:
+X1+1
+=
+LN(x1+αF (x1; 01)) (19)
+Similar to the previous analysis process, we can
+calculate the gradients of BranchNorm as:
+X1+1 =
+LN(ax+F(x1; 01))
+(15)
+Follow the above process in A.1, we have the gra-
+dient of DeepNorm:
+L-1
+θε
+θε
+☑
+II
+дхі
+ax L
+irreducible
+L-1
+θε
+θε
+'OLN (axk + F (xk; 01))
+θαι
+axL
+II
+×
+k=l
+irreducible
+Ə (axk + F (xk; 01))
+LN
+L-1
+II (
+k=l
+k=l
++a
+OLN (xkaF (xk; 01))
+0 (2k+aF (2k;0))
+OF (xk; 01)
+дхк
+LN
+✗
+L-1
+JF (xk; Ok)
+II (a +
+Әхк
+k=l
+residual
+θε
+☑
+axL
+II
+residual
+L-1
+ĐLN(k)
+(a = 0)
+Jxk
+(16)
+irreducible
+Given that DeepNorm assigns a relative larger
+value for a to make it to amplify the output percent-
+age of residual connections. Here, we introduce
+an assumption to simplify the derivation: If a gets
+large enough, we can approximate the above equa-
+tion as follows:
+L-1
+II
+θε
+≈2
+θε
+θαι axL
+irreducible
+k=l
+OLN (axk)
+(axk)
+LN
+L-1
+☑
+II
+k=l
+α
+residual
+(17)
+k=l
+LN
+(20)
+BranchNorm can stabilize the gradient norm into
+while DeepNorm require a relatively strong as-
+sumption in Equation (6). Experimentally, in Fig-
+ure 3, we observe corresponding smoother gradi-
+ents of BranchNorm at the very beginning of train-
+ing.
+B Hyperparameter
+Hyperparameters
+Learning rate
+Learning rate scheduler
+Warm-up updates
+Warm-up init learning rate
+Max tokens
+Adam €
+Small Scale Medium Scale Large Scale
+5e-4
+inverse sqrt
+4000
+le-7
+128 × 4096
+Adam B
+1e-8
+(0.9, 0.98)
+Label smoothing
+0.1
+Training updates
+100K
+Gradient clipping
+0.0
+Dropout
+0.4
+0.2
+0.1
+Weight decay
+0.0001
+Hidden size
+512
+FFN inner hidden size
+2048
+Attention heads
+8
+Table 4: Hyperparameters for the Transformer base experiments on different data sizes. 'Small Scale': IWSLT 2014
+De-En and WMT17 En-De. 'Medium Scale': WMT14 En-Fr. 'Large Scale': OPUS-100 and MultiUN datasets.

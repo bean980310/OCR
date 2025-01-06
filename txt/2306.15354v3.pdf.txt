@@ -1,12 +1,17 @@
+--- Page 1 ---
 arXiv:2306.15354v3 [cs.CL] 25 Sep 2023
+
 3D-Speaker: A Large-Scale Multi-Device,
 Multi-Distance, and Multi-Dialect Corpus for Speech
 Representation Disentanglement
+
 Siqi Zheng, Luyao Cheng, Yafeng Chen, Hui Wang, Qian Chen
 DAMO Academy
 Alibaba Group
 {zsq174630, shuli.cly}@alibaba-inc.com
+
 Abstract
+
 Disentangling uncorrelated information in speech utterances is a crucial research
 topic within speech community. Different speech-related tasks focus on ex-
 tracting distinct speech representations while minimizing the affects of other
@@ -19,424 +24,295 @@ a matrix of a diverse blend of speech representation entanglement, thereby mo-
 tivating intriguing methods to untangle them. The multi-domain nature of 3D-
 Speaker also makes it a suitable resource to evaluate large universal speech models
 and experiment methods of out-of-domain learning and self-supervised learning.
-https://3dspeaker.github.io/
+[https : //3dspeaker . github. io/
+
 1 Introduction
+
 Disentangling uncorrelated information in speech utterances is a crucial research topic within speech
-community[1][2]. A speech utterance typically consists of a mixture of information such as content
+community[1}[2]. A speech utterance typically consists of a mixture of information such as content
 of speech, speaker characteristics, dialect, recording device, distance to the sound source, and other
 information such as environment and noise. Different speech-related tasks aim at recognizing the
 specific information of interest while minimizing the affects of uncorrelated information. For example,
 in automatic speech recognition (ASR), researchers aim at recognizing the content of speech without
-being affected by speakers' voice characteristics, noise, and other uncorrelated information. Speaker
-verification (SV), on the other hand, focuses on identifying speaker's voice, independent of the
+being affected by speakers’ voice characteristics, noise, and other uncorrelated information. Speaker
+verification (SV), on the other hand, focuses on identifying speaker’s voice, independent of the
 content of speech. In speech synthesis tasks, researchers leverage disentangled embeddings to achieve
 goals such as style transfer, cross-language synthesis, and voice conversion etc.
+
 Speaker verification is one of the tasks that benefit most from the successful disentanglement of
-different speech-related information, as speaker's voice is an omnipresent characteristics in every
+different speech-related information, as speaker’s voice is an omnipresent characteristics in every
 speech utterance, but is intricately mingled with other speech information, such as speech content,
 device, language, etc. It also possesses natures such as long-term stability and relative uniqueness.
 Methods and techniques to extract disentangled speaker representation from human speech can well
 be generalized to other machine learning fields, such as extracting global features in vision and
 natural language understanding.
+
 However, research of speech representation disentanglement has largely been hindered by the lack of
 large-scale publicly-available dataset containing explicit labels characterizing multiple attributes of
 speech. In order to help accelerate the related research, we introduce 3D-Speaker, where all utterances
-Labels of
-# of
-Multiple
+
+--- Page 2 ---
 Table 1: Comparison of several freely available audio datasets that provide speaker labels.
+
 Labels of
-Multiple
-Labels of
-Multiple
-Speakers
-Dialects
-Sampling
-Rate
-Has
-annotated
-Devices
-Distances
-texts
+
+Hof Labels of — Labels of Multiple Samplin Has
+s Multiple Multiple wip Png annotated
+peakers Devi . Dialects Rate
+evices Distances texts
 /Languages
-3D-Speaker
-10000+
-Yes
-Yes
-Yes
-16k & 48k
-Yes
-VoxCeleb 1&2[17]
-7000+
-No
-No
-No
-16k
-No
-CN-Celeb[18]
-3000
-No
-No
-No
-16k
-No
-Librispeech[19]
-2497
-No
-No
-No
-16k
-Yes
-AliMeeting[25]
-481
-No
-No
-No
-16k & 48k
-Yes
-AISHELL-4[23]
-61
-No
-No
-No
-16k
-Yes
+3D-Speaker 10000+ Yes Yes Yes 16k & 48k Yes
+VoxCeleb 1&2[17] 7000+ No No No 16k No
+CN-Celeb[18} 3000 No No No 16k No
+Librispeech 2497 No No No 16k Yes
+AliMeeting[25] 481 No No No 16k & 48k Yes
+AISHELL-4[23} 61 No No No 16k Yes
+
 contain labels depicting multiple speech characteristics, such as speaker ID, dialect spoken, type of
 recording device, and the distance from device to the speaker.
+
 3D-Speaker can be used to experiment supervised and unsupervised methods, as well as in- and
 out-of-domain learning. It can also be used to evaluate universal speech models aiming to possess the
 ability to perform common speech-related tasks on any domain.
+
 According to previous studies, increasing the number of speakers in training data remarkably improves
 the performance of speaker verification system [3][4]. To the best of our knowledge, 3D-Speaker is
 the largest publicly-accessible corpus in terms of number of speakers.
+
 2 Related Works
+
 There are abundant efforts trying to extract speaker embeddings that represent only speak-
-ers' voice, removing impacts of uncorrelated information. These methods range from ad-
-versarial learning[5][6][7][8][9], to data-driven approaches such as data augmentation and
-generalization[10][11][12][13]. Some speech representation models based on self-supervised are
-shown to have the ability to untangle different speech information into different layers[14][15][16].
+ers’ voice, removing impacts of uncorrelated information. These methods range from ad-
+versarial learning{5)(6}(7][8)(9], to data-driven approaches such as data augmentation and
+generalization[10} (1112) [13]. Some speech representation models based on self-supervised are
+shown to have the ability to untangle different speech information into different layers(14)(15)(16].
+
 Several previously released corpus have successfully boosted research in speech recognition and
-speaker verification. VoxCeleb 1 & 2 [17] collected over 7000 speakers from the internet and the
+speaker verification. VoxCeleb 1 & 2 collected over 7000 speakers from the internet and the
 speakers span a wide range of different ethnicity groups, languages, and ages. Unfortunately, labels
 other than speaker identities are missing, making it less effective in disentangling other speech
 representations and tackling out-of-domain tasks.
-CN-Celeb[18] collected around 3000 speakers in a way similar to VoxCeleb. Additionally, CN-Celeb
+
+CN-Celeb[[18] collected around 3000 speakers in a way similar to VoxCeleb. Additionally, CN-Celeb
 provided the “genre” labels, which introduce more varieties into the corpus and potentially allows for
-"cross-genre” studies. However, a genre such as Play, Movie, Vlog, Drama, is not a direct speech
+“cross-genre” studies. However, a genre such as Play, Movie, Vlog, Drama, is not a direct speech
 characteristics and infers little about the disentangled speech representation of interest.
+
 The Librispeech[19] is a collection of English speech of audiobook reading. Containing annotated
 texts for each utterance, Librispeech is an important corpus for speech recognition and text-to-speech
 synthesis tasks. However, Librispeech lacks varieties in terms of data source, language, and other
 speech aspects.
-AliMeeting [20] is collected in a similar way as 3D-Speaker. Multiple recording devices are placed
+
+AliMeeting[20] is collected in a similar way as 3D-Speaker. Multiple recording devices are placed
 randomly in front of speakers during each recording session. However, the labels of devices and
 distance to speakers are not provided in AliMeeting. Containing fewer than 500 speakers, AliMeeting
 is not suitable to be used solely as a training corpus for speaker verification task.
+
 The NIST SRE datasets are collected accumulated from the regularly held evaluations[21]. However,
 it is not freely accessible to public.
+
 There are many other audio datasets containing speaker identities, including but not limited to
 SITW[22] with 300 speakers, AISHELL-4[23] with 61 speakers, and TIMIT[24] with 630 speakers,
 etc.
-2
-0.1m
-0.3m
-1m
-2m
-09:56
-2.5m
+
+--- Page 3 ---
 4m
+
+2.5m
+
+NN >
+
 Figure 1: An example of device placements in a recording session. Devices are shuffled randomly at
 the beginning of each recording session.
+
 3 Dataset Description
+
 The training dataset includes a total of 10,000 speakers, and 579,013 utterances. The total duration
 of valid speech is 1124 hours. It is worth noting that certain utterances in the dataset share identical
 speech content, as they were simultaneously recorded using different devices from varying distances.
 Additionally, the dataset features 1,200 speakers recorded speaking in two distinct dialects - standard
-Mandarin, and a regional dialect of the speakers' own choice.
+Mandarin, and a regional dialect of the speakers’ own choice.
+
 3.1 Multi-Device
-Every utterances are simultaneously recorded by several different devices, selected from Table 2:
+
+Every utterances are simultaneously recorded by several different devices, selected from Table 2}
 iPads, Android phones, iPhones, microphone arrays(Array for short), PC laptops, recording pens (RP
 for short), single directional microphones, phones(unspecified).
+
 The microphone arrays consist of 8 directional microphones. We follow the design of differential
-circular array described in [26], which have previously been used in AliMeeting dataset[20] and
-speaker diarization system[27].
+circular array described in , which have previously been used in AliMeeting dataset[20] and
+speaker diarization system[27]
+
 Table 2: Detailed information of devices in 3D-Speaker.
-Device
-iPad
-# of Utterance
-Percentage
-65151
-11.25%
-Android
-65208
-11.26%
-iPhone
-65194
-11.26%
-Array
-90058
-15.55%
-PC
-96262
-16.63%
-RP
-106611
-18.41%
-Directional
-57838
-9.99%
-Phone(unspecified)
-Total
-32691
-5.65%
-579013
-100.00%
+
+Device # of Utterance | Percentage
+iPad 65151 11.25%
+Android 65208 11.26%
+iPhone 65194 11.26%
+Array 90058 15.55%
+PC 96262 16.63%
+RP 106611 18.41%
+Directional 57838 9.99%
+Phone(unspecified) 32691 5.65%
+Total 579013 100.00%
+
 3.2 Multi-Distance
+
 During each recording session, different devices are randomly positioned at varying distances from
-the speaker. These specific distances are classified and presented in Table 3. Distances range from
+the speaker. These specific distances are classified and presented in Tablef3] Distances range from
 0.1m to 4m. To simulate real-world usage scenarios, PC laptops are exclusively situated within 1
-3
+
+--- Page 4 ---
 Table 3: Detailed information of source-to-device distances in 3D-Speaker.
-Distance(m)
-# of Utterances
-Duration(h)
-Duration Percentage
-0.1
-14772
-26.94
-2.40%
-0.2
-7845
-14.15
-1.26%
-0.3
-26141
-57.03
-5.07%
-0.8
-4903
-8.94
-0.79%
-0.9
-463
-0.85
-0.08%
-1
-83968
-180.86
-16.08%
-1.2
-690
-1.18
-0.10%
-1.5
-3770
-6.66
-0.59%
-2
-65596
-138.00
-12.27%
-2.5
-4043
-7.13
-0.63%
-3
-65870
-138.48
-12.31%
-4
-115203
-247.03
-21.97%
-Unspecified
-185749
-297.29
-26.44%
-Total
-579013
-1124.52
-100.00%
+
+Distance(m) | # of Utterances | Duration(h) | Duration Percentage
+0.1 14772 26.94 2.40%
+0.2 7845 14.15 1.26%
+0.3 26141 57.03 5.07%
+0.8 4903 8.94 0.79%
+0.9 463 0.85 0.08%
+I 83968 180.86 16.08%
+1.2 690 1.18 0.10%
+1.5 3770 6.66 0.59%
+2 65596 138.00 12.27%
+2.5 4043 713 0.63%
+3 65870 138.48 12.31%
+4 115203 247.03 21.97%
+Unspecified 185749 297.29 26.44%
+Total 579013 1124.52 100.00%
+
 Table 4: Detailed information of different dialects spoken in 3D-Speaker.
-Dialect
-# of Speakers Duration(h)
-JiangHuai Mandarin
-30
-2.027
-Gan Dialect
-37
-1.959
-Wu Dialect
-130
-8.442
-Jin Dialect
-518
-29.108
-Min Dialect
-23
-1.041
-Central Plains Mandarin
-25
-3.684
-Hakka Dialect
-39
-2.147
-JiLu Mandarin
-12
-5.518
-LiaoJiao Mandarin
-13
-6.443
-Northern Mandarin
-2
-0.934
-Xiang Dialect
-2
-0.106
-Southwestern Mandarin
-238
-13.44
-Cantonese
-Total
-42
-2.395
-1074
-77.244
+
+Dialect # of Speakers | Duration(h)
+JiangHuai Mandarin 30 2.027
+Gan Dialect 37 1.959
+Wu Dialect 130 8.442
+Jin Dialect 518 29.108
+Min Dialect 23 1.041
+Central Plains Mandarin 25 3.684
+Hakka Dialect 39 2.147
+JiLu Mandarin 12 5.518
+LiaoJiao Mandarin 13 6.443
+Northern Mandarin 2 0.934
+Xiang Dialect 2 0.106
+Southwestern Mandarin 238 13.44
+Cantonese 42 2.395
+Total 1074 77.244
+
 meter from the speakers, while directional microphones are placed no further than 0.3 meters from
 the speakers.
+
 3.3 Multi-Dialect
-In training set we include 1074 speakers with multiple dialects, as illustrated in Table 4. Each of
+
+In training set we include 1074 speakers with multiple dialects, as illustrated in Table Each of
 these speakers are first recorded speaking standard mandarin. Then they are asked to speak their own
 regional dialect. The entire session are recorded by multiple devices locating at different distances
 from the speaker. The selection of dialects was carried out with the aim of ensuring that they are
 significantly different from one another and from standard Mandarin. This is to the extent that
 individuals who do not speak the particular dialect would find it hardly comprehensible.
+
 3.4 Evaluation set
-Table 5 provide descriptive information of evaluation set. There are a total of 240 speakers and 18782
+
+Table[5]provide descriptive information of evaluation set. There are a total of 240 speakers and 18782
 utterances. None speakers are included in train set. The evaluation set includes 11 distinct dialects,
 all of which are spoken by some speakers in the train set.
-4
+
+--- Page 5 ---
 Table 5: Detailed information of evaluation set.
-# of Speakers
-# of Utterances
-240
-18782
-11
-15.42
-# of Dialects
-Duration(h)
+
+|_ # of Speakers 240 |
+| # of Utterances | 18782 |
+| |
+|
+
+# of Dialects 11
+Duration(h) 15.42
+
 4 Experiments and Benchmarks
+
 The microphone array consists of 8 channels, each of which has a sampling rate of 48kHz. In our
 baseline systems, we only take the first channel and downsample it to 16kHz. In our previous studies
-we discovered that valuable information could be learned by modeling all 8 channels[28][29].
-For baseline systems, we choose CAM++ [25], ERes2Net[30], and ECAPA-TDNN[31]. The results
-are listed in Table 6. We use EER and minDCF(p_target=0.01,c_miss=1,c_fa=1) as the metrics for
+we discovered that valuable information could be learned by modeling all 8 channels[28]][29].
+
+For baseline systems, we choose CAM++ [25], ERes2Net[30], and ECAPA-TDNN{B1J. The results
+are listed in Table[6] We use EER and minDCF(p_target=0.01,c_miss=1,c_fa=1) as the metrics for
 all experiments.
+
 4.1 Track A: Cross-Device Speaker Verification
+
 In cross-device trial, we guarantee that the enrollment and test utterances are recorded using separate
 devices. We also ensure that speech content differs between enrollment and test utterances for each
 of the 180,000 trials. The trial considers the “iPhone”, “Android”, and “Phone” categories as one,
 due to their acoustic similarities.
+
 Table 6: Performance of baseline systems on different tracks.
-Cross-Device
-Cross-Distance
-Cross-Dialect
-Method
-ECAPA-TDNN[31]¹
-# of Params
-EER(%) minDCF EER(%) minDCF
-EER(%) minDCF
-20.8M
-8.87
-0.732
-12.26
-0.805
-14.53
-0.913
-CAM++ Base[25]²
-7.2M
-7.75
-0.723
-11.29
-0.783
-13.44
-0.886
-ERes2Net Base[30]
-3
-4.6M
-7.06
-0.656
-9.95
-0.753
-12.76
-0.871
-ERes2Net Large[30]
-18.3M
-6.55
-0.640
-9.45
-0.713
-11.01
-0.811
-4.2 Track B: Cross-Distance Speaker Verification
+
+Method # of Params Cross-Device Cross-Distance Cross-Dialect
+EER(%) | minDCF | EER(%) | minDCF | EER(%) | minDCF
+ECAPA-TDNNDBIL 20.8M 8.87 0.732 12.26 0.805 14.53 0.913
+CAM++ Base[25/-] 7.2M 7.75 0.723 11.29 0.783 13.44 0.886
+ERes2Net Base[30][)] 4.6M 7.06 0.656 9.95 0.753 12.76 0.871
+ERes2Net LargeB0l"] 18.3M 6.55 0.640 9.45 0.713 11.01 0.811
+
+4.2. Track B: Cross-Distance Speaker Verification
+
 In cross-distance trial, a distance of 0.8 meters or greater is considered “far-field”, while distances
 less than 0.8 meters are classified as “near-field”. With this categorization in mind, we meticulously
 ensure that, across all 175,163 trials, the enrollment and test utterances are selected from different
 classification categories. Similar to Track A, we guarantee that the speech content of the enrollment
 and test utterances differs from one another.
-4.3 Track C: Cross-Dialect Speaker Verification
+
+4.3. Track C: Cross-Dialect Speaker Verification
+
 In cross-dialect trial, it is guaranteed that either the enrollment or test utterance is standard mandarin,
 while the other is the regional dialect of the corresponding speaker.
-4.4 Track D: Language/Dialect Identification
+
+44 Track D: Language/Dialect Identification
+
 In language/dialect identification task, we use all utterances in the test set and estimate the overall
 identification accuracy. We provide a baseline benchmark using vanilla CAM++. To overcome
-¹Implementation: https://github.com/speechbrain/speechbrain/blob/develop/speechbrain/
-lobes/models/ECAPA_TDNN.py
-2Official implementation: https://github.com/alibaba-damo-academy/3D-Speaker/tree/main/
-egs/sv-cam%2B%2B
-3 Official implementation: https://github.com/alibaba-damo-academy/3D-Speaker/tree/main/
-egs/sv-eres2net
-*Official implementation: https://github.com/alibaba-damo-academy/3D-Speaker/tree/main/
-egs/sv-eres2net
-5
+
+"Official implementation: https: //github.com/alibaba-damo- academy/3D-Speaker/tree/main/
+* Official implementation: https : //github. com/alibaba-damo- academy/3D-Speaker/tree/main/
+
+
+--- Page 6 ---
 Table 7: Performance of baseline system on dialect identification.
-Train Accuracy(%) Test Accuracy(%)
-Baseline[25]
-96.82
-29.36
+
+| Train Accuracy(%) | Test Accuracy(%) |
+| Baseline[25] 96.82 29.36 |
+
 Table 8: Performance of baseline self-supervised learning system on different tracks. EER and
-minDCF(Ptarget
-0.05, Cmiss = 1, Cfa = 1) are used to measure the performance.
-=
-Cross-Device
-Cross-Distance
-Cross-Dialect
-Method
-RDINO[32]5
-EER(%) minDCF
-20.41 0.972
-EER(%) minDCF
-21.92 0.966
-EER(%) minDCF
-25.53
-0.999
+minDCF(prarget = 0.05, Cmiss = 1,¢fa = 1) are used to measure the performance.
+
+Method Cross-Device Cross-Distance Cross-Dialect |
+EER(%) | minDCF | EER(%) | minDCF | EER(%) | minDCF |
+RDINOB2P) 20.41 0.972 21.92 0.966 25.53 0.999
+
 imbalance of labels, we only use a small subset of training data in the baseline system. The results
-are listed in Table 7.
+are listed in Table[7]
+
 4.5 Other tasks
+
 Other than the tasks and benchmarks described above, the rich multi-domain information in 3D-
 Speaker allows researchers to design tasks of their own and tailor training and evaluation set to meet
 their needs.
+
 Out-of-domain learning. 3D-Speaker allows researchers to carry out experiments on out-of-domain
 learning. For example, researchers could remove utterances from certain devices from training set and
-evaluate the model performance on these devices. One could also train the model only on "near-field"
+evaluate the model performance on these devices. One could also train the model only on “near-field”
 data and evaluate them on “far-field” data.
+
 Self-supervised learning. The diverse nature of 3D-Speaker makes it an ideal candidate for exploring
-self-supervised learning methods on acoustic data. In Table 8 we provide a baseline system using
-RDINO self-supervised learning method, in which we treat all labels in 3D-Speaker as unknown[32].
+self-supervised learning methods on acoustic data. In Table|8]we provide a baseline system using
+RDINO self-supervised learning method, in which we treat all labels in 3D-Speaker as unknown|[32].
+
 Evaluate large universal speech models. 3D-Speaker is a suitable resource to evaluate the universal
 performance of large speech models. Large universal speech models are expected to perform
 reasonably well on various domains.
+
 5 Conclusion
+
 We introduced 3D-Speaker, a large-scale speech corpus designed to facilitate the research of speech
 representation disentanglement. The controlled combinations of multi-dimensional audio data in this
 corpus yield a matrix of a diverse blend of speech representation entanglement, motivating intriguing
@@ -446,146 +322,248 @@ self-supervised learning. Additionally, 3D-Speaker is the largest publicly-acces
 of number of speakers, which can be used to improve the performance of speaker verification systems
 and other speech-related tasks. Overall, 3D-Speaker provides a valuable resource for advancing the
 research of speech-related fields.
+
 6 Ethics
+
 We understand that voice is a unique physical characteristics and important human biometrics.
 Therefore, during the collection of 3D-Speaker, we ensure that mutual agreements are reached with
 the speakers. The speakers understand that the recorded content will be used for the purpose of
 academic research and be made publicly accessible.
-"Official implementation: https://github.com/alibaba-damo-academy/3D-Speaker/tree/main/
+
+> Official implementation: https : //github. com/alibaba-damo-academy/3D-Speaker/tree/main,
 egs/sv-rdino
-6
+
+
+--- Page 7 ---
 References
-[1] Wei-Ning Hsu, Yu Zhang, Ron J. Weiss, Yu-An Chung, Yuxuan Wang, Yonghui Wu, and
+
+(1)
+
+[2
+
+3
+
+4
+
+5
+
+6
+
+7
+
+8
+
+9
+
+Ac]
+
+(11)
+
+Wei-Ning Hsu, Yu Zhang, Ron J. Weiss, Yu-An Chung, Yuxuan Wang, Yonghui Wu, and
 James R. Glass. Disentangling correlated speaker and noise for speech synthesis via data
-augmentation and adversarial factorization. In IEEE International Conference on Acoustics,
+augmentation and adversarial factorization. In JEEE International Conference on Acoustics,
 Speech and Signal Processing, ICASSP 2019, Brighton, United Kingdom, May 12-17, 2019,
 pages 5901-5905. IEEE, 2019.
-[2] Wei-Ning Hsu, Yu Zhang, and James R. Glass. Unsupervised learning of disentangled and
+
+Wei-Ning Hsu, Yu Zhang, and James R. Glass. Unsupervised learning of disentangled and
 interpretable representations from sequential data. In Isabelle Guyon, Ulrike von Luxburg,
 Samy Bengio, Hanna M. Wallach, Rob Fergus, S. V. N. Vishwanathan, and Roman Garnett,
 editors, Advances in Neural Information Processing Systems 30: Annual Conference on Neural
 Information Processing Systems 2017, December 4-9, 2017, Long Beach, CA, USA, pages
 1878-1889, 2017.
-[3] Joon Son Chung, Arsha Nagrani, and Andrew Zisserman. Voxceleb2: Deep speaker recognition.
+
+Joon Son Chung, Arsha Nagrani, and Andrew Zisserman. Voxceleb2: Deep speaker recognition.
 In Interspeech 2018, 19th Annual Conference of the International Speech Communication
-Association, Hyderabad, India, 2-6 September 2018, pages 1086–1090. ISCA, 2018.
-[4] Siqi Zheng, Gang Liu, Hongbin Suo, and Yun Lei. Autoencoder-based semi-supervised
+Association, Hyderabad, India, 2-6 September 2018, pages 1086-1090. ISCA, 2018.
+
+Siqi Zheng, Gang Liu, Hongbin Suo, and Yun Lei. Autoencoder-based semi-supervised
 curriculum learning for out-of-domain speaker verification. In Interspeech 2019, 20th Annual
 Conference of the International Speech Communication Association, Graz, Austria, 15-19
 September 2019, pages 4360-4364. ISCA, 2019.
-[5] Bengt J. Borgström, Elliot Singer, Douglas A. Reynolds, and Seyed Omid Sadjadi. Improving
+
+Bengt J. Borgstrém, Elliot Singer, Douglas A. Reynolds, and Seyed Omid Sadjadi. Improving
 the effectiveness of speaker verification domain adaptation with inadequate in-domain data.
 In Interspeech 2017, 18th Annual Conference of the International Speech Communication
 Association, Stockholm, Sweden, August 20-24, 2017, pages 1557-1561. ISCA, 2017.
-[6] Saurabh Kataria, Jesús Villalba, Piotr Zelasko, Laureano Moro-Velázquez, and Najim Dehak.
+
+Saurabh Kataria, Jestis Villalba, Piotr Zelasko, Laureano Moro-Velazquez, and Najim Dehak.
 Deep feature cyclegans: Speaker identity preserving non-parallel microphone-telephone domain
-adaptation for speaker verification. In Interspeech 2021, 22nd Annual Conference of the
+adaptation for speaker verification. In Jnterspeech 2021, 22nd Annual Conference of the
 International Speech Communication Association, Brno, Czechia, 30 August - 3 September
-2021, pages 1079–1083. ISCA, 2021.
-[7] Fuchuan Tong, Siqi Zheng, Haodong Zhou, Xingjia Xie, Qingyang Hong, and Lin Li. Deep
+2021, pages 1079-1083. ISCA, 2021.
+
+Fuchuan Tong, Siqi Zheng, Haodong Zhou, Xingjia Xie, Qingyang Hong, and Lin Li. Deep
 representation decomposition for rate-invariant speaker verification. In Odyssey 2022: The
-Speaker and Language Recognition Workshop, 28 June - 1 July 2022, Beijing, China, pages
+Speaker and Language Recognition Workshop, 28 June - I July 2022, Beijing, China, pages
 228-232. ISCA, 2022.
-[8] Zhengyang Chen, Shuai Wang, and Yanmin Qian. Adversarial domain adaptation for speaker
-verification using partially shared network. In Interspeech 2020, 21st Annual Conference of
+
+Zhengyang Chen, Shuai Wang, and Yanmin Qian. Adversarial domain adaptation for speaker
+verification using partially shared network. In Jnterspeech 2020, 21st Annual Conference of
 the International Speech Communication Association, Virtual Event, Shanghai, China, 25-29
 October 2020, pages 3017-3021. ISCA, 2020.
-[9] Siqi Zheng, Yun Lei, and Hongbin Suo. Phonetically-aware coupled network for short duration
+
+Siqi Zheng, Yun Lei, and Hongbin Suo. Phonetically-aware coupled network for short duration
 text-independent speaker verification. In Interspeech 2020, 21st Annual Conference of the
 International Speech Communication Association, Virtual Event, Shanghai, China, 25-29
 October 2020, pages 926-930. ISCA, 2020.
-[10] Da Li, Yongxin Yang, Yi-Zhe Song, and Timothy M. Hospedales. Learning to generalize:
+
+Da Li, Yongxin Yang, Yi-Zhe Song, and Timothy M. Hospedales. Learning to generalize:
 Meta-learning for domain generalization. In Proceedings of the Thirty-Second AAAI Conference
 on Artificial Intelligence, (AAAI-18), the 30th innovative Applications of Artificial Intelligence
 (IAAI-18), and the 8th AAAI Symposium on Educational Advances in Artificial Intelligence
-(EAAI-18), New Orleans, Louisiana, USA, February 2-7, 2018, pages 3490–3497. AAAI Press,
+(EAAI-18), New Orleans, Louisiana, USA, February 2-7, 2018, pages 3490-3497. AAAI Press,
 2018.
-[11] S. Shahnawazuddin, Waquar Ahmad, Nagaraj Adiga, and Avinash Kumar. In-domain and out-
-of-domain data augmentation to improve children's speaker verification system in limited data
+
+S. Shahnawazuddin, Waquar Ahmad, Nagaraj Adiga, and Avinash Kumar. In-domain and out-
+of-domain data augmentation to improve children’s speaker verification system in limited data
 scenario. In 2020 IEEE International Conference on Acoustics, Speech and Signal Processing,
 ICASSP 2020, Barcelona, Spain, May 4-8, 2020, pages 7554-7558. IEEE, 2020.
-7
-[12] Guangxing Li, Wangjin Zhou, Sheng Li, Yi Zhao, Jichen Yang, and Hao Huang. Investigating
+
+--- Page 8 ---
+[12]
+
+[13]
+
+[14]
+
+n
+
+[16
+
+a
+
+8
+
+9
+
+20
+
+[21]
+[22]
+
+[23]
+
+Guangxing Li, Wangjin Zhou, Sheng Li, Yi Zhao, Jichen Yang, and Hao Huang. Investigating
 effective domain adaptation method for speaker verification task. In Neural Information
 Processing - 29th International Conference, ICONIP 2022, Virtual Event, November 22-26,
 2022, Proceedings, Part VI, volume 1793 of Communications in Computer and Information
-Science, pages 517–527. Springer, 2022.
-[13] Hanyi Zhang, Longbiao Wang, Kong Aik Lee, Meng Liu, Jianwu Dang, and Hui Chen. Learning
-domain-invariant transformation for speaker verification. In IEEE International Conference
+Science, pages 517-527. Springer, 2022.
+
+Hanyi Zhang, Longbiao Wang, Kong Aik Lee, Meng Liu, Jianwu Dang, and Hui Chen. Learning
+domain-invariant transformation for speaker verification. In [EEE International Conference
 on Acoustics, Speech and Signal Processing, ICASSP 2022, Virtual and Singapore, 23-27 May
 2022, pages 7177-7181. IEEE, 2022.
-[14] Sanyuan Chen, Chengyi Wang, Zhengyang Chen, Yu Wu, Shujie Liu, Zhuo Chen, Jinyu Li,
+
+Sanyuan Chen, Chengyi Wang, Zhengyang Chen, Yu Wu, Shujie Liu, Zhuo Chen, Jinyu Li,
 Naoyuki Kanda, Takuya Yoshioka, Xiong Xiao, Jian Wu, Long Zhou, Shuo Ren, Yanmin
 Qian, Yao Qian, Jian Wu, Michael Zeng, Xiangzhan Yu, and Furu Wei. Wavlm: Large-scale
-self-supervised pre-training for full stack speech processing. IEEE J. Sel. Top. Signal Process.,
+self-supervised pre-training for full stack speech processing. JEEE J. Sel. Top. Signal Process.,
 16(6):1505-1518, 2022.
-[15] Wei-Ning Hsu, Benjamin Bolte, Yao-Hung Hubert Tsai, Kushal Lakhotia, Ruslan Salakhutdinov,
+
+Wei-Ning Hsu, Benjamin Bolte, Yao-Hung Hubert Tsai, Kushal Lakhotia, Ruslan Salakhutdinov,
 and Abdelrahman Mohamed. Hubert: Self-supervised speech representation learning by masked
 prediction of hidden units. IEEE ACM Trans. Audio Speech Lang. Process., 29:3451-3460,
 2021.
-[16] Alexei Baevski, Yuhao Zhou, Abdelrahman Mohamed, and Michael Auli. wav2vec 2.0: A
+
+Alexei Baevski, Yuhao Zhou, Abdelrahman Mohamed, and Michael Auli. wav2vec 2.0: A
 framework for self-supervised learning of speech representations. In Advances in Neural
+
 Information Processing Systems 33: Annual Conference on Neural Information Processing
 Systems 2020, NeurIPS 2020, December 6-12, 2020, virtual, 2020.
-[17] Arsha Nagrani, Joon Son Chung, and Andrew Zisserman. Voxceleb: A large-scale speaker
+
+Arsha Nagrani, Joon Son Chung, and Andrew Zisserman. Voxceleb: A large-scale speaker
 identification dataset. In Interspeech 2017, 18th Annual Conference of the International Speech
-Communication Association, Stockholm, Sweden, August 20-24, 2017, pages 2616–2620. ISCA,
+Communication Association, Stockholm, Sweden, August 20-24, 2017, pages 2616-2620. ISCA,
 2017.
-[18] Y. Fan, J. W. Kang, L. T. Li, K. C. Li, H. L. Chen, S. T. Cheng, P. Y. Zhang, Z. Y. Zhou, Y. Q.
+
+Y. Fan, J. W. Kang, L. T. Li, K. C. Li, H. L. Chen, S. T. Cheng, P. Y. Zhang, Z. Y. Zhou, Y. Q.
 Cai, and D. Wang. Cn-celeb: A challenging chinese speaker recognition dataset. In 2020
 IEEE International Conference on Acoustics, Speech and Signal Processing, ICASSP 2020,
-Barcelona, Spain, May 4-8, 2020, pages 7604–7608. IEEE, 2020.
-[19] Vassil Panayotov, Guoguo Chen, Daniel Povey, and Sanjeev Khudanpur. Librispeech: An
+Barcelona, Spain, May 4-8, 2020, pages 7604-7608. IEEE, 2020.
+
+Vassil Panayotov, Guoguo Chen, Daniel Povey, and Sanjeev Khudanpur. Librispeech: An
 ASR corpus based on public domain audio books. In 2015 IEEE International Conference on
 Acoustics, Speech and Signal Processing, ICASSP 2015, South Brisbane, Queensland, Australia,
 April 19-24, 2015, pages 5206-5210. IEEE, 2015.
-[20] Fan Yu, Shiliang Zhang, Yihui Fu, Lei Xie, Siqi Zheng, Zhihao Du, Weilong Huang, Pengcheng
+
+Fan Yu, Shiliang Zhang, Yihui Fu, Lei Xie, Siqi Zheng, Zhihao Du, Weilong Huang, Pengcheng
 Guo, Zhijie Yan, Bin Ma, Xin Xu, and Hui Bu. M2met: The icassp 2022 multi-channel
-multi-party meeting transcription challenge. In IEEE International Conference on Acoustics,
+multi-party meeting transcription challenge. In JEEE International Conference on Acoustics,
 Speech and Signal Processing, ICASSP 2022, Virtual and Singapore, 23-27 May 2022, pages
 6167-6171. IEEE, 2022.
-[21] The nist year 2012 speaker recognition evaluation plan. Technical Report, 2012.
-[22] Mitchell McLaren, Luciana Ferrer, Diego Castán, and Aaron Lawson. The speakers in the wild
+
+The nist year 2012 speaker recognition evaluation plan. Technical Report, 2012.
+
+Mitchell McLaren, Luciana Ferrer, Diego Castan, and Aaron Lawson. The speakers in the wild
 (SITW) speaker recognition database. In Interspeech 2016, 17th Annual Conference of the
 International Speech Communication Association, San Francisco, CA, USA, September 8-12,
 2016, pages 818-822. ISCA, 2016.
-[23] Yihui Fu, Luyao Cheng, Shubo Lv, Yukai Jv, Yuxiang Kong, Zhuo Chen, Yanxin Hu, Lei Xie,
+
+Yihui Fu, Luyao Cheng, Shubo Lv, Yukai Jv, Yuxiang Kong, Zhuo Chen, Yanxin Hu, Lei Xie,
 Jian Wu, Hui Bu, Xin Xu, Jun Du, and Jingdong Chen. AISHELL-4: an open source dataset for
 speech enhancement, separation, recognition and speaker diarization in conference scenario.
-In Hynek Hermansky, Honza Cernocký, Lukás Burget, Lori Lamel, Odette Scharenborg, and
-Petr Motlícek, editors, Interspeech 2021, 22nd Annual Conference of the International Speech
-Communication Association, Brno, Czechia, 30 August - 3 September 2021, pages 3665–3669.
+In Hynek Hermansky, Honza Cernocky, Lukas Burget, Lori Lamel, Odette Scharenborg, and
+Petr Motlicek, editors, Interspeech 2021, 22nd Annual Conference of the International Speech
+Communication Association, Brno, Czechia, 30 August - 3 September 2021, pages 3665-3669.
 ISCA, 2021.
-8
-[24] J. S. Garofolo, L. F. Lamel, W. M. Fisher, J.G. Fiscus, and D. S. Pallett. Darpa timit acoustic-
+
+--- Page 9 ---
+[24]
+
+[25]
+
+[26]
+
+[27]
+
+[28]
+
+[29]
+
+[30]
+
+[31]
+
+[32]
+
+J. S. Garofolo, L. F. Lamel, W. M. Fisher, J.G. Fiscus, and D. S. Pallett. Darpa timit acoustic-
 phonetic continous speech corpus cd-rom. nist speech disc 1-1.1. NASA STI/Recon technical
 report, 1993.
-[25] Hui Wang, Siqi Zheng, Yafeng Chen, Luyao Cheng, and Qian Chen. CAM++: A fast and
+
+Hui Wang, Siqi Zheng, Yafeng Chen, Luyao Cheng, and Qian Chen. CAM++: A fast and
 efficient network for speaker verification using context-aware masking. CoRR, abs/2303.00332,
 2023.
-[26] Weilong Huang and Jinwei Feng. Differential beamforming for uniform circular array with
+
+Weilong Huang and Jinwei Feng. Differential beamforming for uniform circular array with
 directional microphones. In Interspeech 2020, 21st Annual Conference of the International
 Speech Communication Association, Virtual Event, Shanghai, China, 25-29 October 2020,
 pages 71-75. ISCA, 2020.
-[27] Siqi Zheng, Weilong Huang, Xianliang Wang, Hongbin Suo, Jinwei Feng, and Zhijie Yan.
-A real-time speaker diarization system based on spatial spectrum. In IEEE International
+
+Siqi Zheng, Weilong Huang, Xianliang Wang, Hongbin Suo, Jinwei Feng, and Zhijie Yan.
+A real-time speaker diarization system based on spatial spectrum. In JEEE International
 Conference on Acoustics, Speech and Signal Processing, ICASSP 2021, Toronto, ON, Canada,
 June 6-11, 2021, pages 7208-7212. IEEE, 2021.
-[28] Shiliang Zhang, Siqi Zheng, Weilong Huang, Ming Lei, Hongbin Suo, Jinwei Feng, and
+
+Shiliang Zhang, Siqi Zheng, Weilong Huang, Ming Lei, Hongbin Suo, Jinwei Feng, and
 Zhijie Yan. Investigation of spatial-acoustic features for overlapping speech detection in
 multiparty meetings. In Interspeech 2021, 22nd Annual Conference of the International Speech
-Communication Association, Brno, Czechia, 30 August - 3 September 2021, pages 3550–3554.
+Communication Association, Brno, Czechia, 30 August - 3 September 2021, pages 3550-3554.
 ISCA, 2021.
-[29] Siqi Zheng, Shiliang Zhang, Weilong Huang, Qian Chen, Hongbin Suo, Ming Lei, Jinwei
+
+Siqi Zheng, Shiliang Zhang, Weilong Huang, Qian Chen, Hongbin Suo, Ming Lei, Jinwei
 Feng, and Zhijie Yan. Beamtransformer: Microphone array-based overlapping speech detection.
-CORR, abs/2109.04049, 2021.
-[30] Yafeng Chen, Siqi Zheng, Hui Wang, Luyao Cheng, Qian Chen, and Jiajun Qi. An enhanced
+CoRR, abs/2109.04049, 2021.
+
+Yafeng Chen, Siqi Zheng, Hui Wang, Luyao Cheng, Qian Chen, and Jiajun Qi. An enhanced
 res2net with local and global feature fusion for speaker verification. CoRR, abs/2305.12838,
 2023.
-[31] Brecht Desplanques, Jenthe Thienpondt, and Kris Demuynck. ECAPA-TDNN: emphasized
+
+Brecht Desplanques, Jenthe Thienpondt, and Kris Demuynck. ECAPA-TDNN: emphasized
 channel attention, propagation and aggregation in TDNN based speaker verification. In Inter-
 speech 2020, 21st Annual Conference of the International Speech Communication Association,
 Virtual Event, Shanghai, China, 25-29 October 2020, pages 3830-3834. ISCA, 2020.
-[32] Yafeng Chen, Siqi Zheng, Hui Wang, Luyao Cheng, and Qian Chen. Pushing the limits of self-
+
+Yafeng Chen, Siqi Zheng, Hui Wang, Luyao Cheng, and Qian Chen. Pushing the limits of self-
 supervised speaker verification using regularized distillation framework. CoRR, abs/2211.04168,
 2022.
+

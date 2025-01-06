@@ -1,12 +1,21 @@
-arXiv:2305.02783v4 [cs.SE] 23 May 2023
+--- Page 1 ---
+2305 .02783v4 [cs.SE] 23 May 2023
+
+1V
+
+arX
+
 Automated Code generation for Information
 Technology Tasks in YAML through Large
 Language Models
-Saurabh Pujar*¹, Luca Buratti*¹, Xiaojie Guo*¹, Nicolas Dupuis*¹, Burn Lewis*¹, Sahil Suneja*¹,
-Atin Sood*1, Ganesh Nalawade*2, Matthew Jones², Alessandro Morari¹, and Ruchir Puri¹
-¹IBM Research
-2Red Hat
-Abstract―The recent improvement in code generation capabili-
+
+Saurabh Pujar*!, Luca Buratti*!, Xiaojie Guo*!, Nicolas Dupuis*!, Burn Lewis*!, Sahil Suneja*!,
+Atin Sood*!, Ganesh Nalawade*?, Matthew Jones”, Alessandro Morari!, and Ruchir Puri!
+
+'IBM Research
+?Red Hat
+
+Abstract—The recent improvement in code generation capabili-
 ties due to the use of large language models has mainly benefited
 general purpose programming languages. Domain specific lan-
 guages, such as the ones used for IT Automation, have received
@@ -29,27 +38,33 @@ and compare with different baselines including Codex-Davinci-
 model (BLEU: 66.67) can outperform a much larger Codex-
 Davinci-002 (BLEU: 50.4) model, which was evaluated in few
 shot settings.
-Index Terms-Generative Model, Ansible, Code Generation
+
+Index Terms—Generative Model, Ansible, Code Generation
+
 I. INTRODUCTION
+
 In the recent years, Large Language models (LLMs) have
 demonstrated considerable content-generation capabilities in
 multiple domains, including natural language, vision, video
 and audio processing [1]. More recently, LLMs have been
 applied to the Software Engineering field, with the objective of
-improving aspects such as programmer's productivity [2] and
+improving aspects such as programmer’s productivity [2] and
 software security [3]. In the space of general-purpose program-
 ming languages, a growing amount of research is exploiting
 the capabilities of large language models to perform code
 generation, clone detection, code repair and other tasks [4], [5].
-This is fueling a new generation of coding assistants' products,
+This is fueling a new generation of coding assistants’ products,
 able to speed up developer work, leveraging the availability
 of open-source code bases to train the models. While the
-field of AI-assisted coding assistants is at its infancy, the
+field of Al-assisted coding assistants is at its infancy, the
 potential impact on the field of Software Engineering cannot
 be underestimated. The application of these techniques to IT
-*Equal contribution. Correspondence: saurabh.pujar@ibm.com
+
+“Equal contribution. Correspondence: saurabh.pujar@ibm.com
+
 domain specific languages like YAML, however, has received
 less attention, despite their importance to a wide array of fields.
+
 In this work, we explore the application of LLMs to the
 important area of IT automation. IT automation replaces
 manual IT admin work with automated execution of domain
@@ -69,35 +84,44 @@ management. This paper investigates the use of LLMs to
 generate Ansible-YAML code, with the objective of building
 an AI assistant for Ansible-YAML users and improving their
 productivity. We propose the use of transformer-based models
-for the task of Ansible-YAML code generation given a natural
+for the task of Ansible- YAML code generation given a natural
 language prompt. We start from training four versions of large
 domain-specific pre-trained decoder-based model, by learning
 from large amount of YAML and Ansible-YAML data in
 general. We then perform fine-tuning for the downstream
-Natural Language to Ansible-YAML generation task. This is
+Natural Language to Ansible- YAML generation task. This is
 the first work looking at LLMs for YAML in general and for
 Ansible-YAML in particular. The contributions of this work
 are the following:
-• We explore the implications of applying code generation
+
+e We explore the implications of applying code generation
 to Ansible-YAML and provide a formal definition of the
 problem.
-. We build the YAML and an Anisible-YAML dataset
+
+e We build the YAML and an Anisible-YAML dataset
 for both pretraining and finetuning tasks in the code
 generation.
-• We theoretically re-formalize the Ansible-YAML genera-
+
+e We theoretically re-formalize the Ansible- YAML genera-
 tion problem into code completion with novel prompt,
 by utilizing the unique features of YAML data and
+
+--- Page 2 ---
 practically trained a series of transformer-based models,
 which show much superiority.
-• We propose two novel evaluation metrics specially de-
+
+« We propose two novel evaluation metrics specially de-
 signed for Ansible-YAML, compare our models against
 the latest LLMs, and highlight their limitations.
+
 II. RELATED WORK
 A. Pre-trained Language Models for Code
+
 Most recently, language models have fueled progress to-
 wards the longstanding challenge of source code synthesis [6],
 [7], which excel at downstream tasks such as code completion,
 code generation and code summarization.
+
 According to Xu et al. [8], pre-training methods for source
 code modeling fall into three categories: (i) The first cate-
 gory is based on left-to-right language models, namely, auto-
@@ -113,14 +137,17 @@ BERT [14]. This line of pre-trained models perform well
 for the code classification and detection tasks. (iii) The third
 category of models is based on encoder-decoder models that
 incorporate pre-training objectives such as masked span pre-
-diction and denoising sequence reconstruction. CodeT5 [15],
+diction and denoising sequence reconstruction. CodeTS5 [15],
 PLBART [16], and PolyCoder [8] fall into the third category
 and perform well in sequence-to-sequence downstream tasks
 such as code commenting and code-to-code translation.
+
 Among these models, CodeGen has been trained on The
 Pile [17] and on data from Google BigQuery, hence it has
 been exposed to natural language, code and some YAML data.
+
 B. Code Generation
+
 Source code generation (or program synthesis) can be
 defined as the generation of a program or code snippet, starting
 from a natural language specification. Traditional methods use
@@ -128,6 +155,7 @@ a probabilistic context free grammar (PCFG) to generate the
 abstract syntax tree (AST) of the source code [6], [18]. Yin
 et al. [18] proposed a neural model in combination with a
 transition system to generate abstract syntax trees.
+
 With the recent development of large scale language models,
 large scale Transformers have also been applied to this prob-
 lem. Transformers typically treat code as text. Feng et al. [13]
@@ -138,13 +166,16 @@ large amounts of source code and web data. Furthermore, Xu
 et al. [8] perform a systematic evaluation of these models,
 finding that the presence of natural language in the training
 corpus helps with general code-language modeling.
+
 Many transformer models have been developed for software
 engineering tasks which focus on specific programming lan-
 guages like Python [14] and C [3]. Multi-lingual LLMs like
+
 PLBART [16], CODEGEN [12] and Codex [6] are trained
 on multiple programming languages but most of the data is
 comprised of commonly used languages like C, C++, Java,
 Python etc.
+
 Widely used domain specific languages like YAML have
 received far less attention. Tools such as Ansible, OpenShift
 and many others rely on YAML for managing their config-
@@ -156,7 +187,9 @@ their very large and heterogeneous training datasets, we did
 not find any work evaluating this capability. To the best of our
 knowledge, this is the first work addressing the problem of
 YAML code generation using a large language model.
-III. BACKGROUND
+
+Ill. BACKGROUND
+
 The Red Hat Ansible Automation Platform is an open-
 source [21], [22] IT automation system. It handles configu-
 ration management, application deployment, cloud provision-
@@ -167,6 +200,7 @@ system running Ansible will have a control node and one
 or more managed nodes. The control node is where Ansible
 is executed, while the managed nodes are the devices being
 automated, for example, Linux and Windows server machines.
+
 An Ansible Playbook (or playbook) is a YAML file that
 describes a set of Ansible Tasks (or tasks) to be performed
 by Ansible on the managed node. The playbook defines the
@@ -175,6 +209,7 @@ steps to bring the nodes to that desired state. For example, a
 playbook might define a set of tasks to install and configure
 a particular application, or to set up a particular system
 configuration.
+
 Playbooks are organized into a series of plays, which are
 executed in order. Each play specifies a group of managed
 nodes and a set of tasks to be performed on those nodes. Play-
@@ -187,59 +222,87 @@ consists of a single play that targets all managed nodes in
 the server group. The play includes two tasks: the task named
 “Install SSH server” uses the ansible.builtin.apt module to
 install the openssh-server package, and the task named “Start
-SSH server" uses the ansible.builtin. service module to start the
-ssh service. The "name" field of each task can be customized
+SSH server” uses the ansible. builtin.service module to start the
+ssh service. The “name” field of each task can be customized
 by users to describe the intention of the task.
+
 IV. METHODOLOGY
 A. Problem formulation
+
 We define the task Ansible-YAML Generation as follows:
 given a task description that includes both natural language
 (NL) as prompt X and Ansible YAML as the context script
--
-hosts: servers
+
+--- Page 3 ---
+- hosts:
 tasks:
-name: Install SSH server
-ansible. builtin .apt:
+- name: Install SSH server
+ansible. builtin . apt:
 name: openssh- server
 state: present
-name: Start SSH server
+- name: Start SSH server
 ansible. builtin . service:
 name: ssh
 state: started
+
+servers
+
 Fig. 1: Example of an Ansible playbook
-YAML Usage
-Туре
-Source
-File
-Count
-Galaxy
-112K
-Ansible
-FT
-GitLab
-64K
-Ansible
-PT
-GitHub GBQ
-1.1M
-Ansible
-PT
-2.2M
-Generic
-PT
-GitHub GBQ
+
+Source File YAML Usage
+Count Type
+
+Galaxy 112K Ansible FT
+
+GitLab 64K Ansible PT
+
+GitHub + GBQ 11M Ansible PT
+
+GitHub + GBQ 2.2M. Generic PT
+
 TABLE I: Extracted file count per data source. The data is used
 for pre-training (PT) or fine-tuning (FT) of Wisdom models.
+
 C, generate an Ansible task or playbook snippet Y based on
 the intent of X and C. Both X and C are represented as a
 sequence of tokens. The snippet code Y is also formalized
 as an Ansible Language sequence (AL). We also define a
 Probabilistic generative model to model the distribution of an
-Ansible snippet Y given X and C as p(Y|X, C). The best-
+Ansible snippet Y given X and C as p(Y|X,C). The best-
 possible Ansible task snippet is then given by
-= arg max p(Y|X, C).
+
+g = arg max p(Y|X,C). (1)
+
 B. Dataset Construction
+
+We curated a YAML dataset from multiple data sources,
+including GitHub, Google BigQuery”, GitLab and Ansible
+Galaxy [23]. We use data extraction logic specific to each
+data source, while querying their respective API endpoints
+to extract YAML files and relevant associated metadata. For
+Google BigQuery, we downloaded every file with a valid
+YAML extension (‘.yml’, ‘.yaml’). For GitHub and GitLab, we
+considered every repository containing “Ansible” either in the
+name or the description. We de-duplicated the dataset using a
+simple exact match criterion. In addition to generic YAML,
+our dataset contains ansible-specific YAML, appropriately
+tagged so as to preserve the interplay between Ansible roles,
+collections, tasks and playbooks.
+
+Our curated dataset contains ~1.1M Ansible task and play-
+book YAMLs, and ~2.2M other generic YAML files. Table I
+summarizes our data sources, file count, type of YAML, and
+whether we use the data for pre-training (PT) of fine-tuning
+(FT).
+
+A publicly available dataset
+
+https://cloud.google.com/bigquery
+
+published by Google,
+
 C. Pre-training
+
 Our pre-trained models are implemented with the same
 architecture as CODEGEN, a decoder-based model released
 by SalesForce [12]. CODEGEN has been pre-trained on several
@@ -262,6 +325,7 @@ addition, to exploring the effectiveness of using CODEGEN
 checkpoint as initialization, we propose WISDOM-ANSIBLE
 and WISDOM-YAML, which are trained from scratch with the
 above mentioned two datasets.
+
 Wisdom is designed to assist Ansible programmers in real-
 time and latency is therefore a critical parameter to consider.
 Which is why we choose a reasonably-sized model with a
@@ -269,39 +333,21 @@ high token-per-second throughput rather than a very large
 model with a low throughput. We tested the architecture of
 CODEGEN 350M and CODEGEN 2.7B. We benchmarked the
 generation throughput on single GPU for both models and
-found that the 350M model was ~1.9× faster than than the
-(1) 2.7B.
-We curated a YAML dataset from multiple data sources,
-including GitHub, Google BigQuery", GitLab and Ansible
-Galaxy [23]. We use data extraction logic specific to each
-data source, while querying their respective API endpoints
-to extract YAML files and relevant associated metadata. For
-Google BigQuery, we downloaded every file with a valid
-YAML extension (‘.yml', ‘.yaml'). For GitHub and GitLab, we
-considered every repository containing "Ansible" either in the
-name or the description. We de-duplicated the dataset using a
-simple exact match criterion. In addition to generic YAML,
-our dataset contains ansible-specific YAML, appropriately
-tagged so as to preserve the interplay between Ansible roles,
-collections, tasks and playbooks.
-Our curated dataset contains ~1.1M Ansible task and play-
-book YAMLS, and ~2.2M other generic YAML files. Table I
-summarizes our data sources, file count, type of YAML, and
-whether we use the data for pre-training (PT) of fine-tuning
-(FT).
-*A publicly available dataset published by
-https://cloud.google.com/bigquery
-Google,
+found that the 350M model was ~ 1.9x faster than than the
+2.7B.
+
 Our training code is based on the Huggingface Transformers
 library [25] that provided the CODEGEN checkpoints and
 tokenizers. We trained the model using our YAML dataset
 for 9 epochs using 16 A100 GPUs with 80 GB of memory.
 To speed up the training we used bf16 data type. Effective
-batch size was 32 and learning rate was 5 × 10−5 with a
+batch size was 32 and learning rate was 5 x 10~> with a
 linear decreasing schedule. During pre-training, YAML files
 were packed to fill up a context window of 1024, and we used
 a special separator token to separate the files.
+
 D. Fine-tuning
+
 1) Dataset: We used the Ansible Galaxy data to fine-tune
 the pretrained models mentioned above on the Ansible-YAML
 generation downstream tasks, as this dataset is a collection of
@@ -315,63 +361,71 @@ team. The Galaxy data files were randomly split into train
 (80%), validation (10%) and test (10%) sets. Exact match
 deduplication is performed at both the file and sample level
 across all splits.
+
+--- Page 4 ---
 2) Generation Types: As described in Section IV-A, the
 goal is to generate two kinds of Ansible output, either a full
 playbook (PB) or a task (T) given the natural languages (NL)
 requirement. The task (T) can be either part of a playbook,
 or part of a role. Thus, we can have 4 types of input-output
 combinations in the fine-tuning dataset.
-• NL→PB: The context is empty, so the only input is the
+
+« NL->PB: The context is empty, so the only input is the
 natural language prompt. We have limited the expected
 output playbooks to examples containing only 1 or 2 tasks.
 This forms the vast majority of playbooks. Playbooks
 containing more than 2 tasks are used to generate the
 next type of samples.
-•
-PB+NL→T: The model is expected to predict the next
+
+« PB+NL->T: The model is expected to predict the next
 task in a Playbook, and the context is a playbook with at
 least 1 task.
-• NL→T: The context is empty and the model is expected
+
+« NL->T: The context is empty and the model is expected
 to generated only 1 task, which is the first task of a role.
-• T+NL→T: The model is expected to predict the next
+
+« T+NL-T: The model is expected to predict the next
 task in a role based on the natural language prompt, where
 the context is the previous tasks.
+
 3) Input Prompt Formulation: A helpful feature of the
 Ansible language is that each Playbook or Task frequently
 contains a “name” field, whose value is the natural language
 description of the goal of playbook or task, as shown in Fig. 1.
-Thus the target output can be represented as Y = {YNL, YAL},
-where YNL refers to the “name” line in the Ansible script, and
-YAL refers to the remainder of the script. In addition, YNL is
+Thus the target output can be represented as Y = {Ynz, Yar},
+where Yy rp, refers to the “name” line in the Ansible script, and
+Yar refers to the remainder of the script. In addition, Yyz, is
 exactly the same as the NL sequence X in the original problem
 formulation in Section IV-A.
-=
+
 Thus, to take advantage of this feature and to make it
 accommodate best the pre-trained decoder-based model, we re-
 formalize the text-to-code generation problem in Section IV-A
 into a code completion problem. Specifically, Eq.1 can be
 formalized as
-ŷ
-= arg max p(YNL, YAL |X, C).
-= P(YNL|X, C)p(YAL |X, C)
-= p(X|X,C)p(YAL | YNL, C)
-= P(YAL |YNL, C)
-=
-(2)
-considering that YAL and YNL are conditionally independent
-given X and C and X YNL. Thus, we can use the value
-of the "name" line YNL as the prompt. When the output
+
+g =arg max p(Ywr, Yar|X,C).
+= p(Ynr|X, C)p(Yar|X, C)
+= p(X|X,C)p(YarlYnz,C)
+
+= p(Yar|Ynz,C) (2)
+considering that Y4; and Yy,, are conditionally independent
+given X and C and X = Yw_y. Thus, we can use the value
+of the “name” line Yy, as the prompt. When the output
 is a playbook, we combine the values of “name” fields of
 the playbook and its tasks to create the prompt. We have
 experimentally validated that this re-formalization can largely
 improve the overall performance regarding all kinds of
 metrics. The results are provided in the following section.
+
 4) Training: We fine-tuned pre-trained models using our
 Galaxy dataset for 8 epochs. The effective batch size was 32
-and the learning rate was 5 × 10-5 with a cosine decreasing
+and the learning rate was 5 x 10~° with a cosine decreasing
 schedule. We used the BLEU score on the validation set to
 determine the best checkpoint.
+
 E. Demo/Plugin
+
 We expose a GRPC and REST API based interface to
 model predictions so that inference can be called out using
 GRPC and REST clients. We wrote a custom Visual Studio
@@ -388,8 +442,10 @@ future implementations, we plan to improve user experience in
 terms of quality of recommendation by leveraging additional
 information in workspace of the editor, as well as improving
 latency by using techniques like caching.
+
 V. EXPERIMENTS
 A. Evaluation Metrics
+
 Since the generated ansible task or a small playbook always
 has high dependency on external resources, it is not practical to
 evaluate the correctness of a task by executing it. For example
@@ -398,148 +454,150 @@ on a number of remote hosts by executing it with Ansible and
 checking that the result is as expected. Thus, our evaluation
 metrics are based on the similarity between the generated
 ansible tasks or playbooks and the ground-truth.
+
 For the experiments described in this paper, 4 comparison
-metrics are used: Exact Match, BLEU [26], [27]*, Ansible
+metrics are used: Exact Match, BLEU [26], [27]", Ansible
 Aware, and Schema Correct. Among these, Ansible Aware
 and Schema Correct are two novel metrics designed specially
 for the Ansible tasks or playbooks.
-Ansible Aware: Ideally a metric should reflect the user's
+
+Ansible Aware: Ideally a metric should reflect the user’s
 view of the result, e.g. how many changes must be made
 to correct it. The purpose of the Ansible-aware metric is to
 use knowledge of the Ansible YAML syntax to compare the
 modules, keywords and parameters that comprise an Ansible
 task or playbook.
+
 Since an Ansible task or playbook is a mapping (dictionary)
-the order of the key-value pairs is not significant - the usual
+the order of the key-value pairs is not significant — the usual
 key order for a task is: name, module, keyword(s).
-The "name" is optional, its value is a natural language
+
+The “name” is optional, its value is a natural language
 description of the task. The module key identifies the operation
-to be performed while its value is a dict holding the module's
+to be performed while its value is a dict holding the module’s
 parameters. The optional keywords define conditions that
 influence the execution of the task, e.g. environment, elevated
 privileges, remote userid, error handling, conditionals, loops.
 The keyword values may be scalars, lists, or dicts. The score
 of a task is computed from the average of the scores of the top-
-level key-value pairs found in the target and predicted YAMLS.
-*Since the sequences of tokens in an Ansible YAML file are important,
-while some reordering is permitted, the BLEU score's basis on n-gram
+level key-value pairs found in the target and predicted YAMLs.
+
+“Since the sequences of tokens in an Ansible YAML file are important,
+while some reordering is permitted, the BLEU score’s basis on n-gram
 coverage suggests it could be a useful metric.
-1
-2
-# Generating a task from NL prompt (L18)
-1
-3
-# using a playbook as context (L1- L17)
-2
-4
-5
-6
-7
-8
-hosts: all
+
+--- Page 5 ---
+1 -
+2  # Generating a task from NL prompt (L18) 1
+3. # using a playbook as context (L1- L17) 2
+4  # model expected output in (L19- L20) 3
+5  - name: Network Setup Playbook 4
+6 connection: ansible .netcommon.network_cli 5
+7 gather_facts : false 6
+8 all 7
 9
-tasks:
-10
-11
-12
-13
-14
-# model expected output in (L19- L20)
-- name: Network Setup Playbook
-connection: ansible.netcommon.network_cli
-gather_facts false
-name: Get config for VyOS devices
-vyos.vyos. vyos_facts:
-gather_subset: all
-name: Update the hostname
-vyos.vyos.vyos_config:
+
+10 - name: Get config for VyOS devices ;
+
+11 vyos.vyos. vyos_facts : 10
+
+12 gather_subset : all "1
+
+13 - name: Update the hostname 12
+
+14 vyos.vyos. vyos_config: 3
+
+15 backup: yes 14
+
+16 lines : 15
+
+17 - set system host- name vyos- changed 16
+
+18 - name: Get changed config for VyOS devices 17
+
+19 vyos.vyos. vyos_facts :
+
+20 gather_subset : all
+
+(a) PB+NL—+T
+
+1 ---
+
+2  # Generating a task from NL prompt (L9) 1
+3 # using task(s) as context (L1- L8) 2
+4  # model expected output in (L10- L12) 3
+5  - name: Ensure apache is at the latest version 4
+6 ansible . builtin .yum: 5
+7 name: httpd 6
+8 state: latest 7
+9  - name: Write the apache config file 8
+
+10 ansible . builtin . template:
+
+11 sre: /srv/httpd .j2
+
+12 dest: /etc/httpd .conf
+
+(c) T+NL3T
+
 # Generating a playbook from NL prompt (L5)
-3
-4
-5
--
-6
-7
-8
-9
-tasks:
-10
-11
-12
-15
-backup: yes
-14
-16
-17
-18
-19
-20
-222
-lines:
-set system host- name vyos- changed
-name: Get changed config for VyOS devices
-vyos.vyos. vyos_facts:
-17
-34567
-% without context
+# without context
 # model expected output in (L6- L17)
-name: Network Setup Playbook
-connection: ansible.netcommon.network_cli
-gather_facts false
+- name: Network Setup Playbook
+connection: ansible .netcommon.network_cli
+gather_facts : false
 hosts: all
-name: Get config for VyOS devices
-vyos.vyos. vyos_facts:
-gather_subset: all
+tasks :
+- name: Get config for VyOS devices
+vyos.vyos. vyos_facts :
+gather_subset : all
 - name: Update the hostname
-vyos.vyos.vyos_config:
+vyos.vyos. vyos_config:
 backup: yes
-lines:
-set system host- name vyos- changed
-gather_subset all
-(a) PB+NL→T
-(b) NL→PB
-1
-2
-# Generating a task from NL prompt (L9)
-1
-3
-# using task(s) as context (L1- L8)
-2
+lines :
+- set system host- name vyos- changed
+
+(b) NL-+PB
+
 # Generating a task from NL prompt (L5)
-4
-# model expected output in (L10- L12)
-3
-5
-6
-7
-8
-state latest
-9
-name: Ensure apache is at the latest version
-ansible. builtin .yum:
-name: httpd
-name: Write the apache config file
-4
-5698
--
-7
 # without context
 # model expected output in (L6- L8)
-name: Ensure apache is at the latest version
-ansible builtin .yum:
+- name: Ensure apache is at the latest version
+ansible . builtin . yum:
 name: httpd
-state latest
-10
-11
-ansible builtin .template:
-src: /srv/httpd.j2
-12
-dest: /etc/httpd.conf
-(c) T+NL→T
-(d) NL→T
+state: latest
+
+(d) NL>T
+
 Fig. 2: Ansible generation types defined in IV-D2. Each snippet of code includes a comment (in red) highlighting the NL
 prompt, the context provided to the model as well as the expected output. The comments are used here only for illustration
 purpose and are not provided to the model during training or inference.
+
+Similarly for playbooks the scores of its top-level key-value
+pairs are averaged, where the score of each of its tasks is
+computed as above. The “name” key and its value can be
+ignored as they has no effect on the execution of the task.
+The score for each key-value pair is the average of the key
+and value scores. Currently keys missing from the prediction
+are given a score of 0, while keys inserted in the prediction are
+ignored. If a key’s value is a list or dict, its score is recursively
+computed by averaging the scores of each dict entries or
+list items. When comparing the module names they are first
+replaced by their fully qualified collection name (FQCN) if
+necessary, e.g. copy is changed to ansible. builtin.copy. Another
+normalization that is applied is to convert the old ky = v1,
+ka = ve syntax for module parameters into a dict. There
+are some modules that are almost equivalent, e.g. command
+/ shell, copy / template, package / apt, dnf, yum. Since they
+accept many of the same arguments and in some cases can
+be exchanged, such module differences are given a partial key
+score which is averaged with the score of their arguments.
+
+Our motivation for ignoring insertions is that they are less
+costly than deletions as they can be easily removed, but we
+
+plan to investigate the impact of including an insertion penalty.
+
 Schema Correct: this metrics is designed to measure the
 correctness of the result, i.e. whether or not it satisfies the
 Ansible schema. It does not reflect the accuracy of the model,
@@ -550,54 +608,34 @@ Ansible itself. Hence a low score does not necessarily mean
 that the results would be rejected by Ansible. Since we did
 not filter our training data with these schema a sample with a
 perfect Exact Match score may have a Schema Correct score
-Similarly for playbooks the scores of its top-level key-value plan to investigate the impact of including an insertion penalty.
-pairs are averaged, where the score of each of its tasks is
-computed as above. The "name" key and its value can be
-ignored as they has no effect on the execution of the task.
-The score for each key-value pair is the average of the key
-and value scores. Currently keys missing from the prediction
-are given a score of 0, while keys inserted in the prediction are
-ignored. If a key's value is a list or dict, its score is recursively
-computed by averaging the scores of each dict entries or
-list items. When comparing the module names they are first
-replaced by their fully qualified collection name (FQCN) if
-necessary, e.g. copy is changed to ansible.builtin.copy. Another
-normalization that is applied is to convert the old ki
-k2 = v2 syntax for module parameters into a dict. There
-are some modules that are almost equivalent, e.g. command
-| shell, copy template, package / apt, dnf, yum. Since they
-accept many of the same arguments and in some cases can
-be exchanged, such module differences are given a partial key
-score which is averaged with the score of their arguments.
-= V1,
-Our motivation for ignoring insertions is that they are less
-costly than deletions as they can be easily removed, but we
 of 0.
+
 B. Results
+
 1) Pre-training: Pre-trained Models for Comparison All
-CODEGEN, but are pre-trained on different datasets. Table II
 the models are implemented with the same architecture as
+CODEGEN, but are pre-trained on different datasets. Table IL
 introduces the names of the models and the datasets they
 were pre-trained on. The first three models correspond to the
 original CODEGEN checkpoints released by Salesforce [12]:
-Model
-The Pile
-BigQuery
-Dataset
-BigPython
-Ansible YAML Generic YAML
-CODEGEN-NL
-✓
-CODEGEN-MULTI
-CODEGEN-MONO
-WISDOM-ANSIBLE
-WISDOM-YAML
-WISDOM-ANSIBLE-MULTI
-✓
+
+--- Page 6 ---
+Model Dataset
+The Pile BigQuery BigPython Ansible YAML | Generic YAML’
+CODEGEN-NL v
+CODEGEN-MULTI v v
+CODEGEN-MONO v v v
+WISDOM-ANSIBLE v
+WISDOM- YAML v v
+WISDOM-ANSIBLE-MULTI v v v
+WISDOM-YAML-MULTI v v v v
+
 TABLE II:
-WISDOM-YAML-MULTI
+
 Model names and their associated pre-training datasets. The Pile, BigQuery and BigPython were used by
+
 Salesforce [12], while Ansible YAML and Generic YAML are introduced in this work.
+
 CODEGEN-NL, CODEGEN-MULTI, and CODEGEN-MONO.
 The last four rows are the domain-specific pre-trained
 WISDOM models proposed in this paper for YAML data.
@@ -606,23 +644,24 @@ while WISDOM-YAML was pre-trained on both Ansible
 YAML and Generic YAML. WISDOM-ANSIBLE-MULTI
 was initialized with the weights of CODEGEN-MULTI
 and we extended the pre-training using Ansible YAML.
-WISDOM-YAML-MULTI was also initialized with the weights
+WISDOM- YAML-MULTI was also initialized with the weights
 of CODEGEN-MULTI and we extended the pre-training using
 both Ansible YAML, and Generic YAML.
+
 Experiment Settings We first evaluate the models in few-shot
 setting on our Ansible test set which includes a distribution of
-the four generation tasks described previously: PB+NL→T,
-NL→PB, T+NL→T, and NL→T. Our main goal here is to
+the four generation tasks described previously: PB+NL-—T,
+NL-—PB, T+NL-T, and NLT. Our main goal here is to
 understand how much adding Ansible and generic YAMLs to
 our pre-training improves the performances of the models.
-Table III presents the results for all CODEGEN and WIS-
+Table III presents the results for all CODEGEN and WIs-
 DOM models as well as OpenAI Codex. For each row, we
 indicate the size of the model (i.e. number of parameters),
 as well as the size of the inference context window. When
-the input to the model {YNL, C} (see IV-D3) is larger than
+the input to the model {Yz,C} (see IV-D3) is larger than
 the context window, it is left-truncated. For the tasks that do
-not include any context (NL→PB and NL→T), we found that
-adding the string "Ansible\n" prior to the prompt improved the
+not include any context (NL—PB and NL-+T), we found that
+adding the string “Ansible\n” prior to the prompt improved the
 performances of CODEGEN models as well as Codex. For the
 WISDOM models, we did not observe any significant change
 and therefore left the context empty. All the models were
@@ -631,17 +670,18 @@ Schema Correct, Exact Match (EM), BLEU, and Ansible
 Aware. In order to correctly evaluate against these metrics, in
 the case of Ansible task generations, we truncated the models
 output predictions to keep only the first generated task. For
-playbook generation (NL→PB), we did not apply any trun-
+playbook generation (NL-—>PB), we did not apply any trun-
 cation. Finally, all results presented thereafter were obtained
 using greedy decoding. We would expect some improvement
 by using random sampling or beam search decoding.
 CODEGEN Comparison on Ansible Generation The first
 three rows refer to the CODEGEN models as released by
-Salesforce. As shown in Table III, CODEGEN-MULTI trained
+Salesforce. As shown in Table II], CODEGEN-MULTI trained
 on The Pile and BigQuery performs the best among the
 three CODEGEN models. Specifically, CODEGEN-NL 350M
 performs the worse across all metrics with a BLEU of 24.95
 and an Ansible Aware score of 6.24. The Schema Correct is
+
 71.26. This rather high value shows that the small subset of
 YAMLs present in the Pile is already enough for the model to
 have a good understanding of the YAML syntax. However,
@@ -663,20 +703,22 @@ in Table III. The larger models do perform slightly better, but
 the improvement is not striking. Comparing with the 350M
 baseline, the 2.7B model improves the Ansible Aware score
 by ~1.8 points and the 6B model by ~4.9 points.
+
 Codex for Ansible Generation We also evaluated Codex
 (Codex-Davinci-002) on the Ansible generation tasks, as
-shown in Table III. The Schema Correct and BLEU scores
+shown in Table II. The Schema Correct and BLEU scores
 of Codex are in the same order of magnitude as CODEGEN-
 MULTI 350M but the Ansible Aware is significantly higher
 (48.78). Also note that the exact match is the highest of all
 models tested, which indicates that Codex likely saw large
 portions of our Galaxy dataset.
+
 WISDOM models for Ansible Generation As shown in the
-last four rows in Table III. The WISDOM models are notably
+last four rows in Table II. The WISDOM models are notably
 better than CODEGEN and Codex baselines, showing that our
 YAML pre-training provided a boost in performance. The last
 two rows show the two WISDOM models pre-trained with
-YAMLS only. Both models reach Ansible Aware score similar
+YAMLs only. Both models reach Ansible Aware score similar
 to Codex, and BLEU score comparable to CODEGEN-MULTI
 6B. WISDOM-ANSIBLE-MULTI 350M has the highest Ansible
 Aware score, ~6 points higher than Codex and ~15 points
@@ -686,8 +728,11 @@ show that adding a large collection of YAMLs to pre-train
 or extend the pre-training of an existing model offer a large
 boost in performance for the Ansible task generations. Further,
 the WISDOM models outperform CODEGEN and Codex with
+
+--- Page 7 ---
 less parameters, which is advantageous in this application that
 requires fast inference.
+
 2) Finetuning: We fine-tuned and evaluated CODEGEN
 and WISDOM models on the Galaxy dataset described
 in IV-D1. As shown in Table IV, fine-tuning on specified
@@ -701,20 +746,22 @@ experimental factors influence the Fine-tuned models, we
 conducted ablation studies regarding the format of prompt,
 pre-trained models, model size, context window size, and the
 dataset size.
+
 Effectiveness of Prompt Formulation As mentioned in
 Section IV-D3, to take advantage of the feature of Ansible-
 YAML data, we re-formalized the code generation problem
 into a code completion process by utilizing the natural
-language prompt as a part of "name" field. To validate its
+language prompt as a part of “name” field. To validate its
 effectiveness, we compare it with the typical prefix-based
 CODEGEN model (named as CODEGEN-prefix) which
-contains the prefix term"context code" before the context
+contains the prefix term‘context code” before the context
 information and “prompt” before the natural language part.
 According to the results shown in Table IV, under the
 window size 1024, CODEGEN with the proposed prompt
 format largely outperforms CODEGEN-prefix, for example,
 10% percent higher on BLEU, 26% percent higher on
 SCHEMA CORRECT, and 16% percent higher on EM.
+
 Analysis on Different Pre-trained Models The pre-trained
 models play an important role in the performance of fine-tuned
 models. By comparing the fine-tuned CODEGEN-MULTI and
@@ -724,6 +771,7 @@ on Ansible data can help the large language model better
 understand the syntax and structure of Ansible. Specifically,
 WISDOM-ANSIBLE-MULTI has gained 1% increase regarding
 Schema Correct, EM and Ansible Aware.
+
 Analysis on Context Window Size We first compare
 fine-tuned CODEGEN-MULTI models with different context
 window sizes. More context improves the model predictions
@@ -739,8 +787,10 @@ Ansible Aware score to 69.77. However, we do not observe
 improvement when going beyond 1024, as seen with the 2048
 results. Note that this observation is based on our current
 dataset, and this is possible that other test sets would benefit
+
 further from larger contexts. Nonetheless, in our current setup,
 we conclude that a 1024 context window is adequate.
+
 Analysis on Number of Training Data To investigate the
 influence of the training data, we use varying amount of data
 (10%, 20% and 50% of training data) for finetuning. The
@@ -759,27 +809,30 @@ seen in Tables III and IV, the best performing Wisdom model,
 WISDOM-ANSIBLE-MULTI, trained on 100% finetuning data
 is better than Codex-Davinci-002 in fewshot settings by about
 15 BLEU points and about 16 EM points.
+
 Analysis on Generation Types As discussed in Section IV-D2,
-there are 4 types of generation problems for Ansible-YAML
+there are 4 types of generation problems for Ansible- YAML
 Generation. To validate how the proposed model deal with
 these 4 types, we evaluate on them sepecreatly, as shown
-in Table V. Due to the dominant number of T+NL→T in
+in Table V. Due to the dominant number of T+NL—>T in
 the training data, the proposed model performs the best in
-this task. For PB+NL→T type, even there are only 3441
+this task. For PB+NL->T type, even there are only 3441
 fine-tuning samples, the performance is comparable to that
-of T+NL→T. This may because T+NL→T and PB+NL→T
+of T+NL-—T. This may because T+NL->T and PB+NL-T
 are both used for generating a task given the natural languages
 and context ansible data and thus can benefit each other while
 fine-tuning. The proposed model has difficulty in generating
 a playbooks, as shown in the second line of the table, which
 is because of the limited number (i.e., 550 counts) of training
-data for NL→T. In addition, by comparing the performance
-between PB+NL→T and NL→T, the necessities of utilizing
+data for NLT. In addition, by comparing the performance
+between PB+NL—T and NL->T, the necessities of utilizing
 the context information for generation is validated. Though
-NL→T has more training data than that of PB+NL→T, the
-performance on NL→T decrease dramatically compared to
-that of PB+NL→T, for example, 33% decrement in BLEU
+NL-T has more training data than that of PB+NL-—>T, the
+performance on NL->T decrease dramatically compared to
+that of PB+NL-—>T, for example, 33% decrement in BLEU
+
 VI. CONCLUSION
+
 This work describes the application of transformer-based
 models to the generation of Ansible-YAML, starting from
 a user-provided natural language prompt. The objective of
@@ -792,230 +845,76 @@ community. We extend the training of the base model with
 our dataset and evaluate the results. Our results show that with
 our approach, Wisdom performs Ansible generation equally or
 better compared to state-of-the-art models for code generation.
-Model
-Size
-Context
-Schema
-EM
-BLEU
-Ansible
-Window
-Correct
-Aware
-CODEGEN-NL
-350M
-2048
-71.26
-1.69
-24.95
-6.24
-CODEGEN-MONO
-350M
-2048
-82.40
-6.37
-34.24
-34.15
-CODEGEN-MULTI
-350M
-2048
-83.65
-6.92
-34.26
-34.40
-CODEGEN-MULTI
-2.7B
-2048
-78.00
-7.74
-37.27
-36.23
-CODEGEN-MULTI
-6B
-2048
-85.80
-7.98
-39.67
-39.27
-Codex-Davinci-002
-175B
-2048
-88.82
-13.66
-50.40
-55.01
-WISDOM-ANSIBLE-MULTI
-350M
-1024
-96.56
-7.35
-46.58
-54.51
-WISDOM-YAML-MULTI
-350M
-1024
-95.97
-7.16
-45.52
-53.08
-WISDOM-ANSIBLE
-WISDOM-YAML
-350M
-350M
-1024
-95.10
-4.63
-39.49
-48.03
-1024
-94.63
-4.19
-40.13
-47.76
+
+--- Page 8 ---
+Model Size Context Schema EM BLEU Ansible
+Window Correct Aware
+CODEGEN-NL 350M 2048) 71.26 1.69 24.95 6.24
+CODEGEN-MONO 350M 2048 82.40 6.37 34.24 34.15
+CODEGEN-MULTI 350M 2048 83.65 6.92 34.26 34.40
+CODEGEN-MULTI 2.7B 2048 78.00 1.74 37.27 36.23
+CODEGEN-MULTI 6B 2048 85.80 7.98 39.67 39.27
+Codex-Davinci-002 175B 2048) 88.82 13.66 50.40 55.01
+WISDOM-ANSIBLE-MULTI 350M 1024 96.56 7.35 46.58 54.51
+WISDOM-YAML-MULTI 350M 1024 95.97 7.16 45.52 53.08
+WISDOM-ANSIBLE 350M 1024 95.10 4.63 39.49 48.03
+WISDOM-YAML 350M 1024 94.63 4.19 40.13 47.76
+
 TABLE III: Evaluation results for CODEGEN, Codex, and WISDOM models in few-shot setting. The first section refers to the
 CODEGEN models released by Salesforce, the second one to OpenAI Codex and the third one to WISDOM models.
-Model
-Size
-Context
-Schema
-EM
-BLEU
-Ansible
-Window
-Correct
-Aware
-CODEGEN-MULTI
-350M
-512
-97.77
-22.30
-61.75
-64.84
-CODEGEN-MULTI
-350M
-1024
-98.06
-28.64
-66.03
-69.77
-CODEGEN-MULTI
-350M
-2048
-98.02
-27.14
-66.12
-69.69
-CODEGEN-MULTI
-2.7B
-1024
-98.36
-28.03
-65.25
-69.41
-CODEGEN-MULTI-prefix
-350M
-1024
-72.96
-12.37
-56.29
-45.87
-WISDOM-ANSIBLE-MULTI
-350M
-1024
-98.00
-29.36
-66.67
-70.79
-WISDOM-YAML-MULTI
-350M
-1024
-98.02
-28.79
-65.92
-69.65
-WISDOM-ANSIBLE
-350M
-1024
-97.68
-23.44
-61.94
-66.29
-WISDOM-YAML
-350M
-1024
-97.97
-23.27
-61.20
-65.70
-WISDOM-ANSIBLE-MULTI
-350M
-1024
-98.10
-27.90
-65.46
-69.79
+
+Model Size Context Schema EM BLEU Ansible
+Window Correct Aware
+
+CODEGEN-MULTI 350M 512 97.77 61.75 64.84
+
+CODEGEN-MULTI 350M 1024 98.06 66.03 69.77
+
+CODEGEN-MULTI 350M 2048 98.02 66.12 69.69
+
+CODEGEN-MULTI 2.7B 1024 98.36 65.25 69.41
+
+CODEGEN- MULT: 1024
+
+WISDOM-ANSIBLE-MULTI 1024
+
+WISDOM- YAML-MULTI 1024
+
+WISDOM-ANSIBLE 1024
+
+WISDOM- YAML 1024
+
+WISDOM-ANSIBLE-MULTI 1024
+
 -50
-WISDOM-ANSIBLE-MULTI
-350M
-1024
-98.08
-25.00
-63.37
-67.90
+
+WISDOM-ANSIBLE-MULTI 350M 1024 98.08 25.00 63.37 67.90
+
 -20
-WISDOM-ANSIBLE-MULTI
-350M
-1024
-98.08
-22.62
-61.68
-66.23
+
+WISDOM-ANSIBLE-MULTI 350M 1024 98.08 22.62 61.68 66.23
+
 -10
+
 TABLE IV: Evaluation results of the fine-tuned models. The first section shows results of CODEGEN-MULTI fined-tuned on
 Galaxy, varying the size of the context window and the number of parameters. The second section shows the WISDOM models
 fine-tuned on Galaxy, for a fixed 1024 context window. The last section corresponds to WISDOM-ANSIBLE-MULTI fine-tuned
 on Galaxy and varying the amount of data (10%, 20%, and 50% of the dataset).
-Generation Types
-Count
-Schema
-Correct
-EM
-BLEU
-Ansible
-Aware
-ALL
-NL→PB
-NL→T
-50580
-98.06
-28.64
-66.03
-69.77
-550
-93.09
-0.0
-22.76
-23.16
-6961
-96.51
-5.17
-45.46
-49.28
-PB+NL→T
-3441
-T+NL→T
-39628
-98.75
-98.35
-46.00
-79.66
-82.31
-31.65
-69.41
-72.93
-TABLE V: Breakdown of the evaluation metrics per generation type (see IV-D2) for CODEGEN-MULTI fine-tuned on Galaxy.
-"ALL" refers to all generation types combined together.
+
+Generation Types Count Schema EM BLEU Ansible
+Correct Aware
+ALL 50580 98.06 28.64 66.03 69.77
+NL-—PB 550 93.09 0.0 22.76 23.16
+NLT 6961 96.51 5.17 45.46 49.28
+PB+NL—>T 3441 98.75 46.00 79.66 82.31
+T+NL—+T 39628 98.35 31.65 69.41 72.93
+
+TABLE V: Breakdown of the evaluation metrics per generation type (see [V-D2) for CODEGEN-MULTI fine-tuned on Galaxy.
+
+“ALL” refers to all generation types combined together.
+
 LIMITATIONS
+
 A lot of Ansible development happens on playbooks. How-
 ever, playbooks are not well represented in our fine-tuning
 dataset since we found very few acceptable playbook samples
@@ -1024,14 +923,19 @@ small with two or less tasks. Ansible Blocks, which are logical
 groups of tasks are also something we have not specifically
 trained and tested on. This is something we hope to expand
 to in the future.
+
 We also hope to do more analysis on the models sensitivity
 to prompts and robustness to changes in indentation, quotes
 and letter case. Currently we focus on the Natural Language
 to Ansible generation task. This can be expanded to a more
 general completion task where a user can prompt the model
+
 at any stage of code development.
+
 ETHICS STATEMENT
+
 A. Legal Implications
+
 Wisdom is trained on code repositories that are publicly
 available and with an open-source license. Training of ML
 algorithms on public repositories, such as those in GitHub,
@@ -1040,9 +944,12 @@ is a rare occurrence, Wisdom could potentially generate code
 that is identical to a training set sample. When this happens,
 the generated code is most likely a very common pattern in
 Ansible, rather than the result of a copy. Furthermore, while
-Wisdom provides a recommendation, it is the user's choice to
+Wisdom provides a recommendation, it is the user’s choice to
 accept it and use it in the codebase.
+
+--- Page 9 ---
 B. Offensive Language
+
 Large amounts of public repositories could contain language
 that is offensive or discriminatory to multiple groups in the
 form of comments or code. While this is primarily a research
@@ -1050,7 +957,9 @@ work, not intended for product use, a product ready version
 of the model would undergo a major data cleaning and
 normalization process to avoid the generation of unwanted
 expressions.
+
 C. Security and Safety Risks
+
 Wisdom is trained on good quality data, however there is
 a significant risk of generating Ansible that contains security
 vulnerabilities or could damage a system. The model it is not
@@ -1062,7 +971,9 @@ safety of training data, and also by performing basic post-
 processing analysis to avoid the most common vulnerabilities.
 Both approaches would be considered in a product-ready
 version of the model.
+
 D. Economic and Labor Market Impact
+
 The topic of economic and labor market disruption by AI
 algorithms has been the subject of a wide range of arguments.
 Specifically, an AI coding assistant could potentially be seen
@@ -1072,105 +983,165 @@ will clearly highlight how the presence of an human expert
 cannot be replaced. Indeed, current ML models cannot provide
 the deep semantic comprehension needed to understand and
 integrate the recommendation into the codebase.
+
 REFERENCES
-[1] OpenAI, "Gpt-4 technical report," 2023.
-[2] N. Jain, S. Vaidyanath, A. Iyer, N. Natarajan, S. Parthasarathy, S. Ra-
-jamani, and R. Sharma, "Jigsaw: Large language models meet program
-synthesis," in Proceedings of the 44th International Conference on
-Software Engineering, 2022, pp. 1219–1231.
-[3] L. Buratti, S. Pujar, M. Bornea, S. McCarley, Y. Zheng, G. Rossiello,
+
+OpenAI, “Gpt-4 technical report,” 2023.
+
+2] N. Jain, S. Vaidyanath, A. Iyer, N. Natarajan, S. Parthasarathy, S. Ra-
+jamani, and R. Sharma, “Jigsaw: Large language models meet program
+synthesis,” in Proceedings of the 44th International Conference on
+Software Engineering, 2022, pp. 1219-1231.
+
+3] L. Buratti, S. Pujar, M. Bornea, S. McCarley, Y. Zheng, G. Rossiello,
 A. Morari, J. Laredo, V. Thost, Y. Zhuang et al., “Exploring soft-
-ware naturalness through neural language models," arXiv preprint
+ware naturalness through neural language models,” arXiv preprint
 arXiv:2006.12641, 2020.
-[4] R. Puri, D. S. Kung, G. Janssen, W. Zhang, G. Domeniconi, V. Zolotov,
+
+4] R. Puri, D. S. Kung, G. Janssen, W. Zhang, G. Domeniconi, V. Zolotov,
 J. Dolby, J. Chen, M. Choudhury, L. Decker, V. Thost, L. Buratti,
-S. Pujar, S. Ramji, U. Finkler, S. Malaika, and F. Reiss, "Codenet: A
-large-scale ai for code dataset for learning a diversity of coding tasks,"
+S. Pujar, S. Ramji, U. Finkler, S. Malaika, and F. Reiss, “Codenet: A
+large-scale ai for code dataset for learning a diversity of coding tasks,”
 2021.
-[5] S. Greengard, "Ai rewrites coding," Commun. ACM, vol. 66, no. 4, p.
+
+5] S. Greengard, “Ai rewrites coding,” Commun. ACM, vol. 66, no. 4, p.
 12-14, mar 2023. [Online]. Available: https://doi.org/10.1145/3583083
-[6] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P. d. O. Pinto, J. Kaplan,
-H. Edwards, Y. Burda, N. Joseph, G. Brockman et al., “Evaluating large
-language models trained on code," arXiv preprint arXiv:2107.03374,
+6] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P. d. O. Pinto, J. Kaplan,
+H. Edwards, Y. Burda, N. Joseph, G. Brockman ef al., “Evaluating large
+language models trained on code,’ arXiv preprint arXiv:2107.03374,
 2021.
-[7] H. Touvron, T. Lavril, G. Izacard, X. Martinet, M.-A. Lachaux,
-T. Lacroix, B. Rozière, N. Goyal, E. Hambro, F. Azhar et al.,
-"Llama: Open and efficient foundation language models," arXiv preprint
+
+7) H. Touvron, T. Lavril, G. Izacard, X. Martinet, M.-A. Lachaux,
+T. Lacroix, B. Roziére, N. Goyal, E. Hambro, F. Azhar et al.,
+“Llama: Open and efficient foundation language models,” arXiv preprint
 arXiv:2302.13971, 2023.
-[8] F. F. Xu, U. Alon, G. Neubig, and V. J. Hellendoorn, "A systematic
-evaluation of large language models of code," in Proceedings of the
+
+8] FF Xu, U. Alon, G. Neubig, and V. J. Hellendoorn, “A systematic
+evaluation of large language models of code,” in Proceedings of the
 6th ACM SIGPLAN International Symposium on Machine Programming,
 2022, pp. 1-10.
-[9] S. Lu, D. Guo, S. Ren, J. Huang, A. Svyatkovskiy, A. Blanco,
+
+19
+
+10.
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+25
+
+[26]
+
+227)
+
+[28]
+
+S. Lu, D. Guo, S. Ren, J. Huang, A. Svyatkovskiy, A. Blanco,
 C. Clement, D. Drain, D. Jiang, D. Tang et al., “Codexglue: A machine
-learning benchmark dataset for code understanding and generation,"
+learning benchmark dataset for code understanding and generation,”
 in Thirty-fifth Conference on Neural Information Processing Systems
 Datasets and Benchmarks Track (Round 1), 2021.
-[10] L. Tunstall, L. von Werra, and T. Wolf, Natural language processing
-with transformers. "O'Reilly Media, Inc.", 2022.
-[11] Y. Li, D. Choi, J. Chung, N. Kushman, J. Schrittwieser, R. Leblond,
-T. Eccles, J. Keeling, F. Gimeno, A. Dal Lago et al., “Competition-
-level code generation with alphacode," Science, vol. 378, no. 6624, pp.
+
+L. Tunstall, L. von Werra, and T. Wolf, Natural language processing
+with transformers. " O’Reilly Media, Inc.", 2022.
+
+Y. Li, D. Choi, J. Chung, N. Kushman, J. Schrittwieser, R. Leblond,
+T. Eccles, J. Keeling, F. Gimeno, A. Dal Lago er al., “Competition-
+level code generation with alphacode,” Science, vol. 378, no. 6624, pp.
 1092-1097, 2022.
-[12] E. Nijkamp, B. Pang, H. Hayashi, L. Tu, H. Wang, Y. Zhou, S. Savarese,
-and C. Xiong, "A conversational paradigm for program synthesis,” arXiv
+
+E. Nijkamp, B. Pang, H. Hayashi, L. Tu, H. Wang, Y. Zhou, S. Savarese,
+and C. Xiong, “A conversational paradigm for program synthesis,” arXiv
 preprint arXiv:2203.13474, 2022.
-[13] Z. Feng, D. Guo, D. Tang, N. Duan, X. Feng, M. Gong, L. Shou, B. Qin,
+
+Z. Feng, D. Guo, D. Tang, N. Duan, X. Feng, M. Gong, L. Shou, B. Qin,
 T. Liu, D. Jiang et al., “Codebert: A pre-trained model for programming
-and natural languages," in Findings of the Association for Computational
+and natural languages,” in Findings of the Association for Computational
 Linguistics: EMNLP 2020, 2020, pp. 1536-1547.
-[14] A. Kanade, P. Maniatis, G. Balakrishnan, and K. Shi, “Learning and
-evaluating contextual embedding of source code," in International
+
+A. Kanade, P. Maniatis, G. Balakrishnan, and K. Shi, “Learning and
+evaluating contextual embedding of source code,’ in International
 Conference on Machine Learning. PMLR, 2020, pp. 5110-5121.
-[15] Y. Wang, W. Wang, S. Joty, and S. C. Hoi, “Codet5: Identifier-aware
+
+Y. Wang, W. Wang, S. Joty, and S. C. Hoi, “Codet5: Identifier-aware
 unified pre-trained encoder-decoder models for code understanding
-and generation," in Proceedings of the 2021 Conference on Empirical
-Methods in Natural Language Processing, 2021, pp. 8696–8708.
-[16] W. Ahmad, S. Chakraborty, B. Ray, and K.-W. Chang, “Unified pre-
+and generation,” in Proceedings of the 2021 Conference on Empirical
+Methods in Natural Language Processing, 2021, pp. 8696-8708.
+
+W. Ahmad, S. Chakraborty, B. Ray, and K.-W. Chang, “Unified pre-
 training for program understanding and generation,” in Proceedings of
 the 2021 Conference of the North American Chapter of the Association
 for Computational Linguistics: Human Language Technologies, 2021,
 pp. 2655-2668.
-[17] L. Gao, S. Biderman, S. Black, L. Golding, T. Hoppe, C. Foster, J. Phang,
-H. He, A. Thite, N. Nabeshima et al., "The pile: An 800gb dataset of
-diverse text for language modeling," arXiv preprint arXiv:2101.00027,
+
+L. Gao, S. Biderman, S. Black, L. Golding, T. Hoppe, C. Foster, J. Phang,
+H. He, A. Thite, N. Nabeshima et al., “The pile: An 800gb dataset of
+diverse text for language modeling,” arXiv preprint arXiv:2101.00027,
 2020.
-[18] P. Yin and G. Neubig, “A syntactic neural model for general-purpose
-code generation," in Proceedings of the 55th Annual Meeting of the
-Association for Computational Linguistics (Volume 1: Long Papers),
+
+P. Yin and G. Neubig, “A syntactic neural model for general-purpose
+code generation,” in Proceedings of the 55th Annual Meeting of the
+Association for Computational Linguistics (Volume I: Long Papers),
 2017, pp. 440-450.
-[19] H. Husain, H.-H. Wu, T. Gazit, M. Allamanis, and M. Brockschmidt,
-"Codesearchnet challenge: Evaluating the state of semantic code search,"
+
+H. Husain, H.-H. Wu, T. Gazit, M. Allamanis, and M. Brockschmidt,
+“Codesearchnet challenge: Evaluating the state of semantic code search,”
 arXiv preprint arXiv:1909.09436, 2019.
-[20] J. Austin, A. Odena, M. Nye, M. Bosma, H. Michalewski, D. Dohan,
-E. Jiang, C. Cai, M. Terry, Q. Le et al., “Program synthesis with large
+
+J. Austin, A. Odena, M. Nye, M. Bosma, H. Michalewski, D. Dohan,
+E. Jiang, C. Cai, M. Terry, Q. Le ef al., “Program synthesis with large
 language models,” arXiv preprint arXiv:2108.07732, 2021.
-[21] R. H. Ansible, “Red Hat Ansible, automation
-for everyone,"
+R. H. Ansible, “Red Hat Ansible, automation for
 https://www.ansible.com/.
-[22] A. Github, "Ansible Github Project," https://github.com/ansible/ansible.
-[23] Ansible, Inc, “Ansible Galaxy," https://galaxy.ansible.com/.
-[24] S. Black, S. Biderman, E. Hallahan, Q. Anthony, L. Gao, L. Golding,
+
+A. Github, “Ansible Github Project,” https://github.com/ansible/ansible.
+Ansible, Inc, “Ansible Galaxy,” https://galaxy.ansible.com/.
+
+S. Black, S. Biderman, E. Hallahan, Q. Anthony, L. Gao, L. Golding,
 H. He, C. Leahy, K. McDonell, J. Phang et al., “Gpt-neox-20b: An open-
-source autoregressive language model," in Proceedings of BigScience
-Episode 5-Workshop on Challenges & Perspectives in Creating Large
-Language Models, 2022, pp. 95–136.
-[25] T. Wolf, L. Debut, V. Sanh, J. Chaumond, C. Delangue, A. Moi, P. Cistac,
+source autoregressive language model,” in Proceedings of BigScience
+Episode 5—Workshop on Challenges & Perspectives in Creating Large
+Language Models, 2022, pp. 95-136.
+
+T. Wolf, L. Debut, V. Sanh, J. Chaumond, C. Delangue, A. Moi, P. Cistac,
 T. Rault, R. Louf, M. Funtowicz, J. Davison, S. Shleifer, P. von Platen,
 C. Ma, Y. Jernite, J. Plu, C. Xu, T. Le Scao, S. Gugger, M. Drame,
-Q. Lhoest, and A. Rush, "Transformers: State-of-the-art natural language
-processing," in Proceedings of the 2020 Conference on Empirical
+Q. Lhoest, and A. Rush, “Transformers: State-of-the-art natural language
+processing,” in Proceedings of the 2020 Conference on Empirical
 Methods in Natural Language Processing: System Demonstrations.
 Online: Association for Computational Linguistics, Oct. 2020, pp. 38-
 45. [Online]. Available: https://aclanthology.org/2020.emnlp-demos.6
-[26] K. Papineni, S. Roukos, T. Ward, and W.-J. Zhu, “Bleu: a method
-for automatic evaluation of machine translation," IBM Research Report
+K. Papineni, S. Roukos, T. Ward, and W.-J. Zhu, “Bleu: a method
+for automatic evaluation of machine translation,’ IBM Research Report
 RC22176 (W0109-022), 2001.
-[27] C.-Y. Lin and F. J. Och, “Orange: a method for evaluating automatic
-evaluation metrics for machine translation," in COLING 2004: Proceed-
+
+C.-Y. Lin and F. J. Och, “Orange: a method for evaluating automatic
+evaluation metrics for machine translation,” in COLING 2004: Proceed-
 ings of the 20th International Conference on Computational Linguistics,
 2004, pp. 501-507.
-[28] C. O'Keefe, D. Lansky, J. Clark, and C. Payne, “Comment regarding
+
+C. O’Keefe, D. Lansky, J. Clark, and C. Payne, “Comment regarding
 request for comments on intellectual property protection for artificial
 intelligence innovation. before the united states patent and trademark
-office department of commerce," 2019, https://perma.cc/ZS7G-2QWF.
+office department of commerce,” 2019, https://perma.cc/ZS7G-2QWF.
+
+everyone,”
+
+

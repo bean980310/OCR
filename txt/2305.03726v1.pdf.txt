@@ -1,67 +1,81 @@
+--- Page 1 ---
 arXiv:2305.03726v1 [cs.CV] 5 May 2023
+
 Otter: A Multi-Modal Model with In-Context
 Instruction Tuning
-*
-Bo Li* Yuanhan Zhang Liangyu Chen*
-Jingkang Yang
-Ziwei Liu
-Jinghao Wang*
+
+Bo Li* Yuanhan Zhang” Liangyu Chen" Jinghao Wang”
+Jingkang Yang = Ziwei Liu™
 S-Lab, Nanyang Technological University, Singapore
-{libo0013, yuanhan002, lchen025, c190209, jingkang001, ziwei.liu}@ntu.edu.sg
+{1ibo0013, yuanhan002, lchen025, c190209, jingkang001, ziwei.liu}@ntu.edu.sg
 https://github.com/Luodian/Otter
+
 Abstract
+
 Large language models (LLMs) have demonstrated significant universal capabilities
 as few/zero-shot learners in various tasks due to their pre-training on vast amounts
-of text data, as exemplified by GPT-3, which boosted to InstrctGPT and ChatGPT,
+of text data, as exemplified by GPT-3, which boosted to InstretGPT and ChatGPT,
 effectively following natural language instructions to accomplish real-world tasks.
 In this paper, we propose to introduce instruction tuning into multi-modal models,
-motivated by the Flamingo model's upstream interleaved format pretraining dataset.
-We adopt a similar approach to construct our Multi-Modal In-Context Instruction
+motivated by the Flamingo model’s upstream interleaved format pretraining dataset.
+We adopt a similar approach to construct our MultI-Modal In-Context Instruction
 Tuning (MIMIC-IT) dataset. We then introduce Otter, a multi-modal model based
-on OpenFlamingo (open-sourced version of DeepMind's Flamingo), trained on
+on OpenFlamingo (open-sourced version of DeepMind’s Flamingo), trained on
 MIMIC-IT and showcasing improved instruction-following ability and in-context
-learning. We also optimize OpenFlamingo's implementation for researchers, de-
-mocratizing the required training resources from 1× A100 GPU to 4× RTX-3090
+learning. We also optimize OpenFlamingo’s implementation for researchers, de-
+mocratizing the required training resources from 1 x A100 GPU to 4x RTX-3090
 GPUs, and integrate both OpenFlamingo and Otter into Huggingface Transformers
 for more researchers to incorporate the models into their customized training and
 inference pipelines.
+
 1 Introduction & Motivation
+
 Large language models (LLMs) have demonstrated significant universal capabilities in performing
 various tasks as few/zero-shot learners. These models are pre-trained on vast amounts of text data
 and have been showcased in recent research, such as GPT-2 [25] and GPT-3 [6].
+
 Recent studies have highlighted the importance of instruction tuning in empowering LLMs, as
 exemplified by the boosting of GPT-3 [6] to InstrctGPT [22] and ChatGPT [20], which follows
 natural language instructions effectively to accomplish real-world tasks and allows for customizing
 task-specific rules into instructions during downstream fine-tuning, enabling pre-trained models to
 comprehend user intents more effectively and produce accurate and relevant responses.
+
 Similar attempts have been introduced in multi-modal models as well. LLaMA-Adapter [38] aims
-to adapt LLAMA [33] into an instruction following model by adding additional adapter modules
+to adapt LLaMA [33] into an instruction following model by adding additional adapter modules
 and multi-modal prompts. Mini-GPT4 [39] follows the architecture of BLIP-2 [15] but replaces
 the language decoder with Vicuna [9], which supports longer answers. LLaVA [17] utilizes the
 same CLIP [23] vision encoder and Vicuna [9] language decoder, and finetunes on their high-quality
 instruction dataset, curated by GPT-4 [19].
+
 Although these works have achieved excellent results and provided valuable insights, they share a
 minor common issue. Specifically, they either finetune the entire model or the connection part on
-Equal Contribution
-Corresponding Author
+
+“Equal Contribution
+=Corresponding Author
+
 Technical Report.
-MMC4
-billion-scale corpus of
-images interleaved with text
-OpenFlamingo
-MIMIC-IT
-multi-modal instruction
+
+--- Page 2 ---
+MMCc4 em MIMIC-IT ae
+= => multi-modal instruction =
+
+billion-scale corpus of + .
 tuning datasets with
-in-context examples
-Otter
+
+images interleaved with text a
+in-context examples Otter
+OpenFlamingo
+
 Figure 1: Otter Overview. Otter is a multi-modal model finetuned on our proposed MIMIC-IT
 dataset, based on OpenFlamingo. Otter model exhibits the improved ability to execute tasks by
 following given instructions and leveraging in-context examples.
+
 task-specific data. For instance, a common practice is to use image-text data pairs from Caption [16]
 or VQA [11] tasks to align visual and language modules. While embedding visual information into
 the language model in this way can be effective, we question whether this practice is inherently
 task-dependent, as it relies on the task for which the data is used to train the alignment module.
-Upon reflection, we have discovered that DeepMind Flamingo's [1] upstream pretraining dataset,
+
+Upon reflection, we have discovered that DeepMind Flamingo’s [1] upstream pretraining dataset,
 MultiModal MassiveWeb (M3W), has significant value in aligning visual and language information
 in a more natural manner. The dataset comprises HTML webpages, where all images and texts are
 arranged in an interleaved format. Specifically, a piece of text may describe an image (or videos)
@@ -70,43 +84,53 @@ positions. This natural organization of context provides richer information than
 where text only describes its corresponding image. Trained on this dataset, Flamingo achieves zero-
 and few-shot generalization and in-context learning ability, making it the GPT-3 moment in the
 multi-modal domain.
+
 However, DeepMind has not released the Flamingo model and its M3W dataset to the public,
-potentially because of the model's exceptional performance that could cause astonishment prematurely.
-Nevertheless, the LAION-AI's OpenFlamingo project [4] has recently been made public, providing
+potentially because of the model’s exceptional performance that could cause astonishment prematurely.
+Nevertheless, the LAION-AI’s OpenFlamingo project [4] has recently been made public, providing
 access to their corresponding MMC4 [40] dataset in the same interleaved format on a larger scale.
 Consequently, community researchers can continue to follow the Flamingo series of works for further
 research and development in the field of multi-modal models. Although the OpenFlamingo model
 exhibits impressive multi-modal in-context learning abilities and executes tasks with given in-context
 examples, as an upstream pre-trained model, it still requires instruction tuning to perform downstream
 tasks more effectively.
-In our paper, we propose our Multi-Modal In-Context Instruction Tuning (MIMIC-IT) dataset
+
+In our paper, we propose our MultI-Modal In-Context Instruction Tuning (MIMIC-IT) dataset
 and provide details on its construction in Sec. 3.1. We then introduce Otter, a multi-modal model
 with in-context instruction tuning based on OpenFlamingo. We illustrate the relationship between
 Otter and OpenFlamingo in Fig. 1. Finetuned on MIMIC-IT dataset, our Otter model demonstrates
 improved instruction-following ability compared to OpenFlamingo, as shown in our qualitative
 analysis in Sec. 4.1. Meanwhile, Otter is capable of learning to execute instructions with provided
 in-context learning examples, as shown in Sec. 4.2. From the engineering perspective, we optimized
-OpenFlamingo's implementation to make it more accessible to researchers. Our optimizations include
-optimizing the training requirements from at least 1× A100 GPU to only 4× RTX3090 GPUs and
+OpenFlamingo’s implementation to make it more accessible to researchers. Our optimizations include
+optimizing the training requirements from at least 1 x A100 GPU to only 4x RTX3090 GPUs and
 integrating it into Hugging Face Transformers [34] to simplify training and inference with a few lines
 of code. Our contributions facilitate further research and development in the field of multi-modal
 models.
+
 We summarize our key contributions as follows:
-• We present the Multi-Modal In-Context Instruction Tuning (MIMIC-IT) dataset. Each
+
+* We present the MultI-Modal In-Context Instruction Tuning (MIMIC-IT) dataset. Each
 data sample includes an instruction-image-answer triplet and its in-context examples.
-• We introduce Otter, a multi-modal model with in-context instruction tuning based on
+
+¢ We introduce Otter, a multi-modal model with in-context instruction tuning based on
 OpenFlamingo, capable of the instruction following and executing new instructions with
 few in-context learning examples.
-• Our optimizations to OpenFlamingo's implementation, including reducing the training
-requirements to 4× RTX3090 GPUs and integrating it into Huggingface Transformers to
+
+¢ Our optimizations to OpenFlamingo’s implementation, including reducing the training
+requirements to 4x RTX3090 GPUs and integrating it into Huggingface Transformers to
 simplify the training and inference with only a few lines of code.
-2
+
+--- Page 3 ---
 2 Related Work
+
 2.1 Large-scale Multi-modal Models
+
 With the recent success of ChatGPT [20], GPT-4 [19], and other large language models [33, 32, 9],
 recent studies start to explore incorporating information from other modalities based on pretrained
 language models. These studies extend the capabilities of language models to more tasks and
 modalities, and can be categorized into two perspectives:
+
 System Design Perspective. This perspective involves using ChatGPT [20] as a dispatch scheduler
 and connecting different expert models through it to allow for different visual tasks. Language
 prompts serve as an interface to call expert visual-language models within their respective task
@@ -114,26 +138,29 @@ domains. Works in this category include VisualChatGPT [35], HuggingGPT [29], Col
 GPT [42], MM-REACT [37], and ViperGPT [31]. This approach has limitations in that each model
 cannot be trained individually on new tasks, and using ChatGPT [20] as a powerful instruction
 dispatch tool can result in high API query costs.
+
 End-to-End Trainable Models Perspective. This perspective focuses on connecting models from
 different modalities into integrated end-to-end trainable models, also known as multi-modal founda-
 tion models. Early works in this field include Flamingo [1], which proposes a unified architecture
-for modeling language and vision and was later open-sourced as OpenFlamingo [4] by LAION-
+‘or modeling language and vision and was later open-sourced as OpenFlamingo [4] by LAION-
 AI. Other earlier works include BLIP-2 [15], which uses a lightweight Querying Transformer and
 two-stage bootstrap pretraining to connect information from the image to text modality. With the
 popularity of GPT-4 [19], there has been an increased focus on this field since 2023. Enterprise-
-level product models include OpenAI's yet-to-be-released vision-language version of GPT-4 [19],
-Google's PaLM-E [10], Baidu's ERNIE [5], Alibaba's Tongyi Qianwen [2], and Sensetime's Sense-
+level product models include OpenAI’s yet-to-be-released vision-language version of GPT-4 [19],
+Google’s PaLM-E [10], Baidu’s ERNIE [5], Alibaba’s Tongyi Qianwen [2], and Sensetime’s SenseN-
 ova [27]. Academic multi-modal efforts include a variety of models such as LLaMA-Adapters [38],
 Mini-GPT4 [39], and LLaVA [17]. LLaMA-Adapters aims to adapt LLaMA [33] into an instruction-
-following model with an additional adapters module and multi-modal prompts. Mini-GPT4 follows
-BLIP-2's [15] architecture but replaces the language decoder with Vicuna [9], which better supports
+ollowing model with an additional adapters module and multi-modal prompts. Mini-GPT4 follows
+BLIP-2’s [15] architecture but replaces the language decoder with Vicuna [9], which better supports
 longer responses and multi-round conversations. LLaVA connects text and image modalities through
 a trainable projector matrix, which is a simple lightweight linear layer. However, since LLaVA trains
 both the vision encoder and language decoder on their instructing tuning dataset, its cost is relatively
 high compared to others. In contrast, based on the Flamingo model, Otter trains a few cross-gated
 attention layers to connect visual and language information and establish attention between in-context
 examples, leaving the vision encoder and language decoder frozen.
-2.2 Multi-modal Instruction Tuning Dataset
+
+2.2. Multi-modal Instruction Tuning Dataset
+
 The concept of instruction tuning in multi-modal models was first introduced in Multi-Instruct [36],
 where 47 diverse multi-modal tasks covering 11 broad categories were organized. Each task comprises
 at least 5,000 instances (input-output pairs) from existing open-source datasets and 5 expert-written
@@ -141,34 +168,39 @@ instructions. Multi-Instruct covers most multi-modal tasks that require visual u
 multi-modal reasoning, such as Visual Question Answering [11, 41, 30], Image Captioning [16],
 Image Generation [7], and Visual Relationship Understanding [14], among others. Similarly, Mini-
 GPT4 [39] constructs its instruction following dataset by combining Conceptual Caption [28, 7],
-SBU [21], and LAION [26] with handwritten instruction templates. More recently, LLAVA [17] has
+SBU [21], and LAION [26] with handwritten instruction templates. More recently, LLaVA [17] has
 brought the quality of an instruction tuning dataset to a higher level, as it was obtained by expanding
 the original captions of COCO [16] images with handwritten seed instructions using GPT-4 [19] to
 provide more detailed descriptions and multi-round conversations.
+
 To the best of our knowledge, the above-mentioned works are the only few that considered instruction
 tuning in multi-modal models. Our approach further differs from them in that we incorporate in-
 context examples into instruction tuning by grouping multiple similar instructions together to form
 a contextual example set. We are the first to propose the in-context instruction tuning paradigm
 in multi-modal models and to build the corresponding multi-modal in-context instruction tuning
 datasets.
-3
+
+--- Page 4 ---
 3 Method
-In this section, we will introduce the details of the MIMIC-IT dataset in Sec. 3.1, our Otter's training
+
+In this section, we will introduce the details of the MIMIC-IT dataset in Sec. 3.1, our Otter’s training
 details in Sec. 3.2, and the integration with Hugging Fance ecosystem in Sec. 3.3.
+
 3.1 Multi-Modal In-Context Instruction Tuning
-in
-The OpenFlamingo framework leverages the interleaved multi-modal MMC4 dataset to emerge
+
+The OpenFlamingo framework leverages the interleaved multi-modal MMC4 dataset to emerge in
 its few-shot, in-context learning capabilities. The MMC4 dataset is composed of image-text pairs
 derived from individual HTML files, with significant contextual relationships between different pairs,
 as depicted in Fig 2(a). An MMC4 training data sample contains (i) a queried image-text pair, where
 the text typically describes the image, and (ii) context, which includes the remaining image-text pairs
 from the same HTML file. The primary training objective of OpenFlamingo is to generate text for
 the queried image-text pair, and the paradigm of generating query text conditioned on in-context
-examples ensures OpenFlamingo's in-context learning capacity during the inference phase.
+examples ensures OpenFlamingo’s in-context learning capacity during the inference phase.
+
 Our Multi-Modal In-Context Instruction Tuning (MIMIC-IT) dataset aims to augment Open-
-Flamingo's instruction comprehension capabilities while preserving its in-context learning capacity.
-To unleash OpenFlamingo's instruction-following potential, we compile data from visual-language
-tasks into image-instruction-answer triplets. Concurrently, to maintain OpenFlamingo's in-context
+Flamingo’s instruction comprehension capabilities while preserving its in-context learning capacity.
+To unleash OpenFlamingo’s instruction-following potential, we compile data from visual-language
+tasks into image-instruction-answer triplets. Concurrently, to maintain OpenFlamingo’s in-context
 learning capacity, we retrieve in-context examples for each triplet, which often lack correlated context,
 such as a visual question-answer data sample in VQAv2 [3]. Specifically, each MIMIC-IT data sample
 consists of (i) a queried image-instruction-answer triplet, with the instruction-answer tailored to the
@@ -181,199 +213,168 @@ instruction datasets, such as LLaVA [17], (iii) an in-progress, high-quality pan
 dataset from the PVSG repository. For each video, we select 4-8 frames for instruction-following
 annotation, using the LLaVA dataset as a reference. We have developed three heuristics to construct
 the context for each image-instruction-answer triplet, as illustrated in Fig 2(b).
+
 3.2 Training Details
+
 Our approach adopts the OpenFlamingo training paradigm to train the Otter model. The pretrained
 OpenFlamingo model comprises a LLaMA-7B [33] language encoder and a CLIP ViT-L/14 [24]
 vision encoder. To prevent overfitting and leverage pretrained knowledge, we freeze both the encoders
 and only finetune the Perceiver resampler module, cross-attention layers inserted into the language
 encoder and input/output embeddings of the language encoder. This results in approximately 1.3
 billion trainable parameters for the Otter model.
+
 To optimize our model, we employ the AdamW optimizer [18] with a starting learning rate of
 10-5 and a batch size of 4. We train Otter for 6 epochs, with the learning rate scheduled using a
 cosine annealing scheduler. We also use gradient clipping of a threshold of 1.0 to prevent exploding
 gradients.
+
 During our training, we follow a specific format to prepare our training data. The format includes a
-combination of image, user instruction, "GPT"-generated answers 1, and a special token known as the
-[endof chunk] token. We format the training data as follows:
-<context> [image] User:<instruction> GPT: [answers] <answer>. [endof chunk]
-where the [image], [answer], and [endof chunk] tokens are unique and serve a specific purpose.
+combination of image, user instruction, "GPT"-generated answers ', and a special token known as the
+[endofchunk] token. We format the training data as follows:
+
+<context> [image] User:<instruction> GPT: [answers] <answer>.[endofchunk]
+
+where the [image], [answer], and [endofchunk] tokens are unique and serve a specific purpose.
 We design such a chatbot-like format to train our model to improve the instruction-following and
-conversation generalizability of the model. The [image] and [endof chunk] tokens are originally
+conversation generalizability of the model. The [image] and [endofchunk] tokens are originally
 from the OpenFlamingo training paradigm, while the [answer] token is a new introduction by us
 in training Otter. The [answer] token separates the answers from the instruction, so that, we mask
 all tokens after the [answer] token during training and set them as the prediction objectives of the
 model. We train our model using a cross-entropy loss.
-¹To support user-assistant conversations, we adopt "GPT" as the role label because it does not have any
+
+'To support user-assistant conversations, we adopt "GPT" as the role label because it does not have any
 specific semantic meaning in vocabulary.
-4
+
+--- Page 5 ---
 Title: WALNUT AND BLUE CHEESE STUFFED MUSHROOMS
-Title: HONDA: (UN) LOKING THE DOORS FROM THE INSIDE
-Text: "This Walnut and Blue
+
+Text: “This Walnut and Blue
 Cheese Stuffed Mushrooms recipe
-Fisher Natural
-is sponsored by Fisher Nuts.",
-Text: "When you lock/unlock the
-driver's door and tailgate using the
-master lock switch, all the other
-doors lock/ unlock at the same time."
-To Lock
--Lock Tab
-To Unlock
-Text: "The ideas for stuffing
+
+is sponsored by Fisher Nuts.”,
+
+Text: “The ideas for stuffing
 mushrooms are endless, so many
 combinations to play
+
 with, a couple of my personal favourites
 are these Mediterranean
+
 Stuffed Mushrooms and these Spinach
-Text: "When you lock the door
-using the lock tab on the driver's
+
+and Toasted Pine Nut Stuffed Mushrooms.”,
+
+Title: HONDA: (UN)LOKING THE DOORS FROM THE INSIDE
+
+Text: “When you lock/unlock the
+driver’s door and tailgate using the
+master lock switch, all the other
+doors lock/ unlock at the same time.”
+
+Tock Tab
+
+Text: “When you lock the door
+using the lock tab on the driver’s
 door, all of the other doors and
-tailgate lock at the same time.",
-and Toasted Pine Nut Stuffed Mushrooms.",
-(a) Multimodal C4 (MMC4)
-To
-Unlock/
--To Lock
-Master Door Lock Switch
+tailgate lock at the same time.”,
+
+(a) Multimodal c4 (MMC4)
+
 same instruction, different images
-in-context examples
-Instruction: What
-skill set do
-snowboarders need
-to perform_such
-tricks?
-Instruction:
-What skill set
-does
-this player
-need to have\in a
-match, and why?
-query
-Instruction:
-What skill set
-does a player
-need to excel in
-this sport,
+
+in-context examples query
+Instruction: What Instruction: Instruction:
+skill set_do What skill set What skill set
+snowboarders need does this player does a player
+to perform such need to have\in a need to excel in
+tricks? match, and why? this sport,
+
 based on the
-image?
+
 same image, different instructions
-in-context examples
-Instruction:
-What is the
-baseball player
-holding in his
-hands?
-Instruction:
-What color is
-the baseball
-player's
-uniform?
-query
-Instruction:
-Which team does
-the baseball
-player belong to?
-ANGEL
-ANGEL
-ANGEL
-ANGEL
-Answer: The
-Answer: To
-perform tricks ...
-Answer: A tennis
-player
-Answer: To
-minimize the
-risks involved
-needs ...winning
-matches.
-improve his
-performance, ...his
-team.
-baseball player is
-holding a baseball
-bat in his hands.
+
+in-context examples query
+Instruction: Instruction: Instruction:
+What is the What color is Which team does
+baseball player the baseball the baseball
+holding in his player's player belong to?
+hands? uniform?
+
+Answer: To Answer: A tennis Answer: To
+perform tricks player improve his
+minimize the needs ..winning performance, ..his
+risks involved matches. team.
+
 sequential images, different instructions
-Answer: The
-baseball
-player's uniform
-is grey.
-Answer: The
-baseball player
-belongs to the
-Angels baseball
-team.
+
 in-context examples
-Instruction: What is
-the main thing
-happening in this
-picture?
-Instruction: Why did
-the player in red who
-was attacking fall to
-the ground?
-Instruction: Why is
-the man in the red
-jersey about to stand
-up from the ground?
-Instruction:
-Description of the
-videos humorous
-moment?
+
+Answer: The Answer: The Answer: The
+
+baseball player is baseball baseball player
+
+holding a baseball player's uniform belongs to the
+
+bat in his hands. is grey. Angels baseball
+team.
+
 query
-Instruction: Why is
-the whole video
-humorous?
-FALKE
-Answer: A group
-of ...attack and look
-for an opportunity to
-Answer: Because
-he
-shoot.
-the ground to
-try to create a
-penalty.
-Answer: Because ...the
-ball go in and didn't
-need to pretend to
-create a penalty.
-Answer: A man on the
-pitch falls down
-after a shot, ... \with
-his teammates.
-Answer: The funny
-thing it's funny
-how his injury seems
-to heal in an
+Instruction: What is Instruction: Why did Instruction: Why is Instruction: Instruction: Why is
+the main thing the player in red who the man in the red Description of the the whole video
+happening in this was attacking fall to jersey about to stand videos humorous humorous?
+
+picture? the ground? up from the ground? moment?
+
+Bgeeseeeees Bee eaeaa
+—; =)
+
+Answer: A group Answer: Because Answer: Because ..the Answer: A man on the Answer:
+of ..attack and look he ..the ground to ball go in and didn't pitch falls down thing ...
+for an opportunity to try to create a need to pretend to after a shot, .. \with how his
+shoot. penalty. create a penalty. his teammates. to heal
+
 instant.
+
 (b) Multi-Modal In-Context Instruction Tuning (MIMIC-IT)
+
+The funny
+it's funny
+injury seems
+in an
+
 Figure 2: Illustration of example data formats in MMC4 and MIMIC-IT. (a) The illustration of
 the data format in the MMC4 dataset that are used OpenFlamingo. (b) Three heuristics to build the
 multi-modal in-Context instruction tuning (MIMIC-IT) dataset.
-5
+
+--- Page 6 ---
 3.3 Integratation with Hugging Face
+
 We have integrated Otter into Hugging Face Transformers [34] and trained it using the Hugging Face
-Accelerator², which enables automatic mapping of the model weights to different GPU devices and
+Accelerator”, which enables automatic mapping of the model weights to different GPU devices and
 offloading of overflowed weights to CPU or disk. Additionally, we use bf16 mixed precision during
-training. The total optimizations enable our model to be trained on 4×RTX-3090 GPUs, each with
+training. The total optimizations enable our model to be trained on 4x RTX-3090 GPUs, each with
 24GB memory.
+
 Meanwhile, since Otter has been integrated into Hugging Face Transformers, it can now be reused
 with less than five lines of code, making it much easier for researchers to integrate into their respective
 training and inference pipelines (compared to the original OpenFlamingo implementation). We also
 provide the support of Fully Sharded Data Parallel (FSDP) and DeepSpeed to enable greater training
 efficiency and less memory consumption.
+
 To enable future research and convenience, we also provide a script for converting the origi-
 nal OpenFlamingo-9B checkpoint into the Hugging Face Model format. The converted check-
 point and our Otter model are uploaded and available on the Hugging Face model hub luodian/
 openflamingo-9b-hf and luodian/otter-9b-hf, respectively.
-4
-Demonstrations
+
+4 Demonstrations
+
 In this section, we show several examples of two types of demonstrations of Otter: (1) the ability to
 follow instructions in Sec. 4.1, and (2) the ability of learning to execute new instructions following
 provided in-context examples in Sec. 4.2. Compared with OpenFlamingo, these results demonstrate
 the importance of in-context instruction tuning and the improvement of Otter.
+
 4.1 Following User Instructions
+
 In Sec. 3.1, we discussed how we finetuned Otter on visual instruction pairs to transform it into a
 powerful instruction follower. The results of our experiments are demonstrated in Fig. 3, where we
 observe that Otter is able to provide more detailed descriptions of images and follow user instructions
@@ -381,7 +382,8 @@ more accurately. This characteristic of Otter is attributed to the co-design of 
 which leverages the generalization ability of a strong language decoder and the rich variety of
 instructions present in the MIMIC-IT dataset. By fine-tuning on visual instruction pairs, Otter is able
 to learn the nuances of human language and accurately apply it to visual input.
-In order to evaluate Otter's reasoning capabilities, we designed a series of experiments to test its
+
+In order to evaluate Otter’s reasoning capabilities, we designed a series of experiments to test its
 ability to handle complex scenarios that require a deeper understanding of the situation and more
 advanced commonsense reasoning. In Fig. 4, we present an example where OpenFlamingo fails to
 identify important clues in the image, while Otter is able to demonstrate a deeper understanding of
@@ -390,20 +392,27 @@ example, Otter is able to correctly interpret the confusion around the traffic s
 into account relevant contextual factors such as accidents, traffic congestion, and disruptions to the
 flow of traffic. This level of reasoning ability is not present in standard image captioning models and
 represents a significant advance in the field of computer vision and natural language processing.
+
 4.2 Multi-Modal In-context Learning
+
 Otter is designed to support multi-modal in-context learning in a similar pattern to Flamingo [1]
 and OpenFlamingo [4], which involves conditioning the language model on the corresponding
 media, such as an image that corresponds to a caption or a question-answer pair. In Fig. 5, we
-demonstrate Otter's ability to perform visual question answering tasks, where users provide examples
+demonstrate Otter’s ability to perform visual question answering tasks, where users provide examples
 of instruction-answering pairs and images as contextual examples to prompt the model with subtasks,
 such as explaining memes or the danger of sports.
+
 Despite the fact that user inputs are often short and restricted in these scenarios, Otter is able to
 provide more comprehensive answers. By leveraging the information contained in the images and
 other contextual examples, Otter is able to better understand the underlying meaning and context of
 the questions, resulting in more accurate and informative answers.
-2Hugging Face Accelerator
+
+Hugging Face Accelerator
+
+--- Page 7 ---
 Instruction: Can you describe the main features of this image for me?
-OpenFlamingo: The man is flying a kite.
+OpenFlaningo: The man is flying a kite.
+
 Otter: The image shows a person standing in front of a kite that is flying in
 the sky. The person is wearing a black shirt and is positioned on the left side
 of the kite. The kite is quite large and can be seen above the person's head.
@@ -413,21 +422,27 @@ two other people in the background, one on the right side and another person
 partially visible on the far right. The presence of multiple people in this
 outdoor setting suggests that it might be a gathering or a popular location for
 kite flying and leisure activities.
+
 Instruction: Write a detailed description of the given image?
-OpenFlamingo: Pancakes with bacon and maple syrup.
+Openflamingo: Pancakes with bacon and maple syrup.
+
 Otter: The image features a wooden table with various items on it.
 There is a sandwhich, which has been cut in half, and a bowl of
 cereal placed near the plate. Additionally, there is a cup, likely
-containing a beverage such as coffee. The table also has a ""live
+containing a beverage such as coffee. The table also has a “"live
 baccy"" container and a mug present, suggesting a cozy and relaxed
 setting. The scene might be a part of a breakfast or snack time
 arrangement, with the sandwich, cereals, and beverage as the main
 items on the table.
+
 Figure 3: Comparisons of image captioning results between OpenFlamingo and Otter. Otter
 provides more detailed and precise descriptions of the images.
+
 Instruction: What could happen if drivers become confused by the
 traffic signals at this intersection?
+
 OpenFlamingo: They could get stuck in the rain.
+
 Otter: If drivers become confused by the traffic signals at the
 intersection, it could lead to various potential scenarios: 1. Red
 light: The red light signal is on, and the car is moving. In this
@@ -442,198 +457,315 @@ If drivers are unsure about the traffic lights, they might hesitate or
 make an unpredictable maneuverer, which could lead not only to
 accidents but also to traffic congestion and general disruption of the
 flow of traffic.
+
 Figure 4: Comparisons of situation understanding results between OpenFlamingo and Otter.
 Otter is able to demonstrate a deeper understanding of the scene and apply relevant commonsense
 knowledge to answer the given question.
-User provided examples
-Otter reaction
-Instruction: what does
-this meme usually use
-for?
-Answer: to ask people to
-think twice and dont be
-silly
-User provided examples
-Instruction: what does
-this meme usually use
-for?
-Answer: to express users
-feeling of sad, or
-moving.
-Instruction: what does this meme usually use for?
-Otter: This meme typically uses a sad-looking baby
-as the main image, with text encouraging people to
-stop being a baby and to be more like a tough,
-cool individual. The image and text are meant to
-create a playful and humorous contrast between a
+
+--- Page 8 ---
+User provided examples otter reaction
+
+Instruction: what does Instruction: what does Instruction: what does this meme usually use for?
+
+this meme usually use this meme usually use Otter: This meme typically uses a sad-looking baby
+for? for? as the main image, with text encouraging people to
+Answer: to ask people to Answer: to express users stop being a baby and to be more like a tough,
+think twice and dont be feeling of sad, or cool individual. The image and text are meant to
+silly moving. create a playful and humorous contrast between a
+
 cute, vulnerable baby and a tuff, strong person.
-Otter reaction
-VIDE
-Instruction: What is
-the danger of this
-sport?
-Answer: The player may
-get hitted by the
-tennis ball.
-Instruction: What is
-the danger of this
-sport?
-Answer: While chasing
-the baseball, the
-player may
-inadvertently collide.
-with other players.
-Instruction: What is the danger of this sport?
-Otter: The sport involves players running and
-trying to catch the ball while others are standing
-in the grass, which can lead to collisions or
-accidents. These collisions can result in injuries
-to the players involved. It is essential for
-players to be aware of their surroundings and
-maintain a safe distance from each other to
+
+User provided examples otter reaction
+
+r .
+
+Instruction: What is Instruction: What is Instruction: What is the danger of this sport?
+
+the danger of this the danger of this Otter: The sport involves players running and
+sport? sport? trying to catch the ball while others are standing
+Answer: The player may Answer: While chasing in the grass, which can lead to collisions or
+get hitted by the the baseball, the accidents. These collisions can result in injuries
+tennis ball. player may to the players involved. It is essential for
+
+inadvertently collide players to be aware of their surroundings and
+
+with other players. maintain a safe distance from each other to
+
 minimize the risk of accidents during the game.
+
 Figure 5: In-context learning examples of Otter. Given two examples of instruction-answering
 pairs and an image, Otter is able to provide more comprehensive answers.
+
 5 Conclusion
+
 In this work, we propose Otter, a multi-modal in-context learning foundation model with instruc-
 tion tuning. Through partial finetuning on MIMIC-IT dataset, we observe that Otter can convert
 OpenFlamingo into a zero-shot visual instruction model with strong in-context learning abilities.
 With the assistance of rich instructions from images and videos, Otter generalizes to achieve better
 instruction-following and situation-understanding performances.
+
 5.1 Limitations
-Language Hallucination. Since Otter is built upon OpenFlamingo, which depends upon LLAMA,
-the hallucination issue of LLAMA is inherited by Otter. Also, the current Otter model may hallucinate
+
+Language Hallucination. Since Otter is built upon OpenFlamingo, which depends upon LLaMA,
+the hallucination issue of LLaMA is inherited by Otter. Also, the current Otter model may hallucinate
 the language that is not related to the image. This issue might be solved by introducing negative
 examples in the training data.
+
 5.2 Future Supports
+
 In the future, we plan to explore the integration of more efficient training schemas (e.g., parameter-
 efficient finetuning such as LoRA [12]) and more modalities (e.g., 3D vision).
+
 Acknowledgement. We thank Chunyuan Li and Jack Hessel for their advice and support, as well as
 the OpenFlamingo team for their great contribution to the open-source community.
-8
+
+--- Page 9 ---
 References
-[1] Jean-Baptiste Alayrac, Jeff Donahue, Pauline Luc, Antoine Miech, Iain Barr, Yana Hasson,
+
+1] Jean-Baptiste Alayrac, Jeff Donahue, Pauline Luc, Antoine Miech, Iain Barr, Yana Hasson,
 Karel Lenc, Arthur Mensch, Katherine Millican, Malcolm Reynolds, et al. Flamingo: a visual
 language model for few-shot learning. Advances in Neural Information Processing Systems,
-35:23716-23736, 2022. 2, 3, 6
-[2] Alibaba. Tongyi qianwen. 2023. 3
-[3] Stanislaw Antol, Aishwarya Agrawal, Jiasen Lu, Margaret Mitchell, Dhruv Batra, C Lawrence
+35:23716-23736, 2022. 2, 3,6
+
+2
+
+Alibaba. Tongyi qianwen. 2023. 3
+
+3] Stanislaw Antol, Aishwarya Agrawal, Jiasen Lu, Margaret Mitchell, Dhruv Batra, C Lawrence
 Zitnick, and Devi Parikh. Vqa: Visual question answering. In Proceedings of the IEEE
 international conference on computer vision, pages 2425-2433, 2015. 4
-[4] Anas Awadalla, Irena Gao, Joshua Gardner, Jack Hessel, Yusuf Hanafy, Wanrong Zhu, Kalyani
+
+4
+
+Anas Awadalla, Irena Gao, Joshua Gardner, Jack Hessel, Yusuf Hanafy, Wanrong Zhu, Kalyani
 Marathe, Yonatan Bitton, Samir Gadre, Jenia Jitsev, Simon Kornblith, Pang Wei Koh, Gabriel
 Ilharco, Mitchell Wortsman, and Ludwig Schmidt. Openflamingo, March 2023. 2, 3, 6
-[5] Baidu. Ernie bot: Enhanced representation through knowledge integration. 2023. 3
-[6] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal,
+
+5] Baidu. Ernie bot: Enhanced representation through knowledge integration. 2023. 3
+
+6] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal,
 Arvind Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. Language models are
-few-shot learners. Advances in neural information processing systems, 33:1877–1901, 2020. 1
-[7] Soravit Changpinyo, Piyush Sharma, Nan Ding, and Radu Soricut. Conceptual 12m: Pushing
+few-shot learners. Advances in neural information processing systems, 33:1877-1901, 2020. 1
+
+7
+
+Soravit Changpinyo, Piyush Sharma, Nan Ding, and Radu Soricut. Conceptual 12m: Pushing
 web-scale image-text pre-training to recognize long-tail visual concepts. In Proceedings of the
 IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 3558-3568, 2021. 3
-[8] Liangyu Chen, Bo Li, Sheng Shen, Jingkang Yang, Chunyuan Li, Kurt Keutzer, Trevor Darrell,
-and Ziwei Liu. Language models are visual reasoning coordinators. In ICLR 2023 Workshop on
+
+8
+
+Liangyu Chen, Bo Li, Sheng Shen, Jingkang Yang, Chunyuan Li, Kurt Keutzer, Trevor Darrell,
+and Ziwei Liu. Language models are visual reasoning coordinators. In JCLR 2023 Workshop on
 Mathematical and Empirical Understanding of Foundation Models, 2023. 3
-[9] Wei-Lin Chiang, Zhuohan Li, Zi Lin, Ying Sheng, Zhanghao Wu, Hao Zhang, Lianmin Zheng,
+
+9
+
+Wei-Lin Chiang, Zhuohan Li, Zi Lin, Ying Sheng, Zhanghao Wu, Hao Zhang, Lianmin Zheng,
 Siyuan Zhuang, Yonghao Zhuang, Joseph E. Gonzalez, Ion Stoica, and Eric P. Xing. Vicuna:
-An open-source chatbot impressing gpt-4 with 90%* chatgpt quality, March 2023. 1, 3
+An open-source chatbot impressing gpt-4 with 90%* chatgpt quality, March 2023. 1,3
+
 [10] Danny Driess, Fei Xia, Mehdi SM Sajjadi, Corey Lynch, Aakanksha Chowdhery, Brian Ichter,
 Ayzaan Wahid, Jonathan Tompson, Quan Vuong, Tianhe Yu, et al. Palm-e: An embodied
 multimodal language model. arXiv preprint arXiv:2303.03378, 2023. 3
-[11] Yash Goyal, Tejas Khot, Douglas Summers-Stay, Dhruv Batra, and Devi Parikh. Making
+
+1
+
+Yash Goyal, Tejas Khot, Douglas Summers-Stay, Dhruv Batra, and Devi Parikh. Making
 the v in vqa matter: Elevating the role of image understanding in visual question answering.
 In Proceedings of the IEEE conference on computer vision and pattern recognition, pages
-6904-6913, 2017. 2, 3
-[12] Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang,
+6904-6913, 2017. 2,3
+
+Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang,
 Lu Wang, and Weizhu Chen. Lora: Low-rank adaptation of large language models. arXiv
 preprint arXiv:2106.09685, 2021. 8
-[13] Drew A Hudson and Christopher D Manning. Gqa: A new dataset for real-world visual
+
+2
+
+3
+
+Drew A Hudson and Christopher D Manning. Gqa: A new dataset for real-world visual
 reasoning and compositional question answering. In Proceedings of the IEEE/CVF conference
 on computer vision and pattern recognition, pages 6700-6709, 2019. 4
-[14] Ranjay Krishna, Yuke Zhu, Oliver Groth, Justin Johnson, Kenji Hata, Joshua Kravitz, Stephanie
+
+4
+
+Ranjay Krishna, Yuke Zhu, Oliver Groth, Justin Johnson, Kenji Hata, Joshua Kravitz, Stephanie
 Chen, Yannis Kalantidis, Li-Jia Li, David A Shamma, et al. Visual genome: Connecting
 language and vision using crowdsourced dense image annotations. International journal of
 computer vision, 123:32-73, 2017. 3
-[15] Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-2: Bootstrapping language-
+
+5
+
+Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-2: Bootstrapping language-
 image pre-training with frozen image encoders and large language models. arXiv preprint
-arXiv:2301.12597, 2023. 1, 3
-[16] Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays, Pietro Perona, Deva Ramanan, Piotr
-Dollár, and C Lawrence Zitnick. Microsoft coco: Common objects in context. In Computer
-Vision-ECCV 2014: 13th European Conference, Zurich, Switzerland, September 6-12, 2014,
-Proceedings, Part V 13, pages 740–755. Springer, 2014. 2, 3
-[17] Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning. arXiv
-preprint arXiv:2304.08485, 2023. 1, 3, 4
-[18] Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. arXiv preprint
+arXiv:2301.12597, 2023. 1,3
+
+6
+
+Tsung- Yi Lin, Michael Maire, Serge Belongie, James Hays, Pietro Perona, Deva Ramanan, Piotr
+Dollar, and C Lawrence Zitnick. Microsoft coco: Common objects in context. In Computer
+Vision—ECCV 2014: 13th European Conference, Zurich, Switzerland, September 6-12, 2014,
+Proceedings, Part V 13, pages 740-755. Springer, 2014. 2, 3
+
+--- Page 10 ---
+{17]
+
+[18]
+
+[19]
+
+[20]
+
+[21]
+
+[22]
+
+23]
+
+24]
+
+25]
+
+26]
+
+[27]
+
+[28]
+
+[29]
+
+[30]
+
+[31]
+
+[32]
+
+[33]
+
+Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning. arXiv
+preprint arXiv:2304.08485, 2023. 1, 3,4
+
+Ilya Loshchilov and Frank Hutter. Decoupled weight decay regularization. arXiv preprint
 arXiv:1711.05101, 2017. 4
-[19] OpenAI. Gpt-4 technical report. 2023. 1, 3
-[20] OpenAI. Introducing chatgpt. 2023. 1,3
-[21] Vicente Ordonez, Girish Kulkarni, and Tamara Berg. Im2text: Describing images using 1
+
+OpenAI. Gpt-4 technical report. 2023. 1, 3
+OpenAI. Introducing chatgpt. 2023. 1, 3
+
+Vicente Ordonez, Girish Kulkarni, and Tamara Berg. Im2text: Describing images using 1
 million captioned photographs. Advances in neural information processing systems, 24, 2011. 3
-[22] Long Ouyang, Jeffrey Wu, Xu Jiang, Diogo Almeida, Carroll Wainwright, Pamela Mishkin,
+
+Long Ouyang, Jeffrey Wu, Xu Jiang, Diogo Almeida, Carroll Wainwright, Pamela Mishkin,
 Chong Zhang, Sandhini Agarwal, Katarina Slama, Alex Ray, et al. Training language models to
 follow instructions with human feedback. Advances in Neural Information Processing Systems,
-35:27730-27744, 2022. 1
-[23] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal,
+35:27730-27744, 2022. |
+
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal,
 Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learning transferable visual
+
 models from natural language supervision. In International conference on machine learning,
 pages 8748-8763. PMLR, 2021. 1
-[24] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal,
+
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal,
 Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learning transferable visual
+
 models from natural language supervision. In International conference on machine learning,
 pages 8748-8763. PMLR, 2021. 4
-[25] Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever, et al.
+
+Alec Radford, Jeffrey Wu, Rewon Child, David Luan, Dario Amodei, Ilya Sutskever, et al.
 Language models are unsupervised multitask learners. OpenAI blog, 1(8):9, 2019. 1
-[26] Christoph Schuhmann, Richard Vencu, Romain Beaumont, Robert Kaczmarczyk, Clayton
+
+Christoph Schuhmann, Richard Vencu, Romain Beaumont, Robert Kaczmarczyk, Clayton
 Mullis, Aarush Katta, Theo Coombes, Jenia Jitsev, and Aran Komatsuzaki. Laion-400m: Open
 dataset of clip-filtered 400 million image-text pairs. arXiv preprint arXiv:2111.02114, 2021. 3
-[27] SenseTime. Sense nova. 2023. 3
-[28] Piyush Sharma, Nan Ding, Sebastian Goodman, and Radu Soricut. Conceptual captions: A
+
+SenseTime. Sense nova. 2023. 3
+
+Piyush Sharma, Nan Ding, Sebastian Goodman, and Radu Soricut. Conceptual captions: A
 cleaned, hypernymed, image alt-text dataset for automatic image captioning. In Proceedings of
 the 56th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long
 Papers), pages 2556-2565, 2018. 3
-[29] Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li, Weiming Lu, and Yueting Zhuang.
+
+Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li, Weiming Lu, and Yueting Zhuang.
 Hugginggpt: Solving ai tasks with chatgpt and its friends in huggingface. arXiv preprint
 arXiv:2303.17580, 2023. 3
-[30] Alane Suhr, Mike Lewis, James Yeh, and Yoav Artzi. A corpus of natural language for visual
+
+Alane Suhr, Mike Lewis, James Yeh, and Yoav Artzi. A corpus of natural language for visual
 reasoning. In Proceedings of the 55th Annual Meeting of the Association for Computational
 Linguistics (Volume 2: Short Papers), pages 217-223, 2017. 3
-[31] Dídac Surís, Sachit Menon, and Carl Vondrick. Vipergpt: Visual inference via python execution
+
+Didac Suris, Sachit Menon, and Carl Vondrick. Vipergpt: Visual inference via python execution
 for reasoning. arXiv preprint arXiv:2303.08128, 2023. 3
-[32] Rohan Taori, Ishaan Gulrajani, Tianyi Zhang, Yann Dubois, Xuechen Li, Carlos Guestrin, Percy
+
+Rohan Taori, Ishaan Gulrajani, Tianyi Zhang, Yann Dubois, Xuechen Li, Carlos Guestrin, Percy
 Liang, and Tatsunori B. Hashimoto. Stanford alpaca: An instruction-following llama model.
-https://github.com/tatsu-lab/stanford_alpaca, 2023. 3
-[33] Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timo-
-thée Lacroix, Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal Azhar, Aurelien Rodriguez,
+https: //github.com/tatsu-lab/stanford_alpaca, 2023. 3
+
+Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier Martinet, Marie-Anne Lachaux, Timo-
+thée Lacroix, Baptiste Roziére, Naman Goyal, Eric Hambro, Faisal Azhar, Aurelien Rodriguez,
 Armand Joulin, Edouard Grave, and Guillaume Lample. Llama: Open and efficient foundation
-language models. arXiv preprint arXiv:2302.13971, 2023. 1, 3, 4
+language models. arXiv preprint arXiv:2302.13971, 2023. 1, 3,4
+
 10
-[34] Thomas Wolf, Lysandre Debut, Victor Sanh, Julien Chaumond, Clement Delangue, Anthony
+
+--- Page 11 ---
+[34]
+
+[35]
+
+[36]
+
+[37]
+
+[38]
+
+[39]
+
+[40]
+
+[41]
+
+[42]
+
+Thomas Wolf, Lysandre Debut, Victor Sanh, Julien Chaumond, Clement Delangue, Anthony
 Moi, Pierric Cistac, Tim Rault, Rémi Louf, Morgan Funtowicz, Joe Davison, Sam Shleifer,
 Patrick von Platen, Clara Ma, Yacine Jernite, Julien Plu, Canwen Xu, Teven Le Scao, Sylvain
 Gugger, Mariama Drame, Quentin Lhoest, and Alexander M. Rush. Transformers: State-of-the-
 art natural language processing. In Proceedings of the 2020 Conference on Empirical Methods
 in Natural Language Processing: System Demonstrations, pages 38-45, Online, October 2020.
 Association for Computational Linguistics. 2, 6
-[35] Chenfei Wu, Shengming Yin, Weizhen Qi, Xiaodong Wang, Zecheng Tang, and Nan Duan.
+
+Chenfei Wu, Shengming Yin, Weizhen Qi, Xiaodong Wang, Zecheng Tang, and Nan Duan.
 Visual chatgpt: Talking, drawing and editing with visual foundation models. arXiv preprint
 arXiv:2303.04671, 2023. 3
-[36] Zhiyang Xu, Ying Shen, and Lifu Huang. Multiinstruct: Improving multi-modal zero-shot
+
+Zhiyang Xu, Ying Shen, and Lifu Huang. Multiinstruct: Improving multi-modal zero-shot
 learning via instruction tuning. arXiv preprint arXiv:2212.10773, 2022. 3
-[37] Zhengyuan Yang, Linjie Li, Jianfeng Wang, Kevin Lin, Ehsan Azarnasab, Faisal Ahmed,
+
+Zhengyuan Yang, Linjie Li, Jianfeng Wang, Kevin Lin, Ehsan Azarnasab, Faisal Ahmed,
 Zicheng Liu, Ce Liu, Michael Zeng, and Lijuan Wang. Mm-react: Prompting chatgpt for
 multimodal reasoning and action. arXiv preprint arXiv:2303.11381, 2023. 3
-[38] Renrui Zhang, Jiaming Han, Aojun Zhou, Xiangfei Hu, Shilin Yan, Pan Lu, Hongsheng Li,
+
+Renrui Zhang, Jiaming Han, Aojun Zhou, Xiangfei Hu, Shilin Yan, Pan Lu, Hongsheng Li,
 Peng Gao, and Yu Qiao. Llama-adapter: Efficient fine-tuning of language models with zero-init
 attention. arXiv preprint arXiv:2303.16199, 2023. 1,3
-[39] Deyao Zhu, Jun Chen, Xiaoqian Shen, Xiang Li, and Mohamed Elhoseiny. Minigpt-4: En-
+
+Deyao Zhu, Jun Chen, Xiaoqian Shen, Xiang Li, and Mohamed Elhoseiny. Minigpt-4: En-
 hancing vision-language understanding with advanced large language models. arXiv preprint
 arXiv:2304.10592, 2023. 1, 3
-[40] Wanrong Zhu, Jack Hessel, Anas Awadalla, Samir Yitzhak Gadre, Jesse Dodge, Alex Fang,
+
+Wanrong Zhu, Jack Hessel, Anas Awadalla, Samir Yitzhak Gadre, Jesse Dodge, Alex Fang,
 Youngjae Yu, Ludwig Schmidt, William Yang Wang, and Yejin Choi. Multimodal C4: An open,
 billion-scale corpus of images interleaved with text. arXiv preprint arXiv:2304.06939, 2023. 2
-[41] Yuke Zhu, Oliver Groth, Michael Bernstein, and Li Fei-Fei. Visual7w: Grounded question
+
+Yuke Zhu, Oliver Groth, Michael Bernstein, and Li Fei-Fei. Visual7w: Grounded question
 answering in images. In Proceedings of the IEEE conference on computer vision and pattern
 recognition, pages 4995-5004, 2016. 3
-[42] Xueyan Zou, Zi-Yi Dou, Jianwei Yang, Zhe Gan, Linjie Li, Chunyuan Li, Xiyang Dai, Harkirat
+
+Xueyan Zou, Zi-Yi Dou, Jianwei Yang, Zhe Gan, Linjie Li, Chunyuan Li, Xiyang Dai, Harkirat
+
 Behl, Jianfeng Wang, Lu Yuan, et al. Generalized decoding for pixel, image, and language.
 arXiv preprint arXiv:2212.11270, 2022. 3
+
 11
+

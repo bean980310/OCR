@@ -1,29 +1,28 @@
+--- Page 1 ---
 arXiv:2305.18286v1 [cs.CV] 29 May 2023
+
 PHOTOSWAP:
 Personalized Subject Swapping in Images
-Jing Gu¹* Yilin Wang²
-Zhifei Zhang²
-Nanxuan Zhao²
-He Zhang²
-Tsu-Jui Fu³
-Jianming Zhang² Hyun Joon Jung²
-University of California, Santa Cruz
-2 Adobe University of California, Santa Barbara
+
+Jing Gu'* Yilin Wang? Nanxuan Zhao? Tsu-Jui Fu’ Wei Xiong? Qing Liu?
+Zhifei Zhang? He Zhang? Jianming Zhang? HyunJoon Jung” ‘Xin Eric Wang'*
+‘University of California, Santa Cruz
+?Adobe University of California, Santa Barbara
+
 https://photoswap.github.io/
+
 reference image
-source image
-Photoswap
-000
-Wei Xiong² Qing Liu²
-Xin Eric Wang¹*
-1
-reference image
-source image
-Photoswap
+
+reference image source image Photoswa;
+
+source image Photoswa
+
 Figure 1: Photoswap can effortlessly replace the subject in a source image, which could be either
 synthetic (first two rows) or real (bottom row), with a personalized subject specified in reference
 images, while preserving the original subject pose and the composition of the source image.
+
 Abstract
+
 In an era where images and visual content dominate our digital landscape, the abil-
 ity to manipulate and personalize these images has become a necessity. Envision
 seamlessly substituting a tabby cat lounging on a sunlit window sill in a photo-
@@ -40,9 +39,14 @@ efficacy and controllability of Photoswap in personalized subject swapping. Fur-
 thermore, Photoswap significantly outperforms baseline methods in human ratings
 across subject swapping, background preservation, and overall quality, revealing
 its vast application potential, from entertainment to professional editing.
-Correspondence to Jing Gu and Xin Eric Wang, {jgu110,xwang366}@ucsc.edu.
+
+* Correspondence to Jing Gu and Xin Eric Wang, {jgui10,xwang366}@ucsc.edu.
+
 Preprint.
+
+--- Page 2 ---
 1 Introduction
+
 Imagine a digital world where the boundaries of reality and creativity blur, where a photograph of
 a tabby cat lounging in a sunlit window sill can effortlessly be transformed to feature your playful
 puppy in the same pose. Or envision yourself as a part of a famous movie scene, replaced seamlessly
@@ -52,6 +56,7 @@ skills, but in an automated, user-friendly manner? This question lies at the hea
 subject swapping, the challenging task of replacing the subject in an image with a user-specified
 subject, while maintaining the integrity of the original pose and composition. It opens up a plethora
 of applications in areas such as entertainment, advertising, and professional editing.
+
 Personalized subject swapping is a complex undertaking that comes with its own set of challenges.
 The task requires a profound comprehension of the visual concept inherent to both the original subject
 and the replacement subject. Simultaneously, it demands the seamless integration of the new subject
@@ -61,19 +66,21 @@ pose and scene, creating a natural and harmonious visual composition. This neces
 consideration of factors such as lighting conditions, perspective, and overall aesthetic coherence. By
 effectively blending the replacement subject with these elements, the final image maintains a sense of
 continuity and authenticity.
+
 Existing image editing methods fall short in addressing these challenges. Many of these techniques
 are restricted to global editing and lack the finesse needed to seamlessly integrate new subjects
-into existing images. For example, for most text-to-image (T2I) models, a slightly prompt change
-could lead to a totally different image. Recent works [3, 6, 25, 27, 46] allow user to control the
+into existing images. For example, for most text-to-image (T2I 1s, a slightly prompt change
+could lead to a totally different image. Recent works Feit allow user to control the
 generation with an additional input such as user brush, semantic layout, or sketches. However, it is
-still challenging to guide the generation process to follow users' intent on the generation of object
-shape, texture, and identity. Other approaches [16, 26, 41] have explored the potential of using text
+still challenging to guide the generation process to follow users’ intent on the generation of object
+shape, texture, and identity. Other approaches have explored the potential of using text
 prompts to edit image content in the context of synthetic image generation. Despite showing promise,
 these methods are not yet fully equipped to handle the intricate task of swapping subjects in existing
 images with user-specified subjects.
+
 Therefore, we present Photoswap, a novel framework that leverages pre-trained diffusion models for
 personalized subject swapping in images. In our approach, the diffusion model learns to represent the
-concept of the subject (Ot). Then the representative attention map and attention output saved in the
+concept of the subject (O,). Then the representative attention map and attention output saved in the
 source image generation process will be transferred into the generation process of the target image to
 generate the new subject while keeping non-subject pixels unchanged. Our extensive experiments
 and evaluations demonstrate the effectiveness of Photoswap. Not only does our method enable the
@@ -82,282 +89,302 @@ the overall coherence of the image. Remarkably, Photoswap outperforms baseline m
 margin in human evaluations of subject identity preservation, background preservation, and overall
 quality of the swapping (e.g., 50.8% vs. 28.0% in terms of overall quality). The contributions of this
 work are as follows: 1) We present a new framework for personalized subject swapping in images.
-2) We
-propose a training-free attention swapping method that governs the editing process. 3) The
+2) We propose a training-free attention swapping method that governs the editing process. 3) The
 efficacy of our proposed framework is demonstrated through extensive experiments including human
 evaluation.
+
 2 Related Work
-2.1 Text-to-Image Generation
-In the early stages of text-based image generation, Generative Adversarial Networks (GANs) [2, 14,
-19] were widely used due to their exceptional ability to produce high-quality images. These models
+
+2.1  Text-to-Image Generation
+
+In the early stages of text-based image generation, Generative Adversarial Networks (GANs) (2) [14]
+were widely used due to their exceptional ability to produce high-quality images. These models
 aimed to align textual descriptions with synthesized images through multi-modal vision-language
 learning, achieving impressive results on specific domains (e.g., bird, chair and human face). When
-combined with CLIP [32], a large pre-trained model that learns visual-textual representations from
+combined with CLIP , a large pre-trained model that learns visual-textual representations from
 millions of caption-image pairs, GAN models [7] have demonstrated promising outcomes in cross-
-domain text-to-image (T2I) generation. Recently, T2I generation has seen remarkable
-progress with
-auto-regressive [9, 9, 29] and diffusion models [15, 27, 30, 36], offering diverse outcomes and can
+domain text-to-image (T2]) generation. Recently, T2I generation has seen remarkable progress with
+auto-regressive 19129) and diffusion models , offering diverse outcomes and can
 synthesize high-quality images closely aligned with textual descriptions in arbitrary domains.
-2
-Rather than focusing on T2I generation tasks without any constraints, subject-driven T2I generation [4,
-28, 35] requires the model to identify the specific object from a set of visual examples and synthesize
+
+
+--- Page 3 ---
+Rather than focusing on T2I generation tasks without any constraints, subject-driven T2I generation [4]
+requires the model to identify the specific object from a set of visual examples and synthesize
 novel scenes incorporating them based on the input text prompts. Building upon modern diffusion
-techniques, recent approaches such as DreamBooth [35] and Textual Inversion [12, 13, 21, 26] learn
+techniques, recent approaches such as DreamBooth and Textual Inversion [
 to invert special tokens from a given set of images. By combining these tokens with text prompts,
 they generate personalized unseen images. To improve data efficiency, retrieval augmentation
-techniques [1, 5, 39] leverages external knowledge bases to overcome limitations posed by rare
+techniques ] leverages external knowledge bases to overcome limitations posed by rare
 entities, resulting in visually relevant appearances and enhanced personalization. In our work, we
 aim to tackle personalized subject swapping, not only preserving the identity of subjects in reference
 images, but also maintaining the context of the source image.
+
 2.2 Text-guided Image Editing
+
 Text-guided image editing manipulates an existing image based on the input textual instructions,
 while preserving certain aspects or characteristics of the original image. Early works based on GAN
-models [19] only limits to a certain object domain. Diffusion-based methods [10, 27, 46] break
+models [19] only limits to a certain object domain. Diffusion-based methods break
 this barrier and support text-guided image editing. Though these methods generate stunning results,
-many of them suffer from conducting local editing, and additional manual masks [25, 25, 45] are
+many of them suffer from conducting local editing, and additional manual masks [25] [25] /45] are
 required to constrain the editing regions, which is often tedious to draw. By employing cross-attention
-[16] or spatial characteristics [41], the local editing can be achieved but struggles with non-rigid
+or spatial characteristics [41], the local editing can be achieved but struggles with non-rigid
 transformations (e.g., changing pose) and retaining the original image layout structure. While
 Imagic [20] addresses the need for non-rigid transformations by fine-tuning a pre-trained diffusion
 model to capture image-specific appearances, it requires test-time finetuning, which is not time-
 efficient for deployment. Moreover, relying solely on text as input lacks precise control. In contrast,
 we propose a novel training-free attention swapping scheme that enables precise personalization
 based on reference images, without the need for time-consuming finetuning.
+
 2.3 Exemplar-guided Image Editing
-Exemplar-guided image editing covers a broad range of applications, and most of the works [17, 42,
-49] can be categorized as exemplar-based image translation tasks, conditioning on various information,
-such as stylized images [8, 24, 48], layouts [18, 22, 44], skeletons [22], sketches/edges [38]. With the
-convenience of stylized images, image style transfer [23, 47] receives extensive attentions, replying
+
+Exemplar-guided image editing covers a broad range of applications, and most of the works [17/42]
+can be categorized as exemplar-based image translation tasks, conditioning on various information,
+such as stylized images iS 4] a8}, layouts keletons [22], sketches/edges [38]. With the
+convenience of stylized images, image style transfer | receives extensive attentions, replying
 on methods to build a dense correspondence between input and reference images, but it cannot deal
 with local editing. To achieve local editing with non-rigid transformation, conditions like bounding
 boxes and skeletons are introduced, but require drawing efforts from users, which sometimes are hard
-to obtain. A recent work [43] poses exemplar-guided image editing task as an inpainting task with
+to obtain. A recent work poses exemplar-guided image editing task as an inpainting task with
 the mask and transfers the semantic content from the reference image to the source one, with the
 context intact. Different from these works, we propose a more user-friendly scenario by conducting
 personalized subject swapping with only reference images and obtain high-quality editing results.
+
 3 Preliminary
+
 Diffusion models are a type of generative model that operates probabilistically. In this process, an
 image is created by gradually eliminating noise from the target that is characterized by Gaussian
 noise. In the context of text-to-image generation, a diffusion model typically involves a process where
 an initial random image is gradually refined step by step, with each step guided by a learned model,
 until it becomes a realistic image. The changes to the image spread out and affect many pixels over
-time. Given an initial random noise z~N(0, 1), the diffusion model gradually denoise Zt, which
-gives Zt-1.
+time. Given an initial random noise z7 ~N (0,1), the diffusion model gradually denoise z,, which
+gives 2,1.
+
 Diffusion models are probabilistic generative models that learn to generate images by simulating
 a random process called a diffusion process. In the image generation process, the diffusion model
 gradually predicts the noise at the current diffusion step and denoises to get the final image. In this
 study, we utilize a pre-trained text-to-image diffusion model, Stable Diffusion [33], which encodes
 the image into latent space and gradually denoises the latent variable to generate a new image. Stable
-Diffusion is based on a U-Net architecture [34], which generates latent variable zt−1 conditioned on
-a given text prompt P and the latent variable zt from the previous step t:
-zt-1=
-€0 (zt, P,t)
-3
-(1)
-Encode Input
-Ps:A photo of a cat sitting in
-a green bucket on a table.
-Ot
-DDIM
-Inversion
-z
-S5
-T steps of Diffusion
-Decode to output
-Original Image
-If continue (T-21) steps...
-zo
-χλ
-z-λ
-... >>
-Ꮎ
-Initial noise
-copy
-Μ, Α, Φ
-x (T-λ)
-Z
-0*
-Z
-Object Inversion
+Diffusion is based on a U-Net architecture [34], which generates latent variable z;_1 conditioned on
+a given text prompt P and the latent variable z; from the previous step t:
+
+Z1-1 = €9(21, P,t) (1)
+
+--- Page 4 ---
+T steps of Diffusion Decode to output
+
+If continue (T-A) steps...
+
+2
+
+ovis Inversion r
+Ba Source Image Diffusion process D Image Encoder
+
+{P,: A photo of < % > sitting in
+
 <*>
-New Concept
-Pt: A photo of <*> sitting in
-a green bucket on a table.
-Prompt with new concept
-Generated Result
-Source Image Diffusion process
-Image Encoder
-☐ Image Decoder
-Target Image Diffusion process
-Transfer M: self-attention map, A: cross
+New Concept {. agreen bucket on a table. }
+
+| BIG target image biffusion process q Image Decoder
+
+—> Transfer M: self-attention map, A: cross
 attention map, : attention output
+
 Figure 2: The Photoswap framework. Given several images of a new concept, the diffusion model
 first learns the concept and converts it into a token. The upper part is the generation process of the
 source image, while the bottom part is the generation process of target image. The initial noise feature
-½ is copied from z of the source. The attention output and attention map in the source image
-generation process would be transferred to the target image generation process. The final feature t
-is decoded to output the target image. Refer to Section 4 for more details.
+zip is copied from z}, of the source. The attention output and attention map in the source image
+generation process would be transferred to the target image generation process. The final feature 2
+is decoded to output the target image. Refer to Section /]for more details.
+
 The U-Net consists of layers that include repetition of self-attention and cross-attention blocks. This
 study focuses on manipulating self-attention and cross-attention to achieve the task of personalized
 subject swapping.
+
 4 The Photoswap Method
-2
-Providing a few reference images of a personalized target subject Ot, Photoswap can seamlessly
-swap it with another subject Os in a given source image Is. The Photoswap pipeline is illustrated in
-Figure 2. To learn the visual concept of the target subject Ot, we fine-tune a diffusion model with
-reference images and do object inversion to represent Ot using special token *. Then, to substitute
-the subject in the source image, we first obtain the noise zã that can be used to re-construct the
-source image Is. Next, through the U-Net, we obtain the needed feature map and attention output
-in the self-attention and cross-attention layers, including M, A, and (which we will introduce in
-Sec. 4.2). Finally, during the target image generation process that is conditioned on the noise z and
-the target text prompt Pt, in the first A steps, those intermediate variables (M, A, and >) would be
+
+Providing a few reference images of a personalized target subject O;, Photoswap can seamlessly
+swap it with another subject O, in a given source image I. The Photoswap pipeline is illustrated in
+To learn the visual concept of the target subject O;,, we fine-tune a diffusion model with
+reference images and do object inversion to represent O, pail special token *. Then, to substitute
+
+the subject in the source image, we first obtain the noise z7|*|that can be used to re-construct the
+source image J,. Next, through the U-Net, we obtain the needed feature map and attention output
+in the self-attention and cross-attention layers, including M, A, and ¢ (which we will introduce in
+Sec.|4.2). Finally, during the target image generation process that is conditioned on the noise z7 and
+the target text prompt P,, in the first \ steps, those intermediate variables (/, A, and @) would be
 replaced with corresponding ones obtained during the the source image generation process. In the last
-(TX) steps, no attention swapping is needed and we can continue the denoising process as usual to
-obtain the final resulting image. Sec. 4.1 discusses the visual concept learning technique we used,
-and Sec. 4.2 details the training-free attention swapping method for controllable subject swapping.
+(T — X) steps, no attention swapping is needed and we can continue the denoising process as usual to
+obtain the final resulting image. Sec. discusses the visual concept learning technique we used,
+and Sec. 4.2]details the training-free attention swapping method for controllable subject swapping.
+
 4.1 Visual Concept Learning
-Subject swapping requires a thorough understanding of the subject's identity and specific character-
+
+Subject swapping requires a thorough understanding of the subject’s identity and specific character-
 istics. This knowledge enables the creation of accurate representations that align with the source
-subject. The subject's identity influences the composition and perspective of the image, including
+subject. The subject’s identity influences the composition and perspective of the image, including
 its shape, proportions, and textures, which affect the overall arrangement of elements. However,
-existing diffusion models lack information about the target subject (Ot) in their weights because
+existing diffusion models lack information about the target subject (O,) in their weights because
 the training data for text-to-image generation models does not include personalized subjects. To
-2For a synthetic image, z is the initial noise used to generate it. For a real image, we utilize an improved
-version of DDIM inversion [40] to get the initial noise and re-generate the source image. See Sec. 5.1 for details.
-4
-Figure 3: SVD visualization of self-attention maps. Each image's attention map is resized to
+
+>For a synthetic image, 27. is the initial noise used to generate it. For a real image, we utiliz
+version of DDIM inversion to get the initial noise and re-generate the source image. See Set
+
+in improved
+1|for details.
+
+
+--- Page 5 ---
+Ci
+os
+
+Figure 3: SVD visualization of self-attention maps. Each image’s attention map is resized to
 64x64 at every layer, and we calculate the average map across all layers for all diffusion time steps.
 Most significant components are extracted with SVD and visualized. Remarkably, the visualized
 results demonstrate a strong correlation with the layout of the generated image. The top two rows are
 visualization about synthetic images while the bottom two rows are about real images.
+
 Diffusion Steps
+
+>
+
 Figure 4: Self-attention map visualization across diffusion time steps. This representation reveals
 that the layout of the generated image is intrinsically embedded in the self-attention map from the
 initial steps. Consequently, to assert control over the layout, it is imperative to commence the attention
 swap at the earliest stages of the process.
+
 overcome this limitation and generate visually consistent variations of subjects from a given reference
 set, we need to personalize text-to-image diffusion models accurately. Recent advancements have
 introduced various methods, such as fine-tuning the diffusion model with distinct tokens associated
-with specific subjects, to achieve this “personalization”[11, 21, 35]. In our experiments, we primarily
-utilize DreamBooth [35] as a visual concept learning method. It's worth noting that alternative concept
+with specific subjects, to achieve this “personalization”’ 5]. In our experiments, we primarily
+utilize DreamBooth35] as a visual concept learning method. It’s worth noting that alternative concept
 learning methods can also be effectively employed with our framework.
+
 4.2 Controllable Subject Swapping via Training-free Attention Swapping
-Subject swapping poses intriguing challenges, requiring the maintenance of the source image's spatial
+
+Subject swapping poses intriguing challenges, requiring the maintenance of the source image’s spatial
 layout and geometry while integrating a new subject concept within the same pose. This necessitates
-5
+
+--- Page 6 ---
 Algorithm 1 The Photoswap Algorithm
-Inputs: source image Is, reference images Ot, source image text prompt Ps, target image text
-prompt Pt, diffusion model
-0*0, Ot▷ Finetune diffusion model to include the new concept
-ZDDIM Inversion (ImageEncoder (Is), Ps) ▷ Using DDIM to guarantee re-construction
-Using the same starting noise
-for iT, T- 1, ..., 1 do
-es,, M, A
+
+Inputs: source image J,, reference images O;, source image text prompt P,, target image text
+prompt P;,, diffusion model 6
+
+0* <— 6, O; > Finetune diffusion model to include the new concept
+z4, < DDIM Inversion(ImageEncoder(I;), P;)> Using DDIM to guarantee re-construction
+zi, < z4 > Using the same starting noise
+fori = 7,T —1,...,1 do
+&,;,M;, A} < e9-(z3, P;,i) > Denoise to get the attention output and map for source
 image
-€0*(z¾, Ps, i) ▷ Denoise to get the attention output and map for source
-o, M, A ← €0*(z½, Pt, i) ▷ Denoise to get the attention output and map for target image
-"
-, M, A SWAP (%), M, A, ½, M², At, i)
-Z-1
-D
-"
-€* ← €0×(z², Pt, i, o, M², A**) ▷ Denoise the updated attention map and output
-DDIM Sampler (z;, e³) ▷ Sample next latent variable for source image
-DDIM Sampler (zt, e*) ▷ Sample next latent variable for source image
-z-1
+o', Mi, Ai < €-(z!, P;,i) > Denocise to get the attention output and map for target image
+$;, M;, A; — SWAP($;, M;, A}, 6;, Mj, Aj, i)
+e* & €9-(z', Pt, i, 6}, Mj, Aj) > Denoise the updated attention map and output
+z$_, + DDIMSampler(z,*) > Sample next latent variable for source image
+zi_, + DDIMSampler(z', e*) > Sample next latent variable for source image
 end for
-It = Image Decoder (z)
-return It
-function SWAP (³, M³, A³, ot, Mt, At, i)
-D
-ø* ← (i < λø)? Ø³ : * > Control self-attention feature swap
-M* ← (i < λm)?M³ : Mt ▷ Control self-attention Map swap
-(i <A)? As: At > Control cross-attention map swap
-*, M*, A*
-A*
-return
+I, = ImageDecoder(z})
+return [;
+
+function SWAP(¢*, M°, A’, ¢', M', A’, i)
+o* & (i < Ay) ?@* : H' > Control self-attention feature swap
+M* & (i < Am)?M®* : Mb Control self-attention Map swap
+A* & (i < \4)?.A® : A‘ > Control cross-attention map swap
+
+return ¢*, M*, A*
 end function
+
 preserving the critical features in the source latent variable, which encapsulates the source image
-information, and leveraging the influence of the target image text prompt Pt, which carries the
+information, and leveraging the influence of the target image text prompt P;, which carries the
 concept token, to inject the new subject into the image.
-The central role of the attention layer in orchestrating the generated image's layout has been well-
-established in prior works [3, 16, 41]. To keep non-subject pixels intact, we orchestrate the generation
-of the target image It by transferring vital variables to the target image generation process. Here, we
+
+The central role of the attention layer in orchestrating the generated image’s layout has been well-
+established in prior works ail, To keep non-subject pixels intact, we orchestrate the generation
+of the target image J, by transferring vital variables to the target image generation process. Here, we
 explore how distinct intermediate variables within the attention layer can contribute to a controllable
 generation in the context of subject swapping.
-Within the source image generation process, we denote the cross-attention map as A, the self-
-attention map as Mr, the cross-attention output as 3, and the self-attention output as ¾. The
-corresponding variables in the target image generation process are denoted as At, Mt, vt, ot, where
+
+Within the source image generation process, we denote the cross-attention map as A;, the self-
+attention map as M °, the cross-attention output as 77, and the self-attention output as 67. The
+corresponding variables in the target image generation process are denoted as A‘, M%, w!, !, where
+
 i represents the current diffusion step.
-In the self-attention block, the latent feature z¿ is projected into queries qį, keys kį, and values v¿.
-We obtain the self-attention block's output ; using the following equation:
-Φί
-=
-Mivi where Mi Softmax q ₂ k i²
-=
-(2)
-where Mi is the self-attention map, and o¿ is the feature output from the self-attention layer. The
-cross-attention block's output vi is:
-=
-Vi Aivi
-=
-where Ai Softmax (q,k,T)
-(3)
-where A is the cross-attention map. In both self-attention and cross-attention, the attention map
-Mi and Ai are correlated to the similarity between qi and ki, acting as weights that dictate the
-combination of information in v¿. In this work, the manipulation of the diffusion model focus on
-self-attention and cross-attention within U-Net, specifically, swapping , M, and A, while keeping
-unchanged.
+
+In the self-attention block, the latent feature z; is projected into queries q;, keys k;, and values v;.
+We obtain the self-attention block’s output @; using the following equation:
+
+¢; = Miv; where M; = Softmax (aki7) (2)
+
+where M; is the self-attention map, and ¢; is the feature output from the self-attention layer. The
+cross-attention block’s output a, is:
+
+w, = A;v; where A; = Softmax (a::) (3)
+
+where A; is the cross-attention map. In both self-attention and cross-attention, the attention map
+M,; and A; are correlated to the similarity between q; and k;, acting as weights that dictate the
+combination of information in v;. In this work, the manipulation of the diffusion model focus on
+self-attention and cross-attention within U-Net, specifically, swapping @, M, and A, while keeping
+w unchanged.
+
 Self-attention map M, as it calculates the similarity within spatial features after linear projection,
 plays a pivotal role in governing spatial content during the generation process. As visualized in
-Figure 3, we capture M during the image generation and highlight the leading components via
+Figure |3} we capture IM during the image generation and highlight the leading components via
 Singular Value Decomposition (SVD). This visualization reveals a high correlation between M and
-6
+
+--- Page 7 ---
 reference image source image
+
+tig
+
 Photoswap
-reference image
-source image
-Photoswap
-e
+
 Figure 5: Photoswap results across various object and image domains, demonstrating its wide
 applicability. From everyday objects to cartoon, the diversity in subject swapping tasks has showcased
 the versatility and robustness of our framework across different contexts.
+
 the geometry and content of the generated image. Further, when visualizing the full steps of the
-diffusion process (Figure 4), we discern that the layout information is mirrored in the self-attention
+diffusion process (Figure|4), we discern that the layout information is mirrored in the self-attention
 from the initial steps. This insight underscores the necessity of initiating the swap early on to prevent
 the emergence of a new, inherent layout.
-Cross-attention map A is determined by both latent variable and text prompt, as in Equation 3, and
-Av can be viewed as a weighted sum of the information from a text prompt. Copying A to A
+
+Cross-attention map A is determined by both latent variable and text prompt, as in Equation[3| and
+A‘v can be viewed as a weighted sum of the information from a text prompt. Copying A} to Af
 during the target image generation process improves the layout alignment between the source image
 and the target image.
-Self-attention output , derived from the self-attention layer, encapsulates rich content information
+
+Self-attention output ¢, derived from the self-attention layer, encapsulates rich content information
 from the source image, independent of direct computation with textual features. Hence, replacing
-with enhances the preservation of context and composition from the original image. Our
-observations indicate that exerts a more profound impact on the image layout than the cross-
+§ with #$ enhances the preservation of context and composition from the original image. Our
+observations indicate that @ exerts a more profound impact on the image layout than the cross-
 attention map A.
-Cross-attention output v, emanating from the cross-attention layer, embodies the visual concept
-of the target subject. It is vital to note that substituting cross-attention output with would
-obliterate all information from the target text prompt Pt, as illustrated in Equation 3. Given that k
-and v are projections of target prompt embeddings, we retain unchanged to safeguard the target
-subject's identity.
-Algorithm 1 provides the pseudo code of our full Photoswap algorithm.
+
+Cross-attention output 7, emanating from the cross-attention layer, embodies the visual concept
+of the target subject. It is vital to note that substituting cross-attention output ~? with wf would
+obliterate all information from the target text prompt P,, as illustrated in Equation|3| Given that kf
+and v! are projections of target prompt embeddings, we retain 7 unchanged to safeguard the target
+subject’s identity.
+
+Algorithm[I]provides the pseudo code of our full Photoswap algorithm.
+
 5 Experiments
-5.1
-Imlementation Details
+
+5.1 Imlementation Details
+
 For the implementation of subject swapping on real images, we require an additional process that
 utilizes an image inversion method, specifically the DDIM inversion [40], to transform the image
 into initial noise. This inversion method relies on a reversed sequence of sampling to achieve the
 desired inversion. However, there exist inherent challenges when this inversion process is applied in
-7
-reference image
-source image
-Photoswap
-reference image source image Photoswap
-(a) Multi-subject swap.
-(b) Occluded subject swap.
+
+
+--- Page 8 ---
+reference image source image Photoswap reference image source image Photoswap
+
+(a) Multi-subject swap. (b) Occluded subject swap.
+
 Figure 6: Photoswap results on multi-subject and occluded subject scenarios. The results show
 that Photoswap can disentangle and replace multiple subjects at once. Also, Photoswap can identify
 the target object while avoiding influencing the non-subject pixels.
+
 text-guided synthesis within a classifier-free guidance setting. Notably, the inversion can potentially
 amplify the accumulated error, which could ultimately lead to subpar reconstruction outcomes. To
 fortify the robustness of the DDIM inversion and to mitigate this issue, we further optimize the null
@@ -365,24 +392,28 @@ text embedding, as detailed in Mokady et al. [26]. The incorporation of this opt
 bolsters the effectiveness and reliability of the inversion process, consequently allowing for a more
 precise reconstruction. Without further notice, the DDIM inversion in this paper is enhanced by null
 text embedding optimization.
+
 During inference, we utilize the DDIM sampling method with 50 denoising steps and classifier-free
-guidance of 7.5. The default step λA for cross-attention map replacement is 20. The default step
-AM for self-attention map replacement is 25, while the default step for self-attention feature
+guidance of 7.5. The default step A, for cross-attention map replacement is 20. The default step
+Xm for self-attention map replacement is 25, while the default step for self-attention feature Ay
 replacement is 10. Note that the replacement steps may change to some specific checkpoint. As
-mentioned in Section 4, the target prompt Pt is just source prompt Ps with the object token being
-replaced with the new concept token. For concept learning, we mainly utilize DreamBooth [35] to
-finetune a stable diffusion 2.1 to learn the new concept from 35 images. The learning rate is set to
-1e-6. We use Adawm optimizer with 800 hundred training step. We finetune both the U-net and text
+mentioned in Section[4| the target prompt P; is just source prompt P, with the object token being
+replaced with the new concept token. For concept learning, we mainly utilize DreamBooth to
+finetune a stable diffusion 2.1 to learn the new concept from 3 5 images. The learning rate is set to
+le-6. We use Adawm optimizer with 800 hundred training step. We finetune both the U-net and text
 encoder. The DreamBooth training takes around 10 minutes on a machine with 8 A100 GPU cards.
+
 5.2 Personalized Subject Swapping Results
-Figure 5 showcases the effectiveness of our Photoswap technique for subject swapping. Our approach
+
+Figure [5]showcases the effectiveness of our Photoswap technique for subject swapping. Our approach
 excels at preserving crucial aspects such as spatial layout, geometry, and the pose of the original
 subject while seamlessly introducing a reference subject into the target image. Remarkably, even in
 cartoon images, our method ensures that the background remains intact during the subject change
 process. A notable example is the "cat" image, where our technique successfully retains all the
 intricate details from the source image, including the distinctive "Whiskers." This demonstrates
-our framework's ability to accurately capture and preserve fine-grained information during subject
+our framework’s ability to accurately capture and preserve fine-grained information during subject
 swapping.
+
 We further demonstrate the versatility of Photoswap by showcasing its effectiveness in multiple
 subject swap and occluded object swap scenarios. As depicted in Figure ?? (a), we present a source
 image featuring two sunglasses, which are successfully replaced with reference glass while preserving
@@ -391,172 +422,193 @@ a dog partially occluded by a suit. The resulting swapped dog wears a suit that 
 the occluded region. These examples serve to highlight the robustness of our proposed Photoswap
 method in handling various real-world cases, thereby enabling users to explore a broader range of
 editing possibilities.
-5.3 Comparison with Baseline Methods
+
+5.3. Comparison with Baseline Methods
+
 Personalized object swap is a new task and there is no existing benchmark. However, we could
 modify the existing attention manipulation based methods. More specifically, we used the same
-8
-reference image source image
-P2P+DreamBooth
-Photoswap
+
+--- Page 9 ---
+reference image source image Photoswap
+
 Figure 7: Qualitative comparison between P2P+DreamBooth and Photoswap. We can observe
 that P2P+dreambooth is capable of achieving subject swapping. However, it faces challenges in
 preserving both the background and the reference subject accurately, while for Photoswap, it is robust
 to handle various cases.
-Photoswap P2P+DreamBooth
-Tie
-Subject Swapping
-Background Preservation
-46.8%
-25.6%
-27.6%
-40.7%
-32.7%
-26.6%
-Overall Quality
-50.8%
-28.0%
-21.2%
+
+Photoswap P2P+DreamBooth Tie
+
+Subject Swapping 46.8% 25.6% 27.6%
+Background Preservation 40.7% 32.7% 26.6%
+Overall Quality 50.8% 28.0% 21.2%
+
 Table 1: Human evaluation between Photoswap and P2P. Note that both Photoswap and P2P
 leverage same concept learning method DreamBooth. The results indicates, for most of the cases
 above 70%, the proposed Photoswap is better or on par with P2P.
+
 concept learning method DreamBooth to finetune the same stable diffusion checkpoint to inject the
 new concept. To fairly compare with our results, we modified existing prompt-based editing method
-P2P [16], an editing method based diffusion models. Note that origin P2P only works on a pair of
+P2P , an editing method based diffusion models. Note that origin P2P only works on a pair of
 synthetic images, in our setting we use same concept learning dreambooth an fix the seed to allow
-concept swapping. On the other hand, PnP [41] could also be implmented in similar setting, however
+concept swapping. On the other hand, PnP could also be implmented in similar setting, however
 we found PnP usually can not lead to satisfactory object swapping and may lead to a huge difference
 between the source image and the generated image. We suspect that it is because PnP is designed
 for image translation so it does not initiate the attention manipulation step from the beginning step.
-The qualitative comparision between Photoswap and P2P+dreambooth is shown in Figure 7. We
+The qualitative comparision between Photoswap and P2P+dreambooth is shown in Figure |7| We
 observe that P2P with DreamBooth could achieve achieve basic object swap, but it still suffers from
 background mismatching issue.
+
 Human Evaluation. We conduct a human evaluation to study the editing quality by (1) Which
 result better swaps the subject as the reference and keeps its identity; (2) Which result better preserves
 the background; (3) Which result has better overall subject-driven swapping. We randomly sample
-99 examples and adopt Amazon MTurk³ to compare between two results. To avoid potential bias,
-we hire 3 Turkers for each sample. Table 1 demonstrates the comparison between our Photoswap
+99 examples and adopt Amazon MTur! | to compare between two results. To avoid potential bias,
+we hire 3 Turkers for each sample. Table}1/demonstrates the comparison between our Photoswap
 and P2P. Firstly, more turkers (over 46%) denote that our Photoswap better swaps the subject yet
 keeps its identity at the same time. Moreover, we can also preserve the background in the source
 image (41% vs. 33%), which is another crucial goal of this editing. In summary, Photoswap precisely
 performs subject swapping and preserves the remaining part from the input, leading to an overall
 superiority (50%) to P2P.
+
 5.4 Controlling Subject Identity
+
 The effectiveness of the proposed mutual self-attention is demonstrated through both synthetic image
 synthesis and real image editing. Additionally, we perform an analysis of the control strategy with
-varying values of M during the denoising process. Figure 8 provides insights into this analysis.
-It is observed that when applying self-attention control with a large swapping step λ for M, the
-3 Amazon Mechanical Turk (MTurk): https://www.mturk.com.
-9
-Photoswap
-identity
-reference image
-source image
-Figure 8: Ablation results of M in Photoswap. With M value increase, the generated one is more
+varying values of M/ during the denoising process. Figure [8]provides insights into this analysis.
+It is observed that when applying self-attention control with a large swapping step Ay, for /, the
+
+Amazon Mechanical Turk (MTurk):
+
+
+--- Page 10 ---
+Photoswap identity
+
+reference image source image
+
+Figure 8: Ablation results of \/ in Photoswap. With M value increase, the generated one is more
 similar to the style and identity of source image and dissimilar to the reference subject, vice versa.
+
 synthesized image closely resembles the source image in terms of both style and identity. In this
 scenario, all contents from the source image are preserved, while the subject style learned from the
-reference subject is disregarded. As the value of M decreases, the synthesized image maintains the
+reference subject is disregarded. As the value of MW decreases, the synthesized image maintains the
 subject from the reference image while retaining the layout and pose of the contents from the source
 image. This gradual transition in the control strategy allows for a balance between subject style
-transfer and preservation of the original image's contents.
-5.5
-Attention Swapping Step Analysis
+transfer and preservation of the original image’s contents.
+
+5.5 Attention Swapping Step Analysis
+
 In this section, we visualize the effect of the influence of swapping steps of different components.
-As discussed in the main paper, self-attention output &, and self-attention map M, derived from the
+As discussed in the main paper, self-attention output ¢, and self-attention map /, derived from the
 self-attention layer, encompasses comprehensive content information from the source image, without
-relying on direct computation with textual features. Previous works such as Hertz et al. [16] did not
-explore the usage of ☀ and M in the object-level image editing process.
+relying on direct computation with textual features. Previous works such as Hertz et al. did not
+explore the usage of ¢ and M in the object-level image editing process.
+
 Attention map and attention output swap step
-Changing A, steps of self-attention output swap
+—>
+
 Source Image
-Reference Images
-Changing AM, steps of self-attention map swap
-Changing A, steps of cross-attention map swap
+
+Changing Aa, steps of cross-attention map swap
+
 Figure 9: Results at different swapping steps. With consistent steps, swapping the self-attention
-output provides superior control over the layout, including the subject's gestures and the background
-details. However, excessive swapping could affect the subject's identity, as the new concept introduced
+output provides superior control over the layout, including the subject’s gestures and the background
+details. However, excessive swapping could affect the subject’s identity, as the new concept introduced
 through the text prompt might be overshadowed by the swapping of the attention output or attention
-map. This effect is more clear when swapping the self-attention output X. Furthermore, we observed
+map. This effect is more clear when swapping the self-attention output 4. Furthermore, we observed
 that replacing the attention map for an extensive number of steps can result in an image with significant
 noise, possibly due to a compatibility issue between the attention map and the v vector.
-Figure 9 provides a visual representation of the effect of incrementally increasing the swapping step
+
+Figure BJprovides a visual representation of the effect of incrementally increasing the swapping step
 for one X hyperparameter while maintaining the other two at zero. Although all of them can be utilized
 for subject swapping, they demonstrate varying levels of layout control. At the same swapping step,
-the self-attention output offers more robust layout control, facilitating better alignment of gestures
+the self-attention output @ offers more robust layout control, facilitating better alignment of gestures
 and preservation of background context. In contrast, the self-attention map M and cross-attention
 map A demonstrate similar capabilities in controlling the layout.
+
 10
-However, extensive swapping can affect the subject's identity, as the novel concept introduced via the
+
+--- Page 11 ---
+However, extensive swapping can affect the subject’s identity, as the novel concept introduced via the
 text prompt might be eclipsed by the swapping of the attention output or attention map. This effect
 becomes particularly evident when swapping the self-attention output. This analysis further informs
-the determination of the default X6, λM, and λA values. While the cross-attention map A facilitates
+the determination of the default \4, Azz, and .4 values. While the cross-attention map A facilitates
 more fine-grained generation control, given its incorporation of information from textual tokens, we
-discovered that offers stronger holistic generation control, bolstering the overall output's quality
+discovered that @ offers stronger holistic generation control, bolstering the overall output’s quality
 and integrity.
+
 5.6 Results of Other Concept Learning Methods
+
 Our mainly use DreamBooth as the concept learning method in the experiments, primarily due to its
 superior capabilities in learning subject identities [35]. However, our method is not strictly dependent
 on any specific concept learning method. In fact, other concept learning methods could be effectively
 employed to introduce the concept of the target subject.
-reference image source image
-Photoswap
+
 reference image
-source image
-Photoswap
-Figure 10: Results of Text Inversion [12] as the concept learning module. It can successfully
+
+source image Photoswap
+
+reference image source image Photoswap
+
+Figure 10: Results of Text Inversion as the concept learning module. It can successfully
 capture key subject features, but its performance drops when representing complex structures such as
 human faces.
+
 To illustrate this, we present the results of Photoswap when applying Text Inversion [12]. We train the
-model using 8 A100 GPUs with a batch size of 4, a learning rate of 5e-4, and set the training steps to
-1000. Results in Figure 10 indicate that Text Inversion also proves to be an effective concept learning
+model using 8 A100 GPUs with a batch size of 4, a learning rate of Se-4, and set the training steps to
+1000. Results in Figure[TO}indicate that Text Inversion also proves to be an effective concept learning
 method, as it successfully captures key features of the target object. Nevertheless, we observe that
 Text Inversion performance is notably underwhelming when applied to human faces. We postulate
 that this is because Text Inversion focuses on learning a new embedding for the novel concept, rather
 than finetuning the entire model. Consequently, the capacity to express the new concept becomes
 inherently limited, resulting in its less than optimal performance in certain areas.
+
 5.7 Ethics Exploration
-reference image
-source image
-Photoswap
-reference image
-source image
-Photoswap
+
+reference image source image Photoswap
+
 Figure 11: Results on real human face images across different races. Evidently, the skin colors
 are also successfully transferred when swapping a white person with a black person, and vice versa.
+
+reference image source image Photoswap
+
 Like many AI technologies, text-to-image diffusion models can potentially exhibit biases reflective of
-those inherent in the training data [31, 37]. Given that these models are trained on vast text and image
+those inherent in the training data BT, Given that these models are trained on vast text and image
 datasets, they might inadvertently learn and perpetuate biases, such as stereotypes and prejudices,
 found within this data. For instance, should the training data contain skewed representations or
 descriptions of specific demographic groups, the model may produce biased images in response to
 related prompts.
+
 However, Photoswap has been designed to mitigate bias within the generation process of a text-to-
 image diffusion model. It achieves this by directly substituting the depicted subject with the intended
-target. In Figure 11, we present our evaluation of face swapping across various skin tones. It is
+target. In Figure we present our evaluation of face swapping across various skin tones. It is
 crucial to observe that when there is a significant disparity between the source and reference images,
 the swapping results tend to homogenize the skin color. As a result, we advocate for the use of
 Photoswap on subjects of similar racial backgrounds to achieve more satisfactory and authentic
 outcomes. Despite these potential disparities, the model ensures the preservation of most of the target
-subject's specific facial features, reinforcing the credibility and accuracy of the final image.
+subject’s specific facial features, reinforcing the credibility and accuracy of the final image.
+
 11
+
+--- Page 12 ---
 5.8 Failure Cases
-reference image
-source image
-Photoswap
-reference image
-source image
-Photoswap
-Potok
+
+reference image source image Photoswap
+
+reference image source image Photoswap
+
 Figure 12: Failure cases. The model sometimes struggles to accurately reconstruct hand details and
 complex background information such as formula on a whiteboard.
+
 Here we highlight two common failure cases. First, the model struggles to accurately reproduce
 hands. When the subject includes hands and fingers, the swapping results often fail to precisely
 mirror the original hand gestures or the number of fingers. This issue could be an inherited challenge
 from Stable Diffusion. Moreover, Photoswap can encounter difficulties when the image comprises
-complex information. As illustrated in the lower row of Figure 12, Photoswap fails to reconstruct
+complex information. As illustrated in the lower row of Figure Photoswap fails to reconstruct
 the complicated formula on a whiteboard. Therefore, while Photoswap exhibits strong performance
-across various scenarios, it's crucial to acknowledge these limitations when considering its application
+across various scenarios, it’s crucial to acknowledge these limitations when considering its application
 in real-world scenarios involving intricate hand gestures or complex abstract information.
+
 6 Conclusion
+
 This paper introduces Photoswap, a novel framework designed for personalized subject swapping
 in images. To facilitate seamless subject photo swapping, we propose leveraging self-attention
 control by exchanging intermediate variables within the attention layer between the source image
@@ -565,104 +617,153 @@ compelling evidence for the effectiveness of Photoswap. Our framework offers a r
 solution for subject swapping, enabling users to effortlessly manipulate images according to their
 preferences. In the future, we plan to further advance the method to address those common failure
 issues to enhance the overall performance and versatility of personalized subject swapping.
+
 References
-[1] Blattmann, A., Rombach, R., Oktay, K., Müller, J., and Ommer, B. (2022). Retrieval-Augmented Diffusion
+
+1] Blattmann, A., Rombach, R., Oktay, K., Miiller, J., and Ommer, B. (2022). Retrieval-Augmented Diffusion
 Models. In NeurIPS.
-[2] Brock, A., Donahue, J., and Simonyan, K. (2018). Large scale gan training for high fidelity natural image
+
+2] Brock, A., Donahue, J., and Simonyan, K. (2018). Large scale gan training for high fidelity natural image
 synthesis. arXiv.
-[3] Cao, M., Wang, X., Qi, Z., Shan, Y., Qie, X., and Zheng, Y. (2023). Masactrl: Tuning-free mutual
+
+3] Cao, M., Wang, X., Qi, Z., Shan, Y., Qie, X., and Zheng, Y. (2023). Masactrl: Tuning-free mutual
 self-attention control for consistent image synthesis and editing. arXiv.
-[4] Casanova, A., Careil, M., Verbeek, J., Drozdzal, M., and Romero-Soriano, A. (2021). Instance-Conditioned
+
+4] Casanova, A., Careil, M., Verbeek, J., Drozdzal, M., and Romero-Soriano, A. (2021). Instance-Conditioned
 GAN. In NeurIPS.
-[5] Chen, W., Hu, H., Saharia, C., and Cohen, W. W. (2023). Re-Imagen: Retrieval-Augmented Text-to-Image
-Generator. In ICLR.
-[6] Couairon, G., Verbeek, J., Schwenk, H., and Cord, M. (2022). Diffedit: Diffusion-based semantic image
+
+5] Chen, W., Hu, H., Saharia, C., and Cohen, W. W. (2023). Re-Imagen: Retrieval-Augmented Text-to-Image
+Generator. In JCLR.
+6] Couairon, G., Verbeek, J., Schwenk, H., and Cord, M. (2022). Diffedit: Diffusion-based semantic image
 editing with mask guidance. arXiv.
-[7] Crowson, K., Biderman, S., Kornis, D., Stander, D., Hallahan, E., Castricato, L., and Raff, E. (2022).
-Vqgan-clip: Open domain image generation and editing with natural language guidance. In ECCV.
-[8] Deng, Y., Tang, F., Dong, W., Ma, C., Pan, X., Wang, L., and Xu, C. (2022). Stytr2: Image style transfer
+7] Crowson, K., Biderman, S., Kornis, D., Stander, D., Hallahan, E., Castricato, L., and Raff, E. (2022).
+Vaqgan-clip: Open domain image generation and editing with natural language guidance. In ECCV.
+Deng, Y., Tang, F., Dong, W., Ma, C., Pan, X., Wang, L., and Xu, C. (2022). Stytr2: Image style transfer
 with transformers. In CVPR.
-[9] Ding, M., Yang, Z., Hong, W., Zheng, W., Zhou, C., Yin, D., Lin, J., Zou, X., Shao, Z., Yang, H., et al.
+9] Ding, M., Yang, Z., Hong, W., Zheng, W., Zhou, C., Yin, D., Lin, J., Zou, X., Shao, Z., Yang, H., et al.
 (2021). Cogview: Mastering text-to-image generation via transformers. NeurIPS.
-[10] Feng, W., He, X., Fu, T.-J., Jampani, V., Akula, A., Narayana, P., Basu, S., Wang, X. E., and Wang, W. Y.
-(2023). Training-Free Structured Diffusion Guidance for Compositional Text-to-Image Synthesis. In ICLR.
-[11] Gal, R., Alaluf, Y., Atzmon, Y., Patashnik, O., Bermano, A. H., Chechik, G., and Cohen-Or, D. (2022). An
+10] Feng, W., He, X., Fu, T.-J., Jampani, V., Akula, A., Narayana, P., Basu, S., Wang, X. E., and Wang, W. Y.
+(2023). Training-Free Structured Diffusion Guidance for Compositional Text-to-Image Synthesis. In JCLR.
+11] Gal, R., Alaluf, Y., Atzmon, Y., Patashnik, O., Bermano, A. H., Chechik, G., and Cohen-Or, D. (2022). An
 image is worth one word: Personalizing text-to-image generation using textual inversion. arXiv.
-[12] Gal, R., Alaluf, Y., Atzmon, Y., Patashnik, O., Bermano, A. H., Chechik, G., and Cohen-Or, D. (2023a).
-An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion. In ICLR.
+12] Gal, R., Alaluf, Y., Atzmon, Y., Patashnik, O., Bermano, A. H., Chechik, G., and Cohen-Or, D. (2023a).
+An Image is Worth One Word: Personalizing Text-to-Image Generation using Textual Inversion. In JCLR.
+
+6
+
 12
-[13] Gal, R., Arar, M., Atzmon, Y., Bermano, A. H., Chechik, G., and Cohen-Or, D. (2023b). Encoder-based
+
+--- Page 13 ---
+13] Gal, R., Arar, M., Atzmon, Y., Bermano, A. H., Chechik, G., and Cohen-Or, D. (2023b). Encoder-based
 Domain Tuning for Fast Personalization of Text-to-Image Models. In arXiv.
-[14] Goodfellow, I., Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A., and
+
+14] Goodfellow, I, Pouget-Abadie, J., Mirza, M., Xu, B., Warde-Farley, D., Ozair, S., Courville, A., and
 Bengio, Y. (2020). Generative adversarial networks. Communications of the ACM.
-[15] Gu, S., Chen, D., Bao, J., Wen, F., Zhang, B., Chen, D., Yuan, L., and Guo, B. (2022). Vector quantized
-diffusion model for text-to-image synthesis. In CVPR.
-[16] Hertz, A., Mokady, R., Tenenbaum, J., Aberman, K., Pritch, Y., and Cohen-Or, D. (2022). Prompt-to-
+
+15] Gu, S., Chen, D., Bao, J., Wen, F., Zhang, B., Chen, D., Yuan, L., and Guo, B. (2022). Vector quantized
+iffusion model for text-to-image synthesis. In CVPR.
+
+16] Hertz, A., Mokady, R., Tenenbaum, J., Aberman, K., Pritch, Y., and Cohen-Or, D. (2022). Prompt-to-
 prompt image editing with cross attention control. arXiv.
-[17] Huang, X., Liu, M.-Y., Belongie, S., and Kautz, J. (2018). Multimodal unsupervised image-to-image
+
+17] Huang, X., Liu, M.-Y., Belongie, S., and Kautz, J. (2018). Multimodal unsupervised image-to-image
 translation. In ECCV.
-[18] Jahn, M., Rombach, R., and Ommer, B. (2021). High-resolution complex scene synthesis with transformers.
+
+18] Jahn, M., Rombach, R., and Ommer, B. (2021). High-resolution complex scene synthesis with transformers.
 arXiv.
-[19] Karras, T., Laine, S., and Aila, T. (2019). A style-based generator architecture for generative adversarial
+
+19] Karras, T., Laine, S., and Aila, T. (2019). A style-based generator architecture for generative adversarial
 networks. In CVPR.
-[20] Kawar, B., Zada, S., Lang, O., Tov, O., Chang, H., Dekel, T., Mosseri, I., and Irani, M. (2022). Imagic:
+
+20] Kawar, B., Zada, S., Lang, O., Tov, O., Chang, H., Dekel, T., Mosseri, I., and Irani, M. (2022). Imagic:
 Text-based real image editing with diffusion models. arXiv.
-[21] Kumari, N., Zhang, B., Zhang, R., Shechtman, E., and Zhu, J.-Y. (2023). Multi-Concept Customization of
+
+21] Kumari, N., Zhang, B., Zhang, R., Shechtman, E., and Zhu, J.-Y. (2023). Multi-Concept Customization of
 Text-to-Image Diffusion. In CVPR.
-[22] Li, Y., Liu, H., Wu, Q., Mu, F., Yang, J., Gao, J., Li, C., and Lee, Y. J. (2023). Gligen: Open-set grounded
+
+22) Li, Y., Liu, H., Wu, Q., Mu, F., Yang, J., Gao, J., Li, C., and Lee, Y. J. (2023). Gligen: Open-set grounded
 text-to-image generation. arXiv.
-[23] Liao, J., Yao, Y., Yuan, L., Hua, G., and Kang, S. B. (2017). Visual atribute transfer through deep image
+
+23] Liao, J., Yao, Y., Yuan, L., Hua, G., and Kang, S. B. (2017). Visual atribute transfer through deep image
 analogy. ACM Transactions on Graphics.
-[24] Liu, S., Lin, T., He, D., Li, F., Wang, M., Li, X., Sun, Z., Li, Q., and Ding, E. (2021). Adaattn: Revisit
-attention mechanism in arbitrary neural style transfer. In ICCV.
-[25] Meng, C., Song, Y., Song, J., Wu, J., Zhu, J.-Y., and Ermon, S. (2021). Sdedit: Image synthesis and editing
+
+24] Liu, S., Lin, T., He, D., Li, F., Wang, M., Li, X., Sun, Z., Li, Q., and Ding, E. (2021). Adaattn: Revisit
+attention mechanism in arbitrary neural style transfer. In JCCV.
+
+25] Meng, C., Song, Y., Song, J., Wu, J., Zhu, J.-Y., and Ermon, S. (2021). Sdedit: Image synthesis and editing
 with stochastic differential equations. arXiv.
-[26] Mokady, R., Hertz, A., Aberman, K., Pritch, Y., and Cohen-Or, D. (2022). Null-text Inversion for Editing
+
+26] Mokady, R., Hertz, A., Aberman, K., Pritch, Y., and Cohen-Or, D. (2022). Null-text Inversion for Editing
 Real Images using Guided Diffusion Models. In arXiv.
-[27] Nichol, A., Dhariwal, P., Ramesh, A., Shyam, P., Mishkin, P., McGrew, B., Sutskever, I., and Chen, M.
+
+27] Nichol, A., Dhariwal, P., Ramesh, A., Shyam, P., Mishkin, P., McGrew, B., Sutskever, I., and Chen, M.
 (2021). Glide: Towards photorealistic image generation and editing with text-guided diffusion models. arXiv.
-[28] Nitzan, Y., Aberman, K., He, Q., Liba, O., Yarom, M., Gandelsman, Y., Mosseri, I., Pritch, Y., and
+
+28] Nitzan, Y., Aberman, K., He, Q., Liba, O., Yarom, M., Gandelsman, Y., Mosseri, I., Pritch, Y., and
 Cohen-or, D. (2022). MyStyle: A Personalized Generative Prior. In Special Interest Group on Computer
 Graphics and Interactive Techniques in Asia (SIGGRAPH Asia).
-[29] OpenAI (2021). DALL E: Creating images from text. https://openai.com/research/dall-e.
-[30] OpenAI (2022). DALL E2. https://openai.com/product/dall-e-2.
-[31] Perera, M. V. and Patel, V. M. (2023). Analyzing bias in diffusion-based face generation models. arXiv
+
+29] OpenAI (2021). DALL-E: Creating images from text. https: //openai.com/research/dall-e
+30] OpenAI (2022). DALL-E2. https: //openai .com/product/dall-e-2
+
+31] Perera, M. V. and Patel, V. M. (2023). Analyzing bias in diffusion-based face generation models. arXiv
 preprint arXiv:2305.06402.
-[32] Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P.,
-Clark, J., et al. (2021). Learning transferable visual models from natural language supervision. In ICML.
-[33] Rombach, R., Blattmann, A., Lorenz, D., Esser, P., and Ommer, B. (2022). High-resolution image synthesis
+
+32] Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G., Agarwal, S., Sastry, G., Askell, A., Mishkin, P.,
+Clark, J., et al. (2021). Learning transferable visual models from natural language supervision. In JCML.
+
+33] Rombach, R., Blattmann, A., Lorenz, D., Esser, P., and Ommer, B. (2022). High-resolution image synthesis
 with latent diffusion models. In CVPR.
-[34] Ronneberger, O., Fischer, P., and Brox, T. (2015). U-net: Convolutional networks for biomedical image
+
+34] Ronneberger, O., Fischer, P., and Brox, T. (2015). U-net: Convolutional networks for biomedical image
 segmentation. In MICCAI. Springer.
-[35] Ruiz, N., Li, Y., Jampani, V., Pritch, Y., Rubinstein, M., and Aberman, K. (2023). DreamBooth: Fine
+
+35] Ruiz, N., Li, Y., Jampani, V., Pritch, Y., Rubinstein, M., and Aberman, K. (2023). DreamBooth: Fine
 Tuning Text-to-Image Diffusion Models for Subject-Driven Generation. In CVPR.
-[36] Saharia, C., Chan, W., Saxena, S., Li, L., Whang, J., Denton, E. L., Ghasemipour, K., Gontijo Lopes,
+
+36] Saharia, C., Chan, W., Saxena, S., Li, L., Whang, J., Denton, E. L., Ghasemipour, K., Gontijo Lopes,
 R., Karagol Ayan, B., Salimans, T., et al. (2022). Photorealistic text-to-image diffusion models with deep
 language understanding. In NeurIPS.
-[37] Sasha Luccioni, A., Akiki, C., Mitchell, M., and Jernite, Y. (2023). Stable bias: Analyzing societal
-representations in diffusion models. arXiv e-prints, pages arXiv-2303.
-[38] Seo, J., Lee, G., Cho, S., Lee, J., and Kim, S. (2022). Midms: Matching interleaved diffusion models for
+
+37] Sasha Luccioni, A., Akiki, C., Mitchell, M., and Jernite, Y. (2023). Stable bias: Analyzing societal
+representations in diffusion models. arXiv e-prints, pages arXiv—2303.
+
+38] Seo, J., Lee, G., Cho, S., Lee, J., and Kim, S. (2022). Midms: Matching interleaved diffusion models for
 exemplar-based image translation. arXiv.
-[39] Sheynin, S., Ashual, O., Polyak, A., Singer, U., Gafni, O., Nachmani, E., and Taigman, Y. (2023).
-KNN-Diffusion: Image Generation via Large-Scale Retrieval. In ICLR.
-[40] Song, J., Meng, C., and Ermon, S. (2020). Denoising diffusion implicit models. In International Conference
+
+39] Sheynin, S., Ashual, O., Polyak, A., Singer, U., Gafni, O., Nachmani, E., and Taigman, Y. (2023).
+KNN-Diffusion: Image Generation via Large-Scale Retrieval. In JCLR.
+
+40] Song, J., Meng, C., and Ermon, S. (2020). Denoising diffusion implicit models. In nternational Conference
 on Learning Representations.
+
 13
-[41] Tumanyan, N., Geyer, M., Bagon, S., and Dekel, T. (2022). Plug-and-play diffusion features for text-driven
+
+--- Page 14 ---
+41] Tumanyan, N., Geyer, M., Bagon, S., and Dekel, T. (2022). Plug-and-play diffusion features for text-driven
 image-to-image translation. arXiv.
-[42] Wang, M., Yang, G.-Y., Li, R., Liang, R.-Z., Zhang, S.-H., Hall, P. M., and Hu, S.-M. (2019). Example-
+
+42] Wang, M., Yang, G.-Y., Li, R., Liang, R.-Z., Zhang, S.-H., Hall, P. M., and Hu, S.-M. (2019). Example-
 guided style-consistent image synthesis from semantic labeling. In CVPR.
-[43] Yang, B., Gu, S., Zhang, B., Zhang, T., Chen, X., Sun, X., Chen, D., and Wen, F. (2022a). Paint by
+
+43] Yang, B., Gu, S., Zhang, B., Zhang, T., Chen, X., Sun, X., Chen, D., and Wen, F. (2022a). Paint by
 example: Exemplar-based image editing with diffusion models. arXiv.
-[44] Yang, Z., Wang, J., Gan, Z., Li, L., Lin, K., Wu, C., Duan, N., Liu, Z., Liu, C., Zeng, M., et al. (2022b).
+
+44] Yang, Z., Wang, J., Gan, Z., Li, L., Lin, K., Wu, C., Duan, N., Liu, Z., Liu, C., Zeng, M., et al. (2022b).
 Reco: Region-controlled text-to-image generation. arXiv.
-[45] Zeng, Y., Lin, Z., Zhang, J., Liu, Q., Collomosse, J., Kuen, J., and Patel, V. M. (2022). Scenecomposer:
+
+45] Zeng, Y., Lin, Z., Zhang, J., Liu, Q., Collomosse, J., Kuen, J., and Patel, V. M. (2022). Scenecomposer:
 Any-level semantic image synthesis. arXiv.
-[46] Zhang, L. and Agrawala, M. (2023). Adding conditional control to text-to-image diffusion models. arXiv.
-[47] Zhang, P., Zhang, B., Chen, D., Yuan, L., and Wen, F. (2020). Cross-domain correspondence learning for
+
+46] Zhang, L. and Agrawala, M. (2023). Adding conditional control to text-to-image diffusion models. arXiv.
+47] Zhang, P., Zhang, B., Chen, D., Yuan, L., and Wen, F. (2020). Cross-domain correspondence learning for
 exemplar-based image translation. In CVPR, pages 5143-5153.
-[48] Zhang, Y., Huang, N., Tang, F., Huang, H., Ma, C., Dong, W., and Xu, C. (2022). Inversion-based creativity
+
+48] Zhang, Y., Huang, N., Tang, F, Huang, H., Ma, C., Dong, W., and Xu, C. (2022). Inversion-based creativity
 transfer with diffusion models. arXiv.
-[49] Zhou, X., Zhang, B., Zhang, T., Zhang, P., Bao, J., Chen, D., Zhang, Z., and Wen, F. (2021). Cocosnet v2:
+
+49] Zhou, X., Zhang, B., Zhang, T., Zhang, P., Bao, J., Chen, D., Zhang, Z., and Wen, F. (2021). Cocosnet v2:
 Full-resolution correspondence learning for image translation. In CVPR.
+
 14
+

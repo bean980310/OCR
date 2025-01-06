@@ -1,25 +1,33 @@
-arXiv:2306.01754v1 [cs.CR] 23 May 2023
+--- Page 1 ---
+2306.01754v1 [cs.CR] 23 May 2023
+
+arXiv
+
 Transformer-based Vulnerability Detection in Code at EditTime:
 Zero-shot, Few-shot, or Fine-tuning?
+
 Aaron Chan, Anant Kharkar, Roshanak Zilouchian Moghaddam, Yevhen Mohylevskyy,
+
 Alec Helyar, Eslam Kamal, Mohamed Elkamhawy, Neel Sundaresan
-ABSTRACT
 Microsoft
 Redmond, USA
+
+ABSTRACT
+
 Software vulnerabilities bear enterprises significant costs. Despite
 extensive efforts in research and development of software vulnera-
-bility detection methods, uncaught vulnerabilities continue to put
+ility detection methods, uncaught vulnerabilities continue to put
 software owners and users at risk. Many current vulnerability de-
 tection methods require that code snippets can compile and build
-before attempting detection. This, unfortunately, introduces a long
-latency between the time a vulnerability is injected to the time it
+efore attempting detection. This, unfortunately, introduces a long
+tency between the time a vulnerability is injected to the time it
 is removed, which can substantially increases the cost of fixing a
 vulnerability. We recognize that the current advances in machine
-learning can be used to detect vulnerable code patterns on syn-
+earning can be used to detect vulnerable code patterns on syn-
 tactically incomplete code snippets as the developer is writing the
 code at EditTime. In this paper we present a practical system that
 leverages deep learning on a large-scale data set of vulnerable code
-patterns to learn complex manifestations of more than 250 vulner-
+atterns to learn complex manifestations of more than 250 vulner-
 ability types and detect vulnerable code patterns at EditTime. We
 discuss zero-shot, few-shot, and fine-tuning approaches on state of
 the art pre-trained Large Language Models (LLMs). We show that
@@ -28,18 +36,22 @@ our approach improves the state of the art by 10%. We also evaluate
 our approach to detect vulnerability in auto-generated code by
 code LLMs. Evaluation on a benchmark of high-risk code scenarios
 shows a reduction of up to 90% vulnerability reduction.
+
 KEYWORDS
+
 Transformers, Software Vulnerabilities, Vulnerability Detection
-1
-INTRODUCTION
+
+1 INTRODUCTION
+
 Despite development of many tools and best practices [3, 4, 12, 47],
 uncaught vulnerabilities persist in code[1, 2] and impact users
-and cost companies time and money [19]. In recent years, many
+and cost companies time and money[19]. In recent years, many
 approaches have been developed to detect vulnerabilities in soft-
 ware. These approaches range from traditional dynamic analysis
 [25, 28, 48], rule-based static analysis [9, 51], feature-based ma-
 chine learning solutions [33], to more recent deep learning based
 solutions [8, 30, 41, 53].
+
 Approaches that rely on dynamic analysis often suffer from low
 code coverage issues. The rule-based static analysis approaches
 typically involve manual efforts by experts to characterize and add
@@ -51,19 +63,24 @@ bility patterns automatically without expert involvement. However
 the majority of these Deep learning approaches require a complete
 source file [39], a complete function [23, 24, 41], or a complete
 code statement [11, 43] to analyze. As a result, to the best of our
+
 knowledge, the existing deep learning approaches cannot find vul-
 nerabilities at EditTime while the developer is typing and the code
 is not yet syntactically correct or complete.
-app.get('name', function(req, res, next){
+
+app.get('/:name', function(req, res, next){
+
 // Query the account based on url parameters
 connection.query('SELECT * FROM accounts WHERE
-name="req.params.name +
+name="" + req.params.name + '"',
+
 Figure 1: The best time to notify the developer about a SQL-
 Injection vulnerability is at EditTime, right after the devel-
 oper has made the mistake.
+
 The literature indicates that the cost of fixing a fault is positively
 correlated with the fault ignorance time (i.e the time when a vul-
-nerability is injected to the time it is removed) [5, 6, 20]. Therefore,
+nerability is injected to the time it is removed)[5, 6, 20]. Therefore,
 the developer should be notified about the fault in a timely manner,
 when the fault is relevant to the current programming task[22].
 For example, in the code snippet shown in Figure 1, the best time
@@ -75,6 +92,7 @@ by prior work [50]. Our work extends this line of prior work by
 leveraging new advancements in deep learning to detect a variety
 of vulnerabilities in incomplete code snippets as the developer is
 typing.
+
 To build our vulnerability detection solution, we collect more
 than 500K vulnerable code snippets from running static analyzers
 on open source repositories. We then develop six model variations
@@ -85,16 +103,20 @@ by OpenAI: code-davinci-002, text-davinci-003. Our compar-
 ative evaluation of these variations shows that fine-tuning Code-
 BERT offers the best balance between precision and recall (precision
 of 59% and recall of 63%). However, both zero-shot and few-shot
-learning on recent text-davinci-003, which is an InstructGPT[35]
+learning on recent text-davinci-0Q3, which is an InstructGPT[35]
 based language model, offer better recall (78% and 75%) and slightly
 lower precision (47% and 49%). We discuss the benefits and chal-
 lenges of each learning approach in terms of model size and perfor-
 mance.
+
 We conduct two experiments using our best performing model.
 The first experiment compares this model with existing vulnerabil-
 ity detection approaches on four established benchmark datasets.
 We show that, in comparison with existing approaches, our ap-
 proach improves recall up to 10% and precision up to 8%.
+
+
+--- Page 2 ---
 The second experiment studies the generalizability of our ap-
 proach beyond manual code edits by developers, where we investi-
 gate the effectiveness of our approach in detecting vulnerabilities
@@ -109,28 +131,36 @@ pletions generated by code LLMs included vulnerable code patterns
 of the benchmark introduced by Pearce et al. [38]. Our evaluation
 shows that using our model yields 90% reduction in vulnerability
 rate.
+
 Finally we discuss the deployment journey of our vulnerability
 detection model in a VSCode extension which has resulted in 80%
 reduction in rate of vulnerability in code edited with the extension.
+
 This paper has the following contributions:
-2
+
 (1) we present a production-quality vulnerability detection
 system which can identify vulnerabilities in incomplete
 code snippets on the order of milliseconds and therefore
 serves developers at EditTime,
+
 (2) we explore and discuss the benefits and challenges of three
 common learning approaches for pre-trained LLMs on the
 task of vulnerability detection: zero-shot, few-shot, and
 fine-tuning,
+
 (3) we expand the benchmark introduced by Pearce et al. and
 make it available to the code vulnerability detection com-
 munity as a future EditTime benchmark.
-RELATED WORK
+
+2 RELATED WORK
+
 We discuss how our work builds upon and extends prior work
 in the area of Vulnerability Detection, Deep Learning methods
 for Vulnerability Detection, and Vulnerability Detection in auto-
 generated code.
+
 2.1 Vulnerability Detection
+
 There are two modalities of analyzing source code to search for vul-
 nerabilities: dynamic analysis, in which a code snippet is executed
 and the stack trace examined for signatures of a specific vulner-
@@ -149,8 +179,9 @@ specific anti-patterns. We build upon this line of research by devel-
 oping a vulnerability detection model that leverages state of the
 art deep learning approaches and therefore is capable of learning a
 variety of vulnerability types without involving human experts.
-2
+
 2.2 Deep Learning Vulnerability Detection
+
 Since natural language and programming languages both possess
 sequential structure, model architectures with success in NLP, such
 as GRU, LSTM, and Transformer, have also shown promise in vul-
@@ -178,10 +209,12 @@ on code property graphs. Our research extends prior work on vul-
 nerability detection by developing a neural vulnerability detection
 model for seven languages: JavaScript, Python, Go, Java, C++, C#
 and Ruby that is capable of detecting vulnerabilities at EditTime.
-2.3 Vulnerability Detection in Auto-generated
+
+2.3. Vulnerability Detection in Auto-generated
 Code
+
 Transformer-based models trained on source code have achieved
-state of the art results for code generation [10, 26, 34]. These mod-
+state of the art results for code generation[10, 26, 34]. These mod-
 els have unprecedented utility as developer-assistance tools, and
 are being deployed into products [17, 45, 46]. Since these code
 LLMs have been trained on large datasets of human-written code,
@@ -205,18 +238,23 @@ Nevertheless, given the high cost associated with code vulnerabili-
 ties, reducing vulnerable code patterns generated by code LLMs is
 essential in ensuring that their prolonged usage is safe, especially
 for novice programmers. To this end, our research yields a model
+
+--- Page 3 ---
 that can operate on syntactically incomplete code, and therefore
 detect vulnerabilities in auto-generated code snippets as well as
 the developer written code snippets at EditTime.
-3
-DETECTING VULNERABILITIES AT
+
+3. DETECTING VULNERABILITIES AT
 EDITTIME
+
 To detect vulnerabilities at EditTime we develop six model variations
 using common learning approaches for pre-trained LLMs: zero-shot,
 few-shot and fine-tuning. Below, we first explain the training data
 we collected for our fine-tuning process. We then explain the model
 variants and their respective performances.
+
 3.1 Data Collection
+
 Our dataset consists of vulnerable code patterns detected in public
 GitHub repositories by the GitHub LGTM service. GitHub LGTM
 service runs CodeQL [18], a scalable static analyzer, on public
@@ -225,10 +263,44 @@ terns, including hard-coded credentials, SQL injections, and path
 injections. In this work, we select a subset of detected CodeQL is-
 sues that correspond to a set of “Common Weakness Enumeration"
 (CWE) [32] in each of seven languages: JavaScript, Python, Go, Java,
-C++, C#, and Ruby.¹ Table 1 shows the summary statistics of the
+C++, C#, and Ruby.! Table 1 shows the summary statistics of the
 curated dataset.
+
 Table 1: Summary statistics of vulnerability detection train-
 ing dataset
+
+Model Coverage | Vulnerable | Non Vulnerable
+Javascript | 70 CWEs 266,342 2,293,712
+Python 37 CWEs 149,158 1,493,972
+Go 29 CWEs 50,233 535,180
+Java 44 CWEs 33,485 431,726
+C++ 32 CWEs 7,222 215,722
+C# 54 CWEs 3,341 27,731
+Ruby 19 CWEs 137 1,957
+
+Each detected vulnerability contains the following:
+
+e Vulnerability title: the type of detected vulnerability, corre-
+sponding to a CWE category
+e Message: a detailed error message explaining the detected
+vulnerability
+e Location: file path, line, and column where the issue starts
+and ends
+
+3.2 Data Pre-Processing
+
+Given the data we collected, the goal of our data pre-processing
+step was to synthesize the following triplets: (cj, v;, 1;) where c is a
+snippet of code that the model takes in as context, v is the block of
+code that is vulnerable, and / is the label for the vulnerability type.
+Our process for synthesizing training data is as follows: we first
+collect files with identified vulnerabilities from all 8,815 repositories
+in which these issues were detected. For each file, we extract the
+Abstract Syntax Tree (AST), and search for nodes of the tree that
+
+'The source code for all CodeQL queries we ran can be found at
+https://github.com/github/codeq! under the ql/Security folders.
+
 contain complete scopes. Specifically, we look for statements (such
 as if and export statements), methods, declarations and clauses.
 For these blocks of code, if the code block contains a vulnerable
@@ -238,8 +310,8 @@ is detected, we randomly split the block at any point. This splitting
 process mimics a possible code state at EditTime. Therefore, models
 trained on this data should be able to detect a vulnerable block
 in a syntactically incorrect and incomplete code snippet. The first
-segment of the block is labeled as the "context" and the second
-segment as the "vulnerable block". Figure 2 shows an example of
+segment of the block is labeled as the “context” and the second
+segment as the “vulnerable block". Figure 2 shows an example of
 a context and vulnerable block pair. If the completion contains
 a vulnerability, the corresponding vulnerability type is assigned
 to the example as a label. This separation between context and
@@ -250,114 +322,74 @@ of the repositories, the validation set is comprised of 5% of the
 repositories and the test set is comprised of 10% of the repositories.
 We then removed any example in the training set that matches a
 test set example.
+
 Context:
-app.get('name', function(req, res, next) {
+app.get('/:name', function(req, res, next){
+
 // Query the account based on url parameters
 con
 Vulnerable Block:
 nection.query('SELECT * FROM accounts WHERE
-name="req.params.name + ".
+name="' + req.params.name + '"',
 function(err, rows, fields) {
 if (err) {
-Model
-Javascript
-Python
-Coverage Vulnerable
-Non Vulnerable
-70 CWES
-266,342
-2,293,712
 next(err);
-37 CWES
 return;
-149,158
-1,493,972
-}
-Go
-29 CWES
-50,233
-535,180
-res.send(JSON.stringify(rows));
-Java
-44 CWES
-});
-33,485
-431,726
-})
-C++
-32 CWES
-7,222
-215,722
-C#
-54 CWES
-Ruby
-19 CWES
-3,341
-137
-27,731
-1,957
-Each detected vulnerability contains the following:
-•
-•
-Vulnerability title: the type of detected vulnerability, corre-
-sponding to a CWE category
-Message: a detailed error message explaining the detected
-vulnerability
-• Location: file path, line, and column where the issue starts
-and ends
-3.2 Data Pre-Processing
-Given the data we collected, the goal of our data pre-processing
-step was to synthesize the following triplets: (Ci, vi, li) where c is a
-snippet of code that the model takes in as context, v is the block of
-code that is vulnerable, and I is the label for the vulnerability type.
-Our process for synthesizing training data is as follows: we first
-collect files with identified vulnerabilities from all 8,815 repositories
-in which these issues were detected. For each file, we extract the
-Abstract Syntax Tree (AST), and search for nodes of the tree that
-1The source code for all CodeQL queries we ran can be found at
-https://github.com/github/codeql under the ql/Security folders.
+
+3
+res. send( JSON. stringify(rows)) ;
+v3
+»
+
 Figure 2: A sample context and vulnerable block from our
 training data. In this example, the vulnerable block contains
 the SQL-Injection vulnerability.
-3.3
-Models
+
+3.3. Models
+
 In order to detect vulnerabilities at EditTime, we develop six model
 variations using three learning approaches for LLMs: zero-shot
 learning, few-shot learning, and fine-tuning. We use these learning
 approaches on three pre-trained LLMs as our base:
-⚫ code-davinci-002: full-size Codex model which is trained
+e code-davinci-002: full-size Codex model which is trained
 on source code from GitHub.
-⚫ text-davinci-003: Codex model based on InstructGPT
+e text-davinci-003: Codex model based on InstructGPT
 [36], using reinforcement learning from human feedback
-(RLHF).
-• CodeBERT: transformer pre-trained trained on bimodal
-data (code and documents) [15]. Its architecture follows
-ROBERTa-base [13], with 12 layers, 12 attention heads, and
+(RLHE).
+¢ CodeBERT: transformer pre-trained trained on bimodal
+data (code and documents)[15]. Its architecture follows
+RoBERTa-base [13], with 12 layers, 12 attention heads, and
 a hidden size of 768.
 Using three learning approaches on the above pre-trained models
 yields six models that are listed in Table 3. We explain the details
 of developing these models below.
-3
-3.3.1
-Zero-shot Learning. In zero-shot learning, we provide a pre-
+
+--- Page 4 ---
+3.3.1. Zero-shot Learning. In zero-shot learning, we provide a pre-
 trained model with a prompt that specifies our desired output. In
-our case, we prompt codedavinci-002 and text-davinci-003. In
+our case, we prompt codedavinci-002 and text-davinci-0Q3. In
 order to obtain a suitable prompt for asking each model to detect vul-
-nerabilities, we leverage the model's own definition of vulnerability
+nerabilities, we leverage the model’s own definition of vulnerability
 detection. We first prompt the model to define the vulnerability
 detection task and use this task description in the final prompt for
 the task.
+
 For code-davinci-002 we prompt the model with "# We run
-CodeQL security queries in order to " on temperature 0.8 for four
+CodeQL security queries in order to "on temperature 0.8 for four
 times and pick the top results. This yields the following prompt
 variations: "identify potential security vulnerabilities", "find potential
 security issues", "find security vulnerabilities", and "detect security
 vulnerabilities". We place these variations in a zero-shot prompt
 following the below template:
+
 <phrase>
+
 <comment> Code snippet
+
 <code snippet >
+
 <comment> Answer (Yes/No, explanation):
+
 Here < phrase > corresponds to one of the prompt phrasing varia-
 tions above, < comment > refers to a language specific comment
 indicator (e.g. "#" for Python) and < code snippet > refers to the
@@ -365,21 +397,24 @@ code snippet in question. Figure 3 shows a sample prompt follow-
 ing this template. In response to this prompt, the model outputs
 either Yes or No, followed by an explanation which can be used for
 observations and debugging purposes. We check for the presence
-of "Yes" or "No" to determine the model's decision. We refer to this
+of "Yes" or "No" to determine the model’s decision. We refer to this
 zero-shot approach as CodexZero.
+
 // identify potential security vulnerabilities
 // Code snippet
 const pg = require("pg");
-const client = new pg. Client({
-});
-host: "database.server.com",
+const client = new pg.Client({
+host: "database. server.com",
 database: "mydb",
 port: 3211,
-user: "username",
+user: “username”,
 password: "password"
+YD;
 //Answer (Yes/No, explanation):
+
 Figure 3: A sample prompt created based on our template for
 zero-shot setting
+
 Similarly, for text-davinci-003, we first prompt the model
 four times at temperature 0.8 with the question, "What would you
 accomplish by running CodeQL security queries?". We then ask the
@@ -387,13 +422,18 @@ model to rephrase its response four times. This yields the following
 unique phrases: "identify potential security vulnerabilities", "spot
 any security weaknesses", "detect any security risks", "determine any
 security issues". We then try these variations in a zero-shot prompt
+
 following a similar template:
-<phrase >
-<code snippet>
+
+<phrase>
+<code snippet >
 Answer (Yes/No):
-We check for the presence of "Yes" or "No" in the model's response to
-determine the model's decision. We refer to this zero-shot approach
+
+We check for the presence of "Yes" or "No" in the model’s response to
+
+determine the model’s decision. We refer to this zero-shot approach
 as TextZero.
+
 3.3.2 Few-shot Learning. Few-shot learning builds on zero-shot
 learning by providing example input-output pairs, in addition to
 the zero-shot prompt. For our study, we utilize the best performing
@@ -402,29 +442,33 @@ from our zero-shot learning in the same template format. We then
 prepend additional examples in the same template format before
 finally inserting the code snippet of interest and prompting the
 model for the answer.
+
 To create the examples, we prompt each model with the phrase,
 "Provide an example in <Language> of a code snippet that contains
 <Vulnerability Name> security vulnerability. Output the code only, do
 not include text:" for each of the languages and types of vulnerabili-
 ties in Table 2. We prompt with this template three times for each
 vulnerability and language pair, yielding 150 vulnerable examples.
-We then prompt the model with "Provide an example in <Language>
+We then prompt the model with "Provide an example in <Language:
 of a code snippet. Output the code only, do not include text:", to retrieve
 non vulnerable samples of code. We manually evaluate each sample
 to ensure that they were vulnerable or non vulnerable as intended.
 In total, there were 297 examples. We refer to the models resulting
 from the above few-shot learning process with code-davinci-002
 and text-davinci-003 as CodexFew and TextFew, respectively.
+
 3.3.3 Fine-tuning. For fine-tuning, we focus on pre-trained code
-LLMs only and fine-tune CodeBERT and code-davinci-002. For
+LLMs only and fine-tune CodeBERT and code-davinci-02. For
 CodeBERT, we add a linear classification head to its BERT trunk in
 order to build a multi-class classification model. The inputs to the
 model are the context and vulnerable code block, separated by a
 special [SEP] token and bounded by a beginning of sequence [BOS]
 token and end of sequence [EOS] token
-[BOS], C1, C2, ...Cn, [SEP], V1, V2, ...Um, [EOS]
-where c1, c2, ...cn denotes a sequence of n tokens of context code
-surrounding the vulnerability and U1, U2, ...Um denotes a sequence of
+
+BOS], c1, c2, «..Cn, [SEP], 01, v2, ...¥m, [EOS]
+
+where ¢}, C2, ...cn denotes a sequence of n tokens of context code
+surrounding the vulnerability and v1, v2, ...m denotes a sequence of
 m tokens of the vulnerable block of code. We distinguish between
 context and vulnerable block to enable the model to process any
 given complete or incomplete code snippet. Because our data is
@@ -435,92 +479,71 @@ while the non-vulnerable examples are rotated through so that each
 epoch contains 50% vulnerable and 50% non vulnerable examples.
 The model is trained with a standard binary cross entropy (BCE) loss.
 In the rest of this work, we refer to this model as DeepDevVuln.
+
 Our second fine-tuned model is a fine-tuned version of code-
 davinci-002 on 30,000 randomly sampled examples from our train-
 ing set. We down-size our training data due to the cost of fine-tuning
 the model on the entirety of the training set. In this case, the con-
 text and vulnerable block are concatenated together, then a special
 classification token is appended to the end of the sequence. Be-
-cause code-davinci-002 is a GPT decoder model that does not
+cause code-davinci-02 is a GPT decoder model that does not
 inherently perform classification, we use next-token prediction as
-a proxy, i.e. the output is a special token that signifies vulnerable
+a proxy, ie. the output is a special token that signifies vulnerable
 or not. The sequence is as follows:
-., Un [CLS][VULN]
-[BOS], C1, C2, ...Cn, V1, V2, ...,
+
+[BOS], c1, c2, ...Cn, 01, 02, «.. Un [CLS] [VULN]
+
 We refer to this variant as CodexVuln.
-4
+
+--- Page 5 ---
 Table 2: Summary statistics of vulnerable issues gathered
 from Github PRs
-Vulnerability
-CWE
-N
-SQL Injection
-89
-45
-Hardcoded Credentials
-798
-Code Injection
-94
-13
-Path Injection
-22
-312
-327
-5337552
-we randomly sample 150 files from repositories that CodeQL has
-scanned and has not detected an issue. We then randomly select
-chunks of non-overlapping code between 1 to 10 lines from these
-files to generate nonvulnerable examples. In total, the GitHub PR
-dataset contains 1,006 examples.
-// Find if the code snippet has any security vulnerabilities
-// Code snippet:
-type groupSourceReq struct {
-Interface uint32
-Pad_cgo_0 [256]byte
-// Answer (Yes/No, explanation): Yes, the code snippet has security
-// vulnerabilities.
-// Explanation: The code snippet has a buffer overflow vulnerability.
-// The variable "buf" is a fixed size array of 256 bytes.
-3.4
-Clear Text Logging
-Weak Cryptographic Algorithm
-Incomplete URL Substring Sanitization 20
-Model Variant Evaluation
+
+Vulnerability | CWE | N |
+SQL Injection 89 45
+Hardcoded Credentials 798 | 23
+Code Injection 94 «| «13
+Path Injection 22 7
+Clear Text Logging 312 | 5
+Weak Cryptographic Algorithm 327 | 5
+Incomplete URL Substring Sanitization | 20 2
+
+3.4 Model Variant Evaluation
+
 To better understand the effect of model architecture and training
 choices, we compare our six model variants on a dataset we collect
 from GitHub pull requests.
+
 3.4.1 Metrics. The majority of existing approaches treat vulnera-
 bility detection as a classification problem. Given a block of code,
 the model makes a binary decision on whether the code is vulner-
 able or not. Therefore, in our evaluations we also use the most
 common evaluation metrics for a classification task [40] which
 includes:
-• Precision: which indicates the correctness of predictions
+
+e Precision: which indicates the correctness of predictions
 and calculated as true positive / (true positive + false posi-
 tive)
-• Recall: which indicates the effectiveness of the prediction
+
+e Recall: which indicates the effectiveness of the prediction
 and calculated as true positive / (true positive + false nega-
 tive).
-• F1-score: which indicates balance between precision and
+
+e F1-score: which indicates balance between precision and
 recall and is defined as the geometric mean of the two.
+
 Table 3: Performance of DeepDevVuln model on Github PR
 Vulnerabilities dataset.
-3.4.2
-Model
-DeepDevVuln
-CodexVuln
-CodexZero
-TextZero
-CodexFew (8 examples)
-TextFew (6 examples)
-Precision Recall F1-Score
-58.87% 63.00% 60.87%
-69.56% 48.00% 56.80%
-11.08% 98.00% 19.90%
-46.99% 78.00% 58.65%
-23.91% 95.00% 37.70%
-49.01% 75.00% 59.29%
-Dataset. To create this dataset, we collect all pull requests
+
+Model Precision Recall F1-Score
+DeepDevVuln 58.87% 63.00% 60.87%
+CodexVuln 69.56% 48.00% 56.80%
+CodexZero 11.08% 98.00% 19.90%
+TextZero 46.99% 78.00% 58.65%
+CodexFew (8 examples) 23.91% 95.00% 37.70%
+TextFew (6 examples) 49.01% 75.00% 59.29%
+
+3.4.2 Dataset. To create this dataset, we collect all pull requests
 that contained "fix <issue>" in the pull request title for every combi-
 nation of issue from Table 2 and language (i.e. JavaScript, Python,
 Go, Java, C++, C#, Ruby). To ensure that the retrieved pull requests
@@ -529,29 +552,50 @@ requests that contain both removal and addition of code and were
 less than 100 lines in length. This yields 283 pull requests. We then
 manually examine each pull request to ensure the vulnerabilities
 are legitimate.
+
 Using this process, we gather a set of 100 vulnerable examples
 constituting the CWEs in Table 2. We added a set of 906 non vulnera-
 ble examples to this dataset. To collect the non vulnerable examples,
-5
-Figure 4: A sample of CodexZero false positive due to over-
-reach
+
+we randomly sample 150 files from repositories that CodeQL has
+scanned and has not detected an issue. We then randomly select
+chunks of non-overlapping code between 1 to 10 lines from these
+files to generate nonvulnerable examples. In total, the GitHub PR
+dataset contains 1,006 examples.
+
 // Find if the code snippet has any security vulnerabilities
 // Code snippet:
-*(md++)
-*(md++)
-*(md++)
-*(md++)
-= (unsigned char) (t>>24);
-= (unsigned char) (t>>16);
-= (unsigned char) (t>>8);
-= (unsigned char) (t);
-// Answer (Yes/No, explanation): Yes, buffer overflow.
+type groupSourceReq struct {
+Interface uint32
+Pad_cgo_0 [256]byte
+// Answer (Yes/No, explanation): Yes, the code snippet has security
+// vulnerabilities.
+// Explanation: The code snippet has a buffer overflow vulnerability
+// The variable "buf" is a fixed size array of 256 bytes.
+
+Figure 4: A sample of CodexZero false positive due to over-
+reach
+
+// Find if the code snippet has any security vulnerabilities
+/1 Code snippet:
+
+x (md++) = (unsigned char) (t>>24);
+(d+) = (unsigned char) (t>>16);
+(d+) = (unsigned char)(t>>8);
+(d+) = (unsigned char)(t);
+
+7/1 Answer (Yes/No, explanation): Yes, buffer overflow.
 // Explanation: The code snippet is vulnerable to buffer overflow.
+
 // The code snippet is trying to write 4 bytes of data into the
-// memory pointed by md.
+
+/1 memory pointed by md
+
 // However, md is a pointer to a memory location that is not allocated.
+
 Figure 5: A sample of CodexVuln false positive due to lack
 of context
+
 3.4.3 Results. Table 3 shows the performance of our model vari-
 ants on this dataset. For these six model variants, we can see that
 DeepDevVuln has the best performance with respect to F1 score.
@@ -566,18 +610,23 @@ buffer overflow in the future. Due to this tendency, it seems that
 CodexZero will raise an alert even if there is no explicit vulnera-
 bility present, which leads to a high recall score but low precision
 score.
-Another example further explains CodexZero's high false posi-
+
+Another example further explains CodexZero’s high false posi-
 tive rate. In Figure 5, we see that the model lacks context around
 the variable md, and explains that because it was never initialized,
 accessing the memory at that location could lead to a vulnerability.
+
 This explanation extends, in part, to TextZero, which has a more
-balanced precision and recall. In TextZero's case, the prompt vari-
+balanced precision and recall. In TextZero’s case, the prompt vari-
 ation used had a significant effect: for example, the first prompt
 variation "identify potential security vulnerabilities" had similar re-
 sults to CodexZero. However, using the phrase "detect any security
 risks" led to the result in Table 3. This may have encouraged the
 model to focus on the exact code snippet as-is, rather than to spec-
 ulate about possible vulnerabilities.
+
+
+--- Page 6 ---
 Comparing few-shot and zero-shot results, we see the few-shot
 evaluations surpassed their zero-shot counterparts. One explana-
 tion is that the inclusion of examples gives the model a sense of
@@ -585,6 +634,7 @@ what to expect in terms of code snippet length and area of focus. For
 instance, when the non-vulnerable examples include uninitialized
 variables and incomplete context, the model starts to ignore the
 worst-case scenarios explained above.
+
 Finding the best number of examples was a matter of gradually
 increasing the number of examples prepended to the prompt from
 1 to 9. We ran several trials and reported the best results. Among
@@ -592,29 +642,36 @@ these trials, we observed that, especially for CodexFew, there is an
 apparent correlation between larger number of examples and the
 precision and recall achieved as seen in Figure 6. It may be that the
 exact types of examples selected have a major role in steering the
-model's output. A similar trend for precision, but not recall, was
+model’s output. A similar trend for precision, but not recall, was
 observed for TextFew, Figure 7.
-4
-EXPERIMENTS
+
+4 EXPERIMENTS
+
 Below, we explain our experiments designed to answer the follow-
 ing two research questions:
-• RQ1: How effective is our vulnerability detection model
+
+e¢ RQ1: How effective is our vulnerability detection model
 compared to results from state of the art models on estab-
 lished benchmark datasets?
-• RQ2: To what extent our proposed vulnerability detection
+
+e RQ2: To what extent our proposed vulnerability detection
 model is effective in reducing the vulnerability rate of code
 LLMs?
+
 We perform two experiments to answer these questions. The first
 experiment focuses on comparing our model against the state of the
 art vulnerability detection models on common datasets. The second
 experiment gauges the effectiveness of our model in reducing the
 vulnerability rate of code LLMs.
+
 4.1 Experiment 1: Performance against Existing
 Approaches on Benchmark Datasets
+
 In this section, we present the experimental evaluation of our
 vulnerability detection model against existing state of the art ap-
 proaches on four widely used datasets. Table 4 summarizes the
 datasets used in this experiment.
+
 4.1.1 Experimental Setup. The granularity of the data, quality of
 the data, and types of issues covered in each of the datasets in
 Table 4 is different from our training and test set. Therefore, we
@@ -623,6 +680,7 @@ remove duplicate examples from each of the datasets. We then fine-
 tune DeepDevVuln as a binary classification model on each dataset
 for 10 epochs. For each dataset, we use a standard 80%/10%/10%
 train/validation/test split, consistent with the baseline models.
+
 4.1.2 Results. As shown in Table 5, our DeepDevVuln model has
 the best overall F1-Score for the majority of datasets. This means
 that our model demonstrates a good balance between precision and
@@ -631,244 +689,151 @@ our vulnerability detection model has 10 times fewer parameters
 than GPT2-Large or Codex, yet still achieves comparable precision
 and higher recall. Overall this results suggests that our approach
 allowed our model to adapt to the specific types of issues present
-6
-precision
-precision
-0.23-
-0.22-
-n_examples
-• 1
-3
-4
-6
-• 7
-0.21-
-9
-0.20
-0.19
-0.18-
-0.17-
+
 code-davinci-002 Few Shot Evaluation
-0.86
-0.88
-0.90
-0.92
-0.94
-0.96
+
+n_examples ‘
+0.23 1 ee
+3 es?
+. : 7°
+e4 Ps
+0.22 ary
+e 6 . $
+e7 ° °
+0.21 e° .
+§ ° : °
+§ 0.20
+5
+0.19
+0.18
+0.17
+0.86 0.88 0.90 0.92 0.94 0.96
+
 recall
+
 Figure 6: Trials varying examples of CodexFew
-0.48
-n_examples
-• 1
-3
-4
-• 6
-0.46-
-• 7
-9
-0.44-
-0.42-
-0.40-
+
 text-davinci-003 Few Shot Evaluation
-0.68 0.70
-0.72 0.74 0.76 0.78 0.80 0.82
+
+.
+n_examples .
+0.48 :
+. 3 .
+e4 .
+e 6 ° . .
+0.46 e7 . .
+eo? .
+§ ee .°* .
+2 0.44 °. °
+°
+& ee. .
+0.424 © ° ° .
+0.40
+
+0.68 0.70 072 074 0.76 0.78 0.80 0.82
 recall
+
 Figure 7: Trials varying examples of TextFew
+
 in these datasets and leverage its knowledge gained through pre-
 training on our vulnerability dataset to improve upon the state of
 the art results.
-4.2 Experiment 2: Model's effectiveness in
-reducing the vulnerability rate of code LLMS
+
+4.2 Experiment 2: Model’s effectiveness in
+
+reducing the vulnerability rate of code LLMs
 In our second experiment, we evaluated the effectiveness of our
 vulnerability detection model in detecting the vulnerable code com-
 pletions of four different code LLMs:
-• CodeGen-2B: a transformer decoder model trained on natu-
+
+e CodeGen-2B: a transformer decoder model trained on natu-
 ral language and code (C, C++, Go, Java, JavaScript, Python)
-⚫ code-cushman-001: smaller-size Codex model, trained on
+
+e code-cushman-0@1: smaller-size Codex model, trained on
 source code from GitHub
-• code-davinci-002: full-size Codex model, trained on source
+
+e code-davinci-0@2: full-size Codex model, trained on source
 code from GitHub
-⚫ text-davinci-003: Codex model based on InstructGPT
+
+e text-davinci-003: Codex model based on InstructGPT
 [36], using reinforcement learning from human feedback
 (RLHF)
+
+--- Page 7 ---
 Table 4: Summary of common vulnerability detection datasets.
+
 Dataset
-# Programs
-% Vuln # Duplicates
-Granularity
-VulDeePecker [30]
-61,638
-28.76%
-33,786
-Slice
-SeVC [29]
-420,627
-13.41%
-188,030
-Slice
-ReVeal [8]
-22,734
-9.85%
-351
-Function
-FFMPeg+Qemu [53] 27,318
-45.61%
-60
-Function
-Table 5: Performance of DeepDevVuln model on Vuldeep-
-ecker, SeVC, Reveal, and FFMPeg+Qemu datasets.
-VulDee-
-Description
-It was obtained by preprocessing examples from the
+
+#Programs % Vuln #Duplicates Granularity Description
+
+VulDeePecker [30] 61,638 28.76% 33,786
+
+Slice It was obtained by preprocessing examples from the
+
 National Vulnerability Database (NVD) and the Software
 Assurance Reference Dataset (SARD) and consists of
 CWE-119 (Improper Restriction of Operations within
 the Bounds of a Memory Buffer) and CWE-399 (Resource
 Management Errors).
-An improvement over the VulDeePecker dataset, cover-
+
+SeVC [29] 420,627 13.41% 188,030
+
+Slice An improvement over the VulDeePecker dataset, cover-
+
 ing 126 different types of vulnerabilities and divided into
 four categories: API Function Call, Arithmetic Expres-
 sion, Array Usage, and Pointer Usage.
+
+ReVeal [8] 22,734 9.85% 351
+
+Function
+
 It tracks past vulnerabilities from the Linux Debian Ker-
 nel and Chromium projects. The dataset reflects real bug
 reports and has a realistic data imbalance, with only 10%
 of the examples being vulnerable.
+
+FFMPeg+Qemu [53] 27,318 45.61% 60
+
+Function
+
 It consists of past vulnerabilities and their fixes from two
 open-source projects.
-We took the 29 Python scenarios developed by [38] and, fol-
-lowing the same process, we added 11 new JavaScript scenarios
-covering 10 CWEs to the benchmark. Table 6 describes the scenar-
-ios we added using the same format as in [38]. “Rank" reflects the
-CWE ranking in the MITRE list if applicable. CWE-Scn refers to
-the scenario's identifier and associated CWE. All of these scenarios
-are written in JavaScript, originate from the public GitHub CodeQL
-documentation, and were evaluated with CodeQL.
-Table 6: Javascript Scenarios covering 10 CWEs in Javascript
-Dataset
-VulDee-
-Model
-VulDeePecker
-Pecker
-Thapa et al. CodeBERT
-95.27%
-Precision Recall F1-Score
-82.00% 91.70% 86.6%
-95.15% 95.21%
-CWE 119
-Thapa et al. GPT-2 Base
-93.35%
-93.56%
-Thapa et al. GPT2-Large
-95.74%
-Codex
-DeepDevVuln
-VulDeePecker
-95.30%
-Pecker
-Thapa et al. CodeBERT
-94.25%
-CWE 399
-Thapa et al. GPT-2 Base
-92.97%
-Thapa et al. GPT2-Large
-96.79%
-Codex
-96.69%
-DeepDevVuln
-95.65%
-Thapa et al. (BERTBase)
-93.45%
-95.51%
-97.45% 93.31% 95.33%
-96.74% 95.62% 96.18%
-94.60% 86.6%
-95.29% 94.76%
-94.99% 93.96%
-96.90% 96.84%
-97.04% 96.87%
-97.41% 96.53%
-88.73% 87.95% 88.34%
-95.28%
-Rank
-CWE-Scn. Description
-SeVC
-Thapa et al. (GPT-2 Base)
-Codex
-86.88%
-82.26%
-87.47%
-DeepDevVuln
-95.56%
-88.34%
-84.34% 83.29%
-97.14%
-96.35%
-3
-CWE-89
-SQL Injection
-Chakraborty et al.
-30.91%
-60.91%
-41.25%
-Reveal
-Codex
-45.04%
-29.80%
-35.87%
-4
-CWE-20
-CodeBERT
-48.95%
-35.35%
-41.06%
-8
-CWE-22
-DeepDevVuln
-41.00%
-61.00% 49.29%
-Chakraborty et al.
-56.85%
-74.61%
-64.42%
-FFmpeg +
-Qemu
-Codex
-63.22%
-55.64%
-59.19%
-CodeBERT
-DeepDevVuln
-62.94%
-57.34%
-58.70%
-78.06% 66.11%
-60.74%
-125
-15
-CWE-798
-Incomplete Url Substring Sanitization
-Tainted Path
-Hardcoded Credentials
-25
-CWE-94
-Code Injection
-35
-CWE-601
-Client Side Url Redirection
-35
-CWE-601
-Server Side Url Redirection
-40
-CWE-312
-CWE-209
-CWE-327
-CWE-916
-Clear Text Storage of Sensitive Data
-Stack Trace Exposure
-Broken Cryptographic Algorithm
-Insufficient Password Hash
+
+Table 5: Performance of DeepDevVuln model on Vuldeep-
+ecker, SeVC, Reveal, and FFMPeg+Qemu datasets.
+
+Dataset Model Precision Recall _ F1-Score
+
+VulDee- | VulDeePecker 82.00%
+Pecker Thapa et al. CodeBERT 95.27%
+CWE 119 | Thapa et al. GPT-2 Base 93.35%
+‘Thapa et al. GPT2-Large 95.74%
+Codex 97.45%
+DeepDewVuln 96.74%
+VulDee- | VulDeePecker 95.30%
+Pecker Thapa et al. CodeBERT 94.25%
+CWE 399 | Thapa et al. GPT-2 Base 92.97%
+Thapa et al. GPT2-Large | 96.7
+
+Codex 96.65
+DeepDevVuln 95.6
+Thapa et al. (BERTBase) | 88.7
+seve Thapa et al. (GPT-2 Base) | 86.8
+Codex 82.26%
+DeepDewVuln 95.56%
+Chakraborty et al 30.91%
+ReVeal Codex 45.04%
+CodeBERT 48.95%
+DeepDewVuln 41.00%
+FFmpeg + | Chakraborty etal 56.85%
+Codex 63.22%
+Qemu CodeBERT 62.94%
+DeepDewVuln 57.34%
+
 We evaluated the extent to which our model detects the vulnera-
 ble code patterns produced by each LLM utilizing the benchmark
+
 created by Pearce et al[38]. This benchmark consists of scenarios
 to evaluate the likelihood of a code LLM generating vulnerabilities.
 These scenarios are constructed to specifically elicit a completion
@@ -881,6 +846,41 @@ CodeQL query. Completions that cannot be analyzed by CodeQL
 (due to syntactical errors) are considered invalid and excluded from
 the analysis. CodeQL marks the remaining valid completions as
 either vulnerable or clean.
+
+We took the 29 Python scenarios developed by [38] and, fol-
+lowing the same process, we added 11 new JavaScript scenarios
+covering 10 CWEs to the benchmark. Table 6 describes the scenar-
+ios we added using the same format as in [38]. “Rank" reflects the
+CWE ranking in the MITRE list if applicable. CWE-Scn refers to
+the scenario’s identifier and associated CWE. All of these scenarios
+are written in JavaScript, originate from the public GitHub CodeQL
+documentation, and were evaluated with CodeQL.
+
+Table 6: Javascript Scenarios covering 10 CWEs in Javascript
+
+Rank | CWE-Scn. | Description
+
+3 CWE-89 | SQL Injection
+
+4 CWE-20 | Incomplete Url Substring Sanitization
+CWE-22 | Tainted Path
+
+15 CWE-798 | Hardcoded Credentials
+
+25 CWE-94 | Code Injection
+
+35 CWE-601
+35 CWE-601
+40 CWE-312
+
+Client Side Url Redirection
+Server Side Url Redirection
+Clear Text Storage of Sensitive Data
+
+- CWE-209 | Stack Trace Exposure
+- CWE-327 | Broken Cryptographic Algorithm
+- CWE-916 | Insufficient Password Hash
+
 For each scenario, a model can generate a varying number of
 valid or vulnerable completions. In the context of code LLMs, a de-
 veloper may often see only a single completion for a given prompt.
@@ -891,33 +891,37 @@ narios and each model generates 5 completions per scenario. For
 each of the 10 scenarios, we run the corresponding CodeQL query
 on its 5 completions. Suppose that 9 scenarios have at least one
 syntactically valid completion. We consider the 9 scenarios with
-7
+
+--- Page 8 ---
 valid completions and examine how many of the 9 have at least
 one vulnerable completion.
+
 For each model, we generate 25 completions per scenario. We
 then run our vulnerability detection model on each completion
 and filter out the completions that our model detects as vulnerable.
 We then rerun the CodeQL queries from the benchmark on the
 remaining completions.
-4.2.1
-Results. The results of this vulnerability experiment are
+
+4.2.1 Results. The results of this vulnerability experiment are
 shown in Table 7. The first two columns corresponds to each code
 LLM acting alone, while the second two columns includes filtration
 from our vulnerability detection model. The vulnerability reduction
 rate is the percentage reduction in the vulnerability rate as a result
 of filtration.
+
 As shown in the table, filtering vulnerable outputs results in a sig-
 nificant decrease in vulnerability rate. In particular, the vulnerabil-
-ity reduction rate is highest for text-davinci-003, which follows
-InstructGPT's method of reinforcement learning from human feed-
+ity reduction rate is highest for text-davinci-03, which follows
+InstructGPT’s method of reinforcement learning from human feed-
 back (RLHF). RLHF is known to substantially improve the quality
 and naturalness of generated text. Therefore, text-davinci-003
 likely generates code that more closely resembles code written by
 real developers. Since DeepDevVuln is trained on developer-written
 code, it may be better able to detect vulnerabilities in outputs from
-text-davinci-003 than other code LLMs.
-5
-DEPLOYING IN PRODUCTION
+text-davinci-0@3 than other code LLMs.
+
+5 DEPLOYING IN PRODUCTION
+
 We deployed our model for detecting vulnerable code patterns in a
 VSCode extension with ~100K daily users. After each key stroke
 that a user writes, their incomplete code snippets are sent to our
@@ -932,13 +936,13 @@ all, CodeQL detected ~1,284 vulnerable code snippets. However,
 this number is a lower-bound for the amount of actual vulnerable
 code snippets. CodeQL queries do not successfully run and detect
 issues in all of the code snippets, because CodeQL is designed to
-run on a set of complete files in a repository. Therefore, CodeQL's
+run on a set of complete files in a repository. Therefore, CodeQL’s
 vulnerability detection rate drops significantly when executed on
 syntactically-incorrect code or incomplete code that is presented
 in a single file as opposed to the repository context. This drop im-
 pacts some scenarios more than others, depending on sensitivity
 of the query to syntax issues and the amount of context required
-by the query to detect a vulnerability. Of CodeQL's vulnerability
+by the query to detect a vulnerability. Of CodeQL’s vulnerability
 detections, over 58% were from two scenarios which have simple
 CodeQL queries requiring less context to run successfully. In com-
 parison, DeepDevVuln detections were more uniform. In fact, over
@@ -948,10 +952,11 @@ Insufficient Password Hash scenarios. This is significant because
 JavaScript is a dominant language in both client- and server-side
 web development, and these classes should be more prominent in
 this domain. Yet, CodeQL detects these scenarios at a rate of less
-than 1 in 1,000,000. CodeQL's poor coverage and inability to detect
-8
+than 1 in 1,000,000. CodeQL’s poor coverage and inability to detect
+
 vulnerabilities on this production data highlights the need for deep
 learning based detection systems in live services.
+
 For our evaluation, because CodeQL-detected issues are a lower-
 bound on the number of issues, we use them to measure recall.
 Instead of precision, we measure the positive rate (number of de-
@@ -961,25 +966,36 @@ can achieve up to 90% recall with around 1% positive rate. While
 we optimized for recall for our extension, other applications can
 find the right balance between recall and positive rate based on
 their user scenario and feedback.
-1.0
-0.8-
-0.6-
-0.4
-0.2
+
+os
+
+06
+
+Recall
+
+04
+
+02
+
 0.0
-0.0000
-0.0025 0.0050 0.0075 0.0100 0.0125 0.0150 0.0175 0.02
+
+0.0000 0.0025 0.0050 0.0075 0.0100 0.0125 00150 00175 0.02
+
 Positive rate
-Figure 8: DeepDevVuln model's performance on recall vs.
+
+Figure 8: DeepDevVuln model’s performance on recall vs.
 positive rate
-Overall, we observed that DeepDevVuln's vulnerability reduc-
+
+Overall, we observed that DeepDevVuln’s vulnerability reduc-
 tion rate (i.e. the reduction in the rate of vulnerabilities present in
-developer's code) for JavaScript was 89.64%.
-6
-LESSONS LEARNED AND ONGOING WORK
+developer’s code) for JavaScript was 89.64%.
+
+6 LESSONS LEARNED AND ONGOING WORK
+
 In the process of building and deploying our model, we learned
 a few lessons that have guided our ongoing and future work on
 vulnerability detection.
+
 First, the different learning methods we explored in this work
 come with trade-offs in model size, inference cost, predictive per-
 formance, and maintenance cost. Zero-shot and few-shot learning
@@ -994,47 +1010,26 @@ the best prediction performance, allowing us to make accurate pre-
 dictions without incurring high inference cost. However, in order
 to maintain a fine-tuned model, we must continually monitor and
 retrain the model on additional vulnerability types. Zero-shot and
-Without DeepDevVuln
+
+
+--- Page 9 ---
 Table 7: Vulnerability rate on scenario level for different baselines.
-With DeepDevVuln
-Valid
-Vulnerable
-Valid
-Vulnerable
-Vulnerability
-Approach
-Scenarios
-Scenarios
-Scenarios
-Scenarios
-Reduction Rate
-CodeGen (6B)
-7
-7 (100.00%)
-7
-2 (29.00%)
-71.00%
-code-cushman-001
-25
-25 (100.00%)
-19
-5 (26.0%)
-74.00%
-code-davinci-002
-26
-text-davinci-003
-27
-24 (92.00%)
-21 (78.00%)
-20
-7 (35.0%
-61.96%
-24
-2 (8.0%)
-89.74%
+
+Without DeepDevVuln With DeepDevVuln
+Valid Vulnerable Valid Vulnerable | Vulnerability
+
+Approach . . . . .
+
+Scenarios | Scenarios | Scenarios | Scenarios | Reduction Rate
+CodeGen (6B) 7 7 (100.00%) 7 2 (29.00%) 71.00%
+code-cushman-001 25 25 (100.00%) 19 5 (26.0%) 74.00%
+code-davinci-002 26 24 (92.00%) 20 7 (35.0% 61.96%
+text-davinci-003 27 21 (78.00%) 24 2 (8.0%) 89.74%
+
 few-shot learning, on the other hand, would only require mainte-
 nance with regard to prompts and examples, rather than any further
 training.
+
 Second, there is a trade-off between the size of a model and its
 response time. This work focuses on detecting vulnerabilities at
 EditTime, while a developer is writing code in an IDE. A large vul-
@@ -1046,7 +1041,8 @@ model and has under 100M parameters. As more powerful hardware
 is built to run large models and improve the inference time, we
 expect to be able to run large models in production settings in our
 future iterations.
-Third, in many classification problems, a model's prediction
+
+Third, in many classification problems, a model’s prediction
 threshold is used to create an appropriate balance between pre-
 cision and recall. The balance is important because an effective
 production-ready fault detector must minimize churn and false
@@ -1061,9 +1057,10 @@ metrics are positive rate (the fraction of examples that the model
 predicts as positive) and recall. Our second lesson was in balancing
 these metrics for a production-scale vulnerability detection system.
 We tuned our threshold to maintain a 1% positive rate based on
-initial user's interactions and feedback. However more long-term
+initial user’s interactions and feedback. However more long-term
 studies and monitoring of these metrics are needed to better adjust
 the balance.
+
 Finally we learned that we should periodically retrain our model
 to expand coverage as new vulnerability types are caught. When
 the common vulnerabilities are caught early on in the development
@@ -1072,12 +1069,13 @@ and this may hurt their trust on detection tools overtime. Therefore,
 to address this challenge we have implemented a retraining pipeline
 where we constantly find datasets with new vulnerabilities to feed
 the pipeline and expand the coverage.
-7
-CONCLUSION
+
+7 CONCLUSION
+
 Code vulnerabilities continue to cost software companies and users.
 Detecting vulnerabilities in code at EditTime when the code is writ-
 ten by a developer or generated by a code LLM is essential to ensure
-9
+
 the vulnerabilities are fixed at lower cost. Yet, the majority of cur-
 rent vulnerability detection tools do not detect vulnerabilities at
 EditTime. Our work closes this gap by presenting a vulnerability
@@ -1088,8 +1086,9 @@ evaluation results showed that our model improves the state of the
 art detection approaches by 10% in recall and 8% in precision. In
 addition, our model reduces the vulnerability rate of code LLMs by
 >89%.
+
 An immediate direction for future work is to expand our vul-
-nerability detection model's coverage with adding new types of
+nerability detection model’s coverage with adding new types of
 vulnerabilities to our training set. Another direction is to measure
 the long-term effect of our vulnerability detection model on the
 overall experience of developers who are using our VSCode exten-
@@ -1097,30 +1096,40 @@ sion. For example, measures can include the vulnerability reduction
 rate, whether the file under development resulted in a unit test
 failure, or whether a vulnerability was caught in the file after the
 EditTime (e.g. build time).
+
 REFERENCES
-[1] 2022. CWE List Version 4.9. https://cwe.mitre.org/data/index.html
-[2] 2023. NATIONAL VULNERABILITY DATABASE. https://nvd.nist.gov/
-[3] 2023. Secure Development. https://www.sei.cmu.edu/our-work/secure-
+
+1] 2022. CWE List Version 4.9. https://cwe.mitre.org/data/index.html
+
+2] 2023. NATIONAL VULNERABILITY DATABASE. https://nvd.nist.gov/
+
+3] 2023. Secure Development. _https://www.sei.cmu.edu/our-work/secure-
 development/index.cfm
-[4] Shanai Ardi, David Byers, Per Hakon Meland, Inger Anne Tondel, and Nahid
+
+4] Shanai Ardi, David Byers, Per Hakon Meland, Inger Anne Tondel, and Nahid
 Shahmehri. 2007. How can the developer benefit from security modeling?. In The
-Second International Conference on Availability, Reliability and Security (ARES’07).
+Second International Conference on Availability, Reliability and Security (ARES'07).
 IEEE, 1017-1025.
-[5] Boehm Barry et al. 1981. Software engineering economics. New York 197 (1981).
-[6] Walter Baziuk. 1995. BNR/NORTEL: path to improve product quality, reliability
+
+5] Boehm Barry et al. 1981. Software engineering economics. New York 197 (1981).
+6] Walter Baziuk. 1995. BNR/NORTEL: path to improve product quality, reliability
 and customer satisfaction. In Proceedings of Sixth International Symposium on
-Software Reliability Engineering. ISSRE’95. IEEE, 256–262.
-[7] Al Bessey, Ken Block, Ben Chelf, Andy Chou, Bryan Fulton, Seth Hallem, Charles
+Software Reliability Engineering. ISSRE’95. IEEE, 256-262.
+
+7] Al Bessey, Ken Block, Ben Chelf, Andy Chou, Bryan Fulton, Seth Hallem, Charles
 Henri-Gros, Asya Kamsky, Scott McPeak, and Dawson Engler. 2010. A few billion
 lines of code later: using static analysis to find bugs in the real world. Commun.
 ACM 53, 2 (2010), 66-75.
-[8] Saikat Chakraborty, Rahul Krishna, Yangruibo Ding, and Baishakhi Ray. 2021.
+
+8] Saikat Chakraborty, Rahul Krishna, Yangruibo Ding, and Baishakhi Ray. 2021.
 Deep learning based vulnerability detection: Are we there yet. IEEE Transactions
 on Software Engineering (2021).
-[9] Mahinthan Chandramohan, Yinxing Xue, Zhengzi Xu, Yang Liu, Chia Yuan
+
+9] Mahinthan Chandramohan, Yinxing Xue, Zhengzi Xu, Yang Liu, Chia Yuan
 Cho, and Hee Beng Kuan Tan. 2016. Bingo: Cross-architecture cross-os binary
 search. In Proceedings of the 2016 24th ACM SIGSOFT International Symposium
 on Foundations of Software Engineering. 678-689.
+
 [10] Mark Chen, Jerry Tworek, Heewoo Jun, Qiming Yuan, Henrique Ponde
 de Oliveira Pinto, Jared Kaplan, Harri Edwards, Yuri Burda, Nicholas Joseph, Greg
 Brockman, Alex Ray, Raul Puri, Gretchen Krueger, Michael Petrov, Heidy Khlaaf,
@@ -1132,158 +1141,263 @@ Nichol, Alex Paino, Nikolas Tezak, Jie Tang, Igor Babuschkin, Suchir Balaji, Sha
 tanu Jain, William Saunders, Christopher Hesse, Andrew N. Carr, Jan Leike, Josh
 Achiam, Vedant Misra, Evan Morikawa, Alec Radford, Matthew Knight, Miles
 Brundage, Mira Murati, Katie Mayer, Peter Welinder, Bob McGrew, Dario Amodei,
+
+
+--- Page 10 ---
+20.
+
+21
+
+22,
+
+23,
+
+24
+
+25,
+
+26
+
+27
+
+28
+
+29
+
+30.
+
+31
+
+32,
+
+33,
+
 Sam McCandlish, Ilya Sutskever, and Wojciech Zaremba. 2021. Evaluating Large
 Language Models Trained on Code. https://doi.org/10.48550/ARXIV.2107.03374
-[11] Min-je Choi, Sehun Jeong, Hakjoo Oh, and Jaegul Choo. 2017. End-to-end
+Min-je Choi, Sehun Jeong, Hakjoo Oh, and Jaegul Choo. 2017. End-to-end
 prediction of buffer overruns from raw source code via neural memory networks.
-arXiv preprint arXiv:1703.02458 (2017).
-[12] Microsoft Corp. 2023. Microsoft Security Development Lifecycle. https://www.
+arXiv preprint arXiv:1703,02458 (2017).
+
+Microsoft Corp. 2023. Microsoft Security Development Lifecycle. hhttps://www.
 microsoft.com/en-us/securityengineering/sdl/
-[13] Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. BERT:
+
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina Toutanova. 2019. BERT:
 Pre-training of Deep Bidirectional Transformers for Language Understanding.
 In Proceedings of the 2019 Conference of the North American Chapter of the Associ-
 ation for Computational Linguistics: Human Language Technologies, NAACL-HLT
 2019, Minneapolis, MN, USA, June 2-7, 2019, Volume 1 (Long and Short Papers), Jill
 Burstein, Christy Doran, and Thamar Solorio (Eds.). Association for Computa-
-tional Linguistics, 4171-4186. https://doi.org/10.18653/v1/n19-1423
-[14] Zhiyu Fan, Xiang Gao, Abhik Roychoudhury, and Shin Hwei Tan. 2022. Improv-
+tional Linguistics, 4171-4186. https://doi.org/10.18653/v1/m19- 1423
+
+Zhiyu Fan, Xiang Gao, Abhik Roychoudhury, and Shin Hwei Tan. 2022. Improv-
 ing automatically generated code from Codex via Automated Program Repair.
 https://doi.org/10.48550/ARXIV.2205.10583
-[15] Zhangyin Feng, Daya Guo, Duyu Tang, Nan Duan, Xiaocheng Feng, Ming Gong,
+
+Zhangyin Feng, Daya Guo, Duyu Tang, Nan Duan, Xiaocheng Feng, Ming Gong,
 Linjun Shou, Bing Qin, Ting Liu, Daxin Jiang, and Ming Zhou. 2020. CodeBERT:
 A Pre-Trained Model for Programming and Natural Languages. https://doi.org/
 10.48550/ARXIV.2002.08155
-[16] Michael Fu and Chakkrit Tantithamthavorn. 2022. LineVul: A Transformer-based
+
+Michael Fu and Chakkrit Tantithamthavorn. 2022. LineVul: A Transformer-based
 Line-Level Vulnerability Prediction.
-[17] GitHub. 2022. GitHub Copilot. Your AI pair programmer. https://copilot.github.
+
+GitHub. 2022. GitHub Copilot- Your AI pair programmer. https://copilot.github.
 com/
-[18] Github Inc. 2021. CodeQL for research. https:securitylab.github.com/tools/
+
+Github Inc. 2021. CodeQL for research. _https:securitylab.github.com/tools/
 codeql
-[19] Dan Goodin. 2017. An NSA-derived ransomware worm is shutting down com-
+
+Dan Goodin. 2017. An NSA-derived ransomware worm is shutting down com-
 puters worldwide. https://arstechnica.com/information-technology/2017/05/an-
-nsa-derived-ransomware-worm-is-shutting-down-computer-world
-[20] W Humphrey. 1995. A Discipline of Software Engineering Addison-Wesley.
+nsa-derived-ransomware-worm-is-shutting- down-computer-world
+
+W Humphrey. 1995. A Discipline of Software Engineering Addison-Wesley.
 Reading, Pa (1995).
-[21] James Kukucka, Luís Pina, Paul Ammann, and Jonathan Bell. 2022. CONFETTI:
+
+James Kukucka, Luis Pina, Paul Ammann, and Jonathan Bell. 2022. CONFETTI:
 Amplifying Concolic Guidance for Fuzzers. In 2022 IEEE/ACM 44th International
 Conference on Software Engineering (ICSE). 438-450. https://doi.org/10.1145/
 3510003.3510628
-གླུ་ཐ་གླུ
-[22] Lucas Layman, Laurie Williams, and Robert St Amant. 2007. Toward reducing
+
+Lucas Layman, Laurie Williams, and Robert St Amant. 2007. Toward reducing
 fault fix time: Understanding developer behavior for the design of automated
 fault detection tools. In First International Symposium on Empirical Software
 Engineering and Measurement (ESEM 2007). IEEE, 176-185.
-[23] Tue Le, Tuan Nguyen, Trung Le, Dinh Phung, Paul Montague, Olivier De Vel, and
+
+Tue Le, Tuan Nguyen, Trung Le, Dinh Phung, Paul Montague, Olivier De Vel, and
 Lizhen Qu. 2019. Maximal divergence sequential autoencoder for binary software
 vulnerability detection. In International Conference on Learning Representations.
-[24] Young Jun Lee, Sang-Hoon Choi, Chulwoo Kim, Seung-Ho Lim, and Ki-Woong
+Young Jun Lee, Sang-Hoon Choi, Chulwoo Kim, Seung-Ho Lim, and Ki-Woong
 Park. 2017. Learning binary code with deep learning to detect software weakness.
 In KSII the 9th international conference on internet (ICONI) 2017 symposium.
-[25] Yuekang Li, Bihuan Chen, Mahinthan Chandramohan, Shang-Wei Lin, Yang Liu,
+Yuekang Li, Bihuan Chen, Mahinthan Chandramohan, Shang-Wei Lin, Yang Liu,
 and Alwen Tiu. 2017. Steelix: program-state based binary fuzzing. In Proceedings
-of the 2017 11th Joint Meeting on Foundations of Software Engineering. 627–637.
-[26] Yujia Li, David Choi, Junyoung Chung, Nate Kushman, Julian Schrittwieser,
+of the 2017 11th Joint Meeting on Foundations of Software Engineering. 627-637.
+Yujia Li, David Choi, Junyoung Chung, Nate Kushman, Julian Schrittwieser,
 Rémi Leblond, Tom Eccles, James Keeling, Felix Gimeno, Agustin Dal Lago,
 et al. 2022. Competition-level code generation with alphacode. arXiv preprint
-arXiv:2203.07814 (2022).
-[27] Yi Li, Shaohua Wang, and Tien N. Nguyen. 2021. Vulnerability Detection with
+arXiv:2203,07814 (2022).
+
+Yi Li, Shaohua Wang, and Tien N. Nguyen. 2021. Vulnerability Detection with
 Fine-Grained Interpretations. In Proceedings of the 29th ACM Joint Meeting on
 European Software Engineering Conference and Symposium on the Foundations of
 Software Engineering (Athens, Greece) (ESEC/FSE 2021). Association for Comput-
 ing Machinery, New York, NY, USA, 292-303. https://doi.org/10.1145/3468264.
 3468597
-[28] Yuekang Li, Yinxing Xue, Hongxu Chen, Xiuheng Wu, Cen Zhang, Xiaofei Xie,
+
+Yuekang Li, Yinxing Xue, Hongxu Chen, Xiuheng Wu, Cen Zhang, Xiaofei Xie,
 Haijun Wang, and Yang Liu. 2019. Cerebro: context-aware adaptive fuzzing
 for effective vulnerability detection. In Proceedings of the 2019 27th ACM Joint
 Meeting on European Software Engineering Conference and Symposium on the
 Foundations of Software Engineering. 533-544.
-[29] Zhen Li, Deqing Zou, Shouhuai Xu, Hai Jin, Yawei Zhu, and Zhaoxuan Chen. 2021.
+
+Zhen Li, Deqing Zou, Shouhuai Xu, Hai Jin, Yawei Zhu, and Zhaoxuan Chen. 2021.
 Sysevr: A framework for using deep learning to detect software vulnerabilities.
 IEEE Transactions on Dependable and Secure Computing 19, 4 (2021), 2244-2258.
-[30] Zhen Li, Deqing Zou, Shouhuai Xu, Xinyu Ou, Hai Jin, Sujuan Wang, Zhijun
+Zhen Li, Deqing Zou, Shouhuai Xu, Xinyu Ou, Hai Jin, Sujuan Wang, Zhijun
 Deng, and Yuyi Zhong. 2018. Vuldeepecker: A deep learning-based system for
 vulnerability detection. arXiv preprint arXiv:1801.01681 (2018).
-[31] Ruijie Meng, Zhen Dong, Jialin Li, Ivan Beschastnikh, and Abhik Roychoudhury.
+
+Ruijie Meng, Zhen Dong, Jialin Li, Ivan Beschastnikh, and Abhik Roychoudhury.
 2021. Linear-time Temporal Logic guided Greybox Fuzzing. https://doi.org/10.
 48550/ARXIV.2109.02312
-[32] T. M. C. (MITRE). 2022. CWE - Common Weakness Enumeration.
-//cwe.mitre.org
-https:
-[33] Stephan Neuhaus, Thomas Zimmermann, Christian Holler, and Andreas Zeller.
+
+T. M. C. (MITRE). 2022. CWE - Common Weakness Enumeration.
+//ewe.mitre.org
+
+Stephan Neuhaus, Thomas Zimmermann, Christian Holler, and Andreas Zeller.
 2007. Predicting vulnerable software components. In Proceedings of the 14th
 ACM conference on Computer and communications security. 529-540.
-[34] Erik Nijkamp, Bo Pang, Hiroaki Hayashi, Lifu Tu, Huan Wang, Yingbo Zhou, Sil-
+
+https:
+
+34
+
+35,
+
+36.
+
+37
+
+38,
+
+39)
+
+40
+
+41
+
+42
+
+43,
+
+44
+
+45,
+
+46
+
+48
+
+49
+
+50.
+
+51
+
+52)
+
+53)
+
+Erik Nijkamp, Bo Pang, Hiroaki Hayashi, Lifu Tu, Huan Wang, Yingbo Zhou, Sil-
 vio Savarese, and Caiming Xiong. 2022. A conversational paradigm for program
-synthesis. arXiv preprint arXiv:2203.13474 (2022).
-[35] Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L Wainwright, Pamela
+synthesis. arXiv preprint arXiv:2203, 13474 (2022).
+
+Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L Wainwright, Pamela
 Mishkin, Chong Zhang, Sandhini Agarwal, Katarina Slama, Alex Ray, et al. 2022.
 Training language models to follow instructions with human feedback. arXiv
 preprint arXiv:2203.02155 (2022).
-[36] Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L. Wainwright, Pamela
+
+Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Carroll L. Wainwright, Pamela
 Mishkin, Chong Zhang, Sandhini Agarwal, Katarina Slama, Alex Ray, John
 Schulman, Jacob Hilton, Fraser Kelton, Luke Miller, Maddie Simens, Amanda
 Askell, Peter Welinder, Paul Christiano, Jan Leike, and Ryan Lowe. 2022. Training
 language models to follow instructions with human feedback. https://doi.org/
 10.48550/ARXIV.2203.02155
-[37] OWASP. 2021. "Source Code Analysis Tools.".
-community/Source CodeAnalysis Tools
-https://owasp.org/www-
-[38] Hammond Pearce, Baleegh Ahmad, Benjamin Tan, Brendan Dolan-Gavitt, and
-Ramesh Karri. 2021. An Empirical Cybersecurity Evaluation of GitHub Copilot's
+
+OWASP. 2021. “Source Code Analysis Tools.”.
+community/SourceCodeAnalysisTools
+Hammond Pearce, Baleegh Ahmad, Benjamin Tan, Brendan Dolan-Gavitt, and
+Ramesh Karri. 2021. An Empirical Cybersecurity Evaluation of GitHub Copilot’s
 Code Contributions. CoRR abs/2108.09293 (2021). arXiv:2108.09293 https:
 //arxiv.org/abs/2108.09293
-[39] Hao Peng, Lili Mou, Ge Li, Yuxuan Liu, Lu Zhang, and Zhi Jin. 2015. Building
+
+Hao Peng, Lili Mou, Ge Li, Yuxuan Liu, Lu Zhang, and Zhi Jin. 2015. Building
 program vector representations for deep learning. In Knowledge Science, Engi-
 neering and Management: 8th International Conference, KSEM 2015, Chongqing,
-China, October 28-30, 2015, Proceedings 8. Springer, 547–553.
-[40] David MW Powers. 2020. Evaluation: from precision, recall and F-measure to
+China, October 28-30, 2015, Proceedings 8. Springer, 547-553.
+
+David MW Powers. 2020. Evaluation: from precision, recall and F-measure to
 ROC, informedness, markedness and correlation. arXiv preprint arXiv:2010.16061
 (2020).
-[41] Rebecca Russell, Louis Kim, Lei Hamilton, Tomo Lazovich, Jacob Harer, Onur
-Ozdemir, Paul Ellingwood, and Marc McConley. 2018. Automated vulnerability
+
+Rebecca Russell, Louis Kim, Lei Hamilton, Tomo Lazovich, Jacob Harer, Onur
+Ozdemir, Paul Ellingwood, and Mare McConley. 2018. Automated vulnerability
 detection in source code using deep representation learning. In 2018 17th IEEE
 international conference on machine learning and applications (ICMLA). IEEE,
 757-762.
-[42] Gustavo Sandoval, Hammond Pearce, Teo Nys, Ramesh Karri, Brendan Dolan-
+
+Gustavo Sandoval, Hammond Pearce, Teo Nys, Ramesh Karri, Brendan Dolan-
 Gavitt, and Siddharth Garg. 2022. Security Implications of Large Language Model
 Code Assistants: A User Study. arXiv preprint arXiv:2208.09727 (2022).
-[43] Carson D Sestili, William S Snavely, and Nathan M VanHoudnos. 2018. Towards
+
+Carson D Sestili, William S Snavely, and Nathan M VanHoudnos. 2018. Towards
 security defect prediction with AI. arXiv preprint arXiv:1808.09897 (2018).
-[44] Mohammed Latif Siddiq, Shafayat H Majumder, Maisha R Mim, Sourov Jajodia,
+Mohammed Latif Siddiq, Shafayat H Majumder, Maisha R Mim, Sourov Jajodia,
 and Joanna CS Santos. 2022. An Empirical Study of Code Smells in Transformer-
 based Code Generation Techniques. Limassol, Cyprus, Oct (2022).
-[45] Alexey Svyatkovskiy, Shao Kun Deng, Shengyu Fu, and Neel Sundaresan. 2020.
+
+Alexey Svyatkovskiy, Shao Kun Deng, Shengyu Fu, and Neel Sundaresan. 2020.
 Intellicode compose: Code generation using transformer. In Proceedings of the
 28th ACM Joint Meeting on European Software Engineering Conference and Sym-
 posium on the Foundations of Software Engineering. 1433-1443.
-[46] TabNine. 2023. "AI assistant for software developers". https://www.tabnine.com/
-[47] Blair Taylor and Shiva Azadegan. 2008. Moving beyond security tracks: integrat-
+
+TabNine. 2023. "AI assistant for software developers". https://www.tabnine.com/
+Blair Taylor and Shiva Azadegan. 2008. Moving beyond security tracks: integrat-
 ing security in cs0 and cs1. In Proceedings of the 39th SIGCSE technical symposium
 on Computer science education. 320-324.
-[48] Junjie Wang, Bihuan Chen, Lei Wei, and Yang Liu. 2019. Superion: Grammar-
+
+Junjie Wang, Bihuan Chen, Lei Wei, and Yang Liu. 2019. Superion: Grammar-
 aware greybox fuzzing. In 2019 IEEE/ACM 41st International Conference on Soft-
 ware Engineering (ICSE). IEEE, 724-735.
-[49] Tongshuai Wu, Liwei Chen, Gewangzi Du, Chenguang Zhu, and Gang Shi.
+
+Tongshuai Wu, Liwei Chen, Gewangzi Du, Chenguang Zhu, and Gang Shi.
 2021. Self-Attention based Automated Vulnerability Detection with Effec-
 tive Data Representation. In 2021 IEEE Intl Conf on Parallel & Distributed Pro-
 cessing with Applications, Big Data & Cloud Computing, Sustainable Comput-
 ing & Communications, Social Computing & Networking (ISPA/BDCloud/Social-
-Com/SustainCom). 892-899. https://doi.org/10.1109/ISPA-BDCloud-SocialCom-
+Com/SustainCom). 892-899. https://doi.org/10.1109/ISPA- BDCloud-SocialCom-
 SustainCom52081.2021.00126
-[50] Jing Xie, Bill Chu, Heather Richter Lipford, and John T. Melton. 2011. ASIDE:
+
+Jing Xie, Bill Chu, Heather Richter Lipford, and John T. Melton. 2011. ASIDE:
 IDE Support for Web Application Security. In Proceedings of the 27th Annual
-Computer Security Applications Conference (Orlando, Florida, USA) (ACSAC '11).
-Association for Computing Machinery, New York, NY, USA, 267–276. https:
+Computer Security Applications Conference (Orlando, Florida, USA) (ACSAC "11).
+Association for Computing Machinery, New York, NY, USA, 267-276. https:
 //doi.org/10.1145/2076732.2076770
-[51] Zhengzi Xu, Bihuan Chen, Mahinthan Chandramohan, Yang Liu, and Fu Song.
+
+Zhengzi Xu, Bihuan Chen, Mahinthan Chandramohan, Yang Liu, and Fu Song.
 2017. Spain: security patch analysis for binaries towards understanding the pain
 and pills. In 2017 IEEE/ACM 39th International Conference on Software Engineering
 (ICSE). IEEE, 462-472.
-[52] Kunpeng Zhang, Xi Xiao, Xiaogang Zhu, Ruoxi Sun, Minhui Xue, and Sheng Wen.
+
+Kunpeng Zhang, Xi Xiao, Xiaogang Zhu, Ruoxi Sun, Minhui Xue, and Sheng Wen.
 2022. Path Transitions Tell More:Optimizing Fuzzing Schedules via Runtime
 Program States. https://doi.org/10.48550/ARXIV.2201.04441
-[53] Yaqin Zhou, Shangqing Liu, Jingkai Siow, Xiaoning Du, and Yang Liu. 2019.
+
+Yaqin Zhou, Shangqing Liu, Jingkai Siow, Xiaoning Du, and Yang Liu. 2019.
 Devign: Effective vulnerability identification by learning comprehensive program
 semantics via graph neural networks. Advances in neural information processing
 systems 32 (2019).
-10
+
+https://owasp.org/www-
+

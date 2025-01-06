@@ -1,8 +1,18 @@
-arXiv:2309.08586v2 [cs.CV] 17 Oct 2023
+--- Page 1 ---
+2309.08586v2 [cs.CV] 17 Oct 2023
+
+arXiv
+
 Replacing softmax with ReLU in Vision Transformers
-Mitchell Wortsman Jaehoon Lee Justin Gilmer Simon Kornblith
+
+Mitchell Wortsman Jaehoon Lee
+
+Justin Gilmer Simon Kornblith
+
 Google DeepMind
+
 Abstract
+
 Previous research observed accuracy degradation
 when replacing the attention softmax with a point-
 wise activation such as ReLU. In the context of vision
@@ -12,6 +22,17 @@ ments training small to large vision transformers on
 ImageNet-21k indicate that ReLU-attention can ap-
 proach or match the performance of softmax-attention
 in terms of scaling behavior as a function of compute.
+
+1 Introduction
+
+The transformer architecture [26] is ubiquitous in mod-
+ern machine learning. Attention, a central component
+of the transformer [2], includes a softmax which pro-
+duces a probability distribution over tokens. Softmax
+is costly due to an exponent calculation and a sum
+over sequence length which makes parallelization chal-
+lenging [24, 7].
+
 In this report we explore point-wise alternatives to the
 softmax operation which do not necessarily output a
 probability distribution. As a highlight, we observe
@@ -23,18 +44,9 @@ opportunities for parallelization, as ReLU-attention
 can be parallelized over the sequence length dimen-
 sion with fewer gather operations than traditional
 attention.
-1
-Introduction
-The transformer architecture [26] is ubiquitous in mod-
-ern machine learning. Attention, a central component
-of the transformer [2], includes a softmax which pro-
-duces a probability distribution over tokens. Softmax
-is costly due to an exponent calculation and a sum
-sequence length which makes parallelization chal-
-lenging [24, 7].
-over
-2
-Related work
+
+2 Related work
+
 Previous research has explored substituting softmax
 with ReLU [25, 14] or squared ReLU [15]. However,
 these approaches do not divide by sequence length,
@@ -42,361 +54,319 @@ which we experimentally find is important to reach
 accuracy comparable to softmax. In addition, previous
 research [21] has replaced softmax while still requiring
 normalization over the sequence length axis to ensure
-0.82
-softmax
-relu/seqlen
-0.80
-S/32
-S/16
-0.78
-.
-B/32
-×
-B/16
-L/16
-0.76
-ImageNet-1k accuracy (%)
-0.74
-0.72
-0.70
-0.68
-0.84
-0.82
-0.80
-0.78
-Avg. 10-shot linear transfer on 8 datasets
-0.76
-0.74
-0.72
-102
+
+Fs)
+0.82 7 — softmax a
+— relu/seqien g
+yoo] © s/32 8 0.82
+cs m sf6 bea
+a © BB2 §
+eo” B/l6 5° 8°
+3 ° 3
+° W16
+0-76 5 0.78
+~ 5
+30.74 5
+2 0.76
+o £
+20.72 3
+£ G 0.74
+0.70 bo
+$ 90.72
+0.68 <
+
+°
+ra
+&
+
+10?
 TPU core hours
-10²
+
+10?
 TPU core hours
+
 Figure 1: Replacing softmax with relu/seqlen approaches or matches the scaling performance of traditional attention
 for vision transformers [10] with qk-layernorm [8]. This figure displays results for small to large vision transformers
 trained on ImageNet-21k [9] for 30 epochs. We report ImageNet-1k accuracy for ImageNet-21k models by taking the
 top class among those that are in ImageNet-1k, without fine-tuning. Attention with ReLU can be parallelized over
 the sequence length dimension with less gather operations than softmax attention.
-1
-ImageNet-1k accuracy (%)
-ImageNet-1k accuracy (%)
+
+
+--- Page 2 ---
+Training dataset i21k. Model S/32. Training dataset i21k. Model S/16. Training dataset i21k. Model S/8.
+
 0.800
-0.775
-0.750-
-0.725
-0.700
-0.675
-0.650
-0.0
-Training dataset i21k. Model S/32.
-0.5
-1.0
-1.5
+
 0.800
-Training dataset i21k. Model S/16.
-ImageNet-1k accuracy (%)
-0.775
-0.750
-0.725
-0.700
+
+0.800
+
 0.675
-0.650
-2.0
-0.0
+
+ImageNet-1k accuracy (%)
+
+§
+
+x
+
+Pa
+ImageNet-1k accuracy (%)
+
+g
+
+Ry
+
+&
+ImageNet-1k accuracy (%)
+
+g
+
+Ry
+
+&
+
+0.650 0.650
+
+00 05 10 15 20
+Exponent a for scaling inverse seqlen
+
+0.0 05 10 15 2.0
+Exponent a for scaling inverse seqlen
+
+00 os 10 15 210
 Exponent a for scaling inverse seqlen
 Training dataset ilk. Model S/32.
+
+Training dataset ilk. Model S/16. Training dataset ilk. Model S/8.
+
 0.800
-0.775-
-0.750
-0.725
-0.700-
-0.675
-0.650
-0.0
-0.5
-1.0
-1.5
-0.5
-1.0
-1.5
-0.800
-0.775
-Training dataset i21k. Model S/8.
+
 ImageNet-1k accuracy (%)
-0.750
-0.725
-0.700
-0.675
-0.650
-2.0
-0.0
-Exponent a for scaling inverse seqlen
-Training dataset ilk. Model S/16.
-0.5
-1.0
-1.5
-2.0
-Exponent a for scaling inverse seqlen
-Training dataset ilk. Model S/8.
 ImageNet-1k accuracy (%)
-0.800
-0.775
-0.750
-0.725
-0.700
-0.675-
-€ 0.650
 ImageNet-1k accuracy (%)
-0.800
-0.775
-0.750
-0.725
-0.700
-0.675
-0.650
-2.0
-0.0
-0.5
-1.0
-1.5
-2.0
-0.0
-squared relu
+
+00 oS 10 15 20
 Exponent a for scaling inverse seqlen
-gelu
-softplus
-identity
-0.5
-1.0
-1.5
-2.0
+
+0.0 05 10 15 2.0
 Exponent a for scaling inverse seqlen
-softmax
-relu
+
+00 os 10 15 210
 Exponent a for scaling inverse seqlen
-relu6
-sigmoid
-Figure 2: Replacing softmax with L¯ah where h = {relu, relu², gelu, softplus, identity, relu6, sigmoid} and L is sequence
-length. We typically observe the best results when a is close to 1. There is no clear best non-linearity at a ≈ 1, so we
+
+- softmax —e relu —‘— squared relu —+- gelu —*— softplus —® identity —*-— relué —* sigmoid
+
+Figure 2: Replacing softmax with L~“h where h € {relu, relu’, gelu, softplus, identity, relu6, sigmoid} and L is sequence
+length. We typically observe the best results when a is close to 1. There is no clear best non-linearity at a % 1, so we
+
 use ReLU in our main experiment for its speed.
-the attention weights sum to one. This retains the
+
+he attention weights sum to one. This retains the
 downside of requiring a gather. After writing an initial
 version of this note, it was brought to our attention
-that the variant of ReLU-atttention we study was also
+hat the variant of ReLU-atttention we study was also
 explored with a theoretical motivation [3, 12].
+
 Moreover, there is extensive literature which removes
 activation functions altogether so that attention is
-linear [16, 22, 18], which is useful for long sequence
-lengths. In our experiments, removing the activation
+inear [16, 22, 18], which is useful for long sequence
+engths.! In our experiments, removing the activation
 entirely reduced accuracy.
-1
+
 3 Method
+
 Attention. Attention transforms d-dimensional
-queries, keys, and values {qi, ki, vi}/11 with a two
-step procedure. First, attention weights a¿j are pro-
+queries, keys, and values {qi,ki,v;}#_, with a two
+step procedure. First, attention weights a,; are pro-
 duced via
-αij
-=>
+
 1
-[q₁k1,
-KL
-(
-Di
-(1)
-1 Concretely, with linear attention, the order of matrix multi-
-plies can be switched from (gk)v to q(kv) which changes the
-compute required from O(dL²) to O(d² L) where q, k, v € RL xd
+aiy=o (= [aha kx] ;
+j
+
+1Concretely, with linear attention, the order of matrix multi-
+plies can be switched from (qk )u to q(k' v) which changes the
+compute required from O(dL?) to O(d?L) where q,k,v € REX¢
 are the queries, keys, and values and L is sequence length.
-where is typically softmax. Next, the attention
-weights are used to compute outputs o; = -1 αijvj.
-This report explores point-wise alternatives to .
-ReLU-attention. We observe that = L-¹ relu is a
-promising alternative to softmax in Equation 1.
-We refer to attention with o = Lrelu as ReLU-
+
+(1)
+
+where @ is typically softmax. Next, the attention
+. L
+
+weights are used to compute outputs 0; = )>¥_, aijv;.
+
+This report explores point-wise alternatives to ¢.
+
+ReLU-attention. We observe that ¢ = L~!relu is a
+promising alternative to ¢ = softmax in Equation 1.
+We refer to attention with ¢ = L~'relu as ReLU-
 attention.
-=
+
 Scaled point-wise attention. More generally, our
-experiments will explore > = L¯ªh for a € [0,1] and
-h = {relu, relu², gelu, softplus, identity, relu6, sigmoid}
-[6, 13].
+experiments will explore ¢ = L~“h for a € [0,1] and
+h € {relu, relu”, gelu, softplus, identity, relu6, sigmoid}
+6, 13}.
+
 Sequence length scaling. We observe that scaling
-by a term involving sequence length L is beneficial for
+yy a term involving sequence length L is beneficial for
 high accuracy. This scaling is absent from prior work
 which removes softmax [15, 18]. While the central
 justification for sequence length scaling is empirical,
 we provide brief analytical motivation.
+
 Transformers are currently designed with softmax at-
-tention for which Σ=1αij 1. This implies that
-Ej[αij] = L-¹. While it is unlikely that this is a
-necessary condition, = L-1 relu does ensure that
-Ej[αij] is O(L-¹) at initialization. Preserving this
+ention for which ya ay = This implies that
+E,;[a;j] = L~1. While it is unlikely that this is a
+ry condition, @ = L~'relu does ensure that
+E,[a;j] is O(L~') at initialization. Preserving this
 condition may alleviate the need to change other hy-
-=
-2
-ImageNet-1k accuracy (%)
-0.76
-0.74
-0.72
-0.70
-0.68
-0.66
-0.64
-0.0
-Training dataset i21k. Model S/32.
-0.5
-1.0
-1.5
-Exponent a for scaling inverse seqlen
-relu
-0.76
-Training dataset i21k. Model S/16.
-0.74
-0.72
-ImageNet-1k accuracy (%)
-0.70
-0.68
-0.66
-0.76
-0.74-
-Training dataset i21k. Model S/8.
-0.72-
-ImageNet-1k accuracy (%)
-0.70
-0.68
-0.66
-0.64
-0.64
-2.0
-0.0
-0.5
-1.0
-1.5
-2.0
-0.0
-0.5
-1.0
-1.5
-2.0
-squared relu
-Exponent a for scaling inverse seqlen
-relu without qk-layernorm
-Exponent a for scaling inverse seqlen
--squared relu without qk-layernorm
-Figure 3: The effect of removing qk-layernorm [8] on attention with ReLU and squared ReLU scaled by L-a where
-L is sequence length. Results are shown for the S/32, S/16, and S/8 vision transformer models [10, 4] trained on
+
+
+--- Page 3 ---
+Training dataset i21k. Model $/32. Training dataset i21k. Model S/16. Training dataset i21k. Model S/8.
+
+°
+u
+a
+
+g yo76 30.76
+70.74 70.74 F074
+£ £ £
+
+5 5 5
+S072 S072 S072
+8 8 8
+
+070 070 0.70
+
+we we we
+
+2 2 2
+
+Z 0.68 Z 0.68 Z 0.68
+
+a a a
+
+8 8 8
+
+£0.66 £0.66 £ 0.66
+0.64 1 0.64 0.64
+
+0.0 05 1.0 us 2:0 0.0 OS 1.0 15 2:0 0.0 05 1.0 15 2.0
+
+Exponent a for scaling inverse seqlen Exponent a for scaling inverse seqlen Exponent a for scaling inverse seqlen
+
+—* relu —*— squared relu -- relu without qk-layernorm -e- squared relu without qk-layernorm
+
+Figure 3: The effect of removing qk-layernorm [8] on attention with ReLU and squared ReLU scaled by L~* where
+
+L is sequence length. Results are shown for the $/32, S/16, and S/8 vision transformer models [10, 4] trained on
 ImageNet-21k.
-Training dataset i21k. Model S/32.
-Training dataset i21k. Model S/16.
-0.76
-0.74
-0.72
-ImageNet-1k accuracy (%)
-0.70
-0.68
-0.66
-0.64
-0.0
-0.5
-1.0
-1.5
-Exponent a for scaling inverse seqlen
-relu
-0.76
-0.74
-0.72-
-ImageNet-1k accuracy (%)
-0.70
-0.68
-0.66
+
+Training dataset i21k. Model $/32. Training dataset i21k. Model S/16.
+
 Training dataset i21k. Model S/8.
-0.76
-0.74-
-0.72
-0.70-
-0.68-
-ImageNet-1k accuracy (%)
-0.66
-0.64
-0.64
-2.0
-0.0
-0.5
-1.0
-1.5
-2.0
-0.0
-0.5
-1.0
-1.5
-2.0
-squared relu
-Exponent a for scaling inverse seqlen
-relu with gating
-Exponent a for scaling inverse seqlen
-squared relu with gating
-Figure 4: The effect of using a gated attention unit [15] on attention with ReLU and squared ReLU scaled by L-
-where L is sequence length. Results are shown for the S/32, S/16, and S/8 vision transformer models [10, 4] trained
+ek
+yore yore Sore, °
+= = = ©
+70.74 70.74 B0.74
+g g g
+S S S
+30.72 30.72 9 0.72
+5 5 5
+40.70 40.70 40.70
+2 2 2
+2 2 2
+S 0.68 S 0.68 S 0.68
+D D D
+o o o
+£0.66 £0.66 £0.66
+0.64 0.64 0.64
+0.0 0.5 10 v5 210 0.0 05 10 15 210 0.0 OSs 10 15 2:0
+Exponent a for scaling inverse seqlen Exponent a for scaling inverse seqlen Exponent a for scaling inverse seqlen
+—e relu —*— squared relu ~e- relu with gating “a squared relu with gating
+Figure 4: The effect of using a gate
+
+attention unit [15] on attention with ReLU and squared ReLU scaled by L~“
+
+where L is sequence length. Results are shown for the $/32, 8/16, and S/8 vision transformer models [10, 4] trained
 on ImageNet-21k.
-perparameters when replacing softmax.
-√d
-At initialization the elements of q and k are O(1)
-and so (k) will also be O(1). Activation functions
-such as ReLU preserve O(1), 2 and so a factor L-1 is
-necessary for Ej[αij] to be O(L-¹).
-4 Experiments
-ImageNet-21k we train for 30 epochs, and in our ex-
-As a result, both training runs use a roughly similar
+
+perparameters when replacing softmax. ImageNet-21k we train for 30 epochs, and in our ex-
+
 periments on ImageNet-1k we train for 300 epochs.
+As a result, both training runs use a roughly similar
 number of steps of around 9e5. We use ViTs with
 qk-layernorm [8] as this was previously observed to be
 necessary to prevent instability when scaling model
 size. However, we ablate that this is not an important
 component at the scales we test. We use i21k and ilk
 to mean ImageNet-21k and ImageNet-1k, respectively,
+
+At initialization the elements of q and k are O(1)
+and so (are) will also be O(1). Activation functions
+such as ReLU preserve O(1),? and so a factor L~! is
+necessary for Ej[a;;] to be O(L~').
+
+4 Experiments
+
+Experimental setup. Our experiments use
+
+ImageNet-21k and ImageNet-1k [9] training config-
+
+urations from the BigVision codebase [4] without
+
+modifying hyperparameters.® In our experiments on
+?With the exception of squared ReLU.
+
+’For ImageNetlk we use the base config https:
+//github.com/google-research/big_vision/blob/main/
+
 and report ImageNet-1k accuracy for ImageNet-21k
 models by taking the top class among those that are
 in ImageNet-1k, without fine-tuning. When evalu-
 ating transfer performance on downstream tasks we
-big_vision/configs/vit_ilk.py. For ImageNet21k we use
-3For ImageNet1k we use the base config https: the base config https://github.com/google-research/big_
-//github.com/google-research/big_vision/blob/main/
-Experimental setup. Our experiments use
-ImageNet-21k and ImageNet-1k [9] training config-
-urations from the BigVision codebase [4] without
-modifying hyperparameters.³ In our experiments on
-2 With the exception of squared ReLU.
-vision/blob/main/big_vision/configs/vit_i21k.py.
-3
-use a 10-shot linear probe averaged over three seeds. we do not explore.
+
+big_vision/configs/vit_i1k.py. For ImageNet21k we use
+the base config https: //github.com/google-research/big_
+vision/blob/main/big_vision/configs/vit_i21k. py.
+
+--- Page 4 ---
+use a 10-shot linear probe averaged over three seeds.
 The downstream tasks are Caltech Birds [27], Caltech-
-101 [11], Stanford Cars [19], CIFAR-100 [20], DTD [5], Acknowledgements
+101 [11], Stanford Cars [19], CIFAR-100 [20], DTD [5],
 ColHsit [17], Pets [23], and UC Merced [28].
-Main experiment. Figure 1 illustrates that ReLU-
+
+Main experiment. Figure | illustrates that ReLU-
 attention matches the scaling trends for softmax at-
 tention for ImageNet-21k training. On the x-axis
 we display the total core hours required for the ex-
 periment. As an advantage, ReLU-attention enables
 parallelization over the sequence length dimension
 with fewer gather operations than softmax attention.
+
 Effect of sequence length scaling. Figure 2 ex-
 amines the effect of sequence length scaling for var-
 ious point-wise alternatives to softmax. Concretely,
-we replace softmax with L-ah for a € [0,1] and
-h = {relu, relu², gelu, softplus, identity}. On the x-axis
+we replace softmax with L~°h for a € [0,1] and
+h € {relu, relu”, gelu, softplus, identity}. On the z-axis
 we display a. The y-axis displays accuracy for the
-S/32, S/16, and S/8 vision transformer models [10, 4].
+$/32, 8/16, and $/8 vision transformer models [10, 4].
 The best results are typically achieved when a is close
 to 1. Since there is not clear best non-linearity, we
 use ReLU in our main experiment as it is faster.
+
 Effect of qk-layernorm. Our main experiments use
 qk-layernorm [8] in which queries and keys are passed
-through Layer Norm [1] before computing attention
+through LayerNorm [1] before computing attention
 weights. We use qk-layernorm by default as it was
 found to be necessary to prevent instability when
 scaling up model size [8]. Figure 3 shows the effect
 of removing qk-layernorm. The results indicate that
 qk-layernorm does not have a large effect for these
 models, but this may change at scale.
+
 Effect of adding a gate. Previous work removing
 softmax adds a gated unit and does not scale by se-
 quence length [15]. Concretely, in the gated attention
@@ -409,14 +379,21 @@ best accuracy is still achieved with sequence length
 scaling, with or without the gate. Note that gating
 increases the core hours required for the experiment
 by roughly 9.3% for the S/8 model with ReLU.
-5
-Conclusion
+
+5 Conclusion
+
 This report leaves many open questions. In particular,
-we are unsure why the factor L-1 improves perfor-
+we are unsure why the factor L~! improves perfor-
 mance or if this term could be learned. Moreover, it
 is likely that there is a better activation function that
+
+we do not explore.
+
+Acknowledgements
+
 We thank Lucas Beyer, Mostafa Dehghani, and David
 Fleet for their helpful comments and suggestions.
+
 We thank the members of the Google DeepMind PAGI
 team for their support of this effort, Jascha Sohl-
 dickstein, Noah Fiedel, Aaron Parisi, Abhishek Ku-
@@ -429,141 +406,207 @@ nealy, Kelvin Xu, Kevin Swersky, Kshiteej Mahajan,
 Laura Culp, Lechao Xiao, Max Bileschi, Merrie Mor-
 ris, Roman Novak, Rosanne Liu, Sharad Vikram, Tris
 Warkentin, Yundi Qian.
+
 References
-[1] Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E
+
+1] Jimmy Lei Ba, Jamie Ryan Kiros, and Geoffrey E
 Hinton. Layer normalization. arXiv preprint
 arXiv:1607.06450, 2016.
-[2] Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua
+
+2) Dzmitry Bahdanau, Kyunghyun Cho, and Yoshua
 Bengio. Neural machine translation by jointly
 learning to align and translate. arXiv preprint
 arXiv:1409.0473, 2014.
-[3] Yu Bai, Fan Chen, Huan Wang, Caiming Xiong, and
+
+3] Yu Bai, Fan Chen, Huan Wang, Caiming Xiong, and
 Song Mei. Transformers as statisticians: Provable in-
 context learning with in-context algorithm selection.
-arXiv preprint arXiv:2306.04637, 2023.
-[4] Lucas Beyer, Xiaohua Zhai, and Alexander
+arXiv preprint arXiv:2306.046387, 2023.
+
+4] Lucas Beyer, Xiaohua Zhai, and Alexander
 Kolesnikov. Better plain vit baselines for imagenet-
 1k. arXiv preprint arXiv:2205.01580, 2022. URL
-https://arxiv.org/abs/2205.01580.
-[5] Mircea Cimpoi, Subhransu Maji, Iasonas Kokkinos,
+https: //arxiv.org/abs/2205.01580.
+
+a
+
+Mircea Cimpoi, Subhransu Maji, Iasonas Kokkinos,
 Sammy Mohamed, and Andrea Vedaldi. Describing
 textures in the wild. In Conference on Computer
 Vision and Pattern Recognition (CVPR), 2014. https:
 //arxiv.org/abs/1311.3618.
+
 [6] George E Dahl, Tara N Sainath, and Geoffrey E
 Hinton. Improving deep neural networks for lvcsr
 using rectified linear units and dropout. In 2013
 IEEE international conference on acoustics, speech
 and signal processing, pages 8609-8613. IEEE, 2013.
-[7] Tri Dao, Dan Fu, Stefano Ermon, Atri Rudra, and
+
+(7| Tri Dao, Dan Fu, Stefano Ermon, Atri Rudra, and
 Christopher Ré. Flashattention: Fast and memory-
 efficient exact attention with io-awareness. Advances
-4
-in Neural Information Processing Systems, 35:16344–
+
+--- Page 5 ---
+[8]
+
+[9]
+
+[10]
+
+[11]
+
+12
+
+13)
+
+14)
+
+16
+
+in Neural Information Processing Systems, 35:16344—
 16359, 2022.
-[8] Mostafa Dehghani, Josip Djolonga, Basil Mustafa,
+
+Mostafa Dehghani, Josip Djolonga, Basil Mustafa,
 Piotr Padlewski, Jonathan Heek, Justin Gilmer,
 Andreas Steiner, Mathilde Caron, Robert Geirhos,
 Ibrahim Alabdulmohsin, et al. Scaling vision trans-
 formers to 22 billion parameters. arXiv preprint
 arXiv:2302.05442, 2023.
-[17]
-Machine Learning, volume 119 of Proceedings of Ma-
-chine Learning Research, pages 5156-5165. PMLR, 13-
-18 Jul 2020. URL https://proceedings.mlr.press/
-v119/katharopoulos 20a.html.
-Jakob Nikolas Kather, Frank Gerrit Zöllner,
-Francesco Bianconi, Susanne M Melchers, Lothar R
-Schad, Timo Gaiser, Alexander Marx, and Cleo-Aron
-Weis. Collection of textures in colorectal cancer his-
-tology. Zenodo https://doi. org/10, 5281, 2016.
-[9] Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li, [18] Soroush Abbasi Koohpayegani and Hamed Pirsiavash.
+
+Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li,
 and Li Fei-Fei. Imagenet: A large-scale hierarchical
 image database. In Conference on Computer Vision
 and Pattern Recognition, 2009. https://ieeexplore.
-ieee.org/document/5206848.
-[10] Alexey Dosovitskiy, Lucas Beyer, Alexander
+ieee. org/document/5206848.
+
+Alexey Dosovitskiy, Lucas Beyer, Alexander
 Kolesnikov, Dirk Weissenborn, Xiaohua Zhai,
 Thomas Unterthiner, Mostafa Dehghani, Matthias
 Minderer, Georg Heigold, Sylvain Gelly, Jakob Uszko-
 reit, and Neil Houlsby. An image is worth 16x16
 words: Transformers for image recognition at scale.
-In International Conference on Learning Representa-
-tions (ICLR), 2021. https://arxiv.org/abs/2010.
+n International Conference on Learning Representa-
+tions (ICLR), 2021. https: //arxiv.org/abs/2010.
 11929.
-[11] Li Fei-Fei, Rob Fergus, and Pietro Perona. Learning
+
+Li Fei-Fei, Rob Fergus, and Pietro Perona. Learning
 generative visual models from few training exam-
 ples: An incremental bayesian approach tested on 101
 object categories. In 2004 conference on computer vi-
-sion and pattern recognition workshop, pages 178–178.
-IEEE, 2004.
-[12] Hengyu Fu, Tianyu Guo, Yu Bai, and Song Mei.
+sion and pattern recognition workshop, pages 178-178.
+EEE, 2004.
+
+Hengyu Fu, Tianyu Guo, Yu Bai, and Song Mei.
 What can a single attention layer learn? a study
 through the random features lens. arXiv preprint
 arXiv:2307.11353, 2023.
-[13] Dan Hendrycks and Kevin Gimpel. Gaussian error
+
+Dan Hendrycks and Kevin Gimpel. Gaussian error
 linear units (gelus). arXiv preprint arXiv:1606.08415,
 2016.
-[14] Jiri Hron, Yasaman Bahri, Jascha Sohl-Dickstein, and
+
+Jiri Hron, Yasaman Bahri, Jascha Sohl-Dickstein, and
 Roman Novak. Infinite attention: Nngp and ntk for
 deep attention networks. In International Conference
+on Machine Learning, pages 4376-4386. PMLR, 2020.
+
+Weizhe Hua, Zihang Dai, Hanxiao Liu, and Quoc Le.
+Transformer quality in linear time. In International
+Conference on Machine Learning, pages 9099-9117.
+PMLR, 2022.
+
+Angelos Katharopoulos, Apoorv Vyas, Nikolaos Pap-
+pas, and Francois Fleuret. Transformers are RNNs:
+Fast autoregressive transformers with linear atten-
+tion. In Hal Daumé III and Aarti Singh, editors,
+Proceedings of the 37th International Conference on
+
+[17]
+
+[18]
+
+[19]
+
+[20]
+
+[21]
+
+22
+
+23
+
+24
+
+26
+
+[27]
+
+Machine Learning, volume 119 of Proceedings of Ma-
+chine Learning Research, pages 5156-5165. PMLR, 13—
+18 Jul 2020. URL https: //proceedings .mlr.press/
+vi19/katharopoulos20a. html.
+
+Jakob Nikolas Kather, Frank Gerrit Zollner,
+Francesco Bianconi, Susanne M Melchers, Lothar R
+Schad, Timo Gaiser, Alexander Marx, and Cleo-Aron
+Weis. Collection of textures in colorectal cancer his-
+tology. Zenodo https://doi. org/10, 5281, 2016.
+
+Soroush Abbasi Koohpayegani and Hamed Pirsiavash.
 Sima: Simple softmax-free attention for vision trans-
 formers. arXiv preprint arXiv:2206.08898, 2022.
-[19] Jonathan Krause, Michael Stark, Jia Deng, and Li Fei-
+
+Jonathan Krause, Michael Stark, Jia Deng, and Li Fei-
 Fei. 3d object representations for fine-grained cat-
 egorization. In International Conference on Com-
 puter Vision (ICCV) Workshops, 2013. https://
 ieeexplore.ieee.org/document/6755945.
-Learn-
-[20] Alex Krizhevsky, Geoffrey Hinton, et al.
+
+Alex Krizhevsky, Geoffrey Hinton, et al. Learn-
 ing multiple layers of features from tiny im-
 ages, 2009. https://www.cs.toronto.edu/~kriz/
-[21]
-[22]
-[23]
-learning-features-2009-TR.pdf.
+learning-features-2009-TR. pdf.
+
 Zhiyuan Li, Srinadh Bhojanapalli, Manzil Zaheer,
 Sashank Reddi, and Sanjiv Kumar. Robust training
 of neural networks using scale invariant architectures.
 In International Conference on Machine Learning,
 pages 12656-12684. PMLR, 2022.
+
 Jiachen Lu, Jinghan Yao, Junge Zhang, Xiatian Zhu,
 Hang Xu, Weiguo Gao, Chunjing Xu, Tao Xiang,
 and Li Zhang. Soft: Softmax-free transformer with
 linear complexity. Advances in Neural Information
 Processing Systems, 34:21297-21309, 2021.
+
 Omkar M Parkhi, Andrea Vedaldi, Andrew Zisserman,
 and CV Jawahar. Cats and dogs. In 2012 IEEE
 conference on computer vision and pattern recognition,
 pages 3498-3505. IEEE, 2012.
-[24] Markus N Rabe and Charles Staats. Self-attention
-does not need o(n²) memory. arXiv preprint
+
+Markus N Rabe and Charles Staats. Self-attention
+does not need o(n?) memory. arXiv preprint
 arXiv:2112.05682, 2021.
-on Machine Learning, pages 4376–4386. PMLR, 2020. [25] Kai Shen, Junliang Guo, Xu Tan, Siliang Tang, Rui
-[15] Weizhe Hua, Zihang Dai, Hanxiao Liu, and Quoc Le.
-Transformer quality in linear time. In International
-Conference on Machine Learning, pages 9099-9117.
-PMLR, 2022.
-[16] Angelos Katharopoulos, Apoorv Vyas, Nikolaos Pap-
-pas, and François Fleuret. Transformers are RNNs:
-Fast autoregressive transformers with linear atten-
-tion. In Hal Daumé III and Aarti Singh, editors,
-Proceedings of the 37th International Conference on
-[26]
+
+Kai Shen, Junliang Guo, Xu Tan, Siliang Tang, Rui
 Wang, and Jiang Bian. A study on relu and softmax in
 transformer. arXiv preprint arXiv:2302.06461, 2023.
+
 Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob
-Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz
+Uszkoreit, Llion Jones, Aidan N Gomez, Lukasz
 Kaiser, and Illia Polosukhin. Attention is all you
 need. Advances in neural information processing sys-
 tems, 30, 2017.
-[27] Peter Welinder, Steve Branson, Takeshi Mita, Cather-
+
+Peter Welinder, Steve Branson, Takeshi Mita, Cather-
 ine Wah, Florian Schroff, Serge Belongie, and Pietro
 Perona. Caltech-ucsd birds 200. 2010.
-5
+
+
+--- Page 6 ---
 [28] Yi Yang and Shawn Newsam. Bag-of-visual-words
 and spatial extensions for land-use classification. In
 Proceedings of the 18th SIGSPATIAL international
 conference on advances in geographic information sys-
 tems, pages 270-279, 2010.
-6
+

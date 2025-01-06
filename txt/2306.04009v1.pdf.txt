@@ -1,16 +1,15 @@
+--- Page 1 ---
 arXiv:2306.04009v1 [cs.CL] 6 Jun 2023
+
 Triggering Multi-Hop Reasoning for Question Answering
 in Language Models using Soft Prompts and Random Walks
-Kanishka Misra⭑
+
+Kanishka Misra*
 Purdue University
-kmisra@purdue.edu
-Cicero Nogueira dos Santos
-Google Research
-cicerons@google.com
-Siamak Shakeri
-Google DeepMind
-siamaks@google.com
+kmisra@purdue. edu
+
 Abstract
+
 Despite readily memorizing world knowledge
 about entities, pre-trained language models
 (LMs) struggle to compose together two or
@@ -23,15 +22,17 @@ soft prompts to guide LMs to chain together
 their encoded knowledge by learning to map
 multi-hop questions to random walk paths that
 lead to the answer. Applying our methods on
-two T5 LMs shows substantial improvements
+two TS LMs shows substantial improvements
 over standard tuning approaches in answering
 questions that require 2-hop reasoning.
+
 1 Introduction
+
 Performing multi-hop reasoning to answer ques-
-tions such as Where was David Beckham's daugh-
+tions such as Where was David Beckham’s daugh-
 ter born? requires two fundamental capacities: C1:
 possessing pre-requisite knowledge (David Beck-
-ham's daughter is Harper Beckham, Harper Beck-
+ham’s daughter is Harper Beckham, Harper Beck-
 ham was born in Los Angeles), and C2: ability to
 compose internalized knowledge. Contemporary
 pre-trained language models (LMs) such as BERT
@@ -49,7 +50,17 @@ and therefore do not satisfy C2. To overcome this
 limitation, previous works have proposed methods
 that decompose multi-hop questions into single hop
 sub-questions that models can more easily answer
-★Work done during an internship at Google Research.
+
+* Work done during an internship at Google Research.
+
+Cicero Nogueira dos Santos
+Google Research
+cicerons@google.com
+
+Siamak Shakeri
+Google DeepMind
+siamaks@google.com
+
 (Min et al., 2019; Perez et al., 2020, i.a.). How-
 ever, such methods require training entirely sep-
 arate models, or make use of human-annotations
@@ -58,20 +69,21 @@ tasks where models explicitly receive additional
 text containing relevant facts, which makes it un-
 clear if they can truly compose the knowledge that
 they have internalized.
+
 In this work, we aim to improve the standalone,
 self-contained ability of LMs to perform multi-hop
-reasoning. We posit that random walks-paths be-
+reasoning. We posit that random walks—paths be-
 tween entity nodes sampled from structured knowl-
-edge graphs can provide a useful training signal
+edge graphs—can provide a useful training signal
 for LMs to compose entity knowledge. To test this,
-we perform a case-study on two T5 models (LARGE
+we perform a case-study on two TS models (LARGE
 and XXL, Raffel et al., 2020). Specifically, we first
 integrate within the LMs the single-hop knowledge
 that is required to answer multi-hop questions (ef-
 fectively guaranteeing C1 is met). We show that
 this alone is not enough to demonstrate substantial
 improvements on questions requiring 2-hop reason-
-ing. We then adapt the knowledge integrated T5
+ing. We then adapt the knowledge integrated TS
 models by training soft prompts (Qin and Eisner,
 2021; Lester et al., 2021) on random walks over
 the structured knowledge that they have encoded,
@@ -81,111 +93,132 @@ first method, Parse-then-Hop (PATH), uses two
 specialized soft prompts: one to parse entities and
 relations from the question, and another to gener-
 ate a path to the answer, resembling the outputs
-of a random walk. The second method, MIXHOP,
+of a random walk. The second method, MIxHop,
 trains a single prompt on a mixture that combines
 the QA task with the random walk training, so as
-to allow the model to implicitly learn PATH's task.
+to allow the model to implicitly learn PATH’s task.
 Both these soft prompt methods use the same un-
 derlying LM (kept frozen), and guide it to compose
 its internalized entity knowledge.
+
 Our experiments suggest that integrating random
-walks in the T5 models using our proposed tech-
+walks in the TS models using our proposed tech-
 niques can substantially improve their ability to
+
+--- Page 2 ---
 Question: Where was the director of Violet Tendencies born?
+
 Relevant
 Knowledge
-Method 1: Parse-then-Hop (PATH)
-Violet Tendencies ;
-director; place of HP
-birth
+
 (Violet Tendencies, director, Casper Andreas),
 (Casper Andreas, place of birth, Sweden)
-PP Question KNIT5
+
 Knowledge Integration
-KNIT5
-Violet Tendencies ;
-director; Casper
-Andreas; place of
-birth; Sweden
-tuned
-David Beckham ; daughter
-Random Walk Training
-T5
+
+@ tuned
+
+ae frozen
+
 Harper
 Beckham
-frozen
-Method 2: MIXHOP
-HP
-David Beckham ;
-daughter place
-David Beckham ;
-daughter Harper
-✈ Question
+
+Davis Beckhan ; daughter
+
+Random Walk Training 1 O
+HP) @® daughter place KNIT5 Beckham ; place of
+of bir birth ; Los Angeles
+
+Method 1: Parse-then-Hop (PaTH)
+
+Pe] ® Question KNIT5
+Ne
 KNIT5
-of birth
-Beckham place of
-birth Los Angeles
-MP
-KNIT5
+Method 2: MixHop p
+
 Violet Tendencies ;
+director; place of
+birth
+
+‘m
+
+Violet Tendencies ;
+
+director ; Casper
+
+Andreas ; place of
+birth ; Sweden
+
+® Question —,
+A @ Violet Tendencies ;  _—w LOEUS |
+
 director; place of birth
+
 Figure 1: Overview of our approach. Colored rectangular boxes indicate soft prompts: Hopping Prompts (HP),
-Parsing Prompts (PP), and Prompts for the MIXHOP approach (MP). ④ indicates concatenation.
+Parsing Prompts (PP), and Prompts for the MIxHop approach (MP). @ indicates concatenation.
+
 answer entity-centric 2-hop questions (Ho et al.,
 2020) at larger model sizes. Briefly, on T5-XXL
 our methods show improvements over previously
 proposed prompt-tuning approaches (Lester et al.,
 2021; Vu et al., 2022) as well as full model fine-
-tuning, with PATH and MIXHOP demonstrating
+tuning, with PATH and MixHop demonstrating
 gains of ~16 and ~9.6 points in exact match scores
 over fine-tuning the entire model, respectively. In
 the case of T5-LARGE, our methods demonstrate
 improvements over standard prompt-tuning meth-
 ods, but fall short of the performance achieved
-using fine-tuning, suggesting that larger models-
+using fine-tuning, suggesting that larger models—
 with up to 11B parameters—are more conducive to
 leveraging the training signal provided by random
 walks via soft prompts.
+
 2 Method
+
 2.1 Models
+
 We apply our methods on two T5.1.1 models (Raf-
-fel et al., 2020)-T5-Large (770M parameters)
+fel et al., 2020)—T5-LARGE (770M parameters)
 and T5-XXL (11B parameters), using checkpoints
 that have been adapted using the Prefix LM objec-
-tive for 100K steps (Lester et al., 2021).
-2.2
-Knowledge Integration
+tive for LOOK steps (Lester et al., 2021).
+
+2.2 Knowledge Integration
+
 We first ensure that the LMs we use have the pre-
 requisite single-hop knowledge (C1) required to an-
 swer multi-hop questions. This is necessary, as pre-
 liminary experiments suggested that the T5 models
 we used did not satisfy this primary criterion for
 multi-hop reasoning (see Table 1). Specifically, we
-follow Bosselut et al. (2019) and fine-tune our LMS
+follow Bosselut et al. (2019) and fine-tune our LMs
 on knowledge graph (KG) triples containing the
 relevant knowledge that is to be composed to an-
-swer questions. That is, given a triple (e1, r, e2),
-where e1 and e2 are entities, and r is the relation,
+swer questions. That is, given a triple (€1,7, €2),
+where e, and e2 are entities, and r is the relation,
 we fine-tune our T5 models to take as input the
-string "el; r1", and produce "e2” as output, us-
+string “el ; r1”, and produce “‘e2” as output, us-
 ing the Prefix LM objective (Raffel et al., 2020).
 To avoid catastrophic forgetting (McCloskey and
-Cohen, 1989) and retain the LMs' language un-
+
+Cohen, 1989) and retain the LMs’ language un-
 derstanding abilities, we mix our knowledge inte-
-gration training instances with that of the models'
-pre-training corpus-i.e., C4 (Raffel et al., 2020)—
+gration training instances with that of the models’
+pre-training corpus—i.e., C4 (Raffel et al., 2020)—
 in a 50:50 mixture. We denote the resulting models
-as Knowledge-Integrated T5 (KNIT5).
+as KNowledge-Integrated T5 (KNITS).
+
 2.3 Composing knowledge using soft prompts
+
 Random Walk training Our method is centered
-around guiding the KNIT5 LMs to chain together
+around guiding the KNITS LMs to chain together
 their encoded knowledge by training them on ran-
 dom walks over a relevant KG. We formulate ran-
 dom walks here as as a sequence of entity-relation-
 entity triples that are connected linearly via shared
-entities. Figure 1 shows an example with a ran-
+entities. Figure | shows an example with a ran-
 dom walk of length 3 (Violet Tendencies ;
-director; Casper Andreas; place of birth
+director ; Casper Andreas ; place of birth
 ; Sweden). To perform our random walk training,
 we rely on soft prompts (Li and Liang, 2021; Lester
 et al., 2021; Qin and Eisner, 2021), a sequence of
@@ -198,33 +231,38 @@ procedure is as follows: we first perform uniform
 random walks of length n over the KG used in sec-
 tion 2.2, resulting in a set whose elements are se-
 quences of entities interleaved by the relations that
-connect them: (e1, r1, e2, ..., rn-1, en). During
+connect them: (€1, 11, €2,---,1n—1;€n). During
 training, KNIT5 receives as input an incomplete
 path, with only the initial entity and the intermedi-
-ate relations (e1, 11, 12, . . ., rn-1), and is tasked to
-generate the full path: (e1, r1, e2, r2 . . ., rn−1, en).
+ate relations (€,71,72,---,n—1), and is tasked to
+generate the full path: (e1, 71, €2,72---,Tn—1;n)-
 We denote the trained prompts that trigger this abil-
-ity in KNIT5 as Hopping Prompts.
+ity in KNITS as Hopping Prompts.
+
 2.4 Performing QA using Hopping Prompts
+
 We propose two new techniques that utilize Hop-
 ping Prompts to map natural language questions to
+
+--- Page 3 ---
 appropriate paths in the knowledge graph:
+
 Parse-then-Hop (PATH) We take advantage of
 the modularity of soft prompts, and distribute the re-
 sponsibility of parsing the relational structure from
 questions and random walk querying using sepa-
 rate specialized prompts, keeping the underlying
-model the same. We train "parsing” prompts that
+model the same. We train “parsing” prompts that
 parse questions to incomplete random walk queries,
 resembling the inputs to the Hopping Prompts de-
-scribed above. For instance, the question "Where
-was David Beckham's daughter born?" is parsed
-to "David Beckham ; daughter ; place of
-birth". We then swap the parsing prompts with
+scribed above. For instance, the question “Where
+was David Beckham’s daughter born?” is parsed
+to “David Beckham ; daughter ; place of
+birth”. We then swap the parsing prompts with
 the hopping prompts, using the outputs from the
 parsing step as inputs and then run inference to get
 a path from the entity in the question to the answer:
-"David Beckham ; daughter; Harper Beckham
+“David Beckham ; daughter ; Harper Beckham
 ; place of birth ; Los Angeles”, as shown
 in Figure 1. We posit that parsing of the appropri-
 ate relational structure from the question should
@@ -232,7 +270,8 @@ be easy and self-contained, since it only involves
 using the surface form of the question as opposed
 to invoking any external knowledge, which is dele-
 gated to Hopping Prompts.
-MIXHOP We propose to jointly train a single
+
+MIXxHOP We propose to jointly train a single
 set of prompts on a mixture of the QA task and
 the Hopping Prompts task (50:50), thereby halving
 the number of forward passes from the previous
@@ -240,29 +279,34 @@ method. Our primary motivation here is to pro-
 vide diverse training signals that get models to map
 questions to the structured knowledge that explic-
 itly connects the entity in the question to the answer
-entity. Like PATH, MIXHOP directly produces ran-
+entity. Like PATH, MrxHop directly produces ran-
 dom walk paths as output, as shown in Figure 1.
+
 3 Experimental Setup
+
 3.1 Data
+
 Multi-hop QA Dataset While traditional multi-
 hop QA datasets provide additional paragraphs
 (Yang et al., 2018; Trivedi et al., 2022) for models
 to reason over, we operate under the more challeng-
 ing closed-book QA setting (Roberts et al., 2020),
 where such contexts are omitted. Specifically, we
-use the "compositional” and “inference” subsets of
+use the “compositional” and “inference” subsets of
 the 2WikiMultiHopQA dataset (Ho et al., 2020),
 which contains 2-hop English questions focusing
 on 98,284 entities and 29 relations, sourced from
-WikiData (Vrandečić and Krötzsch, 2014). We se-
+WikiData (Vrande¢cié and Krétzsch, 2014). We se-
 lect this dataset as it uniquely provides the precise
 structured knowledge that is required to answer
+
 each question, in the form of entity-relation-entity
-triples. Since the test splits for these specific sub-
+triples.! Since the test splits for these specific sub-
 sets are private, we use the validation split as the
 test set, and use 10% of the training set for valida-
 tion. In total we have 72,759 train, 8,085 validation,
 and 6,768 test questions.
+
 1-hop QA Dataset To characterize if the models
 we test have the pre-requisite 1-hop knowledge,
 we additionally construct 1-hop questions from
@@ -274,10 +318,12 @@ Nolan is converted to Who is the director of Incep-
 tion?. We end up with 83,643 train, 5,022 valida-
 tion, and 6,440 test QA instances. We term this
 constructed dataset as 1WikiHopQA.
+
 Knowledge Integration Data We build the KG
 for our methods using the set of ground-truth triples
 provided in the 2WikiMultiHopQA dataset (98,284
 entities and 29 relations, amounting to 95K triples).
+
 Random Walk Training Corpus For each en-
 tity in the above KG, we sample up to 20 random
 walks of length 3, each corresponding to an in-
@@ -285,7 +331,7 @@ stance of 2 hops between entities. We repeat this
 step 5 times with different seeds, discard duplicate
 paths, and end up with a total of 165,324 unique
 paths as a result. Importantly, we hold out the
-paths that include the triples in the QA task's
+paths that include the triples in the QA task’s
 validation and test sets in order to avoid leak-
 age, ending up with 155,311/ 8,085/6,768 paths
 as our train/validation/test sets, respectively. This
@@ -299,37 +345,29 @@ the lexical and structural generalization tests in
 stricter, more prominent compositional generaliza-
 tion benchmarks (Lake and Baroni, 2018; Kim and
 Linzen, 2020).
+
 3.2 Baselines and Comparisons
+
 We compare our proposed approaches to standard
 fine-tuning and prompt-tuning (Lester et al., 2021),
-¹Works such as Balachandran et al. (2021) propose unsu-
+
+'Works such as Balachandran et al. (2021) propose unsu-
 pervised mappings of questions in more popular datasets such
 as NaturalQuestions (Kwiatkowski et al., 2019) to paths in
 knowledge graphs, but our initial investigations of these paths
 found them to be extensively noisy.
-Setup Model LARGE
-XXL
-Model
-EM
-F1
-T5
-4.36
-6.89
-PT
-KNIT5-LARGE 22.83 84.72
-KNIT5
-6.30
-31.64
-KNIT5-XXL
-58.36 92.82
-T5
-6.24
-8.82
-FT
-KNIT5 22.73
-43.60
-Table 1: Test EM scores achieved by T5 and KNIT5 on
+
+--- Page 4 ---
+Setup Model LARGE XXL
+PT T5 4.36 6.89
+KNITS 6.30 31.64
+
+FT T5 6.24 8.82
+KNITS 22.73 43.60
+
+Table 1: Test EM scores achieved by T5 and KNITS on
 1WikiHopQA. PT: Prompt-Tuning, FT: Fine-Tuning.
+
 which we use to directly produce the answer, with-
 out any intermediate entities or relations. Addi-
 tionally, we also adapt SPOT (Vu et al., 2022), a
@@ -337,8 +375,8 @@ prompt-tuning method where we initialize prompts
 with those that were pre-trained on related tasks.
 In our adaptation, we initialize prompts using the
 values of the Hopping Prompts, and SPOT-transfer
-them to guide KNIT5 models to generate the full
-output, similar to PATH and MIXHOP. Since we
+them to guide KNITS models to generate the full
+output, similar to PATH and MIxHop. Since we
 operate in the closed book QA setting (Roberts
 et al., 2020), our methods cannot be directly com-
 pared to previous approaches on the dataset we
@@ -350,45 +388,57 @@ both of them use smaller subsets of the validation
 set as their testing set, and test on different pre-
 trained models, making it impractical to directly
 compare our results to their reported values.
-4 Experiments and Findings²
+
+4 Experiments and Findings”
 We report and summarize our results as follows:
+
 Integration of 1-hop knowledge only results
 in marginal improvements on 2-hop questions
 We begin by first establishing the extent to which
-T5 models encode and compose 1-hop knowledge
+TS models encode and compose 1-hop knowledge
 required to answer 2-hop questions, and whether
 additional knowledge integration (via KNIT5) can
 improve both these abilities. From Tables 1 and 3,
-we observe that the T5 models struggle to answer
+we observe that the TS models struggle to answer
 both 1-hop as well as 2-hop questions, suggesting
 that they critically lack the precise 1-hop entity
 knowledge required to demonstrate success on the
-2-hop questions. The KNIT5 LMs overcome this
-limitation, by showing substantial gains on 1Wik-
+2-hop questions. The KNITS LMs overcome this
+limitation, by showing substantial gains on 1 Wik-
 iHopQA over their T5 counterparts—they show
 improvements of ~16.5 and ~34.8 points in ex-
-2Training details for all experiments can be found in Ap-
+
+?Training details for all experiments can be found in Ap-
 pendix A.
+
+Model EM Fl
+
+KNITS-LARGE 22.83 84.72
+
+KNIT5-XXL 58.36 92.82
+
 Table 2: Best reported validation EM and F1 scores
 achieved from training Hopping Prompts to get KNIT5
 models to generate random-walks. N = 8085.
+
 act match (EM) scores at LARGE and XXL sizes
 in the fine-tuning setting, respectively (Table 1).
 However, this is insufficient to show improvements
 on 2-hop questions—where maximum gain over
-T5 is only 2.2 points, achieved by prompt-tuning
+TS is only 2.2 points, achieved by prompt-tuning
 KNIT5-XXL (see Table 3). This suggests that even
 after being endowed with the prerequisite 1-hop
 knowledge, both LMs are unable to successfully
 answer more complicated questions, echoing the
 results of Moiseev et al. (2022). Note that both
-KNIT5 models almost perfectly memorize the KG
+KNITS models almost perfectly memorize the KG
 in our knowledge-integration experiments (achiev-
 ing ~96% EM in under 10K training steps; see
 Appendix B.1), so their limitations on 2-hop ques-
 tions are likely not due to lack of entity knowledge
 and perhaps instead due to the inability to compose
 or chain together memorized facts.
+
 Generalizing to novel random walks may re-
 quire the prompt-tuning of larger LMs We
 now turn to analyzing the performance of mod-
@@ -409,37 +459,35 @@ triples in the validation and test sets of the main
 QA task to prevent complete memorization (due to
 leakage into the training set). This way we are able
 to measure the extent to which models learned to
-Το
-construct KG paths in a generalized manner.
+construct KG paths in a generalized manner. To
 this end, we compute the EM and F1 scores over
 the full generated spans of entities, interleaved by
 the relations that connect them. Note that EM is
-substantially stricter than F1, since F1 rewards par-
+substantially stricter than F1, since Fl rewards par-
+
+
+--- Page 5 ---
 Prompt-Tuning
+
 Fine-Tuning
-Size
-SPOT PATH MIXHOP
-T5 KNIT5
-T5 KNIT5
-LARGE
-XXL
-4.47
-6.42
-5.29
-8.62
-10.03 11.19 7.22 8.62
-12.92 13.47 20.03 29.37
-6.58
-23.09
+
+Size SPoT PATH MIxHop
+TS KNITS TS KNITS
+
+LARGE 4.47 5.29 10.03 11.19 7.22 8.62 6.58
+
+XXL 6.42 8.62 12.92 13.47 20.03 29.37 23.09
+
 Table 3: Test set EM scores achieved by various tuning methods on 2WikiMultiHopQA (Ho et al., 2020). SPOT
-(Vu et al., 2022), PATH, and MIXHOP use KNIT5 as their base model.
+(Vu et al., 2022), PATH, and MIxHopP use KNITS as their base model.
+
 tial overlap of tokens between the target vs. the
 generated output. Table 2 shows these scores for
-KNIT5-LARGE and KNIT5-XXL on the validation
+KNITS-LARGE and KNIT5-XXL on the validation
 set of our random walk task, tuned using the Hop-
 ping Prompts. We see from Table 2 that there is
-a substantial gap between KNIT5-large (~23
-EM) and KNIT5-XXL (~58 EM), suggesting that
+a substantial gap between KNITS-LARGE (~23
+EM) and KNITS-XXL (~58 EM), suggesting that
 the LARGE model finds it difficult to generalize to
 random walk paths involving entities and relations
 outside of the training set. We conclude from this
@@ -455,26 +503,28 @@ case for KNIT5-XXL. Additionally, the EM score
 achieved by the XXL-sized model is well below
 perfect values, highlighting important avenues for
 future work to improve upon these gaps.
+
 Training on random walks substantially im-
 proves 2-hop capabilities ..but mostly in larger
 LMs We used three methods that leveraged
 the training signal provided by random walks to
 compose the 1-hop knowledge as memorized by
-KNIT5: PATH (ours), MIXHOP (ours), and SPOT
+KNITS: PATH (ours), MIxHopP (ours), and SPOT
 (Vu et al., 2022). Due to lack of space, examples of
-the outputs from each of these methods, along with
+he outputs from each of these methods, along with
 analysis of intermediate steps (e.g., parsing) are
 shown in Appendix B. We observe from Table 3
 that for the XXL-sized model, all three methods
-lead to substantial improvements in performance on
+ead to substantial improvements in performance on
 2-hop questions over standard tuning approaches
-on T5 and KNIT5. Notably for KNIT5-XXL, ran-
+on T5 and KNITS. Notably for KNITS-XXL, ran-
 dom walk-integrated methods improve even over
 fine-tuning, which is often expected to be better
 at transfer learning as compared to parameter effi-
 cient methods. Among the three, our PATH method
 shows the best improvements (~16 point gain over
 fine-tuning KNIT5-XXL) at answering 2-hop ques-
+
 tions. This showcases the promise of learning sepa-
 rate specialized prompts that operate over the same
 underlying model to first parse natural language
@@ -482,14 +532,14 @@ into incomplete structured knowledge, and then
 expand it to answer the question, while also elic-
 iting intermediate steps (Wang et al., 2022), sim-
 ilar to recent in-context prompting methods (Wei
-et al., 2022b; Nye et al., 2022). While the MIXHOP
+et al., 2022b; Nye et al., 2022). While the MIxHOP
 method (~9.6 point gain over fine-tuning) falls
 short of PATH, it still improves over SPOT (~6.6
 point gain over fine-tuning), suggesting that joint
 training of related tasks may improve over sequen-
 tial training (as employed by SPOT) in perform-
 ing multi-hop reasoning, at larger model sizes. In
-the case of T5-LARGE and Knit5-large, while
+the case of T5-LARGE and KNIT5-LARGE, while
 the proposed methods show improvements over
 standard prompt-tuning, with PATH demonstrating
 a gain of 3.33 points over prompt-tuning KNIT5-
@@ -500,24 +550,30 @@ eral benefits of the training signal provided by ran-
 dom walks, which end up being most impressive at
 models that are an order of magnitude larger. Over-
 all, these results corroborate with our hypothesis
-from the random walk tests about KNIT5-LARGE'S
+from the random walk tests about KNITS-LARGE’s
 potential inability to generate partially novel ran-
 dom walks given either natural language multi-hop
-questions (MIXHOP) or their parses (PATH).
+questions (MIxHOP) or their parses (PATH).
+
 5 Conclusion
+
 We show that composition of memorized world
 knowledge can be triggered in LMs with up to
 11B parameters (T5-XXL) to a desirable extent by
 leveraging training signal from random walks over
 structured knowledge using approaches based on
 prompt-tuning (Lester et al., 2021). Doing so leads
-to substantial improvements in the LMs' ability to
+to substantial improvements in the LMs’ ability to
 answer 2-hop questions, even beyond standard, full
 model fine-tuning.
+
+--- Page 6 ---
 Limitations
+
 Despite showing non-trivial improvements in the
 multi-hop capabilities of T5 models, our work has
 multiple limitations.
+
 Restricted to 2-hops First, we chose 2WikiHop-
 MultiQA (Ho et al., 2020) as our primary dataset
 since it uniquely maps each question to a chain of
@@ -532,6 +588,7 @@ walk training method is general by definition, and
 can be extended to multiple hops, though its effec-
 tiveness on QA tasks requiring more than 2-hops
 of reasoning remains to be measured.
+
 Knowledge Graph size Our focus in this paper
 was to allow models to chain together their inter-
 nalized knowledge in order to answer complex 2-
@@ -545,10 +602,11 @@ coding world knowledge restricted our KG to be
 small in size (only 98,284 entities and 29 relations),
 which could be impractical in most real-world ap-
 plications. In future work, we will experiment with
-larger sized KGs (Vrandečić and Krötzsch, 2014),
+larger sized KGs (Vrande¢ié and Krotzsch, 2014),
 by adding a substantially larger amount of addi-
 tional triples to the existing KG, and measure their
 impact on multi-hop reasoning.
+
 Lack of diverse QA tasks Finally, we were un-
 able to consider popular datasets with CBQA ver-
 sions such as TriviaQA (Roberts et al., 2020), Nat-
@@ -563,10 +621,12 @@ a more holistic picture of our methods. Addition-
 ally, this would also overcome the above limitation
 (of KG size), as it would substantially increase the
 amounts of entities and relations to be encoded
+
 within models.
+
 Implications for Larger Models Although we
 show clear improvements in triggering 2-hop rea-
-soning in the largest T5 LM (T5-XXL), with 11B
+soning in the largest TS LM (T5-XXL), with 11B
 parameters, contemporary work has shown that
 multi-step reasoning capacities naturally emerge
 in LMs that are two or three orders of magnitude
@@ -575,15 +635,19 @@ Wei et al., 2022b,a). However, these LMs benefit
 from examples in-context (especially since tuning
 them is non-trivial and expensive), and therefore it
 is unclear whether our methods can improve such
-models' capacities even further. We have not tested
+models’ capacities even further. We have not tested
 such LMs in our work, due to resource limitations.
+
 Acknowledgments
+
 We thank Noah Constant, Chung-Ching Chang,
 Brian Lester, and Ben Withbroe from Google Re-
 search for their helpful comments and advice. We
 would also like to thank our three anonymous re-
 viewers for their useful feedback.
+
 References
+
 Oshin Agarwal, Heming Ge, Siamak Shakeri, and Rami
 Al-Rfou. 2021. Knowledge graph based synthetic
 corpus generation for knowledge-enhanced language
@@ -592,6 +656,7 @@ ference of the North American Chapter of the Asso-
 ciation for Computational Linguistics: Human Lan-
 guage Technologies, pages 3554-3565, Online. As-
 sociation for Computational Linguistics.
+
 Vidhisha Balachandran, Bhuwan Dhingra, Haitian Sun,
 Michael Collins, and William Cohen. 2021. Inves-
 tigating the effect of background knowledge on nat-
@@ -600,6 +665,7 @@ Inside Out (DeeLIO): The 2nd Workshop on Knowl-
 edge Extraction and Integration for Deep Learning
 Architectures, pages 25-30, Online. Association for
 Computational Linguistics.
+
 Antoine Bosselut, Hannah Rashkin, Maarten Sap, Chai-
 tanya Malaviya, Asli Celikyilmaz, and Yejin Choi.
 2019. COMET: Commonsense transformers for auto-
@@ -608,18 +674,22 @@ of the 57th Annual Meeting of the Association for
 Computational Linguistics, pages 4762-4779, Flo-
 rence, Italy. Association for Computational Linguis-
 tics.
+
 Tom Brown, Benjamin Mann, Nick Ryder, Melanie
 Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind
 Neelakantan, Pranav Shyam, Girish Sastry, Amanda
 Askell, et al. 2020. Language models are few-shot
 learners. Advances in neural information processing
 systems, 33:1877-1901.
+
+--- Page 7 ---
 Aakanksha Chowdhery, Sharan Narang, Jacob Devlin,
 Maarten Bosma, Gaurav Mishra, Adam Roberts,
 Paul Barham, Hyung Won Chung, Charles Sutton,
 Sebastian Gehrmann, et al. 2022. Palm: Scaling
 language modeling with pathways. arXiv preprint
 arXiv:2204.02311.
+
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
 Kristina Toutanova. 2019. BERT: Pre-training of
 deep bidirectional transformers for language under-
@@ -629,6 +699,7 @@ Computational Linguistics: Human Language Tech-
 nologies, Volume 1 (Long and Short Papers), pages
 4171-4186, Minneapolis, Minnesota. Association for
 Computational Linguistics.
+
 Xanh Ho, Anh-Khoa Duong Nguyen, Saku Sugawara,
 and Akiko Aizawa. 2020. Constructing a multi-
 hop QA dataset for comprehensive evaluation of
@@ -636,32 +707,38 @@ reasoning steps. In Proceedings of the 28th Inter-
 national Conference on Computational Linguistics,
 pages 6609-6625, Barcelona, Spain (Online). Inter-
 national Committee on Computational Linguistics.
-Nora Kassner, Benno Krojer, and Hinrich Schütze. 2020.
+
+Nora Kassner, Benno Krojer, and Hinrich Schiitze. 2020.
 Are pretrained language models symbolic reasoners
 over knowledge? In Proceedings of the 24th Confer-
 ence on Computational Natural Language Learning,
 pages 552-564, Online. Association for Computa-
 tional Linguistics.
+
 Najoung Kim and Tal Linzen. 2020. COGS: A compo-
 sitional generalization challenge based on semantic
 interpretation. In Proceedings of the 2020 Confer-
 ence on Empirical Methods in Natural Language
 Processing (EMNLP), pages 9087-9105, Online. As-
 sociation for Computational Linguistics.
+
 Tom Kwiatkowski, Jennimaria Palomaki, Olivia Red-
 field, Michael Collins, Ankur Parikh, Chris Alberti,
-Danielle Epstein, Illia Polosukhin, Jacob Devlin, Ken-
+Danielle Epstein, Ilia Polosukhin, Jacob Devlin, Ken-
 ton Lee, Kristina Toutanova, Llion Jones, Matthew
 Kelcey, Ming-Wei Chang, Andrew M. Dai, Jakob
 Uszkoreit, Quoc Le, and Slav Petrov. 2019. Natu-
 ral questions: A benchmark for question answering
 research. Transactions of the Association for Compu-
-tational Linguistics, 7:452–466.
+tational Linguistics, 7:452-466.
+
 Brenden Lake and Marco Baroni. 2018. Generalization
 without Systematicity: On the Compositional Skills
 of Sequence-to-Sequence Recurrent Networks. In
+
 International conference on machine learning, pages
 2873-2882. PMLR.
+
 Brian Lester, Rami Al-Rfou, and Noah Constant. 2021.
 The power of scale for parameter-efficient prompt
 tuning. In Proceedings of the 2021 Conference on
@@ -669,19 +746,23 @@ Empirical Methods in Natural Language Processing,
 pages 3045-3059, Online and Punta Cana, Domini-
 can Republic. Association for Computational Lin-
 guistics.
+
 Xiang Lisa Li and Percy Liang. 2021. Prefix-tuning:
 Optimizing continuous prompts for generation. In
+
 Proceedings of the 59th Annual Meeting of the Asso-
 ciation for Computational Linguistics and the 11th
 International Joint Conference on Natural Language
-Processing (Volume 1: Long Papers), pages 4582-
+Processing (Volume 1: Long Papers), pages 4582—
 4597, Online. Association for Computational Lin-
 guistics.
+
 Michael McCloskey and Neal J Cohen. 1989. Catas-
 trophic interference in connectionist networks: The
 sequential learning problem. In Psychology of learn-
-ing and motivation, volume 24, pages 109–165. Else-
+ing and motivation, volume 24, pages 109-165. Else-
 vier.
+
 Sewon Min, Victor Zhong, Luke Zettlemoyer, and Han-
 naneh Hajishirzi. 2019. Multi-hop reading compre-
 hension through question decomposition and rescor-
@@ -689,20 +770,23 @@ ing. In Proceedings of the 57th Annual Meeting of
 the Association for Computational Linguistics, pages
 6097-6109, Florence, Italy. Association for Compu-
 tational Linguistics.
+
 Fedor Moiseev, Zhe Dong, Enrique Alfonseca, and Mar-
 tin Jaggi. 2022. SKILL: Structured knowledge infu-
 sion for large language models. In Proceedings of
 the 2022 Conference of the North American Chap-
 ter of the Association for Computational Linguistics:
-Human Language Technologies, pages 1581–1588,
+Human Language Technologies, pages 1581-1588,
 Seattle, United States. Association for Computational
 Linguistics.
+
 Maxwell Nye, Anders Johan Andreassen, Guy Gur-Ari,
 Henryk Michalewski, Jacob Austin, David Bieber,
 David Dohan, Aitor Lewkowycz, Maarten Bosma,
 David Luan, et al. 2022. Show your work: Scratch-
 pads for intermediate computation with language
 models. In Deep Learning for Code Workshop.
+
 Pruthvi Patel, Swaroop Mishra, Mihir Parmar, and
 Chitta Baral. 2022. Is a question decomposition unit
 all we need? In Proceedings of the 2022 Confer-
@@ -710,6 +794,7 @@ ence on Empirical Methods in Natural Language
 Processing, pages 4553-4569, Abu Dhabi, United
 Arab Emirates. Association for Computational Lin-
 guistics.
+
 Ethan Perez, Patrick Lewis, Wen-tau Yih, Kyunghyun
 Cho, and Douwe Kiela. 2020. Unsupervised question
 decomposition for question answering. In Proceed-
@@ -717,7 +802,8 @@ ings of the 2020 Conference on Empirical Methods
 in Natural Language Processing (EMNLP), pages
 8864-8880, Online. Association for Computational
 Linguistics.
-Fabio Petroni, Tim Rocktäschel, Sebastian Riedel,
+
+Fabio Petroni, Tim Rocktischel, Sebastian Riedel,
 Patrick Lewis, Anton Bakhtin, Yuxiang Wu, and
 Alexander Miller. 2019. Language models as knowl-
 edge bases? In Proceedings of the 2019 Confer-
@@ -726,10 +812,14 @@ cessing and the 9th International Joint Conference
 on Natural Language Processing (EMNLP-IJCNLP),
 pages 2463-2473, Hong Kong, China. Association
 for Computational Linguistics.
+
 Ofir Press, Muru Zhang, Sewon Min, Ludwig Schmidt,
 Noah A. Smith, and Mike Lewis. 2023. Measuring
+
+--- Page 8 ---
 and narrowing the compositionality gap in language
 models. ICLR 2023 Submission.
+
 Guanghui Qin and Jason Eisner. 2021. Learning how
 to ask: Querying LMs with mixtures of soft prompts.
 In Proceedings of the 2021 Conference of the North
@@ -737,55 +827,67 @@ American Chapter of the Association for Computa-
 tional Linguistics: Human Language Technologies,
 pages 5203-5212, Online. Association for Computa-
 tional Linguistics.
+
 Colin Raffel, Noam Shazeer, Adam Roberts, Katherine
 Lee, Sharan Narang, Michael Matena, Yanqi Zhou,
 Wei Li, Peter J Liu, et al. 2020. Exploring the limits
 of transfer learning with a unified text-to-text trans-
-former. J. Mach. Learn. Res., 21(140):1–67.
+former. J. Mach. Learn. Res., 21(140):1-67.
+
 Adam Roberts, Colin Raffel, and Noam Shazeer. 2020.
 How much knowledge can you pack into the param-
 eters of a language model? In Proceedings of the
 2020 Conference on Empirical Methods in Natural
 Language Processing (EMNLP), pages 5418-5426,
 Online. Association for Computational Linguistics.
+
 Tianxiang Sun, Yunfan Shao, Xipeng Qiu, Qipeng Guo,
 Yaru Hu, Xuanjing Huang, and Zheng Zhang. 2020.
-COLAKE: Contextualized language and knowledge
+CoLAKE: Contextualized language and knowledge
 embedding. In Proceedings of the 28th International
 Conference on Computational Linguistics, pages
-3660–3670, Barcelona, Spain (Online). International
+3660-3670, Barcelona, Spain (Online). International
 Committee on Computational Linguistics.
+
 Alon Talmor, Yanai Elazar, Yoav Goldberg, and
 Jonathan Berant. 2020. oLMpics-on what language
 model pre-training captures. Transactions of the As-
-sociation for Computational Linguistics, 8:743–758.
+sociation for Computational Linguistics, 8:743-758.
+
 Harsh Trivedi, Niranjan Balasubramanian, Tushar Khot,
 and Ashish Sabharwal. 2022. MuSiQue: Multi-
 hop questions via single-hop question composition.
 Transactions of the Association for Computational
-Linguistics, 10:539–554.
-Denny Vrandečić and Markus Krötzsch. 2014. Wiki-
+Linguistics, 10:539-554.
+
+Denny Vrande¢ié and Markus Krétzsch. 2014. Wiki-
 data: A free collaborative knowledgebase. Commu-
-nications of the ACM, 57(10):78–85.
-Tu Vu, Brian Lester, Noah Constant, Rami Al-Rfou',
-and Daniel Cer. 2022. SPOT: Better frozen model
+nications of the ACM, 57(10):78-85.
+
+Tu Vu, Brian Lester, Noah Constant, Rami Al-Rfou’,
+and Daniel Cer. 2022. SPoT: Better frozen model
 adaptation through soft prompt transfer. In Proceed-
 ings of the 60th Annual Meeting of the Association
 for Computational Linguistics (Volume 1: Long Pa-
 pers), pages 5039-5059, Dublin, Ireland. Association
 for Computational Linguistics.
+
 Boshi Wang, Xiang Deng, and Huan Sun. 2022. Itera-
 tively prompt pre-trained language models for chain
 of thought. In Proceedings of the 2022 Conference on
 Empirical Methods in Natural Language Processing,
 pages 2714-2730, Abu Dhabi, United Arab Emirates.
 Association for Computational Linguistics.
+
 Xiaozhi Wang, Tianyu Gao, Zhaocheng Zhu, Zhengyan
 Zhang, Zhiyuan Liu, Juanzi Li, and Jian Tang. 2021.
+
 KEPLER: A unified model for knowledge embed-
 ding and pre-trained language representation. Trans-
+
 actions of the Association for Computational Linguis-
-tics, 9:176–194.
+tics, 9:176-194.
+
 Jason Wei, Yi Tay, Rishi Bommasani, Colin Raffel,
 Barret Zoph, Sebastian Borgeaud, Dani Yogatama,
 Maarten Bosma, Denny Zhou, Donald Metzler, Ed H.
@@ -793,11 +895,13 @@ Chi, Tatsunori Hashimoto, Oriol Vinyals, Percy
 Liang, Jeff Dean, and William Fedus. 2022a. Emer-
 gent abilities of large language models. Transactions
 on Machine Learning Research.
+
 Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
 Bosma, brian ichter, Fei Xia, Ed H. Chi, Quoc V Le,
 and Denny Zhou. 2022b. Chain of thought prompt-
 ing elicits reasoning in large language models. In
 Advances in Neural Information Processing Systems.
+
 Zhilin Yang, Peng Qi, Saizheng Zhang, Yoshua Bengio,
 William Cohen, Ruslan Salakhutdinov, and Christo-
 pher D. Manning. 2018. HotpotQA: A dataset for
@@ -806,6 +910,7 @@ In Proceedings of the 2018 Conference on Empiri-
 cal Methods in Natural Language Processing, pages
 2369-2380, Brussels, Belgium. Association for Com-
 putational Linguistics.
+
 Zexuan Zhong, Dan Friedman, and Danqi Chen. 2021.
 Factual probing is [MASK]: Learning vs. learning
 to recall. In Proceedings of the 2021 Conference
@@ -813,15 +918,17 @@ of the North American Chapter of the Association
 for Computational Linguistics: Human Language
 Technologies, pages 5017-5033, Online. Association
 for Computational Linguistics.
+
 A Training and Experiment Details
+
 Hyperparameters We use the default hyper-
-parameters and optimizers used to train the T5
+parameters and optimizers used to train the TS
 1.1 checkpoints (Raffel et al., 2020) as well as
 those used in the Prompt-Tuning and SPOT papers
 (Lester et al., 2021; Vu et al., 2022). We set the
 prompt-length to 100 for all prompt-tuning experi-
 ments, and initialized them with the top 100 tokens
-in the T5 models' vocabulary, following Lester et al.
+in the TS models’ vocabulary, following Lester et al.
 (2021). We fine-tune and prompt-tune our models
 for a maximum of 100K and 200K steps, respec-
 tively. We stop training on convergence, and use the
@@ -829,104 +936,119 @@ checkpoint with the best validation performance to
 evaluate. Tables 4, 5, and 6 show hyperparameter
 values for each type of experiment. All results are
 from single runs.
+
 Hardware and Compute Prompt-tuning and
 fine-tuning experiments for LARGE models were
 run on 16 TPUv3 chips, while those for XXL mod-
-els were run on 64 TPUv3 chips. One exception is
+els were run on 64 TPUVv3 chips. One exception is
 knowledge integration (which also involved contin-
 ual pre-training on C4, larger batch size, and longer
+
+--- Page 9 ---
 sequences), for which we used 256 TPUv3 chips
-for XXL, and 64 TPUv3 chips for LARGE.
+for XXL, and 64 TPUV3 chips for LARGE.
+
 Code For metric calculation and checkpoints, we
-use the T5 and T5x code-base, open-sourced on
-github.34 For prompt-tuning experiments, we adapt
+use the TS and T5x code-base, open-sourced on
+github.>*+ For prompt-tuning experiments, we adapt
 the original code-base (Lester et al., 2021), which
-is also open-sourced.5
+is also open-sourced.>
+
 Data The 2WikiMultiHopQA dataset (Ho et al.,
-2020) has been released with Apache 2.0 license.6
-Hyperparameter
-Values
-Memorization (EM)
-Model
-XXL LARGE
-100
-75
-50
-25
-2
-4 6 8 10 12
-Batch Size
-Learning Rate
-Dropout
-32 (XXL), 128 (LARGE)
-0.001
-0.1
+2020) has been released with Apache 2.0 license.°
+
+Hyperparameter Values
+Batch Size 32 (XXL), 128 (LARGE)
+Learning Rate 0.001
+Dropout 0.1
+
 Training Steps 100K (w/ early stopping)
+
 Table 4: Hyperparameters used for fine-tuning T5-
 LARGE and T5-XXL. Values except batch size and
 training steps kept same as Raffel et al. (2020).
-Hyperparameter
-Batch Size
-Learning Rate
-Dropout
-Values
-512
-0.001
-0.1
+
+Hyperparameter Values
+Batch Size 512
+Learning Rate 0.001
+Dropout 0.1
+
 Training Steps 100K (w/ early stopping)
+
 Table 5: Hyperparameters used for Knowledge Integra-
 tion experiments. Values except batch size and training
 steps kept same as Raffel et al. (2020).
-Hyperparameter
-Values
-Batch Size
-32 (XXL), 128 (LARGE)
-Learning Rate
-0.3
-Prompt Length
-100
-Dropout
-0.1
+
+Hyperparameter Values
+Batch Size 32 (XXL), 128 (LARGE)
+Learning Rate 0.3
+Prompt Length 100
+Dropout 0.1
+
 Training Steps 200K (w/ early stopping)
+
 Table 6: Hyperparameters used for all prompt-tuning
 experiments. Values except batch size kept same as
 Lester et al. (2021), number of training steps kept same
 as Vu et al. (2022), who found longer training to be
 beneficial.
-https://github.com/google-research/
+
+https: //github.com/google-research/
 text-to-text-transfer-transformer/tree/main/t5
-https://github.com/google-research/t5x
-Shttps://github.com/google-research/
-prompt-tuning
-https://github.com/Alab-NII/2wikimultihop
+
+‘https: //github. com/google-research/t5x
+
+https: //github. com/google-research/
+prompt- tuning
+
+https: //github.com/Alab-NII/2wikimultihop
+
+Model -* XXL -* LARGE
+
+100
+
+75
+
+50
+
+25
+
+Memorization (EM)
+
+2 4 6 8 10 1
 Training Step (in thousands)
+
 Figure 2: Time course of KG memorization for different
-KNIT5 model sizes. EM scores calculated for producing
-object entity (e2), given subject (e₁) and relation (r) as
-inputs to T5 models.
-B
-Additional Analyses
+KNITS model sizes. EM scores calculated for producing
+object entity (e2), given subject (e;) and relation (r) as
+inputs to TS models.
+
+B_ Additional Analyses
+
 B.1 Knowledge Integration
+
 Integrating single-hop entity knowledge is an im-
 portant part of our methods. How well are the mod-
 els able to actually encode this knowledge? Fig-
 ure 2 shows the dynamics of memorization across
 both models, measured as the exact match scores
-in generating e2 given e₁ and r. From Figure 2, we
+in generating € given e; andr. From Figure 2, we
 see that the XXL and LARGE models can memorize
 96% of the KG within 5,000 and 10,000 steps re-
 spectively. With a batch size of 512, this translates
 to traversing the dataset 27 and 54 times, respec-
 tively, for XXL and LARGE. An important caveat
 here is that the models are also being tuned on C4
-(Raffel et al., 2020), in order to retain the models'
+(Raffel et al., 2020), in order to retain the models’
 general language understanding-like capabilities.
 That is, they can be expected to memorize the KG
 relatively faster in the absence of training on the
 C4 corpus, but this would constitute a trade-off, by
 leading to overfitted models with substantial loss
 their original utility on other NLP tasks.
+
 B.2 Parsing Step in PATH
+
 The parsing step is essential for our Parse-then-Hop
 approach to succeed. Here we perform additional
 analyses on how well models can successfully ex-
@@ -936,39 +1058,40 @@ Recall that the objective of the parsing step is to
 produce as output a sequence indicating an incom-
 plete random walk, containing only the initial entity
 (seed node), followed by the relations (edges) that
-Model
-Relation EM
-Entity EM
-Full EM
-KNIT5-LARGE 98.69
-76.19
-78.98
-KNIT5-XXL
-99.17
-78.46
-80.17
+
+--- Page 10 ---
+Model Relation EM EntityEM Full EM
+KNITS-LARGE 98.69 76.19 78.98
+KNITS-XXL 99.17 78.46 80.17
+
 Table 7: Metrics for the parsing sub-task of PATH on
 test-set questions.
+
 lead to the final entity. For instance, if the ques-
-tion is "Where was the director of Inception (film)
-born?" the output of the parsing step should be:
-Inception (film) ; director ;
+tion is “Where was the director of Inception (film)
+born?” the output of the parsing step should be:
+
+Inception (film) ;
 place of birth
-Here, Inception (film) is the entity, e1, while
+
+director ;
+
+Here, Inception (film) is the entity, e;, while
 director and place of birth are the relations,
-r1 and r2, respectively. We analyze the extent to
+ry, and rg, respectively. We analyze the extent to
 which models successfully extract these three ele-
 ments for the 6,768 test set questions, by measuring
 three quantities: (1) Relation EM, which is the ex-
 act match score computed between the ground truth
 span of relation pairs (here “director ; place
-of birth"), and that extracted from the model out-
+of birth”), and that extracted from the model out-
 puts; (2) Entity EM, which is similar to Relation
 EM, but only considers the initial entity; and (3)
 Full EM, which computes the exact match score
 between the full output and the target. Table 7
 shows these values from prompt-tuning the two
-KNIT5 models.
+KNITS models.
+
 From Table 7, we see that prompt-tuning both
 models allows them to achieve almost perfect EM
 values in extracting the relation pairs from the ques-
@@ -980,39 +1103,45 @@ randomly sampled outputs—with incorrect entity
 predictions—and found most errors to be due to
 omission of tokens involving middle names, or ad-
 ditional information about the entity such as the
-"(film)" in the above example (other examples in-
-clude the entity's title, such as "Count of East
-Frisia", or "(born in year XXX)", "(died in
-year XXX)", etc.)
+“(film)” in the above example (other examples in-
+clude the entity’s title, such as “Count of East
+Frisia”, or “(born in year XXX)”, “(died in
+year XXX)”, etc.)
+
 B.3 Example Outputs
+
 Tables 8, 9, 10, and 11 show examples of outputs
 from the different approaches used in this work (ex-
 amples shown for the XXL-sized models). Below
 we discuss each of these cases in detail:
-• In Table 8, all approaches that leverage the
+
+¢ In Table 8, all approaches that leverage the
 training signal from random walks succeed,
+
 while tuning methods that do not fail. Ad-
 ditionally, all three random walk-integrated
 methods agree on their parsed relational struc-
 ture as well as the intermediate entity.
-• In Table 9, only the two proposed methods
-(PATH and MIXHOP) succeed, while all other
+
+In Table 9, only the two proposed methods
+(PATH and MIXHop) succeed, while all other
 methods fail. Note that SPOT correctly pre-
 dicts the correct intermediate entity (Sally
 Hemings), but is unable to predict the final
 entity (John Wayles).
-•
+
 Table 10 shows an example where all ap-
 proaches fail. However, this question is am-
-biguous, as aunt can either mean father's sis-
-ter or mother's sister - our random walk in-
+biguous, as aunt can either mean father’s sis-
+ter or mother’s sister — our random walk in-
 tegrated methods correctly predict these rela-
 tional structures but are unable to resolve the
 intermediate and final entities.
-• Table 11 shows an example where all ap-
+
+Table 11 shows an example where all ap-
 proaches are supposedly scored as incorrect,
 but are in-fact correct. Here we argue that the
-ground truth answer, “United Kingdom" is in
+ground truth answer, “United Kingdom’ is in
 its incorrect form, since the question asks for
 the nationality of a person. Our random walk-
 integrated methods successfully predict the
@@ -1024,9 +1153,11 @@ Kingdom. This problem could be mitigated
 by adding in aliases for the entities in the
 ground-truth answer space, similar to Trivi-
 aQA (Roberts et al., 2020).
-C Templates for constructing
+
+C_ Templates for constructing
 1WikiHopQA
-Here we describe our process of constructing 1Wik-
+
+Here we describe our process of constructing 1 Wik-
 iHopQA: a collection of English question-answer
 pairs that only require single-hop knowledge using
 the 2WikiMultiHopQA (Ho et al., 2020) dataset.
@@ -1040,194 +1171,159 @@ in Table 12. For many relations, we have multiple
 different paraphrases of the question template, e.g.,
 the relation director translates to: Who is the di-
 rector of X? or Who directed the film X? In such
-Question: Where was the place of burial of the director of film New World (1995 Film)? Answer: Père Lachaise Cemetery
-Model
-Setup
-Response
-FT
-Forest Lawn Memorial Park
+
+--- Page 11 ---
+Question: Where was the place of burial of the director of film New World (1995 Film)? Answer: Pére Lachaise Cemetery
+
+Model Setup Response
+
+FT Forest Lawn Memorial Park
 T5-XXL
-PT
-Forest Lawn Memorial Park
-FT
-New York
-PT
-SPOT
-KNIT5-XXL
-PATH
-MIXHOP
-Forest Lawn Memorial Park
-New World; director; Alain Corneau ; place of burial; Père Lachaise Cemetery
-PP: New World ; director ; place of burial
-HP: New World ; director ; Alain Corneau ; place of burial ; Père Lachaise Cemetery
-New World; director ; Alain Corneau ; place of burial; Père Lachaise Cemetery
+
+PT Forest Lawn Memorial Park
+
+FT New York
+
+PT Forest Lawn Memorial Park
+
+SPoT New World ; director ; Alain Corneau ; place of burial ; Pére Lachaise Cemetery
+KNIT5S-XXL
+
+PATH PP: New World ; director ; place of burial
+
+HP: New World ; director ; Alain Corneau ; place of burial ; Pére Lachaise Cemetery
+MIXHop_ New World ; director ; Alain Corneau ; place of burial ; Pére Lachaise Cemetery
+
 Table 8: An example case where methods that leverage random walks succeed, but baselines fail.
-Question: Who is Harriet Hemings's maternal grandfather? Answer: John Wayles
-Model
-Setup
-Response
-FT
-Ted Hughes
-T5-XXL
-PT
-John Hemings
-FT
-Betty Hemings
-PT
-SPOT
-KNIT5-XXL
-John Hemings
-Harriet Hemings ; mother ; Sally Hemings ; father ; Thomas Hemings
+
+Question: Who is Harriet Hemings’s maternal grandfather? Answer: John Wayles
+
+Model Setup Response
+TS-XxL FT Ted Hughes
+
+PT John Hemings
+
+FT Betty Hemings
+
+PT John Hemings
+
+SPOT Harriet Hemings ; mother ; Sally Hemings ; father ; Thomas Hemings
+KNIT5S-XXL
+
 PP: Harriet Hemings ; mother ; father
 PATH
+
 HP: Harriet Hemings ; mother ; Sally Hemings ; father ; John Wayles
-Harriet Hemings ; mother ; Sally Hemings ; father ; John Wayles
-MIXHOP
-Table 9: An example case where all baselines fail, and additionally SPOT (Vu et al., 2022) also produces the incorrect
+
+MIxHop Harriet Hemings ; mother ; Sally Hemings ; father ; John Wayles
+
+Table 9: An example case where all baselines fail, and additionally SPoT (Vu et al., 2022) also produces the incorrect
 final entity, but our two proposed methods succeed.
-Question: Who is Christopher Blom Paus's aunt? Answer: Hedevig Christine Paus
-Model
-Setup
-Response
-FT
-Clotilde of Saxe - Lauenburg
+
+Question: Who is Christopher Blom Paus’s aunt? Answer: Hedevig Christine Paus
+
+Model Setup Response
+
+FT Clotilde of Saxe - Lauenburg
 T5-XXL
-PT
-FT
-PT
-SPOT
+
+PT Annemarie Blom Paus
+
+FT Anna of Oldenburg
+
+PT Christina Paus
+
+SPoT Christopher Blom Paus ; father ; Ole Paus ; sibling ; Kjersti Bua Paus
 KNIT5-XXL
-Annemarie Blom Paus
-Anna of Oldenburg
-Christina Paus
-Christopher Blom Paus ; father ; Ole Paus ; sibling ; Kjersti Bua Paus
-PP: Christopher Blom Paus ; mother ; sibling
-PATH
-HP: Christopher Blom Paus ; mother ; Margrete Laarmann; sibling ; Kjartan Flóki
-MIXHOP Christopher Blom Paus ; mother; Ulla Blom; sibling ; Gunnar Blom
-Table 10: An example of an ambiguous question (since “aunt” can be father's sister or mother's sister) on which all
+
+PATH PP: Christopher Blom Paus ; mother ; sibling
+
+HP: Christopher Blom Paus ; mother ; Margrete Laarmann ; sibling ; Kjartan Floki
+MIxHop Christopher Blom Paus ; mother ; Ulla Blom ; sibling ; Gunnar Blom
+
+Table 10: An example of an ambiguous question (since “aunt” can be father’s sister or mother’s sister) on which all
 approaches fail. Importantly, methods that use random-walks accurately generate the relations required to answer
 the question, but fail at predicting the correct entities.
+
 cases, we randomly sample a template from the
 entire set, equally weighing each. In total, we end
 up with 83,643 train, 5,022 validation, and 6,440
+
 test QA pairs.
-Question: What nationality is John Bede Dalley's father? Answer: United Kingdom
-Model
-Setup
-Response
-FT
-British
-T5-XXL
-PT
-British
-FT
-English
-PT
-English
-SPOT
-KNIT5-XXL
-John Bede Dalley; father; William Dalley %; country of citizenship ; English
-PP: John Bede Dalley; father; country of citizenship
-PATH
-HP: John Bede Dalley; father ; William Bede Dalley; country of citizenship; English
-MIXHOP
-John Bede Dalley; father; William Dalley, 1st Viscount Darnley; country of citizenship ; British
+
+--- Page 12 ---
+Question: What nationality is John Bede Dalley’s father ? Answer: United Kingdom
+
+Model Setup Response
+FT British
+TS-XXL
+PT British
+FT English
+PT English
+KNITS-XXxL SPoT John Bede Dalley ; father ; William Dalley ; country of citizenship ; English
+PATH PP: John Bede Dalley ; father ; country of citizenship
+
+HP: John Bede Dalley ; father ; William Bede Dalley ; country of citizenship ; English
+
+MixHop John Bede Dalley ; father ; William Dalley, 1st Viscount Darnley ; country of citizenship ; British
+
 Table 11: An example of a scenario where all models fail at answering the question correctly, but this is likely
+
 attributable to the dataset since it does not contain aliases.
-Relation
-Template Space
-Relation
-Template Space
-director
-Who is the director of X?, Who di- mother
-rected the film X?
-date of birth
-What is the date of birth of X?, When
-is X's birthday?, When was X born?
-founded by
-date of death
-country
-country of
-When did X die?, What is the date of inception
+
+Relation Template Space Relation Template Space
+
+director Who is the director of X?, Who di- mother Who is the mother of X?, Who is X’s
+rected the film X? mother?
+
+date of birth What is the date of birth of X?, When founded by Who is the founder of X?, Who
+is X’s birthday ?, When was X born? founded X?
+
+date of death When did X die?, What is the date of inception When was X founded?
 death of X?
-What country is X from?, What is the manufacturer
+
+country What country is X from?, What is the manufacturer Who manufactures X?
 nationality of X?
-What country is X from?, What is the performer
-nationality of X?
-Who is the mother of X?, Who is X's
-mother?
-Who is the founder of X?, Who
-founded X?
-When was X founded?
-Who manufactures X?
-citizenship
-Who is the performer of the song X?,
-Who performed the song X?
-award
-What is the award that X received?,
-place
-of
-received
-Which award did X receive?
-birth
-Where was X born?, What is the
-place of birth of X?
-cause
-of
-death
-Why did X die?, What was the cause
-of X's death?
-place
-burial
-of
-Where was X buried?, Where is the
-place of burial of X?
-composer
-Who is the composer of X?, Who com- place
-posed X?
-of
-Where did X die?, Where is the place
-death
-of death of X?
-creator
-Who is the creator of X?, Who cre- place
-ated X?
-of
-Where did X go to prison?, Where
-child
-Who is the child of X?
-detention
-presenter
-was X detained?
-Who is the presenter of X?, Who
+
+country of What country is X from?, What is the performer Who is the performer of the song X?,
+
+citizenship nationality of X? Who performed the song X?
+
+award What is the award that X received?, place of Where was X born?, What is the
+
+received Which award did X receive? birth place of birth of X?
+
+cause of Why did X die?, What was the cause place of Where was X buried?, Where is the
+
+death of X’s death? burial place of burial of X?
+
+composer Who is the composer of X?, Who com- place of Where did X die?, Where is the place
+posed X? death of death of X?
+
+creator Who is the creator of X?, Who cre- place of Where did X go to prison?, Where
+ated X? detention was X detained?
+
+child Who is the child of X? presenter Who is the presenter of X?, Who pre-
+
 sented X?
-pre-
-doctoral
-Who is the doctoral advisor of X?
-publisher
-advisor
-editor
-Who published X?, What company
-published X?
-educated at
-Where did X graduate from?, What
-is the alma mater of X?, Where did X
+
+doctoral Who is the doctoral advisor of X? publisher Who published X?, What company
+
+advisor published X?
+
+editor Who is the editor of X?, Who edited sibling Who is the sibling of X?, Who is X’s
+Xx? sibling?
+
+educated at Where did X graduate from?, What spouse Who is the spouse of X?, Who is X’s
+is the alma mater of X?, Where did X spouse?
 study?
-spouse
-Who is the editor of X?, Who edited sibling
-X?
-Who is the sibling of X?, Who is X's
-sibling?
-Who is the spouse of X?, Who is X's
-spouse?
-employer
-Who is the employer of X?, Where
-does X work?
-student of
-Who was the teacher of X?, Who was
-X's teacher?
-father
-Who is the father of X?, Who is X's
+
+employer Who is the employer of X?, Where student of Who was the teacher of X?, Who was
+does X work? X’s teacher?
+
+father Who is the father of X?, Who is X’s
+
 father?
+
 Table 12: Question templates for for each of the 29 relations, used to create 1WikiHopQA. X stands for the subject.
+

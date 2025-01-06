@@ -1,9 +1,17 @@
-arXiv:2305.07804v4 [cs.CL] 1 Aug 2023
+--- Page 1 ---
+2305.07804v4 [cs.CL] 1 Aug 2023
+
+arXiv
+
 Improving Small Language Models on PubMedQA via
 Generative Data Augmentation
-Zhen Guo¹*, Yanwei Wang¹, Peiqi Wang¹ and Shangdi Yu¹
-¹MIT Department of Electrical Engineering and Computer Science, 77 Massachusetts Ave, Cambridge, MA 02139
+
+Zhen Guo!*, Yanwei Wang!, Peiqi Wang! and Shangdi Yu!
+
+'MIT Department of Electrical Engineering and Computer Science, 77 Massachusetts Ave, Cambridge, MA 02139
+
 Abstract
+
 Large Language Models (LLMs) have made remarkable advancements in the field of natural language processing. However,
 their increasing size poses challenges in terms of computational cost. On the other hand, Small Language Models (SLMs) are
 known for their efficiency, but they often struggle with limited capacity and training data, especially in specific domains. In
@@ -13,24 +21,15 @@ specialized applications. Through experiments conducted on the PubMedQA dataset,
 LLMs in refining and diversifying existing question-answer pairs. This refinement process leads to improved performance
 in a significantly smaller model after fine-tuning. Notably, our best SLM, with under 1.6 billion parameters, outperforms
 the few-shot GPT-4 on the PubMedQA dataset. Our code and generated data are publicly available to facilitate further
+
 explorations [1].
+
 Keywords
+
 large language models, small language models, medical question-answering, data augmentation
+
 1. Introduction
-proves SLMs in the medical domain through LLM-based
-generative data augmentation. The objective is to de-
-velop more efficient and capable models tailored for spe-
-cialized medical applications without using billions of
-parameters. Our results in the PubMedQA dataset [12]
-demonstrate the effectiveness of LLM in the refinement
-and diversification of question-answer pairs, leading to
-improved performance of a significantly smaller model
-after fine-tuning. The best SLM, with less than 1.6 billion
-parameters, outperforms the few-shot GPT-4 on Pub-
-MedQA, as shown in Table 1. In general, our method
-holds promise for enhancing SLMs for medical tasks,
-bridging the gap between computational efficiency and
-model performance in specialized domains.
+
 In recent years, Large Language Models (LLMs) have
 transformed the field of natural language processing,
 demonstrating exceptional performance in a wide range
@@ -45,60 +44,79 @@ applications and domain-specific tasks [6, 7]. Problems
 such as medical question-answering or legal document
 analysis require specialized knowledge that may not be
 fully captured by general-purpose LLMs [8, 9].
-Small Language Models (SLMs), on the other hand, of- ChatGPT vs. BioGPT with fine-tuning on PubMedQA
+
+Small Language Models (SLMs), on the other hand, of-
 fer a more computationally efficient alternative to LLMs.
 However, SLMs often struggle in domain-specific tasks
 due to their limited capacity and training data. This lim-
 itation requires the development of new strategies to
 enhance the performance of SLMs in specialized tasks
 while maintaining their computational efficiency [10, 11].
+
 In this paper, we introduce a novel method that im-
-LLM4A1'23: Workshop on Foundations and Applications in Large-scale
+
+LLM4AI‘23: Workshop on Foundations and Applications in Large-scale
 AI Models -Pre-training, Fine-tuning, and Prompt-based Learning, co-
 located with the 29TH ACM SIGKDD CONFERENCE ON KNOWLEDGE
 DISCOVERY AND DATA MINING (KDD), August 6-10, 2023, Long
 Beach, CA, USA
+
 *Corresponding author.
-zguo0525@mit.edu (Z. Guo); yanwei@mit.edu (Y. Wang);
+
+Q zgu00525@mit.edu (Z. Guo); yanwei@mit.edu (Y. Wang);
 wpq@mit.edu (P. Wang); shangdiy@mit.edu (S. Yu)
-CC
-+
+
+SDI) © 222 Copyright for this paper by is authors, Use permitted under Creative Commons License
+Attribution 4.0 International (CC BY 4.0).
+
+CEUR Workshop Proceedings (CEUR-WS.org)
+
+proves SLMs in the medical domain through LLM-based
+generative data augmentation. The objective is to de-
+velop more efficient and capable models tailored for spe-
+cialized medical applications without using billions of
+parameters. Our results in the PubMedQA dataset [12]
+demonstrate the effectiveness of LLM in the refinement
+and diversification of question-answer pairs, leading to
+improved performance of a significantly smaller model
+after fine-tuning. The best SLM, with less than 1.6 billion
+parameters, outperforms the few-shot GPT-4 on Pub-
+MedQA, as shown in Table 1. In general, our method
+holds promise for enhancing SLMs for medical tasks,
+bridging the gap between computational efficiency and
+model performance in specialized domains.
+
 Table 1
-Model
-GPT-3.5-turbo (175B)
-GPT-4 (0-shot) [13]
-GPT-4 (5-shot) [13]
-Best BioGPT (1.6B)
-Human Performance [12]
-Accuracy
-Macro-F1
-0.372
-0.327
-0.752
-NA
-0.744
-NA
-0.754
-0.520
-0.780
-0.722
+
+ChatGPT vs. BioGPT with fine-tuning on PubMedQA
+Model Accuracy  Macro-F1
+GPT-3.5-turbo (175B) 0.372 0.327
+GPT-4 (0-shot) [13] 0.752 NA
+GPT-4 (5-shot) [13] 0.744 NA
+Best BioGPT (1.6B) 0.754 0.520
+Human Performance [12] 0.780 0.722
+
 2. Technical background
+
 2.1. Efficient fine-tuning
+
 Fine-tuning LLMs for specific tasks poses computational
 and time-related challenges [14, 15]. To address these
-2022 Copyright for this paper by its authors. Use permitted under Creative Commons License issues, researchers have developed efficient fine-tuning
-Attribution 4.0 International (CC BY 4.0).
-CEUR Workshop Proceedings (CEUR-WS.org)
-techniques, such as Prefix Tuning and Low-rank Adapta- 4. Results
+issues, researchers have developed efficient fine-tuning
+
+--- Page 2 ---
+techniques, such as Prefix Tuning and Low-rank Adapta-
 tion, as alternatives to traditional fine-tuning methods
-that update the model's weights entirely. Prefix tun-
+that update the model’s weights entirely. Prefix tun-
 ing [16] adapts the behavior of a language model to
 specific tasks without modifying its pre-trained weights.
 While the low-rank adaptation [17] allows the model to
 capture the essential characteristics of the data and adapt
 to domain-specific tasks effectively by decomposing the
 weight matrices into smaller matrices.
+
 2.2. Data Augmentation using LLMs
+
 LLMs serve as powerful tools to generate realistic text
 samples based on existing data. For NLP tasks, generating
 data with LLM can involve paraphrasing text, creating
@@ -107,6 +125,7 @@ tences [18]. Producing diverse representations of input
 data enables models to learn various ways to express the
 same underlying concepts, increasing their adaptability
 to real-world data variations.
+
 For our preliminary study on the PubMedQA dataset,
 we used GPT-3.5 Turbo and GPT-4 to either rewrite
 existing medical question-answering pairs or generate
@@ -116,7 +135,9 @@ prove the diversity and coverage of the training data,
 ultimately improving the performance of the medical
 question-answering model trained on the augmented
 dataset.
+
 3. Experimental settings
+
 We performed experiments on the MIT Supercloud [19],
 using PyTorch 1.12 and Python 3.8 with eight NVIDIA
 V100 GPUs and Intel Xeon Gold 6248 processors. We
@@ -138,35 +159,25 @@ inference, we applied techniques including Repetition
 Penalty Logits Processor (penalty factor of 2.0), Tempera-
 ture Logits Warper (temperature of 0.8), and beam search
 decoding with a beam size of 5 to ensure output quality.
+
+4. Results
+
 4.1. Low-rank Adaptation outperforms
 Prefix Tuning
+
 accuracy
-f1 score
-0.6-
-0.5
-0.3
-0
-100
-200
-300
-400
-500
-0.40
-0.35
-0.30
-0.25
-0.20
-0
-100
-low-rank adaptation
--prefix tuning
-200
-300
-400
-500
+
+fl score
+
+9 low-rank adaptation
+e prefix tuning
+
+é Fry 380 30 “400 300
 fine-tuning hyperparameter
+
 Figure 1: Comparison between two fine-tuning techniques
 for BioGPT-Large.
+
 We compared the performance of two techniques,
 Low-rank Adaptation and Prefix Tuning, for BioGPT-
 Large (Figure 1). We observed that Low-rank Adaptation
@@ -178,16 +189,18 @@ to hyperparameter selection, providing consistent and
 reliable performance for efficient fine-tuning. For all the
 results below, Low-rank adaptation is the default fine-
 tuning technique.
+
 4.2. Instruction-tuning constrains domain
 adaptability of language models
+
 In Table 2, we present a comparison of BioGPT-Large,
-LLAMA-7b, and Alpaca-7b, all fine-tuned on the origi-
+LLaMA-7b, and Alpaca-7b, all fine-tuned on the origi-
 nal PubMedQA dataset without data augmentation as
 the baseline. Alpaca-7b, a derivative of LLaMA-7b, is an
 instruction-tuned LLM designed to improve task-specific
 performance by following instructions. However, this ap-
 proach restricts its adaptability to other domain-specific
-tasks compared to a naïve pre-trained model. In our ex-
+tasks compared to a naive pre-trained model. In our ex-
 periments, LLaMA-7b shows superior generalizability
 compared to BioGPT-Large by exhibiting a higher F1
 score, when fine-tuned only on the original PubMedQA
@@ -197,79 +210,45 @@ have different fine-tuning settings. While Luo et al. [20]
 inserted the virtual tokens right before the answer token,
 we inserted the virtual tokens before the question token
 to avoid the risk of overfitting.
+
+--- Page 3 ---
 Table 2
-erate useful new training data. By incorporating new
-Comparison of BioGPT-Large, LLaMA-7b and Alpaca-7b fine- question-answer pairs from GPT-4 into the training pro-
-tuned on the original PubMed QA dataset.
-Model
-Accuracy
-Macro-F1
-BioGPT-Large
-0.630
-0.387
-LLaMA-7b
-Alpaca-7b
-0.594
-0.380
-0.495
-0.335
+Comparison of BioGPT-Large, LLaMA-7b and Alpaca-7b fine-
+tuned on the original PubMedQA dataset.
+
+Model Accuracy Macro-F1
+
+BioGPT-Large 0.630 0.387
+
+LLaMA-7b 0.594 0.495
+
+Alpaca-7b 0.380 0.335
 Table 3
+
 Comparison of LLaMA-7b and BioGPT-Large fine-tuned on
 augmented PubMedQA (Acc. stands for accuracy, GPT-3.5
 refers to GPT-3.5-turbo, BioGPT represents BioGPT-Large, and
 F1 denotes marco F1 Score).
-F1 (best)
-0.495
-SLM
-LLM
-Augment.
-none
-Acc. (best)
-0.594
-rewriteQA
-0.642
-0.497
-GPT-3.5
-newQA
-0.552
-0.460
-LLAMA
-combinedQA 0.582
-0.485
-rewriteQA
-0.540
-0.463
-GPT-4
-newQA
-0.576
-0.451
-combinedQA
-0.506
-0.446
-none
-0.630
-0.387
-rewriteQA
-0.720
-0.498
-GPT-3.5
-newQA
-0.718
-0.491
-BioGPT
-combinedQA 0.714
-0.493
-GPT-4
-rewriteQA
-newQA
-0.654
-0.471
-0.754
-0.520
-combinedQA 0.708
-0.518
+
+SLM LLM Augment. Acc. (best) FI (best)
+none 0.594 0.495
+rewriteQA 0.642 0.497
+CPT-3.5 newQA 0.552 0.460
+LLaMA combinedQA 0.582 0.485
+rewriteQA 0.540 0.463
+GPT-4 newQA 0.576 0.451
+combinedQA 0.506 0.446
+none 0.630 0.387
+rewriteQA 0.720 0.498
+CPT-3.5 newQA 0.718 0.491
+BioGPT combinedQA 0.714 0.493
+rewriteQA 0.654 0.471
+GPT-4 newQA 0.754 0.520
+combinedQA 0.708 0.518
+
 4.3. Comparison between generative data
 augmentation approaches
+
 In Table 3, we provide a comparison of LLaMA-7b and
 BioGPT-Large fine-tuned on the augmented PubMedQA
 dataset. Our experiments demonstrate the efficacy of
@@ -281,6 +260,7 @@ gpt-3.5-turbo). The resulting alternative representations
 of questions and answers facilitated the construction of
 more diverse and robust training datasets suitable for
 SLMs.
+
 However, we found that instructing an LLM (gpt-3.5-
 turbo) lacking domain knowledge to generate entirely
 new question-answer pairs did not lead to an improve-
@@ -290,9 +270,13 @@ tion suggests that while LLMs are effective in refining and
 diversifying existing question-answer pairs, their ability
 to create novel, high-quality pairs for domain-specific
 tasks remains limited.
+
 On the other hand, recent advances in LLMs such
 as GPT-4, which have domain-specific knowledge and
 question-answering capacity for PubMedQA, can gen-
+
+erate useful new training data. By incorporating new
+question-answer pairs from GPT-4 into the training pro-
 cess, we can significantly improve the performance of
 the fine-tuned smaller models. This finding highlight the
 importance of LLMs with domain-specific knowledge in
@@ -304,22 +288,27 @@ consistent with the previous finding [20], and highlights
 the effectiveness of pretraining with domain-specific
 data, enabling BioGPT to better understand and excel
 in domain-specific tasks. Leveraging domain-specific
-knowledge during fine-tuning improves the model's ac-
+knowledge during fine-tuning improves the model’s ac-
 curacy and contextual relevance, resulting in superior
 performance for domain-specific questions or tasks.
+
 5. Future works
+
 A promising direction for future work is to investigate
 the application of knowledge distillation, a popular tech-
 nique that trains a smaller language model to mimic the
 behavior of a larger language model on medical question-
 answering tasks.
+
 Another potential approach is through contrastive
 learning. By training an SLM using contrastive learn-
 ing on medical question-answering data, contrastive loss
 can help the model learn to identify similarities and dif-
 ferences between different instances of data and improve
 its ability to generalize to new and unseen data.
+
 6. Conclusion
+
 Our research highlights the effectiveness of LLM-based
 generative data augmentation in enhancing domain-
 specific question answering datasets. However, instruct-
@@ -332,91 +321,143 @@ formance of fine-tuned models by generating valuable
 new training data. These findings underscore the impor-
 tance of incorporating domain-specific knowledge when
 applying generative data augmentation techniques.
+
 Acknowledgments
+
 We thank Prof. Yoon Kim at MIT CSAIL for his guidance
 and feedback. The authors acknowledge the MIT Super-
 Cloud and Lincoln Laboratory Supercomputing Center
 for providing computing resources. We would also like to
 acknowledge OpenAI for providing access to their API.
+
+--- Page 4 ---
 References
-[1] Z. Guo, P. Wang, Y. Wang, S. Yu, Dr. LLAMA: Im-
+
+1
+
+[8
+
+10
+
+11
+
+12
+
+13
+
+Z. Guo, P. Wang, Y. Wang, S. Yu, Dr. LLaMA: Im-
 proving small language models in domain-specific
 qa via generative data augmentation, 2023. URL:
-https://github.com/zguo0525/Dr.LLAMA.
-[2] J. Hoffmann, S. Borgeaud, A. Mensch,
+https://github.com/zguo0525/Dr.LLaMA.
+
+J. Hoffmann, S. Borgeaud, A. Mensch,
 E. Buchatskaya, T. Cai, E. Rutherford, D. d. L. Casas,
 L. A. Hendricks, J. Welbl, A. Clark, et al., Training
 compute-optimal large language models, arXiv
 preprint arXiv:2203.15556 (2022).
-[3] W. X. Zhao, K. Zhou, J. Li, T. Tang, X. Wang, Y. Hou,
-Y. Min, B. Zhang, J. Zhang, Z. Dong, et al., A
+
+W. X. Zhao, K. Zhou, J. Li, T. Tang, X. Wang, Y. Hou,
+Y. Min, B. Zhang, J. Zhang, Z. Dong, et al, A
 survey of large language models, arXiv preprint
 arXiv:2303.18223 (2023).
-[4] J. Austin, A. Odena, M. Nye, M. Bosma,
+
+J. Austin, A. Odena, M. Nye, M. Bosma,
 H. Michalewski, D. Dohan, E. Jiang, C. Cai,
 M. Terry, Q. Le, et al., Program synthesis with large
 language models, arXiv preprint arXiv:2108.07732
 (2021).
-[5] M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P. d. O.
+M. Chen, J. Tworek, H. Jun, Q. Yuan, H. P. d. O.
 Pinto, J. Kaplan, H. Edwards, Y. Burda, N. Joseph,
 G. Brockman, et al., Evaluating large language mod-
 els trained on code, arXiv preprint arXiv:2107.03374
 (2021).
-[6] E. Strubell, A. Ganesh, A. McCallum, Energy and
+
+E. Strubell, A. Ganesh, A. McCallum, Energy and
 policy considerations for deep learning in nlp, arXiv
 preprint arXiv:1906.02243 (2019).
-[7] Y. Gu, R. Tinn, H. Cheng, M. Lucas, N. Usuyama,
+
+Y. Gu, R. Tinn, H. Cheng, M. Lucas, N. Usuyama,
 X. Liu, T. Naumann, J. Gao, H. Poon, Domain-
 specific language model pretraining for biomedical
 natural language processing, ACM Transactions
 on Computing for Healthcare (HEALTH) 3 (2021)
 1-23.
-[8] O. Ram, Y. Kirstain, J. Berant, A. Globerson, O. Levy,
+
+O. Ram, Y. Kirstain, J. Berant, A. Globerson, O. Levy,
 Few-shot question answering by pretraining span
 selection, arXiv preprint arXiv:2101.00438 (2021).
-[9] Z. Sun, A short survey of viewing large lan-
+Z. Sun, A short survey of viewing large lan-
 guage models in legal aspect, arXiv preprint
 arXiv:2303.09136 (2023).
-[10] N. Poerner, U. Waltinger, H. Schütze, Inexpensive
+
+N. Poerner, U. Waltinger, H. Schiitze, Inexpensive
 domain adaptation of pretrained language models:
 Case studies on biomedical ner and covid-19 qa,
 arXiv preprint arXiv:2004.03354 (2020).
-[11] F. N. Iandola, A. E. Shaw, R. Krishna, K. W. Keutzer,
+
+F.N. Iandola, A. E. Shaw, R. Krishna, K. W. Keutzer,
 Squeezebert: What can computer vision teach nlp
 about efficient neural networks?, arXiv preprint
 arXiv:2006.11316 (2020).
-[12] Q. Jin, B. Dhingra, Z. Liu, W. W. Cohen, X. Lu, Pub-
-medqa: A dataset for biomedical research question
+
+Q. Jin, B. Dhingra, Z. Liu, W. W. Cohen, X. Lu, Pub-
+medga: A dataset for biomedical research question
 answering, arXiv preprint arXiv:1909.06146 (2019).
-[13] H. Nori, N. King, S. M. McKinney, D. Carignan,
+H. Nori, N. King, S. M. McKinney, D. Carignan,
 E. Horvitz, Capabilities of gpt-4 on medical chal-
 lenge problems, arXiv preprint arXiv:2303.13375
 (2023).
-[14] H. Liu, D. Tam, M. Muqeeth, J. Mohta, T. Huang,
+
+14
+
+15,
+
+16
+
+17
+
+18
+
+19
+
+20.
+
+21
+
+22
+
+23
+
+24
+
+25
+
+H. Liu, D. Tam, M. Mugeeth, J. Mohta, T. Huang,
 M. Bansal, C. A. Raffel, Few-shot parameter-
 efficient fine-tuning is better and cheaper than in-
 context learning, Advances in Neural Information
 Processing Systems 35 (2022) 1950-1965.
-[15]
-D. Vos, T. Döhmen, S. Schelter, Towards parameter-
+
+D. Vos, T. Déhmen, S. Schelter, Towards parameter-
 efficient automation of data wrangling tasks with
 prefix-tuning, in: NeurIPS 2022 First Table Repre-
 sentation Workshop, 2022.
-[16] X. L. Li, P. Liang, Prefix-tuning: Optimizing con-
+
+X. L. Li, P. Liang, Prefix-tuning: Optimizing con-
 tinuous prompts for generation, arXiv preprint
 arXiv:2101.00190 (2021).
-[17] E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li,
+
+E. J. Hu, Y. Shen, P. Wallis, Z. Allen-Zhu, Y. Li,
 S. Wang, L. Wang, W. Chen, Lora: Low-rank adap-
 tation of large language models, arXiv preprint
 arXiv:2106.09685 (2021).
-[18] A. Edwards, A. Ushio, J. Camacho-Collados,
+
+A. Edwards, A. Ushio, J. Camacho-Collados,
 H. de Ribaupierre, A. Preece, Guiding generative
 language models for data augmentation in few-shot
 text classification, arXiv preprint arXiv:2111.09064
 (2021).
-[19]
-[20]
-[21]
+
 A. Reuther, J. Kepner, C. Byun, S. Samsi, W. Ar-
 cand, D. Bestor, B. Bergeron, V. Gadepally, M. Houle,
 M. Hubbell, M. Jones, A. Klein, L. Milechin,
@@ -425,27 +466,34 @@ Interactive supercomputing on 40,000 cores for ma-
 chine learning and data analysis, in: 2018 IEEE
 High Performance Extreme Computing Conference
 (HPEC), IEEE, 2018, pp. 1-6.
+
 R. Luo, L. Sun, Y. Xia, T. Qin, S. Zhang, H. Poon, T.-Y.
 Liu, Biogpt: generative pre-trained transformer for
 biomedical text generation and mining, Briefings
 in Bioinformatics 23 (2022).
+
 H. Touvron, T. Lavril, G. Izacard, X. Martinet,
-M.-A. Lachaux, T. Lacroix, B. Rozière, N. Goyal,
+M.-A. Lachaux, T. Lacroix, B. Roziére, N. Goyal,
 E. Hambro, F. Azhar, et al., Llama: Open and effi-
 cient foundation language models, arXiv preprint
 arXiv:2302.13971 (2023).
-[22] R. Taori, I. Gulrajani, T. Zhang, Y. Dubois, X. Li,
+
+R. Taori, I. Gulrajani, T. Zhang, Y. Dubois, X. Li,
 C. Guestrin, P. Liang, T. B. Hashimoto, Stanford al-
 paca: An instruction-following llama model, https:
 //github.com/tatsu-lab/stanford_alpaca, 2023.
-[23] I. Loshchilov, F. Hutter, Decoupled weight decay
+
+I. Loshchilov, F. Hutter, Decoupled weight decay
 regularization, arXiv preprint arXiv:1711.05101
 (2017).
-[24] A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit,
-L. Jones, A. N. Gomez, Ł. Kaiser, I. Polosukhin, At-
+
+A. Vaswani, N. Shazeer, N. Parmar, J. Uszkoreit,
+L. Jones, A. N. Gomez, EL. Kaiser, I. Polosukhin, At-
 tention is all you need, Advances in neural infor-
 mation processing systems 30 (2017).
-[25] Y. Lin, S. Han, H. Mao, Y. Wang, W. J. Dally, Deep
+
+Y. Lin, S. Han, H. Mao, Y. Wang, W. J. Dally, Deep
 gradient compression: Reducing the communica-
 tion bandwidth for distributed training, arXiv
 preprint arXiv:1712.01887 (2017).
+

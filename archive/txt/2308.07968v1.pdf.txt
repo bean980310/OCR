@@ -1,0 +1,1251 @@
+arXiv:2308.07968v1 [cs.CL] 15 Aug 2023
+Teach LLMs to Personalize - An Approach inspired by Writing
+Cheng Li
+Google
+USA
+chgli@google.com
+Yaqing Wang
+Google
+USA
+yaqingwang@google.com
+ABSTRACT
+Education
+Mingyang Zhang
+Google
+USA
+mingyang@google.com
+Spurthi Amba Hombaiah
+Google
+USA
+spurthiah@google.com
+Michael Bendersky
+Google
+USA
+bemike@google.com
+Personalized text generation is an emerging research area that has
+attracted much attention in recent years. Most studies in this direc-
+tion focus on a particular domain by designing bespoke features or
+models. In this work, we propose a general approach for personal-
+ized text generation using large language models (LLMs). Inspired
+by the practice of writing education, we develop a multistage and
+multitask framework to teach LLMs for personalized generation.
+In writing instruction, the task of writing from sources is often
+decomposed into multiple steps that involve finding, evaluating,
+summarizing, synthesizing, and integrating information. Analo-
+gously, our approach to personalized text generation consists of
+multiple stages: retrieval, ranking, summarization, synthesis, and
+generation. In addition, we introduce a multitask setting that helps
+the model improve its generation ability further, which is inspired
+by the observation in education that a student's reading proficiency
+and writing ability are often correlated. We evaluate our approach
+on three public datasets, each of which covers a different and repre-
+sentative domain. Our results show significant improvements over
+a variety of baselines.
+KEYWORDS
+personalized generation, large language models
+*Work done as a visiting researcher at Google.
+Permission to make digital or hard copies of all or part of this work for personal or
+classroom use is granted without fee provided that copies are not made or distributed
+for profit or commercial advantage and that copies bear this notice and the full citation
+on the first page. Copyrights for components of this work owned by others than ACM
+must be honored. Abstracting with credit is permitted. To copy otherwise, or republish,
+to post on servers or to redistribute to lists, requires prior specific permission and/or a
+fee. Request permissions from permissions@acm.org.
+XXX, XXX, XXX
+© 2023 Association for Computing Machinery.
+ACM ISBN 978-1-4503-XXXX-X/18/06... $15.00
+https://doi.org/XXXXXXX.XXXXXXX
+ACM Reference Format:
+Qiaozhu Mei*
+University of Michigan
+USA
+qmei@umich.edu
+Yi Liang
+Google
+USA
+yiliang@google.com
+Cheng Li, Mingyang Zhang, Qiaozhu Mei, Yaqing Wang, Spurthi Amba
+Hombaiah, Yi Liang, and Michael Bendersky. 2023. Teach LLMs to Personal-
+ize An Approach inspired by Writing Education. In Proceedings of XXX.
+ACM, New York, NY, USA, 10 pages. https://doi.org/XXXXXXX.XXXXXXX
+1
+INTRODUCTION
+As artificial intelligence (AI) based systems are increasingly used
+to assist content creation, there has been a tremendous amount of
+interest in personalized text generation. Producing a customized re-
+sponse that takes into account auxiliary context, such as documents
+previously written by the user, is crucial for the development of gen-
+erative systems that support specific audiences, creation contexts,
+and information needs. Example applications include AI-assisted
+writing of various types of content from tweets and news stories
+to scientific articles and fictions, corporate and personal commu-
+nications (emails, chats, forums), and transformations of a given
+piece of written content into other styles, e.g., summarization, or
+conversely, elaboration.
+Researchers have investigated the generation of personalized
+text on various domains, including but not limited to reviews [13,
+14], dialogue agents [17, 38, 41] and social networks [8]. Previous
+work mostly relies on domain-specific features or knowledge and
+proposes models that address a particular task. How to design a
+general approach that works for all scenarios is a less studied area.
+On the other hand, along with the ascendance of generative
+AI, through chatbots like ChatGPT¹ and Bard² in particular, large
+language models (LLMs) are playing an increasingly prominent role
+in many text generation tasks. However, few studies have explored
+how to equip LLMs with the ability to personalize.
+In this work, we propose a general approach for personalized text
+generation using large language models. Our work is inspired by
+the widely-used practice in writing education, which decomposes
+the task of writing from sources by a procedure of finding, evaluat-
+ing, summarizing, synthesizing, and integrating information [3, 31].
+https://chat.openai.com
+2https://bard.google.com
+XXX, XXX, XXX
+Li et al.
+Analogously, we adopt a multistage multitask framework to teach
+LLMs for personalized text generation, with similar stages being
+retrieval, ranking, summarization, synthesis, and generation. Specif-
+ically, given the immediate context, such as the title and the starting
+sentence of a document a user is writing, we formulate a query and
+retrieve relevant information from an auxiliary repository of per-
+sonal contexts, such as documents the user has authored in the past.
+We then rank the retrieved results based on their relevance and
+importance, followed by summarizing the ranked results. We also
+synthesize the retrieved information into key elements, and finally
+feed the retrieved results, summary and synthesized information
+into the large language model for generating the new document.
+In language education, it is often observed that the proficiency
+of one's writing skills is highly correlated with that of their reading
+skills [4]. Furthermore, studies show that author recognition tasks
+can be used to measure the amount and level of reading by an indi-
+vidual [18], which correlates with their reading proficiency. Inspired
+by these two observations, we create a multitask setting that aims
+to improve the reading ability of the large language model, where
+we introduce an auxiliary task charging the model to attribute the
+authorship of a given text. We anticipate that this task will help
+the model better understand (i.e., read) the given text and in turn
+generate (i.e., write) better and more personalized content.
+We evaluate the proposed models on three public datasets, which
+cover personal email communications, social media discussions,
+and product reviews. By employing our multistage and multitask
+framework, we demonstrate significant improvements over a vari-
+ety of baselines on all three datasets.
+2
+RELATED WORK
+We present a literature review on personalized text generation and
+two related tasks, controlled text generation and text style transfer.
+Personalized text generation. Some studies focus on improving
+personalized generation for a particular domain by utilizing domain-
+specific features or knowledge. Li and Tuzhilin [14] design a model
+based on self-attentive recursive autoencoders to generate person-
+alized user reviews given product description, sentiment labels, and
+historical reviews of the user. A knowledge enhanced personalized
+review generation model based on a capsule graph neural network
+(CapsGNN) is proposed in [13] to utilize product attributes. Gao
+et al. [8] focus on personalized social text generation, where per-
+sonalized features are fed to the encoder to guide the generation of
+the decoder. There are extensive studies on personalization for dia-
+logue agents [17, 38, 41]. Due to limited real conversational data, re-
+searchers have explored constructing data by asking crowd-workers
+to write dialogues for specific personas [41] and by extracting user
+attributes and utterances from Reddit [17, 38] and Weibo [25, 43].
+There are investigations on using predefined attributes and topics
+for personalization. A personalized sentence generation method is
+proposed [40] based on generative adversarial networks (GANs).
+Frequently used function words and content words are used as
+input and as sentence structure constraints for model training.
+A less explored area is how to utilize large language models for
+personalized generation across different domains without relying
+on domain-specific or user-defined features. LaMP [29] is the work
+closest to ours. It provides a benchmark for training and evaluat-
+ing personalized language models on three classification and four
+text generation tasks. They deploy an approach that retrieves text
+from user profiles. The generation tasks provided in LaMP are at
+the sentence-level. We instead consider generating longer text of
+passage-length, which is more challenging. Method-wise, the re-
+trieval based approach in LaMP can be viewed as an instantiation
+of a single component of the multi-stage framework we proposed.
+Skopyk et al. [34] propose to train transformer layer adapters to
+achieve the effect of personalization. The paper only proposes the
+method without including any experimental analysis.
+Controlled text generation. Controlled text generation aims to
+generate text with a predefined list of attributes, which could be
+stylistic or semantic. To reduce the cost of finetuning, recent work
+of controlled text generation resorts to decoding-time methods,
+directly making pre-trained models generate texts towards de-
+sired attributes during inference. These methods include PPLM [5],
+GeDi [11], FUDGE [39], and DEXPERTS [16].
+Controlled text generation is different from personalized genera-
+tion in that it requires a predefined set of attributes (constraints).
+Text style transfer. A task related to controlled text generation is
+text style transfer. Its goal is to transform a piece of text by control-
+ling certain attributes of the generated text while preserving the
+content. There are two paradigms: supervised learning using paral-
+lel corpora, and unsupervised methods using non-parallel corpora.
+With parallel data, standard sequence-to-sequence models can be
+directly employed [27]. There are three approaches when only non-
+parallel corpora are available. The first approach is to disentangle
+text into content and attributes for generative modeling [33]. The
+second approach, called prototype editing [12], extracts a sentence
+template and attribute markers for generation. The third approach
+constructs pseudo-parallel corpora to train the model [42].
+Unlike text style transfer, personalized generation does not as-
+sume that the original text is already given. Like controlled text
+generation, most methods for text style transfer expect a given set
+of predefined attributes, which are not available in our setting.
+Our work is also aligned with the paradigm of teaching LLMs to
+reason through chain of thoughts [36, 37], with our decomposition
+of tasks deeply inspired by writing education and our model training
+for each task going beyond prompt engineering.
+3
+PROBLEM FORMULATION
+We consider the setting where a user is writing a document, which
+we call the current document. Given the immediate context and
+the user's personal context, the goal of the personalized model is
+to complete the document so that the generated document is close
+to the real current document as if the user finishes writing.
+There might be different ways to define the immediate context
+and the personal context. For simplicity and generality, we use the
+title and a short start of the current document as the immediate
+context. The user's personal context is defined as the documents
+they have written in the past at the time of writing the current
+document. These contexts are analogous to the sources a student is
+instructed to write from [3].
+Our training task is formulated as follows. Given a list of ex-
+amples {(xut, Dut, dut)}, where xut is the immediate context of
+Teach LLMs to Personalize - An Approach inspired by Writing Education
+XXX, XXX, XXX
+Personal context
+2. Rank
+3. Summarize
+Top entries
+Summary
+4. Synthesize
+Key elements
+1. Retrieve
+Immediate context of
+the current document
+LLM
+圖貳
+Generate
+Predict
+Personalized
+document
+Same Author?
+A document pair
+Multitasking
+Figure 1: The overview of the multistage multitask frame-
+work for personalized text generation.
+=
+user u for the current document dut at time step t, and Dut
+{du1, du2,. ‚du,t−1} is the personal context of past documents, we
+want to train a personalized generation model G that generates
+dut based on (xut, Dut) so that we can maximize the similarity
+between d'ut and dut. Whenever it is clear from the context, we will
+omit the subscript u and directly use xt, Dt and dt instead. We will
+also use "user" and "author" interchangeably.
+4
+METHOD OVERVIEW
+The overview of our multistage multitask framework for personal-
+ized text generation is presented in Figure 1.
+=
+Given the immediate context xt of the current document written
+by a user u, a retriever Re(xt, Dt) retrieves entries from past user
+document set Dt using xt as the query. The returned entries are
+fed to a ranker Ra to produce ranked entries &t Ra(Re(xt, Dt)),
+which are consumed by: (1) a summarization model Su(x+, εt)
+to produce a summary of the multiple documents retrieved; and
+(2) a synthesis model Sy(x+, &t) to produce key elements in these
+documents. The personalized generation model G generates the cur-
+rent document d'₁ = G(xt, Su(xt, &t), Sy(xt, &εt), &t) and is trained
+against the ground-truth current document dt.
+We additionally consider an auxiliary task, called author dis-
+tinction, to help the model better understand the user context and
+generate better personalized content. Given a document dui writ-
+ten by a user u, we randomly sample another document d₂j to
+form a document pair. The model G is then trained on a set of
+tuples {(dui, dvj), y}, where the label y = true if v = u, otherwise
+y=false. Note that we use text {true, false} instead of numerical
+labels for y since G is a sequence-to-sequence model.
+5
+PERSONALIZED TEXT GENERATION
+We discuss the detail of each stage as outlined in Section 4.
+5.1
+Retrieval
+In the retrieval stage, given the immediate context xt, the retriever
+Re(xt, Dt) uses x+ as the query to retrieve relevant text entries
+from past document set Dt.
+To define an immediate context that can be applied to any sce-
+nario, we simply use FirstKCharacters (dt), where
+First KCharacters (·) returns the first K characters of a piece of text.
+We set K = 150 for all experiments. If a document has a title, we
+concatenate the title and the body as the text.
+We experiment with both sparse and dense retrievers to re-
+trieve relevant entries from a user's past documents. We employ
+BM25 [28] as the sparse retriever. We use a T5X Retrieval model [19,
+21], GTR-Large, as our dense retriever. We do not choose models of
+larger sizes since they demonstrate similar performance but much
+worse effectiveness-latency trade-offs on benchmark datasets [21].
+For dense retrieval, we experiment with two levels of granularity
+when indexing personal document entries: a document level and
+a snippet level. We do not choose a sentence level since many
+sentences are too short to offer enough context information. We
+create a snippet in this way: we keep appending sentences from
+the same document until we reach 250 characters or we reach the
+end of the document.
+Since the snippets to retrieve are quite short, we only examine
+the performance of sparse retrieval at the document level.
+5.2 Ranking
+Since we experiment with indexing entries at both document and
+snippet level, we can rank entries accordingly:
+• RANKDOCBM25. For sparse retrieval, we retrieve and rank
+documents based on BM25 scores.
+• RANKDOCDENSE. For dense retrieval, when we retrieve en-
+tries at the document level, we rank retrieved documents
+based on their embedding similarity with the embedding of
+the immediate context xt.
+• RANKSNIPPET. Similarly, for dense retrieval, when we re-
+trieve entries at the snippet level, we rank retrieved snippets
+based on embedding similarity.
+During analysis, we find that issues exist for both RANKDOC-
+DENSE and RANKSNIPPET. The retrieved results via RANKDOCDENSE
+can be less relevant since embeddings are less effective when the
+documents to encode are long. While for RANKSNIPPET, many sim-
+ilar snippets are retrieved, providing insufficient information for
+generation. For example, if the immediate context is I really enjoyed
+reading the book, we might retrieve similar snippets like I enjoy the
+book, The book is fun, or I love this book. They are all relevant but
+do not provide enough details on why this user enjoys a particular
+book, which is critical for passage-level generation.
+To alleviate the two issues, we propose another dense retrieval
+strategy, RANKDOCBYSNPT, inspired by past work on using passage
+evidence in retrieval [2]. RANKDOCBYSNPT retrieves relevant text at
+the snippet level, which addresses the issue that document embed-
+dings are less effective. At the ranking stage, instead of directly rank-
+ing snippets, we rank documents that contain the retrieved snippets,
+to mitigate lack of diversity in snippets retrieved via RANKSNIP-
+PET. Specifically for each document d;, we compute the embedding
+similarity score between each retrieved snippet sij Є di and the
+immediate context x+, and use the max score as the document score
+for ranking. That is, score (di, x+) = maxs₁₁ =d; (score (sij, xt)).
+To make all the ranking strategies comparable, we concatenate
+ranked entries into a string and truncate it to 2, 500 characters. Thus
+the subsequent modules are fed with input text of the same length.
+5.3
+Summarization
+The summarization stage aims to extract important information
+from the retrieved entries so that the generation model can have
+a better understanding of what is the most important information
+in the user's personal context, such as key points, topics, or useful
+XXX, XXX, XXX
+Li et al.
+Snippets in the
+ranked entries
+Compute
+similarity to
+.
+This book is amazing.
+all snippets
+•
+It had me read it out loud.
+⚫
+I enjoyed reading this book.
+⚫
+I love the characters.
+⚫ The book is a page turner.
+The weak label for context
+dependent summarization
+I enjoyed reading this
+book. I love the
+characters. The book is
+a page turner.
+Snippets in the ground-
+truth current document
+• I really enjoyed the book.
+The characters are loving.
+It's a page-turner.
+Pair each ground-truth snippet
+with a past one
+Snippets in the
+ground-truth
+current document
+Past snippets of
+the highest
+similarity
+I really enjoyed the I enjoyed reading
+Join selected
+book.
+this book.
+past snippets
+into a string The characters are I love the
+loving.
+characters.
+to minimize the cross-entropy loss. We still choose T5-11B [26] as
+the model.
+One important note is that we only use half of the training data
+for the generation task to train the summarization model. In this
+way,
+the generated summary will be noisier on the unseen half of the
+training data (similar to the test set). Consequently the generation
+model will be aware of the noisy summary during training and
+learn to cope with it by attending to other information.
+Another note is that no validation or test data for the generation
+task are used to train the summarization model.
+It's a page-turner.
+The book is a page
+turner.
+Figure 2: Creation of weak labels for context dependent sum-
+marization.
+phrases (so they can be reflected in the output). With the summary,
+the generation model does not need to work on extracting the
+high-level aspects and generating the exact words at the same time,
+making the generation task easier.
+We experiment with two strategies – context independent and
+context dependent summarization. By context dependent, we mean
+that the summarization is conditioned on the immediate context.
+Context independent summarization. We choose a straightfor-
+ward implementation of context independent summarization - we
+finetune an independent LLM, T5-11B [26], on publicly available
+summarization datasets, and directly use the finetuned model on
+our ranked entries for inference. The datasets we use are CNN/Daily
+Mail [30], ForumSum [9], and Reddit TIFU-long [10].
+Context dependent summarization. The challenge to train a con-
+text dependent summarization model is the lack of ground-truth
+labels. We tackle this challenge by generating weak labels based
+on ground-truth current documents. Our intuition is that we want
+to extract text from the retrieved results that are more likely to be
+used in the current document. To this end, we find text from the
+ranked entries that is similar to the text of the current document,
+which can be formulated as an extractive summarization task. An
+example to illustrate this idea can be found in Figure 2.
+Specifically for each snippet sti = dt in the ground-truth current
+document, we compute its similarity to all snippets in the ranked
+entries & = {e1, e2, ...,\
+, 
+eR} retrieved from past documents, where
+e; is the j-th snippet in the entries Et, and R is the number of
+snippets we include in the ranking. For simplicity, we reuse the
+embeddings obtained by the T5X Retrieval model [19, 21] in the
+retrieval stage to compute similarity. The snippet with the highest
+similarity score emax₁ = arg maxe; && (score (ej, Sti)) will be added
+to the candidate snippet list Lt. If the selected snippet emax; is
+already in the candidate list Lt, we look for the snippet with the
+next highest score until we find a new snippet. We keep adding
+newly selected snippets from the ranked entries to the candidate
+list until we have iterated through all the snippet pairs.
+The weak labels are created by Join(Lt), which joins the snip-
+pets in the candidate list into one string. Given the immediate
+context x+ and the ranked entries &t, the context dependent summa-
+rization model Su(x+, &t) is trained using the weak labels Join (Lt)
+5.4
+Synthesis
+The synthesis step aims to find key elements that are common
+in the top retrieved entries for an overall understanding of the
+current writing task. We experiment with extracting keywords as
+the synthesis step in this paper. More sophisticated approaches to
+synthesis are worth exploration and are left as future work.
+Similar to summarization, we investigate two strategies - context
+independent and context dependent synthesis. The context also
+refers to the immediate context.
+Context independent synthesis. We extract keywords by finding
+frequent terms from the past documents Dt. We limit terms to
+unigrams as most users do not have enough documents to extract
+n-grams with larger n. We also remove stopwords, words with
+frequency of one, and words with small inverse document frequency
+(IDF < 1.5). We then sort remaining words in descending order by
+their frequency and then by IDF, and keep up to 20 words.
+Context dependent synthesis. Our idea of creating weak labels
+for context dependent synthesis is very similar to how we create
+weak labels for context dependent summarization - we aim to find
+important words from the retrieved results that are likely to be
+used in the generation of the current document.
+To be more specific, for each source word wti = dt in the ground-
+truth current document, we compute its similarity with each target
+word
+vtj ¤ Ɛt from the ranked entries. For both source and target
+words, we skip stopwords or words with IDF < 1.5. Two words
+(Wti, vtj) are similar if at least one of the conditions are met:
+• The two words are identical.
+• The two words are synonyms as defined in WordNet [6].
+• The two words are close in the embedding space. We use
+the uncased Glove [24] embeddings pretrained on the Com-
+mon Crawl dataset. We define two words as similar if their
+Euclidean distance is less than 4.
+We add the qualified target word vt; to the candidate target word
+list T. After going through all possible (source, target) word pairs,
+the words in the candidate list Tt are then sorted inversely by the
+number of times they are selected, and then by IDF. The candidate
+word list is then joined into a string to form the weak label Join (T+).
+We still finetune a T5-11B [26] model for synthesis. Given the
+immediate context xt and the ranked entries εt, the context de-
+pendent synthesis model Sy(x+, εt) is trained using the weak label
+Join(T) to minimize the cross-entropy loss.
+We use the same set of training examples that are used for sum-
+marization. The only difference is that the label is changed from the
+joined snippet list Join(Lt) to the joined target word list Join(T).
+Teach LLMs to Personalize - An Approach inspired by Writing Education
+5.5
+Personalized Generation
+Given the immediate context xt, the ranked entries & retrieved
+from the past documents, the context independent/dependent sum-
+mary from the summarization model Su(xt, &t), the context inde-
+pendent/dependent synthesis from the synthesis model Sy(xt, εt),
+the personalized generation model G(xt, Su(xt, &t), Sy(xt, &t), &t)
+is trained using the ground-truth current document d₁ as the label
+to minimize the cross-entropy loss.
+To help the model distinguish between various information
+sources, we add different prefixes when converting the sources
+to a single string input. Specifically, the immediate context is pre-
+fixed by passage start, the summary is prefixed by summary, the
+synthesis is prefixed by important words, and the list of ranked
+entries is prefixed by past passages.
+5.6
+Multitask Learning
+Studies in language education show that writing and reading skills
+are highly correlated [4]. Additionally, researches have found that
+author recognition tasks can be used to assess how much an individ-
+ual reads [18], which correlates with reading proficiency. Inspired
+by the above studies, in addition to the generation task, which corre-
+sponds to writing, we add a reading comprehension task that aims
+to improve the model's ability to better understand the style of an
+author. Specifically, we introduce the author distinction task, which
+requires the model to decide whether a given pair of documents
+are written by the same author or not.
+Given a document dui written by a user u, for half of the time,
+we randomly sample another document du; from the same user u to
+form a positive training example (x, y) = ((dui, duj), true). Other-
+wise, we randomly sample another document dk from another user
+v (vu) to form a negative example (x, y) ((dui, duk), false).
+Note that we use text labels y = {true, false} since the generation
+model G is a sequence-to-sequence model.
+=
+Since the generation model is simultaneously trained on two
+tasks, personalized generation and author distinction, we prepend
+a task-level instruction to the model input to help the model distin-
+guish which task to perform. For the personalized generation task,
+the instruction is "Finish the passage in the user voice". While for
+the author distinction task, the instruction is "Predict whether two
+passages are from the same author".
+Note that all the documents for the author distinction task are
+sampled from users that never appear in the validation or test data
+of the personalized generation task.
+6
+EXPERIMENT SETUP
+In this section, we describe our experiment setup, including datasets,
+training details, competing methods, and metrics.
+6.1
+Datasets
+We evaluate our models on three public datasets, each from a rep-
+resentative domain. A summary of data statistics can be found in
+Table 1. For all the three datasets, we give their respective definition
+of a document.
+The Avocado Research Email Collection [22] consists of emails
+and attachments taken from 279 accounts of an information tech-
+nology company named "Avocado". We follow the processing steps
+XXX, XXX, XXX
+of LaMP [29] and group emails by sender addresses. Note that the
+number of senders/users can be more than 279 accounts as there are
+senders outside of the company. We treat an email as a document
+and its subject as the title.
+The Amazon review data [20] provides user reviews from Ama-
+zon on different product categories. Since the entire dataset is very
+large, we choose the biggest category, books, which has the largest
+number of reviews. We group reviews by users. We treat reviews
+as documents and review titles as document titles.
+The Reddit comments dataset [35] consists of all the posts and
+comments available on Reddit from 2007 to 2015. We treat both
+posts and comments as documents and group them by users.
+For all the three datasets, we deduplicate identical documents
+from each user's personal context. A document is qualified to be
+a current document, which is the document to be generated, if this
+document is longer than 300 characters and the document author
+has written at least 2 documents before this one. For each qualified
+current document, we generate an example. We only keep users
+who have at least 5 examples. We include up to 50 examples per
+user in case the datasets are dominated by certain active users.
+In order to evaluate the model's ability to generalize, we partition
+the datasets by users so that the validation and test sets only contain
+documents from users that are unseen in the training set. The
+partition ratio of users in train/validation/test sets are 85/5/10.
+6.2 Training details
+We finetune the T5-11B [26] model for all the summarization, syn-
+thesis, and personalized generation tasks. The T5-11B models are
+optimized by the Adafactor algorithm [32] with a base learning
+rate of 0.001. We use the first 1,000 training steps for warmup with
+a linear warmup scheduler. We additionally apply the square root
+normalized decay of the learning rate. We train the models until
+the performance converges on the validation set. Beam search [7]
+is used for decoding with a beam size of 4.
+For multitask learning, we simply mix the examples for person-
+alized generation and author distinction in the ratio of 1:1.
+6.3 Competing methods
+As mentioned in Section 2, most personalized generation models are
+proposed for a particular domain, which relies on domain specific
+knowledge or features. The work closest to ours is LaMP [29],
+which employs a retrieval based method for personalization using
+LLMs. Since LaMP focuses on sentence-length generation, it does
+not explore the advantage of utilizing snippet- or document-based
+strategies as we have done in this paper.
+We consider the following competing methods for better under-
+standing of credit assignment.
+Baselines. We consider these baselines.
+• IMMEDCTX. This method only uses the immediate context x+
+as the model input, which is the title and a short start of the
+current document.
+• USERID. We add User ID to the model input and train the
+model using the next snippet generation task. The user ID
+helps the model memorize the personal style of each user.
+XXX, XXX, XXX
+Table 1: Dataset statistics.
+#avg chars of
+current docs
+#avg past docs
+per current doc
+#users
+#current docs (#examples)
+Train
+Val.
+Test
+Train
+Val.
+Test
+Avocado email
+Amazon review
+Reddit
+3,648.8
+1,056.7
+658.5
+42.3
+45.1
+88.5
+501
+27
+53
+354,275 20,789 41,331
+240,626 14,223 28,306
+13,305
+764
+1,227
+5,349,661 311,469 621,438
+3,858,731 231,307 455,582
+Li et al.
+Since this model performs better on users seen during train-
+ing, we include all documents that are never used for pre-
+diction to train the model, including documents from the
+validation and the test set. The next snippet generation task
+requires the model to generate the next snippet given a snip-
+pet from a document.
+Note that the immediate context includes a short start of the
+current document, which is also the start of the ground-truth
+output. Other generation models learn to copy the start to
+their output to minimize loss but this baseline model is not
+trained to do so. To make the comparison fair, as postprocess
+we prepend the start of the current document included in
+the immediate context to the model output.
+⚫ LLMZEROSHOT. We use the PaLM 2 model [1], which is a
+new state-of-the-art LLM, for zero-shot generation. PaLM 2
+is fed with the input of the best configuration based on exper-
+iments, including the task instruction to prompt the model to
+perform the personalized generation task, the immediate con-
+text, the context dependent summary, the context dependent
+synthesis, and the retrieved entries from the best ranking
+strategy. Similar to the USERID baseline, we also prepend the
+start of the current document to the model output.
+Retrieval augmented methods. We experiment with the ranking
+strategies introduced in Section 5.2: one sparse retrieval based
+method RANKDocBM25, and three dense retrieval based methods -
+RANKDOCDENse, RankSnippet, and RankDocBYSNPT. In addition,
+we add a recency based baseline, RECENTDOC, which retrieves most
+recent documents written in the past as ranked entries.
+For all these methods, the personalized generation model G is
+trained on the immediate context x+ and the ranked entries &t.
+Summarization. We examine the summarization methods intro-
+duced in Section 5.3 by performing summarization on top of the
+best configuration of ranking strategies. The personalized generation
+model G is trained on the immediate context xt, the output from
+the summarization model Su(x+, &t), and the ranked entries &t. We
+refer to context independent summarization as SUMCTXIND, and
+context dependent summarization as SUMCTX.
+Synthesis. We evaluate the synthesis methods introduced in Sec-
+tion 5.4 by applying synthesis on top of the best configuration of
+summarization methods. The personalized generation model G is
+trained on the immediate context xt, the summary from the summa-
+rization model Su(xt, εt), the synthesis from the synthesis model
+Sy(xt, &t), and the ranked entries εt. We refer to context indepen-
+dent synthesis as SYNCTXIND, and context dependent synthesis as
+SYNCTX.
+Multitask Training. We use AUTHORPRED to refer to the multitask
+setting, where we add the author distinction task on top of the best
+configuration of the single (generation) task to jointly train the
+generation model.
+6.4
+Metrics
+For each generated current document, we compute its overlap with
+the ground-truth current document. We adopt BLEU [23], Rouge-1,
+ROUGE-2 and ROUGE-L [15] as evaluation metrics, which have been
+widely used in personalized generation tasks [14, 29].
+7
+We conduct statistical significance tests using the paired t-test.
+7.1
+EXPERIMENTAL RESULTS
+Overall performance
+Table 2: Overall performance(%) on the Avocado email dataset.
+*, † indicate statistically significant improvement over IM-
+MEDCTX, RANKDOCBM25 respectively at the level of 0.01.
+Avocado email
+BLEU ROUGE-1 ROUGE-2 ROUGE-L
+Baselines
+IMMEDCTX
+USERID
+LLMZEROSHOT
+17.27
+32.36
+21.45
+28.58
+13.28
+32.33
+20.95
+27.86
+14.93
+35.06*
+22.11*
+28.52
+Retrieval augmented methods
+RECENTDOC
+RANKDOCBM25 21.19*
+RANKDOCDENSE 19.43*
+RANKSNIPPET
+RANKDOCBYSNPT 21.06*
+19.57*
+35.64*
+23.96*
+31.25*
+37.69*
+25.99*
+33.07*
+35.62*
+23.71*
+30.90*
+18.69*
+35.82*
+23.26*
+30.78*
+37.42*
+25.65*
+32.90*
++Summarization
+SUMCTXIND
+SUMCTX
+21.23*
+37.58*
+25.79*
+23.17** 39.31** 26.64**
+33.15*
+34.37**
++Synthesis
+SYNCTXIND
+SYNCTX
+23.06**
+39.24*
+26.72*1
+34.52**
+23.44** 40.38**
+26.93**
+34.34**
++Multitask
+AUTHORPRED
+23.27** 41.02** 28.60**
+35.70**
+The overall performance on the three datasets are listed in Ta-
+ble 2, 3, and 4 respectively. In general, retrieval augmented methods
+perform better than baselines that do not utilize the retrieved infor-
+mation. Summarization and synthesis bring additional gains when
+they are dependent on the immediate context. Multitask learning
+Teach LLMs to Personalize - An Approach inspired by Writing Education
+Table 3: Overall performance(%) on the Amazon review
+dataset. *, indicate statistically significant improvement
+over IMMEDCTX, RANKDOCBYSNPT respectively at the level
+of 0.01.
+Amazon review
+BLEU ROUGE-1 ROUGE-2 ROUGE-L
+Baselines
+IMMEDCTX
+USERID
+LLMZEROSHOT
+17.83
+36.22
+17.61
+36.62
+22.49
+22.85
+16.29
+38.74*
+22.52
+31.77
+32.11*
+30.79
+Retrieval augmented methods
+RECENTDOC
+19.09* 37.51*
+23.37*
+32.67*
+RANKDOCBM25 19.49*
+37.79*
+23.56*
+32.85*
+RANKDOCDENSE 19.38*
+37.49*
+22.92*
+32.48*
+RANKSNIPPET
+19.44*
+37.45*
+23.10*
+RANKDOCBYSNPT 19.35*
+38.28*
+23.87*
+32.50*
+33.23*
++Summarization
+SUMCTXIND
+19.17*
+38.33*
+23.66*
+SUMCTX
+19.81**
+38.66*
+24.25**
+33.35*
+33.57*
++Synthesis
+SYNCTXIND
+SYNCTX
+19.84**
+19.87**
+38.68* 24.31**
+39.46**
+24.66**
+33.61*
+33.97**
++Multitask
+AUTHORPRED 19.78** | 39.36**
+24.56**
+33.87**
+further improves the model's generation ability in most datasets.
+We compare important methods in detail below.
+Comparison among baselines. Comparing with IMMEDCTX, USERID
+performs surprisingly well, especially on the Amazon review and
+the Reddit data. This is because the USERID model is trained on
+the next snippet prediction task, resulting in relatively shorter
+generated output. By memorizing the user IDs, the model has an
+advantage on datasets with shorter document length, e.g., the Ama-
+zon review and the Reddit data. However, since this model requires
+user IDs as input, it has problems in generalizing to new users or
+scaling to a large number of users.
+LLMZEROSHOT is provided with the same input as SYNCTX. The
+reduced performance suggests that finetuning is critical to the
+personalized generation task.
+Retrieval augmented methods. All the retrieval augmented meth-
+ods outperform IMMEDCTX, which excludes all documents from a
+user's personal context. This indicates that past documents provide
+useful information when the model generates the current document
+for a user.
+RECENTDOC unexpectedly performs on par with some similarity
+based retrieval methods in many cases, especially on the Avocado
+email dataset. But it still performs worse than RANKDOCBYSNPT.
+On one hand, RECENTDOC is a decent strategy as a user's recent
+documents might share similar writing style, and even similar con-
+tent, e.g., a user is writing multiple emails concerning a particular
+topic, or a user starts to take interest in a particular book genre
+XXX, XXX, XXX
+and are thus writing similar book reviews. On the other hand, pro-
+viding information more relevant to the current topic based on the
+immediate context using RANKDocBYSNPT instead of simply re-
+trieving the most recent content can further improve the generation
+performance.
+RANKDOCBM25 performs closely to RANKDOCBYSNPT except for
+the Amazon review dataset, where RANKDOCBM25 is less effective.
+This suggests that BM25 is still a powerful retrieval strategy even
+when the query, which is the immediate context, is longer than
+common search queries and is written in natural language.
+RANKDOCBYSNPT consistently performs better than or equally
+well as other retrieval based methods by combining the strength of
+RANK DOCDENSE and RANKSNIPPET. By retrieving on the snippet
+level, dense retrieval becomes more effective by encoding less infor-
+mation in a single embedding. By ranking documents that contain
+the retrieved snippets, the generation model is able to extract more
+diverse or detailed information for content generation. RANKDOC-
+DENSE, RANKSNIPPET and RANKDOCBYSNPT all perform well on
+the Reddit data, due to the relatively short document length of this
+dataset.
+Summarization. SUMCTXIND performs similarly as retrieval aug-
+mented methods without the summarization step, while SUMCTX
+outperforms retrieval augmented methods. This indicates that a
+generic summary does not provide additional information to the
+generation model. The summary is more useful when it consid-
+ers the immediate context. It guides the generation model to the
+incorporation of possible topics or phrases when generating the
+Table 4: Overall performance(%) on the Reddit dataset. *, †
+indicate statistically significant improvement over USERID,
+RANKSNIPPET respectively at the level of 0.01.
+Reddit
+BLEU ROUGE-1 ROUGE-2 ROUGE-L
+Baselines
+IMMEDCTX
+USERID
+LLMZEROSHOT 24.04
+26.33
+26.55
+43.69
+33.52
+40.53
+44.71
+34.61
+41.53
+43.67
+31.24
+37.85
+Retrieval augmented methods
+RANK DOCDENSE
+RECENTDOC 28.23*
+RANKDOCBM25 28.97*
+44.83
+34.57
+41.72
+45.71 1*
+35.13
+42.52*
+28.82* 45.61*
+35.22*
+42.56*
+RANKSNIPPET
+RANKDOCBYSNPT
+29.08* 45.94*
+35.39*
+42.68*
+28.87* 45.67*
+35.24*
+42.54*
++Summarization
+SUMCTXIND
+SUMCTX
+28.91*
+45.71*
+35.26*
+42.57*
+28.92* 46.09* 35.82**
+43.14**
++Synthesis
+SYNCTXIND
+SYNCTX
+28.82*
+45.91* 35.87**
+29.19* 46.45**
+43.09**
+36.13**
+43.27**
+AUTHOR PRED
++Multitask
+29.13* 47.11** 36.94** 43.95**
+XXX, XXX, XXX
+Li et al.
+current document. Without the context dependent summary, the
+generation model needs to consider the high-level topics and the
+exact words to generate at the same time, making the task harder.
+Synthesis. We observe patterns similar as summarization - SYNC-
+TXIND performs on par with SUMCTX, a method without synthesis,
+while SYNCTX outperforms SUMCTX. This means that synthesis is
+useful only when it is dependent on the immediate context. We
+also see that SYNCTX improves the ROUGE-1 metric more than other
+metrics. This is due to our design choice of the synthesis stage
+by identifying important unigrams. More sophisticated synthesis
+methods are worth exploring as future work to improve metrics
+other than ROUGE-1.
+Multitask. By jointly learning to predict whether two docu-
+ments are from the same author, AuthorPred performs better
+than SYNCTX, which has a single task setting, on the Avocado email
+and the Reddit datasets, and performs closely on the Amazon re-
+view dataset. This indicates that improving the model's reading
+ability by differentiating the writing style of different authors does
+no harm to the generation performance, which often benefits.
+7.2
+Formulation of input and output
+Since Table 2, 3, and 4 have already included the ablation study by
+reporting the performance of adding one new component at a time,
+we additionally investigate whether varying the formulation of the
+input and output will lead to significant change in performance.
+We study the following settings.
+• NORANKEDENTRIES. We investigate whether the ranked en-
+tries are still necessary when the summary and the syn-
+thesized outcome are available. To this end, we train the
+generation model using the immediate context, the context
+dependent summary, and the context dependent synthesis.
+• REMOVEDOCSTART. The immediate context includes a short
+start of the current document. For all the previous exper-
+iments, this short start is still present in the ground-truth
+label, which is the current document, when we train the
+generation model. We study the effect of removing the short
+start from the ground-truth label. Note that to make the
+comparison fair, we prepend the short start to the model
+generated text when computing metrics.
+• IMMEDCTXATEND. In all the experiments above, the informa-
+tion sources are placed in the order of the immediate context,
+the summary, the synthesis, and the ranked entries. We study
+whether the order matters by placing the immediate context
+at the end.
+Table 5: Analysis of formulation of input and output on the
+Avocado email dataset based on absolute change of perfor-
+mance (%) over AUTHORPRED. Other datasets show similar
+patterns and are omitted to save space.
+Table 6: Examples of model output. Italic words are used in
+the immediate context.
+Ground-truth doc: I just did not enjoy this book. I discovered this author a
+few weeks ago and have been making my way through her cocktail series
+but this one was not good for me. Didnt particularly like the characters
+(and I get it, Lucas looks like Prince Harry) and the plot was slow and less
+than engaging. I finished it, but only because Im stubborn.
+SUMCTX output: I just did not enjoy this book. I discovered this author a
+few weeks ago and have been making my way through her books. I really
+liked the first book in the series, but this one was just not my favorite. I
+just didn't find myself connecting with the characters. I found the heroine
+to be a bit too naive and I just didn't find myself falling for the hero.
+RANKDOCBYSNPT output: I just did not enjoy this book. I discovered this
+author a few weeks ago and have been making my way through her books.
+I've enjoyed the first two books in this series and I'm not sure why I didn't
+like this one. I'm not sure if it's because I'm not a fan of the whole "friends
+to lovers" thing, but I just didn't like the way this book was written.
+Why SUMCTX is better: the summarization model mentions I didn't fall
+for the hero, which makes the generation model comment more on the
+characters.
+Ground-truth doc: Thanks for your insight. I do websites, mobile applica-
+tions, desktop applications. I have a lot of success with odesk and have been
+using it ever since. I have been thinking of developing stuff for my own
+the way I do it for my clients. I just get too busy with side projects and my
+full-time employment.
+SYNCTX output: Thanks for your insight. I do websites, mobile applications,
+desktop applications. I have a lot of success with odesk and have been using
+it ever since. I have a lot of clients and I have been using it for a long time.
+I am a professional developer though and I have been doing this for a long
+time.
+SUMCTX output: Thanks for your insight. I do websites, mobile applications,
+desktop applications. I have a lot of success with odesk and have been using
+it ever since. I have a lot of projects. I have a lot of experience with php,
+javascript, html, css, javascript, html5, c#, javascript, c#
+Why SYNCTX is better: the synthesis model mentions developer and free-
+lancer so that the generation model can focus on the topic of development
+and clients.
+Ground-truth doc: As another reviewer wrote, this book flows gently. There
+isn't a lot of action and yes, the timeline bounces around but it's not hard to
+figure out what is happening. But fair warning - this is a sad story. I got
+choked up once or twice. It's very well written but the story isn't really
+groundbreaking.
+AUTHORPRED output: As another reviewer wrote, this book flows gently.
+There isn't a lot of action and yes, the timeline bounces around but it's not
+confusing. The characters are well-developed and the story is interesting.
+I did find the ending a little sad, but I guess that's what I was expecting.
+SYNCTX output: As another reviewer wrote, this book flows gently. There
+isn't a lot of action and yes, the timeline bounces around but it's not confusing.
+The story is about a group of friends who have been friends since childhood.
+They are all in their late 30s and have been friends since childhood.
+Why AUTHORPRed is better: The author distinction task helps the model
+understand that this user often gives a high-level review of the story instead
+of going to details.
+Avocado email
+BLEU
+NORANKEDENTRIES -2.53
+REMOVEDOCSTART -0.85
+IMMEDCTXATEND -0.12
+-2.6
+-0.74
+0.05
+-3
+-2.25
+0.13
+ROUGE-1 ROUGE-2 ROUGE-L
+-2.75
+-1.78
+-0.08
+Due to the space limit, we only show the performance on the
+Avocado email data in Table 5. Other datasets show similar patterns.
+NORANKEDENTRIES underperforms AUTHORPRED by a large mar-
+gin, meaning that the generation model still relies on the retrieved
+Teach LLMs to Personalize - An Approach inspired by Writing Education
+entries for information, e.g., word usage and writing style, even
+when the summary and the synthesis are available. There is a per-
+formance degradation of REMOVEDOCSTART. We suspect that the
+presence of the short start of the current document in both the input
+and the ground-truth label helps the model understand the task bet-
+ter. This is supported by the observation that the model converges
+faster during training when the short start is included in the ground-
+truth label. The close performance between IMMEDCTXATEND and
+AUTHORPRED indicates that reordering the information sources
+does not affect the performance at least in the case of finetuning.
+7.3 Case studies
+We provide some illustrative examples in Table 6 for a better under-
+standing of why the proposed method could provide better guidance
+on how to generate personalized content.
+8
+CONCLUSION
+We propose a general approach for teaching large language mod-
+els for personalized text generation. Analogous to how students
+are instructed to write from sources in a sequence of steps, the
+proposed approach consists of multiple stages: retrieval, ranking,
+summarization, synthesis, and generation. Additionally, inspired by
+the observation that reading and writing skills are correlated, we
+create a multitask setting that improves the model's reading ability
+by distinguishing the authorship of given document pairs. This
+multitask setting further improves the model's ability to generate
+personalized text empirically. We evaluate our models on three
+publicly released datasets from representative domains. Our results
+demonstrate the effectiveness of the multistage multitask frame-
+work. Investigation into the incorporation of world knowledge, e.g.,
+product information, is a promising direction for future work.
+REFERENCES
+XXX, XXX, XXX
+[1] Rohan Anil, Andrew M Dai, Orhan Firat, Melvin Johnson, Dmitry Lepikhin,
+Alexandre Passos, Siamak Shakeri, Emanuel Taropa, Paige Bailey, Zhifeng Chen,
+et al. 2023. Palm 2 technical report. arXiv preprint arXiv:2305.10403 (2023).
+[2] James P. Callan. 1994. Passage-Level Evidence in Document Retrieval. In SIGIR
+'94, Bruce W. Croft and C. J. van Rijsbergen (Eds.). Springer London, London,
+302-310.
+[3] Adeline Cooney, Eamon Darcy, and Denis Casey. 2018. Integrating reading and
+writing: supporting students' writing from source. Journal of University Teaching
+& Learning Practice 15, 5 (2018), 3.
+[4] Marion Crowhurst. 1990. Reading/writing relationships: An intervention study.
+Canadian Journal of Education/Revue canadienne de l'éducation 15, 2 (1990), 155-
+172.
+[5] Sumanth Dathathri, Andrea Madotto, Janice Lan, Jane Hung, Eric Frank, Piero
+Molino, Jason Yosinski, and Rosanne Liu. [n.d.]. Plug and Play Language Models:
+A Simple Approach to Controlled Text Generation. In International Conference
+on Learning Representations.
+[6] Christiane Fellbaum. 1998. WordNet: An electronic lexical database. MIT press.
+[7] Markus Freitag and Yaser Al-Onaizan. 2017. Beam Search Strategies for Neural
+Machine Translation. ACL 2017 (2017), 56.
+[8] Yong-Bing GAO, Jun-Tian GAO, Rong MA, and Li-Dong YANG. [n.d.]. Research
+on user granularity-level personalized social text generation technology. Journal
+of Computer Applications ([n. d.]), 0.
+[9] Misha Khalman, Yao Zhao, and Mohammad Saleh. 2021. ForumSum: A multi-
+speaker conversation summarization dataset. In Findings of the Association for
+Computational Linguistics: EMNLP 2021. 4592-4599.
+[10] Byeongchang Kim, Hyunwoo Kim, and Gunhee Kim. 2019. Abstractive Summa-
+rization of Reddit Posts with Multi-level Memory Networks. In NAACL-HLT.
+[11] Ben Krause, Akhilesh Deepak Gotmare, Bryan McCann, Nitish Shirish Keskar,
+Shafiq Joty, Richard Socher, and Nazneen Fatema Rajani. 2021. GeDi: Generative
+Discriminator Guided Sequence Generation. In Findings of the Association for
+Computational Linguistics: EMNLP 2021. 4929-4952.
+[12] Juncen Li, Robin Jia, He He, and Percy Liang. 2018. Delete, Retrieve, Generate:
+a Simple Approach to Sentiment and Style Transfer. In Proceedings of the 2018
+Conference of the North American Chapter of the Association for Computational
+Linguistics: Human Language Technologies, Volume 1 (Long Papers). 1865–1874.
+[13] Junyi Li, Siqing Li, Wayne Xin Zhao, Gaole He, Zhicheng Wei, Nicholas Jing Yuan,
+and Ji-Rong Wen. 2020. Knowledge-enhanced personalized review generation
+with capsule graph neural network. In Proceedings of the 29th ACM International
+Conference on Information & Knowledge Management. 735-744.
+[14] Pan Li and Alexander Tuzhilin. 2019. Towards Controllable and Personalized
+Review Generation. In Proceedings of the 2019 Conference on Empirical Methods in
+Natural Language Processing and the 9th International Joint Conference on Natural
+Language Processing (EMNLP-IJCNLP). 3237-3245.
+[15] Chin-Yew Lin. 2004. Rouge: A package for automatic evaluation of summaries.
+In Text summarization branches out. 74-81.
+6706.
+[16] Alisa Liu, Maarten Sap, Ximing Lu, Swabha Swayamdipta, Chandra Bhagavatula,
+Noah A Smith, and Yejin Choi. 2021. DExperts: Decoding-Time Controlled Text
+Generation with Experts and Anti-Experts. In Proceedings of the 59th Annual
+Meeting of the Association for Computational Linguistics and the 11th International
+Joint Conference on Natural Language Processing (Volume 1: Long Papers). 6691-
+[17] Pierre-Emmanuel Mazare, Samuel Humeau, Martin Raison, and Antoine Bordes.
+2018. Training Millions of Personalized Dialogue Agents. In Proceedings of the
+2018 Conference on Empirical Methods in Natural Language Processing. 2775-2779.
+[18] Sean Patrick McCarron and Victor Kuperman. 2021. Is the author recognition test
+a useful metric for native and non-native English speakers? An item response
+theory analysis. Behavior Research Methods 53, 5 (2021), 2226-2237.
+[19] Jianmo Ni, Gustavo Hernandez Abrego, Noah Constant, Ji Ma, Keith Hall, Daniel
+Cer, and Yinfei Yang. 2022. Sentence-T5: Scalable Sentence Encoders from Pre-
+trained Text-to-Text Models. In Findings of the Association for Computational
+Linguistics: ACL 2022. 1864-1874.
+[20] Jianmo Ni, Jiacheng Li, and Julian McAuley. 2019. Justifying recommendations
+using distantly-labeled reviews and fine-grained aspects. In Proceedings of the
+2019 conference on empirical methods in natural language processing and the 9th
+international joint conference on natural language processing (EMNLP-IJCNLP).
+188-197.
+[21] Jianmo Ni, Chen Qu, Jing Lu, Zhuyun Dai, Gustavo Hernández Ábrego, Ji Ma,
+Vincent Y Zhao, Yi Luan, Keith B Hall, Ming-Wei Chang, et al. 2021. Large dual
+encoders are generalizable retrievers. arXiv preprint arXiv:2112.07899 (2021).
+[22] Douglas Oard, William Webber, David Kirsch, and Sergey Golitsynskiy. 2015.
+Avocado research email collection. Philadelphia: Linguistic Data Consortium
+(2015).
+[23] Kishore Papineni, Salim Roukos, Todd Ward, and Wei-Jing Zhu. 2002. Bleu: a
+method for automatic evaluation of machine translation. In Proceedings of the
+40th annual meeting of the Association for Computational Linguistics. 311-318.
+XXX, XXX, XXX
+Li et al.
+[24] Jeffrey Pennington, Richard Socher, and Christopher D Manning. 2014. Glove:
+Global vectors for word representation. In Proceedings of the 2014 conference on
+empirical methods in natural language processing (EMNLP). 1532-1543.
+[25] Hongjin Qian, Xiaohe Li, Hanxun Zhong, Yu Guo, Yueyuan Ma, Yutao Zhu,
+Zhanliang Liu, Zhicheng Dou, and Ji-Rong Wen. 2021. Pchatbot: A large-scale
+dataset for personalized chatbot. In Proceedings of the 44th International ACM
+SIGIR Conference on Research and Development in Information Retrieval. 2470-
+2477.
+[26] Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang,
+Michael Matena, Yanqi Zhou, Wei Li, and Peter J Liu. 2020. Exploring the limits of
+transfer learning with a unified text-to-text transformer. The Journal of Machine
+Learning Research 21, 1 (2020), 5485-5551.
+[27] Sudha Rao and Joel Tetreault. 2018. Dear Sir or Madam, May I Introduce the
+GYAFC Dataset: Corpus, Benchmarks and Metrics for Formality Style Transfer. In
+Proceedings of the 2018 Conference of the North American Chapter of the Association
+for Computational Linguistics: Human Language Technologies, Volume 1 (Long
+Papers). 129-140.
+[28] Stephen E Robertson, Steve Walker, Susan Jones, Micheline M Hancock-Beaulieu,
+Mike Gatford, et al. 1995. Okapi at TREC-3. Nist Special Publication Sp 109 (1995),
+109.
+[29] Alireza Salemi, Sheshera Mysore, Michael Bendersky, and Hamed Zamani. 2023.
+LAMP: When Large Language Models Meet Personalization. arXiv preprint
+arXiv:2304.11406 (2023).
+[30] Abigail See, Peter J Liu, and Christopher D Manning. 2017. Get To The Point:
+Summarization with Pointer-Generator Networks. In Proceedings of the 55th
+Annual Meeting of the Association for Computational Linguistics (Volume 1: Long
+Papers). 1073-1083.
+[31] Timothy Shanahan. 2015. Common Core State Standards: A new role for writing.
+The Elementary School Journal 115, 4 (2015), 464–479.
+[32] Noam Shazeer and Mitchell Stern. 2018. Adafactor: Adaptive learning rates with
+sublinear memory cost. In International Conference on Machine Learning. PMLR,
+4596-4604.
+[33] Tianxiao Shen, Tao Lei, Regina Barzilay, and Tommi Jaakkola. 2017. Style trans-
+fer from non-parallel text by cross-alignment. Advances in neural information
+processing systems 30 (2017).
+[34] Khrystyna Skopyk, Artem Chernodub, and Vipul Raheja. [n.d.]. Personalizing
+Large Language Models. ([n. d.]).
+[35] Stuck_In_the_Matrix. 2015. Reddit Public Comments (2007-10 through 2015-
+05). (2015). https://www.reddit.com/r/datasets/comments/3bxlg7/i_have_every_
+publicly available_reddit_comment/
+[36] Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc Le, Ed Chi, Sharan Narang,
+Aakanksha Chowdhery, and Denny Zhou. 2022. Self-consistency improves chain
+of thought reasoning in language models. arXiv preprint arXiv:2203.11171 (2022).
+[37] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten Bosma, Fei Xia, Ed Chi,
+Quoc V Le, Denny Zhou, et al. 2022. Chain-of-thought prompting elicits reasoning
+in large language models. Advances in Neural Information Processing Systems 35
+(2022), 24824-24837.
+[38] Yuwei Wu, Xuezhe Ma, and Diyi Yang. 2021. Personalized response generation
+via generative split memory network. In Proceedings of the 2021 Conference of the
+North American Chapter of the Association for Computational Linguistics: Human
+Language Technologies. 1956-1970.
+[39] Kevin Yang and Dan Klein. 2021. FUDGE: Controlled Text Generation With
+Future Discriminators. In Proceedings of the 2021 Conference of the North Ameri-
+can Chapter of the Association for Computational Linguistics: Human Language
+Technologies. 3511-3535.
+[40] Chenhan Yuan and Yi-chin Huang. 2020. Personalized sentence generation using
+generative adversarial networks with author-specific word usage. Computación
+y Sistemas 24, 1 (2020), 17-28.
+[41] Saizheng Zhang, Emily Dinan, Jack Urbanek, Arthur Szlam, Douwe Kiela, and
+Jason Weston. 2018. Personalizing Dialogue Agents: I have a dog, do you have pets
+too?. In Proceedings of the 56th Annual Meeting of the Association for Computational
+Linguistics (Volume 1: Long Papers). 2204-2213.
+[42] Zhirui Zhang, Shuo Ren, Shujie Liu, Jianyong Wang, Peng Chen, Mu Li, Ming
+Zhou, and Enhong Chen. 2018. Style transfer as unsupervised machine translation.
+arXiv preprint arXiv:1808.07894 (2018).
+[43] Hanxun Zhong, Zhicheng Dou, Yutao Zhu, Hongjin Qian, and Ji-Rong Wen. 2022.
+Less is More: Learning to Refine Dialogue History for Personalized Dialogue
+Generation. In Proceedings of the 2022 Conference of the North American Chapter
+of the Association for Computational Linguistics: Human Language Technologies.
+5808-5820.

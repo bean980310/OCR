@@ -1,18 +1,38 @@
-AniPortraitGAN: Animatable 3D Portrait Generation from 2D Image Collections
-Yue Wu¹* Sicheng Xu²*
-Jianfeng Xiang3,2 Fangyun Wei 2
-1HKUST
-Qifeng Chen¹Jiaolong Yang 2* Xin Tong²
-2Microsoft Research Asia
-3Tsinghua University
-saare
-AC 200 103
+--- Page 1 ---
 arXiv:2309.02186v1 [cs.CV] 5 Sep 2023
-Figure 1: Our method is a new 3D-aware GAN that can generate diverse virtual human portraits (512×512) with explicitly controllable
+
+AniPortraitGAN: Animatable 3D Portrait Generation from 2D Image Collections
+
+Yue Wul*  Sicheng Xu? *
+Qifeng Chen!
+‘HKUST
+
+A
+£
+
+a A
+
+AB.
+
+Jianfeng Xiang”
+Jiaolong Yang?*
+Microsoft Research Asia
+
+aa
+
+AAP LAS ALO2E SAY
+
+Fangyun Wei ?
+Xin Tong?
+3Tsinghua University
+
+Figure 1: Our method is a new 3D-aware GAN that can generate diverse virtual human portraits (512x512) with explicitly controllable
 3D camera viewpoints, facial expression, head pose, and shoulder movements. It is trained on unstructured 2D images without any 3D or
 video data. (Best viewed with zoom; see our project page for videos of more samples)
+
 Abstract
-Previous animatable 3D-aware GANS for human gen-
+
+Previous animatable 3D-aware GANs for human gen-
 eration have primarily focused on either the human head
 or full body. However, head-only videos are relatively un-
 common in real life, and full body generation typically does
@@ -29,14 +49,18 @@ shoulder deformations. A dual-camera rendering and ad-
 versarial learning scheme is proposed to improve the qual-
 ity of the generated faces, which is critical for portrait im-
 ages. A pose deformation processing network is developed
+
 *Equal contribution. Work done when YW was an intern at MSRA.
-*Corresponding author and project lead.
++ Corresponding author and project lead.
+
 to generate plausible deformations for challenging regions
 such as long hair. Experiments show that our method,
 trained on unstructured 2D images, can generate diverse
 and high-quality 3D portraits with desired control over dif-
 ferent properties.
+
 1. Introduction
+
 The automatic creation of animatable 3D human char-
 acters has become an increasingly important topic with a
 range of applications including video conferencing, movie
@@ -44,17 +68,22 @@ production, and gaming. The related techniques have under-
 gone a significant growth recently, with a variety of promis-
 ing methods being proposed [1, 7, 8, 16, 21, 38, 40, 42, 51,
 52, 54, 60, 62].
+
 Among these techniques, 3D-aware generation methods
 have emerged as a particularly promising avenue [1, 12, 21,
 38, 51, 52, 60, 62]. These methods can leverage the ample
 availability of unstructured 2D data for 3D human gener-
 ative learning without the need for 3D scans or multiview
 human images which are difficult to acquire at scale. Typ-
+
+
+--- Page 2 ---
 ically, these methods employ Generative Adversarial Net-
-works (GANS) [18] for unsupervised training, use neural
+works (GANs) [18] for unsupervised training, use neural
 implicit fields [34] as the 3D representation, and incorporate
 priors from 3D face and body parametric models [4, 29, 32]
 for character control.
+
 Despite their promising potential, existing animatable
 3D-aware human generation focuses on either the human
 head or full body and have encountered limitations in their
@@ -69,14 +98,16 @@ However, generating high-quality full body human is still
 challenging due to the complexity of body motion. In addi-
 tion, the facial region is often underrepresented in these full
 body methods and there is no expression control.
+
 Our paper presents a new 3D-aware generation method
 that is the first to focus on animatable generation of the hu-
 man head and shoulder regions. Our method enables fine-
 grained control over facial expressions as well as head and
 shoulder movements, making it well suited for real-world
 applications such as video conferencing and virtual presen-
-ters. Like previous 3D-aware GANS, our method is trained
+ters. Like previous 3D-aware GANs, our method is trained
 on unstructured 2D image sets.
+
 For this new task, we follow previous methods to train
 neural radiance generation with 3D parametric model pri-
 ors in a GAN training scheme. We base our method on
@@ -103,7 +134,9 @@ will occur under head rotation for hair region, leading to
 significant artifacts. To tackle this issue, we propose a pose
 deformation volume processing module to learn better de-
 formations, which stabilizes GAN training and produces vi-
+
 sually plausible results.
+
 We train our model on a head-shoulder portrait dataset
 called SHHQ-HS, which is constructed by cropping and
 superresolving the 40K human body images in the SHHQ
@@ -111,24 +144,29 @@ dataset [15]. We show that our method can generate diverse
 and high-quality 3D portrait images with flexible control of
 different properties including facial expressions and head-
 shoulder poses.
+
 Our contributions can be summarized as follows:
-• We propose the first animatable 3D-aware portrait
+
+* We propose the first animatable 3D-aware portrait
 GAN that generates head and shoulder regions with fa-
 cial expression and head-shoulder motion control. We
 believe generating such animatable human characters
 is a missing piece of 3D-aware human GANs for real-
 world applications like video conferencing and virtual
 presenters.
-• We propose a dual-camera rendering and adversar-
+
+* We propose a dual-camera rendering and adversar-
 ial learning scheme that gives rise to high-quality
 face generation comparable to previous head-only 3D-
 aware GANs.
-• We propose a pose deformation processing module
+
+* We propose a pose deformation processing module
 which achieves smooth and plausible pose-driven de-
 formation for human hair.
+
 2. Related Work
-3D-aware Image Generation
-3D-aware image genera-
+
+3D-aware Image Generation 3D-aware image genera-
 tive models aim to generate images that allow for the ex-
 plicit control of 3D camera viewpoint, training only on
 2D images. Most existing works are based on the GAN
@@ -137,10 +175,11 @@ this problem use 3D convolutions to generate 3D feature
 volumes and project them to 2D plane for image genera-
 tion [35, 36]. Recently, methods based on more explicit 3D
 representations and differentiable rendering have become
-popular [5, 6, 9, 11, 19, 30, 37, 39, 44, 47, 49, 50, 53, 61,
+popular [5, 6, 9, 11, 19, 30, 37, 39, 44, 47, 49, 50, 53, 6l,
 66]. The widely-used 3D representations are NeRF [34] and
 its variants, for their strong capability to model real-world
 3D scenes.
+
 Among these NeRF-based GANs, some use volume ren-
 dering to directly generate the final images, which ensures
 strong 3D consistency among different views but often has
@@ -151,14 +190,17 @@ but sacrifices multiview consistency for the generated in-
 stances. Our method uses the high-resolution radiance man-
 ifold representation of [61], which can generate high reso-
 lution images with strong multiview consistency.
+
 Controllable Human Head and Body Generation
 Adding explicit controls to face and body generative mod-
+
+--- Page 3 ---
 eling has received much attention in recent years. Existing
 works have primarily focused on either the head [1, 8, 51,
 52, 60, 62] or the whole body [1, 7, 12, 21, 38], with priors
 from 3D parametric models being commonly incorporated
 to achieve semantically meaningful control. For expression
-control, most head GANS [1, 8, 51, 52, 60] often incorpo-
+control, most head GANs [1, 8, 51, 52, 60] often incorpo-
 rate 3D morphable models (3DMMs) [4] or FLAME mod-
 els [29] in their training process. Whole-body GANs typi-
 cally rely on the SMPL model [32] for body pose animation
@@ -167,6 +209,7 @@ and they often do not address facial expression control. This
 work deals with a new human generation task: generating
 portrait figures that contain head and shoulder, with control-
 lable facial expression and head-shoulder poses.
+
 Human Image and Video Manipulation Our method is
 also related to human image and video manipulation ap-
 proaches [13, 16, 17, 23, 27, 31, 42, 43, 48, 55, 58, 59, 63,
@@ -178,7 +221,9 @@ cally trained in a supervised manner using videos or image
 pairs. In contrast, we deal with human generative modeling
 and novel character creation, training on unstructured still
 images in an unsupervised or weakly-supervised fashion.
+
 3. Method
+
 Our goal is to generate human portrait images containing
 human head and shoulder regions by training on a given 2D
 image collection. As in a standard GAN setup, we sample
@@ -187,26 +232,32 @@ The input to our generator consists of multiple latent codes,
 which corresponds to different properties of the generated
 human, and the camera viewpoint. The output is a human
 portrait image carrying the desired properties.
+
 Figure 2 presents an overview of our method. The over-
 all pipeline follows the popular paradigm of canonical neu-
 ral radiance representation in combination with (inverse)
 deformation [1, 21, 60].
+
 3.1. Latent Codes
-Our latent codes contain an identity code Zid ERdi for
-human shape, an expression code Zexp ERde for facial ex-
-pression, an Zpose ERdp for head and shoulder pose, and an
-additional noise ε = R de controlling other attributes such
+
+Our latent codes contain an identity code z;q € R% for
+human shape, an expression code Zeap € R® for facial ex-
+pression, an Zpose © IR®» for head and shoulder pose, and an
+additional noise ¢ € R% controlling other attributes such
 as appearance. To achieve semantically meaningful con-
 trol, we incorporate priors 3D human parametric models
 and align our latent space with theirs. Specifically, our iden-
-tity code zid is designed as the concatenation of 3DMM [41]
+tity code z;q is designed as the concatenation of 3DMM [41]
 face identity coefficient and SMPL [32] body shape coeffi-
 cient. The pose code Zpose is a reduced SMPL pose param-
 eter, which consists of the joint transformations of 6 joints:
+
 head, neck, left and right collars, and left and right shoul-
-ders. The expression code Zexp is the same as 3DMM ex-
+ders. The expression code Z,.,, is the same as 3DMM ex-
 pression coefficient.
+
 3.2. Canonical Radiance Manifolds
+
 Our method utilizes the radiance manifolds [9, 61] to
 represent canonical humans. This representation regu-
 lates radiance field learning and rendering on a set of
@@ -215,103 +266,125 @@ high-quality human faces with strict multiview consistency.
 With manifold superresolution [61], it can generate high-
 resolution images efficiently without sacrificing multiview
 consistency.
+
 Concretely, we apply three networks for radiance gener-
 ation. A manifold prediction MLP M takes a point x in the
 canonical space as input and predicts a scalar s:
-M:xЄR³ SER.
-(1)
+
+M:x€R®>se€R. ap)
+
 It models a scalar field that defines the surfaces. A radiance
-generation MLP & generates the color and opacity for points
-on the surfaces given the identity codes Zid, noise & and
+generation MLP ¢ generates the color and opacity for points
+on the surfaces given the identity codes z;4, noise ¢ and
 view direction d:
-Ó : (x, Zid, ɛ, d) Є Rdi+de+6 → (c, a) € R4.
-(2)
-A manifold superresolution CNNU upsamples the flattened
-and discretized radiance maps Rɩr to high-resolution ones
-Rhr:
-(3)
-U (Zid, E, Rir) → Rhr,
-for which we use a 128² → 512² upsampling setting in this
+
+@ : (x, Zia, €,d) € RUT — (ca) ER’. (2)
+
+A manifold superresolution CNN U upsamples the flattened
+and discretized radiance maps R},. to high-resolution ones
+Ra,:
+
+U: (aia, €,Rir) > Rar, (3)
+
+for which we use a 128? —> 512? upsampling setting in this
 paper. For more technical details, we refer the readers to
 [9, 61].
+
 3.3. Deformation Fields
+
 For each sampled 3D point in the target space with de-
 sired head-shoulder pose and facial expression, we apply
 deformations to transform them to the canonical space for
 radiance retrieval. A two-stage deformation scheme is used
 to neutralize pose and expression.
-3.3.1
-Pose Deformation Generator
+
+3.3.1 Pose Deformation Generator
+
 We incorporate the SMPL model [32] and use its linear
 blend skinning (LBS) scheme [28] to guide our deforma-
-tion. Given the shape code Zid and pose code Zpose, a posed
+tion. Given the shape code z;q and pose code Zpose, a posed
 human body mesh can be constructed using SMPL. The
 SMPL model provides a pre-defined skinning weight vec-
-tor w Є RN for each vertex on the body surface, where
-NJ is the joint number.
+tor w € RY for each vertex on the body surface, where
+Nz is the joint number.
+
 A simple approach for propagating body surface defor-
 mation to the full 3D space is assigning any point the skin-
 ning weights of its closest body surface vertex and use them
-Zid
-Zpose
-A. Zexp
-Λε
+
+
+--- Page 4 ---
+A tia Zia» Epose
+A 2pose
+
+A Lexp
+
+AE
+
+Lia Zexp
+
 Portrait
 camera
-☐
-Face
-camera
-Zid, Zexp
-Zid, ε
-Zid, Zpose
+
+ove
+ace?
+
+3
+
+4 {xP} {x}
+
+Target Space Neutral Pose Space
+
 Pose Deformation
 Exp. Deformation
+
+f
+3
+2
+a
+
+J A
+
+Neutral Pose&Exp. Space
+
+z,
+
+te
+
 Radiance Generation
 Volume Rendering
-Dface
-{x}
-Target Space
-{x}
-{x}
-Neutral Pose Space
-Neutral Pose&Exp. Space
-(Canonical Space)
-Iface
+
+Trace
 Face Image
-Iportrait
-Portrait Image
+
+(Canonical Space)
+
 Pose Deformation
+
+£ i
+SMPL Mesh S(Zia,Zpose)
+
 Expression Deformation
+
+Zid Zexp——
+xP
+
 Radiance Generation
-Gather
-T
-DP
-XP
-Zid, Zexp
-XP
-Zid, ε—
-S
-De
-all samples, all rays
-xc - M
-x* -
-$
-c, a
-Get (inverse) LBS
-H×W×D×16
-HxWxDx16
-Getintersection
-trans. TE R4×4
-3D Conv Net
-SMPL Mesh S(Zid, Zpose)
-Manifold
-Generator
+
+Dp &
+
 Radiance
 Generator
+
+Manifold
+Generator
+
 Figure 2: Method overview. Top: the pipeline of our controllable 3D-aware portrait GAN. For training, we apply a dual-
 camera rendering scheme with two images separated rendered and three discriminators employed. Bottom: structures of the
 deformation and radiance generation modules (the radiance manifold super-resolution step is omitted for simplicity; see text
+
 for details).
+
 to deform it. In fact, this strategy is widely used in state-
 of-the-art animatable human body modeling and generation
 methods [2, 12, 17, 22, 42, 65]. While it yields plausible
@@ -320,53 +393,61 @@ incurs significant visual defects in high-resolution portrait
 synthesis. For human characters with long hairs, this na-
 tive strategy leads to sharp deformation discontinuity for the
 hair regions above shoulders (see Fig. 6).
+
 We propose a deformation volume processing module to
-tackle this issue. Specifically, for a point x in the target
+tackle this issue. Specifically, for a point x’ in the target
 space with the skinning weight vector w retrieved from the
 closest SMPL body vertex, the deformed point can be cal-
 culated using inverse LBS:
-j=1
-x² = LBS−¹(x², w) = T·x² = (Σ¾¾¾₁ w;T;)·x², (4)
-where TR4×4 is a transformation matrix computed by
+
+x? = LBS"! (x!,w) = T-x! = (4 wyTy)-x!, 4)
+
+where T € R*** is a transformation matrix computed by
 linearly blending the SMPL joint transformations T; €
 SE(3). We gather the reshaped transformation matrices
 for the sampled points of all H x W rays into a tensor
-TERH×W×D×16, where D is the number of sampled
-points per ray, and apply a 3D CNN DP to process it:
-TERH×W×D×16
-H×W×D×16
-DP: TERHX\
-(5)
+T © RYXWxDx16" where D is the number of sampled
+points per ray, and apply a 3D CNN D? to process it:
+
+DP: T eC REXWxDx16 _, 7 6 RUXWxDx16 (5)
+
 After processing, we reshape the transformations back and
 apply them to the sampled points to accomplish pose defor-
 mation.
-3.3.2 Expression Deformation Generator
+
+3.3.2. Expression Deformation Generator
+
 We further apply a deformation to neutralize the facial ex-
 pression from the target expression. Following [60], we in-
 troduce a deformation field which is guided by the 3DMM
-model [41]. Specifically, an MLP De is employed to deform
+
+model [41]. Specifically, an MLP D® is employed to deform
 the points in the pose-aligned space:
-De (XP, Zid, Zexp) → xc.
-(6)
+
+D®° : (x?, Zid, Zeap) > X°. (6)
+
 This deformation network will be trained to generate faces
 with expressions following 3DMM:
-(7)
-S = S(Zid, Zexp) = S + Bidzid + BexpZexp,
-where S is the 3DMM mean face, and Bid and Bexp are the
+
+S = S(4ia,Zexp) =S + Biatia + BexpZeap, (7)
+
+where S is the 3DMM mean face, and B;, and Bexp are the
 PCA basis for identity and expression, respectively. Train-
 ing details can be found in later sections.
-In total, our generator G has five sub-nets: M, ò̟, U,
-DP, and De. For final image rendering, we calculate M
-intersection points {x} between a deformed ray r (point
+
+In total, our generator G has five sub-nets: M, ¢, U,
+D?, and D°. For final image rendering, we calculate M
+intersection points {x*} between a deformed ray r (point
 samples) and the canonical manifolds. We then obtain the
-color and occupancy of {x} by sampling the radiance map
-Rhr, and composite the color via:
+color and occupancy of {x*} by sampling the radiance map
+R»,, and composite the color via:
+
 M
-C(r) = ΣT(x²)a(x²)c(x;), T(x*) = [[(1 − a(x)).
-i=1
-3.4. Dual-Camera Discriminators
-k<i
+Cr) = SOT (Kax}e(x}), TO?) = [A - a(xj)).
+i=l k<i
 (8)
+3.4. Dual-Camera Discriminators
+
 Previous 3D-aware head GANs have demonstrated strik-
 ing face generation quality by carefully center-aligning the
 generated and real face images for training. In our case,
@@ -375,8 +456,8 @@ image and its spatial position and orientation vary signifi-
 cantly. Simply applying a whole-image discriminator can-
 not offer adequate supervision for high-quality face genera-
 tion, which is crucial for portrait images.
-Dwhole
-Dtorso
+
+--- Page 5 ---
 A straightforward remedy is to crop and align the faces
 in the rendered images and apply a local face discrimina-
 tor. However, since image resampling operators are in-
@@ -384,186 +465,201 @@ herently low-pass, such an image-space cropping strategy
 introduces blur to the cropped faces, which is detrimental
 to GAN training especially for a multi-discriminator setup.
 In this work, we design a dual-camera rendering scheme
-for GAN training. In addition to the main camera for full
+or GAN training. In addition to the main camera for full
 portrait image rendering, we add another camera for face
 rendering, which is placed around human head pointing at
 head center, as shown in Fig. 2. It is designed to have the
 same local coordinate system as in previous 3D-aware head
-GANS [9, 60], and its position can be readily computed
+GANs [9, 60], and its position can be readily computed
 using the deformed SMPL head. Another possible idea is
 blending the output of two separate generators for face and
 body, as in some 2D human generation methods [14]. But
 applying this strategy to the 3D, animatable case seems not
 straightforward.
+
 Adding a dedicated face camera for training not only
 avoids image resampling and provides a more direct su-
 pervision to the canonical radiance manifolds, but also en-
 ables higher-resolution face rendering for adversarial learn-
 ing. Consequently, the radiance generator receives stronger
 supervision for the face region. We apply two image dis-
-criminators Dwhole and D face for the rendered portrait im-
+criminators Dyhote and D face for the rendered portrait im-
 age and face image with these two cameras, respectively.
-We also add another local discriminator Dtorso, which takes
+We also add another local discriminator Dio;s0, which takes
 the lower 1/4 part of the rendered portrait images as input.
+
 3.5. Training Losses
+
 Adversarial Learning. We apply the non-saturating
 GAN loss with R1 regularization [33] for the 3D-aware im-
-age generator and all three discriminators Dwhole, Dface,
-and Dtorso. We empirically set the balancing weights to be
-Xwhole
-0.1, Aface
-= 1.0 and Dtorso 0.5, respectively.
+age generator and all three discriminators Dwhote, Dfaces
+and Diorso. We empirically set the balancing weights to be
+Awhole = 0.1, Aface = 1.0 and Diorso = 0.5, respectively.
+
 Deformation Learning Following [60], we use a 3D
 landmark loss and imitation loss to gain expression control
 with 3DMM guidance. The landmark loss enforces the gen-
 erated face image to have similar 3D facial landmarks to the
 3DMM face constructed with the input identity and expres-
 sion codes:
-Lim = || flm (S(Zid, Zexp)), flm (S(Źid, Zexp))||2, (9)
+
+Lim = ||fim(S(Zia, Zexp)), fim(S(Bia; Bexp))\I5. 9)
+
 where Zid, Zexp are the 3DMM coefficients estimated
 from the generated image using a face reconstruction net-
-work [10] and fim denotes a simple facial landmark extrac-
+work [10] and f;,,, denotes a simple facial landmark extrac-
 tion function. For deformation imitation, we enforce the
-displacement of an input point x² to follow its nearest point
-xref on the 3DMM mesh:
-£3DMM = ||(Dª (x²) – x”) – Axref || (10)
--
-where Axref
-- BexpZexp(xref) is the 3DMM-derived
-(inverse) deformation of point x²-reƒ•
+displacement of an input point x” to follow its nearest point
+x?,.¢ on the 3DMM mesh:
+
+L3pMM = (Dee) — x?) — Ax? ; D
+
+(10)
+
+where Ax? ,= —BexpZexp(x?, ,) is the 3DMM-derived
+(inverse) deformation of point x”, fr
+
 We impose several regularizations on the deformations.
 First, we encourage the deformations to be as smooth as
 possible. For pose deformation processing, we apply
-(11)
-Lpose_smooth = ||DP (T) – AvgPool(T)||2.
-where AvgPool is a fixed average pooling operator. For the
+
+Lyose.smooth = |D?(T) — AvgPool(T)||,. AD
+
+where Avg Pool is a fixed average pooling operator. For the
 expression deformation, we apply
-Lexp_smooth ||De (x²) – De (x² + A)||₁₂, (12)
+
+Lexp.smooth = \[D°(x?) — D°(x? + A)|IZ, (12)
+
 where A is a small random perturbation. Finally, a minimal
 deformation constraint is applied for the expression defor-
 mation:
-Lexp-minimal = ||x³ – Dº (x²)|||2 .
+
+Leep-minimal = (IX? —D°(x?)I|z. (13)
 3.6. Training Strategy
-(13)
+
 We employ a two-stage training strategy to train our
 model. At the first stage, we train a low-resolution image
 generator and the corresponding discriminators. Both the
-face and portrait branches generate 128 × 128 images. All
+face and portrait branches generate 128 x 128 images. All
 sub-networks are trained except for the manifold superreso-
-lution CNN U. For the second stage, we generate 512 × 512
-portrait images and 256 × 256 faces. We randomly initial-
-ize and train u as well as the high-resolution discriminators
+lution CNN U. For the second stage, we generate 512 x 512
+portrait images and 256 x 256 faces. We randomly initial-
+ize and train U/ as well as the high-resolution discriminators
 with all other sub-networks frozen.
+
 4. Experiments
+
 Training Data We build a training set by processing the
 human images in the SHHQ dataset [15]. SHHQ contains
-40K full-body images of 1024 × 512 resolution. To ob-
+40K full-body images of 1024 x 512 resolution. To ob-
 tain high-quality head-shoulder portraits, we first fit SMPL
 models on the SHHQ images using the method of [24].
 Then, we crop the images and align them using the pro-
 jected head and neck joints. The cropped portrait images are
-about 256 × 256 resolution. We upsample them using the
-super-resolution methods of [56] and [57] to 1024 × 1024,
-followed by downsampling them to 512 × 512. Finally,
+about 256 x 256 resolution. We upsample them using the
+super-resolution methods of [56] and [57] to 1024 x 1024,
+followed by downsampling them to 512 x 512. Finally,
 the backgrounds are removed by applying the provided seg-
 mentation masks. We call this dataset SHHQ-HS.
+
 Implementation Details Our manifold predictor and ra-
 diance generator follow the implementations of [9]. 24 ra-
 diance manifolds are used as in [9]. The manifold super-
-resolution net U is a smaller CNN compared to that in [61].
-The pose deformation CNN DP has two 3D conv layers with
-kernel size 9×9 × 5. The expression deformation network
-De is the same as [60]. See Fig. 10 for more details. For all
+resolution net U/ is a smaller CNN compared to that in [61].
+The pose deformation CNN D? has two 3D conv layers with
+kernel size 9x 9 x 5. The expression deformation network
+D¢® is the same as [60]. See Fig. 10 for more details. For all
 experiments, we use the Adam optimizer [26] for training.
 Prior to training, we estimate the identity, pose and expres-
 sion coefficients as well as camera poses for the images in
+
+--- Page 6 ---
+Camera viewpoint control —_—_—_>
+
+ARAL
+
+y
+
+bh. /
+
+hu/ ay
+
+<9 Random other properties
+
+A AH
+£5 SS
+
 Random other properties
+
+Head pose Contro] >
+
+<——— Random other properties
+
 Random other properties
-Head
-pose control
-Camera viewpoint control
-Random other properties
-Random other properties
-Facial expression control
-010
-Shoulder
-pose
-control
+
+Facial expression control ——e
+
+AA ABA
+
+Shoulder pose control >
+
 Figure 3: Results with controllable camera viewpoint, facial expression, head pose and shoulder pose. (Best viewed with
+
 zoom)
+
 the dataset using 3DMM and SMPL fitting [10, 24]. During
-training, we randomly sample latent codes Zid, Zpose, and
-Zexp and camera pose 0 from the estimated distributions,
-and sample ε from a normal distribution.
-Runtime.
-With an unoptmized implementation, our
-method takes about 0.87 seconds to generate one 512 × 512
+training, we randomly sample latent codes Zia, Zpose, and
+Zewp and camera pose @ from the estimated distributions,
+and sample ¢ from a normal distribution.
+
+Runtime. With an unoptmized implementation, our
+method takes about 0.87 seconds to generate one 512 x 512
 image from a set of given latent codes, evaluated on a
+
 NVIDIA RTX A6000 GPU.
+
 4.1. Generation Results
-Figure 1 and 9 present some generated portraits from our
+
+Figure | and 9 present some generated portraits from our
 method trained on SHHQ-HS. The results are diverse and
 of high-quality, with camera viewpoint, facial expression,
 head rotation, and shoulder pose explicitly controlled. Fig-
 ure 3 shows the generated results for which we control one
+
+--- Page 7 ---
 Table 1: Quantitative comparison with state-of-the-art 3D-
-aware GANS on SHHQ-HS. Note that EG3D and GRAM-
+aware GANs on SHHQ-HS. Note that EG3D and GRAM-
 HD do not provide any expression and pose control, and
 AniFaceGAN only generates head images. FID and KID
-(×100) are computed with 20K randomly generated images
+(x 100) are computed with 20K randomly generated images
 and 20K real ones. *: Although EG3D has lowest FID and
 KID scores, it often generates planar geometry; see Fig. 4.
-† AniFaceGAN is trained on 1282 by [60] and evaluated
-with 256² rendering.
-2/8/2
-Method
-Face 2562
-FID↓↓
-KID↓
-FID↓↓
-EG3D
-5.63*
-0.20* 6.81*
-GRAM-HD64512
-8.01
-0.41 7.75
-Full 5122
-KID↓
-0.26*
-0.29
-GRAM-HD128-512
-8.14
-0.30
-8.82
-0.28
-AniFaceGAN
-11.56+
-0.66+
-N/A
-N/A
-Ours
-7.64
-0.43
-10.10
-0.43
-EG3D
-GRAM-HD
-Ours
-Figure 4: Visual comparison with state-of-the-art 3D-aware
-GANS on SHHQ-HS. Our results have similar visual quality
-to existing 3D-aware GANs that do not handle expression
-and pose control. (Best viewed with zoom)
+1; AniFaceGAN is trained on 128? by [60] and evaluated
+with 256? rendering.
+
+Face 2567 Full 512?
+Method FID} KID} FID) KID
+EG3D 5.63" 0.20" 681° 0.26"
+
+GRAM-HDea4512 8.01 041 = 7.75 0.29
+GRAM-HDj9g-4512 8.14 0.30 = 8.82 0.28
+AniFaceGAN 11.564 0.664 N/A N/A
+Ours 764 043 10.10 0.43
+
 property out of the four while randomly changing the oth-
 ers. Our method achieves consistent control for all the four
 properties for different identities. More results can be found
 in the suppl. video.
+
 4.2. Comparison with Previous Methods
+
 We compare our method with three state-of-the-art 3D-
-aware GANS: EG3D [5], GRAM-HD [61] and AniFace-
+aware GANs: EG3D [5], GRAM-HD [61] and AniFace-
 GAN [60]. Note that to our knowledge, there is no previous
 work that deals with the animatable head-shoulder portrait
 generation task in this paper, and hence we compare with
 these three methods for reference purpose only.
+
 Table 1 shows the FID [20] and KID [3] metrics eval-
 uated on both the full portrait images and the face regions.
 Our method has comparable scores with EG3D and GRAM-
@@ -577,25 +673,40 @@ and the portraits have correct geometry, as shown in Fig. 4.
 Figure 5 compares the results from AniFaceGAN and our
 method. Clearly, our method can generate and control much
 larger region.
+
 4.3. Ablation Study
+
 We then conduct ablation studies to validate the effec-
 tiveness of our algorithm design. For efficiency, we quanti-
-tatively evaluate the generation quality on the 1282 resolu-
+tatively evaluate the generation quality on the 1287 resolu-
 tion (i.e., without manifold super-resolution) and compute
 the FID and KID metrics using 5K generated and real im-
 ages. The results are summarized in Table 2.
-AniFaceGAN
-Ours
+
+EG3D ~ GRAM-HD- Ours
+Figure 4: Visual comparison with state-of-the-art 3D-aware
+GANs on SHHQ-HS. Our results have similar visual quality
+
+to existing 3D-aware GANs that do not handle expression
+and pose control. (Best viewed with zoom)
+
+Q
+2
+
+AniFaceGAN Ours
+
 Figure 5: Visual comparison with AniFaceGAN.
+
 Discriminator Combinations Our full method uses three
-discriminators for training: Dwhole, D face, and Dtorso. Ta-
-ble 2 shows that using Dwhole alone is clearly deficient,
+discriminators for training: Dwhotes Dface, and Dtorso. Ta-
+ble 2 shows that using D,,n.1- alone is clearly deficient,
 as demonstrated by the poor FID and KID scores for face.
-Combining Dwhole with D face (i.e., without Dtorso) signif-
+Combining Dyhote With D face (i.€., without Djorso) signif-
 icantly improved the face quality, but the full portrait quality
-gets much worse than using only D whole. The FID and KID
+gets much worse than using only Dynote. The FID and KID
 scores of our full method are low for both the full portrait
 images and face regions.
+
 Dual-Camera Training To validate our dual-camera ren-
 dering and adversarial learning scheme, we train a variant of
 our method without a separate face camera for training. For
@@ -606,54 +717,42 @@ Table 2, our method with dual cameras for training sig-
 nificantly outperforms such an image cropping strategy in
 terms of face quality with slightly lower full-image FID.
 Some visual examples can be found in Fig. 6.
+
 Pose Deformation Processing Module Table 2 (last row)
 shows that removing our pose deformation processing CNN
-DP, which degrades to a simple skinning weight assignment
+D?, which degrades to a simple skinning weight assignment
 strategy, leads to a quality drop for the full portrait image.
 Figure 6 visually compares two typical generation results.
-Without DP, sharp discontinuities will occur for long hairs
+Without D?, sharp discontinuities will occur for long hairs
+
+--- Page 8 ---
 Table 2: Ablation study on discriminator settings and the
-pose deformation processing CNN DP. *: w/o dual-camera
+pose deformation processing CNN D?. *: w/o dual-camera
 training, i.e., applying D face on faces cropped from the ren-
-dered portrait images. FID and KID (×100) are computed
+dered portrait images. FID and KID (x 100) are computed
 with 5K randomly generated images and 5K real ones.
-Full 1282
-FID↓ KID↓
-Figure 7: Talk video generation driven by real person.
-Method
-Dwhole Dface Dtorso DP
-FID
-Face 1282
-KID
-● 11.26
-0.57 16.68 0.97
-☑
-✓
-23.00
-1.48
-18.11 1.06
-✓
-10.68
-0.52
-22.58 1.49
-*
-✓
-0 17.89
-1.33
-✗
-10.88
-0.52
-14.05 0.69
-19.27 1.23
+
+Method Face 128? Full 128
+Dwhote Dface Diorso D? | FID) KID| FID] KIDJ
+v Vv Vv Joll.26 00.57 © 16.68 00.97
+v x x v |@23.00 @1.48 018.11 0 1.06
+v Vv x Vv |010.68 ©0.52 @22.58 @ 1.49
+v * vv |017.89 © 1.33 © 14.05 © 0.69
+v vv x Jo 10.88 00.52 019.27 01.23
+
+wlo DP Ours
+
 w/o dual cam.
-w/o DP
-Ours
+
 Figure 6: Ablation on the dual camera training scheme and
-pose deformation CNN DP (trained on 1282 and rendered
-on 2562). See the suppl. video for more results.
+pose deformation CNN D? (trained on 128? and rendered
+on 256? ). See the suppl. video for more results.
+
 under head movements, whereas our full method produces
 plausible results without obvious artifacts.
+
 4.4. Talk Video Generation
+
 We further test our trained model on the task of gen-
 erating videos of talking portraits driven by real videos.
 Specifically, we selected some talk videos from the 300-VW
@@ -666,13 +765,23 @@ Figure 7 shows some typical examples of our results where
 a generated virtual character moves following the real per-
 son. See the supplementary video for continuous anima-
 tions of our results.
+
 5. Conclusion
+
 We have presented a novel 3D-aware GAN for animat-
 able head-shoulder portrait generation, a new task not ad-
 dressed by previous methods. We identified several key is-
+
+veo spe
+
+Figure 7: Talk video generation driven by real person.
+
+Bea
+
 Figure 8: Limitations on more extreme expressions and
 closed eyes. For each image pair, the left one is the ref-
 erence image and the right one is the animated result.
+
 sues when extending existing techniques to this new task
 and proposed targeted algorithms to tackle them. We
 demonstrate that by training a corpus of unstructured 2D
@@ -681,8 +790,8 @@ images, our method can generate diverse and high-quality
 head and shoulder movements. We believe our work repre-
 sents one step forward towards auto-creating video avatars
 for real-world applications.
-Limitations
-Our method still has several limitations. It
+
+Limitations Our method still has several limitations. It
 may produce artifacts under human poses and expressions
 that are not present in training data distribution, as shown
 in Fig. 8. In fact, the facial expression variation in SHHQ-
@@ -693,6 +802,7 @@ tially due to limited data samples. Additionally, our current
 method lacks the ability to control other attributes, such as
 eye gaze and environment lighting. We plan to further ex-
 plore and address these issues in our future research.
+
 Ethics and responsible AI considerations This work
 aims to design an animatable 3D-aware human portrait gen-
 eration method for the application of virtual avatars. It is not
@@ -702,350 +812,512 @@ any behaviors of creating misleading or harmful contents
 and are interested in applying this technology for advanced
 forgery detection. Currently, the images generated by this
 method contain visual artifacts that can be easily identified.
-The method's performance is affected by the biases in the
+The method’s performance is affected by the biases in the
 training data. One should be careful about the data collec-
 tion process and ensure unbiased distributions of race, gen-
 der, age, among others.
+
+--- Page 9 ---
 References
-[1] Alexander Bergman, Petr Kellnhofer, Wang Yifan, Eric
+
+1
+
+10
+
+11
+
+12
+
+13
+
+Alexander Bergman, Petr Kellnhofer, Wang Yifan, Eric
 Chan, David Lindell, and Gordon Wetzstein. Generative neu-
 ral articulated radiance fields. In Advances in Neural Infor-
-mation Processing Systems, 2022. 1, 2, 3
-[2] Bharat Lal Bhatnagar, Cristian Sminchisescu, Christian
+mation Processing Systems, 2022. 1, 2,3
+
+Bharat Lal Bhatnagar, Cristian Sminchisescu, Christian
 Theobalt, and Gerard Pons-Moll. Loopreg: Self-supervised
 learning of implicit surface correspondences, pose and shape
 for 3d human mesh registration. In Advances in Neural In-
-formation Processing Systems, pages 12909–12922, 2020. 4
-[3] Mikołaj Bińkowski, Danica J Sutherland, Michael Arbel, and
-Arthur Gretton. Demystifying mmd gans. In International
+formation Processing Systems, pages 12909-12922, 2020. 4
+Mikotaj Birkowski, Danica J Sutherland, Michael Arbel, and
+Arthur Gretton. Demystifying mmd gans. In Jnternational
 Conference on Learning Representations, 2018. 7
-[4] Volker Blanz and Thomas Vetter. A morphable model for the
+
+Volker Blanz and Thomas Vetter. A morphable model for the
 synthesis of 3d faces. In Annual Conference on Computer
-Graphics and Interactive Techniques, pages 187–194, 1999.
+Graphics and Interactive Techniques, pages 187-194, 1999.
 2,3
-[5] Eric R Chan, Connor Z Lin, Matthew A Chan, Koki Nagano,
+
+Eric R Chan, Connor Z Lin, Matthew A Chan, Koki Nagano,
 Boxiao Pan, Shalini De Mello, Orazio Gallo, Leonidas J
 Guibas, Jonathan Tremblay, Sameh Khamis, et al. Effi-
 cient geometry-aware 3d generative adversarial networks.
 In IEEE/CVF Conference on Computer Vision and Pattern
-Recognition, pages 16123-16133, 2022. 2, 7
-[6] Eric R Chan, Marco Monteiro, Petr Kellnhofer, Jiajun Wu,
+Recognition, pages 16123-16133, 2022. 2,7
+
+Eric R Chan, Marco Monteiro, Petr Kellnhofer, Jiajun Wu,
 and Gordon Wetzstein. pi-gan: Periodic implicit gener-
 ative adversarial networks for 3d-aware image synthesis.
 In IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 5799-5809, 2021. 2, 13
-[7] Xu Chen, Tianjian Jiang, Jie Song, Jinlong Yang, Michael J
+
+Xu Chen, Tianjian Jiang, Jie Song, Jinlong Yang, Michael J
 Black, Andreas Geiger, and Otmar Hilliges. gDNA: Towards
-generative detailed neural avatars. In IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 20427-
+generative detailed neural avatars. In JEEE/CVF Conference
+on Computer Vision and Pattern Recognition, pages 20427—
 20437, 2022. 1,3
-[8] Yu Deng, Jiaolong Yang, Dong Chen, Fang Wen, and Xin
+
+Yu Deng, Jiaolong Yang, Dong Chen, Fang Wen, and Xin
 Tong. Disentangled and controllable face image generation
-via 3d imitative-contrastive learning. In IEEE/CVF Con-
+via 3d imitative-contrastive learning. In [EEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, pages
-5154-5163, 2020. 1,3
-[9] Yu Deng, Jiaolong Yang, Jianfeng Xiang, and Xin Tong.
+5154-5163, 2020. 1, 3
+
+Yu Deng, Jiaolong Yang, Jianfeng Xiang, and Xin Tong.
 GRAM: Generative radiance manifolds for 3d-aware image
-generation. In IEEE/CVF Conference on Computer Vision
-and Pattern Recognition, pages 10673-10683, 2022. 2, 3, 5
-[10] Yu Deng, Jiaolong Yang, Sicheng Xu, Dong Chen, Yunde
+generation. In JEEE/CVF Conference on Computer Vision
+and Pattern Recognition, pages 10673-10683, 2022. 2, 3,5
+Yu Deng, Jiaolong Yang, Sicheng Xu, Dong Chen, Yunde
 Jia, and Xin Tong. Accurate 3d face reconstruction with
 weakly-supervised learning: From single image to image set.
 In IEEE/CVF Conference on Computer Vision and Pattern
-Recognition Workshops, 2019. 5,6,8
-[11] Terrance DeVries, Miguel Angel Bautista, Nitish Srivastava,
+Recognition Workshops, 2019. 5, 6, 8
+
+Terrance DeVries, Miguel Angel Bautista, Nitish Srivastava,
 Graham W Taylor, and Joshua M Susskind. Unconstrained
 scene generation with locally conditioned radiance fields. In
 IEEE/CVF International Conference on Computer Vision,
 2021. 2
-[12] Zijian Dong, Xu Chen, Jinlong Yang, Michael J Black, Ot-
+
+Zijian Dong, Xu Chen, Jinlong Yang, Michael J Black, Ot-
 mar Hilliges, and Andreas Geiger. AG3D: Learning to gen-
 erate 3d avatars from 2d image collections. arXiv preprint
-arXiv:2305.02312, 2023. 1, 2, 3, 4
-[13] Michail Christos Doukas, Stefanos Zafeiriou, and Viktoriia
+arXiv:2305.02312, 2023. 1, 2,3, 4
+
+Michail Christos Doukas, Stefanos Zafeiriou, and Viktoriia
 Sharmanska. Headgan: One-shot neural head synthesis and
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
 editing. In IEEE/CVF International Conference on Com-
 puter Vision, pages 14398-14407, 2021. 3
-[14] Anna Frühstück, Krishna Kumar Singh, Eli Shechtman,
+
+Anna Friihstiick, Krishna Kumar Singh, Eli Shechtman,
 Niloy J Mitra, Peter Wonka, and Jingwan Lu. Insetgan
-for full-body image generation. In IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 7723-
+for full-body image generation. In JEEE/CVF Conference
+on Computer Vision and Pattern Recognition, pages 7723—
 7732, 2022. 5
-[15] Jianglin Fu, Shikai Li, Yuming Jiang, Kwan-Yee Lin, Chen
+
+Jianglin Fu, Shikai Li, Yuming Jiang, Kwan-Yee Lin, Chen
 Qian, Chen Change Loy, Wayne Wu, and Ziwei Liu.
 Stylegan-human: A data-centric odyssey of human genera-
 tion. In European Conference on Computer Vision, pages
 1-19, 2022. 2,5
-[16] Guy Gafni, Justus Thies, Michael Zollhofer, and Matthias
-Nießner. Dynamic neural radiance fields for monocular
-4d facial avatar reconstruction. In IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 8649–
-8658, 2021. 1, 3
-[17] Xiangjun Gao, Jiaolong Yang, Jongyoo Kim, Sida Peng,
+
+Guy Gafni, Justus Thies, Michael Zollhofer, and Matthias
+NieBner. Dynamic neural radiance fields for monocular
+4d facial avatar reconstruction. In [EEE/CVF Conference
+on Computer Vision and Pattern Recognition, pages 8649—
+8658, 2021. 1,3
+
+Xiangjun Gao, Jiaolong Yang, Jongyoo Kim, Sida Peng,
 Zicheng Liu, and Xin Tong. MPS-NeRF: Generalizable 3d
-human rendering from multiview images. IEEE Transactions
-on Pattern Analysis and Machine Intelligence, 2022. 3,4
-[18] Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing
+human rendering from multiview images. JEEE Transactions
+on Pattern Analysis and Machine Intelligence, 2022. 3, 4
+Ian Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing
 Xu, David Warde-Farley, Sherjil Ozair, Aaron Courville, and
 Yoshua Bengio. Generative adversarial nets. In Z. Ghahra-
 mani, M. Welling, C. Cortes, N. Lawrence, and K.Q. Wein-
 berger, editors, Advances in Neural Information Processing
 Systems, 2014. 2
-[19] Jiatao Gu, Lingjie Liu, Peng Wang, and Christian Theobalt.
+
+Jiatao Gu, Lingjie Liu, Peng Wang, and Christian Theobalt.
 Stylenerf: A style-based 3d-aware generator for high-
 resolution image synthesis. In International Conference on
 Learning Representations, 2022. 2
-[20] Martin Heusel, Hubert Ramsauer, Thomas Unterthiner,
+
+Martin Heusel, Hubert Ramsauer, Thomas Unterthiner,
 Bernhard Nessler, and Sepp Hochreiter. Gans trained by a
 two time-scale update rule converge to a local nash equilib-
 rium. In Advances in Neural Information Processing Sys-
 tems, pages 6626-6637, 2017. 7
-[21] Fangzhou Hong, Zhaoxi Chen, Yushi Lan, Liang Pan, and
+
+Fangzhou Hong, Zhaoxi Chen, Yushi Lan, Liang Pan, and
 Ziwei Liu. EVA3D: Compositional 3d human generation
-from 2d image collections. In International Conference on
+from 2d image collections. In /nternational Conference on
 Learning Representations, 2023. 1, 2, 3
-[22] Zeng Huang, Yuanlu Xu, Christoph Lassner, Hao Li, and
+
+Zeng Huang, Yuanlu Xu, Christoph Lassner, Hao Li, and
 Tony Tung. Arch: Animatable reconstruction of clothed hu-
-mans. In IEEE/CVF Conference on Computer Vision and
+mans. In JEEE/CVF Conference on Computer Vision and
 Pattern Recognition, pages 3093-3102, 2020. 4
-[23] Kaiwen Jiang, Shu-Yu Chen, Feng-Lin Liu, Hongbo Fu, and
+
+Kaiwen Jiang, Shu-Yu Chen, Feng-Lin Liu, Hongbo Fu, and
 Lin Gao. Nerffaceediting: Disentangled face editing in neu-
 ral radiance fields. In ACM SIGGRAPH Asia, pages 1-9,
 2022. 3
-[24] Hanbyul Joo, Natalia Neverova, and Andrea Vedaldi. Exem-
+
+Hanbyul Joo, Natalia Neverova, and Andrea Vedaldi. Exem-
 plar fine-tuning for 3d human model fitting towards in-the-
 wild 3d human pose estimation. In International Conference
 on 3D Vision, pages 42-52, 2021. 5, 6, 8
-[25] Tero Karras, Samuli Laine, and Timo Aila. A style-based
+
+Tero Karras, Samuli Laine, and Timo Aila. A style-based
 generator architecture for generative adversarial networks.
 In IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 4401-4410, 2019. 13
-[26] Diederik P Kingma and Jimmy Ba. Adam: A method
+
+Diederik P Kingma and Jimmy Ba. Adam: A method
 for stochastic optimization. In International Conference on
 Learning Representations, 2015. 5
-[27] Youngjoong Kwon, Dahun Kim, Duygu Ceylan, and Henry
+
+--- Page 10 ---
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+Youngjoong Kwon, Dahun Kim, Duygu Ceylan, and Henry
 Fuchs. Neural human performer: Learning generalizable ra-
-diance fields for human performance rendering. Advances
-in Neural Information Processing Systems, 34:24741-24752,
+iance fields for human performance rendering. Advances
+in Neural Information Processing Systems, 34:24741—24752,
 2021. 3
-[28] John P Lewis, Matt Cordner, and Nickson Fong. Pose space
-deformation: a unified approach to shape interpolation and
+
+John P Lewis, Matt Cordner, and Nickson Fong. Pose space
+leformation: a unified approach to shape interpolation and
 skeleton-driven deformation. In Annual Conference on Com-
-puter Graphics and Interactive Techniques, pages 165–172,
+puter Graphics and Interactive Techniques, pages 165-172,
 2000. 3
-[29] Tianye Li, Timo Bolkart, Michael J Black, Hao Li, and Javier
+
+Tianye Li, Timo Bolkart, Michael J Black, Hao Li, and Javier
 Romero. Learning a model of facial shape and expression
-from 4d scans. ACM Transactions on Graphics, 36(6):194–
-1, 2017. 2, 3
-[30] Yiyi Liao, Katja Schwarz, Lars Mescheder, and Andreas
+from 4d scans. ACM Transactions on Graphics, 36(6):194—
+» 2017. 2,3
+
+Yiyi Liao, Katja Schwarz, Lars Mescheder, and Andreas
 Geiger. Towards unsupervised learning of generative mod-
-els for 3d controllable image synthesis. In IEEE/CVF Con-
+els for 3d controllable image synthesis. In JEEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, pages
 5871-5880, 2020. 2
-[31] Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu
+
+Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu
 Sarkar, Jiatao Gu, and Christian Theobalt. Neural actor:
 Neural free-view synthesis of human actors with pose con-
-trol. ACM Transactions on Graphics, 40(6):1-16, 2021. 3
-[32] Matthew Loper, Naureen Mahmood, Javier Romero, Ger-
+trol. ACM Transactions on Graphics, 40(6):1—16, 2021. 3
+Matthew Loper, Naureen Mahmood, Javier Romero, Ger-
 ard Pons-Moll, and Michael J Black. SMPL: A skinned
 multi-person linear model. ACM transactions on Graphics,
 34(6):1-16, 2015. 2, 3
-[33] Lars Mescheder, Andreas Geiger, and Sebastian Nowozin.
+
+Lars Mescheder, Andreas Geiger, and Sebastian Nowozin.
 Which training methods for gans do actually converge?
 In International Conference on Machine Learning, pages
 3481-3490, 2018. 5
-[34] Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
+
+Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
 Jonathan T Barron, Ravi Ramamoorthi, and Ren Ng. NeRF:
 Representing scenes as neural radiance fields for view syn-
 thesis. In European Conference on Computer Vision, pages
 405-421, 2020. 2
-[35] Thu Nguyen-Phuoc, Chuan Li, Lucas Theis, Christian
+
+Thu Nguyen-Phuoc, Chuan Li, Lucas Theis, Christian
 Richardt, and Yong-Liang Yang. Hologan: Unsupervised
-learning of 3D representations from natural images.
+learning of 3D representations from natural images. In
 IEEE/CVF International Conference on Computer Vision,
 pages 7588-7597, 2019. 2
-In
-[36] Thu Nguyen-Phuoc, Christian Richardt, Long Mai, Yong-
+
+Thu Nguyen-Phuoc, Christian Richardt, Long Mai, Yong-
 Liang Yang, and Niloy Mitra. BlockGAN: Learning 3d
 object-aware scene representations from unlabelled images.
 In Advances in Neural Information Processing Systems,
 2020. 2
-[37] Michael Niemeyer and Andreas Geiger. Giraffe: Represent-
+
+Michael Niemeyer and Andreas Geiger. Giraffe: Represent-
 ing scenes as compositional generative neural feature fields.
 In IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 11453-11464, 2021. 2
-[38] Atsuhiro Noguchi, Xiao Sun, Stephen Lin, and Tatsuya
+
+Atsuhiro Noguchi, Xiao Sun, Stephen Lin, and Tatsuya
 Harada. Unsupervised learning of efficient geometry-aware
 neural articulated representations. In European Conference
-on Computer Vision, pages 597–614, 2022. 1, 2, 3
-[39] Roy Or-El, Xuan Luo, Mengyi Shan, Eli Shecht-
+on Computer Vision, pages 597-614, 2022. 1, 2, 3
+
+Roy Or-El, Xuan Luo, Mengyi Shan, Eli Shecht-
 man, Jeong Joon Park, and Ira Kemelmacher-Shlizerman.
 Stylesdf: High-resolution 3d-consistent image and geometry
-generation. In IEEE/CVF Conference on Computer Vision
-and Pattern Recognition, pages 13503–13513, 2022. 2
-[40] Hao Ouyang, Bo Zhang, Pan Zhang, Hao Yang, Jiaolong
+generation. In JEEE/CVF Conference on Computer Vision
+and Pattern Recognition, pages 13503-13513, 2022. 2
+
+40
+
+4l
+
+42
+
+43
+
+44
+
+45
+
+46
+
+47
+
+48
+
+50
+
+51
+
+52
+
+Hao Ouyang, Bo Zhang, Pan Zhang, Hao Yang, Jiaolong
 Yang, Dong Chen, Qifeng Chen, and Fang Wen. Real-time
 neural character rendering with pose-guided multiplane im-
 ages. In European Conference on Computer Vision, pages
 192-209, 2022. 1
-[41] Pascal Paysan, Reinhard Knothe, Brian Amberg, Sami
+
+Pascal Paysan, Reinhard Knothe, Brian Amberg, Sami
 Romdhani, and Thomas Vetter. A 3d face model for pose
-and illumination invariant face recognition. In IEEE Inter-
+and illumination invariant face recognition. In JEEE Inter-
 national Conference on Advanced Video and Signal based
-Surveillance, pages 296–301, 2009. 3, 4
-[42] Sida Peng, Junting Dong, Qianqian Wang, Shangzhan
+Surveillance, pages 296-301, 2009. 3, 4
+
+Sida Peng, Junting Dong, Qiangian Wang, Shangzhan
 Zhang, Qing Shuai, Xiaowei Zhou, and Hujun Bao. Ani-
 matable neural radiance fields for modeling dynamic human
 bodies. In IEEE/CVF International Conference on Computer
-Vision, pages 14314-14323, 2021. 1, 3, 4
-[43] Yurui Ren, Ge Li, Yuanqi Chen, Thomas H Li, and Shan
+Vision, pages 14314-14323, 2021. 1, 3,4
+
+Yurui Ren, Ge Li, Yuangi Chen, Thomas H Li, and Shan
 Liu. Pirenderer: Controllable portrait image generation via
 semantic neural rendering. In IEEE/CVF International Con-
 ference on Computer Vision, pages 13759-13768, 2021. 3
-[44] Katja Schwarz, Yiyi Liao, Michael Niemeyer, and Andreas
+Katja Schwarz, Yiyi Liao, Michael Niemeyer, and Andreas
 Geiger. Graf: Generative radiance fields for 3d-aware image
 synthesis. In Advances in Neural Information Processing
 Systems, 2020. 2
-[45] Jie Shen, Stefanos Zafeiriou, Grigoris G Chrysos, Jean Kos-
+
+Jie Shen, Stefanos Zafeiriou, Grigoris G Chrysos, Jean Kos-
 saifi, Georgios Tzimiropoulos, and Maja Pantic. The first
 facial landmark tracking in-the-wild challenge: Benchmark
-and results. In IEEE International Conference on Computer
+and results. In EEE International Conference on Computer
 Vision Workshops, pages 50-58, 2015. 8
-[46] Wenzhe Shi, Jose Caballero, Ferenc Huszár, Johannes Totz,
+
+Wenzhe Shi, Jose Caballero, Ferenc Huszar, Johannes Totz,
 Andrew P Aitken, Rob Bishop, Daniel Rueckert, and Zehan
 Wang. Real-time single image and video super-resolution
 using an efficient sub-pixel convolutional neural network. In
 IEEE Conference on Computer Vision and Pattern Recogni-
 tion, pages 1874-1883, 2016. 13
-[47] Yichun Shi, Divyansh Aggarwal, and Anil K Jain. Lifting 2d
+
+Yichun Shi, Divyansh Aggarwal, and Anil K Jain. Lifting 2d
 stylegan for 3d-aware face generation. In IEEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, pages
 6258-6266, 2021. 2
-[48] Aliaksandr Siarohin, Stéphane Lathuilière, Sergey Tulyakov,
+
+Aliaksandr Siarohin, Stéphane Lathuiliére, Sergey Tulyakov,
 Elisa Ricci, and Nicu Sebe. First order motion model for im-
 age animation. Advances in Neural Information Processing
 Systems, 32, 2019. 3
-[49] Ivan Skorokhodov, Aliaksandr Siarohin, Yinghao Xu, Jian
+
+Ivan Skorokhodoy, Aliaksandr Siarohin, Yinghao Xu, Jian
 Ren, Hsin-Ying Lee, Peter Wonka, and Sergey Tulyakov.
 3d generation on imagenet. In International Conference on
 Learning Representations, 2023. 2
-[50] Ivan Skorokhodov, Sergey Tulyakov, Yiqun Wang, and Peter
+
+Ivan Skorokhodov, Sergey Tulyakov, Yiqun Wang, and Peter
 Wonka. Epigraf: Rethinking training of 3d gans. In Ad-
 vances in Neural Information Processing Systems, 2022. 2
-[51] Jingxiang Sun, Xuan Wang, Lizhen Wang, Xiaoyu Li, Yong
+Jingxiang Sun, Xuan Wang, Lizhen Wang, Xiaoyu Li, Yong
 Zhang, Hongwen Zhang, and Yebin Liu. Next3D: Gener-
 ative neural texture rasterization for 3d-aware head avatars.
 In IEEE/CVF Conference on Computer Vision and Pattern
-Recognition, 2023. 1, 2, 3
-[52] Keqiang Sun, Shangzhe Wu, Zhaoyang Huang, Ning Zhang,
+Recognition, 2023. 1, 2,3
+
+Keqiang Sun, Shangzhe Wu, Zhaoyang Huang, Ning Zhang,
 Quan Wang, and HongSheng Li. Controllable 3d face syn-
 thesis with conditional generative occupancy fields. In Ad-
 vances in Neural Information Processing Systems, 2022. 1,
 2,3
-[53] Ayush Tewari, Xingang Pan, Ohad Fried, Maneesh
+
+
+--- Page 11 ---
+[53]
+
+54
+
+55
+
+56
+
+57
+
+58
+
+59
+
+60
+
+61
+
+62
+
+63
+
+64
+
+65
+
+Ayush Tewari, Xingang Pan, Ohad Fried, Maneesh
 Agrawala, Christian Theobalt, et al. Disentangled3d: Learn-
 ing a 3d generative model with disentangled geometry and
 appearance from monocular images. In IEEE/CVF Confer-
 ence on Computer Vision and Pattern Recognition, pages
 1516-1525, 2022. 2
-[54] Daoye Wang, Prashanth Chandran, Gaspard Zoss, Derek
+
+Daoye Wang, Prashanth Chandran, Gaspard Zoss, Derek
 Bradley, and Paulo Gotardo. MORf: Morphable radiance
 fields for multiview neural head modeling. In ACM SIG-
-GRAPH 2022 Conference Proceedings, pages 1-9, 2022. 1
-[55] Ting-Chun Wang, Arun Mallya, and Ming-Yu Liu. One-shot
+GRAPH 2022 Conference Proceedings, pages 1-9, 2022. |
+Ting-Chun Wang, Arun Mallya, and Ming- Yu Liu. One-shot
 free-view neural talking-head synthesis for video conferenc-
 ing. In IEEE/CVF conference on Computer Vision and Pat-
 tern Recognition, pages 10039-10049, 2021. 3
-[56] Xintao Wang, Yu Li, Honglun Zhang, and Ying Shan. To-
+
+Xintao Wang, Yu Li, Honglun Zhang, and Ying Shan. To-
 wards real-world blind face restoration with generative facial
-prior. In IEEE/CVF Conference on Computer Vision and Pat-
+prior. In JIEEE/CVF Conference on Computer Vision and Pat-
 tern Recognition, pages 9168-9178, 2021. 5
-[57] Xintao Wang, Ke Yu, Shixiang Wu, Jinjin Gu, Yihao Liu,
+
+Xintao Wang, Ke Yu, Shixiang Wu, Jinjin Gu, Yihao Liu,
 Chao Dong, Yu Qiao, and Chen Change Loy. Esrgan: En-
 hanced super-resolution generative adversarial networks. In
 European Conference on Computer Vision Workshops, 2018.
-5,13
-[58] Chung-Yi Weng, Brian Curless, Pratul P Srinivasan,
+5, 13
+
+Chung-Yi Weng, Brian Curless, Pratul P Srinivasan,
 Jonathan T Barron, and Ira Kemelmacher-Shlizerman. Hu-
 mannerf: Free-viewpoint rendering of moving people from
-monocular video. In IEEE/CVF Conference on Computer
-Vision and Pattern Recognition, pages 16210–16220, 2022.
+monocular video. In JEEE/CVF Conference on Computer
+Vision and Pattern Recognition, pages 16210-16220, 2022.
 3
-[59] Olivia Wiles, A Koepke, and Andrew Zisserman. X2face:
+
+Olivia Wiles, A Koepke, and Andrew Zisserman. X2face:
 A network for controlling face generation using images, au-
 dio, and pose codes. In European Conference on Computer
 Vision, pages 670-686, 2018. 3
-[60] Yue Wu, Yu Deng, Jiaolong Yang, Fangyun Wei, Qifeng
+
+Yue Wu, Yu Deng, Jiaolong Yang, Fangyun Wei, Qifeng
 Chen, and Xin Tong. AniFaceGAN: Animatable 3d-aware
 face image generation for video avatars. In Advances in Neu-
-ral Information Processing Systems, 2022. 1, 2, 3, 4, 5, 7
-[61] Jianfeng Xiang, Jiaolong Yang, Yu Deng, and Xin Tong.
+ral Information Processing Systems, 2022. 1, 2, 3, 4, 5,7
+Jianfeng Xiang, Jiaolong Yang, Yu Deng, and Xin Tong.
 GRAM-HD: 3d-consistent image generation at high resolu-
 tion with generative radiance manifolds. In IEEE/CVF In-
 ternational Conference on Computer Vision, 2023. 2, 3, 5,
 7
-[62] Hongyi Xu, Guoxian Song, Zihang Jiang, Jianfeng Zhang,
+
+Hongyi Xu, Guoxian Song, Zihang Jiang, Jianfeng Zhang,
 Yichun Shi, Jing Liu, Wanchun Ma, Jiashi Feng, and Linjie
 Luo. OmniAvatar: Geometry-guided controllable 3d head
-synthesis. In IEEE/CVF International Conference on Com-
-puter Vision, 2023. 1, 2, 3
-[63] Sicheng Xu, Jiaolong Yang, Dong Chen, Fang Wen, Yu
+synthesis. In JEEE/CVF International Conference on Com-
+puter Vision, 2023. 1, 2,3
+
+Sicheng Xu, Jiaolong Yang, Dong Chen, Fang Wen, Yu
 Deng, Yunde Jia, and Tong Xin. Deep 3d portrait from a
-single image. In IEEE Conference on Computer Vision and
+single image. In JEEE Conference on Computer Vision and
 Pattern Recognition, pages 7710-7720, 2020. 3
-[64] Egor Zakharov, Aliaksandra Shysheya, Egor Burkov, and
+
+Egor Zakharov, Aliaksandra Shysheya, Egor Burkov, and
 Victor Lempitsky. Few-shot adversarial learning of realis-
-tic neural talking head models. In IEEE/CVF International
-Conference on Computer Vision, pages 9459–9468, 2019. 3
-[65] Jianfeng Zhang, Zihang Jiang, Dingdong Yang, Hongyi Xu,
+tic neural talking head models. In JEEE/CVF International
+Conference on Computer Vision, pages 9459-9468, 2019. 3
+Jianfeng Zhang, Zihang Jiang, Dingdong Yang, Hongyi Xu,
 Yichun Shi, Guoxian Song, Zhongcong Xu, Xinchao Wang,
 and Jiashi Feng. Avatargen: a 3d generative model for an-
 imatable human avatars. In European Conference on Com-
+
 puter Vision Workshops, pages 668-685, 2022. 2, 4
-[66] Xiaoming Zhao, Fangchang Ma, David Güera, Zhile Ren,
+
+[66] Xiaoming Zhao, Fangchang Ma, David Giiera, Zhile Ren,
+
 Alexander G Schwing, and Alex Colburn. Generative mul-
 tiplane images: Making a 2d gan 3d-aware. In European
 Conference on Computer Vision, pages 18-35, 2022. 2
-A
-Figure 9: Uncurated portrait generation results from our method.
-T
-པ་
-Zid, Zexp
-xp
-Zid, E
-Rlr
-Downsample 2x
-3D Conv
-FC+LReLU
-FC+LReLU
-FC+LReLU
-Upsample 2x
-FC+LReLU
-3D Conv
-FC+LReLU
-RRDBs
-FC+LReLU
-A
-FILM SIREN
-A
-Sub-pixel Conv
-A
-FILM SIREN
-A
-Sub-pixel Conv
-A
-FILM SIREN
-A
-Conv
-A
-FC
-XC
-FC
-A
-Rhr
-Pose Deformation Processing Network DP
-Expression Deformation Network De
-Manifold Super-resolution Network U
-Figure 10: Network structures. DP has two 3D conv layers with kernel size 9 × 9 × 5. Both De and U have a StyleGAN-
-like structure [25] with a mapping MLP network and a backbone. The backbone of De is mainly based on 3 FILM SIREN
-layers [6] while U uses 4 Residual-in-Residual Dense Blocks (RRDBs) [57] and 2 sub-pixel conv layers [46].
+
+--- Page 12 ---
+Figure 9: Uncurated portrait generati
+
+--- Page 13 ---
+T Zia LZexp xP Lig € Ri;
+
+v 1 ¥ v
+Downsample 2x FC+LReLU FC+LReLU
+¥ v ¥
+3D Conv FC+LReLU FC+LReLU RRDBs
+y J y
+Upsample 2x. FC+LReLU FC+LReLU
+¥
+3D a A ->| FiLM SIREN A [->} Sub-pixel Conv
+v ¥
+T A |>] FiLM SIREN A |5] sub-pixel Conv
+Vv ¥
+A ->} FiLM SIREN A Conv
+y v
+Arp FC At FC
+V y
+xe Ror
+Pose Deformation Processing Network D? Expression Deformation Network D Manifold Super-resolution Network U
+
+Figure 10: Network structures. D? has two 3D conv layers with kernel size 9 x 9 x 5. Both D® and U have a StyleGAN-
+like structure [25] with a mapping MLP network and a backbone. The backbone of D® is mainly based on 3 FiLM SIREN
+layers [6] while U/ uses 4 Residual-in-Residual Dense Blocks (RRDBs) [57] and 2 sub-pixel conv layers [46].
+

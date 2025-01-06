@@ -1,41 +1,59 @@
-arXiv:2305.04966v2 [cs.CV] 24 Oct 2023
+--- Page 1 ---
+arXiv:2305 .04966v2 [cs.CV] 24 Oct 2023
+
 NerfAcc: Efficient Sampling Accelerates NeRFs
+
 Ruilong Li
 UC Berkeley
-ruilongli@berkeley.edu
+
+ruilonglid@berkeley.edu
+
+ge
+
+As
+
+Training Speedup
+
+t 20x
+
 Hang Gao
 UC Berkeley
+
 hangg@berkeley.edu
+
+pip install nerfacc
+
+1.6x
+mu 11x
+
+TensoRF _ Instant-NGP
+Static NeRFs
+
+Efficient Sampling
+—————_—>
+
 Matthew Tancik
 UC Berkeley
+
 tancik@berkeley.edu
+
 Angjoo Kanazawa
 UC Berkeley
+
 kanazawa@berkeley.edu
-Training Speedup
-20×
-Efficient Sampling
-NerfAcc
-pip install nerfacc
-17.2x
+
+17.2x«
+
 4.5x
-2.8×
-1.6x
-1.6x
-NeRF
-TensoRF
-1.1 x
-Instant-NGP
-T-NERF
-Static NeRFS
-TiNeu Vox
-Dynamic NeRFS
-K-Planes
-BARF
-Cam Opt. NeRFS
+2.8
+TiNeuVox K-Planes BARF
+Dynamic NeRFs Cam Opt. NeRFs
+
 Figure 1: NerfAcc Toolbox. Our proposed toolbox, NerfAcc, integrates advanced efficient sampling techniques that lead to
 significant speedups in training various recent NeRF papers with minimal modifications to existing codebases.
+
 Abstract
+
 Optimizing and rendering Neural Radiance Fields
 is computationally expensive due to the vast number of
 samples required by volume rendering. Recent works
@@ -49,45 +67,53 @@ To facilitate future experiments, we develop NerfAcc, a
 Python toolbox that provides flexible APIs for incorporating
 advanced sampling methods into NeRF related methods. We
 demonstrate its flexibility by showing that it can reduce the
-training time of several recent NeRF methods by 1.5× to
+training time of several recent NeRF methods by 1.5x to
 20x with minimal modifications to the existing codebase.
 Additionally, highly customized NeRFs, such as Instant-NGP,
 can be implemented in native PyTorch using NerfAcc. Our
-code are open-sourced at https://www.nerfacc.com.
+
+code are open-sourced at\ht tps: //www.nerfacc.com
+
 1. Introduction
+
 Neural volume rendering has revolutionized the in-
 verse rendering problem, with the Neural Radiance Field
-(NeRF) [16] being a key innovation. The continuous radi-
+(NeRF) being a key innovation. The continuous radi-
 ance field representation allows for rendering novel views of
 a scene from any camera position. However, the optimiza-
-tion of a NERF can be computationally expensive due to the
+tion of a NeRF can be computationally expensive due to the
 neural representation of radiance field and the large number
 of samples required by volume rendering. These challenges
 have limited practical applications of NeRF-based optimiza-
 tion and rendering.
+
 Several recent works have successfully reduced the com-
 putational cost of neural volume rendering by proposing
-more efficient radiance field representations [17, 35, 36, 4,
-24, 7]. While there are differences in the specific radiance
+more efficient radiance field representations
+(24| [7]. While there are differences in the specific radiance
 field representations and their applications, most of these
 methods share a similar volume rendering pipeline which
 involves creating samples along the ray and accumulating
 them through alpha-composition.
+
 However, compared to the considerable efforts focused on
 developing efficient radiance field representations, there has
+
+--- Page 2 ---
 been limited attention devoted to reducing the computational
 cost of neural volume rendering through efficient sampling.
 While a few recent works have included alternative sampling
-approaches to accelerate their methods [17, 35, 24, 2], these
+approaches to accelerate their methods , these
 methods are often not the main focus of the paper. Moreover,
 implementing advanced sampling approaches typically
-requires non-trivial efforts. For example, Instant-NGP [17]
-and Plenoxels [35] both employ highly customized CUDA
+requires non-trivial efforts. For example, Instant-NGP
+and Plenoxels both employ highly customized CUDA
 implementations to achieve spatial skipping during ray
 marching, which are tightly coupled with their respective
 radiance field implementations. Consequently, it can be
 challenging for researchers to benefit from these advanced
 sampling approaches in their own research.
+
 In this paper, we investigate and compare several ad-
 vanced sampling approaches from the literature and pro-
 vide mathematical proofs demonstrating that they can all be
@@ -104,12 +130,13 @@ that provides a flexible Python API for integrating advanced
 sampling approaches into NeRF-related methods, ready for
 researchers to incorporate into their own codebases. We
 demonstrate that with less than 100 lines of code change us-
-ing NerfAcc, various NeRF methods [16, 4, 5, 7, 14, 21, 17]
-can enjoy 1.5× to 20× training speedup with better perfor-
+ing NerfAcc, various NeRF methods 16] (4) (5)(7) [14] (21) 17)
+can enjoy 1.5 to 20x training speedup with better perfor-
 mance. Notably, using the NerfAcc library, one can train an
-Instant-NGP [17] model with pure Python code in the same
+Instant-NGP model with pure Python code in the same
 amount of time, and achieve slightly better performance
 (+0.2dB) than the official pure CUDA implementation.
+
 Our paper presents a unique contribution to the commu-
 nity. Unlike other papers that introduce novel algorithms,
 our work sheds light on the intricacies of various sampling
@@ -125,36 +152,39 @@ easy-to-modify implementation is fundamental to the
 research development. Overall, we hope that our proposed
 concept, along with the toolbox, can inspire new research
 ideas and accelerate progress in this field.
+
 2. Related Works
+
 NeRF Codebases. The recent explosion of NeRF-related
 research has led to numerous papers, many of which have re-
-leased their own codebases [1, 2, 4, 7, 13, 16, 19, 37, 9].
+leased their own codebases [I] [2] [4] [7] [13] [16] [T9} [37] 9].
 These codebases address various tasks related to NeRF,
-including surface reconstruction [18, 32, 34], radiance
-field representation [1, 2, 17, 24, 35], dynamic model-
-ing [5, 7, 13, 21], and camera optimization [14, 33]. How-
+including surface reconstruction 4], radiance
+field representation 35], dynamic model-
+ing {13] 21], and camera optimization [14] [33]. How-
 ever, each codebase is tailored to a specific task and supports
 only a single approach. While most of these methods share
 the same volume rendering pipeline of accumulating sam-
 ples along the ray, transferring the implementation from one
 codebase to another requires non-trivial efforts. In this work,
 we address this common sampling problem by introducing
-Nerf Acc, a plug-and-play toolbox that supports all the afore-
+NerfAcc, a plug-and-play toolbox that supports all the afore-
 mentioned tasks and methods, making it easy to integrate
 into any existing codebase.
+
 NeRF Frameworks. Recently, several projects have been
 introduced to integrate different NeRF variants into a sin-
 gle framework, such as NeRF-Factory [11], Nerfstudio [29],
 and Kaolin-Wisp [28]. These frameworks have made sig-
 nificant progress in facilitating future NeRF-related re-
 search. NeRF-Factory offers a collection of NeRF vari-
-ants [16, 39, 24, 35, 1, 2, 30] with original implementations
+ants with original implementations
 and focuses on comprehensive benchmarking. Nerfstudio
 consolidates critical techniques introduced in existing litera-
-ture [16, 1, 2, 17, 15] and provides modular components for
+ture (16) [1] [2] (17) [15] and provides modular components for
 the community to easily build on. Kaolin-Wisp builds upon
-the Kaolin [8] framework and implements a set of voxel-
-based NeRF papers [27, 17, 26]. However, these frameworks
+the Kaolin framework and implements a set of voxel-
+based NeRF papers [27][17|/26]. However, these frameworks
 are designed to encourage researchers to develop within the
 framework, and do not benefit users working on their own
 codebases. Moreover, due to the high activity in the NeRF-
@@ -162,12 +192,14 @@ related research, it is almost impossible to keep track of the
 latest developments and integrate advanced techniques into
 a single framework. Therefore, NerfAcc is designed as a
 standalone library that can be plugged into any codebase. It
-supports a wide range of NERF related methods and can be
+supports a wide range of NeRF related methods and can be
 easily maintained as new methods emerge.
+
 3. Importance Sampling via Transmittance
+
 Several advanced sampling approaches exist in the litera-
-ture. For instance, Plenoxels [35] uses a sparse grid, Instant-
-NGP [17] uses an occupancy grid, NeRF [16] employs a
+ture. For instance, Plenoxels uses a sparse grid, Instant-
+NGP uses an occupancy grid, NeRF employs a
 coarse-to-fine strategy, Mip-NeRF 360 [2] proposes proposal
 networks. However, creating a toolbox that can support all
 of these approaches is not an easy task since they operate in
@@ -176,152 +208,134 @@ that these approaches can all be viewed in a unified way of
 importance sampling. We also provide a mathematical proof
 that transmittance is all you need for importance sampling.
 Thus, each method essentially has its own way of creating an
+
+--- Page 3 ---
+pele Real Distribution
+
+Density Density
+Inf A—-—— Inf
+
+@@ Samples
+
+_ Estimator
+
 Density
-Inf --
-^^^^ Real Distribution
-Density
-Inf A
-0.0
-0.0
-Estimator
 Inf
-Samples
-Density
-Ray Direction
-PDF
-1.0
-Ray Direction
-PDF
-PDF
+
+00 00 >
+Ray Direction Ray Direction
+PDF PDF
+10 104
+oo | 00 bee
+Ray Direction Ray Direction Ray Direction
+Transmittance Transmittance Transmittance
+
+10h
+
 0.0
+
 Ray Direction
-LA LA
-0.0
-1.0
-Ray Direction
-Transmittance
-0.0
-Ray Direction
-Transmittance
-1.0
-Ray Direction
-Transmittance
-1.0
-0.0
-0.0
-0.0
-Ray Direction
-Ray Direction
-Ray Direction
+
 Importance Sampling
+
 (a) Uniform
-{Coarse MLP NeRF...}
+{Coarse MLP NeREF...}
+
+Ray Direction
+
 Importance Sampling
+
 (b) Spatial Skipping
 {Instant-NGP, Plenoxels,...}
+
+Ray Direction
+
 Importance Sampling
+
 (c) PDF Approaches
 {NeRF, Mip-NeRF 360,...}
-Figure 2: Illustration of Sampling via Transmittance Estimator. Although spatial skipping approaches (e.g., Occupancy
-Grid in Instant-NGP [17]) and PDF approaches (e.g., Proposal Network in Mip-NeRF 360 [2]) appear distinct from each other,
+
+Figure 2: Mlustration of Sampling via Transmittance Estimator. Although spatial skipping approaches (e.g., Occupancy
+Grid in Instant-NGP {17]]) and PDF approaches (e.g., Proposal Network in Mip-NeRF 360 [2]) appear distinct from each other,
 they can both be viewed as constructing a transmittance estimator from which samples can be created via importance sampling.
+
 estimation of the transmittance along the ray, which we refer
 to as the transmittance estimator. This observation enables
 us to unify different types of sampling approaches under the
 same framework and leads to our NerfAcc toolbox.
+
 3.1. Formulation
+
 Efficient sampling is a well-explored problem in
 Graphics [6], wherein the emphasis is on identifying regions
 that make the most significant contribution to the final
 rendering. This objective is generally accomplished through
 importance sampling, which aims to distribute samples
 based on the probability density function (PDF), denoted
-as p(t), between the range of [tn, tf]. By computing the
+as p(t), between the range of [¢,,t/]. By computing the
 cumulative distribution function (CDF) through integration,
-i.e., F(t) = ſp(v) du, samples are generated using the
+ie, F(t) = fi. p(v) dv, samples are generated using the
 inverse transform sampling method:
-t = F¹ (u) where u ~ U[0, 1].
-(1)
+
+t=F-'(u) where u~U(0, 1]. (1)
+
 In volumetric rendering, the contribution of each sam-
 ple to the final rendering is expressed by the accumulation
+
 weights T(t)o(t):
-rt f
-C(r) = [* T(t) o(t) c(t) dt
-tn
-where T(t) = exp
-t
-• (-fo(s) ds).
-(2)
+
+ty
+C(r) = T(t) a(t) e(t) dt
+I, (2)
+
+where T(t) = exp (- [ o(s) ds) .
+
 Hence, the PDF for volumetric rendering is p(t) = T(t)o(t)
-and the CDF F(t) = √t p(v) du can be derived as a function
+and the CDF F(t) = f p(v) dv can be derived as a function
 of transmittance T(t):
-F (t) = √ √ ²
-T(v)o(v) dv
-tn
-d
-o(s)ds)] dv
-(3)
-- L = [ -xp ( - [[(s) de)] de
-=
-tn
-= 1-
-dv
-ехр
-tn
-• ( -_ o(s)ds)
-= 1 − T(t).
-tn
-Therefore, inverse sampling the CDF F(t) is equivalent
+
+F(t)= | T(v)o(v) dv
+
+=1-exp (- [ a(sds)
+
+=1-T(t).
+
+Therefore, inverse sampling the CDF F'(t) is equivalent
 to inverse sampling the transmittance T(t). Thus a transmit-
 tance estimator is sufficient to determine the optimal samples.
 Intuitively, this suggests to put more samples around regions
-Sampling Methods
-Uniform
-PDF Estimator p(ti)
-Transmittance Estimator T(ti)
-Update F
-Constant
-t-tn
-1
-tf-tn
-Spatial Skipping
-1[0(ti)>T]
-11[(t)>]
-PDF Approaches
-σ(ti) exp(-σ(ti) dt)
-1[σ (ti)>T]
-EMA
-1-
-11[(t)>]
-SGD
-Instantiation
-Coarse MLP NERF [16]
-Instant-NGP [17]
-Plenoxels [35]
-exp(-(ti) dt)
-SGD
-SGD
-Fine MLP NERF [16]
-Mip-NeRF 360 [2]
+
+--- Page 4 ---
+Sampling Methods PDF Estimator p(t; ) Transmittance Estimator T(t; ) Update F Instantiation
+Uniform Constant 1- at - Coarse MLP NeRF
+. . tfo(ti)>7] Diz} tfe(ts)>z] EMA Instant-NGP
+Spatial Skippin; a ee
+P: pping 1 ale>7 Dry Alo(ts)>7] SGD Plenoxels (35)
+i-1 SGD Fine MLP NeRF
+PDF Approaches o(t;) exp(—o(t;) dt) exp(— ja o(t;) dt) SGD Mip-NeRF 360
+
 Table 1: Mathematical Formulations of Different Sampling Approaches. We outlines the significant mathematical
-distinctions among each sampling approach, under the perspective of transmittance estimator. See Section 3.1 for notations.
-where the transmittance changes rapidly - and that is exactly
+distinctions among each sampling approach, under the perspective of transmittance estimator. See Section[3.I]for notations.
+
+where the transmittance changes rapidly — and that is exactly
 what happens when a ray hit a surface. Implementation wise,
 this observation enables us to compute the CDF directly
-using 1 – T(t), instead of the computationally expensive
-integral T(v)o(v) du, which is the standard implementa-
-tion adopted by many popular codebases [16, 1, 2, 29, 7].
+using 1 — T(t), instead of the computationally expensive
+integral te T(v)o(v) dv, which is the standard i
+tion adopted by many popular codebases :
+
 While advanced transmittance estimator techniques,
-such as delta tracking [31] with Monte Carlo sampling,
+such as delta tracking with Monte Carlo sampling,
 are utilized in production-level volumetric rendering in
 Graphics [6], NeRFs operate in a distinct setting in which
 the scene geometry is not predefined but optimized on the
 fly. During NeRF optimization, the radiance field changes
 between iterations, necessitating the dynamic update of the
 transmittance estimator at each step k:
-` : T(t)k−¹ — T(t)k.
-F:
-(4)
+
+lementa-
+
+F:T(t)* 14 T(t)’. (4)
 This introduces additional challenges to efficient sampling
 because it becomes more difficult to accurately estimate
 the transmittance from a radiance field that is constantly
@@ -329,122 +343,134 @@ changing. Current approaches employ either exponential
 moving average (EMA) or stochastic gradient descent
 (SGD) as the update function F. However, we note that
 there may be other update functions that could be explored.
+
 With these concepts in mind, let us now examine some of
 the existing approaches towards efficient sampling.
+
 Uniform. If a transmittance estimator is not available, the
 only assumption we can make is that every point along the
 ray contributes equally to the final rendering. Mathemat-
 ically, this assumption translates to a constant PDF and a
-linearly decaying transmittance T(t) = 1−(t−tn)/(tƒ—tn).
+linearly decaying transmittance T(t) = 1—(t—tn)/(t—tn).
 In this case, the sampling process is equivalent to uniformly
-sampling along the ray, i.e., ti - tnt (tf - tn) It
+sampling along the ray, i.e., t; = tn + (tf — tn) > ui. It
 is worth noting that every NeRF model that uses uniform
 sampling inherently assumes this linear transmittance decay,
-such as the coarse level in vanilla NeRF [16]. See Fig. 2(a)
+such as the coarse level in vanilla NeRF [16]. See Fig. [2{a)
 for the illustration.
-=
+
 Spatial Skipping. A more sophisticated approach to im-
 prove uniform sampling is to identify empty regions and skip
-them during sampling, as proposed in Instant-NGP's Occu-
-pancy Grid [17] and Plenoctrees' Sparse Grid [36]. This
--
-=
-technique binarizes the density along the ray with a conser-
-vative threshold 7: ô(ti) = 1[σ(ti) > 7]. Consequently,
-the piece-wise constant PDF can be expressed as p(ti):
-ô(ti)/Σ±1 ô(tj), and the piece-wise linear transmittance
-estimator is T(t¿) = 1 − Σ ô(t;)/Σ±1 ô(t;). To up-
-date this estimator during optimization, Instant-NGP [17]
+them during sampling, as proposed in Instant-NGP’s Occu-
+pancy Grid and Plenoctrees’ Sparse Grid [36]. This
+
+technique binarizes the density along ihe ray with a conser-
+vative threshold r: 6(t;) = 1[o(t;) > rT]. Consequently,
+the piece-wise constant PDF can be expressed as p(ti) =
+
+&(ti)/ 05 _, @(t;), and the piece-wise linear transmittance
+estimator is T(t;) = 1 — va &(ty)/ ja G(t,). To up-
+date this estimator during optimization, Instant-NGP
 directly updates the cached density with exponential moving
-average (EMA) over iteration k: σ (ti)k = y · σ(ti)k−1 +
-(1) σ(ti). Meanwhile, Plenoxels [35] updates the
+average (EMA) over iteration k: o(t:)* = y- o(ti)*"+ +
+(1 — ) - o(ti)*. Meanwhile, Plenoxels updates the
 density via the gradient descent through the rendering loss.
-See Fig. 2(b) for an illustration.
-.
+See Fig. [2[b) for an illustration.
+
 PDF Approaches. Another type of approach is to directly
 estimate the PDF along the ray with discrete samples. In
-vanilla NeRF [16], the coarse MLP is trained using vol-
-umetric rendering loss to output a set of densities σ (tį).
+vanilla NeRF ], the coarse MLP is trained using vol-
+umetric rendering loss to output a set of densities o(t;).
 This allows for the creation of a piece-wise constant PDF:
-p(ti) = σ(t;) exp(−σ (t;) dt), and a piece-wise linear trans-
-mittance estimator T(ti)
-T(t₁) 
-= exp(−Σσ(tr) dt). This
-approach was further improved in Mip-ŇeRF 360 [16] with
-a PDF matching loss, which allows for the use of a much
+(ti) = o(ti) exp(—o(t;) dt), and a piece-wise linear trans-
+mittance estimator T(t;) = exp(— via a(t, ee This
+approach was further improved in Mip-NeRF 360 [16] with
+a PDF matching loss, which allows for the use a a much
 smaller MLP in the coarse level, namely Proposal Network,
 to speedup the PDF construction. In both cases, the trans-
 mittance estimator is updated through gradient descent. See
-Fig. 2(c) for an illustration.
-Table 1 provides a mathematical summary and compari-
+Fig. 2{c) for an illustration.
+
+Table[I]|provides a mathematical summary and compari-
 son of these approaches. Additionally, we present an illustra-
-tion in Figure 2 to provide an intuitive comparison of these
+tion in Figure[2]to provide an intuitive comparison of these
 approaches from the perspective of PDF (second row) and
 transmittance (third row), as well as how the samples can
 be created from the transmittance estimator via importance
 sampling (last row). This visualization also reveals some
 pros and cons for each approach, which we will discuss in
-in Section. 3.3.
+in Section. B.3]
+
 3.2. Design Spaces
+
 Choice of Representations. The transmittance estimator
-can use either an explicit voxel [17, 35, 4], an MLP [1, 2, 16],
+can use either an explicit voxel [1 ,an MLP
 or a hybrid representation [29]. Depending on whether the
 estimator is explicit or not, it can be updated with either
-rule-based EMA [17, 4] or gradient descent with some super-
-vision [35, 2, 16, 29]. Generally, voxel-based estimators are
+rule-based EMA [17] |4]] or gradient descent with some super-
+. Generally, voxel-based estimators are
+
+vision
+
+
+--- Page 5 ---
 faster than implicit (e.g., MLP-based) estimators but suffer
 more from aliasing issues. It is worth noting that the trans-
-mittance estimator's representation can significantly benefit
+mittance estimator’s representation can significantly benefit
 from advances in radiance field representation. For exam-
-ple, the Nerfacto model [29] uses the most recent hybird-
-representation HashEncoding [17] for both the radiance field
+ple, the Nerfacto model uses the most recent hybird-
+representation HashEncoding for both the radiance field
 and the sampling module, achieving the best quality-speed
 tradeoff in in-the-wild settings.
+
 Handling Unbounded Scenes. So far, we have only dis-
-cussed sampling within a bounded area [tn,tƒ]. For un-
+cussed sampling within a bounded area [t,t]. For un-
 bounded scenes, it is impossible to densely sample along the
 ray. Similar to the mipmaps used in graphics rendering, a
 general solution is to sample more coarsely as the ray goes
 further, as objects farther away appear in fewer pixels on the
 image plane. This can be achieved by creating a bijective
-mapping function § : sЄ [Sn, Sƒ] → t € [tn, +∞], and
+mapping function ® : s € [sn,s¢] 4 t € [tn, too], and
 performing sampling in the s-space instead of the t-space.
-Several papers [2, 39, 23] that work on unbounded scenes
-have introduced different mapping functions , to which we
+Several papers that work on unbounded scenes
+have introduced different mapping functions ®, to which we
 refer our readers for details.
+
 3.3. Discussions
+
 Pros and Cons. Sampling with uniform assumption is the
 easiest one to implement but with lowest efficiency in most
 cases. Spatial skipping is a more efficient technique since
 most of the 3D space is empty, but it still samples uniformly
 within occupied but occluded areas that contribute little to
-the final rendering (e.g., the last sample in Figure 2(b)).
+the final rendering (e.g., the last sample in Figure [2{b)).
 PDF-based estimators generally provide more accurate trans-
 mittance estimation, enabling samples to concentrate more
 on high-contribution areas (e.g., surfaces) and to be more
 spread out in both empty and occluded regions. However,
 this also means that samples are always spread out through-
 out the entire space without any skipping, as shown in Fig-
-ure 2(c). Moreover, the current approaches all introduce
+ure 2c). Moreover, the current approaches all introduce
 aliasing effects to the volumetric rendering due to either (1)
 the piece-wise linearity assumption for estimating transmit-
-tance along the ray [1, 2, 16, 35, 17] as illustrated in Figure 2,
+tance along the ray as illustrated in Figure[2|
 or (2) the underlying voxel representation for the transmit-
-tance estimator [35, 17] as discussed in Section 3.2. A recent
+tance estimator [35] [17] as discussed in Section[3.2] A recent
 work, Zip-NeRF [3], addresses the aliasing problem tied to
-these two exact issues (called "z-aliasing” and “xy-aliasing"
+these two exact issues (called “z-aliasing” and “‘xy-aliasing”
 in their work), which are naturally revealed under our unified
 framework.
+
 Implementation Difficulties. The current implementa-
 tions for efficient sampling are all highly customized and
 tightly integrated with the specific radiance field proposed
 in each paper. For instance, spatial skipping is implemented
-with customized CUDA kernels in Instant-NGP [17] and
+with customized CUDA kernels in Instant-NGP and
 Plenoxels [35]. Mip-NeRF 360 [2], K-planes [7], and Ner-
 facto [29] have a proposal network implemented but it is
 closely integrated with their repositories and can only sup-
-repos-
-port t limited types of radiance fields that come with the
+
+port limited types of radiance fields that come with the repos-
 itory. However, as shown before, the sampling process is in-
 dependent of the radiance field representation, thus it should
 be easily transferable across different NeRF variants. Due to
@@ -453,11 +479,12 @@ nificant effort to correctly implement an efficient sampling
 approach from scratch. Therefore, having an implementa-
 tion that is easily transferable from repository to repository
 would be valuable in supporting future research on NeRF.
+
 Insights from Unified Formulation. Comprehending the
 sampling spectrum through the lens of Transmittance Estima-
 tor paves the way for investigating novel sampling strategies.
 For example, our framework reveals that the Occupancy
-Grid from Instant-NGP [17] and the Proposal Network from
+Grid from Instant-NGP and the Proposal Network from
 Mip-NeRF 360 [2] are not mutually exclusive but comple-
 mentary, as both aim to estimate the transmittance along the
 ray. Therefore, combining them becomes straight-forward:
@@ -465,193 +492,154 @@ one can first compute the transmittance with the occupancy
 grid, and then refine the estimated transmittance with a pro-
 posal network. This enables both skipping on the empty
 space and concentrating the samples onto the surface. We
-explore this approach in Section 4.4 and demonstrate that it
+explore this approach in Section[4.4]and demonstrate that it
 overcomes the limitation of the proposal network approach,
 which always samples the entire space. Furthermore, this
 formulation could potentially shed light on questions such
 as how to enhance the sampling procedure with depth in-
 formation or other priors, which we encourage readers to
 investigate further.
+
 4. NerfAcc Toolbox
+
 In this paper, we present NerfAcc toolbox, designed for
 Neural radiance field Acceleration. It provides efficient
 sampling for volumetric rendering, that is universally appli-
 cable and easily integrable for a diverse range of radiance
-fields [16, 4, 17, 14, 32]. In this section, we first introduce
+fields {17] [14] [32]. In this section, we first introduce
 the design principles of this toolbox, along with critical
 implementation details. To demonstrate its flexibility, we
 further show that it can significantly speedup the training
-of various NeRF-related papers by 1.5× to 20× with only
+of various NeRF-related papers by 1.5x to 20x with only
 minor modifications to existing codebases.
+
 4.1. Design Principles
-•
-•
 This library is designed with these goals in mind:
-• Plug-and-play. Our primary objective is to ease the
+
+¢ Plug-and-play. Our primary objective is to ease the
 challenges of implementing an efficient volumetric sam-
 pling technique for the research community. Therefore,
 NerfAcc is designed as a standalone library that can be
 easily installed from PyPI on both Windows and Linux
 platforms, and seamlessly integrated into any PyTorch
 codebase.
-Efficiency & Flexibility. To maximize the speed of
+
+¢ Efficiency & Flexibility. To maximize the speed of
 the code, we fuse the operations into CUDA kernels as
+
+--- Page 6 ---
 Algorithm 1: NerfAcc Rendering Pipeline. In NerfAcc, the
 samples are created from a transmittance estimator, which can be
-updated during the NeRF training. See Section 4.2 for details.
+updated during the NeRF training. See Section[4.2]for details.
+
 # nerf: a radiance field model.
-#r_o: ray origins. (n_rays, 3)
-#r_d: ray normalized directions. (n_rays, 3)
-#e.g., Prop Net, Occ Grid.
-estimator = nerfacc. Transmittance Estimator()
-def density fn(to, t₁, r_id):
+# r_o: ray origins. (n_rays, 3)
+# r_d: ray normalized directions. (n_rays, 3)
+
+# e.g., Prop Net, Occ Grid.
+estimator = nerfacc.TransmittanceEstimator( )
+
+def density_fn(to, t1, r_id):
 """Query density from nerf."""
 return nerf.density(r_o[r_id], r_d[r_id], to, t1)
-def rgb_density_fn(to, t₁, r_id):
-"Query rgb and density from nerf."""
-return nerf. forward (r_o [r_id], r_d[r_id], to, t₁)
+
+def rgb_density_fn(to, ta, r_id):
+“Query rgb and density from nerf."""
+return nerf.forward(r_o[r_id], r_d[r_id], to, t1)
+
 # Efficient sampling.
-# (to, t1, r_id): packed samples. (all_samples,)
-to, t₁, r_id = nerfacc.sampling(
-)
+# (to, ta, r_id): packed samples. (all_samples, )
+to, t1, r_id = nerfacc.sampling(
 r_o, r_d, estimator, density_fn=density_fn
+)
 # Differentiable volumetric rendering.
 color, opacity, depth, aux = nerfacc.rendering(
+to, t1, r_id, rgb_density_fn=rgb_density_fn
 )
-to, t₁, r_id, rgb_density_fn=rgb_density_fn
 # Update the transmittance estimator.
-estimator.update_every_n_steps (to, t₁, r_id, aux)
+estimator.update_every_n_steps(to, t1, r_id, aux)
 # nerf, r_o and r_d all receive gradients.
-F.mse_loss (color, color_gt). backward()
-Methods
-TensoRF [4]
-+ nerfacc (occ)
-Dataset Speedup T (min) ↓↓ PSNR ↑ LPIPS↓↓
-18.3
-28.13 0.143
-T&T
-1.5x
-12.6
-28.10 0.150
-TensoRF [4]
-10.6
-32.52 0.047
-Syn.
-1.6x
-+ nerface (occ)
-6.5
-32.51 0.044
-NERF [16]
->1000 31.00 0.081
-+ nerfacc (occ)†
-Syn.
-20x
-52.0
-31.55 0.072
-Instant-NGP [17]
-4.4
-32.35
-+ nerfacc (occ)+
-+ nerfacc (prop)+
-Instant-NGP [17]
-+ nerfacc (occ)+
-+ nerfacc (prop)+
-Syn.
-1.0×
-4.4
-32.55 0.056
-5.2
-31.40 0.064
-5.3
-25.93
-360
-1.1x
-5.0
-26.41 0.353
-4.9
-27.58
-0.292
-(a) Static NeRFs.
-Dataset Speedup T (min) ↓ PSNR ↑ LPIPS ↓
-Methods
-TiNeu Vox [20]
-+ nerfacc (occ)
-+nerfacc (prop)
-TiNeu Vox [5]
-+ nerfacc (occ)
-56.3
-24.19
-0.425
-Hyper.
-1.7x
-33.0
-24.19 0.434
-34.3
-24.26 0.398
-11.8
-31.14 0.050
-D-NeRF
-2.8×
-4.2
-31.75 0.038
-K-Planes [7]
-+ nerfacc (occ)
-T-NeRF [21]
-+ nerface (occ)+
-63.9
-30.28 0.043
-D-NeRF
-1.6x
-38.8
-D-NeRF 20×
-30.35 0.042
->1000 28.78 0.069
-58.0 32.22 0.040
-(b) Dynamic NeRFs.
+F.mse_loss(color, color_gt).backward()
+
 much as possible, while exposing flexible Python APIs
 to the users.
-• Radiance Field Complexity. We target on supporting
+
+¢ Radiance Field Complexity. We target on supporting
 any radiance fields that are designed for per-scene opti-
 mization, including both density-based and SDF-based
 fields, for both static and dynamic scenes.
+
 4.2. Implementation Details
-Nerf Acc incorporates two advanced sampling methods
+
+NerfAcc incorporates two advanced sampling methods
 that can be decoupled from the radiance field representation,
-namely the Occupancy Grid from Instant-NGP [17] and the
-Proposal Network from Mip-NeRF 360 [2]. Algorithm 1
+namely the Occupancy Grid from Instant-NGP and the
+Proposal Network from Mip-NeRF 360 [2]. Algorithm [I]
 presents the pseudo code for volumetric rendering using
 the NerfAcc toolbox. In this section, we do not dive into
 the details of each algorithm, as we basically follow the
-original paper's implementation. Instead, we discuss the
+original paper’s implementation. Instead, we discuss the
 implementation designs that are crucial to maintain high
 efficiency and flexibility of this toolbox.
+
 Sample as Interval. In the NerfAcc toolbox, instead of
 representing each sample with a coordinate x, we represent
-the sample as an interval along the ray (to, t₁, r), where to
-and t₁ are the start and end of the interval along the r-th ray.
+the sample as an interval along the ray (to, 1,7"), where to
+and t, are the start and end of the interval along the r-th ray.
 This interval-based representation offers three key advan-
 tages. Firstly, representing a sample as an interval instead of
 a single point allows us to support research based on cone-
 based rays for anti-aliasing, such as Mip-NeRF [1] and Mip-
-NERF 360 [2]. Secondly, since in almost all cases t¿ does
-Methods
-BARF [20]
+NeRF 360 [2]. Secondly, since in almost all cases t; does
+
+Methods Dataset Speedup T (min) | PSNR + LPIPS |
+TensoRF 18.3 28.13 0.143
++ nerface (occ) T&T 15x 12.6 28.10 0.150
+TensoRF syn. 16x 10.6 32.52 0.047
++ nerface (occ) 6.5 32.51 0.044
+NeRF >1000 31.00 0.081
++nerface (oceyt SY 20 52.0 31.55 0.072
+Instant-NGP 44 32.35 -
++nerface (oce)t Syn. 1.0x 44 32.55 0.056
++ nerfacc (prop)* 5.2 31.40 0.064
+Instant-NGP 5.3 25.93 -
++nerface (occ)t 360 1.1x 5.0 26.41 0.353
++nerface (prop)t 49 27.58 0.292
+
+(a) Static NeRFs.
+
+Methods Dataset Speedup T (min) | PSNR + LPIPS |
+
+TiNeu Vox
 + nerface (occ)
-Dataset Speedup T (min) ↓ PSNR ↑ LPIPS ↓ ER/ET↓
-Syn.
-4.5x
-586
-130
-28.83 0.054 0.19 / 0.74
-30.11 0.044 0.07 / 0.35
+
+56.3 24.19 0.425
+Hyper. 1.7x 33.0 24.19 0.434
+
++ nerfacc (prop) 34.3 24.26 0.398
+Mmtcctese) PNERE 28X15 ne
+tmece (co) NERF 28x 53955 g0M2
+a ertce (oce)t D-NeRF 20x a a 7
+
+(b) Dynamic NeRFs.
+
+Methods Dataset Speedup T (min) | PSNR LPIPS | ER /Ey |
+
+BARF (20) 586 28.83
++nerface (occ) SY¥* 45% 439 30.11
+
+0.054 0.19 /0.74
+0.044 0.07/0.35
+
 (c) NeRFs for Camera Optimization. Camera rotational / transna-
-tional errors are denoted as ER/ET. ET is scaled by 100.
+tional errors are denoted as Ep/Er. Er is scaled by 100.
+
 Table 2: Improvements on Various NeRFs. Experiments
 are conducted by replacing necessary code in the official
-repositories, except for those marked by † that are based on
-+
+repositories, except for those marked by f that are based on
 our re-implementations.
-not require gradients, using (to, t₁, r) instead of (x0,x1) to
+
+not require gradients, using (to, t1, 7) instead of (xo, x1) to
 represent the interval allows for the detachment of the sam-
 pling process from the differentiable computational graph,
 thereby maximizing its speed. Lastly, the ray id r attached to
@@ -659,93 +647,91 @@ each sample enables support for various numbers of samples
 across rays with a packed tensor, which we will discuss in the
 next paragraph. A similar representation has been adopted
 in Nerfstudio [29] to support various radiance fields.
+
 Packed Tensor. To support sampling with spatial skipping,
 it is necessary to consider that each ray may result in a dif-
 ferent number of valid samples. Storing the data as a tensor
 with shape (n_rays, n_samples, ...) and an extra mask
 with shape (n_rays, n_samples) to indicate which sam-
 ples are valid leads to significant inefficient memory usage
-w/ Nerf Acc
+
+--- Page 7 ---
+18.3min/28.13dB)
+
 Original
-18.3min/28.13dB
-5.3min/25.93dB
-|63.9min/30.28dB
+
+\
+12.6min/28.10dB| S.0Omin/27.21dB}
+
+w/ NerfAcc
+
 56.3min/24.19dB
-|586min/28.83dB
-12.6min/28.10dB
-|5.0min/27.21dB
-38.8min/30.35dB
+
 34.3min/24.26dB
-|130min/30.11dB
-TensoRF [4]
+
+TensoRF
 Tanks&Temples Dataset
-Instant-NGP [17]
+
+SS
+Instant-NGP
 360 Dataset
-T-NeRF [16]
+
+T-NeRF
 D-NeRF Dataset
-TiNeu Vox [5]
+
+fa
+TiNeuVox
 HyperNeRF Dataset
-BARF [14]
+
 NeRF-Synthetic Dataset
+
 Figure 3: Qualitative Results. NerfAcc is able to significantly reduce the training time of various NeRF-related methods
 across multiple datasets, while also yielding slightly improved quality in the majority of cases. The training time and test
+
 PSNR are shown on the left corner of each image.
-***
-retum depth,
-def composites, apt, nay, rgb saples, deity, ples, des]:
-ray.length ray.neredie, kr)
-1
-val rendering: computs probability using quadrature)
-depth int
-delta density samples dist
-smples.
-NerfAcc-
-def forward self, out, center, ray, apples, ade):
-tumerables, deity.s
-Code Snippets from BARF
-***
-sition torists starts 2
-M
-erf...rea
-fit.featers, Lands rey.indisl
-sitions trisirs rs (t.starts tents]/2.8
-g, deity.in,
-gp,pacity, ther
-starts tr
-Equavlent code with NerfAcc
-Figure 4: Plug-and-play Example in BARF [14]'s Repos-
+
+NerfAcc =<
+oS
+
+Code Snippets from BARF Equavlent code with NerfAcc
+
+Figure 4: Plug-and-play Example in BARF [14]’s Repos-
 itory. With around 50 lines of code change, both training
 speed and performance can be greatly improved with effi-
-cient sampling equipped in NerfAcc, as shown in Table 2b.
+cient sampling equipped in NerfAcc, as shown in Table [2b]
+
 when large portions of space are empty. To address this, in
-Nerf Acc, we represent samples as “packed tensors” with
-shape (all samples, ...), in which only valid samples
-are stored (see Algo. 1). To keep track of the associated rays
+NerfAcc, we represent samples as “packed tensors” with
+shape (all_samples, ...), in which only valid samples
+are stored (see Algo.[I}. To keep track of the associated rays
 for each sample, we also host an integer tensor with shape
 (n_rays, 2), which stores the start index in the packed ten-
 sors and the number of samples on this ray. This approach is
-similar to that used in Instant-NGP [17] and PyTorch3D [22].
+similar to that used in Instant-NGP and PyTorch3D [22].
+
 No Gradient Filtering. After importance sampling, inac-
 curate transmittance estimations can result in some samples
 lying in empty or occluded spaces, particularly in spatial
 skipping methods like Occupancy Grid. These samples can
-be filtered before being included in PyTorch's differentiable
+be filtered before being included in PyTorch’s differentiable
+
 computation graph by evaluating their transmittance using
 the radiance field with gradients disabled. As backward
 passes are not required during filtering, this is much faster
-(~10×) than keeping all samples in the computation graph.
-In practice, samples with transmittance below 10-4 are dis-
+(~10x) than keeping all samples in the computation graph.
+In practice, samples with transmittance below 10~4 are dis-
 regarded during this process with almost no influence on the
 rendering quality. Note that this strategy is inspired from
-Instant-NGP [17]'s implementation.
+Instant-NGP [17]’s implementation.
+
 4.3. Case Studies
+
 We showcase the flexibility of NerfAcc on three types of
 NeRFs across seven papers: static NeRFs (NeRF [16], Ten-
-SORF [4], Instant-NGP [17]); dynamic NeRFs (D-NeRF [21],
-K-Planes [7] TiNeuVox [5]); and a NeRF variation for cam-
+soRF [4], Instant-NGP [17]); dynamic NeRFs (D-NeRF [21],
+K-Planes [7]] TiNeuVox and a NeRF variation for cam-
 era optimization (BARF [14]). Although many of these meth-
-ods, e.g.,
-Instant-NGP, TensoRF, TiNeuVox and K-Planes,
+ods, e.g., Instant-NGP, TensoRF, TiNeuVox and K-Planes,
 have already been highly optimized for efficiency, we are
 still able to accelerate their training by a large margin and
 achieve slightly better performance on nearly all cases. It is
@@ -753,15 +739,19 @@ worth mentioning that experiments with TensoRF, TiNeu Vox,
 K-Planes and BARF are conducted by integrating NerfAcc
 into the official codebase with around 100 lines of code
 change. The results of our experiments, including those
-of our baselines, are presented in Table 2a, 2b, and2c, all
+of our baselines, are presented in Table [2a[2b] and2c] all
 of which were conducted under the same physical environ-
 ment using a single NVIDIA RTX A5000 GPU to facilitate
 comparison, as per [25]. Aside from the experiments re-
 ported in this paper, NerfAcc has also been integrated into a
+
+
+--- Page 8 ---
 few popular open-source projects such as nerfstudio [29]
 for density-based NeRFs, as well as sdfstudio [38] and
-instant-nsr-pl [10] for SDF-based NeRFs.
-Static NeRFS. In this task, we experiment with three
+instant-nsr-pl for SDF-based NeRFs.
+
+Static NeRFs. In this task, we experiment with three
 NeRF vaiants, including the original MLP-based NeRF [16],
 TensoRF [4] and Instant-NGP [17]. We show that Ner-
 fAcc works with both MLP-based and Voxel-based radi-
@@ -770,11 +760,12 @@ Tank&Template dataset [12]) and unbounded scenes (360
 Dataset [2]). It is worth to note that with NerfAcc, one
 can train an Instant-NGP model with pure Python code and
 achieve slightly better performance than the official pure
-CUDA implementation, as shown in Table 2a.
+CUDA implementation, as shown in Table [2a]
+
 Dynamic NeRFs. In this task, we apply the NerfAcc tool-
 box to T-NeRF [21], K-Planes [7] and TiNeuVox [5], cov-
 ering both the synthetic (D-NeRF [21]) and “in-the-wild”
-captures¹ (that accompany HyperNeRF [20]). When apply-
+captureq!](that accompany HyperNeRF [20]). When apply-
 ing the occupancy grid approach to accelerate those dynamic
 methods, instead of representing a static scene with it, we
 share the occupancy grid across all frames. In other words,
@@ -783,8 +774,9 @@ single timestamp, We use it to indicate the maximum opacity
 at this area over all the timestamps. This is not optimal but
 still makes the rendering very efficient, due to the fact there
 are limited movements in these datasets.
+
 NeRFs for Camera Optimization. In this task, we em-
-ployed the Nerf Acc toolbox to BARF [14] on the NeRF-
+ployed the NerfAcc toolbox to BARF [14] on the NeRF-
 Synthetic dataset with perturbed cameras. The goal is to
 jointly optimize the radiance field and camera extrinsic for
 multi-view images. We observed that the spatial skipping
@@ -793,8 +785,9 @@ significantly improved both image quality and camera pose
 reconstruction. These improvements could be attributed to
 the sparsity enforced in our sampling procedure. This finding
 may provide interesting avenues for future research.
+
 Analysis of Different Sampling Approaches. Results in
-Table 2a show that the choice between occupancy grid and
+Table 2a]show that the choice between occupancy grid and
 proposal network sampling can noticeably affect run-time
 and performance on different datasets. As each approach
 relies on a distinct set of hyperparameters, a systematic com-
@@ -804,11 +797,13 @@ marching step size for occupancy grid and the number of
 samples and size of the proposal network for the proposal
 network approach. We plot pareto curves for each approach
 for both the NeRF-Synthetic and Mip-NeRF 360 datasets
-in Fig.5. This analysis indicates that occupancy grid sam-
+in Figh5| This analysis indicates that occupancy grid sam-
 pling is suitable for the NeRF-Synthetic dataset, whereas
 the proposal network approach performs better on the 360
 dataset. This is likely because the NeRF-Synthetic dataset
-1These datasets teleport cameras and do not represent real captures [9].
+
+'These datasets teleport cameras and do not represent real captures (9).
+
 contains more empty space that can be skipped effectively
 using the occupancy grid approach. However, in the case
 of real, unbounded data, the use of the occupancy grid ap-
@@ -816,9 +811,11 @@ proach is limited by the bounding box and the lack of empty
 space to skip, making the proposal network approach more
 effective. These experiments used the radiance field from
 Instant-NGP [17], with the same training recipes.
+
 4.4. Combined Sampling
+
 A benefit from the unified concept of transmittance esti-
-mator introduced in Section 3, is that it's straight-forward
+mator introduced in Section[3| is that it’s straight-forward
 to combine the two distinct sampling approaches, as both of
 them essentially provide an estimation of the transmittance
 that can be used for importance sampling. For example, we
@@ -828,12 +825,14 @@ rays and shrink the near-far plane for the remaining rays on
 the NeRF-Synthetic dataset. This leads to improvements in
 quality, from 31.40dB to 32.35dB, and a reduction in train-
 ing time, from 5.2min to 4.3min, compared to using only the
-proposal network for importance sampling. Figure 6 shows
+proposal network for importance sampling. Figure |6|shows
 an example with the FICUS scene, where the floaters are
 cleaned out with the combined sampling. This experiment is
-conducted using the HashEncoding from Instant-NGP [17]
+conducted using the HashEncoding from Instant-NGP
 as the radiance field representation.
+
 5. Conclusions
+
 In conclusion, this paper highlights the significant im-
 pact of advanced sampling approaches on improving the
 efficiency of Neural Radiance Fields (NeRF) optimization
@@ -849,240 +848,323 @@ methods. The presented results also demonstrate the poten-
 tial for further research to improve the performance of NeRF
 and other related techniques through advanced sampling
 strategies.
+
 Acknowledgement
 This project was supported in part by the Bakar Fellows
 Program and the BAIR/BDD sponsors.
+
 References
-[1] Jonathan T Barron, Ben Mildenhall, Matthew Tancik, Peter
+
+{1] Jonathan T Barron, Ben Mildenhall, Matthew Tancik, Peter
 Hedman, Ricardo Martin-Brualla, and Pratul P Srinivasan.
 Mip-nerf: A multiscale representation for anti-aliasing neural
-PSNR
-32
-30
-28
-PSNR
-32
-30
-28
-Occupancy Grid * Proposal Network
-PSNR
-26
-26
-6
-8
-10
-3
-1
-T (min)
-FPS
+
+--- Page 9 ---
+—<— Occupancy Grid —— Proposal Network
+
+PSNR PSNR PSNR PSNR
+32 32 28 28
+30 30 26 26
+28 28 24 24
+26 26 22 22
+4 6 8 Demin) 4 3 2 1 FPS 4 6 7 T (min) 3 2 1 FPS
+
 (a) NeRF-Synthetic Dataset
-28
-26
-24
-PSNR
-28
-26
-24
-22
-22
-4
-5
-6
-7
-3
-2
-1
-T (min)
-FPS
+
 (b) Mip-NeRF 360 Dataset
+
 Figure 5: Comparison between Different Sampling Approaches in terms of Training Time and Rendering FPS. We
 sweep the hyper-parameters space for each sampling approach, and find out that occupancy grid approach gives the best
 performance-speed trade-off on the NeRF-Synthetic dataset, while the proposal network approach performs the best on the
 Mip-NeRF 360 dataset. Note T (min) denotes for training time and FPS is for rendering frames per second. All experiments
-use the HashEncoding from Instant-NGP [17] as the radiance field representation. Please see the supplementary materials for
+
+use the HashEncoding from Instant-NGP
 the hyperparameter space that we explored.
-5.2min/31.40dB
+
+1.40dB
+
 Proposal
 Network
-4.3min/32.35dB
+
 Occupancy
 Grid
 +
 Proposal
 Network
-Rendered RGB
-Rendered Opacity
+
+Rendered RGB Rendered Opacity
+
 Figure 6: Results of Combined Sampling on NeRF-
 Synthetic Dataset. Benefit from our unified concept of
-transmittance estimator, we find it's straight-forward to com-
+transmittance estimator, we find it’s straight-forward to com-
 bine the two distinct sampling approaches.
+
 radiance fields. In Proceedings of the IEEE/CVF International
 Conference on Computer Vision, pages 5855-5864, 2021.
+
 [2] Jonathan T Barron, Ben Mildenhall, Dor Verbin, Pratul P
 Srinivasan, and Peter Hedman. Mip-nerf 360: Unbounded
 anti-aliased neural radiance fields. In Proceedings of the
 IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 5470-5479, 2022.
+
 [3] Jonathan T. Barron, Ben Mildenhall, Dor Verbin, Pratul P.
 Srinivasan, and Peter Hedman. Zip-nerf: Anti-aliased grid-
 based neural radiance fields. arXiv, 2023.
+
 [4] Anpei Chen, Zexiang Xu, Andreas Geiger, Jingyi Yu, and
+
+[9
+
+[10
+(ll
+
+[13
+
+as the radiance field representation. Please see the supplementary materials for
+
 Hao Su. Tensorf: Tensorial radiance fields. arXiv preprint
 arXiv:2203.09517, 2022.
-[5] Jiemin Fang, Taoran Yi, Xinggang Wang, Lingxi Xie, Xi-
-aopeng Zhang, Wenyu Liu, Matthias Nießner, and Qi Tian.
+
+Jiemin Fang, Taoran Yi, Xinggang Wang, Lingxi Xie, Xi-
+aopeng Zhang, Wenyu Liu, Matthias NieBner, and Qi Tian.
 Fast dynamic radiance fields with time-aware neural voxels.
 In SIGGRAPH Asia 2022 Conference Papers, 2022.
-[6] Julian Fong, Magnus Wrenninge, Christopher Kulla, and Ralf
+
+Julian Fong, Magnus Wrenninge, Christopher Kulla, and Ralf
 Habel. Production volume rendering: Siggraph 2017 course.
-In ACM SIGGRAPH 2017 Courses, pages 1–79. 2017.
-[7] Sara Fridovich-Keil, Giacomo Meanti, Frederik Warburg,
+In ACM SIGGRAPH 2017 Courses, pages 1-79. 2017.
+
+Sara Fridovich-Keil, Giacomo Meanti, Frederik Warburg,
 Benjamin Recht, and Angjoo Kanazawa. K-planes: Explicit
 radiance fields in space, time, and appearance. arXiv preprint
 arXiv:2301.10241, 2023.
-[8] Clement Fuji Tsang, Maria Shugrina, Jean Francois Lafleche,
+
+Clement Fuji Tsang, Maria Shugrina, Jean Francois Lafleche,
 Towaki Takikawa, Jiehan Wang, Charles Loop, Wenzheng
 Chen, Krishna Murthy Jatavallabhula, Edward Smith, Artem
 Rozantsev, Or Perel, Tianchang Shen, Jun Gao, Sanja Fi-
 dler, Gavriel State, Jason Gorski, Tommy Xiang, Jianing
 Li, Michael Li, and Rev Lebaredian. Kaolin: A pytorch
-library for accelerating 3d deep learning research. https:
-//github.com/NVIDIAGameWorks/kaolin, 2022.
-[9] Hang Gao, Ruilong Li, Shubham Tulsiani, Bryan Russell, and
+library for accelerating 3d deep learning research.
+\/7github . com/NVIDIAGameWorks/kaolin) 2022.
+
+Hang Gao, Ruilong Li, Shubham Tulsiani, Bryan Russell, and
 Angjoo Kanazawa. Monocular dynamic view synthesis: A
 reality check. In Advances in Neural Information Processing
 Systems, 2022.
-[10] Yuan-Chen Guo. Instant neural surface reconstruction, 2022.
-[11] Yoonwoo Jeong, Seungjoo Shin, and Kibaek Park. Nerf-
+
+Yuan-Chen Guo. Instant neural surface reconstruction, 2022.
+
+Yoonwoo Jeong, Seungjoo Shin, and Kibaek Park. Nerf-
 factory: An awesome pytorch nerf collection, 2022.
-[12] Arno Knapitsch, Jaesik Park, Qian-Yi Zhou, and Vladlen
+
+Arno Knapitsch, Jaesik Park, Qian-Yi Zhou, and Vladlen
 Koltun. Tanks and temples: Benchmarking large-scale scene
 reconstruction. ACM Transactions on Graphics, 36(4), 2017.
-[13] Ruilong Li, Julian Tanke, Minh Vo, Michael Zollhofer, Jur-
+Ruilong Li, Julian Tanke, Minh Vo, Michael Zollhofer, Jur-
 gen Gall, Angjoo Kanazawa, and Christoph Lassner. Tava:
 Template-free animatable volumetric actors. arXiv preprint
 arXiv:2206.08929, 2022.
-[14] Chen-Hsuan Lin, Wei-Chiu Ma, Antonio Torralba, and Simon
+
+--- Page 10 ---
+(14]
+
+(15]
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+Chen-Hsuan Lin, Wei-Chiu Ma, Antonio Torralba, and Simon
 Lucey. Barf: Bundle-adjusting neural radiance fields. In IEEE
 International Conference on Computer Vision (ICCV), 2021.
-[15] Ricardo Martin-Brualla, Noha Radwan, Mehdi SM Sajjadi,
+Ricardo Martin-Brualla, Noha Radwan, Mehdi SM Sajjadi,
 Jonathan T Barron, Alexey Dosovitskiy, and Daniel Duck-
 worth. Nerf in the wild: Neural radiance fields for uncon-
 strained photo collections. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition,
 pages 7210-7219, 2021.
-[16] Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
+
+Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
 Jonathan T Barron, Ravi Ramamoorthi, and Ren Ng. Nerf:
 Representing scenes as neural radiance fields for view synthe-
-sis. Communications of the ACM, 65(1):99–106, 2021.
-[17] Thomas Müller, Alex Evans, Christoph Schied, and Alexan-
+sis. Communications of the ACM, 65(1):99-106, 2021.
+Thomas Miiller, Alex Evans, Christoph Schied, and Alexan-
 der Keller. Instant neural graphics primitives with a mul-
 tiresolution hash encoding. arXiv preprint arXiv:2201.05989,
 2022.
-[18] Michael Oechsle, Songyou Peng, and Andreas Geiger.
+
+Michael Oechsle, Songyou Peng, and Andreas Geiger.
 Unisurf: Unifying neural implicit surfaces and radiance
 fields for multi-view reconstruction. In Proceedings of the
 IEEE/CVF International Conference on Computer Vision,
 pages 5589-5599, 2021.
-[19] Keunhong Park, Utkarsh Sinha, Jonathan T Barron, Sofien
+
+Keunhong Park, Utkarsh Sinha, Jonathan T Barron, Sofien
 Bouaziz, Dan B Goldman, Steven M Seitz, and Ricardo
 Martin-Brualla. Nerfies: Deformable neural radiance fields.
 In Proceedings of the IEEE/CVF International Conference
 on Computer Vision, pages 5865-5874, 2021.
-[20] Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T
+
+Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T
 Barron, Sofien Bouaziz, Dan B Goldman, Ricardo Martin-
 Brualla, and Steven M Seitz. Hypernerf: A higher-
 dimensional representation for topologically varying neural
 radiance fields. arXiv preprint arXiv:2106.13228, 2021.
-[21] Albert Pumarola, Enric Corona, Gerard Pons-Moll, and
+Pons-Moll, and
 Francesc Moreno-Noguer. D-nerf: Neural radiance fields
 for dynamic scenes. In Proceedings of the IEEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, pages
 10318-10327, 2021.
-[22] Nikhila Ravi, Jeremy Reizenstein, David Novotny, Taylor
+Nikhila Ravi, Jeremy Reizenstein, David Novotny, Taylor
 Gordon, Wan-Yen Lo, Justin Johnson, and Georgia Gkioxari.
 Accelerating 3d deep learning with pytorch3d. arXiv preprint
 arXiv:2007.08501, 2020.
-[23] Christian Reiser, Richard Szeliski, Dor Verbin, Pratul P Srini-
+
+Christian Reiser, Richard Szeliski, Dor Verbin, Pratul P Srini-
 vasan, Ben Mildenhall, Andreas Geiger, Jonathan T Barron,
 and Peter Hedman. Merf: Memory-efficient radiance fields
 for real-time view synthesis in unbounded scenes. arXiv
 preprint arXiv:2302.12249, 2023.
-[24] Cheng Sun, Min Sun, and Hwann-Tzong Chen. Direct voxel
+
+Cheng Sun, Min Sun, and Hwann-Tzong Chen. Direct voxel
 grid optimization: Super-fast convergence for radiance fields
 reconstruction. In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 5459–
+on Computer Vision and Pattern Recognition, pages 5459—
 5469, 2022.
-[25] Cheng Sun, Min Sun, and Hwann-Tzong Chen. Improved di-
+
+Cheng Sun, Min Sun, and Hwann-Tzong Chen. Improved di-
 rect voxel grid optimization for radiance fields reconstruction.
 arXiv preprint arXiv:2206.05085, 2022.
-[26] Towaki Takikawa, Alex Evans, Jonathan Tremblay, Thomas
-Müller, Morgan McGuire, Alec Jacobson, and Sanja Fidler.
+
+Towaki Takikawa, Alex Evans, Jonathan Tremblay, Thomas
+Miiller, Morgan McGuire, Alec Jacobson, and Sanja Fidler.
 Variable bitrate neural fields. In ACM SIGGRAPH 2022
 Conference Proceedings, pages 1-9, 2022.
-[27] Towaki Takikawa, Joey Litalien, Kangxue Yin, Karsten Kreis,
+
+Albert Pumarola, Enric Corona, Gerar
+
+[27]
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+Towaki Takikawa, Joey Litalien, Kangxue Yin, Karsten Kreis,
 Charles Loop, Derek Nowrouzezahrai, Alec Jacobson, Mor-
 gan McGuire, and Sanja Fidler. Neural geometric level of
 detail: Real-time rendering with implicit 3d shapes. In Pro-
 ceedings of the IEEE/CVF Conference on Computer Vision
 and Pattern Recognition, pages 11358-11367, 2021.
-[28] Towaki Takikawa, Or Perel, Clement Fuji Tsang, Charles
+
+Towaki Takikawa, Or Perel, Clement Fuji Tsang, Charles
 Loop, Joey Litalien, Jonathan Tremblay, Sanja Fidler, and
 Maria Shugrina. Kaolin wisp: A pytorch library and
-engine for neural fields research. https://github.com/
-NVIDIAGameWorks/kaolin-wisp, 2022.
-[29] Matthew Tancik, Ethan Weber, Evonne Ng, Ruilong Li, Brent
+engine for neural fields research.
+INVIDTAGameWorks/kaolin-wisp) 2022.
+
+Matthew Tancik, Ethan Weber, Evonne Ng, Ruilong Li, Brent
 Yi, Justin Kerr, Terrance Wang, Alexander Kristoffersen, Jake
 Austin, Kamyar Salahi, et al. Nerfstudio: A modular frame-
 work for neural radiance field development. arXiv preprint
 arXiv:2302.04264, 2023.
-[30] Dor Verbin, Peter Hedman, Ben Mildenhall, Todd Zickler,
+
+Dor Verbin, Peter Hedman, Ben Mildenhall, Todd Zickler,
 Jonathan T Barron, and Pratul P Srinivasan. Ref-nerf: Struc-
 tured view-dependent appearance for neural radiance fields.
 In 2022 IEEE/CVF Conference on Computer Vision and Pat-
 tern Recognition (CVPR), pages 5481-5490. IEEE, 2022.
-[31] John Von Neumann. 13. various techniques used in connec-
+John Von Neumann. 13. various techniques used in connec-
 tion with random digits. Appl. Math Ser, 12(36-38):3, 1951.
-[32] Peng Wang, Lingjie Liu, Yuan Liu, Christian Theobalt, Taku
+Peng Wang, Lingjie Liu, Yuan Liu, Christian Theobalt, Taku
 Komura, and Wenping Wang. Neus: Learning neural implicit
 surfaces by volume rendering for multi-view reconstruction.
 arXiv preprint arXiv:2106.10689, 2021.
-[33] Zirui Wang, Shangzhe Wu, Weidi Xie, Min Chen, and Vic-
+
+Zirui Wang, Shangzhe Wu, Weidi Xie, Min Chen, and Vic-
 tor Adrian Prisacariu. Nerf-: Neural radiance fields without
 known camera parameters. arXiv preprint arXiv:2102.07064,
 2021.
-[34] Lior Yariv, Jiatao Gu, Yoni Kasten, and Yaron Lipman. Vol-
+
+Lior Yariv, Jiatao Gu, Yoni Kasten, and Yaron Lipman. Vol-
 ume rendering of neural implicit surfaces. Advances in Neural
-Information Processing Systems, 34:4805-4815, 2021.
-[35] Alex Yu, Sara Fridovich-Keil, Matthew Tancik, Qinhong
+Information Processing Systems, 34:4805—4815, 2021.
+
+Alex Yu, Sara Fridovich-Keil, Matthew Tancik, Qinhong
 Chen, Benjamin Recht, and Angjoo Kanazawa. Plenoxels:
 Radiance fields without neural networks. arXiv preprint
 arXiv:2112.05131, 2021.
-[36] Alex Yu, Ruilong Li, Matthew Tancik, Hao Li, Ren Ng, and
+
+Alex Yu, Ruilong Li, Matthew Tancik, Hao Li, Ren Ng, and
 Angjoo Kanazawa. Plenoctrees for real-time rendering of
 neural radiance fields. In Proceedings of the IEEE/CVF Inter-
 national Conference on Computer Vision, pages 5752-5761,
 2021.
-[37] Alex Yu, Vickie Ye, Matthew Tancik, and Angjoo Kanazawa.
+
+Alex Yu, Vickie Ye, Matthew Tancik, and Angjoo Kanazawa.
 pixelnerf: Neural radiance fields from one or few images.
 In Proceedings of the IEEE/CVF Conference on Computer
 Vision and Pattern Recognition, pages 4578-4587, 2021.
-[38] Zehao Yu, Anpei Chen, Bozidar Antic, Songyou Peng
+Zehao Yu, Anpei Chen, Bozidar Antic, Songyou Peng
 Peng, Apratim Bhattacharyya, Michael Niemeyer, Siyu Tang,
 Torsten Sattler, and Andreas Geiger. Sdfstudio: A unified
 framework for surface reconstruction, 2022.
-[39] Kai Zhang, Gernot Riegler, Noah Snavely, and Vladlen
+
+Kai Zhang, Gernot Riegler, Noah Snavely, and Vladlen
 Koltun. Nerf++: Analyzing and improving neural radiance
 fields. arXiv preprint arXiv:2010.07492, 2020.
+
+--- Page 11 ---
 A. Implementation Details for Case Studies
+
 This section describes the usage of NerfAcc to enhance
 multiple NeRFs, as discussed in Section 4.3 of the main
 paper. We provide detailed information on how to adapt
-Nerf Acc to various NeRF models.
+NerfAcc to various NeRF models.
+
 A.1. Static NeRFs.
+
 Vanilla NeRF [16]. We trained an 8-layer MLP with
-the same structure as the vanilla NeRF
-paper. The paper
+the same structure as the vanilla NeRF paper. The paper
 employs the PDF-based efficient sampling approach with
 two MLPs for course-to-fine sampling (64 + 128). Although
 the PDF-based approach effectively concentrates samples
@@ -1092,22 +1174,24 @@ proach with Occupancy Grid provided by NerfAcc. Due to
 the considerable amount of empty space in NeRF-Synthetic
 dataset, we are able to increase the number of samples per ray
 to 1024 without any memory issue. As a result, we achieved
-a 20× speedup and improved image quality by +0.5dB.
+a 20x speedup and improved image quality by +0.5dB.
+
 TensoRF [4]. Interestingly, incorporating NerfAcc
-into its own repository results in a 1.5× speedup for
+into its own repository results in a 1.5x speedup for
 TensoRF [4], a more recent voxel-based method, on both
 the NeRF-Synthetic and Tank-and-Temple datasets. We
 conjecture that this improvement is due to our update to
 their transmittance estimator. Although not discussed in its
 paper, TensoRF initially employs a skip-based transmittance
 estimator when sampling, similar to our occupancy grid.
-However, unlike our implementation, TensoRF's estimator
+However, unlike our implementation, TensoRF’s estimator
 does not maintain an accurate estimation of the main density
 field and only updates twice throughout the entire training
 process. Our approach, on the other hand, distills a running
 average of the density field every few training steps.
+
 Instant-NGP [17]. Furthermore, we were able to repro-
-duce Instant-NGP [17] on the NeRF-Synthetic dataset with
+duce Instant-NGP on the NeRF-Synthetic dataset with
 the same training speed and slightly better performance
 (+0.2dB) using the Occupancy Grid. We also achieved
 significantly better results on the Mip-NeRF 360 dataset
@@ -1119,25 +1203,30 @@ entire training pipeline can be implemented in Python on top
 of PyTorch. We believe that our toolbox strikes a balance
 between high-performance computing and simplicity,
 benefiting rapid research development.
+
 A.2. Dynamic NeRFs.
-T-NeRF [21] We trained a T-NeRF model described in
+T-NeRF We trained a T-NeRF model described in
+
 the D-NeRF paper [21] on the D-NeRF dataset. By utilizing
 the occupancy grid in NerfAcc, we achieved a remarkable
-speedup of 20× with a corresponding +3.5dB improvement
+speedup of 20x with a corresponding +3.5dB improvement
+
 in performance. It is worth noting that we performed this
 experiment using our re-implementation of T-NeRF model
 and training recipe.
-K-Planes [7]. For K-Planes, we achieve around 1.6×
+
+K-Planes [7]. For K-Planes, we achieve around 1.6x
 speedup on D-NeRF dataset by replacing its original
 proposal-based transmittance estimator with the occupancy
 grid. We believe that the sparsity in the D-NeRF dataset
 makes it more suitable for spatial skipping approaches.
-TiNeu Vox [5]. Our experiments with TiNeu Vox on
+
+TiNeuVox [5]. Our experiments with TiNeuVox on
 both datasets suggest a universal speedup by using our
-toolbox. Specifically, NerfAcc speeds up training by 2.8×
-on D-NeRF and 1.7× on HyperNeRF datasets, respectively.
+toolbox. Specifically, NerfAcc speeds up training by 2.8x
+on D-NeRF and 1.7x on HyperNeRF datasets, respectively.
 The original TiNeuVox implementation extends upon
-DVGO [24] and directly marches rays within the main den-
+DVGO and directly marches rays within the main den-
 sity grid, which can be wasteful since space skipping does
 not require precise geometry. Our occupancy grid overcomes
 this issue and has been shown to be more effective. Addition-
@@ -1145,26 +1234,29 @@ ally, we found that a time-conditioned proposal network can
 achieve similar performance on the real bounded scenes in
 the HyperNeRF dataset, which aligns with what we observed
 in the Instant-NGP experiments with the proposal network.
+
 A.3. Camera Optimization.
-range
+
 BARF [14]. In the original implementation, BARF
-uniformly samples within the near-far
-for each ray,
+uniformly samples within the near-far range for each ray,
 analogous to the course level in the vanilla NeRF [16].
 We integrated the occupancy grid from our toolbox for
-spatial skipping, resulting in a 4× speedup during training.
+spatial skipping, resulting in a 4x speedup during training.
 Additionally, this led to improved image quality (+1.3dB)
-and roughly 2× lower camera registration error.
+and roughly 2 lower camera registration error.
+
 B. Hyper-parameter Space
+
 Figure 5 in the main paper demonstrates the significant
 impact of hyper-parameters on the performance of each
 sampling approach. The occupancy grid approach relies
 on several primary hyper-parameters, such as the binary
-threshold 7, the grid resolution L³, and the marching
+threshold 7, the grid resolution L?, and the marching
 step size At. Meanwhile, the proposal network approach
 involves hyper-parameters related to the setup of the
-proposal network(s) Fe, as well as the number of samples
+proposal network(s) Fo, as well as the number of samples
 N to be taken along each ray. To ensure the robustness of
 our experiments, each data point in Figure 5 is trained with
 a random combination of hyper-parameters drawn from a
 reasonable range for each dataset.
+

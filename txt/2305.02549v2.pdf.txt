@@ -1,11 +1,16 @@
+--- Page 1 ---
 arXiv:2305.02549v2 [cs.CL] 13 Jun 2023
+
 FormNetV2: Multimodal Graph Contrastive Learning for
 Form Document Information Extraction
-Chen-Yu Lee¹* Chun-Liang Li¹, Hao Zhang², Timothy Dozat², Vincent Perot²,
-Guolong Su², Xiang Zhang¹, Kihyuk Sohn², Nikolai Glushnev³, Renshen Wang²,
-Joshua Ainslie², Shangbang Long², Siyang Qin², Yasuhisa Fujii², Nan Hua², Tomas Pfister¹
-¹ Google Cloud AI Research, 2 Google Research, 3 Google Cloud AI
+
+Chen-Yu Lee!* Chun-Liang Li’, Hao Zhang’, Timothy Dozat”, Vincent Perot’,
+Guolong Su”, Xiang Zhang!, Kihyuk Sohn”, Nikolai Glushnev®, Renshen Wang”,
+Joshua Ainslie”, Shangbang Long’, Siyang Qin’, Yasuhisa Fujii”, Nan Hua’, Tomas Pfister!
+!Google Cloud AI Research, Google Research, ?Google Cloud AI
+
 Abstract
+
 The recent advent of self-supervised pre-
 training techniques has led to a surge in the
 use of multimodal learning in form docu-
@@ -30,7 +35,9 @@ der. FormNetV2 establishes new state-of-the-
 art performance on FUNSD, CORD, SROIE
 and Payment benchmarks with a more compact
 model size.
+
 1 Introduction
+
 Automated information extraction is essential for
 many practical applications, with form-like doc-
 uments posing unique challenges compared to
@@ -44,8 +51,10 @@ ing has been critical for many successes (Xu et al.,
 To further boost the performance, many recent
 approaches adopt multiple modalities (Xu et al.,
 *All work done at Google. Correspondence to: Chen-
+
 Yu Lee <chenyulee@google.com>, Chun-Liang Li <chun-
-liang@google.com>
+liang @ google.com>
+
 2021; Huang et al., 2022; Appalaraju et al., 2021).
 Specifically, the image modality adds more struc-
 tural information and visual cues to the existing
@@ -56,14 +65,14 @@ image alignment (TIA) for cross-modal learning.
 The alignment objective may also help to prime the
 layout modality, though it does not directly involve
 text layouts or document structures.
--
+
 In this work, we propose FormNetV2, a mul-
 timodal transformer model for form information
-extraction. Unlike existing works - which may use
+extraction. Unlike existing works — which may use
 the whole image as one representation (Appalaraju
 et al., 2021), or image patches (Xu et al., 2021), or
 image features of token bounding boxes (Xu et al.,
-2020) we propose using image features extracted
+2020) — we propose using image features extracted
 from the region bounded by a pair of tokens con-
 nected in the constructed graph. This allows us to
 capture a richer and more targeted visual compo-
@@ -73,10 +82,11 @@ objectives for each individual modality, we intro-
 duce graph contrastive learning (Li et al., 2019;
 You et al., 2020; Zhu et al., 2021) to learn multi-
 modal embeddings jointly. These two additions to
-FormNetV1 (Lee et al., 2022) enable the graph con-
+FormNetV 1 (Lee et al., 2022) enable the graph con-
 volutions to produce better super-tokens, resulting
 in both improved performance and a smaller model
 size.
+
 In experiments, FormNetV2 outperforms its pre-
 decessor FormNetV1 as well as the existing mul-
 timodal approaches on four standard benchmarks.
@@ -86,11 +96,14 @@ NetV2 outperforms it by a large margin on FUNSD
 compared with DocFormer (Appalaraju et al.,
 2021), FormNetV2 outperforms it on FUNSD and
 CORD with nearly 2.5x less number of parameters.
+
+--- Page 2 ---
 2 Related Work
+
 Early works on form document information extrac-
 tion are based on rule-based models or learning-
 based models with handcrafted features (Lebour-
-geois et al., 1992; O'Gorman, 1993; Ha et al., 1995;
+geois et al., 1992; O’Gorman, 1993; Ha et al., 1995;
 Simon et al., 1997; Marinai et al., 2005; Chiticariu
 et al., 2013). Later on, various deep neural models
 have been proposed, including methods based on
@@ -99,6 +112,7 @@ recurrent nets (Palm et al., 2017; Aggarwal et al.,
 et al., 2019; Denk and Reisswig, 2019), and trans-
 formers (Majumder et al., 2020; Garncarek et al.,
 2020; Wang et al., 2022c).
+
 Recently, in addition to the text, researchers
 have explored the layout attribute in form docu-
 ment modeling, such as the OCR word reading
@@ -123,6 +137,7 @@ sakovsky et al., 2015) or PubLayNet (Zhong et al.,
 2019)), and sometimes depend upon a visual code-
 book pre-trained by a discrete variational auto-
 encoder (dVAE).
+
 When multiple modalities come into play, dif-
 ferent supervised or self-supervised multimodal
 pre-training techniques have been proposed. They
@@ -137,6 +152,7 @@ image modalities. Direct and relative position pre-
 dictions (Cosma et al., 2020; Wei et al., 2020; Li
 et al., 2021a; Wang et al., 2022a; Li et al., 2021c)
 have been proposed to explore the underlying lay-
+
 out semantics of documents. Nevertheless, these
 pre-training objectives require strong domain ex-
 pertise, specialized designs, and multi-task tuning
@@ -145,12 +161,16 @@ proposed graph contrastive learning performs mul-
 timodal pre-training in a centralized design, unify-
 ing the interplay between all involved modalities
 without the need for prior domain knowledge.
+
 3 FormNetV2
+
 We briefly review the backbone architecture Form-
 NetV1 (Lee et al., 2022) in Sec 3.1, introduce the
 multimodal input design in Sec 3.2, and detail the
 multimodal graph contrastive learning in Sec 3.3.
+
 3.1 Preliminaries
+
 ETC. FormNetV1 (Lee et al., 2022) uses Ex-
 tended Transformer Construction (ETC; Ainslie
 et al., 2020) as the backbone to work around the
@@ -160,15 +180,16 @@ to attend to every token in the sequence (global
 attention); all other tokens may only attend to k
 local neighbors within a small window, in addition
 to these special tokens (local attention). This re-
-duces the computational complexity from O(n²)
+duces the computational complexity from O(n?)
 query-key pairs that need scoring to O(kn). Eq. (2)
 formalizes the computation of the attention vector
 ao for a model with one global token at index 0,
 and Eq. (2) formalizes computation of the attention
-vector a>0 for the rest of the tokens in the model.
-ao attend(ho, [ho, h1, ..., hn]) (1)
-a>0= attend(h, [họ, hk,…,h+]) (2)
-.
+vector a;so for the rest of the tokens in the model.
+
+ap = attend(ho, [ho, hy,...,h,]) (1)
+ajso = attend(hy, [ho, hi_x,.--,hisre]) (2)
+
 Rich Attention. To address the distorted seman-
 tic relatedness of tokens created by imperfect
 OCR serialization, FormNetV1 adapts the atten-
@@ -185,116 +206,106 @@ order of tokens along the x-axis and the y-axis (Eq.
 8); and the log distance (in number of pixels) be-
 tween tokens, again along both axes (Eq. 9). The
 expression for a transformer head with Rich Atten-
-tion on the x-axis is provided in Eqs. (3–10); we
+tion on the x-axis is provided in Eqs. (3-10); we
+
+--- Page 3 ---
 DAVIS POLK
-DAVIS POLK
-D VOIS P₁K
-Vo
-V1
+
+DAVis) POLK
+
+phos PK ® ©@®
+
+“aC —-= - @
+
 Sender
-Charles Duggan
-Input document
-Sender
-Charles Duggan
-OCR + graph construction
-SV2
-V2
-Ch V3 es DVA an
+
+Charles Duggan_
+
+oe
+
+Input document OCR + graph construction
+
+TOTO
+
 5 nodes & 5 edges constructed
-V3
-V4
+
 Graph representation
 of the document
+
 Figure 1: Graph of a sample region from a form. Token bounding boxes are identified, and from them the graph is
 constructed. Nodes are labeled and the graph structure is shown abstracted away from its content.
-Edge-Level Features
-Node-Level Features
+
+Edge-Level Features Node-Level Features
+
+Image ; Text
+
+[| ©-©|* DAVIS
+
+©) j : ee POLK}
+[ " : [Sender|
+
+Textual features
+by BERT
+tokenizer
+
 Layout
-Image
-Text
-[
-DAVIS POLK]
-Vo e01
-DAVIS
-DAVIS
-e02
-POLK
-[
-V2
-Sender
-Sender:
-V3
-Image features
-from token
-union boxes
+
 Geometric
 features by
 token spatial
 relationship
-Textual features
-by BERT
-tokenizer
+
 Figure 2: Multimodal graph representations are com-
 posed from three modalities: text at node-level; concate-
 nation of layout and image at edge-level.
+
+Image features
+from token
+union boxes
+
 refer the interested reader to Lee et al. (2022) for
 further details.
-Oij
-=
-int(x; < xj)
-(3)
-dij = ln(1+|xi − xj|)
--
-(4)
-=
-Pij Sigmoid(affine (P)([qi; kj]))
-(5)
-Hij = affine(") ([qi; kj])
-(6)
-=
-q₁kj
-=
-Sij
-(7)
-Oij ln(Pij) + (1 − Oij) ln(1 – Pij) (8)
--
-0² (dij — Hij)²
-Sij
-2
-+S
-Sij
-= S +s
-(9)
-(10)
+
+oi = int(a < 2) (3)
+diy =In(1 + |ay— 1;|) 4)
+pig = Sigmoid(affine”) ({q;; kj])) ©)
+Miz = affine ([qu; k;]) 6)
+3) = =q)k; (7)
+s{)) = 04; (pig) + (1 0%) M(L— py) 8)
+of = — Pls = ws)” (9)
+
 GCN. Finally, FormNetV1 includes a graph con-
 volutional network (GCN) contextualization step
 before serializing the text to send to the ETC trans-
 former component. The graph for the GCN locates
-up to K neighbors for each token - defined broadly
-by geographic "nearness” – before convolving their
+up to / neighbors for each token — defined broadly
+by geographic “nearness” — before convolving their
 token embeddings to build up supertoken represen-
 tations as shown in Figure 1. This allows the net-
 work to build a weaker but more complete picture
 of the layout modality than Rich Attention, which
 is constrained by local attention.
--
+
 The final system was pretrained end-to-end with
 a standard masked language modeling (MLM) ob-
 jective. See Sec A.3 in Appendix for more details.
-DAVIS POLK &
-Sender
-Charles Duggan
-(a) Within entity
-DAVIS POLK
-Sender
-Charles Duggan
+
+_
+
+DAVis POLKa feavesiests
+Sender]
+
 (b) Cross entity
+
+(a) Within entity
 Figure 3: Image features are extracted from bounding
 boxes (red) that join pairs of tokens connected by edges
+
 to capture (a) similar patterns within an entity, or (b)
 dissimilar patterns or separating lines between entities.
-3.2
-Multimodal Input
+
+3.2 Multimodal Input
+
 In FormNetV2, we propose adding the image
 modality to the model in addition to the text and
 layout modalities that are already used in Form-
@@ -302,9 +313,10 @@ NetV1 (Sec 3.3 in Lee et al. (2022)). We expect
 that image features from documents contain infor-
 mation absent from the text or the layout, such as
 fonts, colors, and sizes of OCR words.
+
 To do this, we run a ConvNet to extract dense
 image features on the whole document image, and
-then use Region-of-Interest (ROI) pooling (He et al.,
+then use Region-of-Interest (RoI) pooling (He et al.,
 2017) to pool the features within the bounding box
 that joins a pair of tokens connected by a GCN
 edge. Finally, the RoI pooled features go through
@@ -314,12 +326,14 @@ the network through concatenation with the exist-
 ing layout features at edges of the GCN. Figure 2
 illustrates how all three modalities are utilized in
 this work and Sec 4.2 details the architecture.
+
 Most of the recent approaches (Table 1) that
 incorporate image modality extract features from
 either (a) the whole image as one vector, (b) non-
 overlapping image patches as extra input tokens to
 transformers, or (c) token bounding boxes that are
 added to the text features for all tokens.
+
 However, form document images often contain
 OCR words that are relatively small individually
 and are densely distributed in text blocks. They also
@@ -327,69 +341,67 @@ contain a large portion of the background region
 without any texts. Therefore, the aforementioned
 method (a) only generates global visual representa-
 tions with large noisy background regions but not
-Node-level Edge-level
-~
-Edge dropping +
+
+--- Page 4 ---
+|
+
 Layout
-Vo
-Node feature dropping
-Edge feature dropping +
-V₁
+
 Image
+
+|
+
 Text
-V2
-Stochastic Graph Corruption
-V₁
-Vo
+
+Node-level_ Edge-level
+
 Layout
+
 Image
-V2
+
 Text
-V3
-V4
-V₁
-Vo
-Layout
-VA
-V3
-Edge dropping +
-Edge feature dropping +
-Node feature dropping
-Image
-V2
-Text
-V3
-V4
+
 Inductive Multimodal
 Graph Contrastive Learning
+
 A positive pair of the same node
+
 from different corrupted graphs
+
 A negative pair of different nodes
 from the same corrupted graphs
+
 A negative pair of different nodes
 from different corrupted graphs
+
 Figure 4: Multimodal graph contrastive learning. Two corrupted graphs are sampled from an input graph by
+
 corruption of graph topology (edges) and attributes (multimodal features). The system is trained to identify which
-pair of nodes across all pairs of corrupted nodes (including within the same graph) came from the same node.
+
+pair of nodes across all pairs of corrupted nodes (inclu
+
 targeted entity representations; method (b) tends
 to be sensitive to the patch size and often chops
 OCR words or long entities to different patches,
 while also increasing computational cost due to the
 increased token length; and method (c) only sees
-regions within each token's bounding box and lacks
+regions within each token’s bounding box and lacks
 context between or outside of tokens.
+
 On the other hand, the proposed edge-level im-
 age feature representation can precisely model the
 relationship between two nearby, potentially re-
-lated "neighbor" tokens and the surrounding region,
+lated “neighbor” tokens and the surrounding region,
 while ignoring all irrelevant or distracting regions.
-Figure 3 demonstrates that the targeted RoI image
+Figure 3 demonstrates that the targeted Rol image
 feature pooling through the union bounding box
 can capture any similar patterns (e.g. font, color,
 size) within an entity (left) or dissimilar patterns
 or separating lines between entities (right). See
 Sec 4.4 for detailed discussion.
-3.3 Multimodal Graph Contrastive Learning
+
+3.3, Multimodal Graph Contrastive Learning
+
 Previous work in multimodal document under-
 standing requires manipulating multiple supervised
 or self-supervised objectives to learn embeddings
@@ -404,13 +416,17 @@ step generates node embeddings based on partial
 contexts. Then, we apply a contrastive objective
 by maximizing agreement between tokens at node-
 level. That is, the model is asked to identify which
-pairs of nodes across all pairs of nodes - within
-the same graph and across graphs – came from the
+pairs of nodes across all pairs of nodes — within
+the same graph and across graphs — came from the
+
+ing within the same graph) came from the same node.
+
 same original node. We adopt the standard normal-
 ized temperature-scaled cross entropy (NT-Xent)
 loss formulation (Chen et al., 2020; Wu et al., 2018;
 Oord et al., 2018; Sohn, 2016) with temperature
 0.1 in all experiments.
+
 To build a centralized contrastive loss that unifies
 the interactions between multiple input modalities,
 we corrupt the original graph at both graph topol-
@@ -424,6 +440,7 @@ only corrupt the graph in the GCN encoder and
 keep the ETC decoder intact to leverage the se-
 mantically meaningful graph representation of the
 document during graph contrastive learning.
+
 To further diversify the contexts in two corrupted
 graphs and reduce the risk of training the model
 to over-rely on certain modalities, we further de-
@@ -432,18 +449,20 @@ nism by adopting imbalanced drop-rates of modali-
 ties between the two corrupted graphs. Precisely,
 for a given modality, we discard p percent of the
 features in the first corrupted graph and discard
-1-p percent of the features in the second corrupted
-graph. Experiments in Sec 4.4 show that p 0.8
+1—p percent of the features in the second corrupted
+graph. Experiments in Sec 4.4 show that p = 0.8
 works best empirically and the inductive feature
 dropping mechanism provides further performance
 boost over the vanilla version. We stipulate that this
 boom-and-bust approach to regularization allows
 the model to learn rich, complex representations
-that take full advantage of the model's capacity
+that take full advantage of the model’s capacity
 without becoming overly dependent on specific fea-
 ture interactions. Figure 4 illustrates the overall
-=
+
+--- Page 5 ---
 process.
+
 The proposed graph contrastive objective is also
 general enough in principle to adopt other corrup-
 tion mechanisms (Zhu et al., 2020; Hassani and
@@ -457,9 +476,12 @@ without the need for hand crafting specialized loss
 by domain experts. To the best of our knowledge,
 we are the first to use graph contrastive learning
 during pre-training for form document understand-
+
 ing.
 4 Evaluation
+
 4.1 Datasets
+
 FUNSD. FUNSD (Jaume et al., 2019) contains a
 collection of research, marketing, and advertising
 forms that vary extensively in their structure and
@@ -468,6 +490,7 @@ forms with 9,707 entities and 31,485 word-level
 annotations for 4 entity types: header, question,
 answer, and other. We use the official 75-25 split
 for the training and test sets.
+
 CORD. CORD (Park et al., 2019) contains over
 11,000 Indonesian receipts from shops and restau-
 rants. The annotations are provided in 30 fine-
@@ -475,6 +498,7 @@ grained semantic entities such as store name, quan-
 tity of menu, tax amount, discounted price, etc.
 We use the official 800-100-100 split for training,
 validation, and test sets.
+
 SROIE. The ICDAR 2019 Challenge on Scanned
 Receipts OCR and key Information Extraction
 (SROIE) (Huang et al., 2019) offers 1,000 whole
@@ -482,16 +506,20 @@ scanned receipt images and annotations. 626 sam-
 ples are for training and 347 samples are for testing.
 The task is to extract four predefined entities: com-
 pany, date, address, or total.
+
 Payment. We use the large-scale payment data
 (Majumder et al., 2020) that consists of roughly
 10,000 documents and 7 semantic entity labels
 from human annotators. We follow the same evalu-
 ation protocol and dataset splits used in Majumder
 et al. (2020).
+
 4.2 Experimental Setup
+
 We follow the FormNetV1 (Lee et al., 2022) ar-
 chitecture with a slight modification to incorporate
 multiple modalities used in the proposed method.
+
 Our backbone model consists of a 6-layer GCN
 encoder to generate structure-aware super-tokens,
 followed by a 12-layer ETC transformer decoder
@@ -503,11 +531,13 @@ maximum sequence length is set to 1024. We fol-
 low Ainslie et al. (2020); Lee et al. (2022) for other
 hyper-parameter settings. For the image embedder
 architecture, see Sec A.1 in Appendix.
+
 Pre-training. We pre-train FormNetV2 using
 two unsupervised objectives: Masked Language
 Modeling (MLM) (Taylor, 1953; Devlin et al.,
 2019) and the proposed multimodal Graph Con-
 trastive Learning (GCL).
+
 Different from BERT (Devlin et al., 2019), here
 MLM has access to layout and image modalities
 during pre-training similar to Appalaraju et al.
@@ -517,6 +547,7 @@ level instead of at node level, supplementing the
 text features for better underlying representation
 learning without directly leaking the trivial infor-
 mation.
+
 GCL provides a natural playground for effective
 interactions between all three modalities from a
 document in a contrastive fashion. For each graph
@@ -526,6 +557,7 @@ dropping, and node feature dropping with dropping
 rates {0.3, 0.8, 0.8}, respectively. The weight ma-
 trices in both GCN and ETC are shared across the
 two views.
+
 We follow Appalaraju et al. (2021); Xu et al.
 (2021, 2020) and use the large-scale IIT-CDIP
 document collection (Lewis et al., 2006) for pre-
@@ -534,8 +566,9 @@ ages. We train the models from scratch using Adam
 optimizer with batch size of 512. The learning rate
 is set to 0.0002 with a warm-up proportion of 0.01.
 We find that GCL generally converges faster than
-MLM, therefore we set the loss weightings to 1 and
+MLM, therefore we set the loss weightings to | and
 0.5 for MLM and GCL, respectively.
+
 Note that we do not separately pre-train or load
 a pre-trained checkpoint for the image embedder as
 done in other recent approaches shown in Table 1.
@@ -543,156 +576,47 @@ In fact, in our implementation, we find that using
 sophisticated image embedders or pre-training with
 natural images, such as ImageNet (Russakovsky
 et al., 2015), do not improve the final downstream
-Dataset
-Method
-P
-R
-F1
-F1*
-Modality
-Image Embedder
-#Params
-FUNSD
-SPADE (Hwang et al., 2021)
-UniLMv2 (Bao et al., 2020)
-LayoutLMv1 (Xu et al., 2020)
-DocFormer (Appalaraju et al., 2021)
-70.5
-T+L
-110M
-67.80 73.91 70.72
-75.36 80.61 77.89
-81.33 85.44 83.33
-T
-355M
-T+L
-343M
-T+L+I
-ResNet50
-502M
-FormNet V1 (Lee et al., 2022)
-LayoutLMv1 (Xu et al., 2020)
-LayoutLMv2 (Xu et al., 2021)
-DocFormer (Appalaraju et al., 2021)
-StructuralLM (Li et al., 2021a)
-LayoutLMv3 (Huang et al., 2022)
-FormNet V2 (ours)
-85.21 84.18 84.69
-76.77 81.95 79.27
-83.24 85.19 84.20
-82.29 86.94 84.55
-T+L
-217M
-CORD
-SPADE (Hwang et al., 2021)
-UniLMv2 (Bao et al., 2020)
-LayoutLMv1 (Xu et al., 2021)
-85.14
-81.35 83.75 82.53 92.08
-85.78 86.94 86.35 92.51
-91.5
-T+L+I
-T+L+I
-T+L+I
-T+L
-T+L+I
-ResNet101
-160M
-ResNeXt101-FPN
-426M
-ResNet50
-536M
-355M
-Tokenization
-368M
-T+L+I
-3-layer ConvNet
-204M
-T+L
-110M
-DocFormer (Appalaraju et al., 2021)
-91.23 92.89 92.05
-94.32 95.54 94.93
-96.46 96.14 96.30
-T
-355M
-T+L
-343M
-T+L+I
-ResNet50
-502M
-FormNet V1 (Lee et al., 2022)
-LayoutLMv2 (Xu et al., 2021)
-TILT (Powalski et al., 2021)
-DocFormer (Appalaraju et al., 2021)
-LayoutLMv3 (Huang et al., 2022)
-FormNet V2 (ours)
-98.02 96.55 97.28
-95.65 96.37 96.01
-96.33
-T+L
-345M
-T+L+I
-ResNeXt101-FPN
-426M
-T+L+I
-U-Net
-780M
-97.25 96.74 96.99
-T+L+I
-ResNet50
-536M
-95.82 96.03 95.92 97.46
-T+L+I
-Tokenization
-368M
-97.74 97.00 97.37 97.70
-T+L+I
-3-layer ConvNet
-204M
-SROIE
-UniLMv2 (Bao et al., 2020)
-94.88
-T
-355M
-LayoutLMv1 (Xu et al., 2021)
-LayoutLMv2 (Xu et al., 2021)
-95.24 95.24 95.24
-99.04 96.61 97.81
-T+L
-343M
-T+L+I
-ResNeXt101-FPN
-426M
-FormNetV2 (ours)
-98.56
-98.05
-98.31
-T+L+I
-3-layer ConvNet
-204M
-Payment
-NeuralScoring (Majumder et al., 2020)
-FormNetV1 (Lee et al., 2022)
-87.80
-T+L
-92.70
-91.69 92.19
-FormNetV2 (ours)
-94.11 95.71 94.90
-T+L
-T+L+I
-217M
-3-layer ConvNet
-204M
-Table 1: Entity-level precision, recall, and F1 score comparisons on four standard benchmarks. “T/L/I❞ denotes
-"text/layout/image” modality. The proposed FormNetV2 establishes new state-of-the-art results on all four datasets.
-FormNet V2 significantly outperforms the most recent DocFormer (Appalaraju et al., 2021) and LayoutLMv3 (Huang
+
+--- Page 6 ---
+Dataset Method P R Fl Fl Modality Image Embedder #Params
+FUNSD — SPADE (Hwang et al., 2021) - - 70.5 - T+L - 110M
+UniLMv2 (Bao et al., 2020) 67.80 73.91 70.72 - T - 355M
+LayoutLMv1 (Xu et al., 2020) 75.36 80.61 77.89 - T+L - 343M
+DocFormer (Appalaraju et al., 2021) 81.33 85.44 = 83.33 - T+L+I ResNet50. 502M
+FormNetV1 (Lee et al., 2022) 85.21 84.18 84.69 - T+L - 217M
+LayoutLMv1 (Xu et al., 2020) 76.77 81.95 79.27 - T+L+I ResNet101 160M
+LayoutLMv2 (Xu et al., 2021) 83.24 85.19 84.20 - T+L+I ResNeXt101-FPN 426M
+DocFormer (Appalaraju et al., 2021) 82.29 86.94 84.55 - T+L+I ResNet50. 536M
+StructuralLM (Li et al., 2021a) - - - T+L - 355M
+LayoutLMv3 (Huang et al., 2022) 81.35 83.75 82.53 T+L+I Tokenization 368M
+FormNetV2 (ours) 85.78 86.94 86.35 T+L+I 3-layer ConvNet 204M
+CORD SPADE (Hwang et al., 2021) - - 91.5 - T+L - 110M
+UniLMv2 (Bao et al., 2020) 91.23 92.89 92.05 - T - 355M
+LayoutLMv1 (Xu et al., 2021) 94.32 95.54 94.93 - T+L - 343M
+DocFormer (Appalaraju et al., 2021) 96.46 96.14 96.30 - T+L+I ResNet50 502M
+FormNetV1 (Lee et al., 2022) 98.02 96.55 97.28 - T+L - 345M
+LayoutLMv2 (Xu et al., 2021) 95.65 96.37 96.01 - T+L+I ResNeXt101-FPN 426M
+TILT (Powalski et al., 2021) - - 96.33 - T+L+I U-Net 780M
+DocFormer (Appalaraju et al., 2021) 97.25 96.74 96.99 - T+L+I ResNet50 536M
+LayoutLMv3 (Huang et al., 2022) 95.82 96.03 95.92 97.46 T+L+I Tokenization 368M
+FormNetV2 (ours) 97.74 97.00 97.37 97.70 T+L+I 3-layer ConvNet 204M
+SROIE UniLMv2 (Bao et al., 2020) - - 94.88 - T - 355M
+LayoutLMv1 (Xu et al., 2021) 95.24 95.24 95.24 - T+L - 343M
+LayoutLMv2 (Xu et al., 2021) 99.04 96.61 97.81 - T+L+I ResNeXt101-FPN 426M
+FormNetV2 (ours) 98.56 98.05 98.31 - T+L+I 3-layer ConvNet 204M
+Payment NeuralScoring (Majumder et al., 2020) - - 87.80 - T+L - -
+FormNetV1 (Lee et al., 2022) 92.70 91.69 92.19 - T+L - 217M
+FormNetV2 (ours) 94.11 95.71 94.90 - T+L+I 3-layer ConvNet 204M
+
+Table 1: Entity-level precision, recall, and Fl score comparisons on four standard benchmarks. “T/L/I” denotes
+“text/layout/image” modality. The proposed FormNetV2 establishes new state-of-the-art results on all four datasets.
+FormNetV2 significantly outperforms the most recent DocFormer (Appalaraju et al., 2021) and LayoutLMv3 (Huang
 et al., 2022) while using a 38% and 55% sized model, respectively. Note that LayoutLMv3 (Huang et al., 2022) and
 StructuralLM (Li et al., 2021a) use segment-level layout positions that incorporate ground truth entity bounding
 boxes, which is less practical for real-world applications. We nevertheless report our results under the same protocol
-in column F1*. See Sec 4.3 and Sec A.2 in Appendix for details.
-entity extraction F1 scores, and they sometimes
+in column FL’. See Sec 4.3 and Sec A.2 in Appendix for details.
+
+entity extraction Fl scores, and they sometimes
 even degrade the performance. This might be be-
 cause the visual patterns presented in form docu-
 ments are drastically different from natural images
@@ -700,6 +624,7 @@ that have multiple real objects. The best practice
 for conventional vision tasks (classification, detec-
 tion, segmentation) might not be optimal for form
 document understanding.
+
 Fine-tuning. We fine-tune all models for the
 downstream entity extraction tasks in the exper-
 iments using Adam optimizer with batch size of 8.
@@ -708,98 +633,111 @@ The fine-tuning is conducted on Tesla V100 GPUs
 for approximately 10 hours on the largest corpus.
 Other hyper-parameters follow the settings in Lee
 et al. (2022).
+
 4.3 Benchmark Results
+
 Table 1 lists the results that are based on the same
-evaluation protocal¹.
+evaluation protocal!.
+
 'Micro-F1 for FUNSD, CORD, and SROIE by following
 the implementation in Xu et al. (2021); macro-F1 for Pay-
-F1 score (%)
-87.5
-FormNetV2-family
-85.0
-82.5
-FormNetV----- DocFormer-large
-DocFormer-base LayoutLMv2-large
-LayoutĹMv3-large
-LayoutLMv2-base
-80.0
-77.5
-LayoutLM-base
+
+87.5 FormNetV2-family
+85.0 .
+FormNetV1_ —--e--~"DotFormer-large
+pPotFormer-base —_ LayoutLMv2-large
+82.5 re eLayouttMv3-large
+// LayoutLMv2-base
+
+g /
+= 80.0 /
+Fy é °
+877.5]  layoutL-base ” LayoutLMJarge
+
 75.0
-LayoutLM-large
+
 72.5
-70.0
-SPADE
-UniLMv2-large
-100
-200
-300 400 500
+
+o .
+70.0 SPADE UniLMv2-large
+
+100.200 300 400 500
+
 Number of Parameters (Millions)
-600
-700
+
 Figure 5: Model Size vs. Entity Extraction F1 Score
 on FUNSD benchmark. The FormNetV2 family sig-
-nificantly outperforms other recent approaches - Form-
+nificantly outperforms other recent approaches — Form-
 NetV2 achieves highest F1 score (86.35%) while using
 a 2.6x smaller model than DocFormer (84.55%; Ap-
 palaraju et al., 2021). FormNetV2 also outperforms
-FormNetV1 (Lee et al., 2022) by a large margin (1.66
+FormNetV 1 (Lee et al., 2022) by a large margin (1.66
 F1) while using fewer parameters.
+
+600 700
+
 As the field is actively growing, researchers
 have started to explore incorporating additional
+
 ment (Majumder et al., 2020).
--
+
+--- Page 7 ---
 information into the system. For example,
 LayoutLMv3 (Huang et al., 2022) and Struc-
 turalLM (Li et al., 2021a) use segment-level layout
 positions derived from ground truth entity bound-
-ing boxes the {Begin, Inside, Outside, End,
+ing boxes — the {Begin, Inside, Outside, End,
 Single} schema information (Ratinov and Roth,
 2009) that determine the spans of entities are given
 to the model, which is less practical for real-world
 applications. We nevertheless report our results un-
-der the same protocol in column F1* in Table 1. We
+der the same protocol in column F'1' in Table 1. We
 also report LayoutLMv3 results without ground-
 truth entity segments for comparisons.
+
 Furthermore, UDoc (Gu et al., 2022a) uses ad-
 ditional paragraph-level supervision returned by
-a third-party OCR engine EasyOCR². Additional
+a third-party OCR engine EasyOCR?. Additional
 PubLayNet (Zhong et al., 2019) dataset is used
 to pre-train the vision backbone. UDoc also uses
 different training/test splits (626/247) on CORD in-
 stead of the official one (800/100) adopted by other
 works. ERNIE-mmLayout (Wang et al., 2022b)
-utilizes a third-party library spaCy³ to provide ex-
+utilizes a third-party library spaCy? to provide ex-
 ternal knowledge for the Common Sense Enhance-
-ment module in the system. The F1 scores on
+ment module in the system. The Fl scores on
 FUNSD and CORD are 85.74% and 96.31% with-
 out the external knowledge. We hope the above
 discussion can help clarify the standard evaluation
 protocol and decouple the performance improve-
 ment from modeling design vs. additional informa-
 tion.
-Figure 5 shows model size vs. F1 score for
+
+Figure 5 shows model size vs. Fl score for
 the recent approaches that are directly compara-
 ble. The proposed method significantly outper-
 forms other approaches in both F1 score and pa-
 rameter efficiency: FormNetV2 achieves highest
-F1 score (86.35%) while using a 38% sized model
+FI score (86.35%) while using a 38% sized model
 than DocFormer (84.55%; Appalaraju et al., 2021).
 FormNetV2 also outperforms FormNetV1 (Lee
 et al., 2022) by a large margin (1.66 F1) while
-using fewer parameters. Table 1 shows that Form-
+using fewer parameters. Table | shows that Form-
 NetV2 outperforms LayoutLMv3 (Huang et al.,
 2022) and StructuralLM (Li et al., 2021a) with a
 considerable performance leap while using a 55%
 and 57% sized model, respectively. From Table 1
 we also observe that using all three modalities
-(text+layout+image) generally outperforms using
+(text+layouttimage) generally outperforms using
 two modalities (text+layout), and using two modal-
 ities (text+layout) outperforms using one modality
 (text) only across different approaches.
-2 https://github.com/JaidedAI/EasyOCR
-spacy.io
+
+*https://github.com/JaidedAI/EasyOCR
+3spacy.io
+
 4.4 Ablation Studies
+
 We perform studies over the effect of image modal-
 ity, graph contrastive learning, and decoupled graph
 corruption. The backbone for these studies is a 4-
@@ -808,17 +746,19 @@ layer 1-attention-head GCN encoder followed by a
 with 512 hidden units. The model is pre-trained on
 the 1M IIT-CDIP subset. All other hyperparame-
 ters follow Sec 4.2.
+
 Effect of Image Modality and Image Embedder.
 Table 2 lists results of FormNetV1 (a) backbone
 only, (b) with additional tokens constructed from
-image patches, and (c) with the proposed image
+image patches*, and (c) with the proposed image
 feature extracted from edges of a graph. The net-
 works are pre-trained with MLM only to showcase
 the impact of input with image modality.
+
 We observe that while (b) provides slight F1
 score improvement, it requires 32% additional pa-
 rameters over baseline (a). The proposed (c) ap-
-proach achieves a significant F1 boost with less
+proach achieves a significant Fl boost with less
 than 1% additional parameters over baseline (a).
 Secondly, we find the performance of more ad-
 vanced image embedders (He et al., 2016) is in-
@@ -830,21 +770,14 @@ part of the multimodal input. Next we will val-
 idate the importance of an effective multimodal
 pre-training mechanism through graph contrastive
 learning.
-Method
-FormNet V1
-82.53
-95.16
-82.65
-95.43
-FUNSD CORD #Params
-81.7M
-107.0M
-83.13
-95.85
-82.3M
-FormNet V1+Image Patch
-FormNetV1+Edge Image (ours)
+
+Method FUNSD CORD _ #Params
+FormNetV1 82.53 95.16 81.7M
+FormNetV 1+Image Patch 82.65 95.43 107.0M
+FormNetV 1+Edge Image (ours) 83.13 95.85 82.3M
+
 Table 2: F1 with different image modality setups.
+
 Effect of Graph Contrastive Learning. The
 graph corruption step (Figure 4) in the proposed
 multimodal graph contrastive learning requires cor-
@@ -854,75 +787,77 @@ in multiple places: edges, edge features, and node
 features, a naive graph corruption implementation
 would be to use the same drop-rate value every-
 where. In Figure 6(a)(b), we show the downstream
-entity extraction F1 scores on FUNSD and CORD
+entity extraction Fl scores on FUNSD and CORD
 datasets by varying the dropping rate value during
 the graph contrastive pre-training. The selected
+
 4We experiment with 32x32 image patch size, resulting in
 additional 256 image tokens to the model.
-Edge & Node Feature Dropping Rate
---MLM
-◆ MLM+GCL (ours)
-84.0
-83.5
-96.65
-96.40
---MLM ◆ MLM+GCL (ours)
+
+--- Page 8 ---
+— = MLM ¢ MLM+GCL(ours) == MLM @ MLM+GCL(ours)
+84.0 96.65
 84.50
+
+83.5 96.40
+
 84.00
-Edge & Node Feature Dropping Rate
-0.9 0.8 0.7
-96.75
-AMTI
-83.0
-82.5
-82.0
-0.1 0.3 0.5 0.7 0.9
-General Dropping Rate
-(a) FUNSD
-96.15
-95.90
-95.65
+
+83.0 96.15
+
 83.50
-83.00
-82.50
-0.7 0.9
-0.3
-0.1 0.3 0.5
-General Dropping Rate
-0.5
+
+828 9.90 ee eee 83.00
+82.0 95.65 82.50
+0.1 03 #05 O7 09 01 #03 05 O07 09
+General Dropping Rate General Dropping Rate
+(a) FUNSD (b) CORD
+
+Edge & Node Feature Dropping Rate
+
+Edge & Node Feature Dropping Rate
+
+09 m0Os8 mO7 09 m08 mO7
+
+96.75
+
 96.50
+
 96.25
-96.00
+| 96.00 |
 95.75
-0.7
-0.3
-0.5
-■ 0.9
-0.8 0.7
-0.7
-(b) CORD
+
+0.3 0.5 07 0.3 0.5 07
+
 Edge Dropping Rate
-(c) FUNSD
-Edge Dropping Rate
+
 (d) CORD
+
+Edge Dropping Rate
+
+(c) FUNSD
+
 Figure 6: Entity Extraction F1 Score vs. Graph Corruption Mechanism on FUNSD and CORD benchmarks.
 (a)(b) show results using the same drop-rate across modalities. The proposed multimodal graph contrastive learning
 improves MLM pretraining at almost all drop-rates; (c)(d) show results using different drop-rates across modalities.
-The decoupled dropping mechanism permits further boosts to the F1 scores over non-decoupled counterparts. See
+The decoupled dropping mechanism permits further boosts to the Fl scores over non-decoupled counterparts. See
+
 Sec 4.4 for discussion.
+
 dropping rate is shared across all aforementioned
 places.
-_
+
 Results show that the proposed multimodal
 graph contrastive learning works out of the box
 across a wide range of dropping rates. It demon-
 strates the necessity of multimodal corruption at
-both topology level and feature level it brings
+both topology level and feature level — it brings
 up to 0.66% and 0.64% F1 boost on FUNSD and
 CORD respectively, when the model is pre-trained
 on MLM plus the proposed graph contrastive learn-
 ing over MLM only. Our method is also stable to
 perturbation of different drop-rates.
+
 We observe less or no performance improvement
 when extreme drop-rates are used; for example,
 dropping 10% edges and features or dropping 90%
@@ -931,6 +866,7 @@ too much information provides either no node con-
 text changes or too few remaining node contexts in
 different corrupted graphs for effective contrastive
 learning.
+
 Effect of Decoupled Graph Corruption. In this
 study, we investigate whether decoupling the drop-
 rate in different places of graph corruption can learn
@@ -943,26 +879,28 @@ at node level. At feature level (layout, image, text),
 when one of the corrupted graphs selects dropping
 rate p for a certain feature, the other corrupted
 graph will use the complement of the selected drop-
-ping rate 1 p for the same feature as introduced
+ping rate 1 — p for the same feature as introduced
 in Sec 3.3. This inductive multimodal contrastive
 design creates stochastically imbalanced informa-
 tion access to the features between two corrupted
--
+
 views. It provides more diverse contexts at node
 level in different views and makes the optimization
 of the contrastive objective harder, ideally generat-
 ing more semantically meaningful representations
 between the three modalities.
+
 Figure 6(c)(d) show the downstream entity ex-
-traction F1 scores on FUNSD and CORD datasets
+traction Fl scores on FUNSD and CORD datasets
 by pre-training with three different edge dropping
 rates and three different feature dropping rates. We
 observe that decoupling the dropping rate at vari-
 ous levels further boosts the performance on both
-datasets it brings another 0.34% and 0.07% F1
+datasets — it brings another 0.34% and 0.07% F1
 boost on FUNSD and CORD respectively, when
 decoupled dropping rates are used over the non-
 decoupled ones.
+
 We also observe nonlinear interactions between
 different dropping rates at edge level and feature
 level. The best performing feature dropping rate
@@ -978,196 +916,70 @@ topology is altered. Nevertheless, we find that low
 edge dropping rates (e.g. 0.3) generally perform
 better than high edge dropping rates, and therefore
 select a low edge dropping rate in our final design.
+
 Visualization. We visualize (Vig, 2019) the local-
 to-local attention scores of a CORD example for
 model pre-trained with MLM only and MLM+GCL
 but before fine-tuning in Figure 7(a). We observe
 that with GCL, the model can identify more mean-
 ingful token clusterings, leveraging multimodal in-
-HEADER
-QUESTION
-ANSWER
-BAT
-BAT
-4600
-4600
-0
-0
-Y
-}
-STB
-STB
-STB
-STB
-PRO
-PRO
-PRO
-PRO
-MO
-MO
-MO
-MO
-1750
-1750
-1750
-1750
-0
-0
-0
-0
-Please type or prin
-Name:
-Y
-SAMS
-Tile
-Firs
-Middle
-Last
-47th TCRC REGISTRATION FORM
-47th TCRC REGISTRATION FORM
-Please type or prin
-Name:
-Y
-Institution:
-B
-B
-B
-Address:
-Street
-P.O. Be
-BAT
-BAT
-4600
-4600
-0
-0
-Y
-Y
-Tile
-Firs
-Middle
-Last
-Institution:
-Address:
-Street
-P.O. Be
+
+--- Page 9 ---
+HEADER ‘QUESTION "ANSWER
+
+47* TCRC REGISTRATION FORM.
+
+(7 TCRC REGISTRATION FORM
 a
-ZIP Code
-Country
-Cry
-ZIP Code
-Country
-Telephone:
-FAX #
-Telephone:
-FAX :
-J.STB PROMO
-[17500]
-Name of guest:
-Name of guest:
-BAS
-ཁ ༔ གཽ སྒྱུ ཁ ཙྩུ སྒྱུ ཁ སྒྲ  ྗ ༤
-BAS
+
+he pees pe vate
+en Nome pe
+bas bas = arama) = a wana
+° ° SSE eS, Ray Beton) Sifons Wag Taro a)
+
+™
+m0
 0
-Y.B.BAT
-46000
-BAS
-BAS
-Continental Breakfam on Tuesday
-Breakfast on Wednesday
-BASO PROM
-27500
-0
-Fall Foliage Tour on Tuesday
-Craftsman Village Tour on Wednesday
-Continental Breakfan on Tuesday
-Fall Foliage Tour on Tuesday
-Breakfast on Wednesday
-Craftman Village Tour on Wednesday
-PRO
-TOTAL
-91000
-PRO
-PRO
-M
-M
-2750
-2750
-CASH
-91000
-M
-M
-2750
-2750
-Advance Registration Fee: (prior to September 1)
-Late Registration Fee: (after September 1)
-$135.00
-Advance Registration Fee: (prior to September 1)
-$135.00
-$150.00
-Late Registration Fee: (after September 1)
-$150.00
-0
-Extra
-TOTAL
-9100
-TOTAL
-TOTAL
-9100
-0
-0
-9100
-0
-MLM
-CASH
-9100
-0
-9100
-0
-CASH
-9100
-Ground Ton round i
-$30.00
-Extra banquet tickets @$40.00
-Ground Transportation (round trip)
-$30.00
-TOTAL
-TOTAL
-TOTAL
-19100
-9100
-}
-Please complete this portion if you need transportation from and to the Knoxville Airport.
-No. in Party:
-Please complete this portion if you need transportation from and to the Knoxville Airport.
-No. in Party:
-DATE
-TIME
-CARRIER
-FLIGHT #
-DATE
-TIME
-CARRIER
-Ground Truth
-FLIGHT #
-Input Image
+
+cash as
+100 — 100
+
+Pes compe i oto yu ntl ramporatn fom and th Kea Ape.
+No te Pr:
+
+| | sr ten ner Senter) 50
+
+| eco pon ou wl nario Fro the Reale Ai)
+Nos te Pr:
+
+0 °
 MLM + GCL (ours)
+
+Input Image
+
 (a) Attention scores w/ and w/o GCL
-FormNetV2 Output
+
+FormNetV2 Output Ground Truth
+
 (b) Model outputs for difficult cases.
+
 Figure 7: (a) The attention scores for MLM and MLM+GCL(Graph Contrastive Learning) models on CORD
 before fine-tuning. When pre-trained with the proposed GCL, the model can identify more meaningful token
 clusterings, leveraging multimodal input effectively; (b) Difficult cases where the model predictions do not match
 the human-annotated ground truth. In this visualization we highlight disagreements only.
+
 put more effectively.
+
 We also show sample model outputs that do not
 match the human-annotated ground truth in Fig-
-ure 7(b). The model confuses between 'header' and
-'other' on the top of the form and between ‘ques-
-tion' and 'answer' for the multiple choice questions
+ure 7(b). The model confuses between ‘header‘ and
+‘other‘ on the top of the form and between “ques-
+tion‘ and ‘answer‘ for the multiple choice questions
 on the bottom half of the form. More visualization
 can be found in Figure 9 in Appendix.
+
 5 Conclusion
+
 FormNetV2 augments an existing strong Form-
 NetV1 backbone with image features bounded by
 pairs of neighboring tokens and the graph con-
@@ -1176,7 +988,9 @@ tween the multimodal token representations of two
 corrupted versions of an input graph. The central-
 ized design sheds new light to the understanding of
 multimodal form understanding.
+
 6 Limitations
+
 Our work follows the general assumption that the
 training and test set contain the same list of pre-
 defined entities. Without additional or necessary
@@ -1185,11 +999,14 @@ of the model is expected to be limited. Future work
 includes exploring prompt-based architectures to
 unify pre-training and fine-tuning into the same
 query-based procedure.
+
 7 Ethics Consideration
+
 We have read and compiled with the ACL Code
 of Ethics. The proposed FormNetV2 follows the
 prevailing large-scale pre-training then fine-tuning
 framework. Although we use the standard IIT-
+
 CDIP dataset for pre-training in all experiments,
 the proposed method is not limited to using specific
 datasets for pre-training. Therefore, it shares the
@@ -1198,45 +1015,57 @@ models, such as biases from the pre-training data
 and privacy considerations. We suggest following
 a rigorous and careful protocol when preparing the
 pre-training data for public-facing applications.
+
 References
+
 Milan Aggarwal, Hiresh Gupta, Mausoom Sarkar, and
 Balaji Krishnamurthy. 2020. Form2seq: A frame-
 work for higher-order form structure extraction. In
 EMNLP.
-Joshua Ainslie, Santiago Ontañón, Chris Alberti, Va-
+
+Joshua Ainslie, Santiago Ontafidn, Chris Alberti, Va-
 clav Cvicek, Zachary Fisher, Philip Pham, Anirudh
 Ravula, Sumit Sanghai, Qifan Wang, and Li Yang.
 2020. Etc: Encoding long and structured data in
 transformers. In EMNLP.
+
 Srikar Appalaraju, Bhavan Jasani, Bhargava Urala Kota,
 Yusheng Xie, and R Manmatha. 2021. Docformer:
 End-to-end transformer for document understanding.
 In ICCV.
+
 Hangbo Bao, Li Dong, Furu Wei, Wenhui Wang, Nan
 Yang, Xiaodong Liu, Yu Wang, Jianfeng Gao, Song-
 hao Piao, Ming Zhou, et al. 2020. Unilmv2: Pseudo-
 masked language models for unified language model
-pre-training. In ICML.
+pre-training. In JCML.
+
 Ting Chen, Simon Kornblith, Mohammad Norouzi, and
 Geoffrey Hinton. 2020. A simple framework for con-
-trastive learning of visual representations. In ICML.
+trastive learning of visual representations. In JCML.
+
 Laura Chiticariu, Yunyao Li, and Frederick Reiss. 2013.
 Rule-based information extraction is dead! long
 live rule-based information extraction systems! In
 EMNLP.
+
+--- Page 10 ---
 Adrian Cosma, Mihai Ghidoveanu, Michael Panaitescu-
 Liess, and Marius Popescu. 2020. Self-supervised
 representation learning on document images. In In-
 ternational Workshop on Document Analysis Systems,
-pages 103–117. Springer.
+pages 103-117. Springer.
+
 Timo I Denk and Christian Reisswig. 2019. Bert-
 grid: Contextualized embedding for 2d document
 representation and understanding. arXiv preprint
-arXiv:1909.04948.
+arXiv: 1909.04948.
+
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
 Kristina Toutanova. 2019. BERT: Pre-training of
 deep bidirectional transformers for language under-
 standing. In NAACL-HLT.
+
 Alexey Dosovitskiy, Lucas Beyer, Alexander
 Kolesnikov, Dirk Weissenborn, Xiaohua Zhai,
 Thomas Unterthiner, Mostafa Dehghani, Matthias
@@ -1244,185 +1073,226 @@ Minderer, Georg Heigold, Sylvain Gelly, et al. 2020.
 An image is worth 16x16 words: Transformers
 for image recognition at scale. arXiv preprint
 arXiv:2010.11929.
-Powalski,
-Tomasz
-Łukasz Garncarek, Rafał
-Stanisławek, Bartosz Topolski, Piotr Halama,
-Michał Turski, and Filip Graliński. 2020. Lambert:
+
+Lukasz Garncarek, Rafat Powalski, Tomasz
+Stanistawek, Bartosz Topolski, Piotr Halama,
+Michat Turski, and Filip Graliniski. 2020. Lambert:
 Layout-aware (language) modeling for information
 extraction. arXiv preprint arXiv:2002.08087.
+
 Jiuxiang Gu, Jason Kuen, Vlad I Morariu, Handong
 Zhao, Nikolaos Barmpalios, Rajiv Jain, Ani Nenkova,
 and Tong Sun. 2022a. Unified pretraining frame-
 work for document understanding. arXiv preprint
 arXiv:2204.10939.
+
 Zhangxuan Gu, Changhua Meng, Ke Wang, Jun Lan,
 Weiqiang Wang, Ming Gu, and Liqing Zhang. 2022b.
 Xylayoutlm: Towards layout-aware multimodal net-
 works for visually-rich document understanding. In
 Proceedings of the IEEE/CVF Conference on Com-
-puter Vision and Pattern Recognition, pages
-4583-
+puter Vision and Pattern Recognition, pages 4583-
 4592.
+
 Jaekyu Ha, Robert M Haralick, and Ihsin T Phillips.
 1995. Recursive xy cut using bounding boxes of
-connected components. In ICDAR.
+connected components. In JCDAR.
+
 Kaveh Hassani and Amir Hosein Khasahmadi. 2020.
 Contrastive multi-view representation learning on
 graphs. In International Conference on Machine
 Learning. PMLR.
-Kaiming He, Georgia Gkioxari, Piotr Dollár, and Ross
-Girshick. 2017. Mask r-cnn. In ICCV.
+
+Kaiming He, Georgia Gkioxari, Piotr Dollar, and Ross
+Girshick. 2017. Mask r-cnn. In JCCV.
+
 Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian
 Sun. 2016. Deep residual learning for image recogni-
 tion. In CVPR.
+
 Yupan Huang, Tengchao Lv, Lei Cui, Yutong Lu, and
 Furu Wei. 2022. Layoutlmv3: Pre-training for doc-
 ument ai with unified text and image masking. In
 Proceedings of the 30th ACM International Confer-
 ence on Multimedia.
+
 Zheng Huang, Kai Chen, Jianhua He, Xiang Bai, Dimos-
 thenis Karatzas, Shijian Lu, and CV Jawahar. 2019.
 Icdar2019 competition on scanned receipt ocr and
-information extraction. In ICDAR.
+information extraction. In JCDAR.
+
 Wonseok Hwang, Jinyeong Yim, Seunghyun Park, So-
 hee Yang, and Minjoon Seo. 2021. Spatial depen-
 dency parsing for semi-structured document informa-
 tion extraction. In ACL-IJCNLP (Findings).
+
 Guillaume Jaume, Hazim Kemal Ekenel, and Jean-
 Philippe Thiran. 2019. Funsd: A dataset for form un-
-derstanding in noisy scanned documents. In ICDAR-
+derstanding in noisy scanned documents. In JCDAR-
 OST.
+
 Anoop Raveendra Katti, Christian Reisswig, Cordula
 Guder, Sebastian Brarda, Steffen Bickel, Johannes
-Höhne, and Jean Baptiste Faddoul. 2018. Chargrid:
+Hohne, and Jean Baptiste Faddoul. 2018. Chargrid:
 Towards understanding 2d documents. In EMNLP.
+
 Geewook Kim, Teakgyu Hong, Moonbin Yim,
 Jeong Yeon Nam, Jinyoung Park, Jinyeong Yim, Won-
 seok Hwang, Sangdoo Yun, Dongyoon Han, and
 Seunghyun Park. 2022. Ocr-free document under-
 standing transformer. In European Conference on
-Computer Vision, pages 498–517. Springer.
+Computer Vision, pages 498-517. Springer.
+
 Frank Lebourgeois, Zbigniew Bublinski, and Hubert
 Emptoz. 1992. A fast and efficient method for ex-
 tracting text paragraphs and graphics from uncon-
-strained documents. In ICPR.
+strained documents. In JCPR.
+
 Chen-Yu Lee, Chun-Liang Li, Timothy Dozat, Vin-
 cent Perot, Guolong Su, Nan Hua, Joshua Ainslie,
 Renshen Wang, Yasuhisa Fujii, and Tomas Pfister.
 2022. Formnet: Structural encoding beyond sequen-
 tial modeling in form document information extrac-
 tion. In ACL.
+
 Chen-Yu Lee, Chun-Liang Li, Chu Wang, Renshen
 Wang, Yasuhisa Fujii, Siyang Qin, Ashok Popat, and
 Tomas Pfister. 2021. Rope: Reading order equivari-
 ant positional encoding for graph-based document
-information extraction. In ACL-IJCNLP.
+information extraction. In ACL-LJCNLP.
+
 David Lewis, Gady Agam, Shlomo Argamon, Ophir
 Frieder, David Grossman, and Jefferson Heard. 2006.
 Building a test collection for complex document in-
 formation processing. In Proceedings of the 29th
 annual international ACM SIGIR conference on Re-
 search and development in information retrieval.
+
 Chenliang Li, Bin Bi, Ming Yan, Wei Wang, Songfang
 Huang, Fei Huang, and Luo Si. 2021a. Structurallm:
 Structural pre-training for form understanding. In
 ACL.
+
 Junlong Li, Yiheng Xu, Tengchao Lv, Lei Cui, Cha
 Zhang, and Furu Wei. 2022. Dit: Self-supervised
 pre-training for document image transformer. arXiv
 preprint arXiv:2203.02378.
+
 Peizhao Li, Jiuxiang Gu, Jason Kuen, Vlad I Morariu,
 Handong Zhao, Rajiv Jain, Varun Manjunatha, and
 Hongfu Liu. 2021b. Selfdoc: Self-supervised doc-
 ument representation learning. In Proceedings of
+
+--- Page 11 ---
 the IEEE/CVF Conference on Computer Vision and
 Pattern Recognition, pages 5652-5660.
+
 Yujia Li, Chenjie Gu, Thomas Dullien, Oriol Vinyals,
 and Pushmeet Kohli. 2019. Graph matching net-
 works for learning the similarity of graph structured
 objects. In International conference on machine
 learning, pages 3835-3845. PMLR.
+
 Yulin Li, Yuxi Qian, Yuechen Yu, Xiameng Qin,
 Chengquan Zhang, Yan Liu, Kun Yao, Junyu Han,
 Jingtuo Liu, and Errui Ding. 2021c. Structext: Struc-
 tured text understanding with multi-modal transform-
 ers. In Proceedings of the 29th ACM International
 Conference on Multimedia, pages 1912-1920.
-Tsung-Yi Lin, Piotr Dollár, Ross Girshick, Kaiming
+
+Tsung-Yi Lin, Piotr Dollar, Ross Girshick, Kaiming
 He, Bharath Hariharan, and Serge Belongie. 2017.
 Feature pyramid networks for object detection. In
 CVPR.
+
 Weihong Lin, Qifang Gao, Lei Sun, Zhuoyao Zhong,
 Kai Hu, Qin Ren, and Qiang Huo. 2021. Vibertgrid:
 a jointly trained multi-modal 2d document represen-
 tation for key information extraction from documents.
 In International Conference on Document Analysis
-and Recognition, pages 548–563. Springer.
+and Recognition, pages 548-563. Springer.
+
 Bodhisattwa Prasad Majumder, Navneet Potti, Sandeep
 Tata, James Bradley Wendt, Qi Zhao, and Marc Na-
 jork. 2020. Representation learning for information
 extraction from form-like documents. In ACL.
+
 Simone Marinai, Marco Gori, and Giovanni Soda. 2005.
 Artificial neural networks for document analysis and
-recognition. IEEE Transactions on pattern analysis
+recognition. EEE Transactions on pattern analysis
 and machine intelligence.
-Lawrence O'Gorman. 1993. The document spectrum
-for page layout analysis. IEEE Transactions on pat-
+
+Lawrence O’Gorman. 1993. The document spectrum
+for page layout analysis. JEEE Transactions on pat-
 tern analysis and machine intelligence.
+
 Aaron van den Oord, Yazhe Li, and Oriol Vinyals. 2018.
 Representation learning with contrastive predictive
-coding. arXiv preprint arXiv:1807.03748.
+coding. arXiv preprint arXiv: 1807.03748.
+
 Rasmus Berg Palm, Ole Winther, and Florian Laws.
 2017. Cloudscan-a configuration-free invoice anal-
-ysis system using recurrent neural networks. In IC-
+ysis system using recurrent neural networks. In JC-
 DAR.
+
 Seunghyun Park, Seung Shin, Bado Lee, Junyeop Lee,
 Jaeheung Surh, Minjoon Seo, and Hwalsuk Lee. 2019.
 Cord: A consolidated receipt dataset for post-ocr
 parsing. In Workshop on Document Intelligence at
 NeurIPS 2019.
-Rafał Powalski, Łukasz Borchmann, Dawid Jurkiewicz,
-Tomasz Dwojak, Michał Pietruszka, and Gabriela
-Pałka. 2021. Going full-tilt boogie on document
+
+Rafat Powalski, Lukasz Borchmann, Dawid Jurkiewicz,
+Tomasz Dwojak, Michat Pietruszka, and Gabriela
+Patka. 2021. Going full-tilt boogie on document
 understanding with text-image-layout transformer. In
 ICDAR.
+
 Subhojeet Pramanik, Shashank Mujumdar, and Hima
 Patel. 2020. Towards a multi-modal, multi-task learn-
 ing based pre-training framework for document repre-
-sentation learning. arXiv preprint arXiv:2009.14457.
+sentation learning. arXiv preprint arXiv:2009. 14457.
+
 Lev Ratinov and Dan Roth. 2009. Design challenges
 and misconceptions in named entity recognition. In
 Conference on Computational Natural Language
 Learning (CoNLL).
+
 Shaoqing Ren, Kaiming He, Ross Girshick, and Jian
 Sun. 2015. Faster r-cnn: Towards real-time object
 detection with region proposal networks. Advances
 in neural information processing systems.
+
 Olga Russakovsky, Jia Deng, Hao Su, Jonathan Krause,
 Sanjeev Satheesh, Sean Ma, Zhiheng Huang, Andrej
 Karpathy, Aditya Khosla, Michael Bernstein, et al.
 2015. Imagenet large scale visual recognition chal-
-lenge. IJCV.
-Anikó Simon, J-C Pret, and A Peter Johnson. 1997. A
+lenge. LJCV.
+
+Anik6 Simon, J-C Pret, and A Peter Johnson. 1997. A
 fast algorithm for bottom-up document layout anal-
-ysis. IEEE Transactions on Pattern Analysis and
+ysis. [EEE Transactions on Pattern Analysis and
 Machine Intelligence.
+
 Kihyuk Sohn. 2016. Improved deep metric learning
 with multi-class n-pair loss objective. Advances in
 neural information processing systems.
-Wilson L Taylor. 1953. “cloze procedure": A new tool
+
+Wilson L Taylor. 1953. “cloze procedure”: A new tool
 for measuring readability. Journalism quarterly.
+
 Petar Velickovic, William Fedus, William L Hamil-
-ton, Pietro Liò, Yoshua Bengio, and R Devon Hjelm.
-2019. Deep graph infomax. ICLR.
+ton, Pietro Lid, Yoshua Bengio, and R Devon Hjelm.
+2019. Deep graph infomax. JCLR.
+
 Jesse Vig. 2019. A multiscale visualization of attention
 in the transformer model. In ACL: System Demon-
 strations.
+
 Jiapeng Wang, Lianwen Jin, and Kai Ding. 2022a. Lilt:
 A simple yet effective language-independent layout
 transformer for structured document understanding.
 arXiv preprint arXiv:2202.13669.
+
 Wenjin Wang, Zhengjie Huang, Bin Luo, Qianglong
 Chen, Qiming Peng, Yinxu Pan, Weichong Yin,
 Shikun Feng, Yu Sun, Dianhai Yu, et al. 2022b.
@@ -1430,61 +1300,77 @@ Ernie-mmlayout: Multi-grained multimodal trans-
 former for document understanding. Proceedings of
 the 30th ACM International Conference on Multime-
 dia.
-Zifeng Wang, Zizhao Zhang, Jacob Devlin, Chen-Yu
+
+Zifeng Wang, Zizhao Zhang, Jacob Devlin, Chen- Yu
 Lee, Guolong Su, Hao Zhang, Jennifer Dy, Vincent
 Perot, and Tomas Pfister. 2022c. Queryform: A sim-
 ple zero-shot form entity query framework. arXiv
 preprint arXiv:2211.07730.
+
 Mengxi Wei, Yifan He, and Qiong Zhang. 2020. Robust
 layout-aware ie for visually rich documents with pre-
 trained language models. In Proceedings of the 43rd
 International ACM SIGIR Conference on Research
 and Development in Information Retrieval, pages
 2367-2376.
+
 Zhanghao Wu, Paras Jain, Matthew Wright, Azalia
 Mirhoseini, Joseph E Gonzalez, and Ion Stoica. 2021.
 Representing long-range context for graph neural net-
 works with global attention. Advances in Neural
 Information Processing Systems, 34:13266-13279.
+
+--- Page 12 ---
 Zhirong Wu, Yuanjun Xiong, Stella X Yu, and Dahua
 Lin. 2018. Unsupervised feature learning via non-
 parametric instance discrimination. In CVPR.
+
 Yang Xu, Yiheng Xu, Tengchao Lv, Lei Cui, Furu
 Wei, Guoxin Wang, Yijuan Lu, Dinei Florencio, Cha
 Zhang, Wanxiang Che, et al. 2021. Layoutlmv2:
 Multi-modal pre-training for visually-rich document
 understanding. In ACL-IJCNLP.
+
 Yiheng Xu, Minghao Li, Lei Cui, Shaohan Huang, Furu
 Wei, and Ming Zhou. 2020. Layoutlm: Pre-training
 of text and layout for document image understanding.
 In KDD.
+
 Yuning You, Tianlong Chen, Yongduo Sui, Ting Chen,
 Zhangyang Wang, and Yang Shen. 2020. Graph con-
 trastive learning with augmentations. Advances in
 Neural Information Processing Systems.
+
 Xiaohui Zhao, Endi Niu, Zhuo Wu, and Xiaoguang
 Wang. 2019. Cutie: Learning to understand docu-
 ments with convolutional universal text information
-extractor. In ICDAR.
+extractor. In JCDAR.
+
 Xu Zhong, Jianbin Tang, and Antonio Jimeno Yepes.
 2019. Publaynet: largest dataset ever for document
-layout analysis. In ICDAR.
+layout analysis. In JCDAR.
+
 Yanqiao Zhu, Yichen Xu, Qiang Liu, and Shu Wu. 2021.
 An empirical study of graph contrastive learning.
 arXiv preprint arXiv:2109.01116.
+
 Yanqiao Zhu, Yichen Xu, Feng Yu, Qiang Liu, Shu Wu,
 and Liang Wang. 2020. Deep graph contrastive repre-
 sentation learning. arXiv preprint arXiv:2006.04131.
+
+--- Page 13 ---
 A Appendix
-A.1 Image Embedder Architecture
+
+A.1_ Image Embedder Architecture
+
 Our image embedder is a 3-layer ConvNet with
 filter sizes {32, 64, 128} and kernel size 3 through-
 out. Stride 2 is used in the middle layer and stride
 1 is used everywhere else. We resize the input doc-
-ument image to 512×512 with aspect ratio fixed
+ument image to 512x512 with aspect ratio fixed
 and zero padding for the background region. After
 extracting the dense features of the whole input
-image, we perform feature RoI pooling (He et al.,
+image, we perform feature Rol pooling (He et al.,
 2017) within the bounding box that joins a pair
 of tokens connected by a GCN edge. The height
 and width of the pooled region are set to 3 and
@@ -1496,8 +1382,10 @@ is used everywhere else. To consume image modal-
 ity in our backbone model, we simply concatenate
 the pooled image features with the existing layout
 features at edge level of GCN as shown in Figure 2.
+
 A.2 More Implementation Details
-We conduct additional experiments on FUNSD
+
+We conduct additional experiments” on FUNSD
 and CORD using base and large versions of Lay-
 outLMv3 (Huang et al., 2022). Instead of using
 entity segment indexes inferred from ground truth,
@@ -1506,48 +1394,41 @@ considerable performance degradation when the
 model has access to word-level box information
 instead of segment-level. The results are shown in
 Table 3.
-Method
-FUNSD CORD
-96.56
-LayoutLMv3-base
-Setting
-Reported
-90.29
-Reproduced
-90.59
-95.85
-Word box
-78.35
-95.81
-92.08
-97.46
-92.14
-96.78
-82.53
-95.92
-LayoutLMv3-large Reported
-Reproduced
-Word box
+
+Method Setting FUNSD CORD
+
+LayoutLMv3-base —_ Reported 90.29 96.56
+Reproduced 90.59 95.85
+Word box 78.35 95.81
+
+LayoutLMv3-large Reported 92.08 97.46
+Reproduced 92.14 96.78
+Word box 82.53 95.92
+
 Table 3: LayoutLMv3 results with entity segment in-
 dexes (reproduced) or word level indexes (word box).
 We observe considerable performance degradation when
 the model has access to word-level box information in-
 stead of segment-level.
+
 A.3 Preliminaries
+
 FormNetV1 (Lee et al., 2022) simplifies the task of
 document entity extraction by framing it as funda-
 mentally text-centric, and then seeks to solve the
-github.com/Jyouhou/unilm-test
+
+5 github.com/Jyouhou/unilm-test
+
 problems that immediately arise from this. Serial-
-ized forms can be very long, so FormNetV1 uses
+ized forms can be very long, so FormNetV 1 uses
 a transformer architecture with a local attention
 window (ETC) as the backbone to work around
 the quadratic memory cost of attention. This com-
 ponent of the system effectively captures the text
 modality.
+
 OCR serialization also distorts strong cues of
-semantic relatedness a word that is just above
--
+semantic relatedness — a word that is just above
 another word may be related to it, but if there are
 many tokens to the right of the upper word or to
 the left of the lower word, they will intervene be-
@@ -1563,6 +1444,7 @@ regions associated with distinct embeddings in a
 lookup table. This allows the system to build pow-
 erful representations from the layout modality for
 tokens that fall within the local attention window.
+
 Finally, while Rich Attention maximizes the po-
 tential of local attention, there remains the problem
 of what to do when there are so many interveners
@@ -1577,138 +1459,89 @@ bors for each token before convolving to build up
 the token representations that will be fed to the
 transformer after OCR serialization. Unlike with
 Rich Attention, which directly learns concepts like
-"above", "below", and infinitely many degrees of
-"nearness", the graph at this stage does not consider
+“above”, “below”, and infinitely many degrees of
+“nearness”, the graph at this stage does not consider
 spatial relationships beyond “is a neighbor” and “is
-not a neighbor" – see Figure 1. This allows the net-
+not a neighbor” — see Figure 1. This allows the net-
 work to build a weaker but more complete picture
 of the layout modality than Rich Attention, which
 is constrained by local attention. A similar archi-
 tecture is also found to be useful in graph learning
 tasks by Wu et al. (2021).
+
 Thus the three main components of FormNetV1
-cover each other's weaknesses, strategically trad-
+cover each other’s weaknesses, strategically trad-
 ing off representational power and computational
 efficiency in order to allow the system to construct
-Edge-level
-Layout
-Vo
-V1
-Layout
-Image
-Vo
-V2
-VA
-Graph Contrastive Learning
-Text
-Vo
-V₁
-Layout
-Image
-Text
-V2
-IIX. }}}
-V4
-Image
-Stochastic Graph Corruption
-V2
-Text
-V3
-Node-level Edge-level
-Vo
-V₁
-Layout
-Image
-V2
-Text
-V3
-V4
-BOISE scheme classification
+
+--- Page 14 ---
 (a) Pre-training
+
+Node level Edge-level
+
 (b) Fine-tuning
+
+BOISE scheme classification
+
 Figure 8: (a) During multimodal graph contrastive pre-training, two corrupted graphs are sampled from an input
-graph by corruption of graph topology (edges) and attributes (multimodal features). (b) During task-specific
+
+graph
+
 fine-tuning, only the original input graph is used.
-TURNING DATA INTO INTELLIGENCE WORLDWIDE
+
+TOnkine ATA CHTo HTELLINERCE WeRLEWiDE™
 Fax Fax Fax Fax Fax Fax Fax Fax Fax
-ROPER
-STAR CH
-TURNING DATA INTO INTELLIGENCE WORLDWIDE
-Fax Fax Fax Fax Fax Fax Fax Fax Fax
-(a)
-Date:
-September 22, 1997
-Date:
-September 22, 1997
-To:
-Ron Milstein
-From:
-"JJ" Klein
-To:
-Ron Milstein
-From:
-"JJ" Klein
-Company:
-Lorillard
-Company:
-Lorillard
-Fax Number:
-(910) 335-7707
-Pages (Including cover page): 3
-Fax Number:
-(910) 335-7707
-Pages (Including cover page): 3
-YEAR:
-(b)
-BRAND NAME:
-(၁)
-VAR. DESC:
-VARIETY UNIT SALES:
-CIGARETTE REPORT FORM
-NO. PER PACK:
-YEAR:
-BRAND NAME:
-VAR. DESC:
-(SEE EXPLANATION)
-VARIETY DOLLAR SALES:
-VARIETY UNIT SALES:
-CIGARETTE REPORT FORM
-NO. PER PACK: _
-(SEE EXPLANATION)
-VARIETY DOLLAR SALES:
-DECISION TREE ESTIMATION OF TOXIC RISK
-DECISION TREE ESTIMATION OF TOXIC RISK
-AME J. D. Ergle and R. F. Dufresne
-DATE August 14, 1990
-AME J. D. Ergle and R. F. Dufresne
-GATE August 14, 1990
-Vanitrope
-| CH,CH,O
-OH
-Vanitrope
-STRUCTURE
-CH,CH,O
-OH
+(a) Date: ‘Soptember 22,1007 Date: ‘Soptember 22,1907
+To: Ron Milstein From: “J" Klein To: Ron Milstein From: “J" Klein
+Compeny: Lorillard Compeny: Lorillard
+‘Fax Number: (010) 336-7707 Pages (including cover pago}: 3 ‘Fax Number: (810) 335-707 Pages (including cover pago}: 3
+CIGARETTE REPORT FORM CIGARETTE REPORT FORM
+YEAR:___ NO. PER PACK: YEAR:___ MO. PER PACK:
+(b) BRAND NAME: BRAND NAME:
+VAR. DESC: (SEE EXPLANATION) RE. RE,
+VARIETY UNIT SALES: VARIETY DOLLAR SALES: VARIETY UNIT SALES: VARIETY DOLLAR SALES:
+DECISION TREE ESTIMATION OF TOXIC RISK DECISION TREE ESTIMATION OF TOXIC RISK
+Fy, p, uxgle and R. F. Dufzesre TT august 14, 1990 Fo. p. urgie and R. F, Dufzesne [> august 4, 1990
+vaniteope vaniteope
+(c) od Xx od ; Dy
+([c,c3,0} : foucno7 “S77
+(ox) on,
+FormNetV2 Output Ground Truth
+
+by corruption of graph topology (edges) and attributes (multimodal features). (b) During task-specific
+
 HEADER
 QUESTION
 ANSWER
-FormNetV2 Output
-Ground Truth
+
 Figure 9: The ambiguous cases where the model predictions do not match the human-annotated ground truth. In
+
 this visualization we only showcase mismatched entities.
-useful representations while simplifying the prob- ing footnotes.
+
+useful representations while simplifying the prob-
 lem to be fundamentally textual rather than visual.
 The final system was pretrained end-to-end on large
 scale unlabeled form documents with a standard
 masked language modeling (MLM) objective.
+
 A.4 Output Visualization
+
 Figure 9 shows additional FormNetV2 model out-
 puts on FUNSD.
+
 A.5 License or Terms
-Please see the license or terms for IIT-CDIPб,
-FUNSD7, CORD8, and SROIE⁹ in the correspond-
-6ir.nist.gov/cdip/README.txt
-9
+
+Please see the license or terms for IIT-CDIP®,
+FUNSD’, CORD®, and SROIE? in the correspond-
+
+ir.nist.gov/cdip/README.txt
 guillaumejaume.github.io/FUNSD/work/
-8 github.com/clovaai/cord/blob/master/LICENSE-CC-BY
-rrc.cvc.uab.es/?ch=13
+github.com/clovaai/cord/blob/master/LICENSE-CC-B Y
+
+6.
+7
+8
+°rre.cve.uab.es/?ch=13
+
+ing footnotes.
+

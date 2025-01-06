@@ -1,35 +1,51 @@
+--- Page 1 ---
 arXiv:2308.03757v1 [cs.CV] 7 Aug 2023
+
 3D Motion Magnification:
 Visualizing Subtle Motions with Time-Varying Radiance Fields
+
 Brandon Y. Feng*
 University of Maryland
-Hadi Alzayer*
-University of Maryland
-Michael Rubinstein
-Google Research
+
 William T. Freeman
 Google Research, MIT
+
+Hadi Alzayer*
+University of Maryland
+
+Michael Rubinstein
+Google Research
+
 Jia-Bin Huang
 University of Maryland
+
 https://3d-motion-magnification.github.io/
-Rendered Novel Views
-Observed Motion
-NO
+
+Rendered Novel Views Observed Motion
+
+F in Y
+-
+
 Magnified Motion at Novel Views
-Rendered Novel View
-64 Hz
-Tuning Fork
-128 Hz
-Tuning Fork
-Observed Motion
-64 Hz Magnification
-128 Hz Magnification
+
 (a) View synthesis with motion magnification
+
+Rendered Novel View
+
+Observed Motion
+
+64 Hz Magnification
+
+128 Hz Magnification
+
 (b) Frequency-selective magnification with temporal filtering
+
 Figure 1. 3D motion magnification. (a) Novel view synthesis with a gymnast doing a handstand while magnifying the small movements
 of the arms needed to remain balanced. (b) Motion magnification based on targeted frequencies through temporal filtering, where the left
 tuning fork vibrates at 64Hz and the right at 128Hz. We visualize x-t (space-time) slices to demonstrate the motion.
+
 Abstract
+
 Motion magnification helps us visualize subtle, imper-
 ceptible motion. However, prior methods only work for 2D
 videos captured with a fixed camera. We present a 3D mo-
@@ -44,7 +60,9 @@ nification using both implicit and tri-plane-based radiance
 fields as our underlying 3D scene representation. We eval-
 uate the effectiveness of our method on both synthetic and
 real-world scenes captured under various camera setups.
+
 1. Introduction
+
 We live in a big world of small motions. These mo-
 tions, such as human respiration or object vibration, are
 hard to perceive with our naked eyes. Video processing
@@ -52,28 +70,31 @@ techniques [29, 61, 56] have been developed to extract and
 magnify subtle motions captured in a 2D video to high-
 light and visualize those motions. These motion magnifi-
 cation techniques empower visual analytics tools like de-
-tecting the vibrations of buildings and measuring a person's
+tecting the vibrations of buildings and measuring a person’s
 heart rate using only a video, without the need for physical
 contact [58, 10, 46, 23].
+
 However, we live in a 3D world full of 3D motions. Mag-
-nifying motion in 3D, as shown in Figure 1 allows us to
+nifying motion in 3D, as shown in Figure | allows us to
 perceive these motions from different views. Furthermore,
 modeling the motion in 3D provides a natural separation be-
+
 *Equal contribution
-1
-3 3
-2D Method [57]
-Ours
+
+--- Page 2 ---
+2D Method [57] Ours
 Figure 2. Motion magnification from a handheld video. Prior
 2D motion magnification approaches (e.g. [57]) cannot handle
 videos captured by a moving camera, producing severe artifacts.
 In contrast, our approach can naturally separate camera motion
 from object motion, allowing us to magnify only the motion of the
 subject of interest. See Figure 7 for our magnified output.
+
 tween camera motion and the motion of subjects of interest.
 This enables magnifying the motion from handheld videos,
 as shown in Figure 2. In contrast, prior 2D motion magnifi-
 cation methods catastrophically fail in such scenarios.
+
 In this paper, we propose a method for 3D motion mag-
 nification using neural radiance fields (NeRF), with mini-
 mal modifications to standard NeRF backbones and train-
@@ -89,6 +110,7 @@ point is highly effective in magnifying subtle 3D motion.
 We observe that magnifying the point embedding provides
 more accurate and robust magnified renderings than Eule-
 rian magnification performed directly on rendered images.
+
 Using images captured during a time window when only
 subtle motion is visible, we train NeRF to reconstruct the
 3D scene with such subtle temporal variations. We ensure
@@ -101,16 +123,18 @@ Eulerian approach [56], which showed superior properties
 over the linear approach, it remains unclear how it may
 be applied for NeRF as it specifically constructs a com-
 plex steerable pyramid over each 2D image frame. The
-recently introduced tri-plane representation for NeRF's em-
+recently introduced tri-plane representation for NeRF’s em-
 bedding function naturally allows for 2D-specific magnifi-
 cation methods like the phase-based approach [7]. Instead
 of using the analytical positional encoding to generate point
+
 embeddings, we learn one feature tri-plane at each observed
 timestep. These tri-planes can be naturally organized as
 feature videos for 2D video-based magnification methods.
 Finally, the motion-magnified 3D scene is rendered using
 these motion-magnified feature triplanes as the point em-
 bedding functions.
+
 To evaluate the performance of 3D magnification with
 NeRF, we first create a synthetic dataset of scenes with sub-
 tle motions and measure the magnification quality against
@@ -124,19 +148,25 @@ setups, scene compositions, and subject motions. Our re-
 sults show that our proposed approach for 3D motion mag-
 nification achieves robust performance for real-world cap-
 tures in the presence of image noise and camera poses.
+
 To summarize, our contributions are:
-• We introduce the problem of 3D motion magnifica-
+
+* We introduce the problem of 3D motion magnifica-
 tion. We demonstrate the feasibility of applying Eule-
 rian motion analysis for 3D motion magnification us-
 ing standard NeRF backbones and training pipelines.
-• We extend Eulerian analysis to a new domain beyond
+
+* We extend Eulerian analysis to a new domain beyond
 color space, exploring strategies to modify and filter
 point embedding and comparing their trade-offs.
-• We demonstrate successful 3D motion magnification
+
+* We demonstrate successful 3D motion magnification
 results on various real-world scenes with different mo-
 tions, scene compositions, and even handheld videos
 unsupported by previous 2D methods.
+
 2. Related Work
+
 Video motion magnification. Prior approaches to video
 magnification fall under two categories, inspired by fluid
 dynamics: Lagrangian [29] and Eulerian [61, 56, 57, 37,
@@ -155,65 +185,68 @@ can be inaccurate and costly. Two variants of the Eulerian
 approach are linear [61] and phase-based [56, 57]. Linear
 Eulerian [61] constructs Laplacian pyramids over the video
 frames and amplifies the color variation of each pixel over
-2
+
+--- Page 3 ---
 (a) 3D Scene Representation
-Point in 3D Space
-→ Coordinate Transformation → Point Embedding →
-Projection Function
-→
-Output
+
+Point in3D Space —* Coordinate Transformation —>
+
+Embedding Function £
+
+Analytical WR, PosEne(p)
+
+Learned TriPlane(p)
+
+Point Embedding —* Projection Function —* Output
+
 Color c
-Embedding Function E
-Analytical \ PosEnc(p)
-E(p) Є R"
-Opacity σ
-OMLP
-TriPlane(p)
-Learned
+
+E(p) € R" Opacity o
+
 Direction d
+
 (b) 3D Scene with Subtle Motion
-Learned
-per timestep
+
+Learned per timestep
+
 Fixed Projection Function
+
+MLP @
+
+MLP @
+
 d
-MLP 0
-Ctoto
-Ct
-,0t1
-Eto
-MLP 0
-р
-Et₁
-Etz
-MLP 0
-to
-t₁
-t₂
-to
-t1
-t₂
+>|
+—
+|
+—
+>|
+|
+
+MLP @
+
+lof Ey, | —| ||
+(| ~C
+
 (c) 3D Motion Magnification
-Fixed Point → Time-Varying Embedding → Temporal Filtering → Amplify Variations Magnified Rendering
-р
-t
-n
-Fourier Transform
-Bandpass Filter
-n
+
+Fixed Point —* Time-Varying Embedding —* Temporal Filtering —* Amplify Variations —* Magnified Rendering
+
 d
-MLP Ꮎ
-MLP 0
-Ctoto
-Ct₁,σt1
-MLP 0
-Ct₂Ot₂
+e 1 H ; t =| MLP@ }>ct,.%%,
+oa Fourier Transform
+p | Go Pe ee,
+i Bandpass Filter —=3} MLP@ Cty Ot,
+n n
+
 Figure 3. Method overview. (a) 3D scene representation with NeRF consists of two main components: 1) Coordinate Transformation uses
-an embedding function E to map the input point p Є R³ to a high-dimensional embedding vector E(p) Є R". The embedding function can
-be analytical (positional encoding) or learned (tri-plane). 2) The Projection Function 0 (usually an MLP) takes in the point embedding and
-viewing direction, and regresses them into the output color c and opacity σ at p. (b) We study scenes with subtle motions. To model the
+an embedding function E to map the input point p € R? to a high-dimensional embedding vector E(p) € R". The embedding function can
+be analytical (positional encoding) or learned (tri-plane). 2) The Projection Function @ (usually an MLP) takes in the point embedding and
+viewing direction, and regresses them into the output color c and opacity o at p. (b) We study scenes with subtle motions. To model the
 tiny variations with NeRF, we change E over time while fixing the projection function. (c) At a given point p, we analyze its embedding
-variations over time: [Eto (p), ..., Etr-1 (p)]. We perform temporal filtering to isolate and amplify embedding variations within a certain
-frequency range and then send the amplified embedding to the MLP 0, resulting in motion-magnified 3D rendering.
+variations over time: [E,,(p),...,E1;_,(p)]. We perform temporal filtering to isolate and amplify embedding variations within a certain
+frequency range and then send the amplified embedding to the MLP 8, resulting in motion-magnified 3D rendering.
+
 time. Phase-based Eulerian [56, 57] operates on the phase
 variations at each pixel, extracted from a complex steer-
 able pyramid [50, 17] decomposition of each video frame.
@@ -229,12 +262,14 @@ upon classical Eulerian motion magnification but extends it
 1) from 2D to 3D and 2) from color space to the point em-
 bedding space of radiance fields. Our results show that the
 Eulerian principle still holds in the point embedding space.
+
 Static radiance fields. NeRF [35] has become the main-
 stream approach for representing 3D scenes and demon-
 strates high-quality view synthesis results. Various tech-
 niques have been introduced to improve NeRF in sev-
 eral aspects, including training and rendering acceleration
 [24, 36, 2, 18, 42, 8], reducing aliasing [3], unbounded
+
 scene modeling [4, 63], and optimizing poses [27, 34]. Fac-
 tor Fields [9] present a unified framework summarizing var-
 ious NeRF variants and other neural signal representations
@@ -249,15 +284,16 @@ of point embeddings in NeRF. We demonstrate successful
 applications of this approach on NeRF with both positional
 encoding-based embedding [35, 24] and tri-plane embed-
 ding [7, 18].
+
 Dynamic scene representations. Extensive research
 has been devoted to extending NeRF for modeling dy-
-namic scenes.
-One line of work learns a deformation
+namic scenes. One line of work learns a deformation
 field and uses it to warp a canonical NeRF for each
 timestep [41, 39, 40, 55, 25]. Alternatively, one can di-
 rectly learn a space-time radiance field with time as an ad-
 ditional coordinate [26, 62, 19, 1, 52, 31, 18, 6, 47]. A
-3
+
+--- Page 4 ---
 major challenge of reconstructing dynamic scenes is cap-
 turing time-synchronous multi-view observations. While a
 multi-camera setting is ideal for acquiring high-quality data
@@ -267,6 +303,7 @@ aging priors such as consistent depth [62, 32, 21], optical
 flow [26, 19, 31], or human prior [20, 60]. We demonstrate
 the applicability of 3D motion magnification in both multi-
 camera and single-camera setups.
+
 Implicit representations. Implicit representations have
 emerged as powerful tools for modeling signals [51, 13, 38,
 28, 43, 53, 54, 15, 16, 14, 49]. Mai and Liu [33] study 2D
@@ -276,7 +313,9 @@ the positional encoding function. Our experiment on mag-
 nification based on position encoding functions shares sim-
 ilar ideas. However, unlike Mai and Liu [33], we learn spa-
 tially varying phase shifts and magnify 3D motion.
+
 3. Preliminaries
+
 Eulerian motion magnification. The Eulerian-based mo-
 tion analysis focuses on the changes at a fixed spatial loca-
 tion over time instead of tracking a specific particle (pixel).
@@ -288,49 +327,59 @@ The color intensity changes within the desired frequency
 range are then amplified and added back to the original val-
 ues to create a motion-magnified video (where subtle mo-
 tions become more visible).
+
 To offer an intuition on why amplifying per-pixel color
 intensity could magnify motion across the frame, let
-f(x,t) = g(x+8(t)) denote a signal with motion over time
-described by the shift (t). The first-order Taylor series ex-
-pansion of g(x+8(t)) about the point x can be written as:
-g(x)+g'(x)(x+ɗ(t) −x) = g(x)+g′(x)§(t).
+f (x,t) = g(x+ 6(t)) denote a signal with motion over time
+described by the shift 5(r). The first-order Taylor series ex-
+pansion of g(x+ 6(t)) about the point x can be written as:
+
+a(x) +8"(x)(x+ 8(t) —x) = g(x) +8'(x)6(7).
+
 With observations at multiple timesteps t, we can easily
 filter out the static g(x) term and keep the dynamic term
-g'(x)(t). If we multiply g'(x) 8(t) by α and add it back to
+g'(x)6(z). If we multiply g’(x)d(t) by o and add it back to
 the original signal, we get
-g(x)+(1+α)g'(x)♂(t) = ≈ g(x+(1+α)&(t)),
-which is equivalent to magnifying the motion by α.
+
+g(x) + (1+ @)g'(x) S(t) © g(xt (1+ 0)8(r)),
+
+which is equivalent to magnifying the motion by a@.
+
 The phase-based Eulerian approach amplifies phase
 variations over time instead of color amplitude variations.
 The phase here is extracted from a complex steerable pyra-
 mid constructed from the original frames. The connection
 between phase and motion can be established through the
 Fourier shift theorem: if a function f(x) is shifted by a dis-
-tance S in its domain, it would be equivalent to multiplying
-its Fourier component F(k) by a phase factor e-i2лk.
-е
--ί2πκδ
-F {f(x − 8)}(k) = F{f(x)}(k)e¯i
-where denotes the Fourier transform operator and k de-
+
+tance 6 in its domain, it would be equivalent to multiplying
+its Fourier component .¥ (k) by a phase factor e~ 27":
+
+Ff (x—8)}(k) = F{ fi) (be? ,
+
+where ¥ denotes the Fourier transform operator and k de-
 notes the frequency component. In other words, extract-
 ing the phase changes over time reveals the motion-induced
-pixel shift in space by S. After amplifying the phase
+pixel shift in space by 6. After amplifying the phase
 changes, the motion-magnified signal can be generated with
 an inverse Fourier transform.
+
 Neural radiance fields as 3D scene representations.
-NERF models the radiance in a scene as a continuous func-
-tion, which takes as input a 3D spatial coordinate pЄR³
-and a viewing direction d = S², and outputs the radiance
-color c (observed from viewing direction d) and density σ at
-that point. Notably, the spatial coordinate Р is transformed
+NeRF models the radiance in a scene as a continuous func-
+tion, which takes as input a 3D spatial coordinate p € R?
+and a viewing direction d € S*, and outputs the radiance
+color c (observed from viewing direction d) and density o at
+that point. Notably, the spatial coordinate p is transformed
 into a feature representation through some embedding func-
 tion E, before a projection function (MLP) regresses it into
 the final prediction:
-f(p,d) = MLP(E(p),d) = (c,σ).
+
+F(p,d) =MLP(E(p),d) = (c,0).
+
 With subtle and unknown scene motions, we assume this
-time-varying scene can be formulated as f(p+8(p,t),d).
+time-varying scene can be formulated as f(p + 5(p,t),d).
 If MLP is fixed across time, then the unknown motion
-(p,t) can be recovered by analyzing the temporal vari-
+5(p,t) can be recovered by analyzing the temporal vari-
 ations of E(p,t). However, where do we access E(p,t)?
 Whereas in the 2D video case, the data of interest is directly
 recorded by a camera and is available for analysis, here we
@@ -338,114 +387,84 @@ only have access to a collection of 2D images that may have
 observed the 3D subtle motions during capture. In the fol-
 lowing subsection, we discuss how to reconfigure NeRF to
 model subtle 3D motions by varying the function E(p,t).
+
 4. Method
+
 We assume the availability of: 1) Multi-view observa-
 tions to reconstruct a static NeRF, and 2) video recording of
 the subtle scene motions, either with a time-synchronized
 multi-camera setup or a single moving camera.
+
 The general workflow of our method is as follows: 1) We
 train a static NeRF from image observations that can be as-
-sumed as motionless. 2) For each timestep t = [0,T - 1] in
+sumed as motionless. 2) For each timestep ¢ € [0,7 — 1] in
 the video observations, we finetune the embedding function
-Et so that the NeRF rendering matches with the observa-
-tions at t. 3) After finetuning all 7 embedding functions Et,
+E; so that the NeRF rendering matches with the observa-
+tions at t. 3) After finetuning all T embedding functions E,,
 we magnify motions by amplifying the temporal variations
 of each sampled point used in NeRF rendering.
+
 In this section, we describe how we repurpose NeRF to
 capture subtle motions and perform magnification by ana-
 lyzing the point embeddings learned by NeRF. We begin our
 discussion with the base case of the standard NeRF with po-
 sitional encoding as the point embedding function. We then
-4
-time
-Observed
-www
-www
-Position Shift
-Linear Tri-Plane
-time
-Observed
-Position Shift
-Linear Tri-Plane
+
+--- Page 5 ---
+* Observed Position Shift Linear ~ Tri-Plane Position Shift Linear ~ Tri-
+Rendered View Ground Truth Encoding Shift Phase — Tri-Plane Rendered View Ground Truth Encoding Shift
+
+‘ae
+
 Rendered View
+
+a
+z
+
+© Observed
+
 Ground Truth
-Encoding Shift
-Phase Tri-Plane
-Rendered View
-Ground Truth
-Encoding Shift
-Phase Tri-Plane
-Rendered View
-time
-Observed
+
 Position Shift
-Linear Tri-Plane
-Ground Truth
+
 Encoding Shift
-Phase Tri-Plane
-time
-Observed
+
+Linear ~ Tri-Plane
+
+Phase — Tri-Plane
+
+* Observed
+
+Ground Truth
+
 Position Shift
-Linear - Tri-Plane
-Rendered View
-Ground Truth
+
 Encoding Shift
-Phase Tri-Plane
+
+Linear ~ Tri-Plane
+
+Rendered View
+
 Figure 4. 3D motion magnification on synthetic scenes. We generated each synthetic scene by periodically vibrating object parts. We
 magnify the subtle motion encoded in NeRF reconstruction using the approaches discussed in Sec. 4, and visualize the motion here as
 a 2D space-time slice image. The corresponding location of each space-time slice is indicated by a red line on the rendered view. All
 four approaches successfully capture and magnify the motion, although the linear Eulerian approach, Linear - Tri-Plane, is more prone to
+
 intensity overshooting [56], manifested as bright and dark spots in the space-time slice.
-SSIM
-Positional Encoding
-LPIPS↓↓
-Tri-Plane
-SSIM
-LPIPS↓
-Position Shift
-Encoding Shift
--Linear - Video
-0.15
-0.95
-Phase - Video
---Position Shift
-Encoding Shift
--Linear-Video
-Phase Video
---Linear - Tri-Plane
-Linear Tri-Plane
-Phase - Tri-Plane
--Linear-Video
-Phase Video
-0.15
-0.95
-Phase Tri-Plane
-Linear Video
-Phase - Video
-0.9
-1
-5
-10
-20
-50 100
-Factors
-0.1
-0.9
-0.05
-5 10
-20 50 100
-Factors
-5
-10
-20 50 100
-Factors
-0.1
-0.05
-5
-10
-20
-50 100
-Factors
+Positional Encoding Tri-Plane
+SSIM x x | LPIPS | T x x >] SSIM LPIPS | . x x
+—# Position Shift —# Position Shift —* Linear - Tri-Plane —e Linear - Tri-Plane
+—# Encoding Shift —m Encoding Shift 01s L = Phase -Tri-Plane | |
+© Lineur- Video 0.15 - Linear - Video. | : © Lineur- Video
+0.95 Phase - Video | == Phase - Video|] 9. 95 Phase - Video
+O11 4 Ore |
+0.9 7 0.9 4
+0.05 | 4
+0.05 }- 4
+1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1
+5 10 20 50 100 5 10 20 50 100 5 10 20 50 100 5 10 20 50 100
+Factors Factors Factors Factors
+
 Figure 5. Quantitative comparison. We evaluate the quality of motion-magnified renderings as a function of the magnification factor
 used, using positional encoding (Left) and tri-plane (Right) as the point embedding function. With positional encoding, we evaluate
 two approaches to vary point embedding through phase shifts in the sine waves: Position Shift (shifting each 3D point) and Encoding
@@ -455,11 +474,14 @@ against two baseline methods for video motion magnification: Linear - Video (lin
 Phase-Video (phase-based magnification on the NeRF-rendered video). Results from two embedding functions are separated to enable
 better assessments of the impact of different magnification approaches and avoid confounding with the inherent performance gap between
 different embedding functions and MLP architectures.
+
 describe our preferred approach with tri-plane as the em-
 bedding function for NeRF, which leads to a natural integra-
 tion with the phase-based Eulerian magnification technique
 previously designed for videos.
+
 4.1. NeRF with Positional Encoding
+
 We first describe how Eulerian magnification in the em-
 bedding space can be achieved on standard NeRF with po-
 sitional encoding. Motivated by prior work on motion-
@@ -468,73 +490,105 @@ the main backbone of NeRF intact and separately train a
 small MLP g that learns to apply phase shifts in the posi-
 tional encoding functions. However, different from prior
 work [33], with video observations from the scene, we or-
+
 ganize the images by their captured time and train a sepa-
 rate MLP g for each timestep. Effectively, g learns to adjust
 the embedded representation of each point so that the NeRF
-output from the projection function (MLP 0) is consistent
-with the time-varying observations. Weights of the MLP 0
+output from the projection function (MLP @) is consistent
+with the time-varying observations. Weights of the MLP @
 are shared across all time steps, and the only difference lies
 in the point embeddings. There are two options to induce
 phase shifts to the positional encoding function: position
 shift and encoding shift.
+
 Position shift. To model motion exclusively through
 changing the point embeddings, we let g directly predict
 the 3D position shift of the queried point p: g(p,t) =
-Ap R³. We add Ap to p before applying positional en-
-5
-Rendered View
+Ap € R®. We add Ap to p before applying positional en-
+
+--- Page 6 ---
+time time
+ry
+
+Observed i
+
+Rendered View Magnified Rendered View
+
 time
-Observed
+rl
+
+* Observed
+
+5 §
+
 Magnified
-Rendered View
-time
+
 Observed
-Magnified
-Rendered View
-time
-Observed
-Magnified
+
+Magnified Rendered View
+
 Figure 6. Real-world multi-view motion magnification. Using multi-view videos from the HumanNerf dataset [20], we can capture and
 magnify true 3D motion. We visualize the motion here as a 2D space-time image, where the corresponding location of each space-time
+
 slice is shown on the rendered view as a red line.
-Observed
+
+mc Observed
+
+4
+
+X Magnified 1 Hz Novel Views
+
 Observed Frame
-x Magnified 1 Hz
+
+a
+
+Tk Observed
+
+— Magnied 1.5 Hz
+
 Novel Views
+
 Observed Frame
-Observed
-Magnified 1.5 Hz
-Novel Views
+
 Figure 7. Real-world single-camera motion magnification. Despite the monocular view of the dynamic scene, we can render novel views
 while magnifying subtle motion. We visualize the motion as a 2D image slice through time.
+
 coding, obtaining a time-varying point embedding function
-E(p,t) = PosEnc(p+g(p,t)),
-.
-which is equivalent to applying a phase shift of @ g(p,t)
+
+E(p,t) = PosEnc(p + g(p,1)),
+
+which is equivalent to applying a phase shift of @ - g(p,t)
 within each sine wave sin(@x) used in positional encod-
 ing. Note that the phase shifts for all K frequencies have
 the same direction and only differ in magnitude, which is
-scaled by different @ = [1,..., K].
+scaled by different @ € [1,..., K].
+
 Encoding shift. Note that motion does not only lead to
 geometric changes in the 3D scene since it would also cause
 appearance changes like shadows and reflections. There-
 fore, attributing all the scene variation to shifts in 3D posi-
 tion is not sufficient. Instead, we may let g learn a separate
 shift for each encoding frequency. In other words, with
-Ow Є R³, let g(p,t) = [01, 02, ..., OK] Є R³×K, and the point
+bo € R’, let g(p,t) = [61, $2,---, Ox] € R°**, and the point
 embedding function becomes
-E(p,t) = [sin(@1p+1), ..., sin(@kp+¢k)].
+
+E(p,t) = [sin(@ p+ $1),...,sin(@xp + ox)].
+
 This setup treats positional encoding as a feature gener-
 ator that produces an embedding with 3K channels. As
-shown in later sections, this "motion-agnostic” approach
+shown in later sections, this “motion-agnostic” approach
 still learns to capture the true motion while outperforming
 the approach that only accounts for position shifts.
+
 With either of these two approaches to vary the point
 embeddings in a standard NeRF with positional encoding,
 we can render magnified motions by linearly amplifying the
+
 temporal variations of g(p,t), and then rendering the point’s
 color and opacity with NeRF.
+
 4.2. NeRF with Tri-plane Learnable Embedding
+
 We now describe our preferred approach using tri-plane
 as the embedding function for NeRF. Later experiments
 suggest that the tri-plane-based approach achieved bet-
@@ -545,6 +599,7 @@ NeRF rendering. Compared to NeRF with the analytical
 positional encoding, NeRF with tri-planes as the point em-
 bedding function can achieve similar representation capac-
 ity with far fewer MLP layers and, thus, faster inference.
+
 In our use case of NeRF, the tri-plane formulation has a
 nice implication of reducing the 3D scene into a collection
 of 2D feature planes. Such a decomposition preserves the
@@ -554,81 +609,60 @@ gests we may achieve 3D motion magnification by directly
 processing the feature planes and potentially outperform-
 ing the aforementioned linear magnification within the po-
 sitional encoding function.
+
 Specifically, we train a separate tri-plane embedding
 function for each timestep while the MLP-based projection
 function is shared across time. With this setup, all sub-
 tle temporal changes in the scene (motion or appearance)
 would need to be encapsulated in the temporal changes of
 the 2D feature images of the tri-plane. The point embedding
-6
-SSIM ↑
-LPIPS↓
-0.98
-0.04
-Linear Tri-Plane
-Phase - Tri-Plane
---Linear - Video
-Phase Video
-0.97
-0.04
-0.96
-0.03
--Linear Tri-Plane
---Phase - Tri-Plane
---Linear - Video
---Phase - Video
-5
-10
-15
-20
-5
-10
-15
-20
-Angles
-Angles
+
+--- Page 7 ---
+SSIM + LPIPS |
+0.98 - 4 0.04 x x
+0.97 +
+
+0.04 + |
+0.96 + Z
+0.03 + S|
+1 1 1 1 1 1 1 1
+5 10 15 20 5 10 15 20
+Angles Angles
+
 Figure 8. Varying the angles of deviation from observed views.
 As the deviation angle increases, magnifying through the embed-
 ding space consistently outperforms the baseline approaches that
 operate on the color space.
---Linear - Tri-Plane
-Phase Tri-Plane
-SSIM ↑
-LPIPS↓
-0.20
-Linear Tri-Plane
-0.95
-Phase Tri-Plane
-Linear Video
-0.18
---Linear-Video
-Phase Video
-Phase Video
+
+SSIM + LPIPS |
+
+: : 9 0.20 = x
+0.95 | fe tineur= Ti-Plane
+
+—e- Linear - Tri-Plane
+
 0.90
-0.16
+
 0.85
-0.14
-0.12
-0.80
-0.01
-0.05
-0.1
-0.2
-0.01
-0.05
-0.1
-02
-0.2
+
+0.80 1 | 1 ia 1 1 1 1
+0.01 005 01 02 0.01 0.05 = 01 02
+
+o o
+
 Figure 9. Varying noise levels in training views. When we per-
 form Eulerian magnification on the tri-plane embedding space,
-Phase Tri-Plane is more robust than Linear Tri-Plane in the
+Phase - Tri-Plane is more robust than Linear - Tri-Plane in the
 presence of noise. The finding is analogous to previous analy-
 sis [56] on color space magnification (validated by the two base-
 line results: Linear - Video and Phase - Video).
+
 function here can be written as
-E(p,t) = Project (p, TriPlanet),
+E(p,t) = Project(p, TriPlane,),
+
 where the embedding of p is obtained by projecting p onto
 the tri-plane and aggregating the corresponding features.
+
 With a separate tri-plane constructed for each timestep,
 we establish a key connection to prior video magnifica-
 tion methods: we essentially obtain a video for each tri-
@@ -642,7 +676,9 @@ The performance comparison in Section 5.2 between the
 linear and phase-based approaches also validates the orig-
 inal findings from when these two approaches were applied
 to perform Eulerian processing of color spaces.
+
 5. Experimental Results
+
 We evaluate the performance of the proposed method
 using synthetic scenes in Section 5.2. We create ground
 truth sequences for the magnified motion and quantitatively
@@ -657,17 +693,19 @@ nification to 3D, our method successfully magnifies 3D mo-
 tions from handheld-captured videos with camera shake, a
 scenario unattainable by prior work that focused on stabi-
 lized 2D videos.
+
 5.1. Implementation Details
+
 Positional encoding as point embedding. We train a 3-
 layer MLP with 32 hidden channels to predict g(p,t) and
 apply the resulting phase shifts in positional encoding. We
-implement the network with nerface [24]. To train a static
+implement the network with nerfacc [24]. To train a static
 NeRF for the first timestep, we optimize for 50,000 steps,
 and for the remaining timesteps, we finetune the embed-
 ding function for 10,000 steps. After training, for each
 point p, we obtain its time-varying phase shifts g(p,t).
 To render with magnified motion within a time window
-[0,..., T1], we Fourier transform [g(p,0),..., g(p,T – 1)]
+(0, ...,7 — 1], we Fourier transform [g(p,0),...,.¢(p,T — 1)]
 along the time dimension, use a bandpass filter to isolate the
 motions within the frequency range of interest, amplify the
 components within the passband range, and then apply in-
@@ -675,6 +713,7 @@ verse Fourier transform to obtain the magnified predictions.
 The magnified predictions are added inside the positional
 encoding as phase shifts, followed by the standard NeRF
 rendering with MLP inference.
+
 Tri-plane as point embedding. Our implementation
 builds on K-Planes [18]. To aggregate the embedding from
 different planes, we adopt concatenation instead of the de-
@@ -683,7 +722,7 @@ a single scale for simplicity. To train a static NeRF for
 the first timestep, we optimize for 30,000 steps, and for
 the remaining timesteps we finetune the embedding func-
 tion for 10,000 steps. After training, we compose a video
-for each feature plane within [0,..., T – 1]. Then, we apply
+for each feature plane within [0,...,7 — 1]. Then, we apply
 2D magnification methods directly on these feature videos.
 For the linear approach, we temporally filter and amplify
 the feature value variations within a frequency range. For
@@ -693,16 +732,21 @@ amplify the phase variations, and then collapse the pyra-
 mid back into the image space; the resulting feature image
 would exhibit magnified motions [56]. To produce motion-
 magnified rendering, we embed each sample point with the
-7
+
+
+--- Page 8 ---
 processed triplane features and then use the MLP to project
 the embedding into color and density output as usual.
+
 5.2. Synthetic Scenes
+
 Data Generation. We use the standard Blender scenes
 [35] and simulate motions in different object parts. We ren-
 der each scene for one second at 30 frames per second. The
 simulated motions are periodic, ranging from 3 Hz to 5 Hz.
 We also render sequences with ground truth magnified mo-
 tions under factors 5, 10, 20, 50, and 100.
+
 Qualitative Evaluation. We magnify motions in the
 Blender scenes with the approaches described in Sec. 4. Re-
 sults in Figure 4 show that all four approaches successfully
@@ -710,6 +754,7 @@ model and magnify tiny motions in the observations. Con-
 sistent with previous findings in video magnification [56],
 the linear Eulerian approach leads to more artifacts, such as
 clipped color intensities and noise amplification.
+
 Quantitative Evaluation. We evaluate the results against
 ground truth magnified frames using structural similarity in-
 dex measure (SSIM) [59], and LPIPS [64] with AlexNet
@@ -720,6 +765,7 @@ directly on the video to magnify subtle motions. As shown
 in Figure 5, our 3D magnification methods outperform the
 2D baseline methods in producing motion-magnified ren-
 derings consistent with the ground truth renderings.
+
 Sensitivity Aanalysis. In Figure 8, we analyze magnifi-
 cation quality as the test viewpoints deviate from the ob-
 served viewpoints. In Figure 9, we plot magnification qual-
@@ -728,9 +774,12 @@ work [56] on color space magnification has found that the
 phase-based approach is less sensitive to noise than the lin-
 ear approach; we observe similar phenomenon during our
 magnification in the embedding space.
+
 5.3. Real-world Scenes
+
 We test our methods on several real-world scenes cap-
 tured with different camera setups.
+
 Multi-Camera Setup. We first validate our method on the
 publicly available dataset from HumanNerf [66], compris-
 ing short videos from six cameras simultaneously capturing
@@ -739,11 +788,13 @@ brief period where the person is relatively static but still ex-
 hibits subtle body movements. In Figure 6, we present the
 magnified results from different viewpoints; the full videos
 are available in the supplementary material.
+
 Single-Camera Setup. As a multi-camera setup may be
 prohibitively inconvenient and expensive for many users,
 we further deploy our method on a single-camera setup.
 We design a capture procedure that consists of two stages.
 Step 1: we first capture a moving camera video of the static
+
 scene, which will be used to train a static NeRF. Step 2: we
 capture a single-view video of the dynamic scene, which
 is used to finetune the point embedding function in NeRF
@@ -761,12 +812,14 @@ since our method uses the estimated poses of each frame
 independently when updating the radiance fields on the dy-
 namic sequence. Hence, an accurate pose estimation re-
 moves the need for a perfectly still capture. We show the
-results using monocular capture in Figure 1 of a gymnast
+results using monocular capture in Figure | of a gymnast
 holding a handstand and in Figure 7 on a person trying to
 balance on one leg and a person breathing. We also show
 observed space-time slices compared to our magnified ones
 with NeRF reconstruction.
+
 6. Limitations
+
 Data captured in real-world environments can be blurry
 due to defocus and camera shake, degrading the quality
 of NeRF. The training of NeRF assumes the knowledge
@@ -782,10 +835,12 @@ and scene motion, which could hinder magnifying subtle
 scene motions or lead to false motion magnification. There-
 fore, real-world data should be captured under conditions
 where accurate camera intrinsic and extrinsic parameters
-are accessible, either from reliable RGB-based SfM with
+are accessible, either from reliable RGB-based Sf{M with
 textured surfaces in the scene, or from cameras that support
 6-DoF tracking during capture.
+
 7. Conclusion
+
 We present a 3D motion magnification method that ap-
 plies Eulerain processing principles to analyzing NeRF em-
 beddings over time. While classical magnification meth-
@@ -795,232 +850,405 @@ of NeRF successfully generalizes those approaches and al-
 lows magnifying motions in 3D renderings. We believe our
 work will motivate further research towards integrating tra-
 ditional signal processing techniques into neural fields.
-8
+
+--- Page 9 ---
 References
-[1] Benjamin Attal, Jia-Bin Huang, Christian Richardt, Michael
-Zollhoefer, Johannes Kopf, Matthew O'Toole, and Changil
+
+1
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+Benjamin Attal, Jia-Bin Huang, Christian Richardt, Michael
+Zollhoefer, Johannes Kopf, Matthew O’Toole, and Changil
 Kim. HyperReel: High-Fidelity 6-DoF Video with Ray-
 Conditioned Sampling. CVPR, 2023. 3
-[2] Benjamin Attal, Jia-Bin Huang, Michael Zollhöfer, Johannes
+
+Benjamin Attal, Jia-Bin Huang, Michael Zollhéfer, Johannes
 Kopf, and Changil Kim. Learning Neural Light Fields with
 Ray-space Embedding. CVPR, 2022. 3
-[3] Jonathan T. Barron, Ben Mildenhall, Matthew Tancik, Peter
+
+Jonathan T. Barron, Ben Mildenhall, Matthew Tancik, Peter
 Hedman, Ricardo Martin-Brualla, and Pratul P. Srinivasan.
 Mip-NeRF: A Multiscale Representation for Anti-Aliasing
 Neural Radiance Fields. arXiv, 2021. 3
-[4] Jonathan T. Barron, Ben Mildenhall, Dor Verbin, Pratul P.
+
+Jonathan T. Barron, Ben Mildenhall, Dor Verbin, Pratul P.
 Srinivasan, and Peter Hedman. Mip-NeRF 360: Unbounded
 Anti-Aliased Neural Radiance Fields. CVPR, 2022. 3
-[5] Zhongang Cai, Daxuan Ren, Ailing Zeng, Zhengyu Lin, Tao
+Zhongang Cai, Daxuan Ren, Ailing Zeng, Zhengyu Lin, Tao
 Yu, Wenjia Wang, et al. HuMMan: Multi-modal 4D Human
 Dataset for Versatile Sensing and Modeling. ECCV, 2022. 4
-[6] Ang Cao and Justin Johnson. HexPlane: A Fast Representa-
+Ang Cao and Justin Johnson. HexPlane: A Fast Representa-
 tion for Dynamic Scenes. CVPR, 2023. 3
-[7] Eric R. Chan, Connor Z. Lin, Matthew A Chan, Koki
+
+Eric R. Chan, Connor Z. Lin, Matthew A Chan, Koki
 Nagano, Boxiao Pan, Shalini De Mello, Orazio Gallo,
 Leonidas J. Guibas, et al. Efficient Geometry-aware 3D Gen-
-erative Adversarial Networks. CVPR, 2022. 2, 3, 6
-[8] Anpei Chen, Zexiang Xu, Andreas Geiger, Jingyi Yu, and
+erative Adversarial Networks. CVPR, 2022. 2, 3,6
+
+Anpei Chen, Zexiang Xu, Andreas Geiger, Jingyi Yu, and
 Hao Su. TensoRF: Tensorial Radiance Fields. ECCV, 2022.
 3
-[9] Anpei Chen, Zexiang Xu, Xinyue Wei, Siyu Tang, Hao Su,
+
+Anpei Chen, Zexiang Xu, Xinyue Wei, Siyu Tang, Hao Su,
 and Andreas Geiger. Factor Fields: A Unified Framework
 for Neural Fields and Beyond. arXiv, 2023. 3
-[10] Justin G. Chen, Abe Davis, Neal Wadhwa, Frédo Durand,
-William T. Freeman, and Oral Büyüköztürk. Video Camera-
+
+Justin G. Chen, Abe Davis, Neal Wadhwa, Frédo Durand,
+William T. Freeman, and Oral Biiyiikéztiirk. Video Camera—
 based Vibration Measurement for Civil Infrastructure Appli-
 cations. Journal of Infrastructure Systems, 23(3), 2017. 1
-[11] Abe Davis, Michael Rubinstein, Neal Wadhwa, Gautham J.
+Abe Davis, Michael Rubinstein, Neal Wadhwa, Gautham J.
 Mysore, Frédo Durand, and William T. Freeman. The visual
 microphone: Passive recovery of sound from video. ACM
 Transactions on Graphics, 33(4), 2014. 3
-[12] Mohamed Elgharib, Mohamed Hefeeda, Fredo Durand, and
+
+Mohamed Elgharib, Mohamed Hefeeda, Fredo Durand, and
 William T. Freeman. Video Magnification in Presence of
 Large Motions. CVPR, 2015. 3
-[13] Rizal Fathony, Anit Kumar Sahu, Devin Willmott, and J Zico
-Kolter. Multiplicative Filter Networks. ICLR, 2020. 4
-[14] Brandon Y. Feng, Susmija Jabbireddy, and Amitabh Varsh-
+
+Rizal Fathony, Anit Kumar Sahu, Devin Willmott, and J Zico
+Kolter. Multiplicative Filter Networks. JCLR, 2020. 4
+Brandon Y. Feng, Susmija Jabbireddy, and Amitabh Varsh-
 ney. VIINTER: View Interpolation with Implicit Neural Rep-
 resentations of Images. SIGGRAPH Asia, 2022. 4
-[15] Brandon Y. Feng and Amitabh Varshney. SIGNET: Efficient
-Neural Representation for Light Fields. ICCV, 2021. 4
-[16] Brandon Y. Feng, Yinda Zhang, Danhang Tang, Ruofei Du,
+
+Brandon Y. Feng and Amitabh Varshney. SIGNET: Efficient
+Neural Representation for Light Fields. JCCV, 2021. 4
+Brandon Y. Feng, Yinda Zhang, Danhang Tang, Ruofei Du,
 and Amitabh Varshney. PRIF: Primary Ray-Based Implicit
 Function. ECCV, 2022. 4
-[17] William T. Freeman and Edward H. Adelson. The Design
+
+William T. Freeman and Edward H. Adelson. The Design
 and Use of Steerable Filters. IEEE Transactions on Pattern
 Analysis and Machine Intelligence, 1991. 3
-K-
-[18] Sara Fridovich-Keil, Giacomo Meanti, Frederik Rahbæk
-Warburg, Benjamin Recht, and Angjoo Kanazawa.
+
+Sara Fridovich-Keil, Giacomo Meanti, Frederik Rahbek
+Warburg, Benjamin Recht, and Angjoo Kanazawa.  K-
 Planes: Explicit Radiance Fields in Space, Time, and Ap-
-pearance. arXiv, 2023. 3, 6, 7
-[19] Chen Gao, Ayush Saraf, Johannes Kopf, and Jia-Bin Huang.
+pearance. arXiv, 2023. 3, 6,7
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+Chen Gao, Ayush Saraf, Johannes Kopf, and Jia-Bin Huang.
 Dynamic View Synthesis from Dynamic Monocular Video.
-ICCV, 2021. 3,4
-[20] Wei Jiang, Kwang Moo Yi, Golnoosh Samei, Oncel Tuzel,
+ICCYV, 2021. 3, 4
+
+Wei Jiang, Kwang Moo Yi, Golnoosh Samei, Oncel Tuzel,
 and Anurag Ranjan. NeuMan: Neural Human Radiance
 Field from a Single Video. ECCV, 2022. 4, 6
-[21] Johannes Kopf, Xuejian Rong, and Jia-Bin Huang. Robust
+
+Johannes Kopf, Xuejian Rong, and Jia-Bin Huang. Robust
 Consistent Video Depth Estimation. CVPR, 2021. 4
-[22] Alex Krizhevsky, Ilya Sutskever, and Geoffrey E. Hinton.
-ImageNet Classification with Deep Convolutional Neural
+
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey E. Hinton.
+ImageNet Cl. cation with Deep Convolutional Neural
 Networks. NIPS, 2012. 8
-[23] Ricard Lado-Roigé, Josep Font-Moré, and Marco A. Pérez.
+
+Ricard Lado-Roigé, Josep Font-Moré, and Marco A. Pérez.
 Learning-based Video Motion Magnification Approach for
 Vibration-based Damage Detection. Measurement, 206,
 2023. 1,8
-[24] Ruilong Li, Matthew Tancik, and Angjoo Kanazawa. Ner-
+
+Ruilong Li, Matthew Tancik, and Angjoo Kanazawa. Ner-
 fAcc: A General NeRF Accleration Toolbox. arXiv, 2022.
 3,7
-[25] Tianye Li, Mira Slavcheva, Michael Zollhoefer, Simon
+
+Tianye Li, Mira Slavcheva, Michael Zollhoefer, Simon
 Green, Christoph Lassner, Changil Kim, Tanner Schmidt,
 Steven Lovegrove, Michael Goesele, and Zhaoyang Lv. Neu-
 ral 3D Video Synthesis. CVPR, 2022. 3
-[26] Zhengqi Li, Simon Niklaus, Noah Snavely, and Oliver Wang.
+
+Zhengqi Li, Simon Niklaus, Noah Snavely, and Oliver Wang.
 Neural scene flow fields for space-time view synthesis of dy-
 namic scenes. CVPR, 2021. 3, 4
-[27] Chen-Hsuan Lin, Wei-Chiu Ma, Antonio Torralba, and Si-
+
+Chen-Hsuan Lin, Wei-Chiu Ma, Antonio Torralba, and Si-
 mon Lucey. Barf: Bundle-adjusting Neural Radiance Fields.
-ICCV, 2021. 3
-[28] David B. Lindell, Dave Van Veen, Jeong Joon Park, and Gor-
+ICCYV, 2021. 3
+
+David B. Lindell, Dave Van Veen, Jeong Joon Park, and Gor-
 don Wetzstein. BACON: Band-limited Coordinate Networks
 for Multiscale Scene Representation. CVPR, 2022. 4
-[29] Ce Liu, Antonio Torralba, William T. Freeman, Frédo Du-
+
+Ce Liu, Antonio Torralba, William T. Freeman, Frédo Du-
 rand, and Edward H. Adelson. Motion Magnification. ACM
 Transactions on Graphics, 2005. 1,2
-[30] Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu
+
+Lingjie Liu, Marc Habermann, Viktor Rudnev, Kripasindhu
 Sarkar, Jiatao Gu, and Christian Theobalt. Neural Actor:
 Neural Free-View Synthesis of Human Actors with Pose
 Control. ACM Transactions on Graphics, 2021. 4
-[31] Yu-Lun Liu, Chen Gao, Andreas Meuleman, Hung-Yu
+
+Yu-Lun Liu, Chen Gao, Andreas Meuleman, Hung-Yu
 Tseng, Ayush Saraf, Changil Kim, Yung-Yu Chuang, Jo-
 hannes Kopf, and Jia-Bin Huang. Robust Dynamic Radiance
 Fields. CVPR, 2023. 3, 4
-[32] Xuan Luo, Jia-Bin Huang, Richard Szeliski, Kevin Matzen,
+
+Xuan Luo, Jia-Bin Huang, Richard Szeliski, Kevin Matzen,
 and Johannes Kopf. Consistent video depth estimation. ACM
 Transactions on Graphics, 2020. 4
-[33] Long Mai and Feng Liu. Motion-Adjustable Neural Implicit
-Video Representation. CVPR, 2022. 4, 5
-[34] Andreas Meuleman, Yu-Lun Liu, Chen Gao, Jia-Bin Huang,
+
+Long Mai and Feng Liu. Motion-Adjustable Neural Implicit
+Video Representation. CVPR, 2022. 4,5
+
+Andreas Meuleman, Yu-Lun Liu, Chen Gao, Jia-Bin Huang,
 Changil Kim, Min H. Kim, and Johannes Kopf. Progres-
 sively Optimized Local Radiance Fields for Robust View
 Synthesis. CVPR, 2023. 3
-[35] Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik,
+
+Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik,
 Jonathan T. Barron, Ravi Ramamoorthi, and Ren Ng. NeRF:
 Representing Scenes as Neural Radiance Fields for View
 Synthesis. ECCV, 2020. 3, 8
-[36] Thomas Müller, Alex Evans, Christoph Schied, and Alexan-
+
+Thomas Miiller, Alex Evans, Christoph Schied, and Alexan-
 der Keller. Instant Neural Graphics Primitives with a Mul-
-9
+
+
+--- Page 10 ---
+37
+
+38
+
+39
+
+40
+
+41
+
+42
+
+43
+
+44
+
+45
+
+46
+
+47
+
+48
+
+49
+
+50
+
+51
+
+52
+
 tiresolution Hash Encoding. ACM Transactions on Graphics,
 2022. 3
-[37] Tae-Hyun Oh, Ronnachai Jaroensri, Changil Kim, Mohamed
+
+Tae-Hyun Oh, Ronnachai Jaroensri, Changil Kim, Mohamed
 Elgharib, Frédo Durand, William T. Freeman, and Woj-
 ciech Matusik. Learning-based Video Motion Magnification.
-ECCV, 2018. 2, 3
-[38] Jeong Joon Park, Peter Florence, Julian Straub, Richard
+ECCY, 2018. 2, 3
+
+Jeong Joon Park, Peter Florence, Julian Straub, Richard
 Newcombe, and Steven Lovegrove. DeepSDF: Learning
 Continuous Signed Distance Functions for Shape Represen-
 tation. CVPR, 2019. 4
-[39] Keunhong Park, Utkarsh Sinha, Jonathan T. Barron, Sofien
+
+Keunhong Park, Utkarsh Sinha, Jonathan T. Barron, Sofien
 Bouaziz, Dan B Goldman, Steven M. Seitz, and Ricardo
 Martin-Brualla. Nerfies: Deformable Neural Radiance
 Fields. ICCV, 2021. 3
-[40] Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T.
+
+Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T.
 Barron, Sofien Bouaziz, Dan B. Goldman, Ricardo Martin-
 Brualla, and Steven M. Seitz. HyperNeRF: A Higher-
 Dimensional Representation for Topologically Varying Neu-
 ral Radiance Fields. ACM Transactions on Graphics, 2021.
 3
-[41] Albert Pumarola, Enric Corona, Gerard Pons-Moll, and
+
+Albert Pumarola, Enric Corona, Gerard Pons-Moll, and
 Francesc Moreno-Noguer. D-NeRF: Neural Radiance Fields
 for Dynamic Scenes. CVPR, 2021. 3
-[42] Sara Fridovich-Keil and Alex Yu, Matthew Tancik, Qinhong
+
+Sara Fridovich-Keil and Alex Yu, Matthew Tancik, Qinhong
 Chen, Benjamin Recht, and Angjoo Kanazawa. Plenoxels:
 Radiance Fields without Neural Networks. CVPR, 2022. 3
-[43] Vishwanath Saragadam, Jasper Tan, Guha Balakrishnan,
+Vishwanath Saragadam, Jasper Tan, Guha Balakrishnan,
 Richard G Baraniuk, and Ashok Veeraraghavan. MINER:
 Multiscale Implicit Neural Representations. ECCV, 2022. 4
-[44] Johannes Lutz Schönberger and Jan-Michael Frahm.
+Johannes Lutz Schénberger and Jan-Michael Frahm.
 Structure-from-Motion Revisited. CVPR, 2016. 8
-[45] Johannes Lutz Schönberger, Enliang Zheng, Marc Pollefeys,
+
+Johannes Lutz Schénberger, Enliang Zheng, Marc Pollefeys,
 and Jan-Michael Frahm. Pixelwise view selection for un-
 structured multi-view stereo. ECCV, 2016. 8
-[46] Zhexiong Shang and Zhigang Shen. Multi-point Vibration
+
+Zhexiong Shang and Zhigang Shen. Multi-point Vibration
 Measurement and Mode Magnification of Civil Structures
 Using Video-based Motion Processing. Automation in Con-
 struction, 93, 2018. 1,8
-[47] Ruizhi Shao, Zerong Zheng, Hanzhang Tu, Boning Liu,
+
+Ruizhi Shao, Zerong Zheng, Hanzhang Tu, Boning Liu,
 Hongwen Zhang, and Yebin Liu. Tensor4D: Efficient Neural
 4D Decomposition for High-fidelity Dynamic Reconstruc-
 tion and Rendering. CVPR, 2023. 3
-[48] Mark Sheinin, Dorian Chan, Matthew O'Toole, and Srini-
+
+Mark Sheinin, Dorian Chan, Matthew O’Toole, and Srini-
 vasa G. Narasimhan. Dual-Shutter Optical Vibration Sens-
 ing. CVPR, 2022. 3
-[49] Shayan Shekarforoush, David B. Lindell, David J. Fleet, and
+
+Shayan Shekarforoush, David B. Lindell, David J. Fleet, and
 Marcus A. Brubaker. Residual Multiplicative Filter Net-
 works for Multiscale Reconstruction. arXiv, 2022. 4
-[50] Eero P. Simoncelli and William T. Freeman. The Steerable
+
+Eero P. Simoncelli and William T. Freeman. The Steerable
 Pyramid: A Flexible Architecture for Multi-scale Derivative
-Computation. ICIP, 1995. 3
-[51] Vincent Sitzmann, Julien Martel, Alexander Bergman,
+Computation. CIP, 1995. 3
+
+Vincent Sitzmann, Julien Martel, Alexander Bergman,
 David B. Lindell, and Gordon Wetzstein. Implicit Neu-
 ral Representations with Periodic Activation Functions.
 NeurIPS, 2020. 4
-[52] Liangchen Song, Anpei Chen, Zhong Li, Zhang Chen, Lele
+
+Liangchen Song, Anpei Chen, Zhong Li, Zhang Chen, Lele
 Chen, Junsong Yuan, Yi Xu, and Andreas Geiger. NeRF-
+
+10
+
+55
+
+56
+
+57
+
+58
+
+59
+
+60
+
+61
+
+62
+
+63
+
+64
+
+65
+
 Player: A Streamable Dynamic Scene Representation with
 Decomposed Neural Radiance Fields. arXiv, 2022. 3
-[53] Kushagra Tiwary, Akshat Dave, Nikhil Behari, Tzofi
+Kushagra Tiwary, Akshat Dave, Nikhil Behari, Tzofi
 Klinghoffer, Ashok Veeraraghavan, and Ramesh Raskar.
-ORCA: Glossy Objects as Radiance-Field Cameras. CVPR,
+ORCa: Glossy Objects as Radiance-Field Cameras. CVPR,
 2023. 4
-[54] Kushagra Tiwary, Tzofi Klinghoffer, and Ramesh Raskar.
+
+Kushagra Tiwary, Tzofi Klinghoffer, and Ramesh Raskar.
 Towards Learning Neural Representations from Shadows.
 ECCV, 2022. 4
-[55] Edgar Tretschk, Ayush Tewari, Vladislav Golyanik, Michael
-Zollhöfer, Christoph Lassner, and Christian Theobalt. Non-
-rigid Neural Radiance Fields: Reconstruction and Novel
+
+Edgar Tretschk, Ayush Tewari, Vladislav Golyanik, Michae!
+Zollhéfer, Christoph Lassner, and Christian Theobalt. Non-
+rigid Neural Radiance Fields: Reconstruction and Nove!
 View Synthesis of A Dynamic Scene from Monocular Video.
-ICCV, 2021. 3
-[56] Neal Wadhwa, Michael Rubinstein, Frédo Durand, and
+ICCYV, 2021. 3
+
+Neal Wadhwa, Michael Rubinstein, Frédo Durand, an
 William T. Freeman. Phase-Based Video Motion Processing.
 ACM Transactions on Graphics (Proceedings SIGGRAPH
-2013), 32(4), 2013. 1, 2, 3, 5, 7, 8
-[57] Neal Wadhwa, Michael Rubinstein, Frédo Durand, and
-William T. Freeman. Riesz Pyramids for Fast Phase-based
-Video Magnification. ICCP, 2014. 2, 3
-[58] Wenjin Wang, Sander Stuijk, and Gerard de Haan. Exploit-
+2013), 32(4), 2013. 1, 2, 3,5, 7,8
+
+Neal Wadhwa, Michael Rubinstein, Frédo Durand, an
+William T. Freeman. Riesz Pyramids for Fast Phase-base:
+Video Magnification. ICCP, 2014. 2,3
+
+Wenjin Wang, Sander Stuijk, and Gerard de Haan. Exploit-
 ing Spatial Redundancy of Image Sensor for Motion Robust
-rPPG. IEEE Transactions on Biomedical Engineering, 62,
+rPPG. JEEE Transactions on Biomedical Engineering, 62,
 2015. 1
-[59] Zhou Wang, Alan C. Bovik, Hamid R. Sheikh, and Eero P.
+
+Zhou Wang, Alan C. Bovik, Hamid R. Sheikh, and Eero P.
 Simoncelli. Image Quality Assessment: From Error Visi-
-bility to Structural Similarity. IEEE Transactions on Image
+bility to Structural Similarity. ZEEE Transactions on Image
 Processing, 13(4), 2004. 8
-[60] Chung-Yi Weng, Brian Curless, Pratul P. Srinivasan,
+
+Chung-Yi Weng, Brian Curless, Pratul P. Srinivasan,
 Jonathan T. Barron, and Ira Kemelmacher-Shlizerman. Hu-
 mannerf: Free-viewpoint Rendering of Moving People from
 Monocular Video. CVPR, 2022. 4
-[61] Hao-Yu Wu, Michael Rubinstein, Eugene Shih, John Gut-
+
+Hao-Yu Wu, Michael Rubinstein, Eugene Shih, John Gut-
 tag, Frédo Durand, and William T. Freeman. Eulerian Video
 Magnification for Revealing Subtle Changes in the World.
 ACM Transactions on Graphics (Proceedings SIGGRAPH
-2012), 31(4), 2012. 1, 2
-[62] Wenqi Xian, Jia-Bin Huang, Johannes Kopf, and Changil
+2012), 31(4), 2012. 1,2
+
+Wendi Xian, Jia-Bin Huang, Johannes Kopf, and Changil
 Kim. Space-time Neural Irradiance Fields for Free-
-Viewpoint Video. CVPR, 2021. 3,4
-[63] Kai Zhang, Gernot Riegler, Noah Snavely, and Vladlen
+Viewpoint Video. CVPR, 2021. 3, 4
+
+Kai Zhang, Gernot Riegler, Noah Snavely, and Vladlen
 Koltun. Nerf++: Analyzing and Improving Neural Radiance
 Fields. arXiv, 2020. 3
-[64] Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman,
+
+Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman,
 and Oliver Wang. The Unreasonable Effectiveness of Deep
 Features as a Perceptual Metric. CVPR, 2018. 8
-[65] Yichao Zhang, Silvia L. Pintea, and Jan C. van Gemert.
-Video Acceleration Magnification. CVPR, 2017. 2, 3
-[66] Fuqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang
+
+Yichao Zhang, Silvia L. Pintea, and Jan C. van Gemert.
+Video Acceleration Magnification. CVPR, 2017. 2,3
+Fuqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang
 Zhang, Jingyi Yu, and Lan Xu. HumanNeRF: Efficiently
 Generated Human Radiance Field From Sparse Inputs.
-CVPR, 2022. 4, 8
-10
+CVPR, 2022. 4,8
+
+

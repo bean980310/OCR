@@ -1,22 +1,34 @@
-arXiv:2305.06456v3 [cs.CV] 11 Sep 2023
+--- Page 1 ---
+2305 .06456v3 [cs.CV] 11 Sep 2023
+
+arXiv
+
 Perpetual Humanoid Control for Real-time Simulated Avatars
-Zhengyi Luo¹,2
-Kris Kitani¹,2
-Jinkun Cao² Alexander Winkler¹
-¹Reality Labs Research, Meta; 2Carnegie Mellon University
+
+Zhengyi Luo!” — Jinkun Cao?
+
+Alexander Winkler!
+
+Kris Kitani!? | Weipeng Xu!
+
+lReality Labs Research, Meta; ?Carnegie Mellon University
 https://zhengyiluo.github.io/PHC/
-Weipeng Xu¹
-A person waves
-the person walked
+
+A person waves the person walked
 forward and is
 picking up his
+
 toolbox.
+
 A person kicks with
 their left leg
+
 Figure 1: We propose a motion imitator that can naturally recover from falls and walk to far-away reference motion, perpetually controlling
 simulated avatars without requiring reset. Left: real-time avatars from video, where the blue humanoid recovers from a fall. Right: Imitating
 3 disjoint clips of motion generated from language, where our controller fills in the blank. The color gradient indicates the passage of time.
+
 Abstract
+
 We present a physics-based humanoid controller that
 achieves high-fidelity motion imitation and fault-tolerant
 behavior in the presence of noisy input (e.g. pose estimates
@@ -35,9 +47,12 @@ trophic forgetting. We demonstrate the effectiveness of our
 controller by using it to imitate noisy poses from video-
 based pose estimators and language-based motion gener-
 ators in a live and real-time multi-person avatar use case.
+
 1. Introduction
+
 Physics-based motion imitation has captured the imag-
 ination of vision and graphics communities due to its po-
+
 tential for creating realistic human motion, enabling plau-
 sible environmental interactions, and advancing virtual
 avatar technologies of the future. However, controlling
@@ -50,6 +65,7 @@ manoids to fall to the ground[50, 51, 22, 24]. These lim-
 itations prevent the widespread adoption of physics-based
 methods, as current control policies cannot handle noisy ob-
 servations such as video or language.
+
 In order to apply physically simulated humanoids for
 avatars, the first major challenge is learning a motion im-
 itator (controller) that can faithfully reproduce human-like
@@ -62,6 +78,8 @@ larger or a mixture of expert policies have been met with
 some success [45, 47], although they have not yet scaled to
 the largest dataset. Therefore, researchers have resorted to
 using external forces to help stabilize the humanoid. Resid-
+
+--- Page 2 ---
 ual force control (RFC) [52] has helped to create motion
 imitators that can mimic up to 97% of the AMASS dataset
 [22], and has seen successful applications in human pose es-
@@ -72,6 +90,7 @@ the humanoid, leading to artifacts such as flying and float-
 ing. One might argue that, with RFC, the realism of sim-
 ulation is compromised, as the model can freely apply a
 non-physical force on the humanoid.
+
 Another important aspect of controlling simulated hu-
 manoids is how to handle noisy input and failure cases. In
 this work, we consider human poses estimated from video
@@ -89,6 +108,7 @@ falling and resetting to unreliable poses. Thus, it is im-
 portant to have a controller that can gracefully handle un-
 expected falls and noisy input, naturally recover from fail-
 state, and resume imitation.
+
 In this work, our aim is to create a humanoid controller
 specifically designed to control real-time virtual avatars,
 where video observations of a human user are used to con-
@@ -99,7 +119,7 @@ urally. We propose a progressive multiplicative control pol-
 icy (PMCP) to learn from motion sequences in the entire
 AMASS dataset without suffering catastrophic forgetting.
 By treating harder and harder motion sequences as a dif-
-ferent "task" and gradually allocating new network capac-
+ferent “task” and gradually allocating new network capac-
 ity to learn, PMCP retains its ability to imitate easier mo-
 tion clips when learning harder ones. PMCP also allows the
 controller to learn fail-state recovery tasks without compro-
@@ -112,9 +132,11 @@ rotation as input, we show that we can design controllers
 that require only the link positions. This input can be gen-
 erated more easily by vision-based 3D keypoint estimators
 or 3D pose estimates from VR controllers.
+
 To summarize, our contributions are as follows: (1) we
 propose a Perpetual Humanoid Controller that can success-
 fully imitate 98.9% of the AMASS dataset without applying
+
 any external forces; (2) we propose the progressive multi-
 plicative control policy to learn from a large motion dataset
 without catastrophic forgetting and unlock additional capa-
@@ -125,7 +147,9 @@ capabilities of our controller by evaluating on both Motion
 Capture (MoCap) and estimated motion from videos. We
 also show a live (30 fps) demo of driving perpetually simu-
 lated avatars using a webcam video as input.
+
 2. Related Works
+
 Physics-based Motion Imitation. Governed by the laws
 of physics, simulated characters [32, 31, 33, 35, 34, 7,
 45, 52, 28, 13, 2, 11, 46, 12] have the distinct advantage
@@ -137,7 +161,7 @@ is time-consuming & costly. As a result, most of the work
 focuses on small-scale use cases such as interactive con-
 trol based on user input [45, 2, 35, 34], playing sports
 [48, 20, 28], or other modular tasks (reaching goals [49],
-dribbling [35], moving around [32], etc.). On the other
+dribbling [35], moving around [32], efc.). On the other
 hand, imitating large-scale motion datasets is a challeng-
 ing yet fundamental task, as an agent that can imitate ref-
 erence motion can be easily paired with a motion generator
@@ -149,10 +173,10 @@ MoCap data. Among them, ScaDiver [47] uses a mixture
 of expert policy to scale up to the CMU MoCap dataset and
 achieves a success rate of around 80% measured by time
 to failure. Unicon[45] shows qualitative results in imita-
-tion and transfer, but does not quantify the imitator's ability
+tion and transfer, but does not quantify the imitator’s ability
 to imitate clips from datasets. MoCapAct[44] first learns
 single-clip experts on the CMU MoCap dataset, and distills
-them into a single that achieves around 80% of the experts'
+them into a single that achieves around 80% of the experts’
 performance. The effort closest to ours is UHC [22], which
 successfully imitates 97% of the AMASS dataset. How-
 ever, UHC uses residual force control [51], which applies a
@@ -162,10 +186,13 @@ falling, RFC reduces physical realism and creates artifacts
 such as floating and swinging, especially when motion se-
 quences become challenging [22, 23]. Compared to UHC,
 our controller does not utilize any external force.
+
 Fail-state Recovery for Simulated Characters. As simu-
 lated characters can easily fall when losing balance, many
 approaches [39, 51, 34, 42, 7] have been proposed to help
 recovery. PhysCap [39] uses a floating-base humanoid that
+
+--- Page 3 ---
 does not require balancing. This compromises physical re-
 alism, as the humanoid is no longer properly simulated.
 Egopose [51] designs a fail-safe mechanism to reset the hu-
@@ -188,6 +215,7 @@ reference motion. In this work, we propose a comprehen-
 sive solution to the fail-state recovery problem in motion
 imitation: our PHC can rise from fallen state and naturally
 walks back to the reference motion and resume imitation.
+
 Progressive Reinforcement Learning. When learning
 from data containing diverse patterns, catastrophic forget-
 ting [9, 27] is observed when attempting to perform multi-
@@ -211,25 +239,28 @@ through lateral connections. PNN requires manually choos-
 ing which subnetwork to use based on the task, preventing it
 from being used in motion imitation since reference motion
 does not have the concept of task labels.
+
 3. Method
-We define the reference pose as ât = (Ôt, pt), consisting
-of 3D joint rotation Ô₁ = RJ×6 and position pt Є RJ×³ of
+
+We define the reference pose as q; 4 (6, Bt), consisting
+of 3D joint rotation 6, € R/*® and position p, € R’*? of
 all J links on the humanoid (we use the 6 DoF rotation rep-
-resentation [55]). From reference poses 1:T, one can com-
-pute the reference velocities 91.7 through finite difference,
-1:T
-Δ
-where ât ± (ŵt, vt) consist of angular ŵ₁ € R³×³ and lin-
-ear velocities ût Є RJ×³. We differentiate rotation-based
+resentation [55]). From reference poses q1,7, one can com-
+pute the reference velocities aur through finite difference,
+
+where q, © (:,6;) consist of angular &, € R7*® and lin-
+ear velocities 6, € R’*. We differentiate rotation-based
 and keypoint-based motion imitation by input: rotation-
-based imitation relies on reference poses 1:T (both rota-
+based imitation relies on reference poses @).7 (both rota-
 tion and keypoints), while keypoint-based imitation only re-
-quires 3D keypoints 1:T. As a notation convention, we use
-~ to represent kinematic quantities (without physics simu-
-lation) from pose estimator/keypoint detectors, to denote
+quires 3D keypoints p;.7. As a notation convention, we use
+
+* to represent kinematic quantities (without physics simu-
+
+lation) from pose estimator/keypoint detectors, ~ to denote
 ground truth quantities from Motion Capture (MoCap), and
 normal symbols without accents for values from the physics
-simulation. We use "imitate", "track”, and “mimic" refer-
+simulation. We use “imitate”, “track”, and “mimic” refer-
 ence motion interchangeably. In Sec.3.1, we first set up the
 preliminary of our main framework. Sec.3.2 describes our
 progressive multiplicative control policy to learn to imitate a
@@ -237,98 +268,92 @@ large dataset of human motion and recover from fail-states.
 Finally, in Sec.3.3, we briefly describe how we connect our
 task-agnostic controller to off-the-shelf video pose estima-
 tors and generators for real-time use cases.
+
 3.1. Goal Conditioned Motion Imitation with Ad-
 versarial Motion Prior
-=
-=
+
 Our controller follows the general framework of goal-
 conditioned RL (Fig.3), where a goal-conditioned policy
-TPHC is tasked to imitate reference motion ĝ1:t or keypoints
-Î₁:T. Similar to prior work [22, 31], we formulate the task
+Tpuc is tasked to imitate reference motion G1;z or keypoints
+pi-r. Similar to prior work [22, 31], we formulate the task
 as a Markov Decision Process (MDP) defined by the tuple
-M (S, A, T,R,y) of states, actions, transition dynam-
+M = (S,A,T,R,7) of states, actions, transition dynam-
 ics, reward function, and discount factor. The physics sim-
-ulation determines state s₁ = S and transition dynamics T
-while our policy TPHC computes per-step action at € A.
-Based on the simulation state st and reference motion ật,
-the reward function R computes a reward rt R(St, ât)
-as the learning signal for our policy. The policy's goal is to
-maximize the discounted reward E Σ -1 -1 rt, and we
-use the proximal policy gradient (PPO) [37] to learn TPHC·
-State. The simulation state st (8,8%) consists of hu-
-manoid proprioception so and the goal state so. Propriocep-
-tions (qt, ġt, 3) contains the 3D body pose qt, velocity
-qt, and (optionally) body shapes ẞ. When trained with dif-
-ferent body shapes, ß contains information about the length
+ulation determines state s, € S and transition dynamics T
+while our policy pyc computes per-step action a, € A.
+Based on the simulation state s,; and reference motion q;,
+the reward function R computes a reward ry = R(s:, Gu)
+as the learning signal for our policy. The policy’s goal is to
+
+maximize the discounted reward E yy yl , and we
+use the proximal policy gradient (PPO) [37] to learn 7pyc.
+
+State. The simulation state s, = (s?, s?) consists of hu-
+manoid proprioception s? and the goal state sf. Propriocep-
+tion s? = (q,, q:, 8) contains the 3D body pose q,, velocity
+qt, and (optionally) body shapes 3. When trained with dif-
+ferent body shapes, 3 contains information about the length
 of the limb of each body link [24]. For rotation-based mo-
-tion imitation, the goal state so is defined as the difference
+tion imitation, the goal state s? is defined as the difference
 between the next time step reference quantitives and their
 simulated counterpart:
-sg-rot± (Ôt+1¤¤¤‚ÂÎt+1¯Pt, Ût+1−Vt, ŵt -
-where
-‚ Pt+1)
-calculates the rotation difference. For keypoint-
+
+sf & (6141061, P41 —P;, Or41—Up, O1—wr, 0441, Bist)
+where © calculates the rotation difference. For keypoint-
 only imtiation, the goal state becomes
-¸²-kp ± (ît+1 − Pt, Ût+1
-St
-Vt, Pt+1).
-All of the above quantities in sε and so are normalized with
-respect to the humanoid's current facing direction and root
+
+ky ~ - .
+si PS (Bisa — Dy, B14 — Ve, Br41)-
+
+All of the above quantities in sf and s? are normalized with
+respect to the humanoid’s current facing direction and root
 position [49, 22].
-Reference
+
+--- Page 4 ---
 Motion
-Simulated
-Motion
-Full dataset
-Primitive: P(1)
-Moderate difficulty
-ART.
-Hard Mining
-Primitive: p(2)
-ART
-▶: Lateral connection or weight sharing Hard Mining: Hard negative mining by evaluation
-Fail recovery
-Hardest
-M
-Full dataset
-THE
-Hard Mining
-Primitive: p(K)
-Primitive: P(F)
-Composer: C
-TM
-Thaal
--Training Progress-
-Figure 2: Our progressive training procedure to train primitives P(1), P(2), ..., P(K) by gradually learning harder and harder sequences.
-Fail recovery P (F) is trained in the end on simple locomotion data; a composer is then trained to combine these frozen primitives.
-Policy: TPHC
+
+D> : Lateral connection or weight sharing (Hafd/Mining> : Hard negative mining by evaluation
+
+Full dataset Moderate difficulty Hardest Fail recovery Full dataset
+'
+Reference '
+Motion eceoe '
+i
+1
+fi
+Primitive: P ic Primitive: PO?) > > Primitive: P™ » Primitive: P rl Composer: C
+1
+'
+1
+
+ih “ANA
+
+Figure 2: Our progressive training procedure to train primitives P,P, -- -
+
+Training Progress:
+
+,P) by gradually learning harder and harder sequences.
+
+Fail recovery P” is trained in the end on simple locomotion data; a composer is then trained to combine these frozen primitives.
+
+Policy: PHC Physics Simulation (Isaac Gym)
 Pretrained Primitives
 Action
-Composer: C p()p(2) pik)
-p(F)
--a₁→
-Weights: w
-‚1:(K+1),
+Composer: C (mt) (re) mm (mm
+
 Gating
 Function
-Motion Data:
-State: St
-Discriminator D
-Reference
-State
-Physics Simulation (Isaac Gym)
-Discriminator
-Reward
-amp
-Inference
-Training
-Goal
-Reward
-Learning
-(PPO)
+
+Weights: o!**? —pe|
+
+‘ y Reference Coser oe rminator
+pal or Learning
+2 a (PPO)
+
 Figure 3: Goal-conditioned RL framework with Adversarial Mo-
-tion Prior. Each primitive P(k) and composer C is trained using
-the same procedure, and here we visualize the final product πPHC.
+tion Prior. Each primitive P™) and composer C is trained using
+the same procedure, and here we visualize the final product tpyc.
+
 Reward. Unlike prior motion tracking policies that only
 use a motion imitation reward, we use the recently proposed
 Adversarial Motion Prior [35] and include a discriminator
@@ -336,69 +361,63 @@ reward term throughout our framework. Including the dis-
 criminator term helps our controller produce stable and nat-
 ural motion and is especially crucial in learning natural fail-
 state recovery behaviors. Specifically, our reward is defined
-as the sum of a task reward r¾, a style reward r
-additional energy penalty r energy [31]:
-amp
-r = 0.5 +0.5t + rt
-.
-energy
-amp
-2
-and an
-(1)
+
+as the sum of a task reward r?, a style reward r;", and an
+additional energy penalty r;"""" [31]:
+r, = 0.577 + 0.5r77P + rp, qd)
+
 For the discriminator, we use the same observations, loss
 formulation, and gradient penalty as AMP [35]. The energy
-penalty is expressed as -0.0005 Σje joints | Mjwj|² where
-μ; and w; correspond to the joint torque and the joint angu-
+penalty is expressed as —0.0005 - >) ¢ joints |p 3095” where
+p43 and w; correspond to the joint torque and the joint angu-
 lar velocity, respectively. The energy penalty [10] regulates
 the policy and prevents high-frequency jitter of the foot that
 can manifest in a policy trained without external force (see
 Sec.4.1). The task reward is defined based on the current
 training objective, which can be chosen by switching the
-reward function for motion imitation Rimitation and fail-state
-recovery Recover. For motion tracking, we use:
-g-imitation
-р
-= Rimitation
--10||âtqt||
-+ Wire
-(8t, âu) Wjpe
-+ Wive
--100 || pt-pt ||
-(2)
--0.1||t-vt ||
--0.1||ŵt-wt||
-+ Wjwe
+reward function for motion imitation Ri™"°" and fail-state
+recovery R°"", For motion tracking, we use:
+
+Inference
+“Training
+
+g-imitation 7p imitation a) ~100||6+—pe|
+re =R (St, Ge) = wipe Q)
+
+—10||440 —0.1||d4—v. —0.1\|t—w,
+$ wge POH OT 4 gy eWPHIFE—PEll 4 aye Pte wel
+
 where we measure the difference between the translation, rotation,
 linear velocity, and angular velocity of the rigid body for all links
 in the humanoid. For fail-state recovery, we define the reward
-in Eq.3.
-rt
-g-recover
-=
+ree" in Bg.3.
+
 Action. We use a proportional derivative (PD) controller at each
-DoF of the humanoid and the action at specifies the PD target.
-With the target joint set as q = at, the torque applied at each joint
-is ₁ = k³ (at — qt) - kdo ġt. Notice that this is different from
+DoF of the humanoid and the action a; specifies the PD target.
+With the target joint set as qi = ai, the torque applied at each joint
+ist’ = k? (az — qr) — k* 0 qr. Notice that this is different from
 the residual action representation [52, 22, 30] used in prior motion
 imitation methods, where the action is added to the reference pose:
-qt=ât at to speed up training. As our PHC needs to remain
+qi = +a: to speed up training. As our PHC needs to remain
 robust to noisy and ill-posed reference motion, we remove such a
 dependency on reference motion in our action space. We do not
 use any external forces [52] or meta-PD control[54].
+
 Control Policy and Discriminator. Our control policy
-TPHC(@t]8t) N(μ(st), σ) represents a Gaussian distribu-
+mpuc(ai|s:) = N(ju(S:),o) represents a Gaussian distribu-
 tion with fixed diagonal covariance. The AMP discriminator
-D(S 10:t) computes a real and fake value based on the current
+‘D(s?_ 40.4) computes a real and fake value based on the current
 prioproception of the humanoid. All of our networks (discrimi-
 nator, primitive, value function, and discriminator) are two-layer
 multilayer perceptrons (MLP) with dimensions [1024, 512].
+
 Humanoid. Our humanoid controller can support any human
 kinematic structure, and we use the SMPL [21] kinematic struc-
 ture following prior arts [54, 22, 23]. The SMPL body contains 24
 rigid bodies, of which 23 are actuated, resulting in an action space
-of at Є R23×3. The body proportion can vary based on a body
-shape parameter ẞ = R10.
+of a; € R*3*3. The body proportion can vary based on a body
+shape parameter 6 € R'°.
+
 Initialization and Relaxed Early Termination. We use reference
 state initialization (RSI) [31] during training and randomly select a
 starting point for a motion clip for imitation. For early termination,
@@ -408,25 +427,30 @@ tion. Unlike UHC, we remove the ankle and toe joints from the
 termination condition. As observed by RFC [52], there exists a
 dynamics mismatch between simulated humanoids and real hu-
 mans, especially since the real human foot is multisegment [29].
+
+--- Page 5 ---
 Thus, it is not possible for the simulated humanoid to have the
 exact same foot movement as MoCap, and blindly following the
 reference foot movement may lead to the humanoid losing bal-
 ance. Thus, we propose Relaxed Early Termination (RET), which
-allows the humanoid's ankle and toes to slightly deviate from the
+allows the humanoid’s ankle and toes to slightly deviate from the
 MoCap motion to remain balanced. Notice that the humanoid still
 receives imitation and discriminator rewards for these body parts,
 which prevents these joints from moving in a nonhuman manner.
 We show that though this is a small detail, it is conducive to achiev-
 ing a good motion imitation success rate.
+
 Hard Negative Mining. When learning from a large motion
 dataset, it is essential to train on harder sequences in the later
 stages of training to gather more informative experiences. We use
 a similar hard negative mining procedure as in UHC [22] and de-
 fine hard sequences by whether or not our controller can success-
 fully imitate this sequence. From a motion dataset Q, we find
-hard sequences hard ≤ Q by evaluating our model over the en-
+hard sequences Qhara Cc Q by evaluating our model over the en-
 tire dataset and choosing sequences that our policy fails to imitate.
+
 3.2. Progressive Multiplicative Control Policy
+
 As training continues, we notice that the performance of the
 model plateaus as it forgets older sequences when learning new
 ones. Hard negative mining alleviates the problem to a certain
@@ -437,111 +461,86 @@ cretely categorized in the Appendix (App. C). Thus, we propose a
 progressive multiplicative control policy (PMCP), which allocates
 new subnetworks (primitives P) to learn harder sequences.
 Progressive Neural Networks (PNN). A PNN [36] starts with a
-single primitive network P (1) trained on the full dataset Q. Once
-P (1) is trained to convergence on the entire motion dataset Q us-
+single primitive network P) trained on the full dataset Q. Once
+P) is trained to convergence on the entire motion dataset Q us-
 ing the imitation task, we create a subset of hard motions by eval-
-uating P(¹) on Q. We define convergence as the success rate on
-Q() no longer increases. The sequences that P (1) fails on is
-formed as Q. We then freeze the parameters of P(1) and cre-
-ate a new primitive P(2) (randomly initialized) along with lateral
-connections that connect each layer of P(¹) to P (2). For more in-
+uating PY on Q. We define convergence as the success rate on
+Qh, no longer increases. The sequences that P fails on is
+
+formed as Q oO). We then freeze the parameters of P and cre-
+ate a new primitive RP? (randomly initialized) along with lateral
+connections that connect each layer of P® to B®). For more in-
 formation about PNN, please refer to our supplementary material.
-hard
-(1)
-hard
-hard
-During training, we construct each Q (K)d by selecting the failed
-sequences from the previous step Q resulting in a smaller
-(k)
-(k-1)
-hard "
-(k+1)
-and smaller hard subset: Qhard Chard ). In this way, we ensure
-that each newly initiated primitive P(k) is responsible for learn-
+During training, we construct each Qi, by selecting the failed
+sequences from the previous step Oe”, resulting in a smaller
+and smaller hard subset: Qi, Cc Qe”. In this way, we ensure
+that each newly initiated primitive P“) is responsible for learn-
 ing a new and harder subset of motion sequences, as can be seen
 in Fig.2. Notice that this is different from hard-negative mining
-in UHC [22], as we initialize a new primitive P to train.
+in UHC [22], as we initialize a new primitive PY to train.
 Since the original PNN is proposed to solve completely new tasks
 (such as different Atari games), a lateral connection mechanism
 is proposed to allow later tasks to choose between reuse, modify,
 or discard prior experiences. However, mimicking human motion
-is highly correlated, where fitting to harder sequences Q ( can
-(k)
+is highly correlated, where fitting to harder sequences Qh, can
 effectively draw experiences from previous motor control experi-
 ences. Thus, we also consider a variant of PNN where there are no
 lateral connections, but the new primitives are initialized from the
 weights of the prior layer. This weight sharing scheme is similar to
 fine-tuning on the harder motion sequences using a new primitive
-P(+1) and preserve P(k)'s ability to imitate learned sequences.
-hard
+P+) and preserve P)’s ability to imitate learned sequences.
+
 Algo 1: Learn Progressive Multiplicative Control Policy
-1 Function TrainPPO (π, Q (k), D, V, R):
-2
-3
-4
-5
-6
-7
-8
+
+1 Function TrainPPo (x, Q), D, V, R):
+
+2 while not converged do
+
+3 M + P initialize sampling memory ;
+4 while M not full do
+
+5 Gi:r < sample motion from Q ;
+6 fort < 1...T do
+
+7 st (8), si) ;
+
+8 at < 7(at|st) ;
+
 9
-10
-11
-while not converged do
-Minitialize sampling memory;
-while M not full do
-12
-P
-(k)
-13
-14
-1:T
-fort
-sample motion from Q;
-1...T do
-St←
-(8), s);
-at π(at St) ;
-St+1T(8+1 St, at) // simulation%;B
-rt R(st, ĝt+1) ;
-store (st, at, rt, st+1) into memory M ;
-VPPO update using experiences collected in M ;
-D← Discriminator update using experiences collected in M
-return;
-15 Input: Ground truth motion dataset Q;
-16 D, V, Q← Q
-(1)
-hard
-function, and
-17 for k 1... K do
+
+Si41 + T(St41/8t,@4) // simulation;
+
+10 re — R(st,9e41) 5
+
+iu store (8+, @¢, T+, $441) intomemory M ;
+
+2 P ) VY < PPO update using experiences collected in M ;
+13 D + Discriminator update using experiences collected in M
+
+4 return 7 ;
+
+1s Input: Ground truth motion dataset Q ;
+6 DV. QY —
+function, and dataset;
+7 fork — 1...K do
+
 // Initialize discriminator, value
-dataset ;
-Initialize P(k) Lateral connection/weight sharing%;B
-(k)
-← TrainPPO (P(k), Q (k+1), D, V, Rimitation);
-hard
-(k)
-);
-18
-19
-20
-(k+1)
-←eval(P(k),
-P(k)
-<freeze P(k)
-loco
-D, V, Recover)
-21
-22 P(F)
-TrainPPO (P
-// Fail-state Recovery%;B
-P(F)
-23 TPHC Á {P(¹)... p(K)
-‚c} ;
-24 TPHC – TrainPPO(TPHC, Q, D, V, {R
+
+18 Initialize P(*Y / Lateral connection/weight sharing;
+9 PO) — trainppo(P, QED, D, v, Rimiationy
+
+20 QED & eval P,Q );
+
+2 RP — freeze P\ ;
+
+2 PM) < trainppo(P™), Q”’, D, Vv, Re")
+// Fail-state Recovery;
+
+23 mac — {PY ..- PO) pl) ec} ;
+
+24 mpc < TrainPPO (pyc, Q, D, Vv, {Rimiation, FREMeT} )
 // Train Composer;
-imitation
-Rrecovery
-})
+
 Fail-state Recovery. In addition to learning harder sequences,
 we also learn new tasks, such as recovering from fail-state. We
 define three types of fail-state: 1) fallen on the ground; 2) far-
@@ -549,121 +548,102 @@ away from the reference motion (> 0.5m); 3) their combination:
 fallen and faraway. In these situations, the humanoid should get
 up from the ground, approach the reference motion in a natural
 way, and resume motion imitation. For this new task, we initialize
-a primitive P (F) at the end of the primitive stack. P(F) shares
-the same input and output space as P(1) ...P(k), but since the
+a primitive P“ at the end of the primitive stack. P‘ shares
+the same input and output space as Pi)... P), but since the
 reference motion does not provide useful information about fail-
 state recovery (the humanoid should not attempt to imitate the ref-
 erence motion when lying on the ground), we modify the state
 space during fail-state recovery to remove all information about
 the reference motion except the root. For the reference joint rota-
-tion ột = [ột, ỗ½, · · · ] where corresponds to the ¿th joint, we
-construct = [0, 0, 0] where all joint rotations except the
-root are replaced with simulated values (without). This amounts
+tion 6: = [6?, 6}, --- 6;/] where 6} corresponds to the i” joint, we
+construct 6; = (69, 6}, -- 62] where all joint rotations except the
+root are replaced with simulated values (without~). This amounts
 to setting the non-root joint goals to be identity when computing
-s
--
-the goal states: sg-Fail = (-0, pt-pt,ốt ớt, cất tốt, pi).
-88-Fail thus collapse from an imitation objective to a point-goal [49]
+the goal states: s°"™" * (6/06:, pi —pi, 6 —v1, @ —wr, Of, pi).
+site thus collapse from an imitation objective to a point-goal [49]
 objective where the only information provided is the relative posi-
+
 tion and orientation of the target root. When the reference root is
-5x (pt-pt)
-too far (> 5m), we normalize pt – pt as
-to clamp the
-||pt-pt || 2
+af
+too far (> 5m), we normalize p; — p: as ere) to clamp the
+A
 goal position. Once the humanoid is close enough (e.g. < 0.5m ),
+
 the goal will switch back to full-motion imitation:
-=
-g-Fail
--Fail
-|| P||2 ≤0.5
+
+e_ fst lb? — pill < 0.5
+t g-Fail
+8;
+
+@)
+
 otherwise.
-(3)
+
 To create fallen states, we follow ASE [34] and randomly drop
 the humanoid on the ground at the beginning of the episode. The
+
+--- Page 6 ---
 (a) MoCap Motion Imitation
+
 (b) Fail-state Recovery
-(b) Nosiy Motion Imitation (Video: H36M dataset, pose estimation from HybriK)
-(c) Nosiy Motion Imitation (Language: prompt "a person runs and turns')
+
+(c) Nosiy Motion Imitation (Language: prompt “a person runs and turns’)
+
 (d) Nosiy Motion Imitation (Video: real-time & live, pose estimation from MeTRAbs)
-Figure 4: (a) Imitating high-quality MoCap – spin and kick. (b) Recover from fallen state and go back to reference motion (indicated by
+
+Figure 4: (a) Imitating high-quality MoCap — spin and kick. (b) Recover from fallen state and go back to reference motion (indicated by
 red dots). (b) Imitating noisy motion estimated from video. (c) Imitating motion generated from language. (d) Using poses estimated from
+
 a webcam stream for a real-time simulated avatar.
+
 faraway state can be created by initializing the humanoid 2 ~ 5
 meters from the reference motion. The reward for fail-state recov-
-ery consists of the AMP reward r, point-goal reward
-7-8-point
-, and
-energy penality energy, calculated by the reward function Rrecover:
-amp
-t
-t
-As each P(k) is an independent Gaussian, the action distribution:
-Ci (St)
-k
-1
-N
-Σ
-C₁₂ (st)
-Ci (St)
-µ³¹² (St), σ³ (St) =
-σ(St)
-(st)
-(Σ of (81)
-(6)
-g-recover
-recover
-πt
-=
-R (St,Ô4t)
-=
-g-point
-0.5r-P
-+0.50.1r
-energy
-"
-=
+ery consists of the AMP reward r?””, point-goal reward rf?°"™, and
+
+energy penality r{""®”, calculated by the reward function R°°™"':
+
+pEROVer ROWS G,) — O.5rEPM 4 5-8 4 C1 PEM,
 (4)
-g-point
-The point-goal reward is formulated as r
-(dt-1 - dt)
-where dt is the distance between the root reference and simulated
-root at the time step t [49]. For training P (F), we use a hand-
-picked subset of the AMASS dataset named Q loco where it con-
+The point-goal reward is formulated as rf?" = (dk-1 — di)
+
+where d¢ is the distance between the root reference and simulated
+root at the time step ¢ [49]. For training P), we use a hand-
+icked subset of the AMASS dataset named Q'°° where it con-
 tains mainly walking and running sequences. Learning using only
-Qloco coaxes the discriminator D and the AMP reward r‍ª
-amp to bias
+Q'"° coaxes the discriminator D and the AMP reward r?”” to bias
 toward simple locomotion such as walking and running. We do not
 initialize a new value function and discriminator while training the
-primitives and continuously fine-tune the existing ones.
+rimitives and continuously fine-tune the existing ones.
+
 Multiplicative Control. Once each primitive has been learned,
-we obtain {P (1).P(K), P(F)}, with each primitive capable
+we obtain {P™ ... PU PU}, with each primitive capable
 of imitating a subset of the dataset Q. In Progressive Networks
-[36], task switching is performed manually. In motion imita-
+36], task switching is performed manually. In motion imita-
 tion, however, the boundary between hard and easy sequences is
-blurred. Thus, we utilize Multiplicative Control Policy (MCP)
-[33] and train an additional composer C to dynamically combine
+lurred. Thus, we utilize Multiplicative Control Policy (MCP)
+33] and train an additional composer C to dynamically combine
 the learned primitives. Essentially, we use the pretrained primi-
 tives as a informed search space for the composer C, and C only
 needs to select which primitives to activate for imitation. Specif-
-ically, our composer C (w1:K+1 st) consumes the same input as
-the primitives and outputs a weight vector wi
-ЄR+1 to ac-
+ically, our composer C(w}'**?|s,) consumes the same input as
+the primitives and outputs a weight vector w}'* +! € R**1 to ac-
 tivate the primitives. Combining our composer and primitives, we
-have the PHC's output distribution:
-1:K+1
+have the PHC’s output distribution:
+
 k
-1
-TPHC(@t | 8t)
-(i)
-=
-1) (a (1) | St) C (st), C(st) ≥ 0.
-(5)
-II
-C(St)
-2
-where μ(st) corresponds to the P()'s jth action dimension. Un-
+1 TL PH (al? | si)", es.) 20. 6)
+81);
+
+TpHc (ae | $4) = ror
+
+As each P“) is an independent Gaussian, the action distribution:
+
+1 * Ci(s * i(s:)\
+"olin 6 * so
+(6)
+where j1/(s1) corresponds to the P®’s j" action dimension. Un-
 like a Mixture of Expert policies that only activates one at a time
-(top-1 MOE), MCP combines the actors' distribution and activates
+(top-1 MOE), MCP combines the actors’ distribution and activates
 all actors at the same (similar to top-inf MOE). Unlike MCP, we
 progressively train our primitives and make the composer and ac-
 tor share the same input space. Since primitives are independently
@@ -671,143 +651,66 @@ trained for different harder sequences, we observe that the com-
 posite policy sees a significant boost in performance. During com-
 poser training, we interleave fail-state recovery training. The train-
 ing process is described in Alg.1 and Fig.2.
+
 3.3. Connecting with Motion Estimators
+
 Our PHC is task-agnostic as it only requires the next time-
-step reference pose Ĩt or the keypoint pt for motion tracking.
+step reference pose q: or the keypoint p: for motion tracking.
 Thus, we can use any off-the-shelf video-based human pose esti-
 mator or generator compatible with the SMPL kinematic structure.
 For driving simulated avatars from videos, we employ HybrIK
 [19] and MeTRAbs [41, 40], both of which estimate in the met-
 ric space with the important distinction that HybrIK outputs joint
-rotation + while MeTRAbs only outputs 3D keypoints pt. For
+rotation 6; while MeTRAbs only outputs 3D keypoints p,;. For
 language-based motion generation, we use the Motion Diffusion
 Model (MDM) [43]. MDM generates disjoint motion sequences
-based on prompts, and we use our controller's recovery ability to
+based on prompts, and we use our controller’s recovery ability to
 achieve in-betweening.
+
 4. Experiments
-We evaluate and ablate our humanoid controller's ability to im-
+
+We evaluate and ablate our humanoid controller’s ability to im-
 itate high-quality MoCap sequences and noisy motion sequences
 estimated from videos in Sec.4.1. In Sec.4.2, we test our con-
-troller's ability to recovery from fail-state. As motion is best in
+troller’s ability to recovery from fail-state. As motion is best in
+
+--- Page 7 ---
 Table 1: Quantitative results on imitating MoCap motion sequences (* indicates removing sequences containing human-object interaction).
 AMASS-Train*, AMASS-Test*, and H36M-Motion* contains 11313, 140, and 140 high-quality MoCap sequences, respectively.
+
 AMASS-Train*
-AMASS-Test*
-H36M-Motion*
-Method RFC
-Succ↑
-Eg-mpjpe↓ Empipe↓ Eacc↓ Evel↓
-Succ ↑ Eg-mpipe↓ Empjpe↓
-EaccEvel↓
-Succ↑ Eg-mpipe Empipe↓
-Eacc↓ Evel↓
-UHC
-✓
-97.0 %
-36.4
-25.1
-4.4
-5.9
-96.4 %
-50.0
-31.2
-9.7 12.1 87.0%
-59.7
-35.4
-4.9
-7.4
-UHC
-Χ
-84.5 %
-62.7
-39.6
-10.9
-10.9
-62.6%
-58.2
-98.1
-Ours
-Ours-kp
-98.9 %
-37.5
-26.9
-3.3
-X
-98.7%
-40.7
-32.3
-3.5
-4.9 96.4%
-5.5 97.1%
-47.4
-30.9
-6.8
-53.1
-39.5
-7.5
-22.8 21.9
-9.1
-10.4
-23.6%
-92.9%
-95.7%
-133.14
-67.4
-14.9
-17.2
-50.3
-33.3
-3.7
-5.5
-49.5
-39.2
-3.7
-5.8
+
+AMASS-Test* H36M-Motion*
+
+Method RFC | Succ+ Egsmpipe | Empine | Ease + Eva | Sucet Egmpipe | Empine + Ese + Eyer | Succ} Eympine + Enpipe | Eace | Evat 4
+UHC v | 97.0 % 36.4 25.1 44 5.9 | 96.4 % 50.0 31.2 97 12.1 | 87.0% 59.7 35.4 4.9 TA
+UHC XK | 84.5% 62.7 39.6 10.9 10.9 | 62.6% 58.2 98.1 22.8 21.9 | 23.6% 133.14 67.4 14.9 17.2
+Ours K | 98.9 % 37.5 26.9 3.3 49 | 96.4% 47.4 30.9 68 9.1 | 92.9% 50.3 33.3 3.7 5.5
+Ours-kp xK 98.7% 40.7 32.3 3.5 5.5 | 97.1% 53.1 39.5 75 10.4 | 95.7% 49.5 39.2 3.7 5.8
+
 Table 2: Motion imitation on noisy motion. We use HybrIK[19]
-to estimate the joint rotations ết and uses MeTRAbs [41] for
-global 3D keypoints pt. HybrIK + MeTRAbs (root): using joint
-rotations + from HybrIK and root position po from MeTRAbs.
-MeTRAbs (all keypoints): using all keypoints pt from MeTRAbs,
+to estimate the joint rotations 6: and uses MeTRAbs [41] for
+global 3D keypoints p;. HybrIK + MeTRAbs (root): using joint
+rotations 6; from HybrIK and root position p? from MeTRAbs.
+MeTRAbs (all keypoints): using all keypoints p; from MeTRAbs,
 only applicabile to our keypoint-based controller.
+
 H36M-Test-Video*
-Method RFC
-UHC
-✓
-Pose Estimate
-HybrIK + MeTRAbs (root)
-Succ↑ Eg-mpjpe↓
-Empipe↓
-58.1%
-75.5
-49.3
-UHC
-Ours
-Ours-kp
-Ours-kp
-X
-HybrIK + MeTRAbs (root)
-18.1%
-126.1
-67.1
-×
-HybrIK + MeTRAbs (root)
-88.7%
-55.4
-34.7
-X
-HybrIK + MeTRAbs (root)
-MeTRAbs (all keypoints)
-90.0%
-55.8
-41.0
-91.9%
-55.7
-41.1
+
+Method RFC Pose Estimate | Succ} Ex.mpipe | Empipe 4
+UHC Y— HybriK +MeTRAbs (root) | 58.1% 75.5 49.3
+UHC X — HybrIK + MeTRAbs (root) | 18.1% 126.1 67.1
+Ours X — HybrIK + MeTRAbs (root) | 88.7% 55.4 34.7
+Ours-kp —- X_—_-HybrIK + MeTRAbs (root) | 90.0% 55.8 41.0
+Ours-kp —-X_~—- MeTRAbs (alll keypoints) | 91.9% 55.7 41d
+
 videos, we provide extensive qualitative results in the supplemen-
 tary materials. All experiments are run three times and averaged.
+
 Baselines. We compare with the SOTA motion imitator UHC [22]
 and use the official implementation. We compare against UHC
 both with and without residual force control.
+
 Implementation Details. We uses four primitives (including fail-
 state recovery) for all our evaluations. PHC can be trained on a
 single NVIDIA A100 GPU; it takes around a week to train all
@@ -816,34 +719,39 @@ runs at > 30 FPS. Physics simulation is carried out in NVIDIA's
 Isaac Gym [26]. The control policy is run at 30 Hz, while simula-
 tion runs at 60 Hz. For evaluation, we do not consider body shape
 variation and use the mean SMPL body shape.
+
 Datasets. PHC is trained on the training split of the AMASS
 [25] dataset. We follow UHC [22] and remove sequences that
 are noisy or involve interactions of human objects, resulting in
 11313 high-quality training sequences and 140 test sequences. To
-evaluate our policy's ability to handle unseen MoCap sequences
+evaluate our policy’s ability to handle unseen MoCap sequences
 and noisy pose estimate from pose estimation methods, we use the
 popular H36M dataset [15]. From H36M, we derive two subsets
 H36M-Motion* and H36M-Test-Video*. H36M-Motion* contains
 140 high-quality MoCap sequences from the entire H36M dataset.
-H36M-Test-Video* contains 160 sequences of noisy poses esti-
+H36M-Test-Video* contains 160 sequences of noisy poses esi
 mated from videos in the H36M test split (since SOTA pose esti-
-mation methods are trained on H36M's training split). * indicates
+mation methods are trained on H36M’s training split). * indicates
 the removal of sequences containing human-chair interaction.
+
 Metrics. We use a series of pose-based and physics-based metrics
 to evaluate our motion imitation performance. We report the suc-
 cess rate (Succ) as in UHC [22], deeming imitation unsuccessful
 when, at any point during imitation, the body joints are on average
+
 > 0.5m from the reference motion. Succ measures whether the
 humanoid can track the reference motion without losing balance
 or significantly lags behind. We also report the root-relative mean
-per-joint position error (MPJPE) Empipe and the global MPJPE
-Eg-mpjpe (in mm), measuring our imitator's ability to imitate the
+per-joint position error (MPJPE) E’mpjpe and the global MPJPE
+E’g-mpipe (in mm), measuring our imitator’s ability to imitate the
 reference motion both locally (root-relative) and globally. To show
-physical realism, we also compare acceleration Eace (mm/frame²)
-and velocity Evel (mm/frame) difference between simulated and
+physical realism, we also compare acceleration Ecc (mm/frame?)
+and velocity Ey: (mm/frame) difference between simulated and
 MoCap motion. All the baseline and our methods are physically
 simulated, so we do not report any foot sliding or penetration.
+
 4.1. Motion Imitation
+
 Motion Imitation on High-quality MoCap. Tablel reports our
 motion imitation result on the AMASS train, test, and H36M-
 Motion* dataset. Comparing with the baseline with RFC, our
@@ -864,6 +772,7 @@ and motion prior. Surprisingly, our keypoint-based controller is on
 par and sometimes outperforms the rotation-based one. This vali-
 dates that the keypoint-based motion imitator can be a simple and
 strong alternative to the rotation-based ones.
+
 Motion Imitation on Noisy Input from Video. We use off-the-
 shelf pose estimators HybrIK [19] and MeTRAbs [41] to extract
 joint rotation (HybrIK) and keypoints (MeTRAbs) using images
@@ -873,84 +782,51 @@ and MeTRAbs are per-frame models that do not use any temporal
 information. Due to depth ambiguity, monocular global pose es-
 timation is highly noisy [41] and suffers from severe depth-wise
 jitter, posing significant challenge to motion imitators. We find
-that MeTRAbs outputs better global root estimation Ã, so we use
-its p combined with HybrIK's estimated joint rotation ỗt (Hy-
+that MeTRAbs outputs better global root estimation p?, so we use
+its p? combined with HybrIK’s estimated joint rotation a (Hy-
 brIK + Metrabs (root)). In Table2, we report our controller and
-baseline's performance on imitating these noisy sequences. Simi-
+baseline’s performance on imitating these noisy sequences. Simi-
 lar to results on MoCap Imitation, PHC outperforms the baselines
+
+
+--- Page 8 ---
 Table 3: Ablation on components of our pipeline, performed
 using noisy pose estimate from HybrIK + Metrabs (root) on the
 H36M-Test-Video* data. RET: relaxed early termination. MCP:
 multiplicative control policy. PNN: progressive neural networks.
+
 Table 4: We measure whether our controller can recover from the
 fail-states by generating these scenarios (dropping the humanoid
 on the ground & far from the reference motion) and measuring the
 time it takes to resume tracking.
-H36M-Test-Video*
-RET MCP PNN Rotation Fail-Recover Succ↑
-Eg-mpipe↓
-Empjpe↓
-Method
-Ours
-Fallen-State
-Succ-5s ↑
-95.0%
-Far-State
-51.2%
-56.2
-34.4
-✓
-X
-X
-59.4%
-60.2
-37.2
-Ours-kp 92.5%
-98.8%
-94.6%
-Succ-5s ↑
-Succ-10s ↑
-83.7%
-95.1%
-Succ-10s ↑
-99.5%
-96.0%
-Fallen Far-State
-Succ-5s ↑ Succ-10s ↑
-93.4%
-98.8%
-79.4%
-93.2%
-66.2%
-59.0
-38.3
-✓
-✓
-✓
-✓
-86.9%
-53.1
-33.7
-✓
-88.7%
-55.4
-34.7
-✓ 90.0%
-55.8
-41.0
-by a large margin and achieves a high success rate (~90%). This
+
+H36M-Test-Video* | Fallen-State | Far-State | Fallen + Far-State
+
+RET MCP PNN Rotation Fail-Recover | Succ} Eg-mpipe | Empipe 4 Method | Succ-Ss} Suce-10s t | Succ-5st Suce-10s } | Suce-5s + Suce-10s +
+x x x Y x | 512% 56.2 34.4 Ours 95.0% 98.8% 83.7% 99.5% 93.4% 98.8%
+v x x v x | 59.4% 602 37.2 Ours-kp | 92.5% 94.6% 95.1% 96.0% 79.4% 93.2%
+v v x v XK | 66.2% 59.0 38.3
+
+v v v v XK | 86.9% 53.1 33.7
+
+v v v v v | 88.7% 55.4 34.7
+
+v v v x Y | 90.0% 55.8 41.0 narios: 1) fallen on the ground, 2) far away from reference mo-
+
+by a large margin and achieves a high success rate (~ 90%). This
 validates our hypothesis that PHC is robust to noisy motion and
 can be used to drive simulated avatars directly from videos. Simi-
 larly, we see that keypoint-based controller (ours-kp) outperforms
 rotation-based, which can be explained by 1) estimating 3D key-
 point directly from images is an easier task than estimating joint
-rotations, so keypoints from MeTRABS are of higher quality than
+rotations, so keypoints from MeTRABs are of higher quality than
 joint rotations from HybrIK; 2) our keypoint-based controller is
 more robust to noisy input as it has the freedom to use any joint
 configuration to try to match the keypoints.
+
 Ablations. Table3 shows our controller trained with various com-
 ponents disabled. We perform ablation on the noisy input from
-H36M-Test-Image* to better showcase the controller's ability to
+H36M-Test-Image* to better showcase the controller’s ability to
 imitate noisy data. First, we study the performance of our con-
 troller before training to recover from fail-state. Comparing row 1
 (R1) and R2, we can see that relaxed early termination (RET) al-
@@ -959,28 +835,31 @@ R3 shows that using MCP directly without our progressive training
 process boosts the network performance due to its enlarged net-
 work capacity. However, using the PMCP pipeline significantly
 boosts robustness and imitation performance (R3 vs. R4). Com-
-paring R4 and R5 shows that PMCP is effective in adding fail-state
+paring R4 and RS5 shows that PMCP is effective in adding fail-state
 recovery capability without compromising motion imitation. Fi-
-nally, R5 vs. R6 shows that our keypoint-based imitator can be
+nally, RS vs. R6 shows that our keypoint-based imitator can be
 on-par with rotation-based ones, offering a simpler formulation
 where only keypoints is needed. For additional ablation on MOE
 vs. MCP, number of primitives, please refer to the supplement.
-Real-time Simulated Avatars. We demonstrate our controller's
+
+Real-time Simulated Avatars. We demonstrate our controller’s
 ability to imitate pose estimates streamed in real-time from videos.
 Fig.4 shows a qualitative result on a live demonstration of using
 poses estimated from an office environment. To achieve this, we
 use our keypoint-based controller and MeTRAbs-estimated key-
 points in a streaming fashion. The actor performs a series of mo-
 tions, such as posing and jumping, and our controller can remain
-stable. Fig.4 also shows our controller's ability to imitate reference
+stable. Fig.4 also shows our controller’s ability to imitate reference
 motion generated directly from a motion language model MDM
 [43]. We provide extensive qualitative results in our supplemen-
 tary materials for our real-time use cases.
+
 4.2. Fail-state Recovery
-To evaluate our controller's ability to recover from fail-state,
+
+To evaluate our controller’s ability to recover from fail-state,
 we measure whether our controller can successfully reach the ref-
 erence motion within a certain time frame. We consider three sce-
-narios: 1) fallen on the ground, 2) far away from reference mo-
+
 tion, and 3) fallen and far from reference. We use a single clip of
 standing-still reference motion during this evaluation. We generate
 fallen-states by dropping the humanoid on the ground and apply-
@@ -988,11 +867,13 @@ ing random joint torques for 150 time steps. We create the far-state
 by initializing the humanoid 3 meters from the reference motion.
 Experiments are run randomly 1000 trials. From Tab.4 we can
 see that both of our keypoint-based and rotation-based controllers
-can recover from fall state with high success rate (>90%) even
+can recover from fall state with high success rate (> 90%) even
 in the challenging scenario when the humanoid is both fallen and
 far away from the reference motion. For a more visual analysis of
 fail-state recovery, see our supplementary videos.
+
 5. Discussions
+
 Limitations. While our purposed PHC can imitate human mo-
 tion from MoCap and noisy input faithfully, it does not achieve a
 100% success rate on the training set. Upon inspection, we find
@@ -1002,14 +883,14 @@ troller to overfit on these sequences (see the supplement), our full
 controller often fails to learn these sequences. We hypothesize that
 learning such highly dynamic clips (together with simpler motion)
 requires more planning and intent (e.g. running up to a high jump),
-which is not conveyed in the single-frame pose target t+1 for our
+which is not conveyed in the single-frame pose target G:+1 for our
 controller. The training time is also long due to our progressive
 training procedure. Furthermore, to achieve better downstream
-tasks, the current disjoint process (where the video estimator
-pose
-is unaware of the physics simulation) may be insufficient; tighter
+tasks, the current disjoint process (where the video pose estimator
+is unaware of the phys imulation) may be insufficient; tighter
 integration with pose estimation [54, 23] and language-based mo-
 tion generation [53] is needed.
+
 Conclusion and Future Work. We introduce Perpetual Hu-
 manoid Controller, a general purpose physics-based motion imi-
 tator that achieves high quality motion imitation while being able
@@ -1020,277 +901,424 @@ include 1) improving imitation capability and learning to imitate
 100% of the motion sequences of the training set; 2) incorporating
 terrain and scene awareness to enable human-object interaction; 3)
 tighter integration with downstream tasks such as pose estimation
-and motion generation, etc.
+and motion generation, efc.
+
 Acknowledgements. We thank Zihui Lin for her help in making
 the plots in this paper. Zhengyi Luo is supported by the Meta AI
 Mentorship (AIM) program.
+
+--- Page 9 ---
 References
-[1] Yoshua Bengio, Jérôme Louradour, Ronan Collobert, and Ja-
+
+1
+
+10
+
+11
+
+12
+
+13
+
+Yoshua Bengio, Jér6me Louradour, Ronan Collobert, and Ja-
 son Weston. Curriculum learning. In Proceedings of the
 26th Annual International Conference on Machine Learning,
-ICML '09, pages 41-48, New York, NY, USA, June 2009.
+ICML ’09, pages 41-48, New York, NY, USA, June 2009.
 Association for Computing Machinery.
-[2] Kevin Bergamin, Simon Clavet, Daniel Holden, and James
+
+Kevin Bergamin, Simon Clavet, Daniel Holden, and James
 Richard Forbes. DReCon: Data-driven responsive control
 of physics-based characters. ACM Trans. Graph., 38(6):11,
 2019.
-[3] Glen Berseth, Cheng Xie, Paul Cernek, and Michiel Van de
+
+Glen Berseth, Cheng Xie, Paul Cernek, and Michiel Van de
 Panne. Progressive reinforcement learning with distillation
 for multi-skilled motion control. Feb. 2018.
-[4] Jinkun Cao, Hongyang Tang, Hao-Shu Fang, Xiaoyong
+
+Jinkun Cao, Hongyang Tang, Hao-Shu Fang, Xiaoyong
 Shen, Cewu Lu, and Yu-Wing Tai. Cross-domain adaptation
 for animal pose estimation. Aug. 2019.
-[5] Jinkun Cao, Xinshuo Weng, Rawal Khirodkar, Jiangmiao
+
+Jinkun Cao, Xinshuo Weng, Rawal Khirodkar, Jiangmiao
 Pang, and Kris Kitani. Observation-centric SORT: Rethink-
 ing SORT for robust multi-object tracking. Mar. 2022.
-[6] Chaoqi Chen, Weiping Xie, Wenbing Huang, Yu Rong,
+Chaoqi Chen, Weiping Xie, Wenbing Huang, Yu Rong,
 Xinghao Ding, Yue Huang, Tingyang Xu, and Junzhou
 Huang. Progressive feature alignment for unsupervised do-
 main adaptation. Nov. 2018.
-[7] Nuttapong Chentanez, Matthias Müller, Miles Macklin, Vik-
+
+Nuttapong Chentanez, Matthias Miiller, Miles Macklin, Vik-
 tor Makoviychuk, and Stefan Jeschke. Physics-based motion
 capture imitation with deep reinforcement learning. Pro-
 ceedings - MIG 2018: ACM SIGGRAPH Conference on Mo-
 tion, Interaction, and Games, 2018.
-[8] Matthias De Lange, Rahaf Aljundi, Marc Masana, Sarah
+
+Matthias De Lange, Rahaf Aljundi, Marc Masana, Sarah
 Parisot, Xu Jia, Ales Leonardis, Gregory Slabaugh, and
 Tinne Tuytelaars. A continual learning survey: Defying for-
 getting in classification tasks. IEEE Trans. Pattern Anal.
-Mach. Intell., 44(7):3366–3385, July 2022.
-[9] Robert M French and Nick Chater. Using noise to com-
+Mach. Intell., 44(7):3366-3385, July 2022.
+
+Robert M French and Nick Chater. Using noise to com-
 pute error surfaces in connectionist networks: a novel
 means of reducing catastrophic forgetting. Neural Comput.,
 14(7):1755-1769, July 2002.
-[10] Zipeng Fu, Xuxin Cheng, and Deepak Pathak. Deep whole-
+
+Zipeng Fu, Xuxin Cheng, and Deepak Pathak. Deep whole-
 body control: Learning a unified policy for manipulation and
 locomotion. Oct. 2022.
-[11] Levi Fussell, Kevin Bergamin, and Daniel Holden. Super-
+
+Levi Fussell, Kevin Bergamin, and Daniel Holden. Super-
 Track: motion tracking for physically simulated characters
-using supervised learning. ACM Trans. Graph., 40(6):1–13,
+using supervised learning. ACM Trans. Graph., 40(6):1-13,
 Dec. 2021.
-[12] Kehong Gong, Bingbing Li, Jianfeng Zhang, Tao Wang, Jing
+Kehong Gong, Bingbing Li, Jianfeng Zhang, Tao Wang, Jing
 Huang, Michael Bi Mi, Jiashi Feng, and Xinchao Wang.
 PoseTriplet: Co-evolving 3D human pose estimation, imi-
 tation, and hallucination under self-supervision. CVPR, Mar.
 2022.
-[13] Leonard Hasenclever, Fabio Pardo, Raia Hadsell,
+
+Leonard Hasenclever, Fabio
+
+Pardo, Raia Hadsell,
 Nicolas Heess, and Josh Merel. CoMic: Comple-
 mentary task learning & mimicry for reusable skills.
-http://proceedings.mlr.press/v119/
+http: //proceedings.mlr.press/v119/
 hasenclever20a/hasenclever20a.pdf.
 cessed: 2023-2-13.
+
 Ac-
-[14] Buzhen Huang, Liang Pan, Yuan Yang, Jingyi Ju, and Yan-
+
+14
+
+15
+
+16
+
+17
+18
+
+[20]
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+Buzhen Huang, Liang Pan, Yuan Yang, Jingyi Ju, and Yan-
 gang Wang. Neural MoCon: Neural motion control for phys-
 ically plausible human motion capture. Mar. 2022.
-[15] Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian
+
+Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian
 Sminchisescu. Human3.6M: Large scale datasets and predic-
 tive methods for 3D human sensing in natural environments.
 IEEE Trans. Pattern Anal. Mach. Intell., 36(7):1325-1339,
 2014.
-[16] Zhiwei Jia, Xuanlin Li, Zhan Ling, Shuang Liu, Yiran Wu,
+
+Zhiwei Jia, Xuanlin Li, Zhan Ling, Shuang Liu, Yiran Wu,
 and Hao Su. Improving policy optimization with generalist-
 specialist learning. June 2022.
-[17] Jocher, Glenn and Chaurasia, Ayush and Qiu, Jing. Yolov8.
-[18] James Kirkpatrick, Razvan Pascanu, Neil Rabinowitz, Joel
+
+Jocher, Glenn and Chaurasia, Ayush and Qiu, Jing. Yolov8.
+James Kirkpatrick, Razvan Pascanu, Neil Rabinowitz, Joel
 Veness, Guillaume Desjardins, Andrei A Rusu, Kieran
 Milan, John Quan, Tiago Ramalho, Agnieszka Grabska-
 Barwinska, Demis Hassabis, Claudia Clopath, Dharshan Ku-
 maran, and Raia Hadsell. Overcoming catastrophic forget-
 ting in neural networks. Proc. Natl. Acad. Sci. U. S. A.,
 114(13):3521-3526, 2017.
-[19] Jiefeng Li, Chao Xu, Zhicun Chen, Siyuan Bian, Lixin Yang,
+Jiefeng Li, Chao Xu, Zhicun Chen, Siyuan Bian, Lixin Yang,
 and Cewu Lu. HybrIK: A hybrid analytical-neural inverse
 kinematics solution for 3D human pose and shape estima-
 tion. Nov. 2020.
-[20] Siqi Liu, Guy Lever, Zhe Wang, Josh Merel, S M Ali Es-
+Sigi Liu, Guy Lever, Zhe Wang, Josh Merel, S M Ali Es-
 lami, Daniel Hennes, Wojciech M Czarnecki, Yuval Tassa,
 Shayegan Omidshafiei, Abbas Abdolmaleki, Noah Y Siegel,
 Leonard Hasenclever, Luke Marris, Saran Tunyasuvunakool,
 H Francis Song, Markus Wulfmeier, Paul Muller, Tuomas
 Haarnoja, Brendan D Tracey, Karl Tuyls, Thore Graepel, and
 Nicolas Heess. From motor control to team play in simulated
-humanoid football. May 2021.
-[21] Matthew Loper, Naureen Mahmood, Javier Romero, Gerard
+umanoid football. May 2021.
+
+Matthew Loper, Naureen Mahmood, Javier Romero, Gerard
 Pons-Moll, and Michael J Black. SMPL: A skinned multi-
 person linear model. ACM Trans. Graph., 34(6), 2015.
-[22] Zhengyi Luo, Ryo Hachiuma, Ye Yuan, and Kris Kitani.
+Zhengyi Luo, Ryo Hachiuma, Ye Yuan, and Kris Kitani.
 Dynamics-regulated kinematic policy for egocentric pose es-
 timation. NeurIPS, 34:25019-25032, 2021.
-[23] Zhengyi Luo, Shun Iwase, Ye Yuan, and Kris Kitani. Em-
+
+Zhengyi Luo, Shun Iwase, Ye Yuan, and Kris Kitani. Em-
 bodied scene-aware human pose estimation. NeurIPS, June
 2022.
-[24] Zhengyi Luo, Ye Yuan, and Kris M Kitani. From univer-
+Zhengyi Luo, Ye Yuan, and Kris M Kitani.
 sal humanoid control to automatic physically valid character
 creation. June 2022.
-[25] Naureen Mahmood, Nima Ghorbani, Nikolaus F Troje, Ger-
+
+Naureen Mahmood, Nima Ghorbani, Nikolaus F Troje, Ger-
 ard Pons-Moll, and Michael J Black. AMASS: Archive
 of motion capture as surface shapes. Proceedings of the
 IEEE International Conference on Computer Vision, 2019-
 Octob:5441-5450, 2019.
-[26] Viktor Makoviychuk, Lukasz Wawrzyniak, Yunrong Guo,
+
+Viktor Makoviychuk, Lukasz Wawrzyniak, Yunrong Guo,
 Michelle Lu, Kier Storey, Miles Macklin, David Hoeller,
 Nikita Rudin, Arthur Allshire, Ankur Handa, and Gavriel
 State. Isaac gym: High performance GPU-based physics
 simulation for robot learning. Aug. 2021.
-[27] Michael McCloskey and Neal J Cohen. Catastrophic inter-
+
+Michael McCloskey and Neal J Cohen. Catastrophic inter-
 ference in connectionist networks: The sequential learning
 problem. In Gordon H Bower, editor, Psychology of Learn-
-ing and Motivation, volume 24, pages 109–165. Academic
+ing and Motivation, volume 24, pages 109-165. Academic
 Press, Jan. 1989.
-[28] Josh Merel, Saran Tunyasuvunakool, Arun Ahuja, Yuval
+
+From univer-
+
+--- Page 10 ---
+[28]
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+41
+
+42
+
+Josh Merel, Saran Tunyasuvunakool, Arun Ahuja, Yuval
 Tassa, Leonard Hasenclever, Vu Pham, Tom Erez, Greg
 Wayne, and Nicolas Heess. Catch and carry: Reusable neural
 controllers for vision-guided whole-body tasks. ACM Trans.
 Graph., 39(4), 2020.
-[29] Hwangpil Park, Ri Yu, and Jehee Lee. Multi-segment foot
+
+Hwangpil Park, Ri Yu, and Jehee Lee. Multi-segment foot
 modeling for human animation. In Proceedings of the 11th
 Annual International Conference on Motion, Interaction,
-and Games, number Article 16 in MIG '18, pages 1-10, New
+and Games, number Article 16 in MIG ’18, pages 1-10, New
 York, NY, USA, Nov. 2018. Association for Computing Ma-
 chinery.
-[30] Soohwan Park, Hoseok Ryu, Seyoung Lee, Sunmin Lee, and
+
+Soohwan Park, Hoseok Ryu, Seyoung Lee, Sunmin Lee, and
 Jehee Lee. Learning predict-and-simulate policies from un-
-organized human motion data. ACM Trans. Graph., 38(6):1–
+organized human motion data. ACM Trans. Graph., 38(6):1—
 11, Nov. 2019.
-[31] Xue Bin Peng, Pieter Abbeel, Sergey Levine, and Michiel
-van de Panne. DeepMimic. ACM Trans. Graph., 37(4):1–
+
+Xue Bin Peng, Pieter Abbeel, Sergey Levine, and Michiel
+van de Panne. DeepMimic. ACM Trans. Graph., 37(4):1-—
 14, 2018.
-[32] Xue Bin Peng, Glen Berseth, Kangkang Yin, and Michiel
+
+Xue Bin Peng, Glen Berseth, Kangkang Yin, and Michiel
 Van De Panne. DeepLoco: dynamic locomotion skills us-
 ing hierarchical deep reinforcement learning. ACM Trans.
 Graph., 36(4):1-13, July 2017.
-[33] Xue Bin Peng, Michael Chang, Grace Zhang, Pieter Abbeel,
+
+Xue Bin Peng, Michael Chang, Grace Zhang, Pieter Abbeel,
 and Sergey Levine. MCP: Learning composable hierarchi-
 cal control with multiplicative compositional policies. May
 2019.
-[34] Xue Bin Peng, Yunrong Guo, Lina Halper, Sergey Levine,
+
+Xue Bin Peng, Yunrong Guo, Lina Halper, Sergey Levine,
 and Sanja Fidler. ASE: Large-scale reusable adversarial skill
 embeddings for physically simulated characters. May 2022.
-[35] Xue Bin Peng, Ze Ma, Pieter Abbeel, Sergey Levine, and
+Xue Bin Peng, Ze Ma, Pieter Abbeel, Sergey Levine, and
 Angjoo Kanazawa. AMP: Adversarial motion priors for styl-
 ized physics-based character control. ACM Trans. Graph.,
 (4):1-20, Apr. 2021.
-[36] Andrei A Rusu, Neil C Rabinowitz, Guillaume Desjardins,
+
+Andrei A Rusu, Neil C Rabinowitz, Guillaume Desjardins,
 Hubert Soyer, James Kirkpatrick, Koray Kavukcuoglu, Raz-
 van Pascanu, and Raia Hadsell. Progressive neural networks.
 arXiv [cs.LG], June 2016.
-[37] John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Rad-
+
+John Schulman, Filip Wolski, Prafulla Dhariwal, Alec Rad-
 ford, and Oleg Klimov. Proximal policy optimization algo-
 rithms. Technical report, 2017.
-[38] Noam Shazeer, Azalia Mirhoseini, Krzysztof Maziarz, Andy
+
+Noam Shazeer, Azalia Mirhoseini, Krzysztof Maziarz, Andy
 Davis, Quoc Le, Geoffrey Hinton, and Jeff Dean. Outra-
 geously large neural networks: The sparsely-gated mixture-
 of-experts layer. arXiv [cs.LG], Jan. 2017.
-[39] Soshi Shimada, Vladislav Golyanik, Weipeng Xu, and Chris-
+
+Soshi Shimada, Vladislav Golyanik, Weipeng Xu, and Chris-
 tian Theobalt. PhysCap: Physically plausible monocular 3D
 motion capture in real time. (1), Aug. 2020.
-[40] István Sárándi, Alexander Hermans, and Bastian Leibe.
+
+Istvan Sérdndi, Alexander Hermans, and Bastian Leibe.
 Learning 3D human pose estimation from dozens of datasets
 using a geometry-aware autoencoder to bridge between
 skeleton formats. Dec. 2022.
-[41] István Sárándi, Timm Linder, Kai O Arras, and Bastian
+
+Istvan Sdrdéndi, Timm Linder, Kai O Arras, and Bastian
 Leibe. MeTRAbs: Metric-scale truncation-robust heatmaps
 for absolute 3D human pose estimation. arXiv, pages 1-14,
 2020.
-[42] Tianxin Tao, Matthew Wilson, Ruiyu Gou, and Michiel
+
+Tianxin Tao, Matthew Wilson, Ruiyu Gou, and Michiel
 van de Panne. Learning to get up. arXiv [cs.GR], Apr. 2022.
-[43] Guy Tevet, Sigal Raab, Brian Gordon, Yonatan Shafir,
+
+43
+
+44
+
+45
+
+46
+
+47
+
+48
+
+49
+
+50
+
+51
+
+52
+
+53
+
+54
+
+55
+
+56
+
+57
+
+Guy Tevet, Sigal Raab, Brian Gordon, Yonatan Shafir,
 Amit H Bermano, and Daniel Cohen-Or. Human motion dif-
 fusion model. arXiv [cs.CV], Sept. 2022.
-[44] Nolan Wagener, Andrey Kolobov, Felipe Vieira Frujeri,
+
+Nolan Wagener, Andrey Kolobov, Felipe Vieira Frujeri,
 Ricky Loynd, Ching-An Cheng, and Matthew Hausknecht.
 MoCapAct: A multi-task dataset for simulated humanoid
 control. Aug. 2022.
-[45] Tingwu Wang, Yunrong Guo, Maria Shugrina, and Sanja Fi-
+
+Tingwu Wang, Yunrong Guo, Maria Shugrina, and Sanja Fi-
 dler. UniCon: Universal neural controller for physics-based
 character motion. arXiv, 2020.
-[46] Alexander Winkler, Jungdam Won, and Yuting Ye. Quest-
+
+Alexander Winkler, Jungdam Won, and Yuting Ye. Quest-
 Sim: Human motion tracking from sparse sensors with sim-
-ulated avatars. Sept. 2022.
-[47] Jungdam Won, Deepak Gopinath, and Jessica Hodgins. A
+avatars. Sept. 2022.
+
+Jungdam Won, Deepak Gopinath, and Jessica Hodgins. A
 scalable approach to control diverse behaviors for physically
 simulated characters. ACM Trans. Graph., 39(4), 2020.
-[48] Jungdam Won, Deepak Gopinath, and Jessica Hodgins. Con-
+Jungdam Won, Deepak Gopinath, and Jessica Hodgins. Con-
 trol strategies for physically simulated characters performing
-two-player competitive sports. ACM Trans. Graph., 40(4):1–
+two-player competitive sports. ACM Trans. Graph., 40(4):1-
 11, July 2021.
-[49] Jungdam Won, Deepak Gopinath, and Jessica Hodgins.
-Physics-based character controllers using conditional VAES.
-ACM Trans. Graph., 41(4):1–12, July 2022.
-[50] Ye Yuan and Kris Kitani. 3D ego-pose estimation via imi-
-tation learning. In Computer Vision - ECCV 2018, volume
+
+Jungdam Won, Deepak Gopinath, and Jessica Hodgins.
+Physics-based character controllers using conditional VAEs.
+ACM Trans. Graph., 41(4):1-12, July 2022.
+
+Ye Yuan and Kris Kitani. 3D ego-pose estimation via imi-
+tation learning. In Computer Vision — ECCV 2018, volume
 11220 LNCS, pages 763-778. Springer International Pub-
 lishing, 2018.
-[51] Ye Yuan and Kris Kitani. Ego-pose estimation and fore-
+
+Ye Yuan and Kris Kitani. Ego-pose estimation and fore-
 casting as real-time PD control. Proceedings of the
 IEEE International Conference on Computer Vision, 2019-
-Octob:10081-10091, 2019.
-[52] Ye Yuan and Kris Kitani. Residual force control for agile
+Octob: 10081-10091, 2019.
+
+Ye Yuan and Kris Kitani. Residual force control for agile
 human behavior imitation and extended motion synthesis.
 (NeurIPS), June 2020.
-[53] Ye Yuan, Jiaming Song, Umar Iqbal, Arash Vahdat, and Jan
+
+Ye Yuan, Jiaming Song, Umar Iqbal, Arash Vahdat, and Jan
 Kautz. PhysDiff: Physics-guided human motion diffusion
 model. arXiv [cs.CV], Dec. 2022.
-[54] Ye Yuan, Shih-En Wei, Tomas Simon, Kris Kitani, and Jason
+
+Ye Yuan, Shih-En Wei, Tomas Simon, Kris Kitani, and Jason
 Saragih. SimPoE: Simulated character control for 3D human
 pose estimation. CVPR, Apr. 2021.
-[55] Yi Zhou, Connelly Barnes, Jingwan Lu, Jimei Yang, and Hao
+
+Yi Zhou, Connelly Barnes, Jingwan Lu, Jimei Yang, and Hao
 Li. On the continuity of rotation representations in neural
 networks. Proceedings of the IEEE Computer Society Con-
 ference on Computer Vision and Pattern Recognition, 2019-
-June: 5738-5746, 2019.
-[56] Yanqi Zhou, Tao Lei, Hanxiao Liu, Nan Du, Yanping Huang,
+June:5738-5746, 2019.
+
+Yanqi Zhou, Tao Lei, Hanxiao Liu, Nan Du, Yanping Huang,
 Vincent Zhao, Andrew Dai, Zhifeng Chen, Quoc Le, and
 James Laudon. Mixture-of-experts with expert choice rout-
 ing. Feb. 2022.
-[57] Yuliang Zou, Jimei Yang, Duygu Ceylan, Jianming Zhang,
+
+Yuliang Zou, Jimei Yang, Duygu Ceylan, Jianming Zhang,
 Federico Perazzi, and Jia-Bin Huang. Reducing footskate
 in human motion reconstruction with ground contact con-
 straints. In 2020 IEEE Winter Conference on Applications of
 Computer Vision (WACV). IEEE, Mar. 2020.
+
+ulate
+
+
+--- Page 11 ---
 Appendix
-A Introduction
-B. Implementation Details
-B.1. Training Details .
-11
-11
-11
-B.2. Real-time Use Cases
-11
-B.3. Progressive Neural Network (PNN) Details
-12
-C. Supplementary Results
-13
-C.1. Categorizing the Forgetting Problem
-13
-C.2. Additional Ablations
-13
-14
-Figure 5: Our framework can support body shape and gender
-variations. Here we showcase humanoids of different gender
-and body proportion holding a standing pose. We construct two
-kinda of humanoids: capsule-based (top) and mesh-based (bot-
-tom). Red: female, Blue: male. Color gradient indicates weight.
-D. Extended Limitation and Discussions
+
+A Introduction 11
+B Implementation Details 11
+B.1. Training Details... 2... ee 11
+B.2. Real-time Use Cases... 2... 2.22.2 2 oe 11
+B.3. Progressive Neural Network (PNN) Details .... 12
+C Supplementary Results 13
+C.1. Categorizing the Forgetting Problem ........ 13
+C.2 Additional Ablations . 2... 2.0.2... 02 13
+D Extended Limitation and Discussions 14
 Appendices
+
 A. Introduction
+
 In this document, we include additional details and results that
 are not included in the paper due to the page limit. In Sec.B, we
 include additional details for training, avatar use cases, and pro-
 gressive neural networks (PNN) [36]. In Sec.C, we include addi-
 tional ablation results. Finally, in Sec.D, we provide an extended
 discussion of limitations, failure cases, and future work.
+
 Extensive qualitative results are provided on the project page.
 We highly encourage our readers to view them to better understand
-the capabilities of our method. Specifically, we show our method's
+the capabilities of our method. Specifically, we show our method’s
 ability to imitate high-quality MoCap data (both train and test) and
 noisy motion estimated from video. We also demonstrate real-time
 video-based (single- and multi-person) and language-based avatar
 (single- and multiple-clips) use cases. Lastly, we showcase our
 fail-state recovery ability.
+
 B. Implementation Details
 B.1. Training Details
+
 Humanoid Construction. Our humanoid can be constructed from
 any kinematic structure, and we use the SMPL humanoid structure
 as it has native support for different body shapes and is widely
@@ -1312,6 +1340,13 @@ performance differences (see Sec.C) and conduct all experiments
 using the capsule-based humanoid. For a fair comparison with the
 baselines, we use the mean body shape of the SMPL with neutral
 gender for all evaluations and show qualitative results for shape
+
+Figure 5: Our framework can support body shape and gender
+variations. Here we showcase humanoids of different gender
+and body proportion holding a standing pose. We construct two
+kinda of humanoids: capsule-based (top) and mesh-based (bot-
+tom). Red: female, Blue: male. Color gradient indicates weight.
+
 variation. For both types of humanoids, we scale the density of
 geometric shapes so that the body has the correct weight (on aver-
 age 70 kg). All inter-joint collisions are enabled for all joint pairs
@@ -1319,10 +1354,10 @@ except for between parent and child joints. Collision between hu-
 manoids can be enabled and disabled at will (for multi-person use
 cases).
 Training Process. During training, we randomly sample motion
-from the current training set Q (k) and normalize it with respect to
+from the current training set Q) and normalize it with respect to
 the simulated body shape by performing forward kinematics using
-Ô1:T. Similar to UHC [22], we adjust the height of the root trans-
-lation to make sure that each of the humanoid's feet touches
+6.7. Similar to UHC [22], we adjust the height of the root trans-
+lation 6? to make sure that each of the humanoid’s feet touches
 the ground at the beginning of the episode. We use parallelly sim-
 ulate 1536 humanoids for training all of our primitives and com-
 posers. Training takes around 7 days to collect approximately 10
@@ -1330,83 +1365,60 @@ billion samples. When training with different body shapes, we ran-
 domly sample valid human body shapes from the AMASS dataset
 and construct humanoids from them. Hyperparamters used during
 training can be found in Table.5
+
 Data Preparation. We follow similar procedure to UHC [22] to
 filter out AMASS sequences containing human object interactions.
 We remove all sequences that sits on chairs, move on treadmills,
-leans on tables, steps on stairs, floating in the air etc., resulting
+leans on tables, steps on stairs, floating in the air efc., resulting
 in 11313 high-quality motion sequences for training and 140 se-
 quences for testing. We use a heuristic-based filtering process
 based on i.e. identifying the body joint configurations correspond-
 ing to the sitting motion or counting number of consecutive air-
 borne frames.
-Runtime. Once trained, our PHC can run in real time (~32FPS)
+
+Runtime. Once trained, our PHC can run in real time (~ 32FPS)
 together with simulation and rendering, and around (~ 50FPS)
 when run without rendering. Table.6 shows the runtime of our
 method with respect to the number of primitives, architecture, and
 humanoid type used.
+
 Model Size. The final model size (with four primitives) is 28.8
 MB, comparable to the model size of UHC (30.4 MB).
+
 B.2. Real-time Use Cases
-To
-Real-time Physics-based Virtual Avatars from Video.
+
+Real-time Physics-based Virtual Avatars from Video. To
 achieve real-time physics-based avatars driven by video, we first
 use Yolov8[17] for person detection. For pose estimation, we use
-MeTRABS [41] and HybrIK [19] to provide 3D keypoints pt and
-rotation t. MeTRAbs is a 3D keypoint estimator that computes
-Table 5: Hyperparameters for PHC. σ: fixed variance for
-policy. : discount factor. e: clip range for PPO
-State: St
-Batch Size Learning Rate
-Primitive: P(1)
-Primitive: P(2)
-Primitive: p(K)
-Primitive: p(F)
-σ
-Υ
-Є
-Composer: C
-h(D)
-h(2)
-h(K)
-h
-Value
-1536
-5 × 2-5
-0.05 0.99
-0.2
-h)
-h(c)
-h
-MLP
-h(2)
-h(K)
-MLP
-MLP
-h(F)
-MLP
-Value
-Wjp
-0.5
-Wjr
-Wjv
-Wjw
-MLP
-0.3
-0.1
-0.1
-3D joint positions pt in the absolute global space (rather than in
+MeTRADS [41] and HybrIK [19] to provide 3D keypoints p,; and
+rotation @,. MeTRAbs is a 3D keypoint estimator that computes.
+
+--- Page 12 ---
+Table 5: Hyperparameters for PHC. o: fixed variance for
+policy. y: discount factor. €: clip range for PPO
+
+Batch Size
+Value 1536
+
+Learning Rate 0 y €
+5x 2-6 0.05 0.99 0.2
+
+Wyp Wyr Wy Ww
+Value 0.5 0.3 0.1 0.1
+
+3D joint positions p; in the absolute global space (rather than in
 the relative root space). HybrIK is a recent method for human
-mesh recovery and computes joint angles ỗt and root position p
-for the SMPL human body. One can recover the 3D keypoints pt
-from joint angles ết and root position p using forward kinemat-
+mesh recovery and computes joint angles 6, and root position p?
+for the SMPL human body. One can recover the 3D keypoints p;
+from joint angles 6, and root position py using forward kinemat-
 ics. Both of these methods are causal, do not use any temporal
 information, and can run in real-time (~ 30FPS). Estimating 3D
 keypoint location from image pixels is an easier task than regress-
 ing joint angles, as 3D keypoints can be better associated with fea-
 tures learned from pixels. Thus, both HybrIK and MeTRAbs esti-
-mate 3D keypoints pt, with HybrIK containing an additional step
+mate 3D keypoints pz, with HybrIK containing an additional step
 of performing learned inverse kinematics to recover joint angles
-Ot. We show results using both of these off-the-shelf pose estima-
+6;. We show results using both of these off-the-shelf pose estima-
 tion methods, using MeTRAbs with our keypoint-based controller
 and HybrIK with our rotation-based controller. Empirically, we
 find that MeTRAbs estimates more stable and accurate 3D key-
@@ -1421,11 +1433,12 @@ estimation, and simulation all need to run at real-time at around
 30 FPS, and small fluctuations in framerate could lead to unstable
 imitation and simulation. To smooth out noisy depth estimates, we
 use a Gaussian filter to smooth out estimates from t-120 to t, and
-use the "mirror" setting for padding at boundary.
+use the “mirror” setting for padding at boundary.
+
 Virtual Avatars from Language. For language-based motion
 generation, we adopt MDM [43] as our text-to-motion model.
 We use the official implementation, which generates 3D key-
-points pt by default and connects it to our keypoint-based imitator.
+points p; by default and connects it to our keypoint-based imitator.
 MDM generates fixed-length motion clips, so additional blending
 is needed to combine multiple clips of generated motion. How-
 ever, since PHC can naturally go to far-away reference motion
@@ -1434,65 +1447,54 @@ together multiple clips of motion generated by MDM and create
 coherent and physically valid motion from multiple text prompts.
 This enables us to create a simulated avatar that can be driven by
 a continuous stream of text prompts.
+
 B.3. Progressive Neural Network (PNN) Details
-A PNN [36] starts with a single primitive network P(¹) trained
-on the full dataset Q. Once P (1) is trained to convergence on
+
+A PNN [36] starts with a single primitive network P™ trained
+on the full dataset Q. Once P™) is trained to convergence on
 the entire motion dataset Q using the imitation task, we create a
-subset of hard motions by evaluating P(¹) on Q. Sequences that
-P(1) fails forms (¹) We then freeze the parameters of P(1)
-hard⚫
-Composer: C
-h(C)
-MLP
-1:(K+1)
--Weights: w
-Gating
-Function
-Action: a₁
-State: St
-Primitive: P(1)
-Primitive: P(2)
-Primitive: p(K)
-Primitive: p(F)
-h(1)
-h(2)
-h(K)
-40
-h(2)
-h(K)
-h
-hQF)
-MLP
-MLP
-MLP
-MLP
-: MLP layer
--Weights: w
-,1:(K+1)
-Gating
-Function
-: Weight sharing
-: Lateral connection
-Action: at
+subset of hard motions by evaluating P“™ on Q. Sequences that
+P™ fails forms Ql). We then freeze the parameters of PO)
+
+State: s;
+
+o i)
+10 Bi a
+= Rol 4
+© 2 Z
+2 MLP MLP MLP MLP
+MLP | |
+Weights: wy «0 —_f Acai |
+Action: a,
+State: s,
+Pr
+"9 i ——peee moe
+= i ¢ 1 — © 1?
+ni? MLP MLP MLP MLP
+MLP | l
+| MLP layer
+‘Weights: w} wn eR, | =O: Weight sharing
+
+48: Lateral connection
+
+Action: a,
+
 Figure 6: Progressive neural network architecture. Top: PNN
-with lateral connection. Bottom: PNN with weight sharing. h()
-indicates hidden activation of jth primitive's ¿th layer.
-and create a new primitive P(2) (randomly initialized) along with
-lateral connections that connect each layer of P(¹) to P (2). Given
-the layer weight W,(k), activation function f, and the learnable
-lateral connection weights U(j:k), we have the hidden activation
-h) of the ith layer of kth primitive as:
-(k)
-h(k)
-1(k) h ( 1 + ΣU (jk) h (²
-= (P+R).
-Συ
+with lateral connection. Bottom: PNN with weight sharing. h{?)
+indicates hidden activation of j" primitive’s i’ layer.
+
+and create a new primitive P) (randomly initialized) along with
+lateral connections that connect each layer of P™ to P). Given
+the layer weight w., activation function f, and the learnable
+lateral connection weights ue *k) we have the hidden activation
+ni of the i" layer of k™ primitive as:
+
 j<k
-(7)
+
 Fig.6 visualizes the PNN with the lateral connection architecture.
 Essentially, except for the first layer, each subsequent layer re-
 ceives the activation of the previous layer processed by the learn-
-able connection matrices U(jk). We do not use any adapter layer
+able connection matrices U‘!"*”, We do not use any adapter layer
 as in the original paper. As an alternative to lateral connection,
 we explore weight sharing and warm-starts the primitive with the
 weights from the previous one (as opposed to randomly initial-
@@ -1502,17 +1504,20 @@ newly learned primitive adds new sequences that PHC can imi-
 tate. The weight sharing strategy significantly decreases training
 time as the policy starts learning harder sequences with basic mo-
 tor skills. We use weight sharing in all our main experiments.
-Epoch
-12500
-15000
-17500
-20000-
-22500-
-25000
-27500-
-30000-
-0 25 50 75 100 125 150 175 200 225 250 275 300 325 350 375 400 425 450 475 500 525
+
+
+--- Page 13 ---
+io fy
+
+NG ts in)
+ee a | lui
+|
+
+i
+
+© 25 50 75 100 125 150 175 200 225 250 275 300 325 350 375 400 425 450 475 500 525
 Motion Index
+
 Figure 7: Here we plot the motion indexes that the policy fails on
 over training time; we only plot the 529 sequences that the policy
 has failed on over these training epoches. A white pixel denotes
@@ -1522,8 +1527,10 @@ that while there are 30 sequences that the policy consistently fails
 on, the remaining can be learned and then forgotten as training
 progresses. The staircase pattern indicates that the policy fails on
 new sequences each time it learns new ones.
+
 C. Supplementary Results
 C.1. Categorizing the Forgetting Problem
+
 As mentioned in the main paper, one of the main issues in
 learning to mimic a large motion dataset is the forgetting prob-
 lem. The policy will learn new sequences while forgetting the
@@ -1540,106 +1547,59 @@ learn when trained together with other sequences. We hypothe-
 size that these remaining sequences (around 40) may require addi-
 tional sequence-level information for the policy to learn properly
 together with other sequences.
+
 Fail-state recovery Learning the fail-state recovery task can
 also lead to forgetting previously learned imitation skills. To ver-
-ify this, we evaluate P(F) on the H36M-Test-Video dataset, which
-leads to a performance of Succ: 42.5%, Eg-mpjpe: 87.3, and Empipe:
-55.9, which is much lower than the single primitive P(¹) perfor-
-mance of Succ: 59.4%, Eg-mpjpe: 60.2, and Empipe: 34.4. Thus,
-learning the fail-state recovery task may lead to severe forgetting
-of the imitation task, motivating our PMCP framework to learn
+ify this, we evaluate P") on the H36M-Test- Video dataset, which
+leads to a performance of Succ: 42.5%, E’y-mpipe: 87.3, and E'mpjpe?
+55.9, which is much lower than the single primitive P“ perfor-
+mance of Su 59.4%, E'g-mpjpe: 60.2, and Exmpjpe: 34.4. Thus,
+learning the state recovery task may lead to severe forgetting
+of the imita
+
+ion task, motivating our PMCP framework to learn
 separate primitives for imitation and fail-state recovery.
+
 C.2. Additional Ablations
+
 In this section, we provide additional ablations of the compo-
 nents of our framework. Specifically, we study the effect of MOE
 vs. MCP, lateral connection vs. weight sharing, and the number of
 primitives used. We also report the inference speed (counting net-
 work inference and simulation time). All experiments are carried
 out with the rotation-based imitator and incorporate the fail state
-recovery primitive P(F) as the last primitive.
+recovery primitive P) as the last primitive.
+
 PNN Lateral Connection vs. Weight Sharing. As can be seen
-in Table 6, comparing Row 1 (R1) and R7, we can see that PNN
+in Table 6, comparing Row | (R1) and R7, we can see that PNN
 with lateral connection and weight sharing produce similar per-
+
 Table 6: Supplmentary ablation on components of our pipeline,
 performed using noisy pose estimate from HybrIK + Metrabs
 (root) on the H36M-Test-Video* data. MOE: top-1 mixture of
 experts. MCP: multiplicative control policy. PNN: progressive
 neural networks. Type: between Cap (capsule) and mesh-based
 humanoids. All models are trained with the same procedure.
-PNN-Lateral
-FPS
+
 H36M-Test-Video*
-PNN-Weight
-MOE MCP Туре
-# Prim
-Succ 1
-Eg-mpjpe↓
-Empipe↓
-✓
-X
-x
-x Cap
-4
-87.5%
-55.7
-36.2 32
-X
-✓
-✓
-Cap
-4
-87.5%
-56.3
-34.3 33
-X
-✓
-X
-✓
-Mesh
-4 86.9%
-62.6
-39.5 30
-X
-X
-x
-x Cap
-1
-59.4%
-60.2
-37.2 32
-✓
-Cap
-2
-65.6%
-58.7
-37.3 32
-X
-✓
-x
-x
-Cap
-3
-80.9%
-56.8
-36.1 32
-✓
-Cap
-4 88.7%
-55.4
-34.7
-32
-Cap
-5 87.5%
-57.7
-36.0
-32
-X
+
+PNN-Lateral_PNN-Weight MOE MCP Type #Prim | Succ} By Enpipe | FPS
+v x x xk Cap 4 | 875% 55.7 36.2 32
+x Yo¢ x Cap 4 | 875% 56.3 34333
+x v xv Mesh 4 | 86.9% 62.6 39.5 30
+x x xk Cap 1 | 59.4% 60.2 372-32
+x v x v¥~ Cap 2 | 65.6% 58.7 373 32
+x v x Vv Cap 3 | 80.9% 56.8 36.1 32
+x v x v— Cap 4 | 88.7% 55.4 34732
+x v xv Cap 5 | 87.5% 517 36.0 32
+
 formance, both in terms of motion imitation and inference speed.
 This shows that in our setup, the weight sharing scheme is an ef-
 fective alternative to lateral connections. This can be explained by
 the fact that in our case, each “task” on which the primitives are
 trained is similar and does not require lateral connection to choose
 whether to utilize prior experiences or not.
+
 MOE vs. MCP. The difference between the top-1 mixture of
 experts (MOE) and multiplicative control (MCP) is discussed in
 detail in the MCP paper [33]: top-1 MOE only activates one ex-
@@ -1655,26 +1615,31 @@ is not far behind. This is also observed by CoMic[13], where they
 observe similar performance between mixture and product dis-
 tributions when used to combine subnetworks. Note that top-inf
 MOE is similar to MCP where all primitives can be activated.
+
 Capsule vs. Mesh Humanoid. Comparing R3 and R7, we can see
 that mesh-based humanoid yield similar performance to capsule-
 based ones. It does slow down simulation by a small amount (30
 FPS vs. 32 FPS), as simulating mesh is more compute-intensive
 than simulating simple geometries like capsules.
+
 Number of primitives. Comparing R4, R5, R6, R7, and R8, we
 can see that the performance increases as the number of primi-
-tives increases. Since the last primitive P (F) is for fail-state re-
+tives increases. Since the last primitive P‘” is for fail-state re-
 covery and does not provide motion imitation improvement, R5
 is similar to the performance of models trained without PMCP
 (R4). As the number of primitives grows from 2 to 3, we can
 see that the model performance grows quickly, showing that MCP
 is effective in combining pretrained primitives to achieve motion
+
 imitation. Since we are using relatively small networks, the in-
 ference speed does not change significantly with the number of
 primitives used. We notice that as the number of primitives grows,
-Q(k) becomes more and more challenging. For instance, Q (4)
+Q* becomes more and more challenging. For instance, Q”
 contains mainly highly dynamic motions such as high-jumping,
 back flipping, and cartwheeling, which are increasingly difficult
 to learn together. We show that (see supplementary webpage) we
+
+--- Page 14 ---
 can overfit these sequences by training on them only, yet it is sig-
 nificantly more challenging to learn them together. Motions that
 are highly dynamic require very specific steps to perform (such
@@ -1689,7 +1654,9 @@ future may be required to learn these high dynamic motions to-
 gether. In general, we find that using 4 primitives is most effective
 in terms of training time and performance, so for our main evalua-
 tion and visualizations, we use 4-primitive models.
+
 D. Extended Limitation and Discussions
+
 Limitation and Failure Cases. As discussed in the main paper,
 PHC has yet to achieve 100% success rate on the AMASS training
 set. With a 98.9% success rate, PHC can imitate most of our daily
@@ -1697,8 +1664,8 @@ motion without losing balance, but can still struggle to perform
 more dynamic motions, such as backflipping. For our real-time
 avatar use cases, we can see a noticeable degradation in perfor-
 mance from the offline counterparts. This is due to the following:
-•
-Discontinuity and noise in reference motion. The inherent
+
+¢ Discontinuity and noise in reference motion. The inherent
 ambiguity in monocular depth estimation can result in noisy
 and jittery 3D keypoints, particularly in the depth dimension.
 These small errors, though sometimes imperceptible to the
@@ -1707,15 +1674,18 @@ nals, leaving insufficient time for appropriate reactions. Ve-
 locity estimation is also especially challenging in real-time
 use cases, and PHC relies on stable velocity estimation to
 infer movement cues.
-• Mismatched framerate. Since our PHC assumes 30 FPS mo-
+
+¢ Mismatched framerate. Since our PHC assumes 30 FPS mo-
 tion input, it is essential for pose estimates from video to
 match for a more stable imitation. However, few pose esti-
 mators are designed to perform real-time pose estimation (>
 30 FPS), and the estimation framerate can fluctuate due to
 external reasons, such as the load balance on computers.
-• For multi-person use case, tracking and identity switch can
+
+¢ For multi-person use case, tracking and identity switch can
 still happen, leading to a jarring experience where the hu-
 manoids need to switch places.
+
 A deeper integration between the pose estimator and our controller
 is needed to further improve our real-time use cases. As we do not
 explicitly account for camera pose, we assume that the webcam is
@@ -1730,8 +1700,10 @@ speed, and tempo during fail-state recovery exhibits noticeable ar-
 tifacts, such as asymmetric motion, a known artifact in AMP [35].
 During the transition between fail-state recovery and motion imi-
 tation, the humanoid can suddenly jolt and snap into motion imi-
+
 tation. Further investigation (e.g. better reward than the point-goal
 formulation, additional observation about trajectory) is needed.
+
 Discussion and Future Work. We propose the perpetual hu-
 manoid controller, a humanoid motion imitator capable of imitat-
 ing large corpus of motion with high fidelity. Paired with its ability
@@ -1757,3 +1729,4 @@ points and leverages the laws of physics to regulate its output. We
 believe that PHC can also be used in other areas such as embodied
 agents and grounding, where it can serve as a low-level controller
 for high-level reasoning functions.
+

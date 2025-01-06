@@ -1,9 +1,15 @@
+--- Page 1 ---
 arXiv:2309.10537v1 [eess.AS] 19 Sep 2023
+
 FOLEYGEN: VISUALLY-GUIDED AUDIO GENERATION
-Xinhao Mei¹,2*, Varun Nagaraja¹, Gael Le Lan¹, Zhaoheng Ni¹, Ernie Chang¹, Yangyang Shi¹, Vikas Chandra¹
-1Meta AI, USA,
-2 University of Surrey, Guildford, UK
+
+Xinhao Mei'?*, Varun Nagaraja’, Gael Le Lan', Zhaoheng Ni, Ernie Chang", Yangyang Shi‘, Vikas Chandra‘
+
+‘Meta AI, USA,
+University of Surrey, Guildford, UK
+
 ABSTRACT
+
 Recent advancements in audio generation have been spurred
 by the evolution of large-scale deep learning models and ex-
 pansive datasets. However, the task of video-to-audio (V2A)
@@ -25,11 +31,13 @@ each pretrained on either single-modal or multi-modal tasks.
 The experimental results on VGGSound dataset show that our
 proposed FoleyGen outperforms previous systems across all
 objective metrics and human evaluations.
-Index Terms― Sound generation, audio-visual learning,
+
+Index Terms— Sound generation, audio-visual learning,
 video-to-audio generation, multimodal learning
+
 1. INTRODUCTION
-gen-
-Recent years have seen remarkable breakthroughs in audio
+
+Recent years have seen remarkable breakthroughs in audio gen-
 eration, powered predominantly by the evolution of large-scale
 deep learning models and datasets. Despite great achieve-
 ments in text-to-audio [1, 2] and text-to-music [3, 4] genera-
@@ -43,18 +51,32 @@ are useful in various applications, such as generating sound
 for movies as a computational Foley artist, enhancing immer-
 sive experiences in virtual reality applications, and assisting
 visually impaired individuals for better spatial awareness.
-* Work done during an internship at Meta.
+
+*Work done during an internship at Meta.
+
 Generated Waveform
-Video Frames
-Encodec Decoder
-Visual Encoder
-Pretrained & Frozen
+
+“et nit i
+
+Encodec Decoder *
+
+™ > t€{
+Atesee t
+
 Transformer Decoder
-Encodec Encoder
+
+! Encodec Encoder % '
+
 Reference Waveform
+
+Video Frames
+
+# : Pretrained & Frozen
+
 Fig. 1. Overview of the FoleyGen system. The dashed-line
 block shows the EnCodec encoder for converting waveforms
 into discrete tokens, utilized only during training.
+
 Achieving accurate and realistic V2A generation poses
 several challenges. First, the simultaneous interpretation of
 both visual and auditory data is intricate due to their respective
@@ -65,6 +87,7 @@ makes the generation of temporally synchronized audio ex-
 tremely challenging. Finally, a single object can emit a diverse
 range of sounds depending on its interaction with varying
 environments, further complicating this task.
+
 Initial efforts in V2A generation has predominantly fo-
 cused on constrained visual contexts and a limited set of sound
 classes to simplify the problem [5, 6, 7]. Such approaches
@@ -75,17 +98,20 @@ videos. Recent advancements, however, indicate a rising
 interest in open-domain, visually guided audio generation.
 SpecVQGAN [9] and IM2WAV [10] both employ a language
 modeling method, leveraging the Transformer model to cap-
+
+--- Page 2 ---
 ture the joint distribution of visual features and discrete audio
 tokens encoded by vector-quantized variational autoencoder
 (VQ-VAE). In SpecVQGAN, the VQ-VAE operates specif-
 ically on spectrograms and subsequently employs a neural
 vocoder to convert generated spectrograms back into wave-
 forms. In contrast, IM2WAV directly operates on waveforms,
-partitioning the VQ-VAE's latent space into two levels and
+partitioning the VQ-VAE’s latent space into two levels and
 utilizing dual Transformer models to model their respective
 distributions. Additionally, Diff-Foley [11] introduces a la-
 tent diffusion method conditioned on contrastive audio-visual
 pretraining (CAVP) representations.
+
 Inspired by the pioneering work of AudioGen [2] and
 MusicGen [4], we introduce FoleyGen, a video-to-audio gen-
 eration framework that adopts a language modeling paradigm.
@@ -109,7 +135,29 @@ of various visual encoders, pretrained on both single-modal
 and multi-modal tasks. The experimental results show that our
 proposed FoleyGen outperforms previous systems across all
 objective metrics and human evaluations.
+
+2. PROPOSED METHOD
+
+Given a video clip, a video-to-audio generation system is
+designed to produce an audio clip that is both semantically
+consistent with and temporally aligned to the accompanying
+video content. The video-to-audio generation process can be
+formulated as H : v +> a, where v refers to the frames of a
+video input and a corresponds to the generated audio wave-
+form. Figure | presents the architecture of FoleyGen, our
+proposed system. FoleyGen comprises three main compo-
+nents: a neural audio codec for the bidirectional conversion
+between waveforms and discrete tokens, a visual encoder for
+feature extraction from video frames, and an audio language
+decoder tasked with generating discrete audio tokens based
+on the extracted visual features. This section first provides a
+detailed introduction to each major component of FoleyGen.
+To improve the temporal alignment of the visual input and
+generated audio, we propose using different visual attention
+mechanisms, which are described at the end of this section.
+
 2.1. Neural Audio Codec
+
 Modeling the distribution of time-domain waveforms presents
 significant challenges and computational inefficiencies, primar-
 ily due to their high-dimensional and lengthy characteristics.
@@ -122,50 +170,35 @@ prises an encoder that compresses audio waveforms into latent
 vectors, a residual vector quantizer (RVQ) for converting these
 latent vectors into discrete tokens, and a symmetric decoder
 that reconverts these tokens back into audio waveforms. Given
-an audio clip a € Rt×fs, where t is the duration and f¸ is
+an audio clip a € R'*/s, where t is the duration and fs is
 the sampling rate, the encoder first compresses a into a latent
-representation z = RL×d. Here, d is the dimensionality of the
+representation z € R“**. Here, d is the dimensionality of the
 latent vector, and L is the number of down-sampled time steps.
-A RVQ with Ng codebooks then transforms the encoded latent
-vectors into N₁ × L discrete tokens. The discrete audio tokens
+A RVQ with N, codebooks then transforms the encoded latent
+vectors into N, x L discrete tokens. The discrete audio tokens
 are further used as the representation of audio in the language
 modeling stage. The EnCodec decoder converts the generated
 audio tokens to waveforms. The EnCodec encoder is used
 only during training. We adhere to the same hyperparameter
 settings as outlined in the EnCodec paper, please refer to [12]
 for details.
+
 The adoption of EnCodec offers a high compression rate
 while keeping high reconstruction quality. Unlike other au-
 toencoders that operate on spectrograms [9, 11], EnCodec
 eliminates the need for an additional vocoder and thus obvi-
 ates the potential fidelity loss that may occur when converting
 a generated spectrogram back to a waveform.
-2. PROPOSED METHOD
-Given a video clip, a video-to-audio generation system is
-designed to produce an audio clip that is both semantically
-consistent with and temporally aligned to the accompanying
-video content. The video-to-audio generation process can be
-formulated as H: va, where v refers to the frames of a
-video input and a corresponds to the generated audio wave-
-form. Figure 1 presents the architecture of FoleyGen, our
-proposed system. FoleyGen comprises three main compo-
-nents: a neural audio codec for the bidirectional conversion
-between waveforms and discrete tokens, a visual encoder for
-feature extraction from video frames, and an audio language
-decoder tasked with generating discrete audio tokens based
-on the extracted visual features. This section first provides a
-detailed introduction to each major component of FoleyGen.
-To improve the temporal alignment of the visual input and
-generated audio, we propose using different visual attention
-mechanisms, which are described at the end of this section.
+
 2.2. Visual Encoder
-Given a visual input v € RT×C×H×W, where T represents
-the number of frames (which can be 1 for a single image), C
+
+Given a visual input v € R?*C*#*W where T represents
+the number of frames (which can be | for a single image), C
 is the number of channels, and H and W denote the height
 and width of the visual input, respectively, the visual encoder
-generates feature vectors FЄRTXD with D being the num-
+generates feature vectors F € R?7* with D being the num-
 ber of dimension of the language decoder. The quality of the
-extracted visual features F is critical for achieving semanti-
+extracted visual features F' is critical for achieving semanti-
 cally consistent and temporally aligned audio generation. A
 suboptimal visual encoder may lead to loss of important vi-
 sual cues, resulting in an audio output that lacks fidelity or
@@ -175,23 +208,22 @@ experiments using a variety of popular visual encoders trained
 with uni-modal and multi-modal tasks. These visual encoders
 include ViT [14], CLIP [15], ImageBind [16] and VideoMAE
 [17].
+
+--- Page 3 ---
 Allow to attend
-Prevent from attending
-Frame-Specific Visual Attention: In a more restrictive ap-
-proach, we introduce "frame-specific visual attention", where
-the model's attention is confined strictly to visual features of
-the concurrent time frame during generation. This strict atten-
-tion mechanism ensures that the model generates audio only
-based on the current visual context.
-A
-All-Frame Visual Attention
-Causal Visual Attention
-A
-Frame-Specific Visual Attention
+
+[By Prevent from attending
+
+v A v A v A
+
+All-Frame Visual Attention Causal Visual Attention Frame-Specific Visual Attention
+
 Fig. 2. Overview of the three visual attention mechanisms. For
-simplicity, here we assume we have 2 visual features 'V' and
-4 audio tokens 'A' with a frame rate of 2 Hz.
+simplicity, here we assume we have 2 visual features ‘V’ and
+4 audio tokens ‘A’ with a frame rate of 2 Hz.
+
 2.3. Audio Language Decoder
+
 Audio is represented as discrete tokens after being encoded by
 EnCodec [12], therefore, the video-to-audio generation prob-
 lem can be formulated as a conditional language modeling task.
@@ -200,7 +232,7 @@ employ a Transformer model [18] to generate discrete audio
 tokens autoregressively. The Transformer model is decoder-
 only and omits the cross-attention block. The visual features
 are prepended to the sequence of audio tokens for conditioning.
-Due to EnCodec's residual vector quantization, each timestep
+Due to EnCodec’s residual vector quantization, each timestep
 encodes multi-stream tokens using residual codebooks. To
 effectively capture these multi-stream tokens, we adopt the
 delay pattern introduced in MusicGen [4]. This approach paral-
@@ -209,11 +241,14 @@ offsets between the streams. The incorporation of the delay
 pattern ensures high efficiency and eliminates the need for
 predicting tokens in a flattened pattern. Moreover, it sidesteps
 the requirement of multiple Transformer models [13, 10].
+
 2.4. Visual Attention Mechanism
+
 Generating audio that is temporally aligned with a video
 presents significant challenges. To address this, we introduce
 and explore three distinct visual attention mechanisms. Fig-
 ure 2 shows the overview of the three attention mechanisms.
+
 All-Frame Visual Attention: In our baseline setting, we
 employ the default causal attention mechanism inherent in
 the Transformer decoder. Given that the visual features are
@@ -222,24 +257,37 @@ the audio tokens have the capability to attend to all visual
 features. While this provides a broad context, it might confuse
 the model regarding the exact timing for sound generation due
 to an overabundance of visual information.
+
 Causal Visual Attention: As a countermeasure, we in-
-vestigate a "causal” approach wherein, during the audio token
+vestigate a “causal” approach wherein, during the audio token
 generation, the model is restricted to attending only to visual
 frames that precede and align with the current timestep. This
 sequential attention might help the model to better synchronize
 the audio with the visual cues.
-3.1. Dataset
+
+Frame-Specific Visual Attention: In a more restrictive ap-
+proach, we introduce“frame-specific visual attention”, where
+the model’s attention is confined strictly to visual features of
+the concurrent time frame during generation. This strict atten-
+tion mechanism ensures that the model generates audio only
+based on the current visual context.
+
 3. EXPERIMENTS
+
+3.1. Dataset
+
 We target at open-domain visually guided audio generation.
 Therefore, we use the VGGSound [19] dataset, which contains
 around 200k 10-second video clips sourced from YouTube
 with diverse contents. Since some video clips are not down-
-loadable anymore, our version contains 159 318 samples in
+loadable anymore, our version contains 159318 samples in
 the train set and 13 161 samples in the test set.
+
 3.2. Implementation Details
+
 All the audio clips in the dataset are sampled to 16k Hz mono-
 phonic audio. For the EnCodec, we follow the same downsam-
-pling strides [2, 4, 5, 8] in the encoder, which leads to a frame
+pling strides [2, 4,5, 8] in the encoder, which leads to a frame
 rate of 50 Hz. We employ four codebooks with a codebook
 size of 2048. For video data, we sample one frame per second
 and follow the prepocessing protocols (e.g., resize, normalize)
@@ -249,17 +297,19 @@ the Transformer model. The Transformer decoder consists of
 24 layers with 16 heads and a dimension of 1024. A memory
 efficient flash attention [20] is used to improve the speed and
 memory usage.
-=
+
 The models are trained for 20k steps with a batch size
-of 256. AdamW optimizer with ẞ1 0.9, 62 = 0.95, and a
-weight decay of 0.1 is used. The learning rate is set to 1 × 10−4
+of 256. AdamW optimizer with 3; = 0.9, 62 = 0.95, anda
+weight decay of 0.1 is used. The learning rate is set to 1 x 10-4
 and warm up is used in the first 4k steps. In addition, classifier-
 free guidance [21] is also employed to achieve better visual
 adherence. During training, the visual condition is dropped
 (i.e., replaced with null vectors) with a probability of 0.1.
 During inference, the classifier-free guidance scale of 3.0 is
 used, and we employ top-k sampling with k setting to 256.
+
 3.3. Evaluation Metrics
+
 To evaluate the performance of FoleyGen, we carry out both
 objective and subjective evaluations. For objective evaluation,
 we employ Fréchet Audio Distance (FAD) [22], Kullback-
@@ -271,75 +321,33 @@ KLD compares the label distribution of target and generated
 audio calculated by a pretrained PaSST model [24]. FAD
 demonstrates a strong correlation with human perception re-
 garding audio quality, whereas KLD primarily captures the
+
+--- Page 4 ---
 Table 1. Experimental results on VGGSound dataset. Here we use all-frame visual attention.
-Methods
-Visual Encoder
-FAD↓
-KL↓
-IB (%) ↑
-OVR (%) ↑
-REL (%) ↑
-SpecVQGAN [9]
-ResNet-50
-6.64
-3.10
-5.6
-5.6
-IM2WAV [10]
-CLIP
-6.41
-2.54
-16.7
-31.1
-Ours
-CLIP
-1.65
-2.35
-26.1
-77.7
-63.3
+
+Methods | Visual Encoder | FAD| KL{ 1B (%)t | OVR(%)t REL (%)t
+SpecVQGAN [9] | ResNet-50 6.64 3.10 - 5.6 5.6
+IM2WAV [10] CLIP 641 2.54 - 16.7 311
+Ours | CLIP | 165 2.35 26.1 «| = 77.7 63.3
+
 Table 2. Experimental results on VGGSound dataset with
 models trained using different visual encoders.
-IB(%) ↑
-Visual Encoder FAD
-KL↓
-CLIP
-1.65
-2.35
-26.1
-ᏙᎥᎢ
-1.75
-2.50
-23.7
-ImageBind
-1.66
-2.34
-26.3
-VideoMAE
-2.59
-3.25
-17.4
+
+Visual Encoder | FAD| KL {  IB(%)t
+CLIP 1.65 2.35 26.1
+ViT 1.75 2.50 23.7
+ImageBind 1.66 2.34 26.3
+VideoMAE 2.59 3.25 17.4
+
 Table 3. Experimental results on VGGSound dataset with
 models trained using different attention mechanisms. The
 visual encoder used is CLIP.
-ALI (%) ↑
-Attention FAD↓↓ KL↓
-All-frame
-1.65 2.35
-Causal
-2.18 2.44
-IB(%) ↑
-OVR (%) ↑
-26.1
-63.3
-55.6
-25.5
-24.2
-14.4
-13.3
-22.3
-31.1
-Frame-specific 2.49 2.46
+
+Attention | FAD| KL{ IB(%)t | OVR (%) t ALI (%) t
+All-frame 165 = 2.35 26.1 63.3 55.6
+Causal 2.18 2.44 25.5 14.4 13.3
+Frame-specific | 2.49 2.46 24.2 22.3 31.1
+
 audio concepts present in the recording [2]. To evaluate the
 relevance between the generated audio and video, we pro-
 pose using the ImageBind model [16] to compute a relevance
@@ -353,16 +361,19 @@ rior performance based on specific criteria, which included
 overall quality (OVR), relevance (REL) to the corresponding
 visual input. Temporal alignment (ALI) is considered when
 evaluating the attention mechanisms.
+
 3.4. Results
+
 Table 1 presents the primary results of our study, where we
 benchmark our proposed FoleyGen system against two previ-
 ous state-of-the-art methods, SpecVQGAN [9] and IM2WAV
 [10]. Given that IM2WAV utilized FAD and KLD as evalua-
 tion metrics, we adopted their scores directly. For subjective
 evaluation, we generated samples using their pretrained mod-
-els. It's evident from the results that FoleyGen consistently
+els. It’s evident from the results that FoleyGen consistently
 surpasses both SpecVQGAN and IM2WAV in both objective
-and subjective metrics. Notably, there's a marked reduction
+
+and subjective metrics. Notably, there’s a marked reduction
 in the FAD score. The trends in subjective evaluations are
 congruent with the objective metrics. Several factors can be at-
 tributed to this improvement. First, the integration of EnCodec
@@ -372,6 +383,7 @@ pression ratio simplifies the modeling of its distribution for the
 language model. Second, the utilization of the delay pattern
 in token generation avoids the need for multiple Transformer
 models, culminating in superior performance.
+
 Table 2 shows the results of our models when trained using
 various visual encoders. It can be observed that visual encoders
 that are pre-trained via multi-modal tasks, (i.e., CLIP [15] and
@@ -381,6 +393,7 @@ been pre-trained through a discriminative task, outperforms
 VideoMAE. Since VideoMAE is trained using masked au-
 toencoder with self-supervised learning, fine-tuning might be
 required when adopt it for downstream tasks.
+
 Table 3 presents the results achieved using different atten-
 tion mechanisms. All-frame visual attention notably surpassed
 the other two, both in objective metrics and human evaluations.
@@ -390,11 +403,13 @@ in human evaluation as compared with causal visual attention.
 However, a critical insight from human evaluations reveals
 that the systems still struggle with temporal alignment, and
 sometimes fail to capture prominent actions within the video.
+
 4. CONCLUSIONS
+
 In this paper, we introduced FoleyGen, a video-to-audio gen-
 eration model following a language modeling paradigm. Fo-
 leyGen utilizes the EnCodec for bidirectional waveform-token
-conversion, a visual encoder for visual feature extraction and
+conversion,a visual encoder for visual feature extraction and
 a Transformer decoder for conditioned audio token genera-
 tion. Our evaluations demonstrate that FoleyGen surpasses
 prior methodologies in both objective metrics and human eval-
@@ -405,108 +420,160 @@ enhance audio-video temporal alignment, it remains a persis-
 tent challenge in the domain. Future research should delve
 deeper into improving the temporal cohesion of video-to-audio
 generation systems.
+
+--- Page 5 ---
+(1)
+
+2
+
+B
+
+(ll
+
+[12
+
 5. REFERENCES
-[1] Haohe Liu, Zehua Chen, Yi Yuan, Xinhao Mei, Xubo Liu,
+
+Haohe Liu, Zehua Chen, Yi Yuan, Xinhao Mei, Xubo Liu,
 Danilo Mandic, Wenwu Wang, and Mark D Plumbley, “Audi-
-OLDM: Text-to-audio generation with latent diffusion models,"
+oLDM: Text-to-audio generation with latent diffusion models,”
 Proceedings of the International Conference on Machine Learn-
+
 ing, 2023.
-[2] Felix Kreuk, Gabriel Synnaeve, Adam Polyak, Uriel Singer,
+
+Felix Kreuk, Gabriel Synnaeve, Adam Polyak, Uriel Singer,
 Alexandre Défossez, Jade Copet, Devi Parikh, Yaniv Taigman,
-and Yossi Adi, "AudioGen: Textually guided audio genera-
-tion," in The Eleventh International Conference on Learning
+and Yossi Adi, “AudioGen: Textually guided audio genera-
+tion,” in The Eleventh International Conference on Learning
 Representations, 2023.
-[3] Haohe Liu, Qiao Tian, Yi Yuan, Xubo Liu, Xinhao Mei, Qi-
-uqiang Kong, Yuping Wang, Wenwu Wang, Yuxuan Wang, and
-Mark D. Plumbley, "AudioLDM 2: Learning holistic audio
-generation with self-supervised pretraining," arXiv preprint
+
+Haohe Liu, Qiao Tian, Yi Yuan, Xubo Liu, Xinhao Mei, Qi-
+ugqiang Kong, Yuping Wang, Wenwu Wang, Yuxuan Wang, and
+Mark D. Plumbley, “AudioLDM 2: Learning holistic audio
+generation with self-supervised pretraining,” arXiv preprint
 arXiv:2308.05734, 2023.
-[4] Jade Copet, Felix Kreuk, Itai Gat, Tal Remez, David Kant,
-Gabriel Synnaeve, Yossi Adi, and Alexandre Défossez, "Sim-
-ple and controllable music generation," arXiv preprint
+
+Jade Copet, Felix Kreuk, Itai Gat, Tal Remez, David Kant,
+Gabriel Synnaeve, Yossi Adi, and Alexandre Défossez, “Sim-
+ple and controllable music generation,’ arXiv preprint
 arXiv:2306.05284, 2023.
-[5] Andrew Owens, Phillip Isola, Josh McDermott, Antonio Tor-
+
+Andrew Owens, Phillip Isola, Josh McDermott, Antonio Tor-
 ralba, Edward H. Adelson, and William T. Freeman, “Visually
-indicated sounds," in Proceedings of the IEEE Conference on
+indicated sounds,” in Proceedings of the IEEE Conference on
 Computer Vision and Pattern Recognition (CVPR), June 2016.
-[6] Kan Chen, Chuanxi Zhang, Chen Fang, Zhaowen Wang, Trung
-Bui, and Ram Nevatia, "Visually indicated sound generation
+
+Kan Chen, Chuanxi Zhang, Chen Fang, Zhaowen Wang, Trung
+Bui, and Ram Nevatia, “Visually indicated sound generation
 by perceptually optimized classification,” in Proceedings of the
 European Conference on Computer Vision Workshops, 2018.
-[7] Yipin Zhou, Zhaowen Wang, Chen Fang, Trung Bui, and
+
+Yipin Zhou, Zhaowen Wang, Chen Fang, Trung Bui, and
 Tamara L Berg, “Visual to sound: Generating natural sound for
-videos in the wild," in Proceedings of the IEEE Conference on
+videos in the wild,” in Proceedings of the IEEE Conference on
 Computer Vision and Pattern Recognition (CVPR), 2018, pp.
 3550-3558.
-[8] Peihao Chen, Yang Zhang, Mingkui Tan, Hongdong Xiao,
+
+Peihao Chen, Yang Zhang, Mingkui Tan, Hongdong Xiao,
 Deng Huang, and Chuang Gan, “Generating visually aligned
-sound from videos," IEEE Transactions on Image Processing,
+sound from videos,” [EEE Transactions on Image Processing,
 vol. 29, pp. 8292-8302, 2020.
-[9] Vladimir Iashin and Esa Rahtu, “Taming visually guided sound
-generation," in British Machine Vision Conference (BMVC),
+
+Vladimir Iashin and Esa Rahtu, “Taming visually guided sound
+generation,” in British Machine Vision Conference (BMVC),
 2021.
-[10] Roy Sheffer and Yossi Adi, “I hear your true colors: Image
-guided audio generation,” in IEEE International Conference
-on Acoustics, Speech and Signal Processing (ICASSP). IEEE,
+
+Roy Sheffer and Yossi Adi, “I hear your true colors: Image
+guided audio generation,” in JEEE International Conference
+on Acoustics, Speech and Signal Processing (ICASSP). EEE,
 2023, pp. 1-5.
-[11] Simian Luo, Chuanhao Yan, Chenxu Hu, and Hang Zhao, “Diff-
+
+Simian Luo, Chuanhao Yan, Chenxu Hu, and Hang Zhao, “Diff-
 Foley: Synchronized video-to-audio synthesis with latent diffu-
-sion models," arXiv preprint arXiv:2306.17203, 2023.
-[12] Alexandre Défossez, Jade Copet, Gabriel Synnaeve, and Yossi
-Adi, "High fidelity neural audio compression," arXiv preprint
+sion models,” arXiv preprint arXiv:2306.17203, 2023.
+
+Alexandre Défossez, Jade Copet, Gabriel Synnaeve, and Yossi
+Adi, “High fidelity neural audio compression,” arXiv preprint
 arXiv:2210.13438, 2022.
-[13] Zalán Borsos, Raphaël Marinier, Damien Vincent, Eugene
+
+(13]
+
+[14
+
+fa]
+
+20
+
+21
+
+22
+
+23
+
+Zalan Borsos, Raphaél Marinier, Damien Vincent, Eugene
 Kharitonov, Olivier Pietquin, Matt Sharifi, Dominik Roblek,
 Olivier Teboul, David Grangier, Marco Tagliasacchi, et al.,
-"Audiolm: a language modeling approach to audio generation,”
+“Audiolm: a language modeling approach to audio generation,”
 IEEE/ACM Transactions on Audio, Speech, and Language Pro-
 cessing, 2023.
-[14] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk
+
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk
 Weissenborn, Xiaohua Zhai, Thomas Unterthiner, Mostafa
 Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly,
 Jakob Uszkoreit, and Neil Houlsby, “An image is worth 16x16
-words: Transformers for image recognition at scale,” in Inter-
+words: Transformers for image recognition at scale,” in Jnter-
 national Conference on Learning Representations, 2021.
-[15] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh,
+
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh,
 Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell,
 Pamela Mishkin, Jack Clark, et al., “Learning transferable
-visual models from natural language supervision,” in Inter-
+visual models from natural language supervision,” in Jnter-
 national Conference on Machine Learning. PMLR, 2021, pp.
 8748-8763.
-[16] Rohit Girdhar, Alaaeldin El-Nouby, Zhuang Liu, Mannat Singh,
+
+Rohit Girdhar, Alaaeldin El-Nouby, Zhuang Liu, Mannat Singh,
 Kalyan Vasudev Alwala, Armand Joulin, and Ishan Misra, “Im-
 ageBind: One embedding space to bind them all,” in Proceed-
 ings of the IEEE/CVF Conference on Computer Vision and
-Pattern Recognition (CVPR), 2023, pp. 15180–15190.
-[17] Zhan Tong, Yibing Song, Jue Wang, and Limin Wang, “Video-
+Pattern Recognition (CVPR), 2023, pp. 15180-15190.
+
+Zhan Tong, Yibing Song, Jue Wang, and Limin Wang, “Video-
 MAE: Masked autoencoders are data-efficient learners for self-
 supervised video pre-training,” Advances in Neural Information
 Processing Systems, vol. 35, pp. 10078-10093, 2022.
-[18] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
+
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
 reit, Llion Jones, Aidan N Gomez, L ukasz Kaiser, and Illia
-Polosukhin, "Attention is all you need,” in Advances in Neural
+Polosukhin, “Attention is all you need,” in Advances in Neural
 Information Processing Systems. 2017, vol. 30, Curran Asso-
 ciates, Inc.
-[19] Honglie Chen, Weidi Xie, Andrea Vedaldi, and Andrew Zisser-
-man, "VggSound: A large-scale audio-visual dataset," in IEEE
+
+Honglie Chen, Weidi Xie, Andrea Vedaldi, and Andrew Zisser-
+man, “VggSound: A large-scale audio-visual dataset,” in JEEE
 International Conference on Acoustics, Speech and Signal Pro-
-cessing (ICASSP). IEEE, 2020, pp. 721–725.
-[20] Tri Dao, Dan Fu, Stefano Ermon, Atri Rudra, and Christo-
-pher Ré, "FlashAttention: Fast and memory-efficient exact
-attention with io-awareness," Advances in Neural Information
+cessing (ICASSP). IEEE, 2020, pp. 721-725.
+
+Tri Dao, Dan Fu, Stefano Ermon, Atri Rudra, and Christo-
+pher Ré, “FlashAttention: Fast and memory-efficient exact
+attention with io-awareness,” Advances in Neural Information
 Processing Systems, vol. 35, pp. 16344-16359, 2022.
-[21] Jonathan Ho and Tim Salimans, "Classifier-free diffusion guid-
-ance," arXiv preprint arXiv:2207.12598, 2022.
-[22] Kevin Kilgour, Mauricio Zuluaga, Dominik Roblek, and
-Matthew Sharifi, "Fréchet audio distance: A metric for
+
+Jonathan Ho and Tim Salimans, “Classifier-free diffusion guid-
+ance,” arXiv preprint arXiv:2207.12598, 2022.
+
+Kevin Kilgour, Mauricio Zuluaga, Dominik Roblek, and
+Matthew Sharifi, “Fréchet audio distance: A metric for
 evaluating music enhancement algorithms,” arXiv preprint
-arXiv:1812.08466, 2018.
-[23] Shawn Hershey, Sourish Chaudhuri, Daniel PW Ellis, Jort F
+arXiv: 1812.08466, 2018.
+
+Shawn Hershey, Sourish Chaudhuri, Daniel PW Ellis, Jort F
 Gemmeke, Aren Jansen, R Channing Moore, Manoj Plakal,
 Devin Platt, Rif A Saurous, Bryan Seybold, et al., “CNN archi-
 tectures for large-scale audio classification,” in IEEE Interna-
 tional Conference on Acoustics, Speech and Signal Processing
 (ICASSP). IEEE, 2017, pp. 131-135.
-[24] Khaled Koutini, Jan Schlüter, Hamid Eghbal-zadeh, and Ger-
+
+Khaled Koutini, Jan Schliiter, Hamid Eghbal-zadeh, and Ger-
 hard Widmer, “Efficient training of audio transformers with
-patchout," in Interspeech. 2022, pp. 2753-2757, ISCA.
+patchout,” in Interspeech. 2022, pp. 2753-2757, ISCA.
+

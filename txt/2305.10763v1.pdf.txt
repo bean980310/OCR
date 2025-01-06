@@ -1,21 +1,18 @@
+--- Page 1 ---
 CLAPSpeech: Learning Prosody from Text Context with Contrastive
-Zhenhui Ye*
-zhenhuiye@zju.edu.cn
-Zhejiang University
-Ziyue Jiang
-jiangziyue@zju.edu.cn
-Zhejiang University
 Language-Audio Pre-training
-Xiang Yin
-Rongjie Huang*
-rongjiehuang@zju.edu.cn
-Zhejiang University
-Jinglin Liu
-liu.jinglin@bytedance.com
-ByteDance
-yixiang.stephen@bytedance.com
-Bytedance
-Abstract
+
+Zhenhui Ye* Rongjie Huang* Yi Ren
+zhenhuiye @ zju.edu.cn rongjiehuang @ zju.edu.cn ren.yi@bytedance.com
+Zhejiang University Zhejiang University Bytedance
+Ziyue Jiang Jinglin Liu Jinzheng He
+jiangziyue @zju.edu.cn liu.jinglin@bytedance.com jinzhenghe @zju.edu.cn
+Zhejiang University ByteDance Zhejiang University
+Xiang Yin Zhou Zhao‘
+yixiang.stephen @ bytedance.com zhaozhou @zju.edu.cn
+Bytedance Zhejiang University
+Abstract (Ren et al., 2021a) and variational generative mod-
+
 Improving text representation has attracted
 much attention to achieve expressive text-to-
 speech (TTS). However, existing works only
@@ -45,25 +42,19 @@ formance of CLAPSpeech. Ablation studies
 demonstrate the necessity of each component
 in our method. Source code and audio sam-
 ples are available at https://clapspeech.
-github.io.
+github. io.
+
 1 Introduction
+
 With the development of deep learning, the audio
 quality of modern TTS systems has been improved,
 yet prosody modeling is still a challenging problem.
 Previous works on expressive TTS have utilized
 external variation predictors (prediction-based, PB)
+
 *Equal contribution.
-*Corresponding author.
-Yi Ren
-ren.yi@bytedance.com
-Bytedance
-Jinzheng He
-jinzhenghe@zju.edu.cn
-Zhejiang University
-Zhou Zhao+
-zhaozhou@zju.edu.cn
-Zhejiang University
-(Ren et al., 2021a) and variational generative mod-
+t Corresponding author.
+
 els (variation-based, VB) (Kim et al., 2020; Liu
 et al., 2022) to inject prosody variance into the
 TTS model. Another popular direction is to learn
@@ -72,7 +63,7 @@ better text representation for prosody prediction
 resentation learning methods for TTS are either
 based on the masked language model task (Devlin
 et al., 2019; Jia et al., 2021; Chen et al., 2021)
-(i.e., learn a BERT-like large language model on a
+(ie., learn a BERT-like large language model on a
 text corpus) or masked acoustic model task (Chen
 et al., 2020; Bai et al., 2022) (i.e., reconstruct the
 masked mel-spectrogram based on the input text),
@@ -86,6 +77,7 @@ of model capacity. We perform a case study in
 Section 4.3.1, in which we can see that previous
 text representation used in TTS cannot capture the
 prosody variance under different text contexts.
+
 Technically, prosody can be regarded as the
 pitch and duration variance of the same token un-
 der different conditions (such as text contexts and
@@ -100,45 +92,29 @@ propose a contrastive learning method that con-
 nects the text context and the high-level prosody
 pattern in the text-speech joint multi-modal space,
 namely Contrastive Language-Audio Pre-Training
-texts that contain the selected token "higher"
-token
-indexing
-token encoding with
-context information
-higher up
-could see
-of a slightly
-Text
-text encoding
-higher age...
-Encoder
+
+--- Page 2 ---
+texts that contain the selected token “higher”
+
+. higher up
+could see ... of a slightly token encoding with
+higher a fe : Text text encoding token context information
+; ° Encoder indexing
 rising higher
-and higher
+and higher ..
+ty 7 rT we Dy
 text-speech pairs from
-large-scale ASR datasets
-Prosody
-Encoder
-555-5
-S₁
-S₁T ST₂ S₁ T3
-...
-S₁. TN
-Sz
-S. T. S₂ Tz Sp. T... Sp. T
-..
-B
-☐ S SL SL SL ST
-..
-...
-...
-higher
-speech segments of the selected token "higher"
+—_ large-scale ASR datasets fs] [sn sen sen) [sen
+Sp S.+T,  Sy°T, 82+ Ts eee S, Ty
+Prosody | .
+Encoder a SieTh | Se°Te | Ss°T) | Ss
 speech encoding with local
-prosody information
-SN
-Sw T₁ Sw T₂ SN T ... SN - TN
+alae iaiaiaaialal prosody information ———>_ Sw SyiT Sue Te| SyeTh | | Sy Ty
+speech segments of the selected token “higher”
+
 Figure 1: The contrastive pre-training process of CLAPSpeech. For clarity, we only show the word-level pre-
 training here. Note that we also perform a phoneme-level pre-training.
+
 for Text-to-Speech (CLAPSpeech). Specifically,
 we learn a text encoder to predict the prosody
 from the text context and a prosody encoder to
@@ -161,6 +137,7 @@ and word levels, respectively. After the pre-training
 stage, our CLAPSpeech can be regarded as a plug-
 in text encoder applicable to all TTS models to
 provide fine-grained prosody representation.
+
 To prove the effectiveness and generalizability
 of our approach, we use two large-scale automatic
 speech recognition (ASR) datasets (LibriSpeech
@@ -170,6 +147,7 @@ train the CLAPSpeech model. The pre-trained
 text encoder of CLAPSpeech is then plugged into
 prediction/variation-based TTS baselines to demon-
 strate the improvement of CLAPSpeech to the exist-
+
 ing expressive TTS systems. We then evaluate the
 performance on three TTS datasets, including one
 single-speaker English dataset, one single-speaker
@@ -178,6 +156,7 @@ dataset. Experiments on all datasets show that
 CLAPSpeech improves the prosody of the TTS
 models and outperforms previous representation
 learning methods.
+
 To summarize, CLAPSpeech has three promi-
 nent advantages: 1) It can provide better prosody
 representation than previous representation learn-
@@ -189,9 +168,10 @@ TTS systems, only with a minor modification of the
 front-end network architecture. 3) We also show its
 potential applications such as fine-grained prosody
 transfer in Section 4.3.2.
+
 2 Related Work
-2.1
-Expressive TTS
+2.1 Expressive TTS
+
 In the past few years, modern neural TTS has made
 significant progress in high practicality and audio
 quality (Ren et al., 2019; Kim et al., 2020; Elias
@@ -201,6 +181,8 @@ modeling expressive prosody given the plain in-
 put text is still challenging. To achieve expressive
 TTS, one common practice is to use a reference
 encoder and style tokens (Wang et al., 2018; Jia
+
+--- Page 3 ---
 et al., 2018). But it is difficult to select appropriate
 reference audios during inference (Tan et al., 2021).
 Other works seek to improve prosody modeling
@@ -213,6 +195,7 @@ variation-based (VB) TTS systems leverage varia-
 tional auto-encoder (VAE) (Ren et al., 2021b) or
 normalizing flow (Kim et al., 2020) to model the
 prosody in the latent space.
+
 There are also some works that explore provid-
 ing better text presentation with rich prior knowl-
 edge to help the prosody prediction. For instance,
@@ -223,7 +206,9 @@ tation learning methods for text pre-training and
 speech pre-training also show improvements in the
 prosody of TTS. We will discuss the representation
 learning works for TTS in the next section.
-2.2 Representation Learning for TTS
+
+2.2. Representation Learning for TTS
+
 Self-supervised pre-training methods have been
 leveraged in TTS to enhance text processing or
 speech generation capabilities (Chung et al., 2019;
@@ -251,10 +236,12 @@ proposes to learn a speech encoder that gener-
 ates continuous speech (prosody) representations.
 Specifically, during training they replace a span of
 speech spectrogram with mask tokens and learn to
+
 recover the masked spectrogram without text con-
-ditions. A³T (Bai et al., 2022) additionally learns a
+ditions. A?T (Bai et al., 2022) additionally learns a
 text encoder as auxiliary information for MAM to
 reconstruct the masked mel-spectrogram.
+
 The difference between CLAPSpeech and previ-
 ous representation works in TTS is obvious: While
 previous works implicitly learn the prosody in-
@@ -264,7 +251,9 @@ cross-modal contrastive learning to explicitly learn
 the context-correlated prosody, which leads to bet-
 ter prosody prediction and more efficient usage of
 model capacity.
-3 CLAPSpeech
+
+3  CLAPSpeech
+
 We propose CLAPSpeech, a cross-modal con-
 trastive learning approach to provide better text
 representation for prosody prediction in TTS. As
@@ -287,60 +276,59 @@ can be conveniently plugged into modern TTS sys-
 tems to improve prosody prediction. We describe
 these designs in detail in the following subsections
 and provide more technical details in Appendix A.
+
 3.1 Text Encoder and Prosody Encoder
-The prosody of the same pronounceable token¹
+
+The prosody of the same pronounceable token!
 varies in different text contexts. CLAPSpeech aims
 to model the correlation between the text context
 and the high-level prosody pattern. To this end,
 we design a text encoder and a prosody encoder to
 construct a text-speech multi-modal prosody em-
 bedding space.
+
 As shown in Figure 2(a), the text encoder uses
 phoneme and byte pair encoding (BPE) (Shibata
 et al., 1999) of the input text as the input. The
 phoneme and BPE sequence help the model extract
-¹ such as the phoneme "AEO" or the word "higher".
+
+'such as the phoneme "AEO” or the word "higher".
+
+--- Page 4 ---
 token encoding
-↑ [N, C]
+IN, C]
+
 token indexing
-[N, T, C] (WP) if word-level
-text encoding
-FFT
+IN, T, C]
+
 speech encoding
-[N, C]
+tw
+
 Attentive Pooling 1D
-[N, T, C]
-Conv1D+
-x 3 x 4
+
+if word-level
+
+text encoding
+
 phoneme-level
-LN + ReLU
+
 WordPool
-(Word-level Sequence)
-has
-WP
-never
-(Phoneme-level Sequence)
-HH AE1 Z❘N EH1 V ERO
-(Word2Ph)
 + Word2Ph
-FFT
-↑
-FFT
-Phoneme
-Embedder
-BPE
-Embedder
-phoneme
-BPE
-(a) text encoder
-Conv1D+LN + ReLU
-× 3
-speech segment
-(b) prosody encoder
+
+ConvID + LN + ReLU
+
+FFT FFT ¥
+Phoneme BPE
+Embedder Embedder
+phoneme BPE speech segment
+
+(a) text encoder (b) prosody encoder
+
 Figure 2: The text / prosody encoder of CLAPSpeech.
 In subfigure (a), "WP" and "Word2Ph" denotes word
 pooling and Word2Ph expanding operation, which are
 illustrated in Figure 3.
+
 the prosody pattern related to phonological habits
 (such as the linking phenomenon in English) and
 semantic information (which may imply different
@@ -367,23 +355,31 @@ according to the word boundary, and the word2ph
 operation repeats the word hidden states for each
 phoneme insides the word boundary as illustrated
 in Figure 3(b).
+
 Once the phoneme sequence and BPE seqneuce
 is fused, we then use an additional FFT block to
 fuse the aligned phoneme and BPE encoding to get
 the final phoneme-level text encoding. During the
 pre-training phase, since only one selected token is
 analyzed, we index from the phoneme-level text en-
-Phoneme/BPE
-Encoder
-HH AE1 Z❘N EH1 V ERO
-(Phoneme/BPE-level Sequence)
-(a) Word Pooling
-has
-never
+
 (Word-level Sequence)
-(b) Word2Ph Expanding
+has never
+
+(Phoneme-level Sequence)
+HH AEI Z |NEHI V ERO
+
+has
+
+HH AE1 Z | NEHI VERO never
+
+(Phoneme/BPE-level Sequence) (Word-level Sequence)
+
+(a) Word Pooling (b) Word2Ph Expanding
+
 Figure 3: The word pooling and word2ph expanding
 operation.
+
 coding to obtain the encoding of the selected token
 (namely the token encoding in Figure 2(a)) and then
 linearly project it into the multi-modal embedding
@@ -391,10 +387,11 @@ space. During the TTS phase, the phoneme-level
 output of the text encoder can be conveniently uti-
 lized as auxiliary features for TTS systems, which
 we will discuss in Section 3.3.
+
 The prosody encoder aims to extract prosody pat-
 terns from the GT speech segment of the selected
 token. Therefore, we clip the mel-spectrogram
-with the word boundary² as the input speech fea-
+with the word boundary” as the input speech fea-
 ture. Then the prosody encoder processes the in-
 put mel-spectrogram into a global encoding to be
 connected with the token encoding. Note that the
@@ -407,7 +404,7 @@ and speaker space: 1) since the positive sample and
 negative samples belong to the same pronounce-
 able token, the phonetic information is eliminated;
 2) as the speaker information is not provided to
-the text encoder³, the prosody encoder will filter
+the text encoder’, the prosody encoder will filter
 out speaker information to maximize the prosody
 information in the output features during training.
 This way, by connecting the context-aware text en-
@@ -416,9 +413,12 @@ the one hand, the prosody encoder learns to ex-
 tract the high-level prosody information from the
 speech segment; on the other hand, the text encoder
 is encouraged to utilize the text context to predict
-2We extract word boundary with a forced alignment tool.
-3 We assume that text and speaker are independent of each
+
+?We extract word boundary with a forced alignment tool.
+3We assume that text and speaker are independent of each
 other (no correlation between them) in our dataset.
+
+--- Page 5 ---
 the prosody extracted by the prosody encoder. As
 shown in Figure 2(b), we use ResNet-50 (He et al.,
 2016) as the backbone of the prosody encoder due
@@ -430,8 +430,9 @@ block; 2) to handle the speech segment of dynamic
 lengths, we use an attentive pooling layer from Rad-
 ford et al. (2021) to aggregate the output feature
 map of the ResNet.
-3.2
-Multi-scale Contrastive Pre-training
+
+3.2. Multi-scale Contrastive Pre-training
+
 The key idea of CLAPSpeech is to model the
 prosody variance of the same text token under dif-
 ferent contexts. Therefore, to construct a mini-
@@ -446,74 +447,80 @@ multi-scale contrastive training framework. To be
 specific, we learn two CLAPSpeech models for
 phoneme-level and word-level text tokens, respec-
 tively.
+
 For clarity, we first illustrate the training process
 of phoneme-level CLAPSpeech. Let the text con-
 text that contains the selected phoneme token (e.g.,
 "AEO") be represented by Xtext. Let the processed
 speech segment of the phoneme token be X speech
-s.t. X speech ERFXT, where F is the number of
+s.t. X speech © R’*T, where F is the number of
 Mel bins and T is the number of time bins. For
-simplicity, we use Xtext and X speech to represent
-a batch of N text-speech pairs.
+simplicity, we use Xter¢ and X speech to represent
+a batch of NV text-speech pairs.
+
 The text and speech are passed through the text
-encoder ftext (•) and prosody encoder fspeech (·),
+encoder ftext(-) and prosody encoder fspeech(-)s
 respectively. As can be seen in Figure 2(a), the out-
-put of the text encoder ftext (Xtext) is the phoneme-
+put of the text encoder frert(Xtext) is the phoneme-
 level encoding of the input text, hence we index
 from it to obtain the encoding of the phoneme to-
-ken ftext (Xtext)iph, where iph denotes the index
+ken Frext(Xtext)ipn> where i,,, denotes the index
 of the phoneme token in the phoneme-level text
 sequence. As can be seen in Figure 2(b), the output
-speech encoding f speech (X speech) is a global repre-
+speech encoding fspeech(Xspeech) is a global repre-
 sentation of the input speech segment. The output
 representations are normalized and then linearly
 projected into the multi-modal embedding space:
-Tph = Ltext (LN(ftext (Xtext)iph))
-S = Lspeech (LN(f speech (Xspeech))),
-(1)
-where Tph = RNC is the phoneme token represen-
-tation and SЄ RNC is the speech representation
+
+Toph = Ltext(LN (ftext(Xtect)i,,,))
+
+d)
+S= Lspeech(LN (fspeech(X speech)))
+
+where Typ, € RNC is the phoneme token represen-
+tation and S ¢ R‘*C js the speech representation
 of channel size C. LN means layer normalization,
-Ltext and Lspeech are linear projections.
+Ltext and Lsneech are linear projections.
+
 Now that the text and speech embeddings are
 comparable, CLAPSpeech is trained to predict
-which of the N × N possible text-speech pairings
+which of the NV x N possible text-speech pairings
 across a batch actually occurred. Specifically, the
 text encoder and prosody encoder are encouraged
 to maximize the cosine similarity of the text and
 speech encoding of the N real pairs in the batch
 while minimizing the cosine similarity of the em-
-beddings of the N² – N incorrect pairings. Follow-
+beddings of the N? — N incorrect pairings. Follow-
 ing Radford et al. (2021), we optimize a symmetric
 cross-entropy loss over these similarity scores:
-=
-0.5× (ltext (T.Cph)+1 speech (T.Cph)) (2)
--
-Lph
-where Cph ЄRNXN is the cosine similarity ma-
-trix between the phoneme token encoding Tph
-and the speech encoding S, measured by Cph
-Tph ST; T is a learnable temperature param-
-eter to scale the range of logits; and lk
-1 N
-A log diag(softmax(C)) is the cross entropy
+
+Loh =0.5x (leat (T- Cyn) +l speech (T-Cpn)) (2)
+
+where Cyn € RY*N is the cosine similarity ma-
+trix between the phoneme token encoding 7),
+and the speech encoding S$, measured by Cp, =
+Tyn - ST; 7 is a learnable temperature param-
+eter to scale the range of logits; and J, =
+Huy log diag(softmax(C))) is the cross entropy
 function along the text and speech axis in C.
-.
-i=0
-=
+
 The word-level CLAPSpeech can be trained sim-
 ilarly. As shown in Figure 2(a), for the word-level
 CLAPSpeech, we use word pooling to process the
 phoneme-level text encoding into word level, then
 index from it to obtain the word token encoding
-Tword. Similar to Equation 2, the training loss for
+Tword- Similar to Equation 2, the training loss for
 word-level CLAPSpeech is formulated as:
-Lword = 0.5×(ltext (T.Cword)+1 speech (T· Cword))
+
+Lword = 0.5X (leet (T-Cword) +l speech (T*Cword))
+
 (3)
 where Cword is the cosine similarity matrix be-
-tween the word token encoding Tword and the
+tween the word token encoding Tyorq and the
 speech encoding S.
+
 3.3 CLAPSpeech Plugged in TTS Systems
+
 The text encoder of CLAPSpeech could provide
 text representation with rich prosody information
 for the TTS task. Since the generated text represen-
@@ -526,31 +533,43 @@ take a state-of-the-art variation-based TTS system,
 PortaSpeech, as an example. As shown in Figure
 4, the pre-trained text encoders of CLAPSpeech
 (marked with a red dashed rectangle) perform as
-K, V
+
+--- Page 6 ---
 Multi-Length Discriminator
+x
+
 Variational Generator
+
 word-to-phoneme Attention
+
 duration
 predictor
-phoneme-level
-combine encoding
-word-level
-duration
-LR)
+
 word encoder
-WP)
-encoder
-expand
-stop gradient
-phonetic
-encoder
-word-level
-CLAPSpeech
+
 phoneme-level
+combine | ¢ncoding
+encoder
+
+t
+4 expand! word-level
+1
+1
+1
+1
+4.
+
+stop gradient
 CLAPSpeech
-phoneme
-BPE
+
+phonetic phoneme-level
+CLAPSpeech
+encoder = =
+XX 3 )
+phoneme BPE
+
 Figure 4: PortaSpeech with CLAPSpeech plugged in.
+
 an auxiliary encoder to the original phonetic en-
 coder of PortaSpeech. The phoneme-level outputs
 of the phonetic encoder and CLAPSpeech text en-
@@ -566,21 +585,26 @@ pendix A.1. We additionally adopt multi-length
 adversarial training in TTS models to improve au-
 dio quality. More details about the the adversarial
 training can be found in Appendix A.2.
+
 4 Experiments
+
 4.1 Experimental Setup
+
 Datasets and Baselines We pre-train CLAP-
 Speech on two ASR datasets: 1) LibriSpeech
 (Panayotov et al., 2015), an English database that
 contains 982 hours of speech from 2484 speak-
 ers; 2) WenetSpeech (Zhang et al., 2022), a Chi-
 nese speech corpus consisting of 10,000 hours of
-speech. Then we evaluate the pre-trained CLAP-
+speech*. Then we evaluate the pre-trained CLAP-
 Speech on three TTS datasets: 1) LJSpeech (Ito
 and Johnson, 2017), a single-speaker database that
-*We filter samples with a correctness confidence level
+
+‘We filter samples with a correctness confidence level
 above 0.95, finally get a subset of 1000 hours.
+
 contains 13,100 English audio clips with a to-
-tal of nearly 24 hours of speech; 2) Biaobei5, a
+tal of nearly 24 hours of speech; 2) Biaobei>, a
 Chinese speech corpus consisting of 10,000 sen-
 tences (about 12 hours) from a Chinese speaker;
 3) LibriTTS (Zen et al., 2019), an English dataset
@@ -592,10 +616,11 @@ tools. The GT mel-spectrograms are generated
 from the raw waveform with a frame size of 1024
 and the hop size of 256. We compare CLAP-
 Speech against two pre-training baselines (BERT
-(Devlin et al., 2019) and A³T (Bai et al., 2022)) in
+(Devlin et al., 2019) and A°T (Bai et al., 2022)) in
 a prediction-based (PB) TTS model, FastSpeech
 2, and a variation-based (VB) TTS model, Por-
 taSpeech.
+
 Model Configuration CLAPSpeech consists of
 a text encoder and a prosody encoder, whose struc-
 tures are shown in Figure 2 and discussed in Sec-
@@ -607,6 +632,7 @@ sists of multiple stacked convolutional layers with
 batch normalization and treats the input spectro-
 gram as images. We put more detailed model con-
 figurations in Appendix B.1.
+
 Training and Evaluation Our approach is im-
 plemented with Pytorch. We pre-train CLAP-
 Speech on 4 Nvidia 3090Ti GPUs with a batch size
@@ -628,14 +654,19 @@ tive evaluation, following Ren et al. (2021b), we
 evaluate the prosody from the aspects of pitch and
 duration: 1) we compute the average dynamic time
 warping (DTW) (Muller, 2007) distances between
-Shttps://www.data-baker.com/opensource.html
+
+Shttps: //www. data-baker..com/opensource. html
+
+--- Page 7 ---
 the pitch contours of GT speech and synthesized
 speech to measure the pitch accuracy; 2) we cal-
 culate the average absolute duration error (DE) in
-micro-seconds to measure the duration accuracy.
+micro-seconds® to measure the duration accuracy.
+
 4.2 Performance
+
 We compare the performance of our CLAPSpeech
-against BERT and A³T in PB/VB TTS models. GT
+against BERT and AT in PB/VB TTS models. GT
 (the ground-truth audio) and GT (voc.) (the audio
 waveform generated by the vocoder using the GT
 mel-spectrogram) are also included in the experi-
@@ -649,16 +680,17 @@ proves that CLAPSpeech could effectively improve
 the prosody prediction in current expressive TTS
 models (no matter prediction-based or variation-
 based). Besides, we observe that CLAPSpeech
-achieves better performance than BERT and A³T
+achieves better performance than BERT and A®T
 with much fewer model parameters. We suspect
 it is due to the fact that the MLM-based method
 (i.e., BERT) require a large model capacity to store
 the semantic information and MAM-based method
-(i.e., A³T) have to jointly learn the phonetic infor-
+(i.e., A3T) have to jointly learn the phonetic infor-
 mation to reconstruct the masked mel-spectrogram.
 By contrast, our CLAPSpeech eliminates the pho-
 netic space and only focus on the prosody space
 during pre-training, which is parameter-efficient.
+
 We then visualize the mel-spectrograms gener-
 ated by different methods in Figure 5. We can see
 that CLAPSpeech can generate results with more
@@ -666,31 +698,33 @@ realistic pitch contours, which result in expressive
 prosody. In conclusion, our experiments demon-
 strate that CLAPSpeech could help TTS systems
 synthesize more expressive and prosodic audio.
+
 4.3 Deeper Analysis
 4.3.1 Token Representation Self-similarity
+
 To better understand the performance superiority of
 CLAPSPeech over existing representation learning
 methods for TTS, we analyze the token represen-
 tation learned by CLAPSpeech and other methods.
 Following Su et al. (2021), we define the averaged
 similarity on the selected token under different con-
-'In our PB/VB TTS baseline, the duration is predicted in
+
+°In our PB/VB TTS baseline, the duration is predicted in
 phoneme/word level, respectively.
-texts T = [T1, ..., TN] as,
-N N
-1
-s(T)
-N(N − 1)
-ΣΣ cosine(Τι, Τ;)
-i=1 j=1,j‡i
+
+texts T = [T},..., Tn] as,
+1 N ON
+N(N 1) i=1 j=1j4i
+
 (4)
-where T¿ and T¿ are the selected token's encoding
+where T; and T; are the selected token’s encoding
 extracted by the model from different text contexts.
-Intuitively, a lower s(T) indicates that the selected
+Intuitively, a lower s(T’) indicates that the selected
 token itself plays a smaller role in generating its rep-
 resentation, which means that the model captures
 more context-related information from the input
 text sequence, and thus predicts better prosody.
+
 Quantitative Evaluation We sample 10,000
 batches (each batch consists of 256 sentences that
 contain the same selected token) from the ASR
@@ -702,207 +736,121 @@ lowest similarity in the off-diagonal entries of the
 similarity matrix, which denotes that the model has
 made use of the text context to capture the prosody
 variance of the same token, thus achieve the best
-prosody performance in Table 1. Besides, we can
+prosody performance in Table |. Besides, we can
 see that BERT also achieves a relatively low off-
 diagonal similarity, which is due to its MLM task
 during pre-training, in which the model needs to
 extract semantic information from context to pre-
 dict the masked token. By contrast, the vanilla
-TTS text encoder and A³T fail to achieve a low off-
+TTS text encoder and A*T fail to achieve a low off-
 diagonal similarity, which means that both models
 cannot extract discriminative information from dif-
-ferent contexts. We suspect the failure of A³T is
+ferent contexts. We suspect the failure of A®T is
 due to the fact that its MAM objective encourages
 the model to predict the masked mel-spectrogram
 patch based on the input unmasked text sequence,
-which increases the model's demand for phonetic
+which increases the model’s demand for phonetic
 information of the selected token.
-Qualitative Evaluation We sample 8 sentences?
+
+Qualitative Evaluation We sample 8 sentences”
+
 that contain the word "higher" from LibriSpeech
-and visualize the self-similarity matrix M (where
-Mi,j = cosine(Ti, T;)) produced by CLAPSpeech
+and visualize the self-similarity matrix / (where
+M,,; = cosine(T;, T;)) produced by CLAPSpeech
 and vanilla TTS text encoder. The results are shown
 in Figure 6, where a darker color denotes a higher
 self-similarity score. We also provide the self-
-similarity matrix of BERT and A³T in Figure 9
+similarity matrix of BERT and A®T in Figure 9
 of Appendix C. We can see that the self-similarities
 of CLAPSpeech are much lower in the off-diagonal
 entries.
-We list these sentences in Table 5 of Appendix C.
+
+7We list these sentences in Table 5 of Appendix C.
+
+--- Page 8 ---
 Table 1: Performance comparison of different methods. PB and VB denote prediction-based and variaition-
 based TTS baselines, respectively. DTW denotes the dynamic time warping distance of pitch contours in the
 Mel-spectrogram. DE means the averaged absolute duration error in micro-seconds.
-LJSpeech
-Biaobei
-LibriTTS
-Method
-#Params
-MOS↑
-DTW↓ DE↓ MOS↑
-DTW↓
-DE↓ MOS↑ DTW↓
-DE↓
-GT
-4.81
-0
-0
-4.59
-0
-0
-4.40
-0
-0
-GT(voc.)
-4.63
-0
-0
-4.43
-0
-0
-4.26
-0
-0
-PB
-3.77
-29.09 25.77
-3.37
-18.01
-PB + BERT
-4.04
-27.43 24.97 3.43
-16.79
-PB +
-+ A³T
-3.92
-28.18 25.63 3.51
-17.18
-PB+ CLAPSpeech
-4.11
-27.16
-24.19 3.62
-28.79 3.43
-28.06 3.60
-28.44
-16.04 27.60
-14.26 27.42
-11.99M
-13.82 26.70
-109.48M
-3.54
-13.67 27.03
-48.25M
-3.71
-13.37
-26.46
-30.51M
-VB
-3.96
-27.58
-53.23
-3.75
-14.22 40.31
-3.81
-VB + BERT
-4.13
-26.97
-52.01
-3.91
-VB + A³T
-4.05
-26.37
-52.17
-4.04
-VB+CLAPSpeech
-4.28
-25.94
-51.34
-4.22
-13.97
-13.48
-13.63 38.41 3.95
-39.15 3.82
-37.07 4.06
-11.96 52.51
-11.51 51.27 132.69M
-11.71 51.98 59.73M
-10.93 50.89 41.54M
-23.02M
-(a) GT
-(b) PB
+
+Method LJSpeech Biaobei LibriTTS #Params
+MOSt DTW| DE| | MOSt DTW| DE| | MOSt DTW|  DE|
+
+GT 4.81 0 0 4.59 0 0 4.40 0 0 /
+
+GT(voc.) 4.63 0 0 4.43 0 0 4.26 0 0 /
+
+PB 3.77 29.09 25.77 | 3.37 18.01 28.79 | 3.43 14.26 27.42 | 11.99M
+PB + BERT 4.04 27.43 24.97 | 3.43 16.79 28.06 | 3.60 13.82 26.70 | 109.48M
+PB+A°T 3.92 28.18 25.63 | 3.51 17.18 28.44 | 3.54 13.67 27.03 | 48.25M
+PB +CLAPSpeech | 4.11 27.16 24.19 | 3.62 16.04 27.60 | 3.71 13.37 26.46 | 30.51M
+VB 3.96 27.58 53.23 | 3.75 14.22 40.31 3.81 11.96 52.51 | 23.02M
+VB + BERT 4.13 26.97 52.01 3.91 13.63 38.41 3.95 11.51 51.27 | 132.69M
+VB + A°T 4.05 26.37. 52.17 | 4.04 13.97 39.15 | 3.82 11.71 51.98 | 59.73M
+VB + CLAPSpeech | 4.28 25.94 51.34 | 4.22 13.48 37.07 | 4.06 10.93 50.89 | 41.54M
+
+(a) GT (b) PB
+
 (c) PB+BERT
-E
-(d) PB+A³T
-(e) PB+ CLAPSpeech
+
+(d) PB+A°T (e) PB + CLAPSpeech
+
 Figure 5: Visualizations of the mel-spectrograms generated by different TTS systems.
+
 Table 2: Self-similarity score of different methods.
 TTS denotes the text encoder of the vanilla TTS base-
 line.
-s8-0.57 0.57 0.84 0.46 0.49 0.52 0.44 1.00
-s8-1.00 1.00 1.00 1.00 0.99 1.00 0.96 1.00
-$7-0.45 0.48 0.52 0.41 0.37
-1.00 0.44
-s7 0.96 0.96 0.96 0.96 0.98 0.96 1.00 0.96
-s6 0.58 0.45 0.50 0.51 0.40 1.00
-0.28 0.52
-s6 - 0.99
-1.00 1.00 1.00 1.00 1.00 0.96 1.00
-$5-0.66 0.50 0.31 0.46 1.00 0.40
-0.37 0.49
-$5 -1.00
-Text Encoder of TTS BERT АЗТ CLAPSPeech
-Self-Similarity 0.9854 0.5517 0.9390
-s4 -0.61 0.67 0.50 1.00 0.46 0.51 0.41 0.46
-0.50 0.31 0.50 0.52 0.84
-1.00 1.00 0.99 1.00 1.00 0.98 0.99
-s4 1.00 1.00 0.98 1.00 0.99 1.00 0.96 1.00
-s3 1.00 1.00 1.00 0.98 1.00 1.00 0.96 1.00
+
+Text Encoder of TTS BERT A°‘T
+0.9854 0.5517 0.9390
+
+CLAPSPeech
 0.4160
-$3-0.59 0.67 1.00
-$2 0.60 1.00 0.67 0.67 0.50 0.45 0.48 0.57
-s2 1.00 1.00 1.00 1.00 1.00 1.00 0.96 1.00
-s1 1.00 0.60 0.59 0.61
-0.66 0.58 0.45 0.57
-$1 1.00 1.00 1.00 1.00 1.00 0.99 0.96 1.00
-T
-$2 $3 $4
-$5
-s6
-s7
-s8
-1.0
+
+Self-Similarity
+
 4.3.2 Fine-grained Prosody Transfer
+
 We perform an intuitive case study about prosody
-transfer to further validate that our CLAPSpeech's
+transfer to further validate that our CLAPSpeech’s
 text-speech joint multi-modal space represents
 high-level prosody patterns (i.e., the pitch contours
 and duration information). We take s7/8 in Table 5
 as the reference/source audio and expect to trans-
-fer the word "higher""'s prosody pattern from s7 to
+fer the word "higher'’s prosody pattern from s7 to
 s8. Specifically, we use the text encoder of CLAP-
 Speech to extract the text prosody encoding of s7
 and s8, then replace the text token encoding of
 "higher" in s8 with that in s7. As shown in Figure
-7, the prosody pattern of "higher" in s88 in Figure
+7, the prosody pattern of "higher" in s8° in Figure
 7(a) has been successfully transferred into s7 in
 Figure 7(c). We also provide audio samples of this
 case study on our demo page. The manipulation of
 the local prosody proves that our CLAPSpeech ex-
-8 the pitch contours in reference remain flat in the early
+
+‘the pitch contours in reference remain flat in the early
 stage and then rise in the late stage
+
+041 037 028
+
+ovo [i
+
+S68 sf 65 86 e788 st
+
 (a) CLAPSpeech
-s1
-s2
-$3 $4
-$5
-s6 s7 s8
-0.3
+
+s2 8 sf 55 86 57 SB on
+
 (b) TTS
+
 Figure 6: Example: self-similarity matrix visualization
 of CLAPSpeech and the text encoder of the vanilla TTS
-model. s; denotes the ith sentence.
+model. s; denotes the 7;, sentence.
+
 tract prosody representation effectively influences
 the prosody prediction of the TTS system.
+
 4.4 Ablation Studies
+
 Use BPE as Auxiliary Features We first ana-
 lyze the effectiveness of the BPE as an auxiliary
 feature to help extract prosody information from
@@ -911,74 +859,45 @@ CLAPSpeech, we found removing BPE from the
 text encoder significantly degrades the validation
 CLIP loss from 0.3692 to 0.6764. Then in the TTS
 phase, as can be seen in line 3 in Table 3, the ab-
-higher
-higher
-higher
-(a) reference (s7) (b) source (s8) (c) transferred (s8)
+
+--- Page 9 ---
+(a) reference (s7)
+
+(b) source (s8) —_(c) transferred (s8)
+
 Figure 7: Visualizations of the mel-spectrograms gen-
 erated in prosody transfer.
+
 lated model using the pre-trained text encoder with-
 out BPE leads to a performance drop in terms of
 CMOS, DTW, and DE. This is possibly due to the
 fact that BPE could better represent the semantic
 information than the low-level phoneme sequence.
+
 Multi-scale Pre-training To demonstrate the ef-
 fectiveness of multi-scale pre-training, as can be
 seen in line 4/5 in Table 3, we tried to remove
 phoneme-level or word-level CLAPSpeech from
 the model, which leads to a worse prosody perfor-
-Imance. We also tried to use the untrained CLAP-
+mance. We also tried to use the untrained CLAP-
 Speech to prove the necessity of the pre-training
 process, and we found this ablated model (line 6)
 achieves a slightly worse performance than the TTS
 baseline (line 3).
+
 Table 3: Performance comparison for ablation studies.
-Setting
-TTS +CLAPSpeech
-TTS baseline
-| CMOS | DTW DE
-27.16 24.19
--1.53 29.09 25.77
-0
-CLAPSpeech and performed ablation studies to
-prove the necessity of each component.
-6 Limitations
-There are majorly two limitations: Firstly, in this
-work, we only consider the current-sentence text
-context-related prosody. In future work, we will
-focus on improving the inter-sentence prosody to
-achieve coherent, expressive TTS for long-form
-text. Secondly, other variables are not considered
-during the contrastive pre-training. One can ex-
-plore similar approaches that connect prosody to
-other conditions such as speaker, emotion, etc.
-7 Ethics Statement
-CLAPSpeech improves the prosody of the synthe-
-sized speech, which may cause unemployment for
-people with related occupations. Besides, the pro-
-duction of fake speeches may cause voice security
-issues. Further efforts in automatic speaker verifi-
-cation should be made to improve voice security.
-8 Acknowledgment
-This work was supported in part by the Na-
-tional Key R&D Program of China under Grant
-No.2022ZD0162000,National Natural Science
-Foundation of China under Grant No. 62222211
-and Grant No.61836002 and Grant No.62072397,
-and Yiwise.
-w/o BPE
--1.08
-28.21 24.93
-w/o ph-level
--1.11
-27.68 25.01
-w/o word-level
--0.46
-untrained
--1.67
-27.55 24.52
-29.45 25.96
+
+Setting “Setting ——~—~—~«(|s CMOS | DTW | DE CMOS | DTW | DE
+
+TTS + CLAPSpeech 27.16 | 24.19
+TTS baseline -1. 53 29.09 | 25.77
+w/o BPE -1.08 | 28.21 | 24.93
+w/o ph-level -1.11 27.68 | 25.01
+w/o word-level -0.46 27.55 | 24.52
+untrained -1.67 _untrained —__|_ 71.67 | 29.45 | 25.96 45 | 25.96
+
 5 Conclusion
+
 In this paper, we propose CLAPSpeech, a cross-
 modal contrastive pre-training framework that pro-
 vides better text representation with rich prosody
@@ -992,175 +911,246 @@ mance and generalization ability of CLAPSpeech
 on three TTS datasets (English, Chinese, and multi-
 speaker, respectively). We have also deeply an-
 alyzed the principle behind the improvement of
+
+CLAPSpeech and performed ablation studies to
+prove the necessity of each component.
+
+6 Limitations
+
+There are majorly two limitations: Firstly, in this
+work, we only consider the current-sentence text
+context-related prosody. In future work, we will
+focus on improving the inter-sentence prosody to
+achieve coherent, expressive TTS for long-form
+text. Secondly, other variables are not considered
+during the contrastive pre-training. One can ex-
+plore similar approaches that connect prosody to
+other conditions such as speaker, emotion, etc.
+
+7 Ethics Statement
+
+CLAPSpeech improves the prosody of the synthe-
+sized speech, which may cause unemployment for
+people with related occupations. Besides, the pro-
+duction of fake speeches may cause voice security
+issues. Further efforts in automatic speaker verifi-
+cation should be made to improve voice security.
+
+8 Acknowledgment
+
+This work was supported in part by the Na-
+tional Key R&D Program of China under Grant
+No.2022ZD0162000,National Natural Science
+Foundation of China under Grant No. 62222211
+and Grant No.61836002 and Grant No.62072397,
+and Yiwise.
+
 References
+
 Alexei Baevski, Yuhao Zhou, Abdelrahman Mohamed,
 and Michael Auli. 2020. wav2vec 2.0: A frame-
 work for self-supervised learning of speech represen-
 tations. In NIPS.
+
 He Bai, Renjie Zheng, Junkun Chen, Mingbo Ma, Xin-
 tong Li, and Liang Huang. 2022. A3t: Alignment-
 aware acoustic and text pretraining for speech syn-
-thesis and editing. In ICML.
+thesis and editing. In JCML.
+
 Junkun Chen, Mingbo Ma, Renjie Zheng, and Liang
 Huang. 2020. Mam: Masked acoustic modeling
-for end-to-end speech-to-text translation.
+for end-to-end speech-to-text translation. arXiv
 preprint arXiv:2010.11445.
-arXiv
+
 Liping Chen, Yan Deng, Xi Wang, Frank K Soong, and
 Lei He. 2021. Speech bert embedding for improving
-prosody in neural tts. In ICASSP.
+prosody in neural tts. In JCASSP.
+
 Yu-An Chung, Yuxuan Wang, Wei-Ning Hsu,
 Yu Zhang, and RJ Skerry-Ryan. 2019. Semi-
 supervised training for improving data efficiency in
-end-to-end speech synthesis. In ICASSP.
+end-to-end speech synthesis. In JCASSP.
+
+--- Page 10 ---
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
 Kristina Toutanova. 2019. Bert: Pre-training of deep
 bidirectional transformers for language understand-
 ing. In NAACL-HLT.
-Jeff Donahue, Sander Dieleman, Mikołaj Bińkowski,
+
+Jeff Donahue, Sander Dieleman, Mikotaj Binkowski,
 Erich Elsen, and Karen Simonyan. 2021. End-to-
-end adversarial text-to-speech. In ICLR.
+end adversarial text-to-speech. In JCLR.
+
 Isaac Elias, Heiga Zen, Jonathan Shen, Yu Zhang,
 Ye Jia, Ron J Weiss, and Yonghui Wu. 2021. Par-
 allel tacotron: Non-autoregressive and controllable
-tts. In ICASSP.
+tts. In JCASSP.
+
 Benjamin Elizalde, Soham Deshmukh, Mahmoud Al
 Ismail, and Huaming Wang. 2022. Clap: Learning
 audio concepts from natural language supervision.
 arXiv preprint arXiv:2206.04769.
+
 Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian
 Sun. 2016. Deep residual learning for image recog-
 nition. In CVPR.
+
 Wei-Ning Hsu, Benjamin Bolte, Yao-Hung Hu-
 bert Tsai, Kushal Lakhotia, Ruslan Salakhutdi-
 nov, and Abdelrahman Mohamed. 2021. Hubert:
 Self-supervised speech representation learning by
-masked prediction of hidden units. IEEE/ACM
+masked prediction of hidden units. JEEE/ACM
 Transactions on Audio, Speech, and Language Pro-
 cessing, 29:3451-3460.
+
 Keith Ito and Linda Johnson. 2017. The lj
-speech dataset.
-https://keithito.com/
+speech dataset. https://keithito.com/
 LJ-Speech-Dataset/.
+
 Ye Jia, Heiga Zen, Jonathan Shen, Yu Zhang, and
 Yonghui Wu. 2021. Png bert: Augmented bert on
 phonemes and graphemes for neural tts.
+
 Ye Jia, Yu Zhang, Ron Weiss, Quan Wang, Jonathan
 Shen, Fei Ren, Patrick Nguyen, Ruoming Pang,
 Ignacio Lopez Moreno, Yonghui Wu, et al. 2018.
 Transfer learning from speaker verification to mul-
 tispeaker text-to-speech synthesis. NIPS.
+
 Ziyue Jiang, Su Zhe, Zhou Zhao, Qian Yang,
 Yi Ren, Jinglin Liu, and Zhenhui Ye. 2022. Dict-
 tts: Learning to pronounce with prior dictionary
 knowledge for text-to-speech. arXiv preprint
 arXiv:2206.02147.
+
 Jaehyeon Kim, Sungwon Kim, Jungil Kong, and Sun-
 groh Yoon. 2020. Glow-tts: A generative flow for
 text-to-speech via monotonic alignment search. In
 NIPS.
+
 Jaehyeon Kim, Jungil Kong, and Juhee Son. 2021.
 Conditional variational autoencoder with adversarial
-learning for end-to-end text-to-speech. In ICML.
+learning for end-to-end text-to-speech. In JCML.
+
 Jungil Kong, Jaehyeon Kim, and Jaekyoung Bae. 2020.
 Hifi-gan: Generative adversarial networks for effi-
-cient and high fidelity speech synthesis. In NIPS.
+cient and high fidelity speech synthesis. In NPS.
+
 Jinglin Liu, Chengxi Li, Yi Ren, Feiyang Chen, and
 Zhou Zhao. 2022. Diffsinger: Singing voice synthe-
 sis via shallow diffusion mechanism. In AAAI.
+
 Rui Liu, Berrak Sisman, and Haizhou Li. 2021. Graph-
 speech: Syntax-aware graph attention network for
-neural speech synthesis. In ICASSP.
+neural speech synthesis. In JCASSP.
+
 Chenfeng Miao, Liang Shuang, Zhengchen Liu, Chen
 Minchuan, Jun Ma, Shaojun Wang, and Jing Xiao.
 2021. Efficienttts: An efficient and high-quality text-
-to-speech architecture. In ICML.
-Meinard Muller. 2007. Dynamic time warping. Infor-
-mation retrieval for music and motion, pages 69–84.
+to-speech architecture. In JCML.
+
+Meinard Muller. 2007. Dynamic time warping. Jnfor-
+mation retrieval for music and motion, pages 69-84.
+
 Vassil Panayotov, Guoguo Chen, Daniel Povey, and
 Sanjeev Khudanpur. 2015. Librispeech: an asr
 corpus based on public domain audio books. In
 ICASSP.
+
 Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
 Ramesh, Gabriel Goh, Sandhini Agarwal, Girish
 Sastry, Amanda Askell, Pamela Mishkin, Jack Clark,
 et al. 2021. Learning transferable visual models
-from natural language supervision. In ICML.
+from natural language supervision. In JCML.
+
 Yi Ren, Chenxu Hu, Xu Tan, Tao Qin, Sheng Zhao,
 Zhou Zhao, and Tie-Yan Liu. 2021a. Fastspeech 2:
 Fast and high-quality end-to-end text to speech. In
 ICLR.
+
 Yi Ren, Ming Lei, Zhiying Huang, Shiliang Zhang,
 Qian Chen, Zhijie Yan, and Zhou Zhao. 2022.
 Prosospeech: Enhancing prosody with quantized
-vector pre-training in text-to-speech. In ICASSP.
-Yi Ren, Jinglin Liu, and Zhou Zhao. 2021b. Por-
+vector pre-training in text-to-speech. In JCASSP.
+
+Yi Ren, Jinglin Liu, and Zhou Zhao. 2021b.  Por-
 taspeech: Portable and high-quality generative text-
 to-speech. In NIPS.
+
 Yi Ren, Yangjun Ruan, Xu Tan, Tao Qin, Sheng Zhao,
 Zhou Zhao, and Tie-Yan Liu. 2019. Fastspeech:
 Fast, robust and controllable text to speech.
+
 Yusuxke Shibata, Takuya Kida, Shuichi Fukamachi,
 Masayuki Takeda, Ayumi Shinohara, Takeshi Shino-
 hara, and Setsuo Arikawa. 1999. Byte pair encoding:
 A text compression scheme that accelerates pattern
 matching.
+
 Yixuan Su, Fangyu Liu, Zaiqiao Meng, Tian Lan, Lei
 Shu, Ehsan Shareghi, and Nigel Collier. 2021. Tacl:
 Improving bert pre-training with token-aware con-
 trastive learning. arXiv preprint arXiv:2111.04198.
+
 Xu Tan, Tao Qin, Frank Soong, and Tie-Yan Liu. 2021.
 A survey on neural speech synthesis. arXiv preprint
 arXiv:2106.15561.
+
 Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob
-Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz
+Uszkoreit, Llion Jones, Aidan N Gomez, Lukasz
 Kaiser, and Illia Polosukhin. 2017. Attention is all
 you need. In NIPS.
+
 Peilu Wang, Yao Qian, Frank K Soong, Lei He, and Hai
 Zhao. 2015. Word embedding for recurrent neural
-network based tts synthesis. In ICASSP.
-Multi-Length
+network based tts synthesis. In JCASSP.
+
+--- Page 11 ---
 Discriminator
+
 Mel-Spec Decoder
+f
+
 Duration & Pitch Predictor
-Combine
-Encoder
-stop gradient
+
 phoneme-level
 encoding
-Phonetic
-Encoder
-phoneme
-expand Word-level
-CLAPSpeech
-Phoneme-level
-CLAPSpeech
-BPE
+
+phoneme BPE
+
 Figure 8: FastSpeech 2 with CLAPSpeech plugged in.
+
 Yuxuan Wang, Daisy Stanton, Yu Zhang, RJ-Skerry
 Ryan, Eric Battenberg, Joel Shor, Ying Xiao, Ye Jia,
 Fei Ren, and Rif A Saurous. 2018. Style tokens:
 Unsupervised style modeling, control and transfer in
-end-to-end speech synthesis. In ICML.
+end-to-end speech synthesis. In JCML.
+
 Zhenhui Ye, Zhou Zhao, Yi Ren, and Fei Wu. 2022.
 Syntaspeech: Syntax-aware generative adversarial
 text-to-speech. arXiv preprint arXiv:2204.11792.
+
 Heiga Zen, Viet Dang, Rob Clark, Yu Zhang, Ron J
 Weiss, Ye Jia, Zhifeng Chen, and Yonghui Wu. 2019.
 Libritts: A corpus derived from librispeech for text-
-to-speech. arXiv preprint arXiv:1904.02882.
+to-speech. arXiv preprint arXiv: 1904.02882.
+
 Binbin Zhang, Hang Lv, Pengcheng Guo, Qijie Shao,
 Chao Yang, Lei Xie, Xin Xu, Hui Bu, Xiaoyu
 Chen, Chenchen Zeng, et al. 2022. Wenetspeech:
 A 10000+ hours multi-domain mandarin corpus for
 speech recognition. In ICASSP.
+
 Mingyang Zhang, Xin Wang, Fuming Fang, Haizhou
 Li, and Junichi Yamagishi. 2019. Joint training
 framework for text-to-speech and voice conversion
 using multi-source tacotron and wavenet. In INTER-
 SPEECH.
+
 A Details of Models
+
 A.1 CLAPSpeech plugged in FastSpeech 2
+
 We show how to integrate CLAPSpeech into a pop-
 ular prediction-based TTS system, FastSpeech 2.
 As shown in Figure 8, the pre-trained text encoders
@@ -1172,7 +1162,9 @@ Speech text encoder are fused and processed by the
 following encoder. Note that we fix the parameters
 of CLAPSpeech text encoders during the training
 of the TTS system to avoid overfitting.
+
 A.2 Multi-length Adversarial Training
+
 For the tested TTS baselines, we adopt an addi-
 tional multi-length discriminator to provide a least
 squared GAN loss to improve the audio quality.
@@ -1181,11 +1173,16 @@ multiple CNN-based discriminators which evalu-
 ates the mel-spectrogram based on random win-
 dows of different lengths. One could refer to Ye
 et al. (2022) for more details.
-B Detailed Experimental Settings
+
+B_ Detailed Experimental Settings
+
 B.1 Model Configurations
+
 We list the hyper-parameters of CLAPSpeech and
 the tested TTS baselines in Table 4.
+
 B.2 Subjective Evaluation
+
 For each tested dataset, we randomly select 10
 texts from the test set and use the TTS systems to
 generate the audio samples. Each audio has been
@@ -1203,134 +1200,70 @@ which of the two audio they prefer and choose one
 of the following scores: 0 indicating no difference,
 1 indicating small difference, 2 indicating a large
 difference, and 3 indicating a very large difference.
+
 C More Details in Analysis
-C.1
-Example Sentences
+
+C.1 Example Sentences
+
 We list the 8 example sentences in Table 5. These
 sentences are used as examples in Section 4.3.
 C.2 Self-similarity of Other Baselines
-The self-similarity visualization of A³T and BERT
+
+The self-similarity visualization of A°T and BERT
 can be found in Figure 9. We discuss the results in
 Section 4.3.1.
+
+--- Page 12 ---
 Table 4: The detailed model configurations.
-Hyper-parameter
-Phoneme/BPE embedding hidden size
-Phoneme/BPE encoder FFT blocks
-Text Encoder
-Hidden size
-Conv1D kernel
-Prosody Encoder
-Conv1D filter size
-Residual blocks
-Number of conv layers per block
-Hidden size
-Input mel-spectrogram length
-Hidden size in pooling layer
-768
-4
-12
-192
-128
-768
-#Attention heads in pooling layer
-4
-CLAPSpeech
-Number of parameters
-192
-4
-2+258 +222 +
-192
-18.517M
-21.801M
-Encoder Layers
-4
-Decoder Layers
-4
-Prediction-based TTS baseline
-11.993M
-Encoder/Decoder Conv1D Kernel
-9
-Encoder/Decoder Conv1D channel size
-256
-Encoder Layers
-8
-Decoder Layers
-4
-Variation-based TTS baseline
-Prior Flow Layers
-Encoder/Decoder Conv1D Kernel
-Encoder/Decoder Conv1D channel size
-Latent Size
-5
-192
-23.020M
-16
-4
-Prior Flow Conv1D Kernel
-3
-Prior Flow Conv1D Channel Size
-64
-Multi-Length Discriminator
-Number of CNN-based Discriminators
-Window size
-Conv2D layers
-Hidden size
-3
-32,64,128
-3
-0.927M
-192
-sl
-s2
-$3
-s4
-$5
-· for the reputation of the stern judge stands not higher than that of the compassionate ...
-As I went on, the precipices rose higher and seemed to overhang. The channel grew narrower...
-Better, and better, and better! Her voice went higher with each better, till it got quite to a squeak at last.
-and the native graduates of our higher institutions have begun to show their strength...
-Innocence is higher than virtue.
-s6 Nothing seems more unfit to give a deeper meaning to life and a higher value.
-$7 Higher up could be seen some chinamen, but whether they were fishing or washing we could not tell.
-s8 May they become convalescents and overcomers, and create higher bodies for themselves!
+
+Hyper-parameter CLAPSpeech | Number of parameters
+Phoneme/BPE embedding hidden size 192
+Phoneme/BPE encoder FFT blocks 4
+Text Encoder Hidden size 192 18.517M
+Conv 1D kernel 5
+Conv 1D filter size 768
+Residual blocks 4
+Number of conv layers per block 12
+Prosody Encoder Hidden size 192
+y Input mel-spectrogram length 128 21.801M
+Hidden size in pooling layer 768
+#Attention heads in pooling layer 4
+Encoder Layers 4
+Lo . Decoder Layers 4
+Prediction-based TTS baseline | Encoder/Decoder Conv1D Kernel 9 11.993M
+Encoder/Decoder Conv1D channel size 256
+Encoder Layers 8
+Decoder Layers 4
+Encoder/Decoder Conv1D Kernel 5
+. . Encoder/Decoder Conv1D channel size 192
+Variation-based TTS baseline | | atent Size 16 23.020M
+Prior Flow Layers 4
+Prior Flow Conv1D Kernel 3
+Prior Flow Conv!D Channel Size 64
+Number of CNN-based Discriminators 3
+. Lo. Window size 32,64,128
+Multi-Length Discriminator Conv2D layers 3 0.927M
+Hidden size 192
+sl | ... for the reputation of the stern judge stands not higher than that of the compassionate ...
+
+s2 | As I went on, the precipices rose higher and seemed to overhang. The channel grew narrower ...
+
+s3 | Better, and better, and better! Her voice went higher with each better, till it got quite to a squeak at last.
+s4 | ... and the native graduates of our higher institutions have begun to show their strength ...
+
+s5 | Innocence is higher than virtue.
+s6 | Nothing seems more unfit to give a deeper meaning to life and a higher value.
+s7 | Higher up could be seen some chinamen, but whether they were fishing or washing we could not tell .
+
+s8 | May they become convalescents and overcomers, and create higher bodies for themselves !
+
 Table 5: The text sentences used in the intuitive example, the selected word token "higher" is bold.
-s8 0.98
-0.98 0.98
-0.99 1.00 1.00 0.90 1.00
-s8 0.61
-0.72 0.62 0.71 0.71 0.76 0.53 1.00
-s7 0.94 0.91 0.94 0.92 0.90 0.90 1.00 0.90
-s7 0.42 0.52 0.53 0.51 0.53 0.50 1.00 0.53
-s6 0.98
-0.98 0.98 0.96 1.00 1.00 0.90 1.00
-s6 0.66 0.62 0.53 0.67 0.70 1.00 0.50 0.76
-$5 0.98 0.99
-0.97 0.97 1.00
-1.00 0.90
-1.00
-$5 0.73 0.58 0.60 0.66 1.00 0.70 0.53 0.71
-s4 0.98 0.99
-0.97 1.00 0.97 0.96 0.92
-0.99
-$4 0.60 0.64 0.59 1.00 0.66 0.67 0.51 0.71
-$30.99 0.99 1.00 0.97 0.97 0.98 0.94
-0.98
-s3 - 0.57 0.72 1.00 0.59 0.60 0.53 0.53 0.62
-$2 - 0.99 1.00 0.99 0.99 0.99 0.98 0.91
-0.98
-s2-0.61 1.00 0.72 0.64 0.58 0.62 0.52 0.72
-s1 - 1.00 0.99 0.99 0.98 0.98 0.96 0.94 0.98
-s1 1.00 0.61 0.57 0.60 0.73 0.66 0.42 0.61
-s1
-$2
-$4 $5 s6 s7
-s8
-s1
-s2
-(a) A³T
-$4 $5 s6
-s7
+
+(a) A°T
+
 (b) BERT
-0.3
-Figure 9: Self-similarity matrix visualization of A³T
+
+Figure 9: Self-similarity matrix visualization of A°T
+
 and BERT.
+

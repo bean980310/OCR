@@ -1,8 +1,16 @@
-arXiv:2309.03199v2 [eess.AS] 9 Jan 2024
+--- Page 1 ---
+2309 .03199v2 [eess.AS] 9 Jan 2024
+
+arXiv
+
 MATCHA-TTS: A FAST TTS ARCHITECTURE WITH CONDITIONAL FLOW MATCHING
-Shivam Mehta, Ruibo Tu, Jonas Beskow, Éva Székely, Gustav Eje Henter
+
+Shivam Mehta, Ruibo Tu, Jonas Beskow, Eva Székely, Gustav Eje Henter
+
 Division of Speech, Music and Hearing, KTH Royal Institute of Technology, Stockholm, Sweden
+
 ABSTRACT
+
 We introduce Matcha-TTS, a new encoder-decoder architecture for
 speedy TTS acoustic modelling, trained using optimal-transport
 conditional flow matching (OT-CFM). This yields an ODE-based
@@ -14,18 +22,21 @@ scratch without external alignments. Compared to strong pre-trained
 baseline models, the Matcha-TTS system has the smallest memory
 footprint, rivals the speed of the fastest model on long utterances,
 and attains the highest mean opinion score in a listening test.
-Index Terms-Diffusion models, flow matching, speech syn-
+
+Index Terms— Diffusion models, flow matching, speech syn-
 thesis, text-to-speech, acoustic modelling
+
 1. INTRODUCTION
+
 Diffusion probabilistic models (DPMs) (cf. [1]) are currently setting
 new standards in deep generative modelling on continuous-valued
 data-generation tasks such as image synthesis [2, 3], motion syn-
-thesis [4, 5], and speech synthesis [6, 7, 8, 9, 10] - the topic of this
+thesis [4, 5], and speech synthesis [6, 7, 8, 9, 10] — the topic of this
 paper. DPMs define a diffusion process which transforms the data
 (a.k.a. target) distribution to a prior (a.k.a. source) distribution, e.g.,
 a Gaussian. They then learn a sampling process that reverses the dif-
-fusion process. The two processes can be formulated as forward- and
-reverse-time stochastic differential equations (SDES) [11]. Solving
+fusion proc The two processes can be formulated as forward- and
+reverse-time stochastic differential equations (SDEs) [11]. Solving
 a reverse-time SDE initial value problem generates samples from
 the learnt data distribution. Furthermore, each reverse-time SDE
 has a corresponding ordinary differential equation (ODE), called
@@ -35,6 +46,7 @@ ODE is a deterministic process for turning source samples into
 data samples, similar to continuous-time normalising flows (CNF)
 [13], but without the need to backpropagate through expensive ODE
 solvers or approximate the reverse ODE using adjoint variables [13].
+
 The SDE formulation of DPMs is trained by approximating the
 score function (the gradients of the log probability density) of the
 data distribution [11]. The training objective takes the form of a
@@ -45,25 +57,32 @@ tions on model architecture. But whilst they allow efficient training
 without numerical SDE/ODE solvers, DPMs suffer from slow syn-
 thesis speed, since each sample requires numerous iterations (steps),
 computed in sequence, to accurately solve the SDE. Each such step
+
 This work was partially supported by the Wallenberg AI, Autonomous
 Systems and Software Program (WASP) funded by the Knut and Alice Wal-
 lenberg Foundation and by the Industrial Strategic Technology Development
 Program (grant no. 20023495) funded by MOTIE, Korea.
+
 requires that an entire neural network be evaluated. This slow syn-
 thesis speed has long been the main practical issue with DPMs.
-This paper introduces Matcha-TTS¹, a probabilistic and non-
+
+This paper introduces Matcha-TTS', a probabilistic and non-
+
 autoregressive, fast-to-sample-from TTS acoustic model based on
 continuous normalising flows. There are two main innovations:
+
 1. To begin with, we propose an improved encoder-decoder TTS
 architecture that uses a combination of 1D CNNs and Trans-
 formers in the decoder. This reduces memory consumption
 and is fast to evaluate, improving synthesis speed.
+
 2. Second, we train these models using optimal-transport condi-
 tional flow matching (OT-CFM) [14], which is a new method
 to learn ODEs that sample from a data distribution. Com-
 pared to conventional CNFs and score-matching probability
-flow ODES, OT-CFM defines simpler paths from source to
+flow ODEs, OT-CFM defines simpler paths from source to
 target, enabling accurate synthesis in fewer steps than DPMs.
+
 Experimental results demonstrate that both innovations acceler-
 ate synthesis, reducing the trade-off between speed and synthesis
 quality. Despite being fast and lightweight, Matcha-TTS learns to
@@ -71,8 +90,11 @@ speak and align without requiring an external aligner. Compared
 to strong pre-trained baseline models, Matcha-TTS achieves fast
 synthesis with better naturalness ratings. Audio examples and code
 are provided at https://shivammehta25.github.io/Matcha-TTS/.
+
 2. BACKGROUND
+
 2.1. Recent encoder-decoder TTS architectures
+
 DPMs have been applied to numerous speech-synthesis tasks with
 impressive results, including waveform generation [6, 10] and end-
 to-end TTS [7]. Diff-TTS [9] was first to apply DPMs for acoustic
@@ -80,24 +102,27 @@ modelling. Shortly after, Grad-TTS [8] conceptualised the diffusion
 process as an SDE. Although these models, and descendants like
 Fast Grad-TTS [15], are non-autoregressive, TorToiSe [16] demon-
 strated DPMs in an autoregressive TTS model with quantised latents.
-The above models – like many modern TTS acoustic models -
+
+The above models — like many modern TTS acoustic models —
 use an encoder-decoder architecture with Transformer blocks in the
 encoder. Many models, e.g., FastSpeech 1 and 2 [17, 18], use si-
 nusoidal position embeddings for positional dependences. This has
 been found to generalise poorly to long sequences; cf. [19]. Glow-
 TTS [20], VITS [21], and Grad-TTS instead use relative positional
 embeddings [22]. Unfortunately, these treat inputs outside a short
-context window as a "bag of words", often resulting in unnatural
+context window as a “bag of words”, often resulting in unnatural
 prosody. LinearSpeech [23] instead employed rotational position
-embeddings (ROPE) [24], which have computational and memory
+embeddings (RoPE) [24], which have computational and memory
 advantages over relative embeddings and generalise to longer dis-
-tances [25, 19]. Matcha-TTS thus uses Transformers with ROPE in
+tances [25, 19]. Matcha-TTS thus uses Transformers with RoPE in
 the encoder, reducing RAM use compared to Grad-TTS. We believe
-ours is the first SDE or ODE-based TTS method to use ROPE.
-We call our approach Matcha-TTS because it uses flow matching for
-TTS, and because the name sounds similar to "matcha tea", which some
+ours is the first SDE or ODE-based TTS method to use RoPE.
+
+'We call our approach Matcha-TTS because it uses flow matching for
+TTS, and because the name sounds similar to “matcha tea”, which some
 people prefer over Taco(tron)s.
-1
+
+--- Page 2 ---
 Modern TTS architectures also differ in terms of decoder net-
 work design. The normalising-flow based methods Glow-TTS [20]
 and OverFlow [26] use dilated 1D-convolutions. DPM-based meth-
@@ -113,6 +138,7 @@ decoders with (1D) Transformers can learn long-range dependencies
 and fast, parallel synthesis. Matcha-TTS also uses Transformers in
 the decoder, but in a 1D U-Net design inspired by the 2D U-Nets in
 the Stable Diffusion image-generation model [3].
+
 Whilst some TTS systems, e.g., FastSpeech [17], rely on
 externally-supplied alignments, most systems are capable of learn-
 ing to speak and align at the same time, although it has been found to
@@ -126,9 +152,11 @@ terministic duration predictor minimising MSE in the log domain.
 Matcha-TTS uses these same methods for alignment and duration
 modelling. Finally, Matcha-TTS differs by using snake beta activa-
 tions from BigVGAN [30] in all decoder feedforward layers.
+
 2.2. Flow matching and TTS
+
 Currently, some of the highest-quality TTS systems either utilise
-DPMS [8, 16] or discrete-time normalising flows [21, 26], with
+DPMs [8, 16] or discrete-time normalising flows [21, 26], with
 continuous-time flows being less explored. Lipman et al. [14] re-
 cently introduced a framework for synthesis using ODEs that unifies
 and extends probability flow ODEs and CNFs. They were then able
@@ -146,6 +174,7 @@ The simple paths mean that the ODE can be solved accurately using
 few discretisation steps, i.e., accurate model samples can be drawn
 with fewer neural-network evaluations than DPMs, enabling much
 faster synthesis for the same quality.
+
 CFM is a new technique that differs from earlier approaches to
 speed up SDE/ODE-based TTS, which most often were based on
 distillation (e.g., [27, 15, 32]). Prior to Matcha-TTS, the only public
@@ -158,107 +187,86 @@ forms TTS, denoising, and text-guided acoustic infilling trained us-
 ing a combination of masking and CFM, whereas Matcha-TTS is a
 pure TTS model trained solely using OT-CFM. VB uses convolu-
 tional positional encoding with AliBi [19] self-attention bias, whilst
+
 our text encoder uses RoPE. In contrast to VB, we train on standard
 data and make code and checkpoints publicly available. VB-En con-
 sumes 330M parameters, which is 18 times larger than the Matcha-
 TTS model in our experiments. Also, VB uses external alignments
 for training whereas Matcha-TTS learns to speak without them.
+
 3. METHOD
+
 We now outline flow-matching training (in Sec. 3.1) and then (in
 Sec. 3.2) give details on our proposed TTS architecture.
+
 3.1. Optimal-transport conditional flow matching
+
 We here give a high-level overview of flow matching, first introdu-
 cing the probability-density path generated by a vector field and then
 leading into the OT-CFM objective used in our proposed method.
 Notation and definitions mainly follow [14].
-Let x denote an observation in the data space Rd, sampled from
-a complicated, unknown data distribution q(x). A probability dens-
-ity path is a time-dependent probability density function, pt : [0,1]×
-Rd R0. One way to generate samples from the data distribu-
-tion q is to construct a probability density path pt, where t = [0,1]
-and po(x) : N(x; 0, I) is a prior distribution, such that p₁(x)
-approximates the data distribution q(x). For example, CNFs first
-define a vector field vt: [0,1] × Rd → Rd, which generates the
-flow &t : [0, 1] × Rd → Rd through the ODE
-t(x) = vt (Ot(x));
-Φο(α) = x.
-(1)
-This generates the path pt as the marginal probability distribution of
+
+Let a denote an observation in the data space R¢, sampled from
+a complicated, unknown data distribution g(a). A probability dens-
+ity path is a time-dependent probability density function, p; : [0, 1] x
+R*  R> 0. One way to generate samples from the data distribu-
+tion q is to construct a probability density path p;, where t € [0, 1]
+and po(#) = N(ax;0, J) is a prior distribution, such that pi (x)
+approximates the data distribution a(x). For example, CNFs first
+define a vector field vz : [0,1] x R° > R?, which generates the
+flow @, : [0,1] x R? > R¢ through the ODE
+
+Soi(x) = vi(ge(w)); — do(w) = a. ()
+This generates the path p; as the marginal probability distribution of
 the data points. We can sample from the approximated data distribu-
-tion p₁ by solving the initial value problem in Eq. (1).
-Suppose there exists a known vector field ut that generates a
-probability path pt from po to p₁ ≈q. The flow matching loss is
-LFM(0) = Et,pt(x)||Ut (x) — vt (x; 0) || ²,
-where t~ · U[0, 1] and v₁(x; 0) is a neural network with parameters
-0. Nevertheless, flow matching is intractable in practice because it is
-non-trivial to get access to the vector field ut and the target probab-
-ility pt. Therefore, conditional flow matching instead considers
-LCFM (0) = Et,q(x1),Pt(x|x1)||Ut(x|x1) — vt (x; 0) ||². (3)
-Vt
+tion p1 by solving the initial value problem in Eq. (1).
+
+Suppose there exists a known vector field wu; that generates a
+probability path p; from po to p1 & gq. The flow matching loss is
+
+Leut(8) = Erp. (2)|ltee(@) — ve (as 4)||”, (2)
+
+where t ~ U0, 1] and v; (a; @) is a neural network with parameters
+6. Nevertheless, flow matching is intractable in practice because it is
+non-trivial to get access to the vector field us and the target probab-
+ility pe. Therefore, conditional flow matching instead considers
+
+Lovo (9) = Er.q(e,),pe(wley) lee (wlarr) — ve(@;)|?. (3)
+
 This replaces the intractable marginal probability densities and the
 vector field with conditional probability densities and conditional
 vector fields. Crucially, these are in general tractable and have
-closed-form solutions, and one can furthermore show that LCFM (0)
-and LFM (0) both have identical gradients with respect to 0 [14].
+closed-form solutions, and one can furthermore show that crm (@)
+and Lym (@) both have identical gradients with respect to 6 [14].
 Matcha-TTS is trained using optimal-transport conditional flow
 matching (OT-CFM) [14], which is a CFM variant with particularly
 simple gradients. The OT-CFM loss function can be written
-от OT
-от
-L(0) = Et,q(x1),P0(x0)||u₁ (01 (x)|x1) — vt ($t (x)|μ; 0) ||²,
+L(A) = Exq(e1),po(eo) llr” (#2 (a) |@1) — ve (OP * (@) | 8) ||”,
+
 (4)
-от
--
-defining (x) = (1 − (1 − σmin) t) xo + tx₁ as the flow from
-xo to x1 where each datum x₁ is matched to a random sample xo ~
-N(0, I) as in [14]. Its gradient vector field - whose expected value
-is the target for the learning – is then u (þt (x0)|x1) = x1-
-σmin) xo, which is linear, time-invariant, and only depends on
-(1
-OT OT
-xo and x1. These properties enable easier and faster training, faster
+
+defining PT (a) = (1 — (1 — omin)t)ao + tay as the flow from
+&o to a, where each datum a1 is matched to a random sample ap ~
+N (0, I) as in [14]. Its gradient vector field — whose expected value
+is the target for the learning — is then up? (@? (ao)\a1) = a1 —
+(1 — omin)0, which is linear, time-invariant, and only depends on
+&o and a1. These properties enable easier and faster training, faster
 generation, and better performance compared to DPMs.
-2
-μ
-Upsample
-wwwww
-Ceil
-h1:L
-Duration
-predictor
-Projection
-Text encoder
-tɛkst Phonetise
-V₁(x|µ; 0)
-Flow-prediction network
-0 N(0,1) t=0
-μ
-Time-step embedding net
-Resnet1D
-Transformer block
-Resnet1D
-୮
-Transformer block
-Resnet1D
-Transformer block
-Resnet1D
-Transformer block
-Resnet1D
-Transformer block
-Resnet1D
-Transformer block
-Downsampling blocks
-Mid blocks
-Upsampling blocks
-Text
-x1
-t = 1
+
+--- Page 3 ---
+zo ~N(0,1) =O
+
+Phonetise
+
 Fig. 1: Overview of the proposed approach at synthesis time.
-In the case of Matcha-TTS, x1 are acoustic frames and μ are the
+
+In the case of Matcha-TTS, a are acoustic frames and ju are the
 conditional mean values of those frames, predicted from text using
-the architecture described in the next section. σmin is a hyperpara-
-meter with a small value (1e-4 in our experiments).
+the architecture described in the next section. Omin is a hyperpara-
+meter with a small value (1e—4 in our experiments).
+
 3.2. Proposed architecture
+
 Matcha-TTS is a non-autoregressive encoder-decoder architecture
 for neural TTS. An overview of the architecture is provided in Fig. 1.
 Text encoder and duration predictor architectures follow [20, 8], but
@@ -266,15 +274,16 @@ use rotational position embeddings [24] instead of relative ones.
 Alignment and duration-model training follow use MAS and the
 prior loss Lenc as described in [8]. The predicted durations, roun-
 ded up, are used to upsample (duplicate) the vectors output by the
-encoder to obtain μ, the predicted average acoustic features (e.g.,
+encoder to obtain yz, the predicted average acoustic features (e.g.,
 mel-spectrogram) given the text and the chosen durations. This
 mean is used to condition the decoder that predicts the vector field
-vt (þt (x0)|µ; 0) used for synthesis, but is not used as the mean
-for the initial noise samples xo (unlike Grad-TTS).
+v:(@27 (ao) |; ) used for synthesis, but is not used as the mean
+for the initial noise samples a (unlike Grad-TTS).
+
 Fig. 2 shows the Matcha-TTS decoder architecture. Inspired
 by [3], it is a U-Net containing 1D convolutional residual blocks to
 downsample and upsample the inputs, with the flow-matching step
-t = [0,1] embedded as in [8]. Each residual block is followed by
+t € [0,1] embedded as in [8]. Each residual block is followed by
 a Transformer block, whose feedforward nets use snake beta activa-
 tions [30]. These Transformers do not use any position embeddings,
 since between-phone positional information already has been baked
@@ -283,17 +292,40 @@ tions act to interpolate these between frames within the same phone
 and distinguish their relative positions from each other. This decoder
 network is significantly faster to evaluate and consumes less memory
 than the 2D convolutional-only U-Net used by Grad-TTS [8].
-4. EXPERIMENTS
+
+4, EXPERIMENTS
+
 To validate the proposed approach we compared it to three pre-
 trained baselines in several experiments, including a listening test.
 All experiments were performed on NVIDIA RTX 3090 GPUs. See
 shivammehta25.github.io/Matcha-TTS/ for audio and code.
+
 4.1. Data and systems
+
 We performed our experiments on the standard split of the LJ Speech
-dataset (a female US English native speaker reading public-domain
-2 https://keithito.com/LJ-Speech-Dataset/
-400T(x)
+dataset” (a female US English native speaker reading public-domain
+
+2https://keithito.com/LJ-Speech-Dataset/
+
+#
+® [inser aan)
+ResnettD
+“Transformer block
+¥ * [Bownsamping bloc
+ResnetiD Ez TeIgeEsS
+— (ec Tianstormer book fa
+ResnetiD
+“Transformer block
+i Mid blocks
+ResnetiD
+“Transformer block
+Le Resnett6
+rabssonrienbocd | Upsampling blocks
+
+£69" @)_
+
 Fig. 2: Matcha-TTS decoder (the flow-prediction network in Fig. 1).
+
 texts), training a version of the Matcha-TTS architecture on this
 data. We used the same encoder and duration predictor (i.e., the
 same hyperparameters) as [8], just different position embeddings
@@ -301,25 +333,25 @@ in the encoder. Our trained flow-prediction network (decoder) used
 two downsampling blocks, followed by two midblocks and two up-
 sampling blocks, as shown in Fig. 2. Each block had one Trans-
 former layer with hidden dimensionality 256, 2 heads, attention di-
-mensionality 64, and ‘snakebeta' activations [30]. Phonemizer³ [34]
-with the espeak-ng backend was used to convert input graphemes
+mensionality 64, and ‘snakebeta’ activations [30]. Phonemizer’ [34]
+with the espeak~ng backend was used to convert input graphemes
 to IPA phones. We trained for 500k updates on 2 GPUs with batch
-size 32 and learning rate 1e-4, labelling our trained system MAT.
+size 32 and learning rate 1e—4, labelling our trained system MAT.
 MAT was compared to three widely used neural TTS baseline
 approaches with pre-trained checkpoints available for LJ Speech,
 namely Grad-TTS* [8] (label GRAD), a strong DPM-based acous-
 tic model, FastSpeech 2 (FS2), a fast non-probabilistic acoustic
-model, and VITS³, a strong probabilistic end-to-end TTS system
+model, and VITS®, a strong probabilistic end-to-end TTS system
 with discrete-time normalising flows. The baselines used the official
 checkpoints from the respective linked repositories. For FS2, which
 does not provide an official implementation, we instead used the
-checkpoint from Meta's FairSeq. To decouple the effects of CFM
+checkpoint from Meta’s FairSeq’. To decouple the effects of CFM
 training from those due to the new architecture, we also trained
 the GRAD architecture using the OT-CFM objective instead, using
 the same optimiser hyperparameters as for MAT. This produced the
 ablation labelled GCFM. For all acoustic models (i.e., all systems
 except VITS), we used the pre-trained HiFi-GAN [35] LJ Speech
-checkpoint LJ_V17 for waveform generation, with a denoising filter
+checkpoint LJ_V1’ for waveform generation, with a denoising filter
 as introduced in [36] at a strength of 2.5e-4. As a top line, our
 experiments also included vocoded held-out speech, labelled VOC.
 ODE-based models, e.g., DPMs, allow trading off speed against
@@ -333,77 +365,36 @@ tions MAT-n, GRAD-n, and GCFM-n, n being the NFE. We used
 NFE 10 or less, since [8] reported that NFE 10 and 100 gave the
 same MOS for Grad-TTS (NFE 50 is the official code default). All
 conditions used a temperature of 0.667 for synthesis, similar to [8].
-Table 1 provides an overview of the conditions in the evaluation.
-3 https://github.com/bootphon/phonemizer
-4 https://github.com/huawei-noah/
+Table | provides an overview of the conditions in the evaluation.
+
+3https://github.com/bootphon/phonemizer
+4nttps://github.com/huawei-noah/
 Speech-Backbones/tree/main/Grad-TTS
-Shttps://github.com/jaywalnut 310/vits
-6https://github.com/facebookresearch/fairseq
-7https://github.com/jik876/hifi-gan/
-3
-Condition Params. RAM RTF (u±o)
-WER
-MOS
-VOC
-13.9M
--
-0.001±0.001
-1.97 4.13±0.09
-FS2
-VITS
-41.2M
-36.3M
-GRAD-10 14.8M
-GRAD-4
-6.0 0.010±0.004 4.18 3.29±0.09
-12.4 0.074±0.083 2.52
-7.8 0.049±0.013 3.44
-"
-"
-3.71±0.08
-3.49±0.08
-0.019±0.006 3.69 3.20±0.09
-"
-"
-GCFM-4
-0.019±0.004 2.70
-3.57±0.08
-MAT-10
-MAT-4
-MAT-2
-18.2M
-4.8 0.038±0.019 2.09
-3.84±0.08
-"
-"
-"
-"
-Synthesis time (s)
-3
-0.5
-TC
-0.1
-50
-100
-200
-500
-1000 1500
-FS2
-GRAD-10
-GRAD-4
-GCFM-4
-MAT-10
-MAT-4
-MAT-2
-0.019±0.008 2.15 3.77±0.07
-0.015±0.006 2.34 3.65±0.08
+Shttps://github.com/jaywalnut310/vits
+Shttps://github.com/facebookresearch/fairseg
+Thttps://github.com/jik876/hifi-gan/
+
+--- Page 4 ---
+Condition | Params. RAM WER
+Voc 13.9M - 1.97
+FS2 41.2M 6.0 4.18
+VITS 36.3M —=-:12.4 2.52
+GRAD-10 | 14.8M 78 3.44
+GRAD-4 " " 3.69
+GCFM-4 " " 2.70
+MAT-10 18.2M 48 | 0.038+0.019 2.09
+MAT-4 " " 0.019+0.008 2.15
+MAT-2 " " 0.015+0.006 2.34
 Table 1: Conditions in the evaluation (with the NFE for ODE-based
+
 methods) and their number of parameters, minimum GPU RAM
 needed to train (GiB), real-time factor (including vocoding time) on
 the test set, ASR WER in percent, and mean opinion score with 95%-
 confidence interval. The best TTS condition in each column is bold.
 The parameter count and RTF for VOC pertain to the vocoder.
+
 4.2. Evaluations, results, and discussion
+
 We evaluated our approach both objectively and subjectively. First
 we measured parameter count and maximum memory use during
 training (at batch size 32 and fp16) of all systems, with results listed
@@ -413,16 +404,18 @@ smaller than VITS also after adding the vocoder (13.9M parameters)
 to the MAT parameter count. More importantly, it uses less memory
 than all baselines, which (more than parameter count) is the main
 limiter on how large and powerful models that can be trained.
+
 After training the systems, we assessed the synthesis speed and
 intelligibility of the different conditions, by computing the real time
 factor (RTF) mean and standard deviation when synthesising the test
 set, and evaluating the word error rate (WER) when applying the
-Whisper medium [37] ASR system to the results, since the WERS
+Whisper medium [37] ASR system to the results, since the WERs
 of strong ASR systems correlate well with intelligibility [38]. The
 results, in Table 1, suggest that MAT is the most intelligible system,
 even using only two synthesis steps. MAT is also much faster than
 VITS, equally fast or faster than GRAD/GCFM at the same NFE,
 and only slightly slower than FS2 when at the fastest setting.
+
 To evaluate the naturalness of the synthesised audio we ran a
 mean opinion score (MOS) listening test. We selected 40 utterances
 (4 groups of 10) of different lengths from the test set and synthes-
@@ -430,9 +423,9 @@ ised each utterance using all conditions, loudness-normalising every
 stimulus using EBU R128. 80 subjects (self-reported as native Eng-
 lish speakers using headphones) were crowdsourced through Pro-
 lific to listen to and rate these stimuli. For each stimulus, listeners
-were asked "How natural does the synthesised speech sound?", and
-provided responses on an integer rating scale from 1 ("Completely
-unnatural”) to 5 (“Completely natural") adopted from the Blizzard
+were asked “How natural does the synthesised speech sound?”, and
+provided responses on an integer rating scale from | (“Completely
+unnatural”) to 5 (“Completely natural”) adopted from the Blizzard
 Challenge [39]. Each group of 10 utterances was evaluated by 20
 listeners, who were paid £3 for a median completion time of 13
 mins. Inattentive listeners were filtered out and replaced in exactly
@@ -443,13 +436,31 @@ We note that, since MOS values depend on many variables external
 to stimulus quality, e.g., listener demographics and instructions (see
 [40, 41]), they should not be treated as an absolute metric. Compar-
 ing our MOS values to other papers is thus unlikely to be meaningful.
+
 Applying t-tests to all pairs of conditions, all differences were
+
+— Fs2
+— GRAD-10
+--- GRAD-4
+=-- GCFM-4
+— MAT-10
+--- MAT-4
+
+—-= MAT-2
+
+(s)
+
+Synthesis time
+
+50 100 200 500 1000 1500
 Text length (characters)
+
 Fig. 3: Scatterplot of prompt length vs. synthesis time for acoustic
 models. Regression lines show as curves due to the log-log axes.
+
 found to be statistically significant at the a = 0.05 level except
-the pairs (MAT-10,MAT-4), (MAT-4, VITS), (VITS, MAT-2), (MAT-
-2,GCFM-4), and (GCFM-4, GRAD-10). This means that MAT al-
+the pairs (MAT-10,MAT-4), (MAT-4,VITS), (VITS,MAT-2), (MAT-
+2,GCFM-4), and (GCFM-4,GRAD-10). This means that MAT al-
 ways had significantly better rated naturalness than GRAD for the
 same NFE, and always surpassed FS2. Both the new architecture and
 training method contributed to the naturalness improvement, since
@@ -462,16 +473,19 @@ performed similarly to MAT-2 and MAT-4 in terms of MOS. MAT-
 VITS. For any given n, MAT-n always scored higher than any sys-
 tem with equal or faster RTF. In summary, Matcha-TTS achieved
 similar or better naturalness than all comparable baselines.
+
 Finally, we evaluated how synthesis speed scaled with utterance
 length for the different models, by generating 180 sentences of dif-
-ferent lengths using a GPT-28 model and plotting wall-clock syn-
+ferent lengths using a GPT-2° model and plotting wall-clock syn-
 thesis time in Fig. 3, also fitting least-squares regression lines to the
 data. The results show that MAT-2 synthesis speed becomes compet-
 itive with FS2 at longer utterances, with MAT-4 not far behind. The
 major contributor to this appears to be the new architecture (since
 GRAD-4 and GCFM-4 both are much slower), and the gap from
 MAT to GRAD only grows with longer utterances.
+
 5. CONCLUSIONS AND FUTURE WORK
+
 We have introduced Matcha-TTS, a fast, probabilistic, and high-
 quality ODE-based TTS acoustic model trained using conditional
 flow matching. The approach is non-autoregressive, memory ef-
@@ -480,127 +494,235 @@ strong pre-trained baselines, Matcha-TTS provides superior speech
 naturalness and can match the speed of the fastest model on long ut-
 terances. Our experiments show that both the new architecture and
 the new training contribute to these improvements.
+
 Compelling future work includes making the model multi-
 speaker, adding probabilistic duration modelling, and applications
 to challenging, diverse data such as spontaneous speech [42].
+
 6. REFERENCES
+
 [1] Y. Song and S. Ermon, “Generative modeling by estimating
-gradients of the data distribution," Proc. NeurIPS, 2019.
-[2] P. Dhariwal and A. Nichol, “Diffusion models beat GANS on
-image synthesis," in Proc. NeurIPS, 2021, pp. 8780-8794.
-8 https://huggingface.co/gpt2
-4
-[3] R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Om-
-mer, "High-resolution image synthesis with latent diffusion
-models," in Proc. CVPR, 2022, pp. 10684–10695.
-[4] S. Alexanderson, R. Nagy, J. Beskow, and G. E. Henter,
-"Listen, denoise, action! Audio-driven motion synthesis with
-diffusion models," ACM ToG, vol. 42, no. 4, 2023, article 44.
-[5] S. Mehta, S. Wang, S. Alexanderson, J. Beskow, É. Székely,
+gradients of the data distribution,’ Proc. NeurIPS, 2019.
+
+[2] P. Dhariwal and A. Nichol, “Diffusion models beat GANs on
+image synthesis,” in Proc. NeurIPS, 2021, pp. 8780-8794.
+
+8nttps: //huggingface.co/gpt2
+
+--- Page 5 ---
+w
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Om-
+mer, “High-resolution image synthesis with latent diffusion
+models,” in Proc. CVPR, 2022, pp. 10 684-10 695.
+
+S. Alexanderson, R. Nagy, J. Beskow, and G. E. Henter,
+“Listen, denoise, action! Audio-driven motion synthesis with
+diffusion models,” ACM ToG, vol. 42, no. 4, 2023, article 44.
+S. Mehta, S. Wang, S. Alexanderson, J. Beskow, E. Székely,
 and G. E. Henter, “Diff-TTSG: Denoising probabilistic integ-
 rated speech and gesture synthesis,” in Proc. SSW, 2023.
-[6] N. Chen, Y. Zhang, H. Zen, R. J. Weiss, M. Norouzi, and
-W. Chan, "WaveGrad: Estimating gradients for waveform gen-
-eration," in Proc. ICLR, 2021.
-[7] N. Chen, Y. Zhang, H. Zen, R. J. Weiss, M. Norouzi, N. Dehak,
-and W. Chan, "WaveGrad 2: Iterative refinement for text-to-
-speech synthesis,” in Proc. Interspeech, 2021, pp. 3765–3769.
-[8] V. Popov, I. Vovk, V. Gogoryan, T. Sadekova, and M. Kudinov,
-"Grad-TTS: A diffusion probabilistic model for text-to-
-speech," in Proc. ICML, 2021, pp. 8599-8608.
-[9] M. Jeong, H. Kim, S. J. Cheon, B. J. Choi, and N. S. Kim,
-"Diff-TTS: A denoising diffusion model for text-to-speech," in
+
+N. Chen, Y. Zhang, H. Zen, R. J. Weiss, M. Norouzi, and
+W. Chan, “WaveGrad: Estimating gradients for waveform gen-
+eration,” in Proc. ICLR, 2021.
+
+N. Chen, Y. Zhang, H. Zen, R. J. Weiss, M. Norouzi, N. Dehak,
+and W. Chan, “WaveGrad 2: Iterative refinement for text-to-
+speech synthesis,” in Proc. Interspeech, 2021, pp. 3765-3769.
+V. Popov, I. Vovk, V. Gogoryan, T. Sadekova, and M. Kudinov,
+“Grad-TTS: A diffusion probabilistic model for text-to-
+speech,” in Proc. ICML, 2021, pp. 8599-8608.
+
+M. Jeong, H. Kim, S. J. Cheon, B. J. Choi, and N. S. Kim,
+“Diff-TTS: A denoising diffusion model for text-to-speech,” in
 Proc. Interspeech, 2021, pp. 3605-3609.
-[10] Z. Kong, W. Ping, J. Huang, K. Zhao, and B. Catanzaro,
-"DiffWave: A versatile diffusion model for audio synthesis,”
+
+Z. Kong, W. Ping, J. Huang, K. Zhao, and B. Catanzaro,
+“DiffWave: A versatile diffusion model for audio synthesis,”
 in Proc. ICLR, 2021.
-[11] Y. Song, J. Sohl-Dickstein, D. P. Kingma, A. Kumar, S. Er-
-mon, and B. Poole, "Score-based generative modeling through
-stochastic differential equations," in Proc. ICLR, 2021.
-[12] M. S. Albergo and E. Vanden-Eijnden, “Building normalizing
+
+Y. Song, J. Sohl-Dickstein, D. P. Kingma, A. Kumar, S. Er-
+mon, and B. Poole, “Score-based generative modeling through
+stochastic differential equations,” in Proc. ICLR, 2021.
+
+M. S. Albergo and E. Vanden-Eijnden, “Building normalizing
 flows with stochastic interpolants,” in Proc. ICLR, 2022.
-[13] R. T. Q. Chen, Y. Rubanova, J. Bettencourt et al., “Neural or-
+
+R. T. Q. Chen, Y. Rubanova, J. Bettencourt ef al., “Neural or-
 dinary differential equations,” in Proc. NeurIPS, 2018.
-[14] Y. Lipman, R. T. Q. Chen, H. Ben-Hamu et al., “Flow matching
+
+Y. Lipman, R. T. Q. Chen, H. Ben-Hamu et al., “Flow matching
 for generative modeling,” in Proc. ICLR, 2023.
-[15] I. Vovk, T. Sadekova, V. Gogoryan, V. Popov, M. Kudinov,
-and J. Wei, "Fast Grad-TTS: Towards efficient diffusion-based
+
+I. Vovk, T. Sadekova, V. Gogoryan, V. Popov, M. Kudinov,
+and J. Wei, “Fast Grad-TTS: Towards efficient diffusion-based
 speech generation on CPU,” in Proc. Interspeech, 2022.
-[16] J. Betker, “Better speech synthesis through scaling," arXiv pre-
+
+J. Betker, “Better speech synthesis through scaling,” arXiv pre-
 print arXiv:2305.07243, 2023.
-[17] Y. Ren, Y. Ruan, X. Tan, T. Qin, S. Zhao, Z. Zhao, and T.-Y.
-Liu, “FastSpeech: Fast, robust and controllable text to speech,"
+
+Y. Ren, Y. Ruan, X. Tan, T. Qin, S. Zhao, Z. Zhao, and T.-Y.
+Liu, “FastSpeech: Fast, robust and controllable text to speech,”
 in Proc. NeurIPS, 2019.
-[18] Y. Ren, C. Hu, X. Tan, T. Qin, S. Zhao, Z. Zhao, and T.-Y.
+
+Y. Ren, C. Hu, X. Tan, T. Qin, S. Zhao, Z. Zhao, and T.-Y.
 Liu, “FastSpeech 2: Fast and high-quality end-to-end text to
-speech," in Proc. ICLR, 2021.
-[19] O. Press, N. A. Smith, and M. Lewis, “Train short, test long:
+speech,” in Proc. ICLR, 2021.
+
+O. Press, N. A. Smith, and M. Lewis, “Train short, test long:
 Attention with linear biases enables input length extrapola-
 tion,” in Proc. ICLR, 2022.
-[20] J. Kim, S. Kim, J. Kong, and S. Yoon, "Glow-TTS: A gener-
-ative flow for text-to-speech via monotonic alignment search,"
+
+J. Kim, S. Kim, J. Kong, and S. Yoon, “Glow-TTS: A gener-
+ative flow for text-to-speech via monotonic alignment search,”
 in Proc. NeurIPS, 2020, pp. 8067-8077.
-[21] J. Kim, J. Kong, and J. Son, "VITS: Conditional variational
+
+J. Kim, J. Kong, and J. Son, “VITS: Conditional variational
 autoencoder with adversarial learning for end-to-end text-to-
-speech," in Proc. ICML, 2021, pp. 5530-5540.
-[22] P. Shaw, J. Uszkoreit, and A. Vaswani, “Self-attention with re-
+speech,” in Proc. ICML, 2021, pp. 5530-5540.
+
+P. Shaw, J. Uszkoreit, and A. Vaswani, “Self-attention with re-
 lative position representations,” in Proc. NAACL, 2018.
-[23] H. Zhang, Z. Huang, Z. Shang, P. Zhang, and Y. Yan, “Lin-
-earSpeech: Parallel text-to-speech with linear complexity," in
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+41
+
+42
+
+H. Zhang, Z. Huang, Z. Shang, P. Zhang, and Y. Yan, “Lin-
+earSpeech: Parallel text-to-speech with linear complexity,” in
 Proc. Interspeech, 2021, pp. 4129-4133.
-[24] J. Su, Y. Lu, S. Pan, A. Murtadha, B. Wen, and Y. Liu, “Ro-
+
+J. Su, Y. Lu, S. Pan, A. Murtadha, B. Wen, and Y. Liu, “Ro-
 Former: Enhanced Transformer with rotary position embed-
-ding," arXiv preprint arXiv:2104.09864, 2021.
-[25] U. Wennberg and G. E. Henter, “The case for translation-
+ding,” arXiv preprint arXiv:2104.09864, 2021.
+
+U. Wennberg and G. E. Henter, “The case for translation-
 invariant self-attention in Transformer-based language mod-
-els," in Proc. ACL-IJCNLP Vol. 2, 2021, pp. 130-140.
-[26] S. Mehta, A. Kirkland, H. Lameris, J. Beskow, É. Székely, and
-G. E. Henter, "OverFlow: Putting flows on top of neural trans-
+els,” in Proc. ACL-IJCNLP Vol. 2, 2021, pp. 130-140.
+
+S. Mehta, A. Kirkland, H. Lameris, J. Beskow, E. Székely, and
+G. E. Henter, “OverFlow: Putting flows on top of neural trans-
 ducers for better TTS,” in Proc. Interspeech, 2023.
-[27] R. Huang, Z. Zhao, H. Liu, J. Liu, C. Cui, and Y. Ren,
-"ProDiff: Progressive fast diffusion model for high-quality
-text-to-speech," in Proc. MM, 2022, pp. 2595-2605.
-[28] O. Watts, G. E. Henter, J. Fong, and C. Valentini-Botinhao,
-"Where do the improvements come from in sequence-to-
+
+R. Huang, Z. Zhao, H. Liu, J. Liu, C. Cui, and Y. Ren,
+“ProDiff: Progressive fast diffusion model for high-quality
+text-to-speech,” in Proc. MM, 2022, pp. 2595-2605.
+
+O. Watts, G. E. Henter, J. Fong, and C. Valentini-Botinhao,
+“Where do the improvements come from in sequence-to-
 sequence neural TTS?” in Proc. SSW, 2019, pp. 217-222.
-[29] S. Mehta, É. Székely, J. Beskow, and G. E. Henter, "Neural
-HMMs are all you need (for high-quality attention-free TTS),"
+
+S. Mehta, E. Székely, J. Beskow, and G. E. Henter, “Neural
+HMMs are all you need (for high-quality attention-free TTS),”
 in Proc. ICASSP, 2022, pp. 7457-7461.
-[30] S.-g. Lee, W. Ping, B. Ginsburg, B. Catanzaro, and S. Yoon,
-"BigVGAN: A universal neural vocoder with large-scale train-
-ing," in Proc. ICLR, 2023.
-[31] X. Liu et al., "Flow straight and fast: Learning to generate and
+
+S.-g. Lee, W. Ping, B. Ginsburg, B. Catanzaro, and S. Yoon,
+“BigVGAN: A universal neural vocoder with large-scale train-
+ing,” in Proc. ICLR, 2023.
+
+X. Liu et al., “Flow straight and fast: Learning to generate and
 transfer data with rectified flow,” in Proc. ICLR, 2023.
-[32] Z. Ye, W. Xue, X. Tan, J. Chen, Q. Liu, and Y. Guo, “Co-
+
+Z. Ye, W. Xue, X. Tan, J. Chen, Q. Liu, and Y. Guo, “Co-
 MoSpeech: One-step speech and singing voice synthesis via
-consistency model,” in Proc. ACM MM, 2023, pp. 1831–1839.
-[33] M. Le, A. Vyas, B. Shi, B. Karrer, L. Sari, R. Moritz et al.,
-"Voicebox: Text-guided multilingual universal speech genera-
-tion at scale," arXiv preprint arXiv:2306.15687, 2023.
-[34] M. Bernard and H. Titeux, “Phonemizer: Text to phones tran-
-scription for multiple languages in Python," J. Open Source
+consistency model,” in Proc. ACM MM, 2023, pp. 1831-1839.
+M. Le, A. Vyas, B. Shi, B. Karrer, L. Sari, R. Moritz et al.,
+“Voicebox: Text-guided multilingual universal speech genera-
+tion at scale,” arXiv preprint arXiv:2306.15687, 2023.
+
+M. Bernard and H. Titeux, “Phonemizer: Text to phones tran-
+scription for multiple languages in Python,” J. Open Source
 Softw., vol. 6, no. 68, p. 3958, 2021.
-[35] J. Kong, J. Kim, and J. Bae, "HiFi-GAN: Generative ad-
+
+J. Kong, J. Kim, and J. Bae, “HiFi-GAN: Generative ad-
 versarial networks for efficient and high fidelity speech syn-
-thesis,” in Proc. NeurIPS, 2020, pp. 17022-17 033.
-[36] R. Prenger, R. Valle, and B. Catanzaro, "WaveGlow: A
+thesis,” in Proc. NeurIPS, 2020, pp. 17 022-17 033.
+
+R. Prenger, R. Valle, and B. Catanzaro, “WaveGlow: A
 flow-based generative network for speech synthesis,” in Proc.
 ICASSP, 2019, pp. 3617-3621.
-[37] A. Radford, J. W. Kim, T. Xu, G. Brockman, C. Mcleavey, and
-I. Sutskever, "Robust speech recognition via large-scale weak
-supervision,” in Proc. ICML, 2023, pp. 28 492–28 518.
-[38] J. Taylor and K. Richmond, "Confidence intervals for ASR-
+
+A. Radford, J. W. Kim, T. Xu, G. Brockman, C. Mcleavey, and
+I. Sutskever, “Robust speech recognition via large-scale weak
+supervision,” in Proc. ICML, 2023, pp. 28 492-28 518.
+
+J. Taylor and K. Richmond, “Confidence intervals for ASR-
 based TTS evaluation,” in Proc. Interspeech, 2021.
-[39] K. Prahallad, A. Vadapalli, N. Elluru, G. Mantena, B. Pulu-
-gundla et al., "The Blizzard Challenge 2013 – Indian language
-task," in Proc. Blizzard Challenge Workshop, 2013.
-[40] C.-H. Chiang, W.-P. Huang, and H. yi Lee, “Why we should
+
+K. Prahallad, A. Vadapalli, N. Elluru, G. Mantena, B. Pulu-
+gundla er al., “The Blizzard Challenge 2013 — Indian language
+task,” in Proc. Blizzard Challenge Workshop, 2013.
+
+C.-H. Chiang, W.-P. Huang, and H. yi Lee, “Why we should
 report the details in subjective evaluation of TTS more rigor-
-ously," in Proc. Interspeech, 2023, pp. 5551-5555.
-[41] A. Kirkland, S. Mehta, H. Lameris, G. E. Henter, E. Szekely
-et al., "Stuck in the MOS pit: A critical analysis of MOS test
+ously,” in Proc. Interspeech, 2023, pp. 5551-5555.
+
+A. Kirkland, S. Mehta, H. Lameris, G. E. Henter, E. Szekely
+et al., “Stuck in the MOS pit: A critical analysis of MOS test
 methodology in TTS evaluation,” in Proc. SSW, 2023.
-[42] É. Székely, G. E. Henter, J. Beskow, and J. Gustafson, "Spon-
-taneous conversational speech synthesis from found data," in
+
+E. Székely, G. E. Henter, J. Beskow, and J. Gustafson, “Spon-
+taneous conversational speech synthesis from found data,” in
 Proc. Interspeech, 2019, pp. 4435-4439.
-5
+

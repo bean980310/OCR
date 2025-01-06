@@ -1,14 +1,19 @@
+--- Page 1 ---
 arXiv:2306.04235v1 [cs.AI] 7 Jun 2023
+
 MobileNMT: Enabling Translation in 15MB and 30ms
-Ye Lin¹* Xiaohui Wang², Zhexi Zhang², Mingxuan Wang², Tong Xiao¹³ Jingbo Zhu¹³
-1NLP Lab, School of Computer Science and Engineering,
+
+Ye Lin!; Xiaohui Wang”, Zhexi Zhang”, Mingxuan Wang’, Tong Xiao!*} Jingbo Zhu!*
+'NLP Lab, School of Computer Science and Engineering,
 Northeastern University, Shenyang, China
-2 ByteDance
+ ByteDance
 3NiuTrans Research, Shenyang, China
 {linye2015}@outlook.com
-{wangxiaohui.neo, zhangzhexi, wangmingxuan.89} @bytedance.com
+{wangxiaohui.neo, zhangzhexi, wangmingxuan. 89}@bytedance.com
 {xiaotong, zhujingbo}@mail.neu.edu.cn
+
 Abstract
+
 Deploying NMT models on mobile devices
 is essential for privacy, low latency, and of-
 fline scenarios. For high model capacity, NMT
@@ -16,20 +21,22 @@ models are rather large. Running these models
 on devices is challenging with limited storage,
 memory, computation, and power consumption.
 Existing work either only focuses on a single
-metric such as FLOPS or general engine which
+metric such as FLOPs or general engine which
 is not good at auto-regressive decoding. In
 this paper, we present MobileNMT, a system
-that can translate in 15MB and 30ms on de-
+that can translate in 1SMB and 30ms on de-
 vices. We propose a series of principles for
 model compression when combined with quan-
 tization. Further, we implement an engine that
 is friendly to INT8 and decoding. With the
 co-design of model and engine, compared with
-the existing system, we speed up 47.0× and
+the existing system, we speed up 47.0x and
 save 99.5% of memory with only 11.6% loss
 of BLEU. The code is publicly available at
 https://github.com/zjersey/Lightseq-ARM.
+
 1 Introduction
+
 As a classic subfield of natural language processing,
 neural machine translation (NMT) has achieved
 great success in recent years. Most of the studies
@@ -47,60 +54,49 @@ design. (3) Memory or Memory mapped I/O
 real running system. (4) Decoding speed depends
 on many realistic factors such as engine implemen-
 tation and the power of avaliable processors.
+
 *This work is done during the internship at ByteDance.
-*Corresponding author.
+} Corresponding author.
+
 Big-TFLite
-1872
-Base-TFLite
-260
-20MB-Ours 20
-10MB-Ours 10
-0
-200
-400 600 800 1,000
+Base-TFLite 260.
+20MB-Ours -i 20
+10MB-Ours —t10-—-i 1 | i !
+0 200 400 600 800 1,000
+
 Model Size (MB)
 Big-TFLite
-Base-TFLite
-20MB-Ours
-10MB-Ours 14-88
-2,886.62
-908.52
-25.95
-0
-1,000
-2,000
-3,000
+Base-TFLite 908.52
+20MB-Ours +1 25.95
+10MB-Ours —-14. L L |
+0 1,000 2,000 3,000
 Memory (MB)
-1,281.5
-332.25
 Big-TFLite
 Base-TFLite
-20MB-Ours 46.3
-10MB-Ours 27.25
-Big-TFLite
-Base-TFLite
-20MB-Ours
-10MB-Ours
-0
-500
-1,000
-1,500
+20MB-Ours ee
+10MB-Ours 4127.25 t
+
+L L
+0 500 1,000 1,500
+
 Latency (ms)
-28.36
-27.4
-27.09
-25.08
+
+Big-TFLite -
+Base-TELite 27.4
+20MB-Ours 27.09
+10MB-Ours 5
 0
-10
-20
+
+10 20 30
 BLEU [%]
-30
+
 Figure 1: These metrics are measured on Google Pixel
 4. Each result is the average of 200 runs on a sample of
 src/tgt length 30.
+
 In this paper, we propose MobileNMT, a
 Transformer-based machine translation system that
-can translate in 15MB and 30ms. First, we propose
+can translate in 1SMB and 30ms. First, we propose
 three principles for designing parameter-limited
 MT models: 1) To compress embedding, reducing
 vocabulary size is simple and effective compared
@@ -116,81 +112,48 @@ tillation. For industrial deployment, we optimize
 general matrix multiplication (GEMM) and mem-
 ory in our own inference engine and use the 8-bit
 integer for storage and computation. As shown in
-Table 1, the 10MB MobileNMT achieves 88.4%
-27
-26
-47 49
-23
-Scaling E
-22
-- Scaling V
-Scaling E
-Scaling V
-BLEU [%]
-20
-18
-16
-Scaling E
-Scaling V
-21
-14
-55
-60
-64
-12
-14 16
-19
-21
-3
-4 5
-7 8
-#Params of Base (M)
-#Params of Small (M)
-#Params of Tiny (M)
-27
-24
-23.5
-26
-Sharing
-Width
-23
-22.5
-Sharing
-Width
-BLEU [%]
-25
-28.2 35.5 42
-64.5
-12.2 14.1 15.9
-21.5
-#Params of Base (M)
-#Params of Small (M)
-21
-20
-19
-Sharing
-Width
-18
-5.7 6.1 6.6
-#Params of Tiny (M)
-8
+Table 1, the 1OMB MobileNMT achieves 88.4%
+
+--- Page 2 ---
+& ob | & 4p + & 20 a
+2 on —e- Scaling E || 2 . i: —e— Scaling E | Fe 18) —e— Scaling E ||
+FA 26) —m Scaling V | | a” 21 —#- Scaling V a 16 F —m- Scaling V ||
+i Ee 1 ] 14k |
+A749 55 60 64 12 14° 16 19 21 3 4 ~=5 7 8
+# Params of Base (M) # Params of Small (M) # Params of Tiny (M)
+a T T T _ T T T — 21F |
+© 27} "18 24 | = 20
+> - 5 23.5 - 5 |
+BQ 26 —e— Sharing |] 93 |- —e-— Sharing || ® 19b —e- Sharing ||
+Fe = Width || B 995) —= Width |] B igh == Width ||
+5 L L . t L L L
+° 28.2 35.5 42 64.5 12.2 14.1 15.9 21.5 5.7 6.1 6.6 8
+# Params of Base (M) # Params of Small (M) # Params of Tiny (M)
 Figure 2: Model performance of different methods in Section 2 and Section 3 (Scaling E: scaling embedding
 dimension; Scaling V: scaling vocabulary size; Sharing: cross-layer parameter sharing; Width: reducing model
 width). Scaling V performs better than Scaling E. Width performs nearly the same with Sharing.
-performance of Transformer-big with only 1.1%
-size and runs 47.0× faster on decoding, which can
-be easily deployed and used.
-Our contributions are summarized as follows:
-• We propose three principles for parameter-
-limited MT models to make more efficient
-use of computation and memory resources.
-• We adjust training strategies according to the
+performance of Transformer-big with only 1.1% Module| Dim Base Small Tiny
+: d fi decodi hich Vocab | f 40,000 40,000 40,000
+size and runs 47.0x faster on decoding, which can Embed Embed | N/A = N/A «i N/A }=
+be easily deployed and used. Hidden|L 512 256 128
+Our contributions are summarized as follows: Hidden|y' 512 256 128
+Encoder| Head 8 x6) 4 x6 2 x6
+sai FFN 2048 1024 512
+. We propose three principles for parameter Widder? 512 756 18
+limited MT models to make more efficient Decoder| Head 8 -« 4 “0 2 x6
+use of computation and memory resources. FEN | 2048 1024 512
+Params 64.5M 21.5M 8.0M
+
+¢ We adjust training strategies according to the
 newly designed structure to achieve higher
 translation accuracy.
-• We develop a mobile inference engine to
+
+¢ We develop a mobile inference engine to
 bridge the gap between industrial practice and
 theoretical research.
+
 2 Architecture Design Principles
+
 For model compression and acceleration, most stud-
 ies focus on a single metric such as model size
 or FLOPs, without considering the real-world ap-
@@ -200,7 +163,9 @@ and decoding speed, and then propose three design
 principles for parameter-limited MT models. We
 choose Transformer (Appendix A) as our baseline
 because of its great success in machine translation.
+
 2.1 Embedding Compression
+
 The vocabulary size V usually reaches tens of thou-
 sands in NMT models (Akhbardeh et al., 2021).
 The parameters can reach tens of millions and
@@ -209,44 +174,15 @@ Embedding Factorization (Scaling E). For
 model compression, embedding factorization has
 been widely studied (Lan et al., 2020; Grave et al.,
 2017; Baevski and Auli, 2019). To decouple the
-Module Dim
-Vocab
-Embed Embed
-Hidden
-Hidden
-Encoder Head
-Base
-40,000¬
-Small
-40,000·
-Tiny
-40,000
-[ "N/A"] × [ "N/A" × [ "N/A" | ×1
-[28] × 6 [ 2404 ] × 6
-[
-FFN
-Hidden 512
-Decoder Head 8
-FFN 2048
-22 ] × 6
-256
-128
-Params
-64.5M
-×6 4
-1024
-21.5M
-×6
-2
-×6
-512
-8.0M
+
 Table 1: The detailed settings of Base, Small and Tiny.
+
 embedding dimension E and hidden dimension H,
 it additionally introduces a trainable transforma-
-tion weight WT = REXH, where E ≤ H. After
+tion weight W? © R®*4, where E < H. After
 factorization, the embedding parameters will be
-decreased from O(V × H) to O(V × E+E×H).
+decreased from O(V x H) to O(V x E+ Ex H).
+
 Reducing Vocabulary Size (Scaling V). A more
 direct way to compress embedding is to reduce the
 vocabulary size V. To reduce the risk of out-of-
@@ -258,92 +194,70 @@ operations range from 30~40K (Ding et al., 2019).
 Volt proves that we can find a well-performing
 vocabulary with higher BLEU and smaller BPE
 merge operations (Xu et al., 2021). Experiments
-in Lin et al. (2021)' work also show that smaller
+in Lin et al. (2021)’work also show that smaller
 vocabularies may be better.
+
 Reducing Vocabulary Size Performs Better.
 To compare the two embedding compression meth-
 ods, here we select three baseline models of differ-
 ent sizes. The model settings are shown in Table 1.
 As shown in Table 2, the parameters and FLOPs are
 almost the same in these two methods. As shown
-Weight
-10
-Sharing
-Width
-Output
-400
-Sharing
-Width
-200
-0
-0 1 2 3 4 5 6 7 8 9 1011
-#Layer ID
-0 1 2 3 4 5 6 7 8 9 1011
-#Layer ID
-BLEU [%]
+
+--- Page 3 ---
+¢ |
+
+~ 10P —e— Sharing |} _ —e- Sharing |) © 25 Ins
+
+s —e wian || 2 4007 se Width |] > 20f law ||
+3 5} +S 200+ 13
+
+m lop a
+
+a a 1 (0) ee = =
+
+012345678 91011 012345678 91011 Base Small Tiny
+
+# Layer ID # Layer ID En—De
+
 Figure 3: The left two figures show weight and output ranges for each layer. The right figure shows the model
+
 performance of Post Training Quantization (PTQ) in cross-layer parameter sharing vs. reducing model width. These
-figures show that reducing model width is more quantization-friendly than cross-layer parameter sharing.
-20
-W
-15
-Base Small Tiny
-En→De
-Metric
-Scaling E
-Base Small Tiny
-Scaling V
-Base Small Tiny
-26
-Params (M)
-FLOPS (G)
-MMI/O (M)
-BLEU
-47 12 3
-1.41 0.38 0.11
-48 15 6
-25.46 21.03 14.48
-VS.
-47 12 3
-1.41 0.38 0.11
-47 14 5
-26.17 22.49 17.10
-Metric
-Sharing
-Base Small Tiny
-Width
-BLEU [%]
-24
-Base Small Tiny
-Params (M)
-FLOPS (G)
-MMI/O (M)
-BLEU
-28 12 6
-1.95 0.65 0.24
-66 24 10
-25.41 22.37 17.75
-VS.
-28 12 6
-0.85 0.38 0.17
-30 15 7
-25.18 22.62 18.60
-22
+
+figures show that reducing model width is more quantization-friend.
+
+Metric Scaling E Scaling V
+Base | Small | Tiny Base | Small | Tiny
+Params (M) | 47 12 3 vs 47 12 3
+FLOPs (G) | 1.41 | 0.38 | 0.11 | "| 1.41 | 0.38 |] 0.11
+MMI/O (M)| 48 15 6 47 14 5
+BLEU 25.46 | 21.03 | 14.48 26.17 | 22.49 | 17.10
+. Sharing Width
+Metric Base | Small | Tiny Base | Small | Tiny
+Params (M) | 28 12 6 vs 28 12 6
+FLOPs (G) | 1.95 | 0.65 | 0.24 | ~"} 0.85 | 0.38 | 0.17
+MMI/O (M)| 66 24 10 30 15 7
+BLEU 25.41 | 22.37 | 17.75 25.18 | 22.62 | 18.60
 Table 2: Parameters, FLOPs, and model perfor-
 mance (FLOPs and MMI/O are estimated on a sam-
 ple with src/tgt length of 30.). For embedding
-compression, reducing vocabulary size (Scaling V
+
+compression, reducing vocabulary size (Scaling V)
 is more simple and effective. For encoder/decoder
 compression, reducing model width (Width) is more
 efficient in computation and memory.
+
 in the first row of Fig. 2, compared to reducing
 vocabulary size, the model with embedding factor-
 ization performs poorly in most cases, especially
 when the parameters are limited.
-2.2 Encoder/Decoder Compression
+
+2.2. Encoder/Decoder Compression
+
 For encoder and decoder compression, here we
 compare models with cross-layer parameter sharing
 and model width reduction.
+
 Cross-Layer Parameter Sharing (Sharing).
 The most widespread use of parameter sharing is in
 convolutional neural networks (Long et al., 2015).
@@ -353,33 +267,41 @@ rameter sharing can provide stronger nonlinearity
 along the model depth while keeping the parame-
 ters unchanged (Dehghani et al., 2019; Takase and
 Kiyono, 2021; Lan et al., 2020).
+
 Reducing Model Width (Width). Since model
 depth has been proven to be important in natural
 language processing tasks such as machine trans-
 lation (Devlin et al., 2019; Liu et al., 2020; Wang
 et al., 2022; Liu et al., 2020), here we keep the
-O
-10
-Small Baseline
-▲ Vocab Size
-Encoder Depth
-◆ Decoder Depth
-Hidden Size
-◆ FFN Dim
-20
-#Params (M)
-30
+
+than cross-layer parameter sharing.
+on T
+~~ Oy 1
+ry Worn +
+~>.
+S Q, a ¢ * “
+x . A e?
+= o4b ‘ ®
+FA cn 9o A Vocab Size
+a ~~ < ¢ @ Encoder Depth
+A ® Decoder Depth
+29 b . ¢ Hidden Size
+ry ©) © FEN Dim
+10 20 30
+# Params (M)
+
 Figure 4: Performance (BLEU) vs. parameters (M). Dif-
 ferent marks denote different dimensions. Points near
 large red circles have a greater impact on model perfor-
 mance than points near small red circles. Encoder depth
 can be considered as the most important dimension.
+
 depth unchanged and reduce the model width.
 Reducing Model Width is More Efficient and
 Quantization-Friendly. In the second row of Fig.
 2, these two methods perform nearly the same.
 However, Table 2 shows that there is a large differ-
-ence in FLOPS and MMI/O, which means reducing
+ence in FLOPs and MMI/O, which means reducing
 model width is much more efficient in computa-
 tion and memory. Since it is necessary to quantize
 these models for greater compression, we further
@@ -392,178 +314,178 @@ verifies this: when we apply post-training quan-
 tization (PTQ) (Sung et al., 2015; Banner et al.,
 2019; Choukroun et al., 2019) to these two meth-
 ods, cross-layer parameter sharing performs poorly.
+
 2.3 Deep Encoder and Shallow Decoder
+
 Fig. 4 studies how different dimensions affect the
 Transformer performance. In order to analyze the
 impact of each dimension separately, here we only
 change one specific dimension and keep the others
-Module Dim
-MobileNMT-10MB MobileNMT-20MB
-Vocab 8,000
-Embed Embed N/A
-Hidden L 256
-8.000
-x1
-N/A
-xX1
-384
-Hidden 256
-384
-Encoder Head
-FFN
-Hidden 256
-4
-× 12
-6
-x12
-512
-768
-384
-Decoder Head
-FFN
-4
-512
-x2
-6
-768
-]
-×2
-Params
-≈10M
-≈20M
-BLEU [%]
-Base -Ours
-w/o
-E w/ PTQ
-25
-26
-20
-24
-0.0
-0.05
-Dropout
-0.1 15
-LR:0.01 LR:0.02
+
+
+--- Page 4 ---
+Module | Dim [MobileNMT-10MB|MobileNMT-20MB
+Vocab | f 8,000 8,000
+
+Embed |Embed N/A xl N/A xl
+Hidden| L 256 384
+Hidden] fT 256 384
+
+Encoder} Head 4 x12 6 x12
+FFN 512 768
+Hidden] fF 256 384
+
+Decoder} Head 4 x2 6 x2
+FFN 512 768
+
+Params 10M 20M
+
 Table 3: The detailed settings of MobileNMT.
-Ya
-Figure 6: The left part shows performance of dif-
-ferent dropouts on base model vs. MobileNMT.
-The right part shows performance before vs. after
-PTQ. Removing dropout from MobileNMT can lead
-to significant performance improvement. While larger
-learning rates can also improve model performance, the
-model will become quantization-unfriendly.
-bo
-Vi
-b2
-Vi
-Wo
-W2
-Soft Max
-ReLU
-scale
-bi
-bqkv
-W₁
-W
-qkv
-LN
-LN
-LR: 0.01
-- LR: 0.02
-Weight
-642
-0 2 4 6 8 101214
-#Layer ID
-Output
-600
-400
-200
-0
-0 2 4 6 8 101214
-#Layer ID
-Figure 7: Weight and output ranges for each layer.
-Larger learning rate will result in larger range of values.
-(a) FFN Quantizer
-(b) Attention Quantizer
+
+é $
+
+b be 6 an
+bE w.-@
+W2@ Gotta) —-€
+
+(ReLU) scale >
+i (i)
+b, —@ a” N
+K Vv
+x
+Wi > gkv
+Wako >
+
+xX
+(a) FFN Quantizer (b) Attention Quantizer
+
 Figure 5: Running examples of the FFN and attention
 quantizers. Here red lines denote values that will be
 quantized, black lines denote values with full precision.
+
 unchanged. The point on the left of the Small
-Baseline represents scaling one dimension down,
+Baseline @ represents scaling one dimension down,
 while the point on the right represents scaling one
 dimension up. We can see that Encoder Depth
 is more important than other dimensions, which
-is consistent with the related work on large-scale
-models (Wang et al., 2019, 2022). Based on the
+is consistent with the related work on large-scal
+models (Wang et al., 2019, 2022). Based on th
 above discussion, we finally build a deep encoder
 and a shallow decoder, while reducing the vocab
 size and model width. Two MobileNMT models
 of different sizes are built here and the detailed
 settings are shown in Table 3.
+
+e
+ie
+
 3 Training Strategies
+
 3.1 Pre-Training with Knowledge Distillation
+
 In order to improve the performance of compressed
 models, recent studies distill knowledge from a
 well-trained full-precision teacher network to a stu-
 dent network (Mishra and Marr, 2018) or directly
 use a quantized teacher network (Kim et al., 2019).
 Here we adopt sequence-level knowledge distilla-
+
+—e— Base — Ours BE w/o mB w/PTQ
+
+T L !
+26 - 4
+
+24 f | 20
+0.0 0.05 0.1 15
+
+Dropout
+
+BLEU [%
+
+LR:0.01 LR:0.02
+
+Figure 6: The left part shows performance of dif-
+ferent dropouts on base model vs. MobileNMT.
+The right part shows performance before vs. after
+PTQ. Removing dropout from MobileNMT can lead
+to significant performance improvement. While larger
+learning rates can also improve model performance, the
+
+model will become quantization-unfriendly.
+
+— LR: 0.01 — LR: 0.02
+_ 6 rTTTTTy] oo 600
+B 4p | & 400
+= 2p + § 200
+i | “1 _1 0H =|
+024 6 8101214 0246 8101214
+
+# Layer ID # Layer ID
+
+Figure 7: Weight and output ranges for each layer.
+Larger learning rate will result in larger range of values.
+
 tion because it has shown to be effective for NMT
 tasks. The most basic full-precision Transformer-
 base model is adopted as the teacher.
+
 3.2 Quantization
+
 The process of quantizing a transformer model can
 be divided into two steps: 1) constructing quan-
 tizers; 2) applying the quantization-aware training
 (QAT) (Courbariaux et al., 2015) based on the pre-
 trained model we have obtained in Section 3.1.
-FFN and Attention Quantizers. The original
+FEN and Attention Quantizers. The original
 Transformer layer includes two types of sublayers:
 the attention sublayer and feed-forward network
-(FFN) (Vaswani et al., 2017). Here we construct
+(FEN) (Vaswani et al., 2017). Here we construct
 the quantizer for each linear in the attention and
-FFN, and quantize both the weights and activations
+FEN, and quantize both the weights and activations
 as shown in Fig. 5. Since most computations are
 spent on matrix multiplication, all biases and resid-
 uals are kept in full precision for accuracy preser-
 vation. Since quantization will change the range of
 network outputs, here we add a learnable weight
-Yi to the i-th sublayer to learn how to combine the
+7; to the i-th sublayer to learn how to combine the
 output and the residual surrounding it.
 Quantization-Aware Training. Since Mo-
 bileNMT only has 10M/20M parameters, quantiz-
 ing such a small model inevitably results in perfor-
 mance loss, so we perform QAT after constructing
+
+
+--- Page 5 ---
+— Attn (w/o Lz) --- Attn (w/ L2)
+
+— FFN (w/o Ly) ~~~ FFN (w/ Lo)
+
+mw/o mw/PTQ
+
+| ee a a T
+| | = 600}
+400 +
+L 2-4 § 200)
+
 Weight
-2
-Attn (w/o L2)
-Attn (w/ L2)
-FFN (w/o L2)
-FFN (w/ L2)
-6
+on F&O
+
 Output
-600
-400
-200
-0
-BLEU [%]
-0 1 2 3 4 5 6 7 8 9 10111213
-#Layer ID
-0 1 2 3 4 5 6 7 8 9 10111213
-#Layer ID
+
+TTP. 25 J
+
+BLEU [%
+
+Soey wee 15
+bors eye tre tet OL-FS Sreera-F 4
+01234567 8 910111213 01234567 8 910111213 0.0 0.05 0.1
+# Layer ID # Layer ID Weight Decay
+
 Figure 8: The left two figures show weight and output ranges for each layer. The right figure shows the performance
-of different L2 regularizations before vs. after PTQ. Experiments show that L2 regularization can make the model
+of different Lz regularizations before vs. after PTQ. Experiments show that D2 regularization can make the model
+
 more quantization-friendly.
-20
-15
-225
-25
-w/o ■w/ PTQ
-0.0
-0.05
-0.1
-Weight Decay
+
 the quantizers. Before QAT, we pre-compute all
 scaling parameters based on a forward running on
 the pre-trained distillation model obtained in Sec-
@@ -575,22 +497,26 @@ et al., 2022). For 8-bit quantization, we use the
 element-wise quantization (Lee et al., 2021). For
 lower-bit quantization, such as 4-bit integer, we use
 the row-wise quantization (Faraone et al., 2018).
-3.3 Training Hyperparameters
+
+3.3. Training Hyperparameters
+
 Compared to the original Transformer model, Mo-
-bile NMT introduced in Section 2 has fewer parame-
-ters and different architectures, so different training
+bileNMT introduced in Section 2 has fewer parame-
+ers and different architectures, so different training
 hyperparameters are needed.
+
 Removing Dropout. Since our models have
-fewer parameters, we do not need to impose strong
+
+‘ewer parameters, we do not need to impose strong
 regularizations on them and we remove dropout
-from the entire model. The left part of Fig. 6 shows
-that removing dropout will lead to an improvement
+rom the entire model. The left part of Fig. 6 shows
+hat removing dropout will lead to an improvement
 of almost two BLEU points.
 Larger Learning Rate. Here we follow the
 configuration provided in Wang et al. (2019) with a
-larger learning rate (0.01 → 0.02), a larger training
-batch (4096 →8192), and more warmup steps
-(4000 → 8000). As shown in the right part of
+arger learning rate (0.01 — 0.02), a larger training
+batch (4096 —+ 8192), and more warmup steps
+(4000 — 8000). As shown in the right part of
 Fig. 6, it can improve model performance by more
 than 0.5 BLEU points (red bars). However, after
 PTQ, the model with 0.02 learning rate performs
@@ -598,145 +524,78 @@ significantly worse than 0.01 (blue bars). As shown
 in Fig. 7, the network weights and outputs become
 larger when using a larger learning rate, which is
 not quantization-friendly.
-L2 Regularization. To solve the above prob-
-lem, this paper adopts L2 regularization applied
+
+Ly Regularization. To solve the above prob-
+lem, this paper adopts Lz regularization applied
 to weight (also called weight decay). It adds the
 squared magnitude of the network weights as the
 penalty term to the original loss function and en-
-k
-4
-1
-1
-do
-*
-n
+
+k 4
+
+1 1 do
+
 wo
-W1
-4
-W2
-W3
-Thread 2
-(3)
-4
-128-bit Register
-1 | do | d1 | d2 | d3
-1
-4
-ΤΟ
-1
-4
-Wo
-SIMD Instruction
-W1 W2 W3
+Wi
+w2
+w3
+
+n —
+4 Thread 2
+
+ae)
+
+4 128-bit Register
+4 1 do aq dz dz
+1 To <_— 4 SIMD Instruction
+1 wo Wi we W3
+
 Figure 9: An example of processing multiple integers
 in a single SIMD instruction.
+
 courage the weights to be smaller. As shown in
-the left two parts of Fig. 8, with L2 regularization,
+the left two parts of Fig. 8, with D2 regularization,
 both the network weights and output values will
 become significantly smaller. The right part of Fig.
 8 shows the performance of PTQ when applying
-different degrees of L2 regularization. The red and
+different degrees of L» regularization. The red and
 blue bars represent the model performance before
-and after PTQ. We can see that L2 regularization
+and after PTQ. We can see that Ly regularization
 does improve the model performance after PTQ.
+
 4 The Engine
+
 This section introduces the detailed implementa-
 tions of our inference engine.
-4.1 GEMM Optimization
+
+4.1. GEMM Optimization
+
 According to statistics on the ONNX Runtime plat-
 form, general matrix multiplication (GEMM) ac-
 counts for 80.44% of the overall decoding time,
 demonstrating that optimizing GEMM is the key
 to decoding speed up. We optimize GEMM from
 three aspects: (1) Replacing 32-bit floating points
-En-Fr
-En-De
-System
-Transformer-big
-218 ↑1×
-Transformer-base 65 13×
-Transformer-small 22 ↑10x
-Transformer-tiny
-8127×
-MobileNMT-20MB 20 ↑11×
-MobileNMT-10MB 10 122×
-Params (M)
-Size (MB)
-Memory (MB)
-872 ↑1x
-2886.6 +1.0x
-Latency (ms)
-1281.5 +1.0×
-Test
-260 ↑3×
-908.5 13.2×
-332.3 ↑3.9x
-28.36 A-0.00
-27.40 -0.96
-Valid
-26.75 A-0.00
-25.81 A-0.94
-88 ↑10×
-759.5 13.8x
-158.0 18.1x
-24.20 -4.61
-23.91 A-2.84
-32 127×
-398.9 17.2×
-73.0 ↑17.6x
-20.97 A-7.39
-21.53 A-5.22
-20144×
-26.0 ↑111.2x
-46.3 127.7x
-27.09 A-1.27
-25.72 A-1.03
-10 +87×
-14.9 +194.0x
-27.3 147.0x
-25.08 A-3.28
-24.85 A-1.90
-Transformer-big
-259 ↑1x
-1036 ↑1x
-2987.6 +1.0x
-1345.6 ↑1.0x
-39.05 A-0.00
-44.12 A-0.00
-Transformer-base
-8613×
-344 13×
-944.8 ↑3.2x
-358.9 +3.7x
-38.64 A-0.41
-43.80 A-0.32
-Transformer-small 22 ↑12×
-88 ↑12×
-782.3 13.8×
-178.5 17.5×
-34.76 A-4.29
-40.01 A-4.11
-Transformer-tiny
-8132×
-32 132x
-418.8 17.1×
-80.3 ↑16.8×
-30.36 A-8.69
-36.01 A-8.11
-MobileNMT-20MB 20 +13×
-MobileNMT-10MB 10 ↑26x
-20 ↑52×
-10 ↑104×
-26.7 ↑111.9x
-53.7 125.1x
-15.8 ↑189.1×
-28.9 +46.6x
-37.67 A-1.38
-36.00 A-3.05 41.87 A-2.25
-43.81 A-0.31
+
+--- Page 6 ---
+System Params (M) | Size (MB) | Memory (MB) | Latency (ms) Test Valid
+Transformer-big 218 F1x 872 t1x 2886.6 1.0 1281.5 F1.0x | 28.36 A-0.00 | 26.75 A-0.00
+© Transformer-base 65 3x 260 73 x 908.5 $3.2 332.3 $3.9 27.40 A-0.96 | 25.81 A-0.94
+Q | Transformer-small | 22 ¢10x 88 F10x 759.5 $3.8 158.0 $8.1 24.20 A-4.61 | 23.91 A-2.84
+G | Transformer-tiny 8 727 32 427 398.9 $7.2 73.0 $17.6 20.97 A-7.39 | 21.53 A-5.22
+MobileNMT-20MB | 20 t11x 20 444 x 26.0 F111.2x | 46.3 $27.7« 27.09 A-1.27 | 25.72 A-1.03
+MobileNMT-10MB | 10 +22 10 ¢87x 14.9 $194.0x | 27.3 747.0x 25.08 A-3.28 | 24.85 A-1.90
+Transformer-big 259 F1x 1036 t1x | 2987.6 ¢1.0x 1345.6 F1.0x | 39.05 A-0.00 | 44.12 A-0.00
+Transformer-base 86 73x 344 43x 944.8 $3.2« 358.9 $3.7 38.64 A-0.41 | 43.80 A-0.32
+Ey Transformer-small | 22 $12 88 F12« 782.3 $3.8 178.5 $7.5x 34.76 A-4.29 | 40.01 A-4.11
+fal Transformer-tiny 8 $32 32 $32 418.8 77.1 80.3 $16.8 30.36 A-8.69 | 36.01 A-8.11
+MobileNMT-20MB | 20 713x 20 #52 26.7 F111.9x | 53.7 425.1 37.67 A-1.38 | 43.81 A-0.31
+MobileNMT-10MB | 10 +26x 107104 | 15.8 7189.1 | 28.9 746.6x 36.00 A-3.05 | 41.87 A-2.25
 Table 4: Results on WMT14 En-De and WMT14 En-Fr tasks. These metrics are measured on Google Pixel 4.
 Transformer-big/base/small/tiny results are tested on TFLite and MobileNMT-20MB/10MB are tested on our engine.
+
 All results are based on a sample with src/tgt length of 30.
+
 with 8-bit integers in GEMM for model quantiza-
 tion. (2) The Arm instruction set we use allows
 multiple integers to be processed in parallel in a
@@ -745,10 +604,12 @@ the processor throughput. (3) To improve the cache
 hit and the register usage, we adjust the layout of
 the tensor in memory to ensure that the instruction
 reads data from continuous space. Specifically, we
-convert each 4 × 4 block in the original layout into
+convert each 4 x 4 block in the original layout into
 a contiguous vector of size 16. An example can be
 seen in Fig. 9.
+
 4.2 Memory Optimization
+
 As shown in Fig. 10 in the appendix C, except for
 GEMM, other operations account for only 19.56%
 of the decoding time but will be frequently per-
@@ -765,53 +626,30 @@ the same time. Through memory sharing, only two
 8-bit memory buffers, and one 32-bit buffer need
 to be pre-allocated in the Transformer encoder to
 hold intermediate results.
+
 5 Experiments
+
 5.1 Setups
+
 We evaluate our methods on two WMT bench-
 marks. For the WMT14 En-De task (4.5M pairs),
 we choose newstest-2013 as the validation set and
-Transformer-base
-DeLighT
-System
-Params(M)
-w/ w/o
-FLOPS (G) BLEU
-65 44
-1.9
-27.40
-37 31.4
-27.60
-Universal Transformer
-Lite Transformer (small)
-Lite Transformer (medium) N/A 11.7
-Lite Transformer (big) N/A 17.3
-EdgeFormer w/o LA N/A 8.6
-EdgeFormer (Adapter-LA) N/A 9.4
-EdgeFormer (Prefix-LA)
-MobileNMT-10MB
-MobileNMT-20MB
-N/A 7.4
-1.9
-26.20
-N/A 2.9
-0.2
-22.50
-0.7
-25.60
-1.0
-26.50
-1.8
-26.50
-1.8
-26.90
-N/A 8.6
-1.9
-26.80
-10 7.9
-0.3
-25.08
-20 17.7
-0.6 27.09
+
+System Params(M) 1 Ops(G)|BLEU
+w/ | w/o
+
+Transformer-base 65} 44 1.9 27.40
+DeLighT 37 | 31.4 - 27.60
+Universal Transformer IN/A| 7.4 1.9 26.20
+Lite Transformer (small) |N/A} 2.9 0.2 22.50
+Lite Transformer (medium)|N/A) 11.7 0.7 25.60
+Lite Transformer (big) IN/A] 17.3 1.0 26.50
+EdgeFormer w/o LA IN/A] 8.6 1.8 26.50
+EdgeFormer (Adapter-LA) |N/A} 9.4 1.8 26.90
+EdgeFormer (Prefix-LA) |N/A] 8.6 1.9 26.80
+MobileNMT-10MB 10] 7.9 0.3 25.08
+MobileNMT-20MB 20 | 17.7 0.6 | 27.09
+
 Table 5: The comparison of MobileNMT with other
 parameter-efficient Transformers, including DeLighT
 (Mehta et al., 2021), Universal Transformer (Dehghani
@@ -819,7 +657,8 @@ et al., 2019), Lite Transformer (Wu et al., 2020) and
 EdgeFormer (Ge et al., 2022) (Parameters w/ or w/o
 embedding layer are both provided. FLOPs is estimated
 on a sample with src/tgt length of 30.).
-newstest-2014 as the test set. For the WMT14 En-
+
+newstest-2014 as the test set. For the WMT 14 En-
 Fr task (35M pairs), we validate the system on
 the combination of newstest-2012 and newstest-
 2013, and test it on newstest-2014. Details of the
@@ -827,34 +666,40 @@ architecture were introduced in Section 2, and train-
 ing hyperparameters were introduced in Section 3.
 For model compression ratio and decoding speed
 up, we choose Transformer-big as the benchmark
-(1.0×). Other details of experimental setups are
+(1.0x). Other details of experimental setups are
 introduced in Appendix D.
+
 5.2 Results
+
 Table 4 shows the results of different sys-
 tems on WMT14 En-De and En-Fr. Table 5
 shows the comparison of MobileNMT with other
 parameter-efficient methods based on Transformer.
 MobileNMT-10MB and MobileNMT-20MB are
+
+--- Page 7 ---
 two models we have built with different sizes,
 which are introduced in Table 3.
+
 On WMT14 En-De, our MobileNMT-10MB re-
 quires only 4.6% of the parameters to maintain
 88.4% performance of Transformer-big, while it
-achieves 87.2× compression ratio and 47.0× speed
+achieves 87.2 compression ratio and 47.0x speed
 up. Our MobileNMT-20MB can maintain 95.5%
 performance of Transformer-big with only 9.2%
-parameters, while it achieves 43.6× compression
-ratio and 27.7× speed up. Experiments on En-Fr
+parameters, while it achieves 43.6 compression
+ratio and 27.7x speed up. Experiments on En-Fr
 show similar results. In addition, thanks to the
 memory optimization strategies adopted in our en-
 gine, MobileNMT requires significantly less run-
 ning memory than other models (0.5%~0.9% of
 Transformer-big). All these experiments demon-
-strate that MobileNMT is efficient in terms of
-pa-
+strate that MobileNMT is efficient in terms of pa-
 rameters, computation, and memory, and can be
 easily deployed on mobile devices.
+
 6 Conclusion
+
 We propose MobileNMT, a Transformer-based ma-
 chine translation system that can translate in 15MB
 and 30ms. It uses existing resources efficiently
@@ -863,7 +708,9 @@ We develop a mobile inference engine with GEMM
 and memory optimization, hoping that it can bridge
 the gap between theoretical research and real-world
 applications on efficient machine translation.
+
 Acknowledgments
+
 This work was supported in part by the National
 Science Foundation of China (No. 62276056), the
 National Key R&D Program of China, the China
@@ -876,17 +723,21 @@ mental Research Funds for the Central Universities
 (Nos. N2216016, N2216001, and N2216002), and
 the Program of Introducing Talents of Discipline
 to Universities, Plan 111 (No. B16009).
+
 Limitations
+
 Multilingual Translation. Here we mainly dis-
 cuss the design principles of efficient architectures
 for bilingual machine translation. Compared with
 bilingual translation, multilingual translation tasks
 require significantly more parameters and compu-
 tations to perform well, and different model scales
+
 may lead to different design considerations. We
 will leave this for future exploration.
+
 Knowledge Distillation. As a small model that re-
-quires only 10MB/20MB of storage, MobileNMT
+quires only 1OMB/20MB of storage, MobileNMT
 will inevitably suffer from performance loss com-
 pared to other Transformer-based models. To re-
 duce performance loss, here we adopt knowledge
@@ -895,15 +746,18 @@ as the teacher. From a training efficiency per-
 spective, although the teacher model can help Mo-
 bileNMT improve performance, it also introduces
 additional training costs.
+
 Compatibility. Here our inference engine only
 provides implementation for the ARM CPU. We
 will make it available for other AI accelerator (such
 as NPU) on mobile devices in the future.
+
 References
+
 Farhad Akhbardeh, Arkady Arkhangorodsky, Mag-
 dalena Biesialska, Ondrej Bojar, Rajen Chatter-
-jee, Vishrav Chaudhary, Marta R. Costa-jussà,
-Cristina España-Bonet, Angela Fan, Christian Fe-
+jee, Vishrav Chaudhary, Marta R. Costa-jussa,
+Cristina Espafia-Bonet, Angela Fan, Christian Fe-
 dermann, Markus Freitag, Yvette Graham, Ro-
 man Grundkiewicz, Barry Haddow, Leonie Harter,
 Kenneth Heafield, Christopher Homan, Matthias
@@ -917,16 +771,19 @@ cos Zampieri. 2021. Findings of the 2021 confer-
 ence on machine translation (WMT21). In Proceed-
 ings of the Sixth Conference on Machine Translation,
 WMT@EMNLP 2021, Online Event, November 10-
-11, 2021, pages 1–88. Association for Computational
+11, 2021, pages 1-88. Association for Computational
 Linguistics.
+
 Lei Jimmy Ba, Jamie Ryan Kiros, and Geoffrey E.
-Hinton. 2016. Layer normalization. CORR,
+Hinton. 2016. Layer normalization. CoRR,
 abs/1607.06450.
+
 Alexei Baevski and Michael Auli. 2019. Adaptive input
 representations for neural language modeling. In 7th
 International Conference on Learning Representa-
 tions, ICLR 2019, New Orleans, LA, USA, May 6-9,
 2019. OpenReview.net.
+
 Ron Banner, Yury Nahshan, and Daniel Soudry. 2019.
 Post training 4-bit quantization of convolutional net-
 works for rapid-deployment. In Advances in Neural
@@ -934,12 +791,16 @@ Information Processing Systems 32: Annual Confer-
 ence on Neural Information Processing Systems 2019,
 NeurIPS 2019, December 8-14, 2019, Vancouver, BC,
 Canada, pages 7948-7956.
+
 Yoni Choukroun, Eli Kravchik, Fan Yang, and Pavel
 Kisilev. 2019. Low-bit quantization of neural net-
 works for efficient inference. In 2019 IEEE/CVF
+
+--- Page 8 ---
 International Conference on Computer Vision Work-
 shops, ICCV Workshops 2019, Seoul, Korea (South),
-October 27-28, 2019, pages 3009–3018. IEEE.
+October 27-28, 2019, pages 3009-3018. IEEE.
+
 Matthieu Courbariaux, Yoshua Bengio, and Jean-Pierre
 David. 2015. Binaryconnect: Training deep neu-
 ral networks with binary weights during propaga-
@@ -947,11 +808,13 @@ tions. In Advances in Neural Information Processing
 Systems 28: Annual Conference on Neural Informa-
 tion Processing Systems 2015, December 7-12, 2015,
 Montreal, Quebec, Canada, pages 3123-3131.
+
 Mostafa Dehghani, Stephan Gouws, Oriol Vinyals,
 Jakob Uszkoreit, and Lukasz Kaiser. 2019. Univer-
 sal transformers. In 7th International Conference on
 Learning Representations, ICLR 2019, New Orleans,
 LA, USA, May 6-9, 2019. OpenReview.net.
+
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
 Kristina Toutanova. 2019. BERT: pre-training of
 deep bidirectional transformers for language under-
@@ -962,13 +825,15 @@ nologies, NAACL-HLT 2019, Minneapolis, MN, USA,
 June 2-7, 2019, Volume 1 (Long and Short Papers),
 pages 4171-4186. Association for Computational
 Linguistics.
+
 Shuoyang Ding, Adithya Renduchintala, and Kevin Duh.
 2019. A call for prudent choice of subword merge
 operations in neural machine translation. In Proceed-
-ings of Machine Translation Summit XVII Volume 1:
+ings of Machine Translation Summit XVI Volume 1:
 Research Track, MTSummit 2019, Dublin, Ireland,
-August 19-23, 2019, pages 204–213. European Asso-
+August 19-23, 2019, pages 204-213. European Asso-
 ciation for Machine Translation.
+
 Julian Faraone, Nicholas J. Fraser, Michaela Blott, and
 Philip H. W. Leong. 2018. SYQ: learning symmet-
 ric quantization for efficient deep neural networks.
@@ -976,6 +841,7 @@ In 2018 IEEE Conference on Computer Vision and
 Pattern Recognition, CVPR 2018, Salt Lake City, UT,
 USA, June 18-22, 2018, pages 4300-4309. Computer
 Vision Foundation / IEEE Computer Society.
+
 Tao Ge, Si-Qing Chen, and Furu Wei. 2022. Edge-
 former: A parameter-efficient transformer for on-
 device seq2seq generation. In Proceedings of the
@@ -984,6 +850,7 @@ Language Processing, EMNLP 2022, Abu Dhabi,
 United Arab Emirates, December 7-11, 2022, pages
 10786-10798. Association for Computational Lin-
 guistics.
+
 Edouard Grave, Armand Joulin, Moustapha Cissé,
 David Grangier, and Hervé Jégou. 2017. Efficient
 softmax approximation for gpus. In Proceedings
@@ -991,35 +858,42 @@ of the 34th International Conference on Machine
 Learning, ICML 2017, Sydney, NSW, Australia, 6-11
 August 2017, volume 70 of Proceedings of Machine
 Learning Research, pages 1302-1310. PMLR.
+
 Song Han, Huizi Mao, and William J. Dally. 2016. Deep
 compression: Compressing deep neural network with
 pruning, trained quantization and huffman coding. In
+
 4th International Conference on Learning Represen-
 tations, ICLR 2016, San Juan, Puerto Rico, May 2-4,
 2016, Conference Track Proceedings.
+
 Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian
 Sun. 2016a. Deep residual learning for image recog-
-nition. In 2016 IEEE Conference on Computer Vision
+nition. In 20/6 IEEE Conference on Computer Vision
 and Pattern Recognition, CVPR 2016, Las Vegas, NV,
 USA, June 27-30, 2016, pages 770-778. IEEE Com-
 puter Society.
+
 Itay Hubara, Matthieu Courbariaux, Daniel Soudry, Ran
 El-Yaniv, and Yoshua Bengio. 2016. Binarized neu-
 ral networks. In Advances in Neural Information
 Processing Systems 29: Annual Conference on Neu-
 ral Information Processing Systems 2016, December
 5-10, 2016, Barcelona, Spain, pages 4107-4115.
+
 Benoit Jacob, Skirmantas Kligys, Bo Chen, Menglong
 Zhu, Matthew Tang, Andrew G. Howard, Hartwig
 Adam, and Dmitry Kalenichenko. 2018. Quanti-
 zation and training of neural networks for efficient
-integer-arithmetic-only inference. In 2018 IEEE Con-
+integer-arithmetic-only inference. In 20/8 IEEE Con-
 ference on Computer Vision and Pattern Recognition,
 CVPR 2018, Salt Lake City, UT, USA, June 18-22,
 2018, pages 2704-2713.
+
 Jangho Kim, Yash Bhalgat, Jinwon Lee, Chirag Patel,
 and Nojun Kwak. 2019. QKD: quantization-aware
 knowledge distillation. CoRR, abs/1911.12491.
+
 Zhenzhong Lan, Mingda Chen, Sebastian Goodman,
 Kevin Gimpel, Piyush Sharma, and Radu Soricut.
 2020. ALBERT: A lite BERT for self-supervised
@@ -1027,12 +901,14 @@ learning of language representations. In 8th Inter-
 national Conference on Learning Representations,
 ICLR 2020, Addis Ababa, Ethiopia, April 26-30,
 2020. OpenReview.net.
+
 Junghyup Lee, Dohyung Kim, and Bumsub Ham. 2021.
 Network quantization with element-wise gradient
 scaling. In IEEE Conference on Computer Vision
 and Pattern Recognition, CVPR 2021, virtual, June
 19-25, 2021, pages 6448-6457. Computer Vision
-Foundation/ IEEE.
+Foundation / IEEE.
+
 Ye Lin, Yanyang Li, Tong Xiao, and Jingbo Zhu. 2021.
 Bag of tricks for optimizing transformer efficiency.
 In Findings of the Association for Computational
@@ -1040,9 +916,11 @@ Linguistics: EMNLP 2021, Virtual Event / Punta
 Cana, Dominican Republic, 16-20 November, 2021,
 pages 4227-4233. Association for Computational
 Linguistics.
+
 Xiaodong Liu, Kevin Duh, Liyuan Liu, and Jianfeng
 Gao. 2020. Very deep transformers for neural ma-
 chine translation. CoRR, abs/2008.07772.
+
 Zechun Liu, Kwang-Ting Cheng, Dong Huang, Eric P.
 Xing, and Zhiqiang Shen. 2022. Nonuniform-to-
 uniform quantization: Towards accurate quantiza-
@@ -1050,54 +928,64 @@ tion via generalized straight-through estimation. In
 IEEE/CVF Conference on Computer Vision and Pat-
 tern Recognition, CVPR 2022, New Orleans, LA,
 USA, June 18-24, 2022, pages 4932-4942. IEEE.
+
+--- Page 9 ---
 Jonathan Long, Evan Shelhamer, and Trevor Darrell.
 2015. Fully convolutional networks for semantic
 segmentation. In IEEE Conference on Computer
 Vision and Pattern Recognition, CVPR 2015, Boston,
 MA, USA, June 7-12, 2015, pages 3431-3440. IEEE
 Computer Society.
+
 Sachin Mehta, Marjan Ghazvininejad, Srinivasan Iyer,
 Luke Zettlemoyer, and Hannaneh Hajishirzi. 2021.
 Delight: Deep and light-weight transformer. In 9th
 International Conference on Learning Representa-
 tions, ICLR 2021, Virtual Event, Austria, May 3-7,
 2021. OpenReview.net.
+
 Paulius Micikevicius, Sharan Narang, Jonah Alben,
-Gregory F. Diamos, Erich Elsen, David García,
+Gregory F. Diamos, Erich Elsen, David Garcia,
 Boris Ginsburg, Michael Houston, Oleksii Kuchaiev,
 Ganesh Venkatesh, and Hao Wu. 2018. Mixed pre-
 cision training. In 6th International Conference on
 Learning Representations, ICLR 2018, Vancouver,
 BC, Canada, April 30 - May 3, 2018, Conference
 Track Proceedings.
+
 Asit K. Mishra and Debbie Marr. 2018. Apprentice:
 Using knowledge distillation techniques to improve
 low-precision network accuracy. In 6th International
 Conference on Learning Representations, ICLR 2018,
 Vancouver, BC, Canada, April 30 - May 3, 2018,
 Conference Track Proceedings. OpenReview.net.
+
 Toan Q. Nguyen and Julian Salazar. 2019. Transformers
 without tears: Improving the normalization of self-
-attention. CORR, abs/1910.05895.
+attention. CoRR, abs/1910.05895.
+
 Myle Ott, Sergey Edunov, David Grangier, and Michael
 Auli. 2018. Scaling neural machine translation. In
 Proceedings of the Third Conference on Machine
 Translation: Research Papers, WMT 2018, Belgium,
-Brussels, October 31 - November 1, 2018, pages 1–9.
+Brussels, October 31 - November 1, 2018, pages 1-9.
 Association for Computational Linguistics.
+
 Matt Post. 2018. A call for clarity in reporting BLEU
 scores. In Proceedings of the Third Conference on
 Machine Translation: Research Papers, WMT 2018,
 Belgium, Brussels, October 31 - November 1, 2018,
-pages 186–191. Association for Computational Lin-
+pages 186-191. Association for Computational Lin-
 guistics.
+
 Jerry Quinn and Miguel Ballesteros. 2018. Pieces of
 eight: 8-bit neural machine translation. In Proceed-
 ings of the 2018 Conference of the North American
 Chapter of the Association for Computational Lin-
 guistics: Human Language Technologies, NAACL-
 HLT 2018, New Orleans, Louisiana, USA, June 1-6,
-2018, Volume 3 (Industry Papers), pages 114–120.
+2018, Volume 3 (Industry Papers), pages 114-120.
+
 Rico Sennrich, Barry Haddow, and Alexandra Birch.
 2016. Neural machine translation of rare words with
 subword units. In Proceedings of the 54th Annual
@@ -1105,23 +993,28 @@ Meeting of the Association for Computational Lin-
 guistics, ACL 2016, August 7-12, 2016, Berlin, Ger-
 many, Volume 1: Long Papers. The Association for
 Computer Linguistics.
+
 Wonyong Sung, Sungho Shin, and Kyuyeon Hwang.
 2015. Resiliency of deep neural networks under
 quantization. CoRR, abs/1511.06488.
+
 Sho Takase and Shun Kiyono. 2021. Lessons on pa-
-rameter sharing across layers in transformers. CORR,
+rameter sharing across layers in transformers. CoRR,
 abs/2104.06022.
+
 Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob
 Uszkoreit, Llion Jones, Aidan N. Gomez, Lukasz
-Kaiser, and Illia Polosukhin. 2017. Attention is all
+Kaiser, and Ilia Polosukhin. 2017. Attention is all
 you need. In Advances in Neural Information Pro-
 cessing Systems 30: Annual Conference on Neural
 Information Processing Systems 2017, 4-9 December
 2017, Long Beach, CA, USA, pages 5998-6008.
+
 Hongyu Wang, Shuming Ma, Li Dong, Shaohan Huang,
 Dongdong Zhang, and Furu Wei. 2022. Deep-
-net: Scaling transformers to 1, 000 layers. CORR,
+net: Scaling transformers to 1, 000 layers. CoRR,
 abs/2203.00555.
+
 Qiang Wang, Bei Li, Tong Xiao, Jingbo Zhu,
 Changliang Li, Derek F. Wong, and Lidia S. Chao.
 2019. Learning deep transformer models for machine
@@ -1130,15 +1023,17 @@ the Association for Computational Linguistics, ACL
 2019, Florence, Italy, July 28- August 2, 2019, Vol-
 ume 1: Long Papers, pages 1810-1822. Association
 for Computational Linguistics.
-Ephrem Wu. 2020.
-Learning accurate integer
-transformer machine-translation models. CORR,
+
+Ephrem Wu. 2020. Learning accurate integer
+transformer machine-translation models. CoRR,
 abs/2001.00926.
+
 Zhanghao Wu, Zhijian Liu, Ji Lin, Yujun Lin, and Song
 Han. 2020. Lite transformer with long-short range at-
 tention. In 8th International Conference on Learning
 Representations, ICLR 2020, Addis Ababa, Ethiopia,
 April 26-30, 2020. OpenReview.net.
+
 Ruibin Xiong, Yunchang Yang, Di He, Kai Zheng,
 Shuxin Zheng, Chen Xing, Huishuai Zhang, Yanyan
 Lan, Liwei Wang, and Tie-Yan Liu. 2020. On layer
@@ -1147,6 +1042,7 @@ ceedings of the 37th International Conference on
 Machine Learning, ICML 2020, 13-18 July 2020, Vir-
 tual Event, volume 119 of Proceedings of Machine
 Learning Research, pages 10524-10533. PMLR.
+
 Jingjing Xu, Hao Zhou, Chun Gan, Zaixiang Zheng,
 and Lei Li. 2021. Vocabulary learning via optimal
 transport for neural machine translation. In Proceed-
@@ -1156,7 +1052,10 @@ Joint Conference on Natural Language Processing,
 ACL/IJCNLP 2021, (Volume 1: Long Papers), Virtual
 Event, August 1-6, 2021, pages 7361-7373. Associa-
 tion for Computational Linguistics.
+
+--- Page 10 ---
 A Transformer Architecture
+
 We chose Transformer for study because it is one
 of the most successful neural models for machine
 translation. It consists of a N-layer encoder and
@@ -1164,97 +1063,84 @@ a M-layer decoder, where N=M=6 in the origi-
 nal Transformer-base and Transformer-big. Each
 encoder layer consists of two sublayers, includ-
 ing the self-attention and feed-forward network
-(FFN). Each decoder layer has an additional cross-
+(FEN). Each decoder layer has an additional cross-
 attention sublayer to bridge the encoder and de-
 coder.
+
 The self-attention takes the output X of the pre-
 vious sublayer as its input. The cross-attention is
 similar to the self-attention, except that it takes the
 encoder output as an additional input. Both types
 of attention first compute the attention distribution
-Ax and then average X by Ax. We denote the trans-
-formation matrices of Q, K, V as Wq, Wk, Wv, the
-subsequent transformation matrices as Wo, and the
-attention as Ya = Attn(X), then:
-Ax
-Soft Max(
-q
-XW WTXT
-√d
-Ya=AxXWW.
-(1)
-(2)
+A, and then average X by A;. We denote the trans-
+formation matrices of Q, K, V as W,, Wz, W,, the
+subsequent transformation matrices as W,, and the
+attention as Y, = Attn(X), then:
+
+TyT
+
+XWaWEXT)
+vd
+
+Yo = AcXWyWo (2)
+
+Az = SoftMax(
+
 The FFN applies non-linear transformation to its
-input X. We denote the FFN as Yƒ = FFN(X):
-(3)
-Yƒ = ReLU(XW1 + b1)W2 +b2
-where W₁ and b₁ denote the weight and bias of the
-first linear transformation, W2 and b₂ are parame-
+input X. We denote the FFN as Yr = FFN(X):
+
+Yy = ReLU(XW + b1)W2 + be (3)
+
+where W, and b; denote the weight and bias of the
+first linear transformation, W2 and b2 are parame-
 ters of the second transformation.
+
 Here we preprocess each sublayer input by the
 layer normalization (Ba et al., 2016). All sublayers
 are coupled with the residual connection (He et al.,
 2016a).
-B PTQ and QAT
+
+B PTQand QAT
+
 As an appealing solution to model compression,
 quantization enables the model to use lower-bit
 values (such as 8-bit integer) to compute faster and
 consume less storage space (Hubara et al., 2016;
 Micikevicius et al., 2018; Quinn and Ballesteros,
 2018; Jacob et al., 2018).
+
 Post-Training Quantization (PTQ) can be seen as
 the basis for Quantization Aware Training (QAT),
 it adds quantization nodes to a well-trained floating-
 point model. To quantize a floating-point tensor r
 to a tensor with n bits, a scale s is introduced to
 map these two types of values (Wu, 2020):
--
+
 max(r) — min(r)
-S =
-2n-1
-(4)
-System
-Transformer-base
-Params (M) Size (MB) BLEU
-65
-260
-27.40
-+ Reducing Vocab
-+ Reducing Width
-+ Other Dimensions
-+ Distillation
-48
-192
-26.20
-10
-40
-22.01
-10
-40
-22.54
-10
-40
-23.77
-10
-10
-23.76
-10
-10
-25.48
-10
-10
-25.08
-+ Quantization
-+ Hyperparameters
-+ Greedy Search
+
+an] (4)
+
+System Params (M) | Size (MB) | BLEU
+Transformer-base 65 260 27.40
++ Reducing Vocab 48 192 26.20
++ Reducing Width 10 40 22.01
++ Other Dimensions 10 40 22.54
++ Distillation 10 40 23.77
++ Quantization 10 10 23.76
++ Hyperparameters 10 10 25.48
++ Greedy Search 10 10 25.08
+
 Table 6: Ablation study on MobileNMT-10MB. The
 colors refer to Model Architecture in Section 2,
+
 Training Strategies in Section 3 and Greedy Search.
+
 To get a faster computation speed, both weights
 and activations will be quantized to n-bit. Suppose
-rm = = min(r), the quantization function is:
-Q(r) = [(r = rm)/s] × s + rm
-where represents rounding to the nearest integer.
+Tm = min(r), the quantization function is:
+
+where |-] represents rounding to the nearest integer.
+
 However, in PTQ, applying quantization directly
 to the floating-point network will result in signif-
 icant performance losses. Based on PTQ, QAT
@@ -1263,7 +1149,9 @@ imizing quantization errors during training, which
 helps the model achieve higher accuracy. In addi-
 tion to the learnable weights of the model itself, s
 is also learnable.
+
 C Operations except GEMM
+
 Since general matrix multiplication (GEMM) ac-
 counts for 80.44% of the overall decoding time, we
 have concluded that optimizing GEMM is the key
@@ -1272,7 +1160,9 @@ tions except GEMM, Fig. 10 shows the proportion
 of running time in the decoding process. The corre-
 sponding data is measured in 32-bit floating point
 format on the ONNX Runtime.
-D Setups
+
+D_ Setups
+
 All sentences were segmented into sequences of
 sub-word units (Sennrich et al., 2016). In the im-
 plementation, we adopt the normalization before
@@ -1281,133 +1171,78 @@ Nguyen and Salazar, 2019). Most previous work
 only shared source and target vocabularies on the
 En-De task. In our MobileNMT, both En-De and
 En-Fr adopt shared vocabularies for efficiency rea-
-which leads to a larger compression gain at
+sons, which leads to a larger compression gain at
 the expense of performance. We test on the model
 ensemble by averaging the last 5 checkpoints and
 report SacreBLEU scores (Post, 2018).
-sons,
-ENCODER_SELF_ATTENTION
-DECODER SELF ATTENTION
-DECODER ATTENTION
+
+--- Page 11 ---
+ENCODER _SELF_ATTENTION,
+DECODER_SELF_ATTENTION,
+DECODER_ATTENTION
 ARGMAX
-LAYER NORM
-BINARY ADD
+
+LAYER_NORM
+
+BINARY_ADD
+
 CONVERTER
+
 GATHER
-BINARY UNKNOWN
+BINARY_UNKNOWN
 REDUCE
-BINARY MUL
+BINARY_MUL
 MULTI_HEAD_TRANS
 CONSTANT_OF_SHAPE
-5.36 10
-4.88-10
-2.99-10
-4.63 10
-4.13 10
-2.01-10 -4
-5.89 101
-3.76 101
-1.96 10
--2
-1.88 10
-3.57 101
-2-10
-1.91 10
--4
 CONCAT
-4
-1.52 10
+
 UNSQUEEZE
-1.13-10
+
 SPLIT
-9.49 10
-5
+
 SHAPE
-7.1-105
-HOST CONVERTER
-6.28-10-5
-MULTI_HEAD
-5.52 10
-5
+HOST_CONVERTER
+MULTI_LHEAD
+
 WHERE
-5
-2.45 10
+
 EXPAND
-1.22 10
 CUMSUM
-5
--6
-4.79 10
+
 SLICE
 IDENTITY
-2.55 10
-2.09 10
-6
-6
-0
-1
-2
-3
-4
-Percentage [%]
-5
-6
--10-2
+
+5.89+ 10-7
+
+3 4 5 6 7
+Percentage [%] “1072
+
 Figure 10: Proportions of different operations (except GEMM) on the Transformer-base model.
-7
-Table 6 summarizes how each part of Section 2 and
-Section 3 affects the overall performance. Each
-row in Table 6 represents the result of applying the
-current part to the system obtained in the previous
-System
-Transformer-base
+
 Params Bits Size
-(M) (W-E-A) (MB)
-65 32-32-32 260
-BLEU
-E Analysis
-10
-32-32-32 40
-27.40
-25.79
-E.1
-Ablation Study
-10
-8-8-8
-10
-MobileNMT-10MB
-10
-4-8-8
-5
-10
-3-8-8
-10
-2-8-8
-20
-32-32-32 80
-25.08
-25.43
-3.75 24.09
-2.5 21.25
-27.30
-20
-8-8-8
-20
-27.09
-MobileNMT-20MB
-20
-4-8-8
-10
-26.96
-20
-3-8-8
-7.5
-26.23
-20
-2-8-8
-5
-24.33
+
+System () (W-E-A) | (MB) BLEU
+Transformer-base 65 32-32-32 | 260 | 27.40
+10 32-32-32 | 40 25.79
+
+10 8-8-8 10 25.08
+
+MobileNMT-10MB 10 4-8-8 5 25.43
+10 3-8-8 3.75 | 24.09
+
+10 2-8-8 2.5 | 21.25
+
+20 32-32-32 | 80 27.30
+
+20 8-8-8 20 27.09
+
+MobileNMT-20MB 20 4-8-8 10 26.96
+20 3-8-8 7.5 | 26.23
+
+20 2-8-8 5 24.33
+
 Table 7: Results of quantizing weights to lower bits.
+
 For the experiments of MobileNMT in Table 4,
 we use the greedy search algorithm in our engine.
 Compared with beam search, greedy search can
@@ -1423,7 +1258,16 @@ the 30-step latency according to the 1-step and 5-
 step latencies. It is worth noting that except for the
 memory and latency on Transformer-big/base, all
 other data statistics are measured in real-world.
+
+E_ Analysis
+E.1 Ablation Study
+
+Table 6 summarizes how each part of Section 2 and
+Section 3 affects the overall performance. Each
+row in Table 6 represents the result of applying the
+current part to the system obtained in the previous
 row.
+
 To reduce the model parameters from 65M to
 10M, the model performance decreased from 27.40
 to 22.54, which illustrates the importance of net-
@@ -1433,7 +1277,9 @@ parameters can bring significant performance im-
 provements (from 22.54 to 25.48), which effec-
 tively compensate for the performance loss caused
 by parameter reduction.
+
 E.2 Quantization Study
+
 Table 7 studies how performance changes when
 quantizing the model to lower bits (i.e., 4-bit, 3-bit,
 and 2-bit). As introduced in Section 3.2, for 8-bit
@@ -1441,8 +1287,10 @@ quantization, we use the element-wise quantization
 method (Lee et al., 2021). For lower-bit quantiza-
 tion, we use the row-wise quantization for accuracy
 preservation (Faraone et al., 2018).
+
 As shown in Table 7, 8-bit and 4-bit quantization
 have almost no negative effect on model perfor-
 mance. When quantizing the model to lower bits,
 such as 3-bit and 2-bit integers, model performance
 will drop dramatically.
+

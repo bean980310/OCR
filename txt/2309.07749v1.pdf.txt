@@ -1,16 +1,26 @@
+--- Page 1 ---
 arXiv:2309.07749v1 [cs.CV] 14 Sep 2023
+
 OmnimatteRF: Robust Omnimatte with 3D Background Modeling
-Geng Lin¹
-Chen Gao²
-Jia-Bin Huang 1,2
-Changil Kim²
-Yipeng Wang²
-Matthias Zwicker¹
-Ayush Saraf²
-¹University of Maryland, College Park
+
+Geng Lin!
+
+Changil Kim? Yipeng Wang”
+
+University of Maryland, College Park
+
+Chen Gao?
+
+Jia-Bin Huang!”
+Matthias Zwicker!
+?Meta
+
+Ayush Saraf?
+
 https://omnimatte-rf.github.io
-2Meta
+
 Abstract
+
 Video matting has broad applications, from adding in-
 teresting effects to casually captured movies to assisting
 video production professionals. Matting with associated
@@ -28,17 +38,9 @@ jects, while the 3D background robustly reconstructs scenes
 in real-world videos. Extensive experiments demonstrate
 that our method reconstructs scenes with better quality on
 various videos.
-(a) Omnimatte BG
-(b) Omnimatte FG
-(c) Our BG
-(d) Our FG
-Figure 1. Video with parallax effects. Limited by their 2D im-
-age representation (a), previous works such as Omnimatte fail to
-handle videos with parallax effects in the background. Their fore-
-ground layer (b) has to capture (dis)occlusion effects to minimize
-the reconstruction loss. In contrast, our method employs a 3D
-background (c), enabling us to obtain clean foreground layers (d).
+
 1. Introduction
+
 Video matting is the problem of separating a video into
 multiple layers with associated alpha mattes such that the
 layers are composited back to the original video. It has a
@@ -56,9 +58,21 @@ ditional manual segmentation of secondary effects and help
 increase realism in the resulting edited video. Being able
 to factor out the related effects of foreground objects also
 helps reconstruct a clean background, which is preferred in
+
+(c) Our BG
+
+(d) Our FG
+Figure 1. Video with parallax effects. Limited by their 2D im-
+age representation (a), previous works such as Omnimatte fail to
+handle videos with parallax effects in the background. Their fore-
+ground layer (b) has to capture (dis)occlusion effects to minimize
+the reconstruction loss. In contrast, our method employs a 3D
+background (c), enabling us to obtain clean foreground layers (d).
+
 applications like object removal. Despite these benefits, this
 problem is much more ill-posed and has been much less ex-
 plored than the conventional matting problem.
+
 The most promising attempt to tackle this problem is
 Omnimatte [21]. Omnimattes are RGBA layers that cap-
 ture dynamic foreground objects and their associated ef-
@@ -74,7 +88,10 @@ rotational motion. This is not the case as long as there ex-
 ists parallax caused by camera motions and objects occlude
 each other. This limitation hinders its application in many
 real-world videos, as shown in Fig. 1.
-D2NERF [36] attempts to address this issue using two
+
+D?NeRF [36] attempts to address this issue using two
+
+--- Page 2 ---
 radiance fields, which model the dynamic and static part of
 the scene. The method works entirely in 3D and can han-
 dle complicated scenes with significant camera motion. It
@@ -87,6 +104,7 @@ simple solution of modeling each foreground object with a
 separate radiance field could lead to excessive training time,
 yet it is not clear how motions could be separated meaning-
 fully in each radiance field.
+
 We propose a method that has the benefit of both by com-
 bining 2D foreground layers with a 3D background model.
 The lightweight 2D foreground layers can represent multi-
@@ -99,38 +117,47 @@ videos than 2D methods. We call this method Omnimat-
 teRF and show in experiments that it works robustly on
 various videos without per-video parameter tuning. To
 quantitatively evaluate the background separation of a 3D
-scene, D²NeRF released a dataset of 5 videos rendered with
+scene, D?NeRF released a dataset of 5 videos rendered with
 Kubrics, which are simple indoor scenes with few pieces of
 furniture and some moving objects that cast solid shadows.
+
 We also render five videos from open-source Blender
 movies [6] with sophisticated motions and lighting con-
 ditions for more realistic and challenging settings. Our
 method outperforms prior works in both datasets, and we
 release the videos to facilitate future research.
+
 In summary, our contributions include the following:
+
 1. We propose a novel method to make Omnimatte [21]
 more robust by better modeling the static background
 in 3D using radiance fields [22].
+
 2. Utilizing the omnimatte masks, we propose a simple
 yet effective re-training step to obtain a clean static 3D
 reconstruction from videos with moving subjects.
+
 3. We release a new dataset of 5 challenging video se-
 quences rendered from open-source blender movies
 [6] with ground truths to better facilitate the develop-
 ment and evaluation of the video matting with associ-
 ated effects (aka omnimatting [21]) problem.
+
 2. Related Work
+
 Video Matting. There is a long line of work exploring
 video matting due to its importance in video editing. Green
 screening and rotoscoping are critical first steps in any vi-
 sual effects pipeline. The matting problem aims to extract
 the foreground subjects into their own RGBA layers and
+
 separate them from the background RGB layer, which is a
 highly under-constrained problem. Many approaches have
 utilized motion and depth cues in addition to integrating
 user interactions [7, 3, 32, 16, 9]. Background Video Mat-
 ting [18] specifically addresses real-time video matting of
 people and preserving strand-level hair details.
+
 Matting with Associated Effects. Video matting is often
 insufficient, as foreground subjects might have associated
 effects like shadows or reflections that need to be extracted
@@ -158,6 +185,7 @@ shown great potential in capturing dynamics, their single
 image background limits the application of these methods
 to videos with planar environments without parallax effects
 caused by camera motion.
+
 Radiance Fields. Radiance fields (RF) emerged as 3D
 representations capable of capturing geometric details and
 photorealistic appearances [22]. Radiance fields model the
@@ -176,17 +204,20 @@ better appearance modeling (e.g., reflection and refraction
 ing dynamic scenes [38, 17, 10, 19]. Since the MLP-
 based implicit RF representations are slow to train, we use
 voxel-based explicit radiance field representations [8] [27].
+
+--- Page 3 ---
 Specifically, we use the factorized voxel grid representation
 from [8].
+
 Self-Supervised Video Dynamics Factoring. Another
 related work is video dynamics factoring without needing
 a predefined mask. One recent work is deformable sprites
 [39] that rely only on motion cues. Similar to other video
 matting works, it has a 2D foreground and background lay-
 ers and the same limitations as Omnimatte. For modeling
-in 3D, D²NeRF[36] proposes to decouple the scene with
+in 3D, D?NeRF[36] proposes to decouple the scene with
 two radiance fields, one for the dynamic content and the
-other for the statics. D²NeRF[36] handles a special case of
+other for the statics. D?NeRF[36] handles a special case of
 matting with only one foreground object, and, compared to
 the other methods, it is not limited to planar backgrounds.
 However, the self-supervised method relies on the heuristics
@@ -194,75 +225,91 @@ that require per-video hyper-parameter tuning and does not
 robustly generalize to new videos. The quality of the fore-
 ground reconstruction can also be limited for objects that
 have large nonrigid motions.
+
 We, therefore, propose a method for video matting with
 associated effects that has the advantages of supervised 2D
 mattes that support multiple individual objects with great
 details, as well as 3D background decoupling that works
 with non-planar videos.
+
 3. Method
+
 The concept of omnimattes is proposed by Lu et al. [21],
 extending RGBA video mattes to capture associated effects
 of the objects of interest like shadows and reflections. To
 avoid any confusion, in the following text, we refer to their
 work as capital Omnimatte, and the resulting RGBA layers
 as italic omnimatte. In the matting setup, the user prepares
-a video of T frames {It}}\/\±1, and N ordered mask layers
-{M}1, each containing a coarse mask video of an object
-of interest. The video's camera parameters are also precom-
-puted as {Pt}.
-The goal is to predict RGBA foreground layers C and
-a that contain the objects together with their associated ef-
-fects, and a background layer Bt which is clean and free
+a video of T frames {I,}7_,, and N ordered mask layers
+{Mj }4_,, each containing a coarse mask video of an object
+of interest. The video’s camera parameters are also precom-
+puted as {P;}.
+
+The goal is to predict RGBA foreground layers C? and
+ai, that contain the objects together with their associated ef-
+fects, and a background layer B, which is clean and free
 from the effects cast by the foreground objects. An input
-frame It should be reconstructed by alpha compositing the
+frame J, should be reconstructed by alpha compositing the
 foreground layers above the background.
+
 In Omnimatte, the background is represented by a static
-2D image and a homography transform Pt. To compose
+2D image and a homography transform P;. To compose
 a frame, part of the static background is extracted accord-
-ing to the estimated homography Pt. The key idea of our
+ing to the estimated homography P;. The key idea of our
 work is to represent the static background in 3D using a
 radiance field, while keeping the foreground in 2D to bet-
 ter capture the dynamics of objects. We employ an explicit
 factorized voxel-based radiance field [8] to model the back-
-ground. In this case, Pt represents a camera pose, and a
+ground. In this case, P, represents a camera pose, and a
 background frame is rendered with volume rendering. Note
+
 that the foreground layers are still 2D videos. We refer to
 this combination as the OmnimatteRF model.
+
 3.1. The OmnimatteRF Model
+
 An outline of our model is depicted in Figure 2. The
 model has two independent branches: foreground and back-
 ground. For any given frame, the foreground branch pre-
 dicts an RGBA image (omnimatte) for each object, and the
 background branch renders a single RGB image.
+
 Preprocessing. Following similar works, we use an off-
 the-shelf model RAFT [29] to predict optical flow between
 neighboring frames. The flow is used as an auxiliary input
-and ground truth for supervision, denoted by {Ft}. We also
+and ground truth for supervision, denoted by {F;}. We also
 use an off-the-shelf depth estimator MiDaS [26] to predict
-monocular depth maps {Dt} for each frame and use them
+monocular depth maps {D,} for each frame and use them
 as ground truth for the monocular depth loss.
+
 Background. The background branch consists of a static
-neural radiance field, fbg, encoding the 3D representation
-of the scene. To render a pixel in a frame It, a ray is traced
-according to the estimated camera pose Pt, and the final
+neural radiance field, f,g, encoding the 3D representation
+of the scene. To render a pixel in a frame J;, a ray is traced
+according to the estimated camera pose P;, and the final
 RGB color is produced via volumetric rendering. The result
-of rendering the entire frame is (Bt, Ôt) = fûg(Pt), where
-B+ is an RGB image and D₁ is a depth map.
+of rendering the entire frame is (B;, Di) = fog(Pr), where
+B, is an RGB image and Dr isa depth map.
+
 Foreground. The foreground branch is a UNet-style
-convolutional neural network, ffg, similar to that of Omn-
+convolutional neural network, ff, similar to that of Omn-
 imatte. The input of the network is a concatenation of three
 maps:
-1. The coarse mask M². The mask is provided by the
+
+1. The coarse mask M}. The mask is provided by the
 user, outlining the object of interest. Mask values are
 ones if the pixels are inside the object.
-2. The optical flow Ft. It provides the network with mo-
+
+2. The optical flow F;. It provides the network with mo-
 tion hints. Note that the network also predicts an opti-
 cal flow as an auxiliary task (detailed in Sec. 3.2.2).
-3. The feature map Et. Each pixel (x, y) in the feature
+
+3. The feature map E;. Each pixel (x, y) in the feature
 map is the positional encoding of the 3-tuple (x, y, t).
+
 Multiple foreground layers are processed individually.
 For the i-th layer, the network predicts the omnimatte layer
-(C, a) and the flow Ĥi.
+(Ci, ai) and the flow Fi.
+
 Detail Transfer. For a tradeoff between image quality
 and training time, the foreground network typically pro-
 duces a color layer with missing details when the alpha
@@ -271,142 +318,140 @@ the output quality, Omnimatte transfers details from input
 frames. We include the same process in our pipeline. Note
 that this is a post-processing step to produce final results,
 and does not apply to model optimization.
+
 3.2. Optimizing the Model
+
 We optimize an OmnimatteRF model for every video
 since both branches of our model are video-specific. To
 supervise learning, we employ an image reconstruction loss
 and several regularization losses.
-Pt
-M
-CH
-Ft
-侧
-ffg
-Et
-fbg
-Volumetric
-Render
-Fi
-Bt
-Alpha
-Composite
-Ît
-Precons
-Ĥt
-Dt
-F
-bg
-Ldepth
-Lflow
-It
-Dt
+
+--- Page 4 ---
+fog
+
+Laepth_
+
 Figure 2. Method overview. We propose a video matting method, named OmnimatteRF, which combines 2D foreground layers with a 3D
-background layer. The foreground branch (ffg, in green box) predicts an RGBA layer (Ct, α) for each object, and an auxiliary flow output
-(Ft). The background branch (fbg, in yellow box) produces a background layer with depths (Bt, Dt). Optimization. During training,
-predicted colors (It) and flow (Ĥt) are alpha-composited, whose inputs have red and green borders respectively. The right most column
+ackground layer. The foreground branch (fig, in green box) predicts an RGBA layer (C?, a) for each object, and an auxiliary flow output
+
+(F}). The background branch (fog, in yellow box) produces a background layer with depths (Bz, Dy). Optimization. During training,
+predicted colors (J;) and flow (F;) are alpha-composited, whose inputs have red and green borders respectively. The right most column
 illustrates the data terms in the loss function, and we omit the regularization terms in this illustration.
-3.2.1
-Reconstruction Loss
+
+3.2.1 Reconstruction Loss
+
 We compute the reconstruction loss with the composed im-
-age It by alpha composition of foreground and background
+age I, by alpha composition of foreground and background
 layers:
-N
-i-1
-N
-Î₁ = Σ(1)| + [[(1 − α²) Bt (1)
-i=1 j=1
-i=1
+
+N i-l N
+h=>> | [T[G-efoic? |} +]Ja-e)B a
+i=1 \j=i i=1
+
 And the reconstruction loss is the mean-squared-error
 between the predicted and input frame,
-Lrecons = ||Ît — It || 2
--
-(2)
+
+Leecons = |[fe — ||? (2)
+
 The reconstruction loss supervises both branches of our
 pipeline simultaneously. Limited by the computational cost
 of volumetric rendering, the background layer is rendered
-only at sparse random locations at each step, where recons
+only at sparse random locations at each step, where Lrecons
 is computed for the composed pixel values.
+
 3.2.2 Foreground Losses
+
 We follow Omnimatte and include the alpha regularization
-loss La-reg, alpha warp loss La-warp, and flow reconstruction
-loss flow. We also bootstrap the initial alpha prediction to
-match the input mask with the mask loss mask, which is
+loss Lo-reg, alpha warp loss Lo-warp, and flow reconstruction
+loss Laow. We also bootstrap the initial alpha prediction to
+match the input mask with the mask loss Lmask, Which is
 gradually decayed and disabled once its value drops below
 the threshold.
+
 While most regularization terms in Omnimatte can be
 applied directly to our pipeline, the flow reconstruction loss
 is an exception. The formulation of the loss remains iden-
-tical: given the per-layer flow prediction Ĥ and a back-
-ground layer flows Fb%, the complete flow Ft is composed
+tical: given the per-layer flow prediction Fi and a back-
+ground layer flows FP ©. the complete flow F, is composed
 via alpha composition (Eq. 1). Then, the loss is defined as:
-Lflow = ||(Êt − Ft) & M³||²
--
-t
-bg
-(3)
-Here, M is the union of all foreground masks ({M}})
-for the frame It, and the loss is only evaluated at the loca-
+
+Laow = ||(Fi — Fi) @ ME|P (3)
+
+Here, M/* is the union of all foreground masks ({M;})
+for the frame J;, and the loss is only evaluated at the loca-
 tion of input coarse masks. The authors of Omnimatte have
 shown the effectiveness of this loss in their case, and we
 also demonstrate its importance in an ablation study.
-However, it remains unclear how Fog can be obtained.
+
+However, it remains unclear how FP ® can be obtained.
 In Omnimatte, the background flow can be derived from
 image homography, which serves both as an input to the
 network and a background for composition. On the other
 hand, since our 3D background has only known camera
 poses but not depths, we cannot obtain background flows
-directly. Instead, we use the ground truth flow Ft as net-
+directly. Instead, we use the ground truth flow F; as net-
 work input to provide motion cues and a masked version of
-Ft as background flow for composition. The masked flow
-is F™ = Ft × (1 – M³)
-M)
-, which is the ground truth op-
+F, as background flow for composition. The masked flow
+is F™ = F, @ (1 — M®), which is the ground truth op-
 tical flow with the regions marked in the coarse masks set
-to zeros. denotes elementwise multiplication. We find
-it crucial to use F rather than Ft for composition, as the
+to zeros. ® denotes elementwise multiplication. We find
+it crucial to use F’” rather than F; for composition, as the
 latter case encourages the network to produce empty layers
-with a equal to zero everywhere.
-(a)
-(b)
+with a! equal to zero everywhere.
+
+--- Page 5 ---
 Figure 3. Background Layer Training Signals. We illustrate how
 the training signal to the background layer changes over time. It
 explains why the background captures some of the associated ef-
 fects (in this example, shadows). We use the pixel circled in red
 as an example. (a) At the beginning of training, the foreground
 alpha value (in light green) does not include the shadow. There-
-fore, a is small and at this pixel, Ît (x,y) ≈ Bt(x,y). The re-
-construction loss recons encourages the background network fbg
+fore, @ is small and at this pixel, ii(x,y) = Bi(x,y). The re-
+construction loss Lrecons encourages the background network fig
 to produce dark prediction at this location from this viewing an-
 gle. (b) As training progresses, a gets larger in the shadow region,
-and Ît(x, y) ≈ Cit(x, y). This means that fog receives little to no
+and I, (x,y) © Ci(a,y). This means that fog receives little to no
 supervision signals from this pixel. If it has modeled the shadow
 in some ways (in this case, a hole), it has little incentive to remove
 it, leaving the artifact in (c).
+
 3.2.3 Background Losses
+
 Apart from the reconstruction loss, the background net-
 work is supervised by the total variation regularization loss,
-Lbg-reg, as in TensoRF [8]. In addition, monocular depth su-
+Lbge-reg, aS in TensoRF [8]. In addition, monocular depth su-
 pervision is used to improve scene reconstruction when the
 camera motions consist of rotation only:
-Ldepth = metric (Dt, Ôt),
-(4)
-where Dt is the estimated depth from volume rendering
+
+Laepth = metric(D;, D;), (4)
+
+where D, is the estimated depth from volume rendering
 [22], and the metric function is the scale-invariant loss from
-MiDaS [26]. Also, we empirically find that depth can in-
-troduce floaters, and employ the distortion loss distort pro-
+MiDaS [26]. Also, we empirically find that Caepin, can in-
+troduce floaters, and employ the distortion loss Laistort pro-
 posed in Mip-NeRF 360 [4] to reduce artifacts in the back-
 ground.
+
 3.2.4 Summary
+
 The combined loss for joint optimization is:
-L = L recons + La-reg + La-warp + Lflow + Lmask +
+
+L =Leecons + La-teg + La-warp + Laow + Lmask +
+a
 Foreground
-Lbg-reg +Ldepth + distort
+Log-reg + Laepth + Laistort
+See
+
 Background
+
 (5)
-At every optimization step, recons and background
+
+At every optimization step, Lrecons and background
 losses are evaluated at sparse random locations. Foreground
 losses are computed for the full image.
+
 3.3. Clean Background via Masked Retraining
+
 When the pipeline is trained jointly as described above,
 it is sometimes observed that the background radiance field
 models some of the foreground contents like shadows (see
@@ -418,51 +463,60 @@ time information. For example, as the camera moves over
 time, there may be a correlation between whether a surface
 is covered by shadow and the direction the surface is viewed
 from.
+
 We illustrate this problem in Fig. 3 and explain the cause
 at an intuitive level. The foreground branch is bootstrapped
 to produce alpha values that match the coarse mask inputs,
 which include only the object without the associated effects.
-In other words, at values are close to one at the object, but
+In other words, a, values are close to one at the object, but
 zero in the shadows (for simplicity, we consider one fore-
 ground layer in which the object casts a shadow, like in
-Fig. 3). At a pixel (x, y) covered by shadow, Eq. 1 sim-
-ply collapses to It(x, y) ≈ Bt(x, y). The reconstruction
-loss will therefore encourage Bt(x, y) to match the color of
+Fig. 3). Ata pixel (x,y) covered by shadow, Eq. | sim-
+ply collapses to [i(x,y) * B,(x,y). The reconstruction
+loss will therefore encourage B,(x, y) to match the color of
 the shadow for a ray shot toward this location.
-As training proceeds, ffg will then gradually increase
+
+As training proceeds, fjg will then gradually increase
 the predicted alpha values at the shadowed regions. If the
-shadow is hard and a gets close to one, Eq. 1 evaluates to
-Ît(x, y) ≈ C²(x, y), and the reconstruction loss gives little
+shadow is hard and a gets close to one, Eq. | evaluates to
+I(x, y) © Ci(a,y), and the reconstruction loss gives little
 to no constraint to the background color at the pixel. As a
-result, fbg is unable to learn to remove the shadow color that
-it produces for the ray towards frame It at (x, y).
+result, fpg is unable to learn to remove the shadow color that
+it produces for the ray towards frame I; at (x,y).
+
 There are also cases where the shadow is soft and a is in
 between. In these cases, the problem remains ambiguous.
+
 Therefore, we propose to obtain clean background re-
 construction via an optional optimization step. In joint
 training, the foreground omnimatte layers can capture most
 associated effects, including the parts with leaked content
-in the background layer. The alpha layers at can then be
+in the background layer. The alpha layers a; can then be
 used to train a radiance field model from scratch, with no
 samples from the foreground region where alpha values are
 high. We show in the ablation study (see Fig. 7) that this
 step produces cleaner background reconstruction for in-the-
 wild videos. As only the background is optimized, the pro-
 cess is fast and takes less than an hour to complete.
+
 4. Evaluation
+
 We compare our quantitative and qualitative methods
-with Omnimatte and D2NeRF [21, 36], which are state-
+with Omnimatte and D?NeRF [21, 36], which are state-
 of-the-art methods in 2D video matting and 3D video seg-
 mentation, respectively. In addition, we compare with Lay-
 ered Neural Atlas (LNA) [13], which uses a deformable 2D
-background in contrast to Omnimatte's static image.
+background in contrast to Omnimatte’s static image.
+
+--- Page 6 ---
 4.1. The Movies Dataset
+
 Quantitative evaluation of background segmentation re-
 quires a dataset with both input videos and ground-truth
 background imagery. Prior works primarily use datasets
 like CDW-2014 [35], which are limited to mostly static
 backgrounds and are not applicable to our settings. Re-
-cently, Kubrics is proposed in D²NeRF, which enables
+cently, Kubrics is proposed in D?NeRF, which enables
 the evaluation of 3D background synthesis. However, these
 videos have relatively simple scenes and lighting. To facil-
 itate the evaluation of video matting and background seg-
@@ -476,236 +530,170 @@ motions and the actors have reasonable sizes. We render
 the clips with and without the actors to obtain input and
 ground truth for background reconstruction evaluation pur-
 poses. The camera poses are also exported.
+
 4.2. Experiment Setup
+
 We evaluate the performance of our proposed method on
 four datasets.
+
 1. Movies: our novel challenging dataset.
-2. Kubrics: the dataset generated and used in D²NeRF,
+
+2. Kubrics: the dataset generated and used in D?NeRF,
 which consists of five scenes of moving objects from
-3D Warehouse [30] rendered with Kubric [11].
+3D Warehouse [30] rendered with Kubric [1 1].
+
 3. DAVIS [24, 25]: short clips with moving foreground
 subjects, like humans, cars, and animals. This dataset
 is widely used to evaluate 2D-background matting
 methods [21, 13, 39].
+
 4. Wild: in-the-wild sequences collected from the inter-
 net that are closer to casually captured videos, with
 natural and noisier camera motions, including trans-
 lations and rotations, as well as objects at different dis-
 tances from the camera. Naturally, these videos have
 backgrounds that are challenging for pure 2D methods.
+
 Kubrics and Movies are synthetic datasets with clean
 background layer renderings available. Note that novel
 view synthesis is not the focus of our method, so we eval-
 uate the background with input views. Both datasets have
 known camera poses and object masks which are used for
 training and evaluation.
+
 DAVIS and Wild are real-world videos without clean
 background. Therefore, we only perform a qualitative eval-
 uation to demonstrate the robustness of our method. For
 videos in Wild we recover camera poses with COLMAP.
 For videos that COLMAP cannot process reliably, including
 DAVIS videos, we use poses from RoDynRF [19].
-ku-bag
-ku-chair
-Sop
-dodge
-D²NeRF
-Omnimatte
-LNA
-Ours
+
+D?NeRF Omnimatte LNA Ours
+yy
+
+i
+
+La a
+2
+E
+5
+3
+avy
+
+ae
+ie} ~*
+3
+
 Figure 4. Background Reconstruction. We show examples of
 results presented in quantitative evaluations. For videos with par-
-allax effects, 3D methods like D²NeRF and ours reconstruct less
+allax effects, 3D methods like D*?NeREF and ours reconstruct less
 distorted background than Omnimatte and LNA.
+
+lodge
+
 To obtain coarse object masks, we attempt to extract
 them with pre-trained object segmentation models from De-
 tectron 2 [37]. In case it does not work, we use the Roto
 Brush tool in Adobe After Effects. Detailed procedures are
 described in the supplementary material. It takes about 10
 minutes of manual effort to produce a 200-frame mask.
+
 For all videos, we also estimate homographies with
-LOFTR [28] and OpenCV to enable Omnimatte processing.
-As mentioned in D²NeRF [36], the method is sensitive
+LoFTR [28] and OpenCV to enable Omnimatte processing.
+
+As mentioned in D2NeRF [36], the method is sensitive
 to hyperparameters. The authors released five sets of con-
 figurations for different videos. We experiment with every
 video using all provided configurations and report the best-
 performing ones.
+
 4.3. Implementation Details
+
 Our network is built upon the publicly available offi-
 cial implementation of Omnimatte [21], and TensoRF [8].
-The videos in Kubrics have resolution 512 × 512, and
-all methods run at the resolution 256 × 256. For videos in
-other datasets with a higher resolution of 1920 × 1080, we
+The videos in Kubrics have resolution 512 x 512, and
+all methods run at the resolution 256 x 256. For videos in
+other datasets with a higher resolution of 1920 x 1080, we
 downsample them by a factor of 4.
+
 We optimize the networks for up to 15,000 steps. The
-learning rate of ffg is set to 0.001 and is exponentially de-
-cayed after 10,000 steps. For fúg we use the learning rate
+learning rate of fig is set to 0.001 and is exponentially de-
+cayed after 10,000 steps. For fg we use the learning rate
 scheduling scheme of TensoRF. Training takes up to 6 hours
 on a single RTX3090 GPU. Detailed network architecture,
 hyper-parameters and timing data are presented in the sup-
 plementary. Our code and datasets will also be made pub-
 licly available.
+
 4.4. Quantitative Evaluation
+
 We quantitatively evaluate the background reconstruc-
 tion quality of our method on two synthetic datasets. We
-Car
-Cars
-Bag
-Chair
-Pillow
-Kubrics
-LPIPS↓ SSIM↑
-PSNR↑ LPIPS↓
-SSIM↑ PSNR↑ LPIPS↓
-D²NeRF
-0.135
-0.854
-34.10
-0.105
-Omnimatte
-0.162
-0.819
-31.14
-0.157
-0.859
-0.834
-34.77
-31.20
-0.131
-0.271
-SSIM↑ PSNR↑
-0.880 33.98
-0.796 23.64
-LPIPS↓
-0.090
-SSIM↑ PSNR↑
-0.916 33.29
-LPIPS↓
-SSIM↑ PSNR↑
-0.105
-0.926 38.80
-0.175
-0.865
-26.91
-0.270
-0.841
-21.17
-LNA
-Ours
-0.033
-0.958
-39.09
-0.032
-0.961 39.78
-0.138
-0.029
-0.835 27.08
-0.972 39.58
-0.105
-0.881
-21.21
-0.080
-0.923 31.66
-0.023
-0.977
-42.46
-0.022
-0.982 43.62
-Movies
-D²NeRF
-Omnimatte 0.315
-LNA
-Ours
-Donkey
-LPIPS↓ SSIM PSNR↑
-0.653
-19.11
-0.104
-0.005
-0.849
-18.79
-0.990 38.24
-Dog
-LPIPS↓ SSIM↑ PSNR↑
-0.370 0.694 22.73
-0.279 0.706 21.74
-0.154 0.828 26.08
-0.030 0.976 31.44
-Chicken
-LPIPS↓ SSIM↑ PSNR↑
-Rooster
-Dodge
-LPIPS↓ SSIM↑ PSNR↑
-LPIPS↓ SSIM↑ PSNR↑
-0.312
-0.190
-0.021
-0.704 20.95
-0.818 19.22
-0.978 32.86
-0.340
-0.220
-0.708 25.13
-0.408
-0.729
-20.95
-0.741
-23.14
-0.067
-0.879
-23.88
-0.131
-0.804
-26.46
-0.068
-0.937 24.94
-0.024
-0.969
-27.65
-0.006
-0.991 39.11
+
+--- Page 7 ---
+Kubries Car Cars Bag Chair Pillow
+LPIPS| SSIMt PSNRt| LPIPS| SSIMf PSNRT | LPIPS| SSIMt PSNRT | LPIPS| SSIMf PSNRt | LPIPS| SSIMt PSNRT
+D?NeRF | 0.135 0.854 34.10 | 0.105 0.859 34.77 | 0.131 0.880 33.98 | 0.090 0.916 33.29 | 0.105 0.926 38.80
+Omnimatte | 0.162 0.819 31.14 | 0.157 0.834 31.20 | 0.271 0.796 = 23.64 | 0.175 = 0.865 26.91 | 0.270 0841 = 21.17
+LNA - - - - - - 0.138 0.835 27.08 | 0.105 0.881 = 21.21 | 0.080 ~—0.923 31.66
+Ours 0.033 0.958 39.09 0.032 0.961 39.78 0.029 0.972 39.58 0.023 0.977 42.46 0.022 0.982 43.62
+Movies Donkey Dog Chicken Rooster Dodge
+LPIPS| SSIMt PSNRf | LPIPS| SSIMf PSNRf | LPIPS| SSIMf PSNRt | LPIPS| SSIMf PSNRT | LPIPS| SSIMt PSNRT
+D?NeRF - - - 0.370 = 0.694 22.73 - - - 0.340 0.708 =—-25.13 | 0.408 = 0.729 20.95
+Omnimatte | 0.315 0.653. 19.11 0.279 0.706 =. 21.74 | 0.312 0.704 = 20.95 | 0.220 0.741 23.14 | 0.067 0.879 23.88
+LNA 0.104 0.849 «18.79 | 0.154 0.828 26.08 | 0.190 0.818 19.22 | 0.131 0.804 26.46 | 0.068 0.937 24.94
+Ours 0.005 = 0.990 38.24 | 0.030 0.976 31.44 | 0.021 0.978 ~— 32.86 | 0.024 0.969 «27.65 | 0.006 0.991 39.11
 Table 1. Quantitative evaluations. We present the background reconstruction comparison of our method and baselines on the Kubrics
 and Movies datasets. Best results are in bold and second place are underlined. Results marked - are the ones the method failed to give
+
 good separations (visuals in supplementary).
+
 report PSNR, SSIM and LPIPS for all videos in Table 1, and
-some visualizations in Fig. 4. For D²NeRF, we tried every
+some visualizations in Fig. 4. For D?NeRF, we tried every
 provided pre-set configuration for every video in Movies,
 and it only gave good results for the Dog, Rooster, and
 Dodge videos. Omnimatte and LNA with the 2D back-
 ground layers struggles in both datasets. Our method can
 handle these videos well.
+
 4.5. Qualitative Evaluation
+
 We present a qualitative comparison of the methods in
 Fig. 5. Due to space limitations, we present at least one
 video from every dataset but show a frame from every se-
 lected video in the figure. The original videos are avail-
 able in supplementary and we highly recommend watching
-them. D²NeRF works well for the fine-tuned videos but not
+them. D?NeRF works well for the fine-tuned videos but not
 for new inputs without further hyper-parameter tuning. Om-
 nimatte background has significant distortion around ob-
 jects, and its foreground layer has to compensate for the
 limitation by capturing all residuals. Our method is versa-
 tile enough to perform well for a variety of videos with our
 3D background model.
+
 4.6. Ablation Studies
-4.6.1
-Loss Terms
+4.6.1 Loss Terms
+
 We present background reconstruction results without
-Ldepth in Fig. 6. For video sequences with rotational camera
+Leepin in Fig. 6. For video sequences with rotational camera
 poses, the model struggles to extract 3D information from
 the input videos because of a lack of 3D clues. This loss
 is critical to extending our method to a broader range of
-videos. The effects of Lflow are also demonstrated in Fig. 6.
+videos. The effects of Laow are also demonstrated in Fig. 6.
 The auxiliary task improves foreground quality and reduces
 unrelated content.
+
 4.6.2 Clean Background Retraining
+
 We employ an additional step for real-world sequences to
 optimize a clean background from scratch. In Fig. 7, we
 compare the background layer from the initial joint opti-
 mization and the final result. This is a simple yet robust
 way to obtain a better background.
+
 4.7. Limitations
 We list some limitations that future works can explore.
+
 1. If a background region is covered by shadows nearly
 all of the time, the background model cannot recover
 its color correctly. An example from a Movies video
@@ -715,6 +703,7 @@ tive shadow that allows the background to have the
 original color. However, this problem is largely under-
 constrained in the current setting, making it ambiguous
 and leading the background to unsatisfying solutions.
+
 2. The foreground layer captures irrelevant content. In
 real-world videos, unrelated motions often exist in
 the background, like swaying trees and moving cars.
@@ -725,407 +714,505 @@ directions include i) using a dummy 2D layer to catch
 such content or ii) a deformable 3D background model
 with additional regularization to address the ambiguity
 as both background and foreground can model motion.
+
 3. Foreground objects may have missing parts in the omn-
-imatte layers if they're occluded. Since our foreground
+imatte layers if they’re occluded. Since our foreground
 network predicts pixel values for alpha composition, it
 does not always hallucinate the occluded parts.
+
 4. The video resolution is limited. This is primarily due
 to the U-Net architecture of the foreground model in-
 herited from Omnimatte. Higher resolutions can po-
 tentially be supported with the use of other lightweight
 image encoders.
+
 5. The foreground layer may capture different content
 when the weights are randomly initialized differently.
 We include visual results in the supplementary materi-
 als.
+
 5. Conclusion
+
 We propose a method to obtain omnimattes, RGBA lay-
 ers that include objects and their associated effects by com-
-bouldering car
-rooster
-ku-pillow
-Input
+
+--- Page 8 ---
 Background
+
 Foreground
-D²NeRF
-Omnimatte
-Ours
-D²NERF
-Omnimatte
-Ours
-Figure 5. Qualitative comparison. We compare results of our and baseline methods on videos from each dataset. Readers are strongly
+
+D?NeRF Omnimatte
+
+ku-pillow
+
+rooster
+
+Ours D?NeRF Omnimatte Ours
+
+at atatatatatatat staat ata" at stata" ata"a"ata"sh
+
+re Geer
+
+pesssuncesssscelbamcessamceasamsoramrnorsrad
+afetatahataterat wretateratararat aanaraneraena"
+
+| potters
+
+bouldering car
+
+Figure 5. Qualitative comparison. We compare results of our and baseline methods on videos from each dataset. Readers are . strongly
 encouraged to view videos files of more sequences available in the supplementary. The first two videos are synthetic from Kubrics and
-Movies, followed by three Wild videos. Omnimatte fails to handle objects in 3D and produces distorted background. D² NeRF works
+Movies, followed by three Wild videos. Omnimatte fails to handle objects in 3D and produces distorted background. D?NeRF works
 for videos with appropriate hyper-parameters, but does not generalize to new videos easily. Our method handles videos in many different
+
 settings. Due to space constraint we defer LNA results to the supplementary.
+
 Input
-with depth
-without depth
-Input
-without Lflow
-with flow
-(a) Coarse mask (b) Background
-(c) Depths
-A
+
+without Laeptn
+‘
+
+with Laeptn
+‘. g
+
+Input ane lvithout rest with Leow
+
+iene bisiessnsesececerersansesed
+
+eee Secceein
+
+pect tatetatatetatatneatet te sents
+aeseatanctatat hat lloatesnatancsatet rosters
+
 Figure 6. Loss Term Ablations. Background of real-world videos
-without depth and foreground without flow can de degraded for
+
+without Laepn and foreground without Low can de degraded for
 real-world videos.
-(f) Depths
-(d) Learned mask (e) Background
+
+bining 2D foreground layers and a 3D background model.
+Extensive experiments demonstrate that our approach is ap-
+
+(a) Coarse mask (b) et (c) Depths
+
+(d) Learned mask (e) Background (f) Depths
 Figure 7. Clean Background Retraining. Background layers
 jointly trained can capture the shadows as a hole on the ground
 (a-c). After the joint training, the foreground omnimatte provides
 a better mask that can be used to train a clean background (d-f).
-bining 2D foreground layers and a 3D background model.
-Extensive experiments demonstrate that our approach is
-ap-
+
 plicable to a wide variety of videos, expanding beyond the
 capabilities of previous methods.
-(a)
-(b)
-(c)
+
+--- Page 9 ---
+(a) (b) (c)
+
 Figure 8. Limitations. (a), (b): Background can have baked-in
 shadows when the region is covered by shadows for most frames
 of the video. (c): The foreground layer captures irrelevant object
 motions (middle left) in the background. Best viewed in videos.
+
 References
-[1] Benjamin Attal, Jia-Bin Huang, Christian Richardt, Michael
-Zollhoefer, Johannes Kopf, Matthew O'Toole, and Changil
+
+{1] Benjamin Attal, Jia~-Bin Huang, Christian Richardt, Michael
+
+Zollhoefer, Johannes Kopf, Matthew O’Toole, and Changil
 Kim. Hyperreel: High-fidelity 6-dof video with ray-
 conditioned sampling. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition,
 2023. 2
-[2] Benjamin Attal, Jia-Bin Huang, Michael Zollhöfer, Johannes
+
+Benjamin Attal, Jia~-Bin Huang, Michael Zollh6fer, Johannes
 Kopf, and Changil Kim. Learning neural light fields with
 ray-space embedding. In Proceedings of the IEEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, 2022.
 2
-[3] Xue Bai, Jue Wang, David Simons, and Guillermo Sapiro.
+
+Xue Bai, Jue Wang, David Simons, and Guillermo Sapiro.
 Video snapcut: robust video object cutout using localized
 classifiers. ACM Trans. Graph., 28(3):70, 2009. 2
-[4] Jonathan T. Barron, Ben Mildenhall, Dor Verbin, Pratul P.
+
+Jonathan T. Barron, Ben Mildenhall, Dor Verbin, Pratul P.
 Srinivasan, and Peter Hedman. Mip-nerf 360: Unbounded
 anti-aliased neural radiance fields. CVPR, 2022. 5
-[5] Mojtaba Bemana, Karol Myszkowski, Jeppe Revall Frisvad,
+
+Mojtaba Bemana, Karol Myszkowski, Jeppe Revall Frisvad,
 Hans-Peter Seidel, and Tobias Ritschel. Eikonal fields for
 refractive novel-view synthesis. In Munkhtsetseg Nandigjav,
 Niloy J. Mitra, and Aaron Hertzmann, editors, SIGGRAPH
-'22: Special Interest Group on Computer Graphics and In-
+’22: Special Interest Group on Computer Graphics and In-
 teractive Techniques Conference, Vancouver, BC, Canada,
-August 7-11, 2022, pages 39:1–39:9. ACM, 2022. 2
-[6] Institute Blender, Oct 2022. 2, 6
-[7] Gabriel J. Brostow and Irfan A. Essa. Motion based de-
+August 7 - 11, 2022, pages 39:1-39:9. ACM, 2022. 2
+Institute Blender, Oct 2022. 2, 6
+
+Gabriel J. Brostow and Irfan A. Essa. Motion based de-
 compositing of video. In Proceedings of the International
 Conference on Computer Vision, Kerkyra, Corfu, Greece,
 September 20-25, 1999, pages 8-13. IEEE Computer Soci-
 ety, 1999. 2
-[8] Anpei Chen, Zexiang Xu, Andreas Geiger, Jingyi Yu, and
+
+Anpei Chen, Zexiang Xu, Andreas Geiger, Jingyi Yu, and
 Hao Su. Tensorf: Tensorial radiance fields. In European
-Conference on Computer Vision (ECCV), 2022. 2, 3, 5, 6, 11
-[9] Yung-Yu Chuang, Aseem Agarwala, Brian Curless, David
+Conference on Computer Vision (ECCV), 2022. 2, 3,5, 6, 11
+Yung-Yu Chuang, Aseem Agarwala, Brian Curless, David
 Salesin, and Richard Szeliski. Video matting of complex
 scenes. ACM Trans. Graph., 21(3):243-248, 2002. 2
-[10] Chen Gao, Ayush Saraf, Johannes Kopf, and Jia-Bin Huang.
+
+Chen Gao, Ayush Saraf, Johannes Kopf, and Jia-Bin Huang.
 Dynamic view synthesis from dynamic monocular video. In
 Proceedings of the IEEE/CVF International Conference on
 Computer Vision, 2021. 2
-[11] Klaus Greff, Francois Belletti, Lucas Beyer, Carl Doersch,
+
+Klaus Greff, Francois Belletti, Lucas Beyer, Carl Doersch,
 Yilun Du, Daniel Duckworth, David J Fleet, Dan Gnanapra-
 gasam, Florian Golemo, Charles Herrmann, Thomas Kipf,
 Abhijit Kundu, Dmitry Lagun, Issam Laradji, Hsueh-
 Ti (Derek) Liu, Henning Meyer, Yishu Miao, Derek
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
 Nowrouzezahrai, Cengiz Oztireli, Etienne Pot, Noha Rad-
 wan, Daniel Rebain, Sara Sabour, Mehdi S. M. Sajjadi,
 Matan Sela, Vincent Sitzmann, Austin Stone, Deqing Sun,
 Suhani Vora, Ziyu Wang, Tianhao Wu, Kwang Moo Yi,
 Fangcheng Zhong, and Andrea Tagliasacchi. Kubric: a scal-
 able dataset generator. 2022. 6
-[12] Zeqi Gu, Wenqi Xian, Noah Snavely, and Abe Davis. Fac-
+
+Zeqi Gu, Wenqi Xian, Noah Snavely, and Abe Davis. Fac-
 tormatte: Redefining video matting for re-composition tasks,
 2022. 2
-[13] Yoni Kasten, Dolev Ofri, Oliver Wang, and Tali Dekel. Lay-
+
+Yoni Kasten, Dolev Ofri, Oliver Wang, and Tali Dekel. Lay-
 ered neural atlases for consistent video editing. ACM Trans-
-actions on Graphics (TOG), 40(6):1-12, 2021. 2, 5, 6, 11
-[14] Yao-Chih Lee, Ji-Ze Genevieve Jang, Yi-Ting Chen, Eliza-
+actions on Graphics (TOG), 40(6):1—12, 2021. 2, 5, 6, 11
+Yao-Chih Lee, Ji-Ze Genevieve Jang, Yi-Ting Chen, Eliza-
 beth Qiu, and Jia-Bin Huang. Shape-aware text-driven lay-
 ered video editing. In Proceedings of the IEEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, 2023.
 2
-[15] Wenbin Li, Fabio Viola, Jonathan Starck, Gabriel J. Bros-
+
+Wenbin Li, Fabio Viola, Jonathan Starck, Gabriel J. Bros-
 tow, and Neill D.F. Campbell. Roto++: Accelerating pro-
 fessional rotoscoping using shape manifolds. ACM Transac-
-tions on Graphics (In proceeding of ACM SIGGRAPH’16),
+tions on Graphics (In proceeding of ACM SIGGRAPH’ 16),
 35(4), 2016. 2
-[16] Yin Li, Jian Sun, and Heung-Yeung Shum. Video object cut
+
+Yin Li, Jian Sun, and Heung- Yeung Shum. Video object cut
 and paste. ACM Trans. Graph., 24(3):595-600, 2005. 2
-[17] Zhengqi Li, Simon Niklaus, Noah Snavely, and Oliver Wang.
+Zhenggqi Li, Simon Niklaus, Noah Snavely, and Oliver Wang.
 Neural scene flow fields for space-time view synthesis of
-dynamic scenes. In IEEE Conference on Computer Vi-
+dynamic scenes. In JEEE Conference on Computer Vi-
 sion and Pattern Recognition, CVPR 2021, virtual, June 19-
 25, 2021, pages 6498-6508. Computer Vision Foundation /
 IEEE, 2021. 2
-[18] Shanchuan Lin, Andrey Ryabtsev, Soumyadip Sen-
+
+Shanchuan Lin, Andrey Ryabtsev, Soumyadip Sen-
 gupta, Brian Curless, Steve Seitz, and Ira Kemelmacher-
 Shlizerman. Real-time high-resolution background matting.
-arXiv, pages arXiv-2012, 2020. 2
-[19] Yu-Lun Liu, Chen Gao, Andreas Meuleman, Hung-Yu
+arXiv, pages arXiv—2012, 2020. 2
+
+Yu-Lun Liu, Chen Gao, Andreas Meuleman, Hung-Yu
 Tseng, Ayush Saraf, Changil Kim, Yung-Yu Chuang, Jo-
 hannes Kopf, and Jia-Bin Huang. Robust dynamic radiance
 fields. In Proceedings of the IEEE/CVF Conference on Com-
 puter Vision and Pattern Recognition, 2023. 2, 6
-[20] Erika Lu, Forrester Cole, Tali Dekel, Weidi Xie, Andrew
+
+Erika Lu, Forrester Cole, Tali Dekel, Weidi Xie, Andrew
 Zisserman, David Salesin, William T Freeman, and Michael
 Rubinstein. Layered neural rendering for retiming people in
 video. In SIGGRAPH Asia, 2020. 2
-[21] Erika Lu, Forrester Cole, Tali Dekel, Andrew Zisserman,
+
+Erika Lu, Forrester Cole, Tali Dekel, Andrew Zisserman,
 William T Freeman, and Michael Rubinstein. Omnimatte:
 Associating objects and their effects in video. In CVPR,
-2021. 1, 2, 3, 5, 6, 11
-[22] Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik,
+2021. 1, 2, 3,5, 6, 11
+Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik,
 Jonathan T. Barron, Ravi Ramamoorthi, and Ren Ng. Nerf:
 Representing scenes as neural radiance fields for view syn-
-thesis. In ECCV, 2020. 2, 5, 11
-[23] Thomas Müller, Alex Evans, Christoph Schied, and Alexan-
+thesis. In ECCV, 2020. 2,5, 11
+
+Thomas Miiller, Alex Evans, Christoph Schied, and Alexan-
 der Keller. Instant neural graphics primitives with a multires-
-olution hash encoding. ACM Trans. Graph., 41(4):102:1–
+olution hash encoding. ACM Trans. Graph., 41(4):102:1-
 102:15, 2022. 2
-[24] F. Perazzi, J. Pont-Tuset, B. McWilliams, L. Van Gool, M.
+
+F. Perazzi, J. Pont-Tuset, B. McWilliams, L. Van Gool, M.
 Gross, and A. Sorkine-Hornung. A benchmark dataset and
+
+
+--- Page 10 ---
+25
+
+26
+
+27
+
+28
+
+29
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
 evaluation methodology for video object segmentation. In
 Computer Vision and Pattern Recognition, 2016. 6
-[25] Jordi Pont-Tuset, Federico Perazzi, Sergi Caelles, Pablo Ar-
-beláez, Alexander Sorkine-Hornung, and Luc Van Gool.
+
+Jordi Pont-Tuset, Federico Perazzi, Sergi Caelles, Pablo Ar-
+beldez, Alexander Sorkine-Hornung, and Luc Van Gool.
 The 2017 davis challenge on video object segmentation.
 arXiv:1704.00675, 2017. 6
-[26] René Ranftl, Katrin Lasinger, David Hafner, Konrad
+
+René Ranftl, Katrin Lasinger, David Hafner, Konrad
 Schindler, and Vladlen Koltun. Towards robust monocular
 depth estimation: Mixing datasets for zero-shot cross-dataset
 transfer. IEEE Transactions on Pattern Analysis and Ma-
-chine Intelligence, 44(3), 2022. 3,5
-[27] Cheng Sun, Min Sun, and Hwann-Tzong Chen. Direct voxel
+chine Intelligence, 44(3), 2022. 3, 5
+
+Cheng Sun, Min Sun, and Hwann-Tzong Chen. Direct voxel
 grid optimization: Super-fast convergence for radiance fields
 reconstruction. In CVPR, 2022. 2
-[28] Jiaming Sun, Zehong Shen, Yuang Wang, Hujun Bao, and
+
+Jiaming Sun, Zehong Shen, Yuang Wang, Hujun Bao, and
 Xiaowei Zhou. LoFTR: Detector-free local feature matching
 with transformers. CVPR, 2021. 6
-[29] Zachary Teed and Jia Deng. RAFT: recurrent all-pairs
+
+Zachary Teed and Jia Deng. RAFT: recurrent all-pairs
 field transforms for optical flow. In Andrea Vedaldi, Horst
 Bischof, Thomas Brox, and Jan-Michael Frahm, editors,
 Computer Vision - ECCV 2020 - 16th European Conference,
 Glasgow, UK, August 23-28, 2020, Proceedings, Part II, vol-
 ume 12347 of Lecture Notes in Computer Science, pages
-402–419. Springer, 2020. 3
-[30] Inc Trimble, Oct 2022. 6
-[31] Dor Verbin, Peter Hedman, Ben Mildenhall, Todd E. Zickler,
+402-419. Springer, 2020. 3
+
+Inc Trimble, Oct 2022. 6
+
+Dor Verbin, Peter Hedman, Ben Mildenhall, Todd E. Zickler,
 Jonathan T. Barron, and Pratul P. Srinivasan. Ref-nerf: Struc-
 tured view-dependent appearance for neural radiance fields.
 In IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, CVPR 2022, New Orleans, LA, USA, June 18-
 24, 2022, pages 5481-5490. IEEE, 2022. 2
-[32] Jue Wang, Pravin Bhat, Alex Colburn, Maneesh Agrawala,
+
+Jue Wang, Pravin Bhat, Alex Colburn, Maneesh Agrawala,
 and Michael F. Cohen. Interactive video cutout. ACM Trans.
-Graph., 24(3):585–594, 2005. 2
-[33] Tianyu Wang, Xiaowei Hu, Chi-Wing Fu, and Pheng-Ann
+Graph., 24(3):585-594, 2005. 2
+
+Tianyu Wang, Xiaowei Hu, Chi-Wing Fu, and Pheng-Ann
 Heng. Single-stage instance shadow detection with bidirec-
 tional relation learning. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition
 (CVPR), pages 1-11, June 2021. 2
-[34] Tianyu Wang, Xiaowei Hu, Qiong Wang, Pheng-Ann Heng,
-and Chi-Wing Fu. Instance shadow detection. In IEEE/CVF
+
+Tianyu Wang, Xiaowei Hu, Qiong Wang, Pheng-Ann Heng,
+and Chi-Wing Fu. Instance shadow detection. In JIEEE/CVF
 Conference on Computer Vision and Pattern Recognition
 (CVPR), June 2020. 2
-[35] Yi Wang, Pierre-Marc Jodoin, Fatih Porikli, Janusz Kon-
+
+Yi Wang, Pierre-Marc Jodoin, Fatih Porikli, Janusz Kon-
 rad, Yannick Benezeth, and Prakash Ishwar. Cdnet 2014:
-An expanded change detection benchmark dataset. In 2014
+An expanded change detection benchmark dataset. In 20/4
 IEEE Conference on Computer Vision and Pattern Recogni-
 tion Workshops, pages 393-400, 2014. 6
-[36] Tianhao Wu, Fangcheng Zhong, Andrea Tagliasacchi, For-
-rester Cole, and Cengiz Oztireli. D² nerf: Self-supervised
+
+Tianhao Wu, Fangcheng Zhong, Andrea Tagliasacchi, For-
+rester Cole, and Cengiz Oztireli. D?nerf: Self-supervised
 decoupling of dynamic and static objects from a monocular
 video. In Advances in Neural Information Processing Sys-
-tems, 2022. 1, 3, 5, 6, 11
-[37] Yuxin Wu, Alexander Kirillov, Francisco Massa, Wan-Yen
+tems, 2022. 1, 3,5, 6, 11
+
+Yuxin Wu, Alexander Kirillov, Francisco Massa, Wan-Yen
 Lo, and Ross Girshick. Detectron2. https://github.
 com/facebookresearch/detectron2, 2019. 6, 11
-[38] Wenqi Xian, Jia-Bin Huang, Johannes Kopf, and Changil
+Wendi Xian, Jia-Bin Huang, Johannes Kopf, and Changil
 Kim. Space-time neural irradiance fields for free-viewpoint
+
 video. In IEEE Conference on Computer Vision and Pattern
 Recognition, CVPR 2021, virtual, June 19-25, 2021, pages
 9421-9431. Computer Vision Foundation / IEEE, 2021. 2
-[39] Vickie Ye, Zhengqi Li, Richard Tucker, Angjoo Kanazawa,
+Vickie Ye, Zhengqi Li, Richard Tucker, Angjoo Kanazawa,
 and Noah Snavely. Deformable sprites for unsupervised
-video decomposition. In IEEE Conference on Computer Vi-
+video decomposition. In JEEE Conference on Computer Vi-
 sion and Pattern Recognition (CVPR), June 2022. 3, 6
+
+--- Page 11 ---
 A. Additional Qualitative Results
+
 Video files of results presented in the main paper (all
 videos from the Movies, Kubrics, Wild, and DAVIS
 datasets) are available on our project website as part of the
 supplementary material. We highly recommend watching
-them on: https://omnimatte-rf.github.io
+them on: https: //omnimatte-rf.github.io
+
 1. For our method (OmnimatteRF), we include results
 (inputs with masks, foreground layers, background
 layer, background depth map) for every video.
-2. For D²NERF [36], we use the best result among all
-configurations provided by the authors for
-every video.
+
+2. For D?NeRF [36], we use the best result among all
+configurations provided by the authors for every video.
 If none of the configurations successfully reconstruct
 non-empty static and dynamic layers, we drop the
 video files and only show a frame in Fig. A2.
+
 3. For Omnimatte [21] and Layered Neural Atlas (LNA)
 [13], we include videos from Wild, Movies, and
 Kubrics. Results of DAVIS can be found in prior
 works.
+
 B. Random Initialization
+
 As is also discussed in Omnimatte [21], different random
 initializations can lead to varying results of the foreground
-layers. We show two examples in Fig. A1.
+layers. We show two examples in Fig. Al.
+
 In all our experiments, the random seed is set to 3.
-Seed = 5
+
+De ee ee ee BEEBE EEE
 Seed = 1
-Seed = 0
-14
-14
-Seed = 3
-Seed = 1
-Seed = 3
-Seed = 1
-Seed = 0
-Seed = 0
-Figure A1. Effect of random initialization. Top: for the
+
+Seed = 3 Seed =0
+
+Seed =3 Seed = 1 Seed =0
+Figure Al. Effect of random initialization. Top: for the
 Wild/dogwalk video, different seeds lead to different amount
 of hallucinated shadow of the person. Bottom: for the
 Kubrics/cars video, seeds influence how shadows are asso-
 ciated to the objects.
+
 C. Additional Implementation Details
 C.1. Mask Generation
+
 Our method and Omnimatte relies on coarse mask
 videos that outlines every object of interest. The synthetic
 Kubrics and Movies videos have ground truth object
 masks and we use them directly. To obtan mask for an in-
 the-wild video, we use one of the two workflows:
+
 1. We first process the video a the pretrained Mask R-
 CNN model (X101-FPN) from Detectron 2 [37].
 Then, we manually select a mask in every frame that
 best capture the object.
+
 2. We use the Roto Brush tool in Adobe After Effects to
 track the object. This method is useful when Mask
 R-CNN fails produce good masks for a video. In par-
-ticular, we processed Wild/dance and Wild/solo
+ticular, we processed Wi ld/dance and Wild/solo
 manually.
+
 It takes about 10 minutes of manual work to generate a
 mask sequence for a 200-frame video.
+
 C.2. Network Architecture
+
 Our foreground network is based on the U-Net architec-
 ture of Omnimatte, which is detailed in their supplemen-
 tary [21]. To adopt their network to OmnimatteRF, we re-
-place the background noise input by the 2D feature map Et.
-Each pixel in Et is the positional encoding of the 3D vec-
-tor (x, y, t) where (x, y) is the pixel location and t is the
+place the background noise input by the 2D feature map F;.
+Each pixel in E; is the positional encoding of the 3D vec-
+tor (x, y,t) where (x, y) is the pixel location and t is the
 frame number. The positional encoding scheme is the same
 as proposed in NeRF [22], with L = 10 frequencies.
+
 For background, we use the Vector-Matrix decomposi-
 tion model in TensoRF [8] with the MLP feature decoder.
 Our initial grid has the same resolution No = 128, and the
-final grid is limited to N 640. The vectors and matrices
+final grid is limited to N = 640. The vectors and matrices
 are upsampled at steps 2000, 3000, 4000, 5500.
-=
+
 C.3. Hyper-parameters
+
 For all videos, we use a learning rate of 0.001 for the
 foreground network, which is exponentially decayed from
-the 10,000 step at a rate of 0.1× per 10,000 steps. We find
+the 10,000 step at a rate of 0.1 per 10,000 steps. We find
 the decay crucial in preventing the foreground training from
-diverging. The mask bootstrapping loss mask has an initial
+diverging. The mask bootstrapping loss Lmask has an initial
 weight of 50, which is first reduced to 5 when the loss value
 (before weighting) drops to below 0.02, and then turned off
 after the same number of steps. We document weights of
-other loss terms in Table A1.
-Background network learning rate scheduling and Lbg-reg
+other loss terms in Table Al.
+
+Background network learning rate scheduling and Log -reg
 weight are identical as the original TensoRF [8].
+
 In general, we use the same set of hyper-parameters for
 most videos, and only add additional terms when artifacts
 are observed.
-Video
-Steps Lrecons
-La-reg
-La-warp Lflow
-Ldepth
-Ldistort
-All
-15,000
-1
-0.01 (L1)/0.005 (LO) 0.01
-1
-0
-0
-0.1
-1
-0.01
-0
-10,000
-Wild/bouldering
-DAVIS
-Table A1. Hyper-parameters. We document the hyper-parameters (number of steps and weights of loss terms) in our experiments. The
+
+--- Page 12 ---
+Video Steps Lrecons La-teg La-warp  Liow Laepth — Laistort
+
+All 15,000 1 0.01 (L1) / 0.005 (LO) 0.01 1 0 0
+Wild/bouldering - - - - - 0.1 0.01
+DAVIS 10,000 - - - - 1 0
+
+Table Al. Hyper-parameters. We document the hyper-parameters (number of steps and weights of loss terms) in our experiments. The
 first row is the configuration shared by most videos. Remaining rows are videos with different configurations, and - means unchanged from
 the shared number.
-FG
-bouldering
-walk
-BG
-FG
-car
-dog
-BG
-donkey
-Figure A2. D²NeRF results for failed scenes.
-Method
-Omnimatte 12,000
-Steps
-Training (hours)
-Rendering (s/image)
-2.7
-2.5
-D²NeRF 100,000
-4.5
-4.8
-LNA
-400,000
-8.5
-0.40
-Ours
-15,000
-3.8
-3.5
-Omnimatte 12,000
-1.2
-0.95
-D²NeRF
-100,000
-3.2
-2.2
-LNA
-400,000
-8.5
-0.21
-Ours
-15,000
-2.5
-1.2
+
+chicken
+
+Figure A2. D?NeRF results for failed scenes.
+
+Method Steps Training (hours) Rendering (s/image)
+Omnimatte 12,000 2.7 2.5
+D?NeRF 100,000 45 48
+LNA 400,000 8.5 0.40
+Ours 15,000 3.8 3.5
+Omnimatte 12,000 1.2 0.95
+D?NeRF 100,000 3.2 2.2
+LNA 400,000 8.5 0.21
+Ours 15,000 2.5 1.2
+
 Table A2. Running Time Measurement. We measure and com-
 pare the time it takes to train OmnimatteRF and baseline methods.
 Top: Movies, Wild (480 x 270, DAVIS has a similar resolution
-of 428 x 240). Bottom: Kubrics (256 × 256).
+of 428 x 240). Bottom: Kubrics (256 x 256).
+
 C.4. Running Time Measurement
+
 We measure and report the time it takes to train Om-
 nimatteRF and baseline methods in Table A2. All mea-
 surements are conducted on a workstation with an eight-
 core AMD R7-2700X CPU and a single NVIDIA RTX3090
 GPU.
+
 Our method takes longer to train than Omnimatte due to
 the addition of the 3D background radiance field.
+
 Optimizing the background model only, as in the clean
 background retraining process, takes about 30 minutes per
 video.
-FG
-solo
-chicken
-BG
+

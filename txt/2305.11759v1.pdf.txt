@@ -1,11 +1,16 @@
-arXiv:2305.11759v1 [cs.CL] 19 May 2023
+--- Page 1 ---
+arX1iv:2305.11759v1 [cs.CL] 19 May 2023
+
 Controlling the Extraction of Memorized Data
 from Large Language Models via Prompt-Tuning
-Mustafa Safa Ozdayi¹* Charith Peris² Jack Fitzgerald², Christophe Dupuy²,
-Jimit Majmudar², Haidar Khan², Rahil Parikh², Rahul Gupta²
-1 Department of Computer Science, The University of Texas at Dallas
+
+Mustafa Safa Ozdayi'; Charith Peris?} Jack Fitzgerald’, Christophe Dupuy’,
+Jimit Majmudar’, Haidar Khan’, Rahil Parikh’, Rahul Gupta?
+'Department of Computer Science, The University of Texas at Dallas
 2 Alexa AI, Amazon
+
 Abstract
+
 Large Language Models (LLMs) are known to
 memorize significant portions of their training
 data. Parts of this memorized content have
@@ -28,7 +33,9 @@ user-specified hyperparameter. We achieve an
 extraction rate reduction of up to 97.7% rela-
 tive to our baseline, with a perplexity increase
 of 16.9%.
+
 1 Introduction
+
 Pretrained large language models (LLMs; Devlin
 et al., 2019; Radford et al., 2019; Raffel et al., 2020;
 Soltan et al., 2022), commonly trained on massive
@@ -41,12 +48,16 @@ that can be extracted using appropriately-crafted
 prompts (Carlini et al., 2020, 2022; Zhang et al.,
 2021). Such extractions pose a privacy risk to the
 contributors of the training data.
+
 In this context, methods that allow developers
 to control the extractability of memorized exam-
 ples from LLMs are of much value. For example,
+
 * Work done while the author was an intern at Amazon;
+
 mustafa.ozdayi@utdallas.edu
-+ perisc@amazon.com
+t perisc@amazon.com
+
 methods that increase extraction rates correspond
 to attacks in an adversarial setting, and provide
 developers with the ability to analyze privacy-risk.
@@ -55,6 +66,7 @@ as defenses, are useful for protecting against such
 attacks. Historically, defense methods tend to be
 compute intensive (Abadi et al., 2016; Dupuy et al.,
 2021).
+
 In this work, we train continuous soft-prompts
 (Lester et al. 2021; hereafter referred to simply as
 prompts) and leverage them as a way of passing
@@ -70,12 +82,15 @@ privacy-utility trade-offs, via a user-specified hy-
 perparameter. Since the original model weights
 are frozen in both these settings, our methods are
 compute efficient across the board.
+
 To the best of our knowledge, our work is the
 first to adapt the use of instructive prompts for the
 analysis and mitigation of privacy in LLMs. We
 have released the code developed for our experi-
-ments¹.
+ments!.
+
 2 Background and Related Work
+
 Previous work has shown that LLMs display mem-
 orization and has explored a range of methods that
 quantify extractability (Carlini et al., 2018, 2020,
@@ -85,52 +100,65 @@ that has been used to mitigate this risk. However,
 it tends to reduce model utility and requires re-
 training of the LLM, which might not be feasible
 due to heavy computational burden.
-'https://github.com/amazon-science/controlling-llm-
+
+‘https://github.com/amazon-science/controlling-llm-
 memorization
+
+--- Page 2 ---
+Prefix Suffix
+
 Input
-Sequence:
-Training/Testing Setup
-Evaluation
-Update soft prompt
-Prefix
-Suffix
-The quick brown fox jumped over the lazy dog
-Soft
-prompt
-Prefix
-embedding
-Model (frozen)
-Generated
-output
-Compare to
-measure
-I
-If training:
-If testing:
-I
-Calculate
-loss
-|
-Exact Match &
-Fractional Match
-Suffix
-Generated output
-(examples)
-Exact
-Match
-over the lazy dog
-over the lazy dog
-over the lazy dog
-over the small dog
-1
-1
-0
-0.75
-Fractional
-Match
+
+Sequence: over the lazy dog
+
+The quick brown fox jumped
+
+Soft Prefix
+prompt embedding
+
+eo ®
+
+Fy
+Fd
+
+o
+” a
+
+rv) 3 Model (frozen)
+= §
+Bb a
+
+£ §
+5 3
+£ & Generated
+& &
+
+rf 5 output
+
+&
+e j ;
+
+Wftraining: | If testing:
+I Compare to
+Calculate measure
+loss I Exact Match &
+1 \. Fractional Match
+Suffix Generated output = Exact Fractional
+
+5 (examples) Match Match
+
+over the lazy dog over the lazy dog 1 1
+
+3
+
+g ‘over the lazy dog cover the small dog () 0.75
+
+a
+
 Figure 1: A schematic of our setup. The upper section
 shows our training and testing setup while the lower
 section shows our evaluation metrics.
+
 The use of instructive prompts for language mod-
 els has been extensively researched, including use
 during pretraining (Raffel et al., 2020), as a sec-
@@ -143,12 +171,15 @@ crete natural language prompts (Shin et al., 2020),
 to mine them (Jiang et al., 2020), or, neglecting
 natural language, to learn continuous prompts (Li
 and Liang, 2021; Lester et al., 2021).
+
 Our work leverages continuous prompts as a way
 of passing an external signal to a model to trigger
 a desired model behavior (i.e., less or more memo-
 rized data in open language generation, which map
 to an extraction attack and defense, respectively).
+
 3 Method
+
 Prompt-tuning requires the prepending of a prompt
 to the prefix embedding and access to the training
 loss (see Figure 1). Given these constraints, we
@@ -157,7 +188,9 @@ access to the target model parameters, and a black-
 box defense where the adversary interacts with the
 target model via an API. We therefore do not test
 our defense against our own attack.
+
 Let [prefix || suffix] be a sequence in the training
+
 set where the prefix is of length k tokens. Carlini
 et al. (2022) defined a suffix to be k-extractable
 if the model generates the suffix exactly, after be-
@@ -167,23 +200,27 @@ the number of k-extractable sequences, while our
 black-box defense aims to reduce the number of
 k-extractable sequences that can be extracted by an
 adversary who submits prefixes via an API.
+
 3.1 Attack
+
 In the attack setting, we assume that the adversary
-has a set of [prefix || suffix ] sequences Strain,
+has a set of [ prefix Il suffix ] sequences Si,ain,
 sampled from the training set of the target model.
 Their goal is to extract the suffixes corresponding
-to a disjoint set of prefixes, denoted by Stest².
+to a disjoint set of prefixes, denoted by Stest>«
+
 To do so, the adversary first initializes a prompt:
-a continuous set of 1 × e parameters where e is the
-embedding size of the model, and 1 is the length of
+a continuous set of / x e parameters where e is the
+embedding size of the model, and / is the length of
 the prompt, a hyperparameter decided by the adver-
-sary. The prompt is trained over Strain to facilitate
+sary. The prompt is trained over Stain to facilitate
 the correct generation of suffixes. To do this, we
 first prepend the prompt to the embedding of the
 prefix and pass the joint embedding through the
 model for generation. We then minimize the loss
 objective (see below) with respect to the prompt
 while keeping the parameters of the model frozen.
+
 We explore two loss objectives. The first is
 causal language modeling (hereafter referred to as
 CLM), where we minimize the cross-entropy loss
@@ -195,9 +232,11 @@ inference task such that during training the model
 is penalized only on the suffix tokens; hence we
 refer to it as aligned CLM. During inference, the
 learned prompt is prepended to each embedding
-of the prefixes in Stest, and the joint embedding is
+of the prefixes in S;-5;, and the joint embedding is
 passed to the model for generation (see Figure 1).
+
 3.2 Defense
+
 In the defense setting, the defender (API owner)
 trains the prompt, and prepends it to the incoming
 prefixes before passing them to the model. Our
@@ -205,30 +244,36 @@ algorithm is inspired by machine-unlearning liter-
 ature (Halimi et al., 2022), and defenses against
 membership inference and backdoor attacks (Chen
 et al., 2022; Ozdayi et al., 2021). We introduce a
-2For simplicity, we assume all prefixes are k-length. This
+
+For simplicity, we assume all prefixes are k-length. This
+
 can easily be ensured by padding or truncating different length
 prefixes if needed in a real-world setting.
+
+--- Page 3 ---
 hyperparameter named learning threshold denoted
-by 0. During prompt training (see Section 3.1),
-when loss is less than 0 we do gradient ascent to
+by @. During prompt training (see Section 3.1),
+when loss is Jess than 0 we do gradient ascent to
 penalize the prompt. If the loss is greater than 0,
 we perform gradient descent with respect to the
 prompt as usual. Training is stopped once the av-
-erage epoch loss is equal or above 0. This allows
+erage epoch loss is equal or above 6. This allows
 us to increase training loss in a controlled manner
-and stabilize it around 0. Through this process, we
+and stabilize it around 9. Through this process, we
 can achieve various privacy-utility trade-offs effi-
 ciently without re-training any part of the model.
-To explore 0, we set the initial value to be slightly
+To explore 6, we set the initial value to be slightly
 above the model training loss and increase in steps
 of 0.25 until desired performance is achieved.
+
 4 Experiments
+
 For our experiments, we use the 125M and 1.3B
 parameter variants of the GPT-Neo models (Black
 et al., 2021). These are public, decoder-only trans-
 former models (Vaswani et al., 2017) trained using
 CLM on the Pile dataset (Gao et al., 2020). We
-extract Strain and Stest from the Language Model
+extract Strain and Stes; from the Language Model
 Extraction Benchmark dataset (Google-Research).
 This dataset contains 15k sequences sampled from
 the training split of the Pile where each sequence
@@ -236,6 +281,7 @@ is partitioned into a prefix and suffix. In the default
 evaluation setting, both prefix and suffix consist of
 50 tokens. We ensure a random train/test split of
 14k/1k samples.
+
 Our evaluation metric of choice is Exact extrac-
 tion rate which is the fraction of correctly gener-
 ated suffixes (i.e., all tokens of the generated suffix
@@ -250,13 +296,17 @@ from our work, to the best of our knowledge. Our
 training setup is discussed in Appendix B. All ex-
 periments are repeated over 5 runs with a new ran-
 dom train/test split in each run.
+
 4.1 Attack
+
 We explore the performance of our attack across
 several dimensions: prompt length, suffix size, pre-
 fix size, and beam size. We use greedy-decoding
 in all cases, except the beam size experiments.
+
 Prompt Length First, we explore prompt length
 in the context of the default setting (prefix and suf-
+
 fix consist of 50 tokens; Figures 2-A1 and 2-A2).
 We note that prompts tuned with both CLM and
 aligned CLM provide improvements over the base-
@@ -264,6 +314,7 @@ line in all cases, with aligned CLM providing the
 best performance. Given this, we train prompts
 using the aligned CLM objective for all other ex-
 periments, including our defense.
+
 With aligned CLM, we achieve the highest ex-
 traction rates of 25.8% and 54.3% for the 125M
 and 1.3B models, respectively (an improvement of
@@ -279,18 +330,20 @@ value for extraction purposes given our objective.
 We note that more sophisticated training strategies
 (designing better loss functions, better prompt ini-
 tialization etc.) might yield better extraction rates.
+
 Suffix Size Next, we fix the prefix size to 50 and
 vary the suffix size. As shown in Figures 2-B1
 and 2-B2, extraction rates decrease roughly expo-
 nentially with suffix size. We note that as suffix size
-increases, longer prompts (≥ 20) provide greater
+increases, longer prompts (> 20) provide greater
 improvements over the baseline. For example, with
 a prompt length of 100 (blue line) using the 1.3B
 model, at suffix size 5 we observe an extraction
 rate increase of 5.3 percentage points. Whereas at
 suffix size 50, the increase is 9.3 percentage points.
+
 Prefix Size Next, we fix the suffix size to 50 and
-vary the prefix size. As shown in Figures 2-C1
+vary the prefix size. As shown in Figures 2-Cl
 and 2-C2, extraction rates increase roughly loga-
 rithmically (as in Carlini et al. 2022). Contrary to
 suffix size, we observe that the gaps between base-
@@ -298,6 +351,7 @@ line and attacks decrease with increasing prefix
 size. This suggests that our attack stands to benefit
 a less informed adversary (small prefix sizes) when
 compared to the baseline.
+
 Beam Decoding Finally, we utilize the default
 setting with prefix and suffix sizes at 50 tokens
 and vary the beam size (beam size=1 corresponds
@@ -307,156 +361,73 @@ tion rates increase across the board when increas-
 ing beam size from 1 to 5. However, improve-
 ments tend to plateau or oscillate when beam size
 is greater than 5. The 1.3B model benefits more
-Exact Extraction Rate
-Exact Extraction Rate
-GPT-Neo-125M
-Baseline
-0.32
-B1
-C1
-CLM
-D1
--Aligned CLM 0.5
-0.4
-0.30
-0.28
-0.4
-0.3
-0.24
-0.3
-0.20
-0.16
-2
-0.58
-0.54
-Baseline
-CLM
-O Aligned CLM
-0.2
-0.1
-0.8
-0.7
-0.50
-0.6
-0.46
-0.5
-0.42
-0.4
-1520
-100 150
-5 10
-Prompt Length
+
+--- Page 4 ---
+== Baseline
+
+GPT-Neco-125M.
+
+AL -e- cM Bl cl DI
+“O Aligned CLM 0,5 04 030
+04 03 4er
 0.25
-0.2
-°
-°
-°
+0.3 0.2
 0.20
-°
-0.1
-0
-0.0
-0.15
-GPT-Neo-1.3B
-82
-B2
-C2
-D2
-89
-0.8
-0.60
-0
-°
-0.6
-0.55 0 8
-°
-°
-°
-0.4
-0.50
-0
-°
-0.2
-0.45-8
-0.0
-0.40
-40 50
-25 50 75 100 125
-Prefix Size
-1 5
-10 15 20
-Beam Size
-25
-Suffix Size
-Baseline Attack
-Prompt Length=1
-Prompt Length=5
--о
-Prompt Length=20
-Prompt Length=100
-Prompt Length=150
+02 O41 —O- Baseline Attack
+—O- Prompt =
+ort ——— 0.0 Pp a 0s : : + -©- Prompt
+7 =—O- Prompt 0
+GPT-Neo-1.3B —©- Prompt Len 00
+Az 7 GN" B2 a2 D2 0 Prompt Length=15
+=O Aligned CLM 9.8 08 0.60
+0.7 0.6 0.55
+0.6 04 0.50 Jot
+0.5 0.2 0.45
+no + + 0.4 4+ : ——— 0.0 3 1 —— 0.40 4 : 1 1
+B20 100 150 510 25 40 50 25° 50 75 100 125 1 5 10 15 (20
+Prompt Length Suffix Size Prefix Size Beam Size
+
 Figure 2: The change in exact extraction rates against prompt length (2-A1, 2-A2), suffix size (2-B1, 2-B2), prefix
 size (2-C1, 2-C2) and beam size (2-D1, 2-D2). Top panels show the GPT-Neo-125M results while the bottom
 panels show GPT-Neo-1.3B results. The transparent polygons about each line represent 95% confidence intervals
+
 across the points.
-Model
-Ꮎ
-Exact Extract
-Rate
-0*
-GPT-Neo
-125M
-1.25
-1.5
-1.75
-0.169 ± 0.007
-0.031 ± 0.005
-0.006 ± 0.001
-0.001 ± 0.0
+
+Exact Extract Pile Test
+Model 8 Rate PPL
+o* 0.169 + 0.007 15.71 40.431
+GPT-Neo 1.25 (0.031 + 0.005 16.601 + 0.197
+125M 1.5 0.006 + 0.001 17.499 + 0.156
+1.75 0.001 + 0.0 19.691 + 0.598
 GPT2
-0.004 ± 0.002
-124M
-0*
-GPT-Neo
-0.5
-1.3B
-0.75
-1
-0.450±0.015
-0.108 ± 0.02
-0.022±0.004
-0.01 ± 0.002
+124M 0.004 + 0.002 30.323 + 1.019
+o* 0.450 + 0.015 9.213 + 0.232
+GPT-Neo 0.5 0.108 + 0.02 9.758 + 0.245
+1.3B 0.75 0.022 + 0.004 10.267 + 0.094
+1 0.01 + 0.002 10.775 + 0.248
 GPT2
-1.5B
-0.019 0.002
-Pile Test
-PPL
-15.71 ± 0.431
-16.601 ± 0.197
-17.499 ± 0.156
-19.691 ± 0.598
-30.3231.019
-9.213±0.232
-9.758 ± 0.245
-10.267 ± 0.094
-10.775 ± 0.248
-17.155 ± 0.545
+15B - 0.019 + 0.002 17.155 + 0.545
+
 Table 1: Exact extraction rates and corresponding per-
 plexities for our defense setting, with different values
-of 0. Values are reported as mean ± std. Extraction
+of 6. Values are reported as mean + std. Extraction
 rates that are smaller than the corresponding GPT2 vari-
 ent of similar size, achieved while perplexity values are
 also smaller, are good. (*no defense).
+
 from increasing beam size achieving the highest ex-
 traction rate of 61.4%, at a beam size of 20 (with
 a prompt length of 150). The highest extraction
 rate achieved for the 125M model was 28.3% at a
 beam size of 15 (with a prompt length of 100).
+
 4.2 Defense
+
 Finally, we evaluate the privacy-utility trade-off of
 our black-box defense. As mentioned in Section 3,
 our defense is designed for a black-box adversary,
 and cannot be tested against our white-box attack.
+
 Therefore, we utilize the baseline attack (Section 4)
 to quantify privacy. We note that longer prompts
 did not add value in a defense setting, so we resort
@@ -473,21 +444,25 @@ premise here is that better performance in terms of
 privacy and utility, when compared to an out-of-
 domain model of similar size, would mean that our
 defense mechanism is of value to an API owner.
+
 In Table 1, we display our results obtained using
 the default evaluation setting (prefix and suffix com-
 prise of 50 tokens). Our defense achieves lower
 extraction rates with competitive PPL values. For
 the 125M model, we achieve an exact extraction
 rate reduction of 99.4% relative to baseline with a
-PPL increase of 25.3% at 0 : 1.75. For the 1.3B
+PPL increase of 25.3% at 9 = 1.75. For the 1.3B
 model, the extraction rate is reduced by 97.7% rel-
 ative to baseline with a PPL increase of 16.9% at
-0 = 1. The ability to achieve lower extraction rates
+
+= 1. The ability to achieve lower extraction rates
 with lower PPL values as measured against the
 GPT2 models of the corresponding size, provides
 evidence that our defense is effective.
-=
+
+--- Page 5 ---
 5 Conclusion
+
 We present the first known effort to leverage
 prompt-tuning to control the extractability of mem-
 orized data from LLMs in an open language genera-
@@ -501,7 +476,9 @@ ers with model trained on sensitive content. These
 results are achieved efficiently, without any change
 to the original model weights. We details avenues
 of future work in Appendix C
+
 6 Limitations
+
 We briefly mention some limitations of our work.
 First, we have only used a single dataset, and a
 single model family in our experiments. This is
@@ -521,7 +498,9 @@ CLM performs better that the basic CLM setting.
 Finally, we believe the evaluation of our defense
 could be improved further by measuring other util-
 ity metrics (e.g., accuracy) on downstream tasks.
+
 7 Ethical Considerations
+
 We leverage prompt-tuning to control the ex-
 tractability of memorized data from LLMs in an
 open language generation task and explore two
@@ -534,22 +513,30 @@ in the community to the possibility and severity
 of this nature of attack. We hope that developers,
 armed with this knowledge, can use relevant de-
 fense mechanisms to avoid such potential misuse.
+
 Acknowledgements
+
 The authors would like to thank Wael Hamza for
 helpful discussions on this topic and Stephen Rawls
 for help with securing the GPU instances that were
 required for experimentation.
+
+--- Page 6 ---
 References
+
 Huggingface accelerate.
-Martín Abadi, Andy Chu, Ian J. Goodfellow, H. B.
+
+Martin Abadi, Andy Chu, Ian J. Goodfellow, H. B.
 McMahan, Ilya Mironov, Kunal Talwar, and
 Li Zhang. 2016. Deep learning with differential pri-
 vacy. Proceedings of the 2016 ACM SIGSAC Con-
 ference on Computer and Communications Security.
+
 Sid Black, Leo Gao, Phil Wang, Connor Leahy, and
 Stella Biderman. 2021. GPT-Neo: Large Scale
 Autoregressive Language Modeling with Mesh-
 Tensorflow.
+
 Tom Brown, Benjamin Mann, Nick Ryder, Melanie
 Subbiah, Jared D Kaplan, Prafulla Dhariwal,
 Arvind Neelakantan, Pranav Shyam, Girish Sastry,
@@ -564,65 +551,84 @@ Alec Radford, Ilya Sutskever, and Dario Amodei.
 Advances in Neural Information Processing Systems,
 volume 33, pages 1877-1901. Curran Associates,
 Inc.
+
 Nicholas Carlini, Daphne Ippolito, Matthew Jagielski,
-Katherine Lee, Florian Tramèr, and Chiyuan Zhang.
+Katherine Lee, Florian Tramér, and Chiyuan Zhang.
 2022. Quantifying memorization across neural lan-
 guage models. ArXiv, abs/2202.07646.
-Nicholas Carlini, Chang Liu, Úlfar Erlingsson, Jernej
+
+Nicholas Carlini, Chang Liu, Ulfar Erlingsson, Jernej
 Kos, and Dawn Xiaodong Song. 2018. The secret
 sharer: Evaluating and testing unintended memoriza-
 tion in neural networks. In USENIX Security Sympo-
-sium.
-Nicholas Carlini, Florian Tramèr, Eric Wallace,
+slum,
+
+Nicholas Carlini, Florian Tramér, Eric Wallace,
 Matthew Jagielski, Ariel Herbert-Voss, Katherine
 Lee, Adam Roberts, Tom B. Brown, Dawn Xi-
-aodong Song, Úlfar Erlingsson, Alina Oprea, and
+aodong Song, Ulfar Erlingsson, Alina Oprea, and
 Colin Raffel. 2020. Extracting training data from
 large language models. In USENIX Security Sympo-
-sium.
+slum,
+
 Dingfan Chen, Ning Yu, and Mario Fritz. 2022. Re-
 laxloss: Defending membership inference attacks
 without losing utility. ArXiv, abs/2207.05801.
+
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
 Kristina Toutanova. 2019. BERT: Pre-training of
 deep bidirectional transformers for language under-
 standing. In Proceedings of the 2019 Conference
 of the North American Chapter of the Association
 for Computational Linguistics: Human Language
-Technologies, Volume 1 (Long and Short Papers),
+Technologies, Volume I (Long and Short Papers),
 pages 4171-4186, Minneapolis, Minnesota. Associ-
 ation for Computational Linguistics.
+
 Christophe Dupuy, Radhika Arava, Rahul Gupta, and
 Anna Rumshisky. 2021. An efficient dp-sgd mech-
 anism for large scale nlu models. ICASSP 2022
-2022 IEEE International Conference on Acous-
+
+- 2022 IEEE International Conference on Acous-
 tics, Speech and Signal Processing (ICASSP), pages
 4118-4122.
+
 Cynthia Dwork. 2006. Differential privacy. In Ency-
 clopedia of Cryptography and Security.
+
 Leo Gao, Stella Rose Biderman, Sid Black, Laurence
 Golding, Travis Hoppe, Charles Foster, Jason Phang,
 Horace He, Anish Thite, Noa Nabeshima, Shawn
 Presser, and Connor Leahy. 2020. The pile: An
 800gb dataset of diverse text for language modeling.
 ArXiv, abs/2101.00027.
+
 Google-Research.
 benchmark.
+
 Google-research/lm-extraction-
+
 Anisa Halimi, Swanand Kadhe, Ambrish Rawat, and
 Nathalie Baracaldo. 2022. Federated unlearning:
 How to efficiently erase a client in fl?
+
 Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan
 Allen-Zhu, Yuanzhi Li, Shean Wang, and Weizhu
 Chen. 2021. Lora: Low-rank adaptation of large lan-
 guage models. ArXiv, abs/2106.09685.
+
 Zhengbao Jiang, Frank F. Xu, Jun Araki, and Graham
 Neubig. 2020. How can we know what language
 models know? Transactions of the Association for
 Computational Linguistics, 8:423-438.
-Diederik P. Kingma and Jimmy Ba. 2014. Adam:
-A method for stochastic optimization. CORR,
+
+Adam:
+CoRR,
+
+Diederik P. Kingma and Jimmy Ba. 2014.
+A method for stochastic optimization.
 abs/1412.6980.
+
 Brian Lester, Rami Al-Rfou, and Noah Constant. 2021.
 The power of scale for parameter-efficient prompt
 tuning. In Proceedings of the 2021 Conference on
@@ -630,6 +636,7 @@ Empirical Methods in Natural Language Processing,
 pages 3045-3059, Online and Punta Cana, Domini-
 can Republic. Association for Computational Lin-
 guistics.
+
 Xiang Lisa Li and Percy Liang. 2021. Prefix-tuning:
 Optimizing continuous prompts for generation. In
 Proceedings of the 59th Annual Meeting of the
@@ -638,18 +645,23 @@ Association for Computational Linguistics and the
 guage Processing (Volume 1: Long Papers), pages
 4582-4597, Online. Association for Computational
 Linguistics.
+
 Jimit Majmudar, Christophe Dupuy, Charith S. Peris,
 Sami Smaili, Rahul Gupta, and Richard S. Zemel.
 2022. Differentially private decoding in large lan-
 guage models. ArXiv, abs/2205.13621.
+
 Mustafa Safa Ozdayi, Murat Kantarcioglu, and Yulia R.
 Gel. 2021. Defending against backdoors in feder-
 ated learning with robust learning rate. Proceedings
 of the AAAI Conference on Artificial Intelligence,
 35(10):9268-9276.
+
 Adam Paszke, Sam Gross, Francisco Massa, Adam
 Lerer, James Bradbury, Gregory Chanan, Trevor
 Killeen, Zeming Lin, Natalia Gimelshein, Luca
+
+--- Page 7 ---
 Antiga, Alban Desmaison, Andreas Kopf, Edward
 Yang, Zachary DeVito, Martin Raison, Alykhan Te-
 jani, Sasank Chilamkurthy, Benoit Steiner, Lu Fang,
@@ -658,20 +670,24 @@ An imperative style, high-performance deep learn-
 ing library. In Advances in Neural Information Pro-
 cessing Systems 32, pages 8024-8035. Curran Asso-
 ciates, Inc.
+
 Alec Radford, Jeff Wu, Rewon Child, David Luan,
 Dario Amodei, and Ilya Sutskever. 2019. Language
 models are unsupervised multitask learners.
+
 Colin Raffel, Noam Shazeer, Adam Roberts, Katherine
 Lee, Sharan Narang, Michael Matena, Yanqi Zhou,
 Wei Li, and Peter J. Liu. 2020. Exploring the limits
 of transfer learning with a unified text-to-text trans-
-former. J. Mach. Learn. Res., 21(1).
+former. J. Mach. Learn. Res.,21(1).
+
 Jeff Rasley, Samyam Rajbhandari, Olatunji Ruwase,
 and Yuxiong He. 2020. Deepspeed: System opti-
 mizations enable training deep learning models with
 over 100 billion parameters. Proceedings of the 26th
 ACM SIGKDD International Conference on Knowl-
 edge Discovery and Data Mining.
+
 Victor Sanh, Albert Webson, Colin Raffel, Stephen
 Bach, Lintang Sutawika, Zaid Alyafeai, Antoine
 Chaffin, Arnaud Stiegler, Arun Raja, Manan Dey,
@@ -688,11 +704,13 @@ Biderman, Leo Gao, Thomas Wolf, and Alexan-
 der M Rush. 2022. Multitask prompted training en-
 ables zero-shot task generalization. In International
 Conference on Learning Representations.
+
 Taylor Shin, Yasaman Razeghi, Robert L. Logan IV,
 Eric Wallace, and Sameer Singh. 2020. AutoPrompt:
 Eliciting knowledge from language models with au-
 tomatically generated prompts. In Empirical Meth-
 ods in Natural Language Processing (EMNLP).
+
 Saleh Soltan, Shankar Ananthakrishnan, Jack FitzGer-
 ald, Rahul Gupta, Wael Hamza, Haidar Khan,
 Charith Peris, Stephen Rawls, Andy Rosenbaum,
@@ -701,26 +719,32 @@ Sridhar, Fabian Triefenbach, Apurv Verma, Gokhan
 Tur, and Prem Natarajan. 2022. Alexatm 20b:
 Few-shot learning using a large-scale multilingual
 seq2seq model. arXiv.
+
 Ashish Vaswani, Noam M. Shazeer, Niki Parmar,
 Jakob Uszkoreit, Llion Jones, Aidan N. Gomez,
-Lukasz Kaiser, and Illia Polosukhin. 2017. Atten-
+Lukasz Kaiser, and Ilia Polosukhin. 2017. Atten-
 tion is all you need. ArXiv, abs/1706.03762.
+
 Eric Wallace, Shi Feng, Nikhil Kandpal, Matt Gardner,
 and Sameer Singh. 2019. Universal adversarial trig-
 gers for attacking and analyzing nlp. In Conference
+
 on Empirical Methods in Natural Language Process-
 ing.
+
 Jason Wei, Maarten Bosma, Vincent Y. Zhao, Kelvin
 Guu, Adams Wei Yu, Brian Lester, Nan Du, An-
 drew M. Dai, and Quoc V. Le. 2021. Finetuned lan-
 guage models are zero-shot learners.
+
 Chiyuan Zhang, Daphne Ippolito, Katherine Lee,
-Matthew Jagielski, Florian Tramèr, and Nicholas
+Matthew Jagielski, Florian Tramér, and Nicholas
 Carlini. 2021. Counterfactual memorization in neu-
 ral language models. ArXiv, abs/2112.12938.
+
 A Fractional Extraction Rate Results
-Fractional extraction rate is the fraction of
-gener-
+
+Fractional extraction rate is the fraction of gener-
 ated tokens that are both correct and in the right
 position, over the dataset (see lower section of Fig-
 ure 2). Our reason to measure this metric is to pro-
@@ -737,6 +761,7 @@ traction rate can be a better metric to assess the risk.
 This is because a human might be able to infer the
 correct meaning of the sequence even when few
 tokens are wrong.
+
 The results related to this metric are shown in
 Figure 3. Comparing these results with the exact
 extraction rate results (Figure 2), we observe the
@@ -744,155 +769,93 @@ same trends across all of our experiment. We note
 that the same shared trends are observed in the case
 of our defense. In this case the fractional extraction
 rate results are tabulated in Table 2.
-B Training Setup
+
+B_ Training Setup
+
 Our soft-prompts are initialized to random word
 embeddings as described in Lester et al. (2021).
 We use a batch size of 128 and an Adam opti-
 mizer (Kingma and Ba, 2014) with a learning rate
-of 5e-4. For the attack setting, the prompts are
+of 5e — 4. For the attack setting, the prompts are
 trained for 15 epochs. In the defense case, the
 prompts are trained until training loss stabilizes
-around the specified 0 value (as described in Sec-
+around the specified @ value (as described in Sec-
 tion 3.2), which happens within 2-3 epochs in our
 experiments.
+
 We use a Pytorch (Paszke et al., 2019) imple-
 mentation where we leverage the HuggingFace Ac-
 celerate (HF) and DeepSpeed (Rasley et al., 2020)
 libraries to handle distributed training over 8 GPUs
-Fractional Extraction Rate
-Fractional Extraction Rate
-0.46
-0.42
-0.38
-0.34
-0.70
-A2
-0.66
-0.62
-15 20
-Baseline
-OCLM
-Aligned CLM
-0.6
-0.5
-15
-0.4
+
+--- Page 8 ---
 GPT-Neo-125M
-2 B1 C1 Di
-0.5
-0.4
-°
-0.45
-0.40-
-Ο
-0.3
-0.35
-0.3
-0.2
-0.30
-GPT-Neo-1.3B
-Baseline
-CLM
-0.85
-Aligned CLM
-B2
-0.9
-C2
-D2
-0.75
-0.80
-0.8
-8
-0.75
-0.7
-°
-°
-0.708
-°
-0.70
-0.6
-0.65
-0.65
-0.5
-0.60
-0.4
-0.60
-100
-150
-5 10
-25
-Suffix Size
-40 50
-25 50 75 100 125
-Prefix Size
-1
-5
-10 15 20
-Beam Size
-Baseline Attack
-Prompt Length=1
-Prompt Length=5
-Prompt Length=20
-Prompt Length=100
-Prompt Length=150
-Prompt Length
+
+2
+3 == Baseline
+2 Al aM Bi C1 DI
+P “© Aligned CLM 05 0.45 | A’ = 5 ™
+3
+FS
+x 0.5 0.4 0.40
+a)
+0.4 0.3 0.35
+ond
+-o
+03 0.2 0.30 -o-
+GPT-Neo-1.3B Be
+2 ceo
+=| == Baseline -o-
+= AZ AS Simca cum 085 B2— 09 4—C2 ors {2
+Bj .75
+70 + 0.8
+Ei
+3 0.7 0.70
+Py
+0.66 + 0.6
+= 0.65
+3 0.5
+3
+fs
+0.62 0.60 0.4 0.60
+520 100150 510 25 40 50 25 50 75 100 125 1 5 0 15 2
+Prompt Length Suffix Size Prefix Size Beam Size
+
 Figure 3: The change in fractional extraction rates against prompt length (3-A1, 3-A2), suffix size (3-B1, 3-B2),
 prefix size (3-C1, 3-C2) and beam size (3-D1, 3-D2). Top panels show the GPT-Neo-125M results while the
 bottom panels show GPT-Neo-1.3B results. The transparent polygons about each line represent 95% confidence
+
 intervals across the points.
-15.71 ± 0.431
-16.601 ± 0.197
-17.499 ± 0.156
-19.691 ± 0.598
-Model
-Ꮎ
-Fract Extract
-Rate
-Pile Test
-PPL
-0*
-GPT-Neo
-125M
-1.25
-1.5
-1.75
-0.35 ± 0.006
-0.192 ± 0.011
-0.123 ± 0.005
-0.087± 0.003
+
+Fract Extract Pile Test
+Model Rate PPL
+o* 0.35 + 0.006 15.71 + 0.431
+GPT-Neo 1.250.192 0.011 16.601 + 0.197
+125M 1.5 0.123 + 0.005 17.499 + 0.156
+1.75 0.087 + 0.003 19.691 + 0.598
 GPT2
-0.099 0.003
-124M
-0*
-GPT-Neo
-1.3B
-0.5
-0.75
-1
-0.634 ± 0.013
-0.316 ± 0.022
-0.171 ± 0.004
-0.128 ± 0.006
+124M - 0.099 + 0.003 30.323 + 1.019
+o* 0.634 + 0.013 9.213 4 0.232
+GPT-Neo 0.5 0.316 + 0.022 9.758 + 0.245
+1.3B 0.75 0.171 £ 0.004 10.267 + 0.094
+1 0.128 + 0.006 10.775 + 0.248
 GPT2
-1.5B
-0.166 ± 0.003
-30.3231.019
-9.2130.232
-9.758 ± 0.245
-10.267±0.094
-10.775 ± 0.248
-17.155 ± 0.545
+15B - 0.166 + 0.003 17.155 + 0.545
+
 Table 2: Fractional extraction rates and corresponding
 perplexities for our defense setting, with different val-
-ues of 0. Values are reported as mean ± std. Extraction
+ues of 6. Values are reported as mean + std. Extraction
 rates that are smaller than the corresponding GPT2 vari-
 ent of similar size, achieved while perplexity values are
-also smaller, are good.(* no defense).
+also smaller, are good.(*no defense).
+
 with fp16 mixed precision. On a p3dn. 24xlarge
 instance, the average attack prompt training time
 was 0.9 hours per prompt while the average defense
 prompt training time was 0.02 hours per prompt.
-C Future work
+
+C_ Future work
+
 We have several avenues that we would like to ex-
 plore in the context of future work. We envision
 that more sophisticated training strategies might
@@ -900,15 +863,18 @@ yield better extraction rates in our attack setting
 (designing better loss objectives, better initializa-
 tion of soft-prompts etc.) and we would like to
 explore this further.
+
 We would like to explore different prompt learn-
 ing algorithms such as other parameter-efficient
 training methods (Li and Liang, 2021; Hu et al.,
 2021), and hard-prompt learning methods (Wallace
 et al., 2019), in order to conduct a more robust
 analysis of extraction rates.
+
 We would like to test the transferability of
 trained prompts across different models and
 datasets.
+
 Finally, we would like to combine our defense
 with other existing defenses such as those applied
 at training time (e.g. versions of differentially pri-
@@ -916,5 +882,8 @@ vate stochastic gradient descent; Abadi et al. 2016;
 Dupuy et al. 2021) or those applied at decoding
 stage (e.g., differentially private decoding; Majmu-
 dar et al. 2022). The goal would be to achieve better
+
+--- Page 9 ---
 privacy-utility trade-offs under a combination of
 such defenses.
+

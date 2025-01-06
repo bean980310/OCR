@@ -1,10 +1,16 @@
-arXiv:2305.05591v1 [cs.SD] 9 May 2023
+--- Page 1 ---
+2305.05591v1 [cs.SD] 9 May 2023
+
+arXiv
+
 AUDIOSLOTS: A SLOT-CENTRIC GENERATIVE MODEL FOR AUDIO SEPARATION
+
 Pradyumna Reddy*
+
 University College London
-Scott Wisdom, Klaus Greff, John R. Hershey, Thomas Kipf
-Google Research
+
 ABSTRACT
+
 In a range of recent works, object-centric architectures have been
 shown to be suitable for unsupervised scene decomposition in the
 vision domain. Inspired by these methods we present AudioSlots, a
@@ -20,14 +26,18 @@ results on Libri2Mix speech separation constitute a proof of concept
 that this approach shows promise. We discuss the results and limita-
 tions of our approach in detail, and further outline potential ways to
 overcome the limitations and directions for future work.
-Index Terms Speech separation, object-centric representation
+
+Index Terms— Speech separation, object-centric representation
+
 1. INTRODUCTION
+
 Recently there has been a lot of research into neural network based
 architectures that operate on set-structured data and architectures
 that learn to map from unstructured inputs to set-structured output
 spaces. In particular, in the vision domain, slot-centric or object-
-centric architectures underpin recent advances in object detection [1]
-and unsupervised object discovery [2, 3].
+centric architectures underpin recent advances in object detection
+and unsupervised object discovery
+
 These object-centric architectures have an inbuilt inductive bias
 of permutation equivariance, making them a natural fit for the task of
 audio separation. In this paper we apply the core ideas from these ar-
@@ -36,6 +46,7 @@ audio sources from mixed audio signals without access to privileged
 knowledge about the sources or the mixing process. Sound separa-
 tion is inherently a set-based problem, as the ordering of the sources
 is arbitrary.
+
 We frame sound separation as a permutation-invariant condi-
 tional generative modeling problem: we learn a mapping from a
 mixed audio spectrogram to an unordered set of independent source
@@ -43,13 +54,20 @@ spectrograms. Our method, AudioSlots, separates audio into indi-
 vidual latent variables per source, which are then decoded into indi-
 vidual source spectrograms. It is built using permutation-equivariant
 encoder and decoder functions based on the Transformer architec-
-ture [4] and thus invariant to the ordering of the source latent vari-
-ables ("slots").
+ture (4) and thus invariant to the ordering of the source latent vari-
+ables (“slots”).
+
 To evaluate the promise of such an architecture, we train Au-
 dioSlots using a matching-based loss to generate separate sources
 from the mixed audio-signal. We demonstrate our method on a sim-
 ple two-speaker speech separation task from Libri2Mix [5].
+
 *Work done while interning at Google.
+
+Scott Wisdom, Klaus Greff, John R. Hershey, Thomas Kipf
+
+Google Research
+
 While our results primarily constitute a proof of concept for this
 idea, we find that sound separation with slot-centric generative mod-
 els shows promise, but comes with certain challenges: the presented
@@ -58,35 +76,42 @@ lies on heuristics for stitching independently predicted audio chunks,
 and still requires ground-truth reference audio sources for training.
 We are optimistic that these challenges can be overcome in future
 work, for which we outline possible directions in this paper.
+
 2. RELATED WORK
+
 Our work explores a novel set-based generative modeling approach
 for sound separation. In the following, we provide a brief overview
 on recent prior learning-based approaches for sound separation as
 well as on set-based (or slot-centric) neural network architectures
 used in other domains.
+
 Sound separation. A variety of neural network methods have
 been proposed for supervised sound separation, differing in terms
 of their sound reconstruction mechanisms and their overall architec-
 tures. Mask-based methods reconstruct sound by predicting sepa-
 ration masks that are applied to an analysis/synthesis basis repre-
 sentation of the input audio signal (such as STFT or learned basis),
-e.g. [6, 7, 8, 9, 10, 11, 12, 13]. Alternatively, direct reconstruction
-methods estimate the source signals or their spectra without explic-
-itly estimating masks [14, 15].
+Alternatively, direct reconstruction
+gnals or their spectra without explic-
+
+itly estimating mas!
+
 Many generic architectures have been proposed for sound sep-
 aration, including recurrent networks [16], convolutional networks
-[9], U-nets [14], attention networks [17], and their combinations.
+, U-nets attention networks , and their combinations.
 These address the arbitrary permutation of output sources using a
-permutation-invariant loss during training [7, 8].
+permutation-invariant loss during training (7|[8}.
+
 Some methods have gone further to address permutation invari-
 ance at the architecture level by producing un-ordered representa-
 tions corresponding to each source. Deep clustering and deep at-
-tractor networks [6, 18, 7], employ a permutation-equivariant archi-
+tractor networks (6][18][7], employ a permutation-equivariant archi-
 tecture, which operates in an attention-like way over embeddings of
 each time-frequency bin.
+
 Our approach produces an embedding for each source, using a
 slot-based attention mechanism, and decodes it to directly estimate
-the source spectrogram, using a NeRF-like [19] method. This differs
+the source spectrogram, using a NeRF-like method. This differs
 from mask-based methods in using direct prediction, and the method
 of direct prediction using NeRF architecture is novel. The slot-based
 attention mechanism is different from previous attention networks
@@ -95,40 +120,55 @@ However our attention method works on higher level spectrogram
 regions rather than individual time-frequency bins, and uses general-
 purpose attention mechanisms instead of simple affinity-based meth-
 ods.
+
 Recent unsupervised approaches, such as mixture invariant
-training (MixIT) [20], us only audio mixtures for training. While
+training (MixIT) us only audio mixtures for training. While
 we only explore supervised sound separation using ground-truth iso-
 lated reference sources in our work, a training setup like in MixIT
-Pre-processing
+
+
+--- Page 2 ---
 Encoder
-CNN
-Transformer
+
 Decoder
--Matching
+
+Pre-processing
+
+Matching
+
 Spatial
-Broadcast
+
 Decoder
+
+¥
+Transformer
+
 Fig. 1: Architecture overview. The input waveform is first cropped and transformed into a spectrogram. Then the neural network encodes the
-spectrogram to a set of permutation invariant source embeddings $1...n, these embeddings are decoded to generate a set of individual source
-spectrograms. The whole pipeline is supervised with the groundtruth source spectrograms using a matching based permutation invariant loss
+spectrogram to a set of permutation invariant source embeddings s}...,,, these embeddings are decoded to generate a set of individual source
+
+spectrograms. The whole pipeline is supervise
 function.
+
 is orthogonal to our approach and would be interesting to explore in
 future work.
+
 Slot-centric neural networks. Neural networks that operate on
-unordered sets of features have been studied for some time [21, 22,
-23]. Most closely related to our work are approaches that gener-
-ate an unordered set of outputs conditioned on some input data [24,
-25, 1] and methods that use a set of latent variables (“slots”) to
-model permutation-invariant aspects of the input [2, 3], such as ob-
+unordered sets of features have been studied for some time
+{23}. Most closely related to our work are approaches that gener-
+ate an unordered set of outputs conditioned on some input data [24]
+and methods that use a set of latent variables (“slots”) to
+model permutation-invariant aspects of the input , such as ob-
 jects in visual scenes. We refer to the latter as slot-centric neural
 networks. In the context of vision, this class of models forms the
 basis for many modern scene understanding approaches, including
-object-detection [1], panoptic segmentation [26], and unsupervised
-object discovery [2, 3, 27]. In our work, we demonstrate that slot-
+object-detection anoptic segmentation [26], and unsupervised
+object discovery In our work, we demonstrate that slot-
 centric generative models similarly hold promise for compositional,
 permutation-invariant tasks in audio processing, specifically for sep-
 arating individual audio sources from a mixture.
+
 3. METHOD
+
 We present a generalized permutation invariant training framework
 for supervised sound separation. Unlike previous methods, we ap-
 proach the source-separation task from a generative perspective. The
@@ -139,40 +179,47 @@ of individual sources in a permutation invariant manner. The whole
 pipeline is supervised with the ground-truth source spectrograms us-
 ing a permutation-invariant loss. In rest of this section we elaborate
 on different steps in our training pipeline.
+
 Preprocessing: Given a mixture waveform during training we
-first randomly crop a 0.5-second audio clip. Then following [28]
+first randomly crop a 0.5-second audio clip. Then following
 we transform the clip into a spectrogram using a short-time Fourier
 transform with window size 512 and hop size 125. Then the abso-
 lute values of the complex spectrograms are non-linearly scaled by
 exponentiating them by power of 0.3 to emphasize low values. These
 scaled absolute values are passed as the input to the next step.
+
 Encoding: To infer source embeddings, the input spectrogram
-is first encoded using a ResNet-34 network [29] to a 32 × 8 grid of
-encoded "image" features z. We use a reduced stride in the ResNet
+is first encoded using a ResNet-34 network [29] to a 32 x 8 grid of
+encoded “image” features z. We use a reduced stride in the ResNet
 root block to retain a higher spatial resolution. Next a transformer
-with 4 layers maps z to source embeddings $1...n where n is the
-number of sources and si Є Rd. Unlike the original formulation [4],
+with 4 layers maps z to source embeddings s1..., where n is the
+number of sources and s; € R*. Unlike the original formulation
 in each transformer layer we first perform a self-attention operation
 between query vectors q and then perform cross-attention between
 the outputs of the self-attention step and z. We use same variables
 as both the key and value in self-attention and cross-attention steps.
+
+with the groundtruth source spectrograms using a matching based permutation invariant loss
+
 The initial queries q of dimensionality 4096 are learned via back-
-propagation, similar to DETR [1].
+propagation, similar to DETR [I].
+
 Decoding: We use a spatial broadcast decoder [30] to generate
-individual source spectrograms from s₁...n. First each embedding
-si are copied across a 2D grid to create tensor g₁ of shape F ×
-Txd where F, T are the frequency bins and timesteps of the output
-spectrogram. Then positional embeddings with fourier features [31]
-are appended to gi making its shape F x T x (d + e) where e is
+individual source spectrograms from sj...,. First each embedding
+8; are copied across a 2D grid to create tensor g; of shape F’ x
+T x dwhere F, T are the frequency bins and timesteps of the output
+spectrogram. Then positional embeddings with fourier features
+are appended to g; making its shape F x T’ x (d + e) where e is
 the size of each fourier feature embeddings. Subsequently a fully
 connected network with shared parameters is applied across all the
-vectors in gi to arrive at a set of spectrograms each with shape F ×
+vectors in g; to arrive at a set of spectrograms each with shape F’ x
 T. Note that this decoder is similar to a NeRF model [19], which
 similarly takes positional codes as input and learns a fully-connected
 network to produce coordinate-dependent outputs. In our case, we
 directly produce spectrogram values, arranged on a 2D image grid,
 as outputs and further condition the network on the respective latent
 source embeddding s; for each generated spectrogram.
+
 Objective: The predicted spectrograms are generated in no pre-
 determined ordering as the source separation problem is permuta-
 tion invariant. Therefore we need to match estimated spectrograms
@@ -188,6 +235,7 @@ pair and then selects pairs which minimize the total cost or weight as-
 sociated with them. Finally the mean squared error between matched
 ground-truth and estimated spectrograms is minimized as the train-
 ing objective to optimize the network parameters.
+
 Source Separation: During testing, given an input mixture
 waveform we first break it into multiple non-overlapping waveforms
 of length 0.5-seconds. We add zero-padding at the end in case the
@@ -199,88 +247,83 @@ The estimated spectrograms are first rescaled by exponentiating
 them by power of 1/0.3 to invert the scaling done during preprocess-
 ing. These rescaled estimates are used to calculate the masks in the
 oracle method to create complex spectrogram estimates of individ-
-ual sources from the input. Given input spectrogram I the output
-source spectrograms are computed as mi * I where mi is the mask
-corresponding to the ith source estimated using the spectrograms
+ual sources from the input. Given input spectrogram J the output
+source spectrograms are computed as m; * I where m, is the mask
+
+corresponding to the i‘ source estimated using the spectrograms
+
+--- Page 3 ---
 Table 1: Results. We use the estimated absolute spectrograms
 as masks over the input complex spectrogram to produce complex
-spectrograms of the individual sources [33]. In the table below we
+spectrograms of the individual sources In the table below we
 present SI-SNR[dB] and SI-SNRi[dB] values with IBM and Wiener-
 like masking. Higher is better. Notice that there is only a minimal
 drop in performance between Autoencoder and AudioSlots showing
 that our pipeline is able to learn to separate speech well.
-SI-SNRi SI-SNR SI-SNRi
-IBM Wiener Wiener
-12.33
-SI-SNR
-Masking Type IBM
-Oracle
-12.07
-12.07
-12.32
-Autoencoder
-10.19
-10.20
-10.15
-10.15
-AudioSlots
-09.50
-09.50
-09.96
-09.97
-13.15
-13.16
-13.46
-09.67
-10.20
-13.47
-10.20
-Oracle (1-sec)
-AudioSlots (1-sec) 09.66
+
+SI-SNR_ SI-SNRi_ SI-SNR__ SI-SNRi
+
+Masking Type IBM IBM Wiener Wiener
+Oracle 12.07 12.07 12.32 12.33
+Autoencoder 10.19 10.20 10.15 10.15
+AudioSlots 09.50 09.50 09.96 09.97
+Oracle (1-sec) 13.15 13.16 13.46 13.47
+AudioSlots (1-sec) 09.66 09.67 10.20 10.20
+
 predicted by the neural network. These complex spectrograms are
 inverted to waveforms using an inverse short-time Fourier transform
 (STFT) and then stitched together, resolving matching using the best
 match with the ground-truth signal for simplicity.
-Training: We train using Adam [32] for 300k steps with a batch
+
+Training: We train using Adam for 300k steps with a batch
 size of 64, a learning rate of 2e-4, 2500 warmup steps and a cosine
 decay schedule.
-4. EXPERIMENTS
+
+4, EXPERIMENTS
+
 We evaluate the performance of our method on speech separation
-using the Libri2Mix [5] dataset. We use the anechoic version of
+using the Libri2Mix dataset. We use the anechoic version of
 the dataset. Each instance in the dataset is sampled at 16kHz and
 10 seconds long. Libri2Mix contains contains utterances from both
-male and female speakers drawn from LibriSpeech [34]. The train-
+male and female speakers drawn from LibriSpeech . The train-
 360-clean split of the dataset contains 364 hours of mixtures and the
 sources are drawn without replacement.
+
 As mentioned above we use the masking to estimate the com-
 plex spectrograms of the individual sources using the input spectro-
 gram and the network predictions. There are various masking func-
 tions that can be used [33]. In our experiments we use the ideal
-binary mask (IBM) [35] and Wiener filter like mask as mask func-
+binary mask (IBM) and Wiener filter like mask as mask func-
 tions which are defined as:
-IBM: mi =
-i = argmax(m)
-otherwise
-"Wiener like": mi =
-(mi) 2
-Σ-1 (m) 2
+
+IBM: m; = 1 .
+0 otherwise
+
+7 = argmax(m)
+
+— _ (mi)?
+~ DL, (mi)?
+
 Metrics: We measure the separation performance using scale-
-invariant signal-to-noise ratio (SI-SNR) [36] and SI-SNR improve-
-ment (SI-SNRi). Let y denote the target and ŷ denote the estimate
+invariant signal-to-noise ratio (SI-SNR) and SI-SNR improve-
+ment (SI-SNRi). Let y denote the target and y denote the estimate
 obtained by our method. Then SI-SNR measures the fidelity between
-y and ŷ within an arbitrary scale by rescaling the target:
-SI-SNR(y, ŷ)
-=
-10 log 10
-||ay||2
-' ||ay — ŷ||²
-where a = argmin ||ay ŷ||² = y¹ŷ/||y||². The SI-SNRi is the
+y and ¥ within an arbitrary scale by rescaling the target:
+
+“Wiener like”: m;
+
+- low?
+
+SI-SNR(y, 9) = 10log,, ey — a12
+
+where a = argmin,||ay — §||? = y7 G/||y||?. The SI-SNRi is the
 difference between the SI-SNR of each source estimate after pro-
 cessing and the SI-SNR obtained using the input mixture as the es-
 timate for each source. During evaluation we first match the targets
 and estimates to maximize SI-SNR and then average the resulting
 SI-SNR and SI-SNRi scores.
-Results: In Table 1 we compare our performance with an au-
+
+Results: In Table[I] we compare our performance with an au-
 toencoder variant of our method (which receives ground-truth refer-
 ence sources as input) and the performance of separation obtained
 using the (preprocessed) ground-truth signals. The metrics com-
@@ -293,35 +336,39 @@ the spectrograms contain high-frequency features, this would help
 us understand the ability of our architecture to faithfully represent
 these features. We also present an ablation by increasing the crop
 length in the preprocessing step to 1 second.
+
 The difference in performance between the autoencoder variant
-and the separation model is only 0.18±0.01. This indicates that our
+and the separation model is only 0.18 + 0.01. This indicates that our
 method, AudioSlots, is able learn speech separation well, closely
 approaching the performance of the baseline which receives fully-
 separated sources as input.
-Still, there is substantial headroom for improvement, both in
+
+Still, there is stantial headroom for improvement, both in
 terms of our model as well as our overall pipeline: prior masking-
-based approaches [11, 12, 13] already solve Libri2Mix speaker sep-
+based approaches {13} already solve Libri2Mix speaker sep-
 aration to an impressive degree, achieving significantly higher SI-
 SNR values than we report here. Very recently, diffusion-based ap-
-proaches have also shown competitive performance [37]. This gap
+proaches have also shown competitive performance . This gap
 is in part due to our lossy preprocessing pipeline: for example, com-
 puting STFTs on pre-chunked audio (done here for simplicity) intro-
 duces border artifacts which even reduces our ground-truth SI-SNR
 scores below what other models can achieve. We further zero-pad
 all audio signals to the same length for simplicity. Also, since we
 create masks from the generated spectrograms, we are also bound
-by the limitations of mask-based methods, e.g. that masked spectral
+y the limitations of mask-based methods, e.g. that masked spectral
 content cannot be regenerated.
+
 Limitations: Our experimental comparison highlights the main
-limitation of our method, which is reconstruction fidelity: both the
+imitation of our method, which is reconstruction fidelity: both the
 autoencoder baseline and our AudioSlots model encode the signal
 using a latent bottleneck representation and tend to discard certain
-high-frequency details (among others). This is also qualitatively
-visible in Figure 2. The comparison further shows that the crop
+igh-frequency details (among others). This is also qualitatively
+visible in Figure | The comparison further shows that the crop
 length affects the separation performance: while this can be par-
 tially explained by boundary artifacts due to our simplistic cropping
-approach, it also hints towards sensitivity of AudioSlot's ability to
-both separate and reconstruct audio spectrograms on chunk length.
+approach, it also hints towards sensitivity of AudioSlot’s ability to
+oth separate and reconstruct audio spectrograms on chunk length.
+
 Discussion: Our results show promise for addressing audio sep-
 aration using slot-centric generative models that represent the audio
 using a set of source-specific latent variables. This is a significant
@@ -329,27 +376,53 @@ departure from earlier methods that directly operate on the input
 audio using e.g. a masking-based approach [20]. Learning source-
 specific latent variables further has the benefit that these decomposed
 latent variables can likely be used not just for generation, but also for
-recognition tasks, similar to how slots in object-centric computer vi-
+recognition t similar to how slots in object-centric computer vi-
 sion models serve as a basis for object detection and segmentation.
+
 We are optimistic that the current limitations of our approach
 can be overcome in future work:
-• To address the issue of reconstruction fidelity (blurry reconstruc-
+
+* To address the issue of reconstruction fidelity (blurry reconstruc-
 tions for high-frequency features), it is likely that moving away
 from a deterministic feedforward decoder to e.g. an autoregressive
-decoding approach, as in AudioLM [38], or an iterative diffusion-
+decoding approach, as in AudioLM , or an iterative diffusion-
 based decoder, as in [39], can bridge the gap to high-fidelty gen-
 eration.
-• At present, AudioSlots assumes supervision in the form of ground-
+
++ Atpresent, AudioSlots assumes supervision in the form of ground-
 truth sources. An extension to fully-unsupervised training on raw,
-Autoencoder
-Reconstruction Reconstruction
-Ours
+
+--- Page 4 ---
 Groundtruth
-Input
+
+Autoencoder
+
+Ours
+
+&
+&
+3
+&
+a
+5
+8
+3
+2
+g
+&
+3
+&
+a
+5
+8
+3
+2
+
 Fig. 2: Comparison between absolute value of the individual source spectrograms of Groundtruth, Autoencoder estimates and AudioSlots
 (Ours) estimates. The input spectrogram (top) is a mixture and rest of the rows show the spectrograms of the individual sources. The input
-and groundtruth spectrograms are preprocessed using the steps mentioned in Sec 3. Notice that our method is able to reconstruct harmonics
+and groundtruth spectrograms are preprocessed using the steps mentioned in Sec] Notice that our method is able to reconstruct harmonics
 fairly well, however struggles with estimating the high-frequency features (see highlighted example regions).
+
 mixed audio would be desirable. To this end, we explored replac-
 ing the Transformer in AudioSlots with a Slot Attention [3] mod-
 ule which has an inductive bias towards decomposition that allows
@@ -360,12 +433,15 @@ a fully-unsupervised fashion. A supervised version of AudioSlots
 with a Slot Attention module, however, performed similar to the
 version with a Transformer module in initial experiments, high-
 lighting that further exploration is still promising for future work.
-• We think that the limitation of processing individual chunks in
+
+¢ We think that the limitation of processing individual chunks in
 isolation, which requires post-hoc stitching, can be overcome by
 using a sequential extension of the model, where slots of the past
 time step are used as initialization for the next time step as in Slot
-Attention for Video [40]. We leave this for future work.
+Attention for Video We leave this for future work.
+
 5. CONCLUSION
+
 We present AudioSlots, a slot-centric generative architecture for
 audio spectrograms. We demonstrate a proof of concept that Au-
 dioSlots holds promise for addressing the task of audio source
@@ -375,162 +451,261 @@ reconstruction fidelity for high-frequency features and requiring
 separated audio sources as supervision, we are optimistic that these
 can be overcome and outline several possible directions for future
 work.
+
 6. REFERENCES
+
 [1] Nicolas Carion, Francisco Massa, Gabriel Synnaeve, Nicolas
-Usunier, Alexander Kirillov, and Sergey Zagoruyko, "End-to-
-end object detection with transformers," in ECCV, 2020.
-[2] Klaus Greff, Raphaël Lopez Kaufman, Rishabh Kabra, Nick
+Usunier, Alexander Kirillov, and Sergey Zagoruyko, “End-to-
+end object detection with transformers,” in ECCV, 2020.
+
+[2] Klaus Greff, Raphaél Lopez Kaufman, Rishabh Kabra, Nick
 Watters, Christopher Burgess, Daniel Zoran, Loic Matthey,
-Matthew Botvinick, and Alexander Lerchner, "Multi-object
-representation learning with iterative variational inference," in
+Matthew Botvinick, and Alexander Lerchner, “Multi-object
+
+representation learning with iterative variational inference,” in
 ICML, 2019.
-[3] Francesco Locatello, Dirk Weissenborn, Thomas Unterthiner,
+
+Francesco Locatello, Dirk Weissenborn, Thomas Unterthiner,
 Aravindh Mahendran, Georg Heigold, Jakob Uszkoreit,
 Alexey Dosovitskiy, and Thomas Kipf, “Object-centric learn-
-ing with slot attention," NeurIPS, 2020.
-[4] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
-reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia
-Polosukhin, "Attention is all you need," NeurIPS, 2017.
-[5] Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine
-Deleforge, and Emmanuel Vincent, "Librimix: An open-
-source dataset for generalizable speech separation," arXiv
+ing with slot attention,’ NeurIPS, 2020.
+
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
+reit, Llion Jones, Aidan N Gomez, Lukasz Kaiser, and Illia
+Polosukhin, “Attention is all you need,” NeurIPS, 2017.
+
+Joris Cosentino, Manuel Pariente, Samuele Cornell, Antoine
+Deleforge, and Emmanuel Vincent, “Librimix: An open-
+source dataset for generalizable speech separation,” arXiv
 preprint arXiv:2005.11262, 2020.
-[6] John R Hershey, Zhuo Chen, Jonathan Le Roux, and Shinji
+
+John R Hershey, Zhuo Chen, Jonathan Le Roux, and Shinji
 Watanabe, “Deep clustering: Discriminative embeddings for
-segmentation and separation," in IEEE International Confer-
+segmentation and separation,” in JEEE International Confer-
 ence on Acoustics, Speech and Signal Processing (ICASSP),
 2016.
-[7] Yusuf Isik, Jonathan Le Roux, Zhuo Chen, Shinji Watanabe,
-and John R Hershey, "Single-channel multi-speaker separa-
-tion using deep clustering," arXiv preprint arXiv:1607.02173,
+
+Yusuf Isik, Jonathan Le Roux, Zhuo Chen, Shinji Watanabe,
+and John R Hershey, “Single-channel multi-speaker separa-
+tion using deep clustering,” arXiv preprint arXiv:1607.02173,
 2016.
-[8] Morten Kolbæk, Dong Yu, Zheng-Hua Tan, and Jesper Jensen,
-"Multitalker speech separation with utterance-level permuta-
-tion invariant training of deep recurrent neural networks,"
+
+Morten Kolbek, Dong Yu, Zheng-Hua Tan, and Jesper Jensen,
+“Multitalker speech separation with utterance-level permuta-
+tion invariant training of deep recurrent neural networks,”
 IEEE/ACM Transactions on Audio, Speech, and Language
 Processing, 2017.
-[9] Yi Luo and Nima Mesgarani, “Conv-tasnet: Surpassing ideal
-time-frequency magnitude masking for speech separation,"
+
+Yi Luo and Nima Mesgarani, “Conv-tasnet: Surpassing ideal
+time-frequency magnitude masking for speech separation,”
 IEEE/ACM Transactions on Audio, Speech, and Language
 Processing, 2019.
-[10] Ethan Manilow, Gordon Wichern, Prem Seetharaman, and
-Jonathan Le Roux, "Cutting music source separation some
+
+Ethan Manilow, Gordon Wichern, Prem Seetharaman, and
+Jonathan Le Roux, “Cutting music source separation some
 Slakh: A dataset to study the impact of training data quality
-and quantity," in Proc. IEEE Workshop on Applications of Sig-
+and quantity,” in Proc. IEEE Workshop on Applications of Sig-
 nal Processing to Audio and Acoustics (WASPAA), 2019.
-#2
-[11] Yi Luo, Zhuo Chen, and Takuya Yoshioka, "Dual-path
-rnn: efficient long sequence modeling for time-domain single-
-channel speech separation,” in IEEE International Conference
+
+--- Page 5 ---
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+Yi Luo, Zhuo Chen, and Takuya Yoshioka, “Dual-path
+mn: efficient long sequence modeling for time-domain single-
+channel speech separation,” in JEEE International Conference
 on Acoustics, Speech and Signal Processing (ICASSP), 2020.
-[12] Cem Subakan, Mirco Ravanelli, Samuele Cornell, Mirko
-Bronzi, and Jianyuan Zhong, "Attention is all you need in
-speech separation," in IEEE International Conference on
+
+Cem Subakan, Mirco Ravanelli, Samuele Cornell, Mirko
+Bronzi, and Jianyuan Zhong, “Attention is all you need in
+speech separation,’ in JEEE International Conference on
 Acoustics, Speech and Signal Processing (ICASSP), 2021.
-[13] Kai Li, Runxuan Yang, and Xiaolin Hu, “An efficient encoder-
+
+Kai Li, Runxuan Yang, and Xiaolin Hu, “An efficient encoder-
 decoder architecture with top-down attention for speech sepa-
-ration," arXiv preprint arXiv:2209.15200, 2022.
-[14] Marco Tagliasacchi, Yunpeng Li, Karolis Misiunas, and Do-
-minik Roblek, "SEANet: A multi-modal speech enhancement
-network," in Proc. Interspeech, 2020.
-[15] Zhong-Qiu Wang, Samuele Cornell, Shukjae Choi, Younglo
+ration,” arXiv preprint arXiv:2209.15200, 2022.
+
+Marco Tagliasacchi, Yunpeng Li, Karolis Misiunas, and Do-
+minik Roblek, “SEANet: A multi-modal speech enhancement
+network,” in Proc. Interspeech, 2020.
+
+Zhong-Qiu Wang, Samuele Cornell, Shukjae Choi, Younglo
 Lee, Byeong-Yeol Kim, and Shinji Watanabe, “Tf-gridnet:
 Making time-frequency domain models great again for monau-
-ral speaker separation," arXiv preprint arXiv:2209.03952,
+ral speaker separation,’ arXiv preprint arXiv:2209.03952,
 2022.
-[16] Felix Weninger, John R Hershey, Jonathan Le Roux, and Björn
-Schuller, "Discriminatively trained recurrent neural networks
-for single-channel speech separation," in 2014 IEEE global
+
+Felix Weninger, John R Hershey, Jonathan Le Roux, and Bjorn
+Schuller, “Discriminatively trained recurrent neural networks
+for single-channel speech separation,” in 2014 IEEE global
 conference on signal and information processing (GlobalSIP).
 IEEE, 2014, pp. 577-581.
-[17] Yuma Koizumi, Shigeki Karita, Scott Wisdom, Hakan Erdo-
+
+Yuma Koizumi, Shigeki Karita, Scott Wisdom, Hakan Erdo-
 gan, John R Hershey, Llion Jones, and Michiel Bacchiani,
-"Df-conformer: Integrated architecture of conv-tasnet and con-
+“Df-conformer: Integrated architecture of conv-tasnet and con-
 former using linear complexity self-attention for speech en-
-hancement," in 2021 IEEE Workshop on Applications of Signal
-Processing to Audio and Acoustics (WASPAA). IEEE, 2021, pp.
+hancement,” in 2021 IEEE Workshop on Applications of Signal
+Processing to Audio and Acoustics (WASPAA). YEEE, 2021, pp.
 161-165.
-[18] Zhuo Chen, Yi Luo, and Nima Mesgarani, “Deep attractor net-
-work for single-microphone speaker separation,” in IEEE In-
+
+Zhuo Chen, Yi Luo, and Nima Mesgarani, “Deep attractor net-
+work for single-microphone speaker separation,” in JEEE In-
 ternational Conference on Acoustics, Speech and Signal Pro-
-cessing (ICASSP). IEEE, 2017.
-[19] Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
-Jonathan T Barron, Ravi Ramamoorthi, and Ren Ng, "Nerf:
+cessing (ICASSP). YEEE, 2017.
+
+Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
+Jonathan T Barron, Ravi Ramamoorthi, and Ren Ng, “Nerf:
 Representing scenes as neural radiance fields for view synthe-
-sis," in ECCV, 2020.
-[20] Scott Wisdom, Efthymios Tzinis, Hakan Erdogan, Ron Weiss,
-Kevin Wilson, and John Hershey, "Unsupervised sound sepa-
-ration using mixture invariant training," NeurIPS, 2020.
-[21] Oriol Vinyals, Samy Bengio, and Manjunath Kudlur, “Or-
-der matters: Sequence to sequence for sets," arXiv preprint
+sis,” in ECCV, 2020.
+
+Scott Wisdom, Efthymios Tzinis, Hakan Erdogan, Ron Weiss,
+Kevin Wilson, and John Hershey, “Unsupervised sound sepa-
+ration using mixture invariant training,” NeurIPS, 2020.
+
+Oriol Vinyals, Samy Bengio, and Manjunath Kudlur, “Or-
+der matters: Sequence to sequence for sets,” arXiv preprint
 arXiv:1511.06391, 2015.
-[22] Manzil Zaheer, Satwik Kottur, Siamak Ravanbakhsh, Barnabas
-Poczos, Russ R Salakhutdinov, and Alexander J Smola, "Deep
-sets," NeurIPS, 2017.
-[23] Juho Lee, Yoonho Lee, Jungtaek Kim, Adam Kosiorek, Se-
+
+Manzil Zaheer, Satwik Kottur, Siamak Ravanbakhsh, Barnabas
+Poczos, Russ R Salakhutdinov, and Alexander J Smola, “Deep
+sets,” NeurIPS, 2017.
+
+Juho Lee, Yoonho Lee, Jungtaek Kim, Adam Kosiorek, Se-
 ungjin Choi, and Yee Whye Teh, “Set transformer: A frame-
 work for attention-based permutation-invariant neural net-
-works," in ICML, 2019.
-[24] Yan Zhang, Jonathon Hare, and Adam Prugel-Bennett, “Deep
-set prediction networks," NeurIPS, 2019.
-[25] Adam R Kosiorek, Hyunjik Kim, and Danilo J Rezende, "Con-
-ditional set generation with transformers,"
-arXiv preprint
-arXiv:2006.16841, 2020.
-[26] Yi Zhou, Hui Zhang, Hana Lee, Shuyang Sun, Pingjun Li,
+works,” in ICML, 2019.
+
+Yan Zhang, Jonathon Hare, and Adam Prugel-Bennett, “Deep
+set prediction networks,” NeurIPS, 2019.
+
+Adam R Kosiorek, Hyunjik Kim, and Danilo J Rezende, “Con-
+ditional set generation with transformers,’ arXiv preprint
+arXiv:2006. 16841, 2020.
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+Yi Zhou, Hui Zhang, Hana Lee, Shuyang Sun, Pingjun Li,
 Yangguang Zhu, ByungIn Yoo, Xiaojuan Qi, and Jae-Joon
 Han, “Slot-vps: Object-centric representation learning for
 video panoptic segmentation,” in CVPR, 2022.
-[27] Pradyumna Reddy, Paul Guerrero, and Niloy J Mitra, “Search
+
+Pradyumna Reddy, Paul Guerrero, and Niloy J Mitra, “Search
 for concepts: Discovering visual concepts using direct opti-
 mization,” arXiv preprint arXiv:2210.14808, 2022.
-[28] Hu Xu, Juncheng Li, Alexei Baevski, Michael Auli, Wo-
-jciech Galuba, Florian Metze, Christoph Feichtenhofer,
-et al., "Masked autoencoders that listen," arXiv preprint
+
+Hu Xu, Juncheng Li, Alexei Baevski, Michael Auli, Wo-
+jeiech Galuba, Florian Metze, Christoph Feichtenhofer,
+et al., “Masked autoencoders that listen,’ arXiv preprint
 arXiv:2207.06405, 2022.
-[29] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun,
-"Deep residual learning for image recognition," in CVPR,
+
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun,
+“Deep residual learning for image recognition,” in CVPR,
 2016.
-[30] Nicholas Watters, Loic Matthey, Christopher P Burgess, and
+
+Nicholas Watters, Loic Matthey, Christopher P Burgess, and
 Alexander Lerchner, “Spatial broadcast decoder: A simple ar-
 chitecture for learning disentangled representations in vaes,”
 arXiv preprint arXiv:1901.07017, 2019.
-[31] Matthew Tancik, Pratul Srinivasan, Ben Mildenhall, Sara
+
+Matthew Tancik, Pratul Srinivasan, Ben Mildenhall, Sara
 Fridovich-Keil, Nithin Raghavan, Utkarsh Singhal, Ravi Ra-
 mamoorthi, Jonathan Barron, and Ren Ng, “Fourier features
 let networks learn high frequency functions in low dimensional
-domains," NeurIPS, 2020.
-[32] Diederik P Kingma and Jimmy Ba, “Adam: A method for
-stochastic optimization," arXiv preprint arXiv:1412.6980,
+domains,” NeurIPS, 2020.
+
+Diederik P Kingma and Jimmy Ba, “Adam: A method for
+stochastic optimization,’ arXiv preprint arXiv: 1412.6980,
 2014.
-[33] Hakan Erdogan, John R. Hershey, Shinji Watanabe, and
+
+Hakan Erdogan, John R. Hershey, Shinji Watanabe, and
 Jonathan Le Roux, “Phase-sensitive and recognition-boosted
-speech separation using deep recurrent neural networks," in
+speech separation using deep recurrent neural networks,” in
 IEEE International Conference on Acoustics, Speech and Sig-
 nal Processing (ICASSP), 2015.
-[34] Vassil Panayotov, Guoguo Chen, Daniel Povey, and Sanjeev
-Khudanpur, "Librispeech: an asr corpus based on public
-domain audio books," in IEEE International Conference on
+
+Vassil Panayotov, Guoguo Chen, Daniel Povey, and Sanjeev
+Khudanpur, “Librispeech: an asr corpus based on public
+domain audio books,” in JEEE International Conference on
 Acoustics, Speech and Signal Processing (ICASSP), 2015.
-[35] Yipeng Li and DeLiang Wang, “On the optimality of ideal
-binary time-frequency masks," Speech Communication, 2009.
-[36] Jonathan Le Roux, Scott Wisdom, Hakan Erdogan, and John R
-Hershey, "Sdr-half-baked or well done?,” in IEEE Interna-
+Yipeng Li and DeLiang Wang, “On the optimality of ideal
+binary time-frequency masks,” Speech Communication, 2009.
+Jonathan Le Roux, Scott Wisdom, Hakan Erdogan, and John R
+Hershey, “Sdr—half-baked or well done?,’ in JEEE Interna-
 tional Conference on Acoustics, Speech and Signal Processing
 (ICASSP), 2019.
-[37] Shahar Lutati, Eliya Nachmani, and Lior Wolf, "Separate
+
+Shahar Lutati, Eliya Nachmani, and Lior Wolf, “Separate
 and diffuse: Using a pretrained diffusion model for improving
-source separation," arXiv preprint arXiv:2301.10752, 2023.
-[38] Zalán Borsos, Raphaël Marinier, Damien Vincent, Eugene
+source separation,” arXiv preprint arXiv:2301.10752, 2023.
+Zalén Borsos, Raphaél Marinier, Damien Vincent, Eugene
 Kharitonov, Olivier Pietquin, Matt Sharifi, Olivier Teboul,
-David Grangier, Marco Tagliasacchi, and Neil Zeghidour, "Au-
+David Grangier, Marco Tagliasacchi, and Neil Zeghidour, “Au-
 diolm: a language modeling approach to audio generation,”
 arXiv preprint arXiv:2209.03143, 2022.
-[39] Curtis Hawthorne, Ian Simon, Adam Roberts, Neil Zeghi-
+
+Curtis Hawthorne, Ian Simon, Adam Roberts, Neil Zeghi-
 dour, Josh Gardner, Ethan Manilow, and Jesse Engel, “Multi-
-instrument music synthesis with spectrogram diffusion," arXiv
+instrument music synthesis with spectrogram diffusion,” arXiv
 preprint arXiv:2206.05408, 2022.
-[40] Thomas Kipf, Gamaleldin F. Elsayed, Aravindh Mahen-
+
+Thomas Kipf, Gamaleldin F. Elsayed, Aravindh Mahen-
 dran, Austin Stone, Sara Sabour, Georg Heigold, Rico Jon-
-schkowski, Alexey Dosovitskiy, and Klaus Greff, "Conditional
-Object-Centric Learning from Video,” in ICLR, 2022.
+schkowski, Alexey Dosovitskiy, and Klaus Greff, “Conditional
+Object-Centric Learning from Video,” in JCLR, 2022.
+

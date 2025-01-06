@@ -1,14 +1,29 @@
-arXiv:2306.09327v1 [cs.CV] 15 Jun 2023
+--- Page 1 ---
+2306.09327v1 [cs.CV] 15 Jun 2023
+
+arXiv
+
 Language-Guided Music Recommendation for Video via Prompt Analogies
-Daniel McKee¹*
-Justin Salamon² Josef Sivic 2,3 Bryan Russell²
-¹University of Illinois at Urbana-Champaign 2 Adobe Research
+
+Daniel McKee!*
+
+Justin Salamon?
+
+Josef Sivic?® | Bryan Russell?
+
+University of Illinois at Urbana-Champaign 7Adobe Research
 3Czech Institute of Informatics, Robotics and Cybernetics, Czech Technical University
+
 dbmckee2@illinois.edu
-salamon@adobe.com josef.sivic@cvut.cz
-brussell@adobe.com
-https://www.danielbmckee.com/language-guided-music-for-video
+
+salamon@adobe.com
+
+josef.sivic@cvut.cz brussell@adobe.com
+
+https: //www.danielbmckee.com/language-guided-music-for-video
+
 Abstract
+
 We propose a method to recommend music for an input
 video while allowing a user to guide music selection with
 free-form natural language. A key challenge of this prob-
@@ -31,36 +46,52 @@ by matching visual style depicted in the video and musical
 genre, mood, or instrumentation described in the natural
 language query. Third, to evaluate our approach, we col-
 lect a testing dataset for our problem by annotating a subset
-of 4k clips from the YT8M-Music Video dataset with natural
+of 4k clips from the YT8M-MusicVideo dataset with natural
 language music descriptions which we make publicly avail-
 able. We show that our approach can match or exceed the
 performance of prior methods on video-to-music retrieval
 while significantly improving retrieval accuracy when using
 text guidance.
+
+1. Introduction
+
+A key part of the video editing process for creators is
+choosing a musical soundtrack. Especially given the rise
+of short-form videos on social media platforms, automated
+music recommendation systems have become an increas-
+
+“Work done as an intern with Adobe Research
+
 Language-Guided Music Retrieval
-Retrieved Music
-Video+Language Query
-Folk music with guitar
-Upbeat pop
-Upbeat pop
-User input includes video
-and a text description of
-target music.
-ViML
-A somber folk ballad
-featuring female vocalist,
-guitar, and tambourine
-ViML
-ViML
-Pop featuring a female
+Video+Language Query Retrieved Music
+al}fiae
+
+he a
+aa =m Cm =» ‘A somber folk ballad
+[ener female vocalist,
+
+Folk music with guitar guitar, and tambourine
+
+1 the
+—_ rn
+=} > (Vim) mm (Pop featuring a female
 vocalist with energetic
+
+Upbeat pop
+
 synth melodies
-Lighthearted pop song
+
+ViML Lighthearted pop song
 with a male vocalist
+
 backed by guitar, drums
+
 Descriptions of the retrieved
 music tracks provided by the
 authors for illustration only.
+
+target music.
+
 Figure 1. Language-guided music retrieval. Our ViML model
 takes a video and text prompt as input to retrieve a suitable music
 track from a database. The model learns to fuse video and lan-
@@ -71,46 +102,46 @@ the music style to match the language query, and for the same
 Upbeat pop query (bottom two rows) we can change the vo-
 calist to match the video content. To fully appreciate our results,
 please view and listen to the companion video on our website.
-1. Introduction
-A key part of the video editing process for creators is
-choosing a musical soundtrack. Especially given the rise
-of short-form videos on social media platforms, automated
-music recommendation systems have become an increas-
-*Work done as an intern with Adobe Research
+
 ingly common and important part of video editing applica-
 tions. While these systems can be helpful for finding rel-
 evant music, they often provide limited capability for user
 control over the types of music recommended. In previ-
 ous work, music is retrieved based solely on the visual con-
-tent and style from a video [31,36]. However, music itself
+tent and style from a video [31, 36]. However, music itself
 can convey critical information about how a video should
+
+--- Page 2 ---
 be perceived. Music selection alone can transform a visual
-scene into one that is perceived as happy, scary, or sad¹. As
+scene into one that is perceived as happy, scary, or sad'. As
 a result, the lack of user input capability to describe a target
 music for an inputted video is a key limitation on the utility
 of current music recommendation methods.
+
 In this work, we propose a more flexible music-for-video
 recommendation approach that allows a user to guide rec-
 ommendations towards specific musical attributes includ-
 ing mood, genre, or instrumentation, illustrated in Figure 1.
 To maximize flexibility and user convenience, we propose
 to take user musical attribute descriptions in the form of
-free-form natural language (e.g., "Folk music with guitar”
+free-form natural language (e.g., “Folk music with guitar”
 in Figure 1). There are two key challenges in learning
 a model for language-guided music recommendation for
 video. First, while there are datasets which include mu-
-sic+text [5,7,19,29] or music+video [1], there are no avail-
+sic+text [5,7, 19,29] or music+video [1], there are no avail-
 able datasets which include music, video, and text together.
 Further, the existing datasets that do include text and music
 focus on a limited vocabulary of tags rather than free-form
 text. Second, previous works have explored jointly learning
-visual, audio, and text embeddings [2-4, 33, 46], and with-
+visual, audio, and text embeddings [2—4, 33, 46], and with-
 out careful regularization, a network can overfit and possi-
 bly learn to ignore one of the input modalities. We seek to
 train a model that keeps the information flow through the
 network and does not ignore one of the modalities.
+
 In order to meet the challenges outlined above, our work
 makes the following contributions:
+
 (1) We propose a new approach to automatically gener-
 ate natural language descriptions for a music video dataset.
 This approach combines a pre-trained music tagger with a
@@ -123,135 +154,154 @@ ities, are converted into a rich natural language description
 for the music video using a carefully designed large-scale
 language model prompting procedure based on analogies
 with a small number of human-provided text descriptions
-(i.e., A (tags): A' (description) :: B (tags): B'
+(ie., A (tags): A’ (description) :: B (tags): B’
 (description)), where A and B are music tags auto-
-matically provided by the tagger, A' is a human-provided
-text description, and B' is the natural language description
+matically provided by the tagger, A’ is a human-provided
+text description, and B’ is the natural language description
 output by the large-scale language model.
+
 (2) We propose a Transformer-based model architecture
 with a video-text fusion module. Our model, which we call
 Video to Music with Language (ViML), is able to retrieve
 music that matches both the visual content/style of the in-
 put video and described musical genre, mood, and instru-
 mentation in the natural language query. Similar to prior
-work [16,27,38], we find that training with text dropout as
+work [16, 27,38], we find that training with text dropout as
 a regularization mechanism is critical to achieve music re-
-https://www.youtube.com/watch?v=iSkJFs7myn0
+
+'https://www.youtube.com/watch?v=iSkJFs7myn0
+
 trieval performance improvements from added text inputs.
 (3) We release a dataset of 4000 high quality text anno-
-tations for clips from a subset of the YT8M-Music Video
+tations for clips from a subset of the YT8M-MusicVideo
 dataset [1] to evaluate language-guided music recommen-
 dation. We show that our method can achieve substantial
 improvements over prior works on music retrieval when in-
 corporating text inputs. Moreover, our model can match or
 even exceed performance of baseline music-for-video rec-
 ommendation models when the text input is ignored.
+
 2. Related Work
+
 Music and language. There are numerous music tagging
 datasets which contain tags specifying attributes like mood,
 genre, or instrumentation [5, 7, 19, 29], and several works
 have studied training automated music taggers from such
-datasets [10,20,21, 30, 42, 43]. Beyond these methods con-
+datasets [10,20,21,30,42,43]. Beyond these methods con-
 strained to limited tag vocabularies, some works also have
 studied jointly embedding music and free-form natural lan-
-guage [9, 14, 26, 43]. However, none of these approaches
+guage [9, 14, 26,43]. However, none of these approaches
 incorporate the video modality.
+
 Music recommendation for video. Others have investi-
 gated automatic recommendation of music based on style
-and content of an input video [13, 23, 31, 36, 48]. Prétet
+and content of an input video [13, 23,31, 36,48]. Prétet
 et al. [31] build on previous self-supervised methods [13]
 by incorporating learned audio features instead of hand-
-crafted features. More recently, Surís et al. [36] propose the
+crafted features. More recently, Suris et al. [36] propose the
 MVPt model which employs a self-supervised contrastive
 loss and Transformer [37] architecture to greatly improve
 the long-range temporal context modeling in order to re-
 trieve suitable music for a given input video. However, none
 of these approaches incorporate the natural language modal-
 ity which we focus on in this work.
+
 Video, audio, & language. While a wide variety of works
 have explored audio-visual or vision-language topics, a
 smaller number focus on jointly embedding video, audio,
-and language [2, 4, 12, 33, 44, 46]. Specifically, Alayrac et
+and language [2, 4, 12,33,44,46]. Specifically, Alayrac et
 al. [3] investigate how best to combine audio and video with
 text representations. The VATT model [2] is a fully end-
 to-end tri-modal model capable of using a single shared
 Transformer backbone across modalities. Lastly, two re-
-cent methods [12, 44] extend CLIP [32] to jointly embed
+cent methods [12,44] extend CLIP [32] to jointly embed
 audio. While relevant, all of these approaches share a com-
-mon focus on "environmental” or “everyday” sounds rather
+mon focus on “environmental” or “everyday” sounds rather
 than music, and they lack the long-range temporal context
 modeling critical for music recommendation as a result. In
 addition, none of these works address a downstream prob-
 lem of using two modalities in combination (video, text) to
 query results from another (music).
+
 Few-shot language model prompting. Recent large lan-
 guage models have shown significant success at a wide vari-
 ety of few-shot or zero-shot tasks from those related to read-
-→
-Music
-Tagger
-Music
-Tagger
-I. prompt2text Synthesis
+
+--- Page 3 ---
+IL. prompt2text Synthesis
+
 PROMPT INPUT TO BLOOM-176B:
+
 [Input]: GENRES: electronic (82.6%), dance
 (63.9%); MOODS: dynamic (46.8%), dramatic
-A (33.3%); INSTRUMENTS: synthesizer keyboard
-(81.9%), electronic drumset (77.6%), synth
-bass (68.4%)
-[Output]: Electronic party track with high
-A' energy synth lines and autotuned female
+(33.3%); INSTRUMENTS: synthesizer keyboard
+
+7 (81.9%), electronic drumset (77.6%), synth
+allio bass (68.4%)
+e [Output]: Electronic party track with high
+—> A’ energy synth lines and autotuned female
+_
 vocals.
-➡B
+
 [Input]: GENRES: country (47.2%), rock
 (30.8%); MOODS: happy (40.2%), relaxing
 (31.7%), nostalgic (30.9%); INSTRUMENTS:
 drumset (63.9%), electric guitar (50.5%), male
 vocals (49.7%), electric bass (49.1%), acoustic
 guitar (33.7%)
-[Output]:
+
+[Output]
+
 OUTPUT:
+
 Country rock track with a nostalgic feel. The
-B' song features acoustic guitar, electric guitar,
+song features acoustic guitar, electric guitar,
 electric bass, drums, and male vocals.
-…
-GENRES: country,
-rock
-II. data2text Synthesis
-Music
-Tagger
-MOODS: happy,
-relaxing, nostalgic
-INSTRUMENTS: drumset,
-male vocals, acoustic guitar
-Input Tags into Template Sentences
-This is country and
-rock music.
-The music gives a
-happy, relaxing and
-nostalgic vibe.
-The soundtrack has
-drumset, male vocals, and
-acoustic guitar.
-Zero-shot D2T Pipeline: Ordering, Aggregation, and Compression
+
+B
+
+IL. data2text Synthesis
+
+fin —
+
+GENRES: country, MOODS: happy, INSTRUMENTS: drumset,
+
+rock relaxing, nostalgic male vocals, acoustic guitar
+1 1 1
+if Input Tags into Template Sentences )
+
+The music gives a The soundtrack has
+happy, relaxing and drumset, male vocals, and
+nostalgic vibe. acoustic guitar.
+1 1 1
+{  Zero-shot D2T Pipeline: Ordering, Aggregation, and Compression |
+
+v v v
+
 This is country and rock music. The soundtrack has acoustic guitar,
 drumset, and male vocals giving a happy, relaxing, and nostalgic vibe.
-Music
-Tagger
+
+This is country and
+rock music.
+
 III. tags Synthesis
+
 acoustic guitar, country, happy, drumset,
 relaxing, electric bass, male vocals, rock,
 nostalgic, electric guitar
+
 Figure 2. Overview of three text synthesis approaches explored in our work. All rely on tag predictions from a pretrained music tagger
 model. We highlight output text from each method in green, inputs from the tagger in blue font, and inputs from a human annotator in red
-font. Left: We introduce the prompt2tags approach for generating natural language descriptions given automatically predicted music
-tags and a small set of human descriptions. We ask a large language model (BLOOM-176B) to complete an analogy task (A : A' :: B : B')
-between music tags (A, B) and descriptions (A', B'). Top right: The data2text pipeline inserts sampled tags into randomly selected
+font. Left: We introduce the prompt 2tags approach for generating natural language descriptions given automatically predicted music
+tags and a small set of human descriptions. We ask a large language model (BLOOM-176B) to complete an analogy task (A : A’ :: B: B’)
+between music tags (A, B) and descriptions (A’, B’). Top right: The data2t ext pipeline inserts sampled tags into randomly selected
 template sentences corresponding to each tag category. The Zero-shot D2T model [17] then orders, aggregates, and compresses these
-templates into a final output description. Bottom right: The tags approach involves direct concatenation of high confidence tags to form
+templates into a final output description. Bottom right: The t ags approach involves direct concatenation of high confidence tags to form
+
 the text description of the music.
+
 ing comprehension and QA [8,40], to reasoning [18,41], or
-even data augmentation [11,39,45]. A few works have ex-
+even data augmentation [11,39, 45]. A few works have ex-
 tended this success to multimodal applications. For exam-
 ple, Zeng et al. [47] show that language models can solve
 video understanding or image captioning tasks by refor-
@@ -263,16 +313,19 @@ robotic planning [15,34]. In this work, we propose a com-
 pletely new application of few-shot language query mod-
 eling: generating free-form musical text descriptions from
 music tags.
+
 3. Approach
-Our goal is to train a pair of feature encoders fut and ƒm
-which are capable of predicting the similarity s(fut, fm)
+
+Our goal is to train a pair of feature encoders f”! and f™”
+which are capable of predicting the similarity s(f’’, f™)
 between an input pair of video and musical text description
-(v, t) and a music clip m, as illustrated in Figure 3. To train
+(v,t) and a music clip m, as illustrated in Figure 3. To train
 such a model in a supervised manner, it is necessary to have
-a dataset of corresponding triplets (v, m, t). While large-
+a dataset of corresponding triplets (v,m,t). While large-
 scale datasets of videos with paired music are available, it is
 difficult to find datasets which also contain high-quality nat-
 ural language descriptions of the paired music tracks. As a
+
 result, we investigate a synthesis approach based on a model
 G which generates text descriptions from available struc-
 tured data in the form of music tags for each music track. In
@@ -280,26 +333,30 @@ the following sections, we first discuss the musical descrip-
 tion synthesis approach G before describing an approach
 to train a language-guided video-to-music recommendation
 model.
+
 3.1. Synthesizing Text Descriptions for Music
+
 Suppose that we are given a set of video and music audio
-pairs (vi, mi) and that we also have access to structured data
-di ETD which describe the music mi. In our case, this
+pairs (v;,™m;) and that we also have access to structured data
+d; € T? which describe the music m,;. In our case, this
 structured data consists of musical tags with confidences.
-Each music track m¿ may be described by a free-form hu-
-man text description t¿ Є TT. However, it can be pro-
+Each music track m; may be described by a free-form hu-
+man text description t; € 7’. However, it can be pro-
 hibitively expensive to obtain high-quality human descrip-
 tions on a large scale. Instead, we propose to synthesize
-such text descriptions using a generator G : TD → TT
+such text descriptions using a generator G : T? > TT
 which maps structured data describing an audio track to the
 space of natural human descriptions.
-=
+
 The goals of such a mapping function G are that: (i) a
-predicted output ti = G(d) should preserve the seman-
-tic meaning contained within the structured data d¿ corre-
+predicted output f; = G(d;) should preserve the seman-
+tic meaning contained within the structured data d; corre-
 sponding to a specific musical track and (ii) the distribu-
-tion of predicted outputs t; should follow the distribution
-of ground truth human text annotations t₁ = TT. Train-
-ing a fully supervised model to be the generator function G
+
+--- Page 4 ---
+tion of predicted outputs ¢; should follow the distribution
+of ground truth human text annotations t; € 7’. Train-
+ing a fully supervised model to be the generator function G’
 would require a large quantity of human text descriptions.
 Instead, we explore zero-shot or few-shot approaches to ob-
 tain a generator function G. In particular, we describe three
@@ -311,37 +368,40 @@ plated sentences using pretrained language models, and a
 zero-shot tags baseline that represents the music track de-
 scription directly via the set of automatically obtained tags.
 Details are given next.
-~
+
 I. Few-shot prompt2text approach. We first explore
-whether the full mapping function G can be encompassed
+whether the full mapping function G' can be encompassed
 by a single large language model through careful few-shot
 prompting. This approach relies on a small set of exam-
-ple human-provided descriptions to, ..., ty where t; ~ TT.
-We assume that for each example ti, we also have a paired
-structured data output d¿, provided by the automatic music
+ple human-provided descriptions to, ..., ty where t; ~ T!.
+We assume that for each example t;, we also have a paired
+structured data output d;, provided by the automatic music
 tagger, which describes the same audio track. Unlike prior
-prompt-based data augmentation works [11, 39, 45] which
+prompt-based data augmentation works [11, 39,45] which
 aim for an unconditional generator G, we aim to generate
-text data ti G(di) conditioned on structured data d¿ such
-that it follows the distribution of human sentences t¿ Є TT.
-As shown in Figure 2 (left), the structured data output di
+text data t; ~ G (d;) conditioned on structured data d; such
+that it follows the distribution of human sentences ¢; € 7”.
+
+As shown in Figure 2 (left), the structured data output d;
 is converted to text form via a template, and a set of pairs
-(do, to), ..., (dk, tk) are used to form k input/output com-
+(do, to), --, (dx, te) are used to form k input/output com-
 ponents in the prompt. The final segment of the prompt is
 the structured data d; corresponding to a new music track.
-Given di, the model will attempt to output a description ti
-following the mapping TD → TT suggested by the exam-
+Given d;, the model will attempt to output a description t;
+following the mapping T? — 77 suggested by the exam-
 ple inputs. For text generation in this setting, we use the
 BLOOM-176B [6] model which is trained on a highly di-
 verse 1.5TB text corpus.
-Given that the prompt2text allows for the greatest
+
+Given that the prompt 2text allows for the greatest
 freedom in generation, the model can more easily generate
-a diverse set of text resembling the target distribution Ț.
-The prompt2text approach is also very flexible as large
+a diverse set of text resembling the target distribution T’.
+The prompt 2text approach is also very flexible as large
 language models like BLOOM can handle a variety of dif-
 ferent structured data inputs such as both tags and their con-
 fidence predictions. However, the model may also be less
 likely to preserve semantic meaning from structured data.
+
 II. Zero-shot data2text approach. The second setting
 that we propose involves a data-to-text generation process
 which is illustrated in Figure 2 (top right). At a high level,
@@ -350,6 +410,7 @@ predefined template sentences and rephrase these template
 sentences using a language model while preserving origi-
 nal semantic meaning. We begin with the tags predicted
 for each music track and grouped into genre, mood, and in-
+
 strument categories. We define a set of category-specific
 templates in the form of short sentences with placehold-
 ers for tags. We randomly sample a template sentence for
@@ -370,6 +431,7 @@ preserving semantic meaning. Because this D2T pipeline
 makes use of models that are pre-trained on large, general
 text corpuses, we find these modules to perform well at gen-
 erating music descriptions in a zero-shot manner.
+
 III. tags approach. The final setting we use involves a
 simple concatenation of predicted tags. We take the set of
 top filtered predicted tags for each music track (this set typ-
@@ -381,8 +443,10 @@ tronic drumset, pop, dance, synth bass, electronic, happy,
 electric guitar, frantic, dynamic”). While this approach
 strongly preserves the semantic meaning, it fails to gener-
 ate text with diverse vocabulary and form which would well
-represent the human annotation distribution TT.
+represent the human annotation distribution T7 .
+
 3.2. Text Dropout for Music Retrieval Training
+
 The objective here is to retrieve music track m match-
 ing a query video v and a natural language query t describ-
 ing the target music track. This is a challenging task as the
@@ -399,35 +463,32 @@ ting to the text inputs and prevent co-adaptations between
 the video and text encoders. The approach is illustrated in
 Figure 3 and details of model architecture, loss, and text
 dropout are given next.
+
 Model architecture. Our model is trained on a set of
-(video, music, text) pairings, (v, m, t), corresponding to a
-CLIP Image
-Encoder
-g³
-Visual
-Transformer
-Input Video
-CLIP Text
-Encoder
-xt
-Text
-Transformer
-Fusion
-Module
-fvt
-Input Text
-8 gt
-Text Dropout
-Input Music
-DeepSim
-Music Encoder
-gm
-xm
-Music Transformer
-fm
+(video, music, text) pairings, (v,m,t), corresponding to a
+
+--- Page 5 ---
+-
+CLIP Image x” Visual
+I Encoder. | ——+ | Transformer
+
+Input Video (@ 9” f”
+
+a CLIP Text Y Text
+ag G ft
+
+Input Text (9
+
 Feature
 similarity
-s(yut, ym)
+sy" y™)
+
+Text Dropout
+
+ulfivn DeepSim
+
+Input Music [@ 9” f
+
 Figure 3. Our proposed ViML model embeds inputs from three
 modalities (video, text, and audio) into an embedding space. We
 extract base features using DeepSim [20] for music input and from
@@ -439,15 +500,15 @@ employ text dropout to address the difference in granularity be-
 tween the three modalities. Since video is a more complex input
 modality, text dropout forces an improved video representation by
 preventing co-adaptation of the video and text representations.
+
 music video clip v, which has been labeled with a gener-
 ated text description t of its music track m, as outlined in
 Section 3.1. We transform these inputs into base features
-xv
-g" (v) for visual video features, xm = gm (m) for
-music features, and xt = gt (t) for text features using pre-
-trained large-scale encoders gº, gm, and gt which are frozen
+” = g*(v) for visual video features, x”” = g’(m) for
+music features, and x’ = g'(t) for text features using pre-
+trained large-scale encoders g”, g”, and g! which are frozen
 during training.
-=
+
 Each base feature representation x is of dimension n x
 d, where n is the length of the temporal sequence of base
 features representing a video clip and d is the dimension of
@@ -455,40 +516,50 @@ the base feature. We note that while our model is capable of
 handling a sequence of temporal text descriptions similar to
 music or video, we obtain only a track-level text description
 in practice meaning that n = 1 for text.
+
 Our tri-modal model consists of three separate modules
-corresponding to each modality fʊ, fm, ft, and a fourth fu-
-sion module fut to combine video and text representations.
+corresponding to each modality f”, f”, f’, and a fourth fu-
+sion module f’’ to combine video and text representations.
 The modules take respective base features and output em-
-beddings y = f (x²), ym = fm (xm), yt = ft (x²). The
+beddings y” = f%(2"), y" = f(a), y' = f*(a"). The
 fusion model outputs a fused embedding from the video and
-text embeddings yʊt = fvt (yʊ, y²).
+text embeddings y”! = f’'(y”, y’).
+
+xr
+
 Fusion loss. For training, we use an InfoNCE loss [28]
 between music and fused video-text embeddings:
-Lvt→m
--
-iЄD
-exp(s(yot, ym)/T)
-ΣjED exp (s(yt, ym)/T)
-(1)
+
+1 exp(s(ui"s ui")/7)
+|D| ieD Vie exp (s(y?", yj")/7)
+
+qd)
+
+Lot+m
+
 where s is a similarity function, D is a batch of data, and
-T is a temperature hyperparameter we set as 7 = 0.03. For
+T is a temperature hyperparameter we set as T = 0.03. For
 our similarity metric, we use the cosine similarity defined as
-s(x, y) = x²y/(||x|| ||y||). We note that the loss Lut→m is
+
+(x,y) = x7 y/(|\a|| - ||y||). We note that the loss Ly1 sm is
 not symmetric as negatives are sampled from music embed-
 dings only. So that our loss is symmetric, we instead train
-with the summed loss Lm,vt = Lvt→m + Lm→vt.
+with the summed loss Lint = Loism + Lm—sot-
+
 Text dropout. To address difficulties posed by the differ-
 ence in granularity between audio/video and text, we in-
 troduce text dropout as a regularization mechanism. With
-probability p, we set the input text embedding xt to a spe-
-cific value x NULL. In practice, we assign this x NULL input as
-the embedding produced by the pretrained gt model for an
-empty string. However, using a zero vector as x NULL works
+probability p, we set the input text embedding -’ to a spe-
+cific value 2". In practice, we assign this 275" input as
+the embedding produced by the pretrained g' model for an
+empty string. However, using a zero vector as x7" works
 similarly. In addition to improving the performance of mu-
 sic retrieval from text and video together, training with text
 dropout yields a model which also performs well at retrieval
 from video alone by removing dependence on text inputs.
+
 3.3. Implementation Details
+
 Music tag generation. The key first step to our text genera-
 tion process is obtaining the structured data describing each
 musical track. To do this, we use a music tagger trained on
@@ -499,16 +570,18 @@ and 28 mood tags. We aggregate these predictions at the
 clip or track level, and we filter the subsequent set based on
 confidence, keeping only those above a particular threshold
 (0.3 in our experiments).
+
 ViML Model. Following MVPt [36], we employ the Trans-
 former architecture [37] for our music and video encoders
-fm and fv. Transformers play a key role in improving
+f™ and f’. Transformers play a key role in improving
 model performance by encoding long-term context from
 video and music clips. We also use a similar two-layer
-Transformer architecture for our text encoder ft and the
-video-text fusion layer fut. However, we find that other fu-
+Transformer architecture for our text encoder f’ and the
+video-text fusion layer f”’. However, we find that other fu-
 sion module architectures such as a single linear layer yield
 similar results. Please see our supplemental for study of
 fusion module architectures.
+
 For base features, we use CLIP [32] to encode represen-
 tations for video frames and text inputs, and DeepSim [20]
 to encode music. Following communication with the au-
@@ -516,34 +589,34 @@ thors of [36], we split the video into 10-second segments
 and compute a feature for each segment by averaging CLIP
 embedding features computed at 6 frames per second. We
 compute 512 dimensional CLIP embedding features using
-OpenAI's CLIP ViT-B/32 model. We encode all input base
-features into embeddings of size d 256 using a linear
+OpenAl’s CLIP ViT-B/32 model. We encode all input base
+features into embeddings of size d = 256 using a linear
 projection layer for each modality. We also select d = 256
 as the output dimension for encoded video, text, music, and
 fused video-text representations from our model.
-=
-A faint, simple acoustic
-piece of singing by a female
-vocalist with an acoustic gui-
-tar with a fast-paced strum-
+
+--- Page 6 ---
+A faint, simple acoustic Hip-hop track with a dark Instrumental track featuring A cover version of Elvis Punjabi track with multiple
+piece of singing by a female synth pad with male aggres- an ambient pad and bell-like Presley’s pop song featuring vocals and other instruments
+vocalist with an acoustic gui- sive rapping along with a sounds. Seems to be a film male and female vocals and that’s great for traditional
+
+tar with a fast-paced strum- chipmunk voice. score.
 ming pattern in a closed
+
 room recorded live. great for
+
 singing along.
-score.
-Hip-hop track with a dark Instrumental track featuring A cover version of Elvis
-synth pad with male aggres- an ambient pad and bell-like
-sive rapping along with a sounds. Seems to be a film
-chipmunk voice.
-Punjabi track with multiple
-Presley's pop song featuring vocals and other instruments
-male and female vocals and that's great for traditional
+
 piano layers. Sounds like a marriage celebrations.
 confession in love.
+
 Figure 4. Example annotations from our collected YouTube8M-MusicTextClips dataset. Each example shows a frame from the 10sec
 source video clip from which audio was extracted for annotation. Note that annotators were only provided audio from the music video, so
 the annotation describes the music, but not the corresponding video. Each example in the figure contains a hyperlink to the corresponding
 YT8M source video with timestamp at the start of the 10sec target clip. Hover over the video frame image and click to follow the link.
+
 4. Experiments
+
 In this section, we report our experimental settings and
 results. First, we describe our datasets and the evalua-
 tion protocol in Sec. 4.1. Next, we investigate tag-based
@@ -552,15 +625,18 @@ video-to-music retrieval methods in Sec. 4.2. In Sec. 4.3,
 we evaluate performance of video-to-music retrieval guided
 by free-form text annotations. Finally, we perform ablation
 studies to measure the influence of text dropout in Sec. 4.4.
+
 4.1. Datasets and Evaluation Protocol
-YT8M-Music Video. In all of our experiments, we train
-models using the YT8M-Music Video dataset which in-
-cludes around 100k videos with the “music video" tag from
+
+YT8M-MusicVideo. In all of our experiments, we train
+models using the YT8M-MusicVideo dataset which in-
+cludes around 100k videos with the “music video” tag from
 the much larger YouTube8M dataset [1]. We synthesize
 tags and a natural language text describing the music track
 of each video for the full dataset using the approaches de-
 scribed in Sec. 3.1. We also use the test split of YT8M-
 Music Video to evaluate tag-based retrieval in Sec. 4.2.
+
 YT8M-MusicTextClips. In addition to the full YT8M-
 Music Video dataset, we also annotate a 4,000 sample subset
 of clips from YT8M-Music Video with human-provided text
@@ -575,11 +651,13 @@ in Figure 4 with links to the starting timestamp of the 10sec
 clips in corresponding YouTube videos. This annotated set
 is meant mainly for evaluation. As a result, the annotations
 are split into a larger set of 3,000 samples from the test set of
-YT8M-Music Video and a smaller set of 1,000 samples from
-the train set of YT8M-Music Video which we use as exam-
-ples in the few-shot prompt2text synthesis process. We
+YT8M-MusicVideo and a smaller set of 1,000 samples from
+the train set of YT8M-MusicVideo which we use as exam-
+ples in the few-shot prompt 2text synthesis process. We
+
 make the annotated text descriptions publicly available at
-our companion website².
+our companion website’.
+
 Evaluation Set-up and Metrics. We evaluate music re-
 trieval performance consistently with previous works [31,
 36]. However, in our case, a query can be either a video
@@ -591,16 +669,18 @@ The pool contains a single ground truth music track cor-
 responding to the input query (the positive example) with
 the remaining music tracks in the pool being non-matching
 (i.e., negative examples). We rank the music tracks in a
-query's pool by feature similarity, and find the rank of the
-query's ground truth matching music track (the positive ex-
+query’s pool by feature similarity, and find the rank of the
+query’s ground truth matching music track (the positive ex-
 ample). We then compute Recall@K (shortened to R@K)
 for K=1,5,10 and Median Rank, calculating the average of
 each of these metrics across the full set of test queries.
+
 4.2. Tag-Based Retrieval
+
 For our first set of experiments, we explore the setting of
 tag-based retrieval. Here the goal is to retrieve a music track
 given a query video together with a set of tags from a pre-
-defined vocabulary, such as "happy", "piano" and "jazz”.
+defined vocabulary, such as “happy”, “piano” and “jazz”.
 This setting could be practically interesting in some ap-
 plications, e.g., tag-based search. To address this setting,
 we train our model on text synthesized with the tags ap-
@@ -612,96 +692,47 @@ consisting of around 10K samples. As shown in Table 1,
 we include three baselines: the model proposed by Pretét et
 al. [31], the MVPt model [36], and an improved version of
 MVPt that we call MVPt+, where we tune the temperature
-2https://www.danielbmckee.com/language-guided-
-music-for-video/index.html
-Method
-Train Text Query Text Input Median Rank↓↓
-R@1↑
-R@5 ↑
-R@ 10 ↑
-a. Pretét et al. [31]
-234
-0.76
-3.42
-5.90
-b. MVPt [36]
-13
-6.09
-24.91
-41.89
-c. MVPt+ [36]
-5
-27.93
-50.64
-60.68
-d. ViML (ours)
-e. ViML (ours)
-tags
-tags
-3
-29.43
-62.49
-75.40
-tags
-2
-49.49
-81.61
-89.41
-f. Chance
-1000
-0.05
-0.25
-0.50
-Table 1. Tag-based music retrieval on full YouTube8M-Music Video test set. We compare ViML against prior methods on video to
+
+2https: //www.danielbmckee.com/language-guided-
+music~-for-video/index.html
+
+--- Page 7 ---
+Method Train Text Query Text Input MedianRank| R@I1t R@S5ft R@107
+a. Pretét et al. [31] - - 234 0.76 3.42 5.90
+b. MVPt [36] - - 13 6.09 24.91 41.89
+c. MVPt+ [36] - - 5 27.93 50.64 60.68
+d. ViML (ours) tags - 3 29.43 62.49 75.40
+e. ViML (ours) tags tags 2 49.49 81.61 89.41
+f. Chance 1000 0.05 0.25 0.50
+
+Table 1. Tag-based music retrieval on full YouTube8M-MusicVideo test set. We compare ViML against prior methods on video to
 music retrieval without tag queries (row d.). We also evaluate ViML on video+text to music retrieval using (synthetic) tags at test time (row
 e.). The text descriptions for both training and evaluation are generated with the tags approach for these experiments.
-Method
-a. MVPt+
-Train Text
-MR↓
-R@1↑
-R@5 ↑
-R@10 ↑
-17
-12.20
-29.43
-40.46
-b. ViML
-tags
-15
-11.95
-30.34
-42.62
-data2text
-13
-13.61 33.94
-prompt2text
-12
-250
-0.20
-14.09 35.04
-1.00
-46.24
-47.88
-2.00
-c. ViML
-d. ViML
-Chance
+
+Method Train Text MR{ R@Ift R@5t R@IOT
+a. MVPtt - 17 1220 29.43 40.46
+b.VIML tags 15 11.95 3034 42.62
+c.ViML  data2text 13 13.61 33.94 46.24
+d.ViML  prompt2text 12 1409 35.04 47.88
+Chance 250 0.20 1.00 2.00
+
 Table 2. Music retrieval with free-form natural language on
 YT8M-MusicTextClips test set. All methods which take text in-
 put are evaluated on the human text annotations as queries. Since
 the MVPt+ model does not take text inputs, it is evaluated on mu-
 sic retrieval from video alone for the same set of 3k video clips.
 MR is median rank.
+
 parameter 7 in the InfoNCE loss to 0.03. This change leads
 to further significant improvement in performance.
+
 Next, we introduce our model (ViML) trained on data
-generated from the tags approach. We evaluate our ViML
+generated from the tags approach. We evaluate our VIML
 model in two settings. First, we evaluate without input texts
 at test time (an empty text input is used instead). Second,
 we evaluate with text inputs at test time. As we do not have
 track-level human-provided music tag annotations for the
-full YT8M-Music Video split, we evaluate the track-level
+full YT8M-MusicVideo split, we evaluate the track-level
 model on synthetically generated tags using our tags ap-
 proach. While a model trained on the tags synthesized
 data may not generalize to out-of-domain free-form text in-
@@ -712,13 +743,15 @@ trieval we report can serve as an upper bound for this type
 of user tag-guided retrieval since the tag-based text for test-
 ing comes from the same music tagger model we used to
 synthesize training data.
+
 Evaluating our model with synthetic tags leads to a
 very substantial performance increase over MVPt+ of 20-
 30 points in each recall metric. Interestingly, our ViML
 model evaluated without text at test time not only matches
 the video-to-music retrieval performance of MVT+ but sub-
 stantially improves over MVPt+, especially in Recall@5
-and Recall @10. This performance increase is not simply
+and Recall@10. This performance increase is not simply
+
 a result of added parameters in the fusion layer, as a fu-
 sion module consisting of only a single linear layer yields
 similar results (see our supplemental for further details).
@@ -730,7 +763,9 @@ semantically meaningful dimensions corresponding to the
 provided tags as well as helps to suppress non-relevant di-
 mensions, e.g., corresponding to presence/absence of some
 non-relevant objects.
+
 4.3. Free-Form Natural Language Retrieval
+
 For the next experiments, we turn to retrieval with free-
 form natural language inputs. The goal is, given an input
 video and a query free-form natural language description, to
@@ -738,17 +773,19 @@ retrieve a relevant music track. For this setting, we evaluate
 on testing videos from the YT8M-MusicTextClips dataset
 which contains free-form human text annotations describ-
 ing the music corresponding to each video in the dataset.
+
 In these experiments, we use a similar protocol to the
-"segment-level" setting reported by Surís et al. [36], but our
+“segment-level” setting reported by Suris et al. [36], but our
 input video includes only a 30sec clip surrounding the 10sec
 of audio labeled by a human annotator. In contrast, a model
 had access to a large context spanning the full source video
-in the previous segment-level setting reported by Surís et
+in the previous segment-level setting reported by Suris et
 al. [36]. We note that retrieval in this setting is significantly
 more difficult than the segment-level setting in [36] or the
 track-level setting reported in 4.2 due to the limited context.
 However, such retrieval is of particular interest given the
 rise of short-form video in social media and entertainment.
+
 Results are summarized in Table 2. Our baseline is an
 MVPt+ model which has been trained on 30sec segments
 (training MVPt+ on full videos and testing on 30sec clips
@@ -758,42 +795,18 @@ descriptions as input queries to our ViML model. In Table 2,
 we report three variants trained on YT8M music videos with
 text synthesized by each of the three approaches described
 in Sec. 3.1. The model trained with our first tags syn-
-Method
-Train Text
-Dropout
-Text Inputs
-Median Rank↓
-R@1↑ R@5↑
-R@ 10 ↑
-a. MVPt+
-17
-12.20 29.43
-40.46
-b. ViML
-prompt 2text
-20
-9.94
-26.42
-37.01
-c. ViML
-prompt2text
-human
-15
-11.45 30.45
-42.77
-d. ViML
-prompt2text
-16
-12.27 30.34
-41.51
-e. ViML
-prompt2text
-human
-12
-14.09
-35.04
-47.88
+
+
+--- Page 8 ---
+Method Train Text Dropout TextInputs MedianRank| R@1t R@S5t R@I10T
+a. MVPt+ - - - 17 12.20 = 29.43 40.46
+b. ViML prompt 2text x - 20 9.94 26.42 37.01
+c. ViML prompt 2text x human 15 11.45 30.45 42.77
+d. ViML prompt 2text v - 16 12.27 30.34 41.51
+e. ViML prompt 2text v human 12 14.09 35.04 47.88
+
 Table 3. Influence of training with text dropout on retrieval performance. Evaluated on the YT8M-MusicTextClips test set.
+
 thesis baseline (b.) provides substantial improvement over
 retrieval with MVPt+ using only video (a.). Next, we evalu-
 ate the data2text approach (c.) which generates more
@@ -803,15 +816,18 @@ tags variant (b.). Finally, our prompt2text approach
 (d.) leads to the best performance showing that large lan-
 guage models prove to be strong annotators on this task with
 careful few-shot prompting.
+
 Qualitative results. In Figure 5, we provide qual-
 itative retrieval results for examples in YouTube8M-
-Music TextClips. In the first example, both models retrieve
+MusicTextClips. In the first example, both models retrieve
 tracks that match the style and beat of the input video well.
 However, only the ViML can match the correct musical
 style by using the input text. In the second example, only
 the ViML result correctly matches the desired music genre
 and the mood of the video.
+
 4.4. Analysis of Text Dropout
+
 In Table 3, we compare the performance of our ViML
 model trained on prompt2text descriptions with and
 without text dropout. We evaluate this model on music re-
@@ -831,40 +847,51 @@ ing more attention to this modality during training improves
 learning. We find that the dropout technique is most effec-
 tive at high rates of dropout in the range 0.8-0.95, and we
 use a dropout rate of 0.8 in all of our experiments.
+
 5. Conclusion
+
 In this work, we introduced an approach to allow
-language-guided music recommendation for video. We
-pro-
-Video+Language Query
-Retrieved Music
-MVPt+
-ViML
-Electronic dance pop track
-that has male vocals and a
-pulsating rhythm. Best for
-nightclubs.
-Male rap song in a foreign
-language with hip-hop beats
-and electronic music that
-gives a freestyle vibe to it.
-Percussive Latin music
-with a male vocalist,
-synth line, and Cumbia
-beat aligned with
-video.
-Upbeat jazzy melody
-played on a saxophone
-over rhythmic
-electronic bass beats.
+language-guided music recommendation for video. We pro-
+
+Video+Language Query Retrieved Music
+
+MVPt+ ViML
+
+aiflen alee
+_ ay Ny en | SS
 Energetic electronic
 party song with male
 vocals over rising
 synth layers and claps
-aligned with video.
+(aligned with video.
+
+Percussive Latin music
+with a male vocalist,
+Electronic dance pop track synth line, and Cumbia
+that has male vocals and a, beat aligned with
+
+pulsating rhythm. Best for | | video.
+nightclubs. \
+
+affiv aiflen
+/ \
+Upbeat jazzy melody
+played on a saxophone
+over rhythmic
+electronic bass beats.
+
+-
+
 French rap song with
 processed male vocals,
 thumping drum beats,
 and synth pad effects.
+
+Male rap song in a foreign
+language with hip-hop beats
+and electronic music that
+gives a freestyle vibe to it. XX J \ S
+
 Figure 5. Qualitative results on YouTube8M-MusicTextClips
 test set. We compare music retrieval quality for two examples
 using the MVPt+ model and our ViML model. The column on
@@ -874,6 +901,7 @@ only the video as an input while the ViML model takes both video
 and corresponding text. The two columns on the right contain
 retrieved music for MVPt+ and ViML respectively. Please see
 results in the companion video on our website.
+
 posed a model, ViML, which fuses text and video inputs to
 find music matching both domains and introduced the text
 dropout technique to improve training. To obtain data for
@@ -884,241 +912,356 @@ sults show that large language models provide a powerful
 tool for training data synthesis in domains where text data
 is limited but other structured data is available. To evaluate
 our method, we also introduced a new dataset, YouTube8M-
-Music TextClips, which includes high quality free-form hu-
+MusicTextClips, which includes high quality free-form hu-
 man descriptions of the music in YT8M videos. There are
 many exciting directions to build upon this work including
 allowing more fine-grained control over specific music at-
 tributes or language-guided audio-video generation.
+
+--- Page 9 ---
 References
-[1] Sami Abu-El-Haija, Nisarg Kothari, Joonseok Lee, Paul
+
+1
+
+[10
+
+(12]
+
+Sami Abu-El-Haija, Nisarg Kothari, Joonseok Lee, Paul
 Natsev, George Toderici, Balakrishnan Varadarajan, and
 Sudheendra Vijayanarasimhan. Youtube-8m: A large-
 scale video classification benchmark. arXiv preprint
-arXiv:1609.08675, 2016. 2,6
-[2] Hassan Akbari, Liangzhe Yuan, Rui Qian, Wei-Hong
+arXiv:1609.08675, 2016. 2, 6
+
+Hassan Akbari, Liangzhe Yuan, Rui Qian, Wei-Hong
 Chuang, Shih-Fu Chang, Yin Cui, and Boqing Gong. Vatt:
 Transformers for multimodal self-supervised learning from
 raw video, audio and text. Advances in Neural Information
 Processing Systems, 34:24206-24221, 2021. 2
-[3] Jean-Baptiste Alayrac, Adria Recasens, Rosalia Schneider,
-Relja Arandjelović, Jason Ramapuram, Jeffrey De Fauw, Lu-
+Jean-Baptiste Alayrac, Adria Recasens, Rosalia Schneider,
+Relja Arandjelovié, Jason Ramapuram, Jeffrey De Fauw, Lu-
 cas Smaira, Sander Dieleman, and Andrew Zisserman. Self-
 supervised multimodal versatile networks. Advances in Neu-
 ral Information Processing Systems, 33:25-37, 2020. 2
-[4] Yusuf Aytar, Carl Vondrick, and Antonio Torralba. See,
+Yusuf Aytar, Carl Vondrick, and Antonio Torralba. See,
 hear, and read: Deep aligned representations. arXiv preprint
 arXiv:1706.00932, 2017. 2
-[5] Thierry Bertin-Mahieux, Daniel PW Ellis, Brian Whitman,
+
+Thierry Bertin-Mahieux, Daniel PW Ellis, Brian Whitman,
 and Paul Lamere. The million song dataset. In Proceed-
 ings of the 12th International Society for Music Information
 Retrieval Conference, 2011. 2
-[6] BigScience. Bigscience large open-science open-access
-multilingual language model, 2022. "https://
-huggingface.co/bigscience/bloom". 4
-[7] Dmitry Bogdanov, Minz Won, Philip Tovstogan, Alastair
+
+BigScience. Bigscience large open-science open-access
+multilingual language model, 2022. "https: //
+huggingface.co/bigscience/bloom”. 4
+
+Dmitry Bogdanov, Minz Won, Philip Tovstogan, Alastair
 Porter, and Xavier Serra. The mtg-jamendo dataset for auto-
 matic music tagging. In Machine Learning for Music Discov-
 ery Workshop, International Conference on Machine Learn-
 ing (ICML 2019), Long Beach, CA, United States, 2019. 2
-[8] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Sub-
+Tom Brown, Benjamin Mann, Nick Ryder, Melanie Sub-
 biah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakan-
 tan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. Lan-
 guage models are few-shot learners. Advances in neural in-
 formation processing systems, 33:1877-1901, 2020. 3
-[9] Jeong Choi, Jongpil Lee, Jiyoung Park, and Juhan Nam.
+Jeong Choi, Jongpil Lee, Jiyoung Park, and Juhan Nam.
 Zero-shot learning for audio-based music classification and
 tagging. In International Society for Music Information Re-
 trieval Conference, 2019. 2
-[10] Keunwoo Choi, George Fazekas, and Mark Sandler. Auto-
+
+Keunwoo Choi, George Fazekas, and Mark Sandler. Auto-
 matic tagging using deep convolutional neural networks. In
 Proceedings of the 12th International Society for Music In-
 formation Retrieval Conference, 2016. 2
-[11] Bosheng Ding, Linlin Liu, Lidong Bing, Canasai Kru-
+
+Bosheng Ding, Linlin Liu, Lidong Bing, Canasai Kru-
 engkrai, Thien Hai Nguyen, Shafiq Joty, Luo Si, and Chun-
 yan Miao. DAGA: Data augmentation with a generation ap-
 proach for low-resource tagging tasks. In Proceedings of
 the 2020 Conference on Empirical Methods in Natural Lan-
 guage Processing (EMNLP), pages 6045-6057, Online, Nov.
-2020. Association for Computational Linguistics. 3,4
-[12] Andrey Guzhov, Federico Raue, Jörn Hees, and Andreas
+2020. Association for Computational Linguistics. 3, 4
+Andrey Guzhov, Federico Raue, Jérm Hees, and Andreas
 Dengel. Audioclip: Extending clip to image, text and au-
 dio. In ICASSP 2022-2022 IEEE International Conference
 on Acoustics, Speech and Signal Processing (ICASSP), pages
 976-980. IEEE, 2022. 2
-[13] Sungeun Hong, Woobin Im, and Hyun Seung Yang. Cbvmr:
+
+(13]
+
+[14]
+
+(15]
+
+[16]
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+[23]
+
+[24]
+
+Sungeun Hong, Woobin Im, and Hyun Seung Yang. Cbvmr:
 Content-based video-music retrieval using soft intra-modal
 structure constraint. Proceedings of the 2018 ACM on Inter-
 national Conference on Multimedia Retrieval, 2017. 2
-[14] Qingqing Huang, Aren Jansen, Joonseok Lee, Ravi Ganti,
+Qingqing Huang, Aren Jansen, Joonseok Lee, Ravi Ganti,
 Judith Yue Li, and Daniel P. W. Ellis. Mulan: A joint embed-
-ding of music audio and natural language. In International
+ding of music audio and natural language. In Jnternational
 Society for Music Information Retrieval Conference, 2022. 2
-[15] Wenlong Huang, F. Xia, Ted Xiao, Harris Chan, Jacky Liang,
+Wenlong Huang, F. Xia, Ted Xiao, Harris Chan, Jacky Liang,
 Peter R. Florence, Andy Zeng, Jonathan Tompson, Igor
 Mordatch, Yevgen Chebotar, Pierre Sermanet, Noah Brown,
 Tomas Jackson, Linda Luu, Sergey Levine, Karol Hausman,
 and Brian Ichter. Inner monologue: Embodied reasoning
 through planning with language models. In Conference on
 Robot Learning, 2022. 3
-[16] Ahmed Hussen Abdelaziz, Barry-John Theobald, Paul
+
+Ahmed Hussen Abdelaziz, Barry-John Theobald, Paul
 Dixon, Reinhard Knothe, Nicholas Apostoloff, and Sachin
 Kajareker. Modality dropout for improved performance-
 driven talking faces. In Proceedings of the 2020 Interna-
-tional Conference on Multimodal Interaction, pages 378-
+tional Conference on Multimodal Interaction, pages 378—
 386, 2020. 2
-[17] Zdeněk Kasner and Ondřej Dušek. Neural pipeline for zero-
+
+Zdenék Kasner and Ondfej DuSek. Neural pipeline for zero-
 shot data-to-text generation. In Proceedings of the 60th An-
 nual Meeting of the Association for Computational Linguis-
-tics (Volume 1: Long Papers), pages 3914–3932, 2022. 3,
+tics (Volume 1: Long Papers), pages 3914-3932, 2022. 3,
 4
-[18] Takeshi Kojima, Shixiang (Shane) Gu, Machel Reid, Yutaka
+
+Takeshi Kojima, Shixiang (Shane) Gu, Machel Reid, Yutaka
 Matsuo, and Yusuke Iwasawa. Large language models are
 zero-shot reasoners. In Advances in Neural Information Pro-
 cessing Systems, 2022. 3
-[19] Edith Law, Kris West, Michael I Mandel, Mert Bay, and
+
+Edith Law, Kris West, Michael I Mandel, Mert Bay, and
 J Stephen Downie. Evaluation of algorithms using games:
-The case of music tagging. In ISMIR, pages 387–392, 2009.
+The case of music tagging. In JSMIR, pages 387-392, 2009.
 2
-[20] Jongpil Lee, Nicholas J. Bryan, Justin Salamon, Zeyu Jin,
+
+Jongpil Lee, Nicholas J. Bryan, Justin Salamon, Zeyu Jin,
 and Juhan Nam. Disentangled multidimensional metric
 learning for music similarity. In Proceedings of the Inter-
 national Conference on Acoustics, Speech and Signal Pro-
-cessing (ICASSP). IEEE, 2020. 2,5
-[21] Jongpil Lee, Jiyoung Park, Keunhyoung Kim, and Juhan
+cessing (ICASSP). YEEE, 2020. 2, 5
+
+Jongpil Lee, Jiyoung Park, Keunhyoung Kim, and Juhan
 Nam. Sample-level deep convolutional neural networks for
 music auto-tagging using raw waveforms. In Proceedings of
 the 14th Sound and Music Computing Conference, 2017. 2
-[22] Mike Lewis, Yinhan Liu, Naman Goyal, Marjan Ghazvinine-
+Mike Lewis, Yinhan Liu, Naman Goyal, Marjan Ghazvinine-
 jad, Abdel rahman Mohamed, Omer Levy, Veselin Stoy-
 anov, and Luke Zettlemoyer. Bart: Denoising sequence-to-
 sequence pre-training for natural language generation, trans-
 lation, and comprehension. In Annual Meeting of the Asso-
 ciation for Computational Linguistics, 2019. 4
-[23] Bochen Li and Aparna Kumar. Query by video: Cross-modal
-music retrieval. In ISMIR, pages 604–611, 2019. 2
-[24] Xudong Lin, Fabio Petroni, Gedas Bertasius, Marcus
+
+Bochen Li and Aparna Kumar. Query by video: Cross-modal
+music retrieval. In JSMIR, pages 604-611, 2019. 2
+
+Xudong Lin, Fabio Petroni, Gedas Bertasius, Marcus
 Rohrbach, Shih-Fu Chang, and Lorenzo Torresani. Learning
 to recognize procedural activities with distant supervision.
 In Proceedings of the IEEE/CVF Conference on Computer
-Vision and Pattern Recognition, pages 13853–13863, 2022.
+Vision and Pattern Recognition, pages 13853-13863, 2022.
 3
-[25] Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar
-Joshi, Danqi Chen, Omer Levy, Mike Lewis, Luke Zettle-
+
+--- Page 10 ---
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+34
+
+35
+
+36
+
+37
+
+Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Mandar
+Joshi, Dangi Chen, Omer Levy, Mike Lewis, Luke Zettle-
 moyer, and Veselin Stoyanov. Roberta: A robustly optimized
-bert pretraining approach. arXiv preprint arXiv:1907.11692,
+bert pretraining approach. arXiv preprint arXiv: 1907.11692,
 2019. 4
-[26] Ilaria Manco, Emmanouil Benetos, Elio Quinton, and
-György Fazekas. Contrastive audio-language learning for
+
+Tlaria Manco, Emmanouil Benetos, Elio Quinton, and
+Gyérgy Fazekas. Contrastive audio-language learning for
 music. In International Society for Music Information Re-
 trieval Conference, 2022. 2
-[27] Natalia Neverova, Christian Wolf, Graham Taylor, and Flo-
+
+Natalia Neverova, Christian Wolf, Graham Taylor, and Flo-
 rian Nebout. Moddrop: adaptive multi-modal gesture recog-
-nition. IEEE Transactions on Pattern Analysis and Machine
-Intelligence, 38(8):1692-1706, 2015. 2
-[28] Aaron van den Oord, Yazhe Li, and Oriol Vinyals. Repre-
+nition. EEE Transactions on Pattern Analysis and Machine
+Intelligence, 38(8):1692—1706, 2015. 2
+
+Aaron van den Oord, Yazhe Li, and Oriol Vinyals. Repre-
 sentation learning with contrastive predictive coding. arXiv
-preprint arXiv:1807.03748, 2018. 5
-[29] Sergio Oramas, Oriol Nieto, Francesco Barbieri, and Xavier
+preprint arXiv: 1807.03748, 2018. 5
+
+Sergio Oramas, Oriol Nieto, Francesco Barbieri, and Xavier
 Serra. Multi-label music genre classification from audio, text
-and images using deep features. In International Society for
+and images using deep features. In Jnternational Society for
 Music Information Retrieval Conference, 2017. 2
-[30] Jordi Pons and Xavier Serra. musicnn: Pre-trained con-
+
+Jordi Pons and Xavier Serra. musicnn: Pre-trained con-
 volutional neural networks for music audio tagging. arXiv
-preprint arXiv: 1909.06654, 2019. 2
-[31] Laure Prétet, Gael Richard, and Geoffroy Peeters. Cross-
+preprint arXiv:1909.06654, 2019. 2
+
+Laure Prétet, Gael Richard, and Geoffroy Peeters. Cross-
 modal music-video recommendation: A study of design
 choices. In 2021 International Joint Conference on Neural
-Networks (IJCNN), pages 1–9. IEEE, 2021. 1, 2, 6, 7
-[32] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
+Networks (IJCNN), pages 1-9. IEEE, 2021. 1, 2, 6, 7
+
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
 Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry,
 Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learn-
 ing transferable visual models from natural language super-
-vision. In International Conference on Machine Learning,
+vision. In Jnternational Conference on Machine Learning,
 pages 8748-8763. PMLR, 2021. 2,5
-[33] Andrew Rouditchenko, Angie Boggust, David F. Har-
+
+Andrew Rouditchenko, Angie Boggust, David F. Har-
 wath, Dhiraj Joshi, Samuel Thomas, Kartik Audhkhasi,
 Rogério Schmidt Feris, Brian Kingsbury, Michael Picheny,
 Antonio Torralba, and James R. Glass. Avlnet: Learn-
 ing audio-visual language representations from instructional
 videos. In Interspeech, 2020. 2
-[34] Ishika Singh, Valts Blukis, Arsalan Mousavian, Ankit Goyal,
+
+Ishika Singh, Valts Blukis, Arsalan Mousavian, Ankit Goyal,
 Danfei Xu, Jonathan Tremblay, Dieter Fox, Jesse Thomason,
 and Animesh Garg. ProgPrompt: Generating situated robot
 task plans using large language models. In International
 Conference on Robotics and Automation (ICRA), 2023. 3
-[35] Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya
+Nitish Srivastava, Geoffrey Hinton, Alex Krizhevsky, Ilya
 Sutskever, and Ruslan Salakhutdinov. Dropout: a simple way
 to prevent neural networks from overfitting. The journal of
-machine learning research, 15(1):1929–1958, 2014. 4
-[36] Dídac Surís, Carl Vondrick, Bryan Russell, and Justin Sala-
-mon. It's time for artistic correspondence in music and video.
+machine learning research, 15(1):1929-1958, 2014. 4
+Didac Suris, Carl Vondrick, Bryan Russell, and Justin Sala-
+mon. It’s time for artistic correspondence in music and video.
 In Proceedings of the IEEE/CVF Conference on Computer
 Vision and Pattern Recognition, pages 10564-10574, 2022.
-1, 2, 5, 6, 7
-[37] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
-reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia
+1, 2,5, 6,7
+
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
+reit, Llion Jones, Aidan N Gomez, Lukasz Kaiser, and Illia
 Polosukhin. Attention is all you need. Advances in neural
-information processing systems, 30, 2017. 2, 5
-[38] Weiyao Wang, Du Tran, and Matt Feiszli. What makes train-
+information processing systems, 30, 2017. 2,5
+
+[38]
+
+[39]
+
+[40]
+
+[41]
+
+42
+
+43
+
+44
+
+45
+
+[47]
+
+Weiyao Wang, Du Tran, and Matt Feiszli. What makes train-
 ing multi-modal classification networks hard? In Proceed-
 ings of the IEEE/CVF Conference on Computer Vision and
 Pattern Recognition, pages 12695-12705, 2020. 2
-[39] Yufei Wang, Can Xu, Qingfeng Sun, Huang Hu, Chongyang
+
+Yufei Wang, Can Xu, Qingfeng Sun, Huang Hu, Chongyang
 Tao, Xiubo Geng, and Daxin Jiang. PromDA: Prompt-
 based data augmentation for low-resource NLU tasks. In
 Proceedings of the 60th Annual Meeting of the Association
 for Computational Linguistics (Volume 1: Long Papers),
 pages 4242-4255, Dublin, Ireland, May 2022. Association
 for Computational Linguistics. 3, 4
-[40] Jason Wei, Maarten Bosma, Vincent Zhao, Kelvin Guu,
+
+Jason Wei, Maarten Bosma, Vincent Zhao, Kelvin Guu,
 Adams Wei Yu, Brian Lester, Nan Du, Andrew M Dai, and
 Quoc V Le. Finetuned language models are zero-shot learn-
 ers. In International Conference on Learning Representa-
 tions, 2022. 3
-[41] Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
+
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
 Bosma, brian ichter, Fei Xia, Ed Chi, Quoc V Le, and Denny
 Zhou. Chain-of-thought prompting elicits reasoning in large
 language models. In S. Koyejo, S. Mohamed, A. Agarwal,
 D. Belgrave, K. Cho, and A. Oh, editors, Advances in Neural
-Information Processing Systems, volume 35, pages 24824-
+Information Processing Systems, volume 35, pages 24824—
 24837. Curran Associates, Inc., 2022. 3
-[42] Minz Won, Keunwoo Choi, and Xavier Serra. Semi-
+
+Minz Won, Keunwoo Choi, and Xavier Serra. Semi-
 supervised music tagging transformer. In Proc. of Interna-
 tional Society for Music Information Retrieval, 2021. 2
-[43] Minz Won, Andres Ferraro, Dmitry Bogdanov, and Xavier
+Minz Won, Andres Ferraro, Dmitry Bogdanov, and Xavier
 Serra. Evaluation of cnn-based automatic music tagging
 models. In Proc. of 17th Sound and Music Computing, 2020.
 2
-[44] Ho-Hsiang Wu, Prem Seetharaman, Kundan Kumar, and
+
+Ho-Hsiang Wu, Prem Seetharaman, Kundan Kumar, and
 Juan Pablo Bello. Wav2clip: Learning robust audio repre-
-sentations from clip. In ICASSP 2022-2022 IEEE Interna-
+sentations from clip. In JCASSP 2022-2022 IEEE Interna-
 tional Conference on Acoustics, Speech and Signal Process-
 ing (ICASSP), pages 4563-4567. IEEE, 2022. 2
-[45] Yiben Yang, Chaitanya Malaviya, Jared Fernandez, Swabha
+
+Yiben Yang, Chaitanya Malaviya, Jared Fernandez, Swabha
 Swayamdipta, Ronan Le Bras, Ji-Ping Wang, Chandra Bha-
 gavatula, Yejin Choi, and Doug Downey. Generative data
 augmentation for commonsense reasoning. In Findings
 of the Association for Computational Linguistics: EMNLP
 2020, pages 1008-1025, Online, Nov. 2020. Association for
 Computational Linguistics. 3, 4
-[46] Rowan Zellers, Jiasen Lu, Ximing Lu, Youngjae Yu, Yan-
+
+Rowan Zellers, Jiasen Lu, Ximing Lu, Youngjae Yu, Yan-
 peng Zhao, Mohammadreza Salehi, Aditya Kusupati, Jack
 Hessel, Ali Farhadi, and Yejin Choi. Merlot reserve: Neu-
 ral script knowledge through vision and language and sound.
 In Proceedings of the IEEE/CVF Conference on Computer
-Vision and Pattern Recognition, pages 16375–16387, 2022.
+Vision and Pattern Recognition, pages 16375-16387, 2022.
 2
-[47] Andy Zeng, Adrian Wong, Stefan Welker, Krzysztof Choro-
+
+Andy Zeng, Adrian Wong, Stefan Welker, Krzysztof Choro-
 manski, Federico Tombari, Aveek Purohit, Michael Ryoo,
 Vikas Sindhwani, Johnny Lee, Vincent Vanhoucke, et al. So-
 cratic models: Composing zero-shot multimodal reasoning
-with language. arXiv preprint arXiv: 2204.00598, 2022. 3
-[48] Donghuo Zeng, Yi Yu, and Keizo Oyama. Audio-visual em-
+with language. arXiv preprint arXiv:2204.00598, 2022. 3
+Donghuo Zeng, Yi Yu, and Keizo Oyama. Audio-visual em-
 bedding for cross-modal music video retrieval through su-
 pervised deep cca. In 2018 IEEE International Symposium
-on Multimedia (ISM), pages 143–150. IEEE, 2018. 2
-A. Fusion Module Architecture Study
+on Multimedia (ISM), pages 143-150. IEEE, 2018. 2
+
+--- Page 11 ---
 Appendix
+
+A. Fusion Module Architecture Study
+
 We evaluate different architectures for the fusion mod-
 ule that is responsible for combining encoded visual and
 text inputs. In Table 4, we present five architecture vari-
@@ -1131,43 +1274,49 @@ and text features as input to: (b.) a single linear layer (c.)
 a two-layer MLP, (d.) a 1-layer Transformer network, and
 (e.) a 2-layer Transformer network. We find that the size
 of the fusion module does not significantly change perfor-
-Imance. We use the 2-layer Transformer fusion architecture
+mance. We use the 2-layer Transformer fusion architecture
 in our main results given the slightly higher performance
 in recall metrics, but similar performance can be achieved
-with the other fusion architectures including the “addition"
+with the other fusion architectures including the “addition”
 fusion module which does not include learned parameters.
+
 B. Training without Video
+
 We also experimented with models trained only on mu-
 sic and text but found these models to significantly under-
 perform other baselines at music retrieval on the YT8M-
-Music TextClips test set. This is not surprising as the input
+MusicTextClips test set. This is not surprising as the input
 video contains a great deal more information than the short
 human text descriptions in the dataset. Performance of our
-music+text model trained on prompt2text data and eval-
-uated on human texts in the YT8M-Music TextClips test set
-was Recall @1/5/10=2.52/9.27/15.52 and MR=56 (compare
+music+text model trained on prompt 2text data and eval-
+uated on human texts in the YT8M-MusicTextClips test set
+was Recall @ 1/5/10=2.52/9.27/15.52 and MR=56 (compare
 to Table 2 results from the main paper). We report the re-
 sults of our track-level music+text model trained with tag
-inputs as MT in Table 5 (a.) (compare to Table 1 results
+inputs as MT in Table 5 (a.) (compare to Table | results
 from the main paper). This model also performed substan-
 tially below MVPt+ or ViML.
+
 C. Ensembled Models
-In addition to the baselines reported in Table 1 of the
+
+In addition to the baselines reported in Table | of the
 main text, we also investigated forming a stronger baseline
 by combining MVPt+ and the music+text model from Ap-
 pendix B into an ensemble.
--
+
 More specifically, for a music track m and a correspond-
-ing video, text pair (v, t), we compute the total similarity
-score as a weighted sum (1 − a) · s(y³‚ym)+a·s(zt, zm)
-where y", ym are the video and music embeddings gener-
-ated by MVPt+, zt, 2m are the text and music embeddings
+ing video, text pair (v,t), we compute the total similarity
+score as a weighted sum (1 — a) + s(y”, y) +a: s(z', 2™)
+where y"”, y’”” are the video and music embeddings gener-
+ated by MVPt+, 2‘, z™ are the text and music embeddings
 generated by our music+text model, and a is a coefficient
 which we tuned.
+
 As shown in Table 5 (d.), we found this music+text
 model and MVPt+ ensemble to reach strong performance,
+
 exceeding Recall@1 performance of ViML and achieving
-similar Recall @5/10 ViML performance. However, we
+similar Recall@5/10 ViML performance. However, we
 found that such ensembling could be used to improve the
 performance of ViML as well. In particular, computing
 scores for music retrieval as a weighted sum of similarity
@@ -1175,7 +1324,9 @@ scores from ViML and MVPt+ led to substantial improve-
 ments over ViML performance as shown in Table 5 (e.).
 An ensemble of ViML and our music+text model led to the
 highest performance in Table 5 (f.).
+
 D. Music Matching the Pace of Videos
+
 In our qualitative results, we did not observe many ex-
 amples where the music beats per minute (BPM) does not
 match the video pace. We hypothesize that a given mu-
@@ -1186,238 +1337,282 @@ grained tempo alignment, e.g., depicted dance motions may
 not be perfectly in sync with the music. One possible fu-
 ture direction could be to refine the alignment between the
 music and depicted action in the video.
+
 E. Text Synthesis Examples Outputs
+
 In Figures 6 and 7, we present generated outputs
 from our text synthesis approaches along with real hu-
 man annotations for randomly selected examples from the
-YouTube8M-Music Video dataset. The text synthesis ap-
+YouTube8M-MusicVideo dataset. The text synthesis ap-
 proaches show different tradeoffs between tag accuracy and
 diversity of form/language.
+
 The prompt2text setting is the most free-form text
 synthesis approach but will sometimes generate outputs
 which are not true to the original tag predictions for a
-track. In general, the prompt2text descriptions tend to
+track. In general, the prompt 2text descriptions tend to
 be shorter and often omit information in the input tags. The
-language model used in the prompt2text approach can
+language model used in the prompt 2text approach can
 also sometimes hallucinate information which is completely
-wrong (e.g. "female vocal and a piano section" in Fig. 6 ex.
+wrong (e.g. “female vocal and a piano section” in Fig. 6 ex.
 3). However, the diversity of vocabulary and structure in the
-outputs produced by prompt2text makes this approach
+outputs produced by prompt 2text makes this approach
 most similar to real human annotations.
-Method
-a. Addition
-# Parameters Median Rank↓
-R@1↑
-R@5 ↑
-R@ 10 ↑
-0
-12
-13.73
-34.12
-46.52
-b. Linear
-131K
-13
-13.19
-33.45
-45.68
-c. MLP
-1.6M
-13
-13.20
-32.69
-44.94
-d. Transformer (1 layer)
-1.4M
-12
-13.98
-34.95
-46.85
-e. Transformer (2 layer)
-2.8M
-12
-14.09 35.04
-47.88
-Table 4. Study of fusion layer architecture. All models are trained on the synthesized prompt2text data, and we report results on the
-YT8M-Music TextClips 3k test set.
-Method
-Train Text
-Query Text Input Median Rank↓↓ R@1↑ R@5 ↑
-R@10↑
-a. MT
-tags
-tags
-15
-11.51
-30.36
-42.72
-b. MVPt+ [37]
-5
-27.93 50.64
-60.68
-c. ViML (ours)
-tags
-tags
-2
-49.49
-81.61
-89.41
-d. MT & MVPt+ Ens.
-tags
-tags
-1
-55.95
-81.73
-88.82
-e. ViML & MVPt+ Ens.
-tags
-tags
-1
-59.86
-85.14
-91.43
-f. ViML & MT Ens.
-tags
-tags
-1
-63.05
-91.32
-96.59
-g. Chance
-1000
-0.05
-0.25
-0.50
-Table 5. Tag-based music retrieval on full YouTube8M-Music Video test set for music+text model and model ensembles. For conve-
+
+--- Page 12 ---
+Method # Parameters MedianRank| R@It R@5t R@I0T
+
+a. Addition 0 12 13.73 34.12 46.52
+b. Linear 131K 13 13.19 33.45 45.68
+c. MLP 1.6M 13 13.20 32.69 44.94
+d. Transformer (1 layer) 1.4M 12 13.98 34.95 46.85
+e. Transformer (2 layer) 2.8M 12 14.09 35.04 47.88
+
+Table 4. Study of fusion layer architecture. All models are trained on the synthesized prompt 2text data, and we report results on the
+YT8M-MusicTextClips 3k test set.
+
+Method Train Text Query Text Input MedianRank| R@1+ R@5t R@I10T
+a. MT tags tags 15 11.51 30.36 42.72
+b. MVPt+ [37] - - 5 27.93 50.64 60.68
+c. ViML (ours) tags tags 2 49.49 81.61 89.41
+d. MT & MVPt+ Ens. tags tags 1 55.95 81.73 88.82
+e. ViIML & MVPt+ Ens. tags tags 1 59.86 85.14 91.43
+f. VIML & MT Ens. tags tags 1 63.05 91.32 96.59
+g. Chance 1000 0.05 0.25 0.50
+
+Table 5. Tag-based music retrieval on full YouTube8M-MusicVideo test set for music+text model and model ensembles. For conve-
 nient comparison, we also report the MVPt+ and ViML results from Table 2 in the main text. We denote the music+text model described
 in Sec. B as MT in the table.
+
+--- Page 13 ---
 1)
+
 2)
+
 3)
+
 4)
+
+5)
+
+6)
+
+7)
+
+8)
+
+9)
+
+Ne
+
 https://youtu.be/xcZIwXABBKA?t=134
+
 TAGS: rock, lead vocals, electric bass, frantic, powerful, vocals, electric guitar, angry, slow, male vocals, acoustic drumset
+
 DATA2TEXT: The soundtrack is rock with a mood of powerful, slow, and frantic. Acoustic drums, male vocals, vocals, lead vocals, and electric
 guitar are playing in this song.
+
 PROMPT2TEXT: Rock song with electric guitars, electric bass, drums, and male vocals. The track has a powerful and angry vibe.
+
 HUMAN: Alternative hard rock song with grungy male vocals, heavy drumming, guitar riffs and bass conveying high energy.
-https://youtu.be/A_j0jhJnHmA?t=100
+
+https://youtu.be/A_jOjh]JnHmA?t=100
+
 TAGS: dance, synthesizer keyboard, hip-hop, male vocals, sad, electronic, electronic drumset, vocals, synth bass
+
 DATA2TEXT: This music is hip-hop, electronic, and dance with vocals, synthesizer keyboard, electronic drumset, and male vocals.
 PROMPT2TEXT: Hip-hop instrumental with a male vocal. Great for rap music.
+
 HUMAN: Rebellious hip-hop track with electronic music and impactful male vocals.
-https://youtu.be/ZUyZP9AS01c?t=82
+
+https://youtu.be/ZUyZP9ASO1c?t=82
+
 TAGS: pop, hip-hop, synth bass, happy, dance, vocals, electronic, sad, male vocals, synthesizer keyboard, lead vocals, electronic drumset, dreamy
 DATA2TEXT: This song is electronic and hip-hop, with synthesizer keyboard, electronic drumset, male vocals, synth bass, vocals, and lead vocals.
 The feeling is happy, dreamy, and sad.
+
 PROMPT2TEXT: Hip-hop track with a female vocal and a piano section. Great for a sad scene.
+
 HUMAN: A jivey male led track with electronic music and groovy trap beats making the song a dance retreat.
-https://youtu.be/Z1UhPHPjE10?t=185
+
+https://youtu.be/Z 1UhPHPjE10?t=185
+
 TAGS: vocals, synthesizer keyboard, male vocals, synth bass, happy, lead vocals, sad, hip-hop, angry, electronic drumset
 DATA2TEXT: This song sounds sad, but is a song with electronic drumset, male vocals, synthesizer keyboard, and synth bass.
 PROMPT2TEXT: Hip-hop track with a slow beat, male vocals, and a synth bass. The track has a sad and melancholic feel.
 HUMAN: Foreign heavy rap with low bass effects and trap synth line. Groovy jamming with friends feeling.
+
 https://youtu.be/kXPxUMv-S9I?t=148
+
 TAGS: electric guitar, vocals, slow, rock, dance, lead vocals, electric bass, blues, frantic, electronic, acoustic drumset, male vocals, quirky, angry,
-5) powerful
-6)
-7)
-8)
-9)
+powerful
+
 DATA2TEXT: This is blues and electronic music with the sound of vocals, male vocals, acoustic drumset, lead vocals, and electric bass giving an
 angry, powerful, and frantic feel.
+
 PROMPT2TEXT: A rock song with a bluesy feel, with electric guitar and drums.
+
 HUMAN: Grunge rock rebel kind of music like Greenday. A male vocal with distorted guitars, bass and drums.
+
 https://youtu.be/enHWyaXrcfl?t=134
+
 TAGS: hip-hop, electronic drumset, electronic, sad, synthesizer keyboard, male vocals, lead vocals, dance, synth bass, vocals
+
 DATA2TEXT: The music sounds like hip-hop, electronic, and dance, and sad, including synthesizer keyboard, electronic drumset, male vocals,
 synth bass, and lead vocals.
+
 PROMPT2TEXT: Hip-hop track with male vocal, electronic drumset, synthesizer keyboard and bass.
+
 HUMAN: Trap song with male rapper, very piercing hi-hat beats and bass line that sounds indulgent and addictive.
-https://youtu.be/kE2wuQT4J14?t=117
+
+https://youtu.be/kKE2wuQT4]14?t=117
+
 TAGS: electric bass, blues, dynamic, acoustic drumset, happy, vocals, male vocals, frantic, electric guitar, rock
+
 DATA2TEXT: This is blues and rock music featuring acoustic drums, electric bass, vocals, male vocals, and electric guitar with a dynamic, happy,
 and frantic feeling.
+
 PROMPT2TEXT: Blues rock track with a male vocalist. The song is happy and has a strong electric guitar and electric bass.
+
 HUMAN: Soulful rock track with male vocals backed by synth layers, over driven electric guitars and drums. The song has a relaxing note.
-https://youtu.be/2dFMqtk1ieM?t=118
+
+https://youtu.be/2dFMqtklieM?t=118
+
 TAGS: synthesizer keyboard, hip-hop, vocals, pop, electronic drumset, happy, dreamy, dance, electronic, male vocals, lead vocals
+
 DATA2TEXT: This song is electronic, dance, and hip-hop, sounding dreamy. The instrumentation includes male vocals and an electronic drumset.
 PROMPT2TEXT: A dreamy pop track with a strong bass line and a catchy melody. Best for commercials, advertisements, and videos.
+
 HUMAN: Mid tempo low sounding hip hop track with rap male vocal and drum groove.
-https://youtu.be/PKJ7p_8tj1c?t=115
+
+https://youtu.be/PK]7p_8tjic?t=115
+
 TAGS: synth bass, synthesizer keyboard, electronic, electronic drumset, vocals, happy, female vocals, slow, powerful, frantic, male vocals, dance,
 lead vocals
+
 DATA2TEXT: The music gives a slow, happy, and powerful feel with synthesizer keyboards, electronic drumset, vocals, male vocals, and female
 vocals playing.
+
 PROMPT2TEXT: A dance track with a strong beat and a lot of synth sound effects. Ideal for a party.
+
 HUMAN: Electropop track with strong bass and impactful electronic beats. Great for disco.
+
 Figure 6. Synthesized text examples using our approach. We randomly select examples from the YouTube8M-MusicTextClips test set.
-We show the output from our tags, data2text, and prompt2text approaches for each example video. We also show real human
+We show the output from our tags, data2text, and prompt 2text approaches for each example video. We also show real human
 annotations collected for each example. The text synthesis approaches show tradeoffs between preserving tag accuracy and increasing
-diversity of vocabulary and phrase structure. The prompt2text approach generates outputs with the highest diversity and most closely
+diversity of vocabulary and phrase structure. The prompt 2text approach generates outputs with the highest diversity and most closely
+
 resembling human annotations. Additional examples shown in Figure 7.
+
+
+--- Page 14 ---
 10)
+
 11)
-123
+
 12)
-133
+
 13)
+
 14)
+
 15)
+
 16)
+
 17)
+
 18)
-https://youtu.be/QJIw6v5uuYc?t=97
+
+https://youtu.be/Q[Iw6vsuuYc?t=97
+
 TAGS: vocals, synth bass, electronic, female vocals, frantic, lead vocals, pop, synthesizer keyboard, dance, happy, electronic drumset, male
 vocals
+
 DATA2TEXT: This sounds like dance and electronic music with a happy sound. The instrumentation includes male vocals, lead vocals,
 electronic drumset, vocals, female vocals, synthesizer keyboard, and synth bass.
+
 PROMPT2TEXT: EDM Pop track with a synth pad layer, heavy bass drops and beats. Sounds like a party track.
+
 HUMAN: Melodious pop song with rhythm guitars, drums and bass. The track adds a happy vibe to the setting.
-https://youtu.be/w3RzK9PEуHs?t=74
+
+https://youtu.be/w3RzK9PEyHs?t=74
+
 TAGS: electronic, synth bass, vocals, hip-hop, male vocals, lead vocals, dance, happy, synthesizer keyboard, electronic drumset
+
 DATA2TEXT: This song is happy. Electronic drumset, lead vocals, synth bass, vocals, male vocals, and synthesizer keyboard are playing in this
 song.
+
 PROMPT2TEXT: Hip-hop music with electronic drums, bass, and synthesizer.
+
 HUMAN: Impactful freestyle male rap with backing prominent synth lines, guitars and drums.
+
 https://youtu.be/Jkb-MeVp4cY?t=129
+
 TAGS: electric guitar, dreamy, dance, synth bass, hip-hop, lead vocals, electronic, pop, synthesizer keyboard, electronic drumset, vocals, happy
 DATA2TEXT: This is some electronic, dance, and pop music with a happy sound. The soundtrack has synth bass, vocals, synthesizer keyboard,
 electric guitar, electronic drumset, and lead vocals.
+
 PROMPT2TEXT: A very upbeat track with a lot of energy. Great for a party or a nightclub. Has a lot of synth bass and a lot of synths.
+
 HUMAN: A classical coordinated track with acoustic guitar, wind chimes, soft rock drum beats, and a male artist in a foreign language. Very
 nostalgic and elegant piece.
-https://youtu.be/Jvjgq9LpDZA?t=124
+
+https: //youtu.be/Jvigq9LpDZA?t=124
+
 TAGS: electronic drumset, sad, lead vocals, hip-hop, happy, synthesizer keyboard, vocals, synth bass, male vocals
+
 DATA2TEXT: This sounds like hip-hop music and sad, including male vocals, synthesizer keyboard, vocals, lead vocals, and electronic drumset.
 PROMPT2TEXT: Hip-hop song with male vocals, synth, drum, bass and an impactful drop.
+
 HUMAN: Dark rap song with male vocals and electronically produced layers.
-https://youtu.be/7SzppacIY1M?t=94
+
+https://youtu.be/7SzppaclY1M?t=94
+
 TAGS: dance, hip-hop, synthesizer keyboard, electronic drumset, sad, vocals, electronic, synth bass, lead vocals
 DATA2TEXT: This is some hip-hop and electronic music featuring an electronic drumset and synth bass. The feeling is sad.
 PROMPT2TEXT: Hip-hop track with male lead, bass, drums and synths. The song is a stress buster.
+
 HUMAN: Hip-hop track with with syncopated beats and synth sound effects that sounds like a Jay-Z song.
+
 https://youtu.be/y2GXHr7P3D0?t=63
+
 TAGS: synth bass, electronic, novelty, angry, synthesizer keyboard, dynamic, electronic drumset, dance
+
 DATA2TEXT: This is a song with synth bass and electronic drumset. The mood is dynamic, dance, novelty, and electronic.
 PROMPT2TEXT: A dance track with a robotic female vocal and a synth bass line. The track is perfect for a club.
+
 HUMAN: Death-metal track with chaotic music that sounds like guns being fired.
+
 https://youtu.be/CzVcyff_gc4?t=147
+
 TAGS: vocals, dance, synth bass, electronic drumset, male vocals, electronic, happy, pop, synthesizer keyboard, lead vocals
+
 DATA2TEXT: The genre of this music is electronic, sounds happy, electronic drumset, synthesizer keyboard, lead vocals, synth bass, and male
 vocals playing in this song.
+
 PROMPT2TEXT: A happy and upbeat dance track with a catchy melody and a strong beat. The vocals are sung in an unfamiliar language.
 HUMAN: Lounge chill hip hop music with rap male vocals, drum and bass.
-https://youtu.be/u6KD0-jBfx4?t=117
+
+https://youtu.be/u6KDO0-jBfx4?t=117
+
 TAGS: dance, female vocals, lead vocals, happy, synth bass, electronic drumset, vocals, pop, synthesizer keyboard, electronic, dynamic
 DATA2TEXT: The music is dynamic and happy with a pop, electronic, and dance feel, featuring synthesizer keyboard, lead vocals, synth bass,
 and female vocals.
+
 PROMPT2TEXT: A dance track with a strong beat, a catchy melody and a lot of energy.
+
 HUMAN: Very passionate love ballad track with sensual female vocals, keys, guitar, drum and bass.
+
 https://youtu.be/qwCWz4BFNuk?t=107
+
 TAGS: relaxing, male vocals, lead vocals, dreamy, nostalgic, acoustic guitar, sad, vocals, piano, acoustic
+
 DATA2TEXT: This music sounds dreamy and nostalgic, including acoustic guitar, lead vocals, male vocals, and piano.
 PROMPT2TEXT: Acoustic ballad with female vocals and piano.
+
 HUMAN: A sorrowful pop song with a melancholic melody. The passionate female vocals add a feeling of separation and longingness.
+
 Figure 7. Synthesized text examples using our approach. Continued from Figure 6.
+
+

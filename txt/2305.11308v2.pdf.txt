@@ -1,32 +1,30 @@
-arXiv:2305.11308v2 [cs.AI] 1 Jun 2024
+--- Page 1 ---
+2305.11308v2 [cs.AI] 1 Jun 2024
+
+arXiv
+
 MCD: A Model-Agnostic Counterfactual Search
 Method For Multi-modal Design Modifications
+
 Lyle Regenwetter
 Massachusetts Institute of Technology
 Cambridge, MA
-regenwet@mit.edu
-Yazan Abu Obaideh
-ProgressSoft
-Amman, Jordan
-yazan.amer@protonmail.com
-Faez Ahmed
-Massachusetts Institute of Technology
-Cambridge, MA
-faez@mit.edu
-Abstract-Designers may often ask themselves how to adjust
+regenwet @mit.edu
+
+Abstract—Designers may often ask themselves how to adjust
 their design concepts to achieve demanding functional goals. To
 answer such questions, designers must often consider counter-
 factuals, weighing design alternatives and their projected perfor-
 mance. This paper introduces Multi-objective Counterfactuals
 for Design (MCD), a computational tool that automates and
 streamlines the counterfactual search process and recommends
-targeted design modifications that meet designers' unique re-
+targeted design modifications that meet designers’ unique re-
 quirements. MCD improves upon existing counterfactual search
 methods by supporting multi-objective requirements, which are
 crucial in design problems, and by decoupling the counterfactual
 search and sampling processes, thus enhancing efficiency and
 facilitating objective trade-off visualization. The paper showcases
-MCD's capabilities in complex engineering tasks using three
+MCD’s capabilities in complex engineering tasks using three
 demonstrative bicycle design challenges. In the first, MCD ef-
 fectively identifies design modifications that quantifiably enhance
 functional performance, strengthening the bike frame and saving
@@ -35,12 +33,14 @@ a cross-modal fashion to resemble subjective text prompts or
 reference images. In a final multidisciplinary case study, MCD
 tackles all the quantitative and subjective design requirements
 introduced in the first two problems, while simultaneously cus-
-tomizing a bike design to an individual rider's biomechanical
+tomizing a bike design to an individual rider’s biomechanical
 attributes. By exploring hypothetical design alterations and their
 impact on multiple design objectives, MCD recommends effective
 design modifications for practitioners seeking to make targeted
-enhancements to their designs'.
+enhancements to their designs’ |
+
 I. INTRODUCTION
+
 Modifying existing designs to generate new ones is an
 essential aspect of various engineering sectors, such as
 aerospace, automotive, architecture, pharmaceuticals, con-
@@ -56,11 +56,26 @@ coming up with good design modifications can be challenging,
 as it requires navigating huge design spaces and making nu-
 merous trade-offs between competing objectives. Often, there
 are too many design attributes and potential modifications to
-The code, test problems, and datasets used in the paper are available to
+
+'The code, test problems, and datasets used in the paper are available to
 the public at decode.mit.edu/projects/counterfactuals/
+
+Yazan Abu Obaideh
+ProgressSoft
+Amman, Jordan
+yazan.amer @ protonmail.com
+
+Faez Ahmed
+Massachusetts Institute of Technology
+
+Cambridge, MA
+
+faez@mit.edu
+
 consider. Not surprisingly, designers often struggle with the
 available choices.
-As a designer, the ability to ask "What if?" questions
+
+As a designer, the ability to ask “What if?” questions
 is crucial in the iterative process of design modification.
 By exploring hypothetical scenarios, designers can identify
 opportunities to improve design performance and functionality.
@@ -78,22 +93,24 @@ the differences in results. Counterfactuals are often employed
 in reasoning, decision-making, and causal inference. They aid
 in comprehending the impact of particular events or actions on
 outcomes and considering the ramifications of various choices.
+
 Counterfactuals are typically employed to understand how
 an outcome would change given a different set of actions. This
 style of counterfactual can be applied to design problems to
-answer questions like: "How would the performance of this
-design change if I modified this particular attribute?" There
-are many tools to predict these 'forward' counterfactuals, such
+answer questions like: “How would the performance of this
+design change if I modified this particular attribute?” There
+are many tools to predict these ‘forward’ counterfactuals, such
 as simulations and predictive models. In this work, we instead
-consider 'inverse' counterfactuals, which ask: "What actions
-would be needed to result in this other outcome?" In design
-contexts, this often equates to the question: "What attributes of
+consider ‘inverse’ counterfactuals, which ask: “What actions
+would be needed to result in this other outcome?” In design
+contexts, this often equates to the question: “What attributes of
 my design would I need to change to achieve a particular re-
 quirement, such as a performance target, design classification,
 or functionality?” Such questions can be answered through
-'inverse counterfactual search.'
+‘inverse counterfactual search.’
+
 This paper proposes a novel approach for inverse counter-
-factual search using an AI-driven multi-objective optimization.
+factual search using an AJ-driven multi-objective optimization.
 Our proposed approach, Multi-objective Counterfactuals for
 Design (MCD), allows users to input a design and a set of
 desired requirements, and then recommends targeted modifi-
@@ -101,56 +118,76 @@ cations to the design attributes to achieve these requirements.
 It identifies these modifications by querying a set of design
 evaluators in a directed search procedure dictated by an evo-
 lutionary algorithm. We demonstrate how predictors ranging
-0674mm
-Design Features:
-Current Properies:
-537mm
-Wheel OD Hbar Style
-TT Length
-8.1 kg
+
+--- Page 2 ---
+Design Features: Current Properies:
+
+a A
+Wheel OD) |Hbar Style) (TT Length 8.1kg Ergonomic) |"Futuristic"
+.
+
 Property Predictors:
-Simulation ML Model
-r =
-=Σ...
+
+y=dD-.
+
 Equation
-X
-Ergonomic "Futuristic"
+
 Desired Properies:
-7.5 kg Ergonomic "Futuristic"
+
+[aI AKA
+
+19 kg “Futuristic”
+
+Simulation) | ML Model Ergonomic
+
 Multi-Objective Counterfactuals for Design (MCD)
-Counterfactual Features:
-0584mm
-566mm
-Wheel OD Hbar Style TT Length
+
 Counterfactual Properies:
-7.5 kg Ergonomic "Futuristic"
--
+
+oO
+
+T3KG
+
+Counterfactual Features:
+
+| (Wheel OD} (Hbar Style) | TT Length
+
+‘ oy
+
+@584mm
+
+Ergonomic) \"Futuristic"
+
 Fig. 1: Multi-objective Counterfactuals for Design answers
-"Inverse Counterfactual" design questions Given an ex-
+“Inverse Counterfactual” design questions — Given an ex-
 isting design and its properties, as well as a set of target
 properties (requirements) and property predictors (design eval-
 uators), MCD identifies variants of the design that achieve the
 requirements. This enables a human-AI collaborative workflow
 in which MCD recommends efficient design modifications to
 achieve designer-specified goals.
+
 from machine learning regressors to text embedding models
 can support target requirements ranging from functional per-
 formance targets to subjective text descriptions.
-MCD can be viewed as an AI-driven design modification
+
+MCD can be viewed as an AlJ-driven design modification
 tool that allows users to ask challenging objective and subjec-
-tive questions about an existing design, such as: "What mod-
-ifications would it take to make this product 10% lighter?",
-"What would make my design look like this other concept?”,
-or "How would my design need to change to look more sleek
-and futuristic?" By enabling designers to interact with AI
+tive questions about an existing design, such as: “What mod-
+ifications would it take to make this product 10% lighter?”,
+“What would make my design look like this other concept?”,
+or “How would my design need to change to look more sleek
+and futuristic?” By enabling designers to interact with AI
 systems simply and intuitively, counterfactuals open the doors
 to more successful human-AI collaboration by enhancing and
 accelerating the design process.
+
 In this paper, we showcase our MCD method and demon-
-strate that counterfactual search is a promising AI-driven
+strate that counterfactual search is a promising Al-driven
 design modification tool that designers can leverage for a
 variety of tasks. To do so, we make several key contributions,
 which we summarize below.
+
 1) We introduce Multi-objective Counterfactuals for Design
 (MCD), a new method to search for counterfactual
 design modifications that achieve desired outcomes. We
@@ -158,49 +195,58 @@ formulate MCD as a multi-objective search problem to
 minimize the magnitude and extent of the modifications,
 encourage proximity to the data manifold, and satisfy
 user-provided multi-modal requirements.
+
 2) We demonstrate that MCD effectively suggests targeted
 design modifications to improve the functional perfor-
+
 mance of query designs, illustrating that counterfactual
 search could be viewed as an effective design modifica-
 tion tool.
+
 3) We present a text and image-based counterfactual
 search in design using Contrastive Language-Image Pre-
 training (CLIP), the first instance of a multi-modal
 counterfactual search, to our knowledge. In doing so, we
 demonstrate that counterfactual search can accommodate
 highly subjective and multi-modal design requirements.
+
 4) We demonstrate that MCD can not only tackle both
 quantitative and subjective requirements, but can also
 handle highly-specialized requirements like ergonomic
 fit, which are customized for an individual user. More-
 over, we show that MCD can tackle these many multid-
 sciplinary requirements simultaneously and effectively.
-II. BACKGROUND
+
+Il. BACKGROUND
+
 Counterfactuals are a useful tool for investigating causality
 and forecasting the potential outcomes of different actions.
 Counterfactuals have been extensively used in various fields,
 including psychology, philosophy, social sciences, and ma-
 chine learning. In psychology, counterfactual thinking has been
 studied in relation to emotions, such as regret and disappoint-
-ment [1]. In philosophy, counterfactuals have been used to
-explore questions of determinism and free will [2]. In social
+ment (i). In philosophy, counterfactuals have been used to
+explore questions of determinism and free will In social
 sciences, counterfactual analysis is widely used to evaluate
-the impact of policies and interventions [3]. Counterfactual
+the impact of policies and interventions By. Counterfactual
 explanations are also gaining traction in the field of machine
 learning as a means to improve the interpretability and fairness
-of machine learning models [4], [5].
+of machine learning models
+
 In this literature review, we discuss several key areas that
-relate closely to our work 1) Optimization in engineer-
+relate closely to our work — 1) Optimization in engineer-
 ing design 2) explainability and counterfactuals in machine
 learning, 3) design modifications as counterfactuals, 4) multi-
 objective optimization approaches to counterfactuals, and 5)
 multi-modal counterfactual search and optimization.
+
 A. Optimization in Engineering Design
+
 Optimization is a powerful problem-solving tool in de-
 sign with a rich theoretical foundation [6], [7]. Typically,
-optimization attempts to find one or many 'best' (optimal)
+optimization attempts to find one or many ‘best’ (optimal)
 designs, subject to a set of constraints. Optimality is typically
-evaluated with respect to one or more ‘objectives.' When
+evaluated with respect to one or more ‘objectives.’ When
 multiple objectives are present, it is typical that a single design
 will not achieve optimal performance across all objectives.
 Instead of finding just a single design, a non-dominated
@@ -208,20 +254,24 @@ set can be identified where no design in the set is strictly
 superior to another in every objective. To effectively identify
 such non-dominated sets, a variety of effective methods have
 been proposed in the field of multi-objective optimization
-(MOO) [8]. In our case studies, we will use a popular MOO
-algorithm the Nondominated Sorting Genetic Algorithm-
-II (NSGA-II) [9]. NSGA-II boasts several innovative features,
+(MOO) (8). In our case studies, we will use a popular MOO
+algorithm — the Nondominated Sorting Genetic Algorithm-
+II (NSGA-II) (9). NSGA-II boasts several innovative features,
 such as non-dominated sorting for elitist selection, crowding
 distance to encourage diversity, and genetic operators such as
+
+
+--- Page 3 ---
 tournament selection, simulated binary crossover, and poly-
 nomial mutation. Our methodology, while demonstrated using
-NSGA-II, is not restricted to this specific MOO algorithm. The
+NSGA-IL is not restricted to this specific MOO algorithm. The
 core insights and applicability of our approach remain valid
 across various MOO algorithms, ensuring broad relevance and
 adaptability in diverse optimization contexts.
+
 a) Counterfactual Search Versus Conventional Optimiza-
 tion:: Though MCD leverages optimization algorithms to
-generate counterfactuals, it's important to underscore the dis-
+generate counterfactuals, it’s important to underscore the dis-
 tinct nature of counterfactual search compared to traditional
 optimization approaches. Predominantly, conventional opti-
 mization endeavors to pinpoint high-performing designs that
@@ -230,7 +280,7 @@ is dedicated to finding minimal modifications to pre-existing
 designs to meet these objectives. This distinction enables
 counterfactual search to thrive in scenarios where explicit
 constraints might not be delineated, a capability we illustrate
-in Sec. VII-A.
+
 Furthermore, traditional optimization methods often are not
 data-driven and do not prioritize staying close to the data
 manifold. MCD, on the other hand, incorporates a data-prior,
@@ -239,16 +289,18 @@ within the bounds of the data manifold. This approach not
 only fosters more realistic and implementable solutions but
 also enhances the relevance and applicability of the generated
 counterfactuals in real-world settings.
+
 B. Counterfactual Explainations in ML
+
 A particularly related body of research to our work is
 counterfactual explanations. Counterfactual explanations were
 originally developed as a tool to interpret machine learning
-(ML) models [10]. Counterfactuals enable users to better
+(ML) models (10). Counterfactuals enable users to better
 understand their models by asking questions about counterfac-
 tual scenarios and have become a staple in machine learning
 explainability. A classic motivating example for counterfactual
 explanations involves a model that is deciding whether to
-approve a loan, where the applicant may ask: "What would
+approve a loan, where the applicant may ask: “What would
 I need to change for this model to approve my application?”
 Broadly speaking, these counterfactuals answer a very ver-
 satile question: “Hypothetically, what would I need to change
@@ -259,45 +311,52 @@ that calculates the functional performance of a design, a
 designer can ask how to modify the design to achieve some
 desired functional performance. Despite this, counterfactual
 explanations have not yet been used in design engineering
-problems, to the best of our knowledge².
+problems, to the best of our knowled,
+
 Since their introduction, researchers have proposed a
 wealth of counterfactual explanation approaches, which
-Verma et al. [4] and Guidotti et al. [5] review. Among
+Verma et al. [4] and Guidotti et al. review. Among
 the popular methods are Diverse Counterfactual Explanations
+
 2A search for the term “counterfactual explanations” on the entire ASME
 digital collection, that includes design venues such as the IDETC conference
 and the Journal of Mechanical Design, returned zero results on March 10,
 2023.
-(DiCE) [11], Feasible and Actionable Counterfactual Expla-
-nations (FACE) [12], and Multi-Objective Counterfactuals
-(MOC) [13]. Counterfactual explanations are a much-needed
-alternative to popular ‘feature importance' methods [14], [15]
+
+(DiCE) (Uj. Feasible and Actionable Counterfactual Expla-
+nations (FACE) (Pj. and Multi-Objective Counterfactuals
+(MOC) (13). Counterfactual explanations are a much-needed
+alternative to popular ‘feature importance’ methods
 in machine learning explainability. In the design automation
-community, these 'feature importance' methods are often used
+community, these ‘feature importance’ methods are often used
 to determine which design parameters have outsized impacts
-on design performance [16]–[20] or which parameters are
-important for relationships between products [21]. However,
+on design performance | OQ] or which parameters are
+important for relationships between products (21). However,
 like counterfactual explanations, counterfactual-based feature
 importance has also not been employed in design.
+
 C. Design Modifications as Counterfactuals
+
 Counterfactuals are a popular ML explainability tool since
-they allow users to intuitively understand the ML model's
-internal decision thresholds (i.e. "Where does my model start
-predicting a different outcome?”). Designers and engineers ask
+they allow users to intuitively understand the ML model’s
+internal decision thresholds (i.e. “Where does my model start
+predicting a different outcome?”’). Designers and engineers ask
 many similar questions about their computational tools (i.e.
-"For what design variant will my finite element simulation cal-
+“For what design variant will my finite element simulation cal-
 culate a safety factor greater than 1?”). While ML practitioners
 leverage counterfactuals to navigate ML models, designers can
 similarly leverage counterfactuals to navigate both ML models
 and other design evaluators (numerical simulations, geometry
 engines, analytical equations, etc.). Even with the abstraction
-of ML models to general design ‘evaluators,' many of the
+of ML models to general design ‘evaluators,’ many of the
 guiding principles that have been proposed in ML literature
-for counterfactual explainations [4], [5] are similarly relevant
+for counterfactual explainations [5] are similarly relevant
 for design modifications. In general, good design modifications
 and good counterfactual explanations should share many of the
 same properties. These include:
+
 1) Validity of Design Modifications: First and foremost,
+
 a good design modification should result in a desired
 outcome. For example, if we are querying a geometry
 engine that calculates the mass of a design and we
@@ -306,11 +365,13 @@ in a calculated mass in this range. Depending on the
 nature of the problem, this desired outcome may be a
 class, an inequality, a range, an exact equality, or some
 combination of the above.
+
 2) Sparsity in Number of Modifications: Good modifica-
 tions should be easy to realize, meaning that they should
 not change many features of the query. Sparsity refers to
 the number of features that must be adjusted to realize
 a modification.
+
 3) Proximity and Minimal Adjustments: While the num-
 ber of adjustments needed to realize a modification is an
 important consideration, the extent of these adjustments
@@ -318,16 +379,20 @@ is also important. In simple terms, we would like the
 modified design to be as similar to the query design as
 possible. This is typically quantified as a distance to the
 original query.
+
 4) Manifold Proximity for Realism and Validity: When
 modifications are guided by statistical evaluators, their
-accuracy is contingent upon the evaluator's familiarity
+accuracy is contingent upon the evaluator’s familiarity
 with its training data. When modifications venture too
-far from the data manifold-essentially the space of
+far from the data manifold—essentially the space of
+
+
+--- Page 4 ---
 known, validated designs on which the evaluator was
 trained—their predicted outcomes become unreliable.
 This challenge underscores the importance of manifold
 proximity, which serves a dual purpose: it not only en-
-sures the evaluator's predictions remain accurate but also
+sures the evaluator’s predictions remain accurate but also
 boosts the realism and validity of the proposed design
 changes. In essence, designs that closely resemble or
 stay within the manifold of existing, proven designs are
@@ -335,14 +400,16 @@ inherently more likely to be both feasible and effective.
 This principle leverages the underlying data to implicitly
 enforce constraints, guiding towards solutions that are
 not just optimal but practically viable as well.
+
 5) Actionability of Design Modifications: In many prob-
 lems, certain input parameters may not be changeable,
 but will nonetheless play a role in the output of the
 model. For example, the weight of the rider will play
 a significant role in the structural loading of a bicycle.
-However, when designing a bicycle, we can't choose to
+However, when designing a bicycle, we can’t choose to
 simply make the rider lighter. A good design modifica-
 tion should only modify actionable features.
+
 6) Causality and Design Coherence: Design features are
 often causally linked, implying that changing one feature
 may necessitate changing another. For example, increas-
@@ -356,27 +423,32 @@ should thus embody a deep understanding of these
 causal dynamics, ensuring that changes are coherent
 and aligned with the underlying physical principles
 governing the design.
+
 There is ample reason to treat design modifications as coun-
 terfactuals. Naturally, a strong counterfactual generator will
 identify modifications with the above properties. However,
 good counterfactual generators should also exhibit several
 properties that may not be reflected in the strength of indi-
 vidual modifications themselves:
-1) Diverse Sets of Modifications: As emphasized in [11],
+
+1) Diverse Sets of Modifications: As emphasized in
 it may be highly desirable to generate diverse sets of
 modifications. This gives the user a wealth of options,
 ideally with different actionable requirements to achieve
 the query objective.
+
 2) Model-Agnosticism in Modification Systems: Ideally,
 the modification system should treat the evaluator as a
-"black box” and require nothing more than a simple
-evaluation function [4]. These "model-agnostic" meth-
+“black box” and require nothing more than a simple
+evaluation function [4]. These “model-agnostic’” meth-
 ods allow for wider applicability and code reuse. No-
 tably, model-agnostic approaches do not rely on gradient
 information from the evaluator but may be less sample-
 efficient than methods that leverage gradients, when
 available.
+
 D. Multi-Objective Counterfactual Explanations
+
 As discussed, counterfactual search is an effective method
 to generate design modifications. Counterfactual search can
 be viewed as an optimization problem, and can similarly be
@@ -385,7 +457,7 @@ summarize the optimization objective as a weighted sum of
 the different objectives discussed earlier. However, another
 approach instead frames the counterfactual search process
 as a classic multi-objective optimization (MOO) problem.
-Dandl et al. [13] formalize this parallel between counterfactual
+Dandl et al. (13) formalize this parallel between counterfactual
 search and MOO in Multi-Objective Counterfactuals (MOC).
 By handling objectives individually rather than as a single
 aggregated objective, MOC realizes a key benefit of Multi-
@@ -396,6 +468,7 @@ weighted aggregation of objectives, the non-dominated set
 allows designers to adaptively select counterfactuals based on
 their specific search priorities, which typically depend on the
 problem at hand.
+
 Though MOC formalized counterfactual search as an op-
 timization problem, its principal concern was the use of
 counterfactuals for machine learning explainability. Though
@@ -405,23 +478,26 @@ tion. Chiefly, despite its name, MOC does not inherently
 support multi-objective queries. Furthermore, MOC does not
 distinguish between hard and soft constraints, despite the
 fact that this functionality is ingrained in the Non-Dominated
-Sorting Genetic Algorithm II (NSGA-II) [9] that MOC is built
+Sorting Genetic Algorithm II (NSGA-II) i) that MOC is built
 around. MCD addresses these gaps while also decoupling the
 optimization and sampling steps, and introducing new ways to
 integrate counterfactuals with representation-learning models
 to enable multi-modal counterfactual search.
+
 Since the overarching goal of MCD is not to explain
 evaluators, but rather to search for counterfactuals that can
 be used as design modifications, we refer to the problem
-as 'counterfactual search.' Unlike counterfactual explanations,
+as ‘counterfactual search.’ Unlike counterfactual explanations,
 counterfactual search does not require ML predictors and can
 work with many types of evaluators. It also has the additional
 goals of manifold similarity and meeting multi-objective multi-
 modal requirements.
+
 E. Multi-Modal Counterfactuals
+
 The multitude of data modalities (parametric, images,
 meshes, etc.) spanned by design data remains a prominent
-challenge in data-driven design [20], [22], [23]. Existing
+challenge in data-driven design . Existing
 inverse design tools, particularly optimization frameworks,
 seldom support design targets specified using complex data
 modalities. For example, interacting with design optimization
@@ -431,12 +507,16 @@ that MCD (and conventional optimization algorithms) can be
 enhanced with representation-learning AI models to process
 design requirements in a variety of multi-modal data repre-
 sentations. However, setting appropriate design constraints in
+
+
+--- Page 5 ---
 multi-modal settings can be challenging. As we showcase in
-Sec. VII-A, MCD's ability to handle implicit constraints makes
+Sec. MCD’s ability to handle implicit constraints makes
 it more robust than conventional optimization algorithms in
 underconstrained multi-modal problems.
-When handling data of modalities like graphs [24], im-
-ages [25], 3D geometry [26], text [27], [28], and mixed modal-
+
+When handling data of modalities like graphs (24). im-
+ages (25). 3D geometry [26], text (27]. (28}, and mixed modal-
 ities, a common representation-learning technique involves
 mapping datapoints to a vector space. This effectively creates a
 link from datapoints of the modality to datapoints in the vector
@@ -449,84 +529,96 @@ are rewarded for mapping matching pairs to similar embed-
 ding vectors and mapping non-matching pairs to dissimilar
 embedding vectors. CLIP has garnered significant attention
 in recent years by enabling high-performing vision-language
-models [30]. In our experiments, we will be leveraging pre-
+models (30). In our experiments, we will be leveraging pre-
 trained CLIP models to query counterfactuals using text and
 image prompts.
-III. METHODOLOGY
+
+II. METHODOLOGY
+
 In this section, we discuss the optimization formulation
 behind MCD, emphasizing the constraints, objectives, and
 operators used. We then present our approach for sampling
 diverse sets of counterfactuals and discuss how we decouple
 the optimization from the final sampling step. Finally, we
 demonstrate the capabilities of MCD on a simple 2D problem.
+
 A. Objectives for Quality Design Modifications
+
 Broadly, MCD considers two types of objectives: Objectives
 related to counterfactual quality and user-specified auxiliary
 objectives (often used for soft constraints). The former draws
-on MOC [13], which leverages Gower distance [31] and
+on MOC (13). which leverages Gower distance [31] and
 the number of changed features as optimization objectives
 in MOC. In the following objectives, we consider a query
-(original design), q, and a counterfactual (modified design),
+(original design), g, and a counterfactual (modified design),
 x, which are each represented as a d-dimensional design
 vector. We also assume that exactly n evaluation functions are
 given by the user, which are used to calculate performance
 objectives, constraint satisfaction, or both.
+
 1) Proximity to Query: To calculate proximity, we use
-Gower Distance [31], a metric that indicates the distance
+Gower Distance BI]. a metric that indicates the distance
 between mixed-type data points. The Gower distance
-between d-dimensional counterfactual x and query q
-is given in terms of their feature values x¿ and q¿ for
-i = [1...d], as:
-fpr (x,q)
--
-d
-1
-d
-Σ SG (xi, Qi)
-i=1
-Here, Â¿ is the range of the feature i observed in the
+between d-dimensional counterfactual « and query q
+is given in terms of their feature values x; and q; for
+
+€ [1...d], as
+
+fpr(a,9) “33 5a(xi, 4) (1)
+dq(«;,q:) is a function that depends on feature type and
+is given as:
+
+if x; is numerical
+Jala, q) = f ‘
+vitdi
+
+— Gil
+
+if x; is categorical
+
+Here, R; is the range of the feature i observed in the
 dataset.
+
 2) Sparsity of Modification: To calculate sparsity, we
 quantify the proportion of features that the counterfac-
-tual, x, modifies from the query, q.
-d
-x-
-1
-fsp(x, q)
-=
-=
-1xi+qi
-(3)
-d
+tual, x, modifies from the query, g
+
+fsp(2,Q) = He allo _
+
+=5 > Inga 3)
+
 3) Proximity to Dataset Manifold: To measure the mani-
 fold proximity, we calculate the average Gower distance
-to the k nearest observed data points s² ...sk from the
+to the k nearest observed data points s‘...s* from the
 dataset S, where k is a tuning parameter:
-fmp(x, S)
-k
-d
-=
-ΙΣΙΣ8(=5,9%)
-i=1 j=1
-8G (xj, s¹)
-(4)
+
+ky
+2 abe (25,85) (4)
+
 4) Problem-Specific Objectives: Users may also specify
 objectives pertaining to the output of the evaluators
-fi(x) ViЄO, where O is the set of evaluation
+fi(z) Vi € O, where © is the set of evaluation
 functions to be treated as objectives. These auxiliary
 objectives are directly included as objectives in the opti-
-mizer. As we discuss next in III-B, users can also choose
+mizer. As we discuss next in[III-B] users can also choose
 to place hard constraints on the outputs of evaluators,
 allowing them to serve as either performance evaluators,
 constraint evaluators, or both.
+
+ie
+
+Fpl, 8) =
+
 B. Constraints on Valid Design Modifications
+
 In a counterfactual search, a variety of optimization con-
 straints may be present. Constraints are considered non-
 negotiable and always take precedence over objectives. In
-practice, many optimization algorithms, including MCD's un-
+practice, many optimization algorithms, including MCD’s un-
 derlying NSGA-II optimizer, prioritize resolving constraint
 violations before proceeding to the optimization of objectives.
 MCD considers several types of constraints:
+
 1) Evaluator Output Constraints: Users may desire to ap-
 ply arbitrary constraints, as is classic in multi-objective
 optimization. Users can do so by affixing inequality con-
@@ -535,84 +627,97 @@ them constraint evaluation functions. Evaluator output
 constraints are also the classic motivating case for coun-
 terfactual explanations in ML. To maintain generality,
 we represent these constraints with inequalities using
-lower bounds L₁ and upper bounds U¿ for evaluators
-fi(x) ViЄ C, where C is the set of evaluation functions
-to be treated as constraints. Note that C and ☐ may
-overlap. The intersection, CO, represents the set of
+lower bounds L; and upper bounds U; for evaluators
+fi(z) Vi € C, where C is the set of evaluation functions
+to be treated as constraints. Note that C and O may
+overlap. The intersection, C  O, represents the set of
 evaluation functions that are both constrained and used
 as an objective (often representing performance objec-
 tives with a hard requirement). We write this constraint
-(1)
 as:
-SG(xi, qi) is a function that depends on feature type and
-is given as:
-|xiqi
-if xi is numerical
-SG(x,q)
-Ri
-1xi+qi
-if x is categorical
-L¡ ≤ ƒ¡(x) ≤ U; V j ≤ C
-(5)
+
+Li <fi(z) <U;VIEC (5)
+
 2) Parameter Bounds: MCD also allows users to specify
 bounds for continuous design parameters or limited sets
 that categorical variables can select from. We define the
-lower bound lk and upper bound uk for parameter k
-where x is continuous or discrete and ordered. If xk is
+lower bound J, and upper bound u, for parameter k
+
+--- Page 6 ---
+where x, is continuous or discrete and ordered. If x, is
 instead categorical, we define a set of valid parameter
-values Vk for parameter k. For k = {1...d}, where d is
+values Vy, for parameter k. For k € {1...d}, where d is
 the dimensionality of the design space:
-if xk is numerical
-lk ≤ xk ≤ Uk
-xXk Є Vk if
-xk
-is categorical
-(6)
+
+ly < @p < up if xp is numerical
+
+we . (6)
+xr, € Vy if xp is categorical
+
 3) Actionable Features: Like many counterfactual models,
+
 we implement a mechanism to constrain which features
+
 are allowed to be modified by a counterfactual, as
+
 specified by the user. We call the set of actionable
-features A. Any feature l = {1...d} that is not actionable
+
+features A. Any feature / € {1...d} that is not actionable
 must not deviate from the query:
-x=q, if 1 A
+
+u=q, ifleA (7)
 C. Formulation as Al-driven MOO problem
-(7)
+
 In summary, we express the multi-objective optimization
 problem in terms of the variables, sets, and functions defined
 above as follows, where x* is an optimal choice of x:
-minimize: fi(x*), ViЄ {pr, sp, mp} UO
-subject to: f¿(x*) – L; ≥ 0,
+
+minimize: f;(x*), V 7 € {pr,sp,mp} UO
+subject to: f;(2*) — L; > 0,
+
+U; ~ file") > 0,
+
+Up — 2, > 0, if x, is numerical,
+
+(8)
+
+ay, — I, > 0, if x, is numerical,
+
+xz, € Ve, if xp is categorical,
+
+a=, ifl¢gA,
+
+VjeC, ke {l...d}, le {1...d}
 D. Algorithm
-U; — f¡ (x*) ≥ 0,
-Ukx0, if x is numerical,
-x½ − lk ≥ 0, if x is numerical,
-xЄ Vk, if xk is categorical,
-x=q, if 1 A,
-VjЄC, kЄ {1...d}, l = {1...d}
-Any gradient or non-gradient-based multi-objective opti-
+
+Any gradient- or non-gradient-based multi-objective opti-
 mization method could be used to optimize MCD problems.
 We implement a backend using the Non-Dominated Sorting
-Genetic Algorithm II (NSGA-II) [9] to generate the results
+Genetic Algorithm Il (NSGA-ID (9 to generate the results
 in the paper. Notably, NSGA-II is a model-agnostic optimizer,
 requiring no gradient information from the predictors, allowing
 for the widest applicability across design problems. We use an
-implementation of NSGA-II from [32], including the mixed-
+implementation of NSGA-II from (32). including the mixed-
 variable selection, crossover, and mutation functions provided.
+
 The initial population always consists of the query and a
 set of randomly sampled points from the confines of the user-
 specified design space or directly from the dataset. In problems
 with continuous variables, we find that without any precautions
 to maintain the exact parameter values from the original query,
-these values tend to get ‘'lost,' and can never be exactly
+these values tend to get ‘lost, and can never be exactly
 reconstructed, hurting the sparsity objective of counterfactuals.
-To allow the algorithm to 'rediscover' the exact parameter
-values from the query, we introduce a custom 'repair' operator
+To allow the algorithm to ‘rediscover’ the exact parameter
+values from the query, we introduce a custom ‘repair’ operator
 that randomly reverts individual parameter values back to the
-query's values with a certain probability.
+query’s values with a certain probability.
+
 E. Sampling
+
 Contrary to other counterfactual search approaches, MCD
 decouples the optimization and sampling steps. Convention-
 ally, a user will have to decide on the priorities between
+
 various objectives (e.g. proximity, diversity, manifold proxim-
 ity, etc.) before running the optimization. This is impractical,
 as these objectives are challenging to select intuitively, and
@@ -620,197 +725,249 @@ must often be chosen through trial and error. For example, a
 designer might realize that the generated counterfactuals are
 much too different from the query to be practically realiz-
 able. By avoiding retraining, our method can save significant
-computational expense and, as we will discuss in Sec. V,
+computational expense and, as we will discuss in Sec.
 enable users to quickly consider counterfactuals from different
 regions of the objective landscape. We decouple the search and
 sampling process as follows:
+
 1) Given a query, a set of constraints, and objectives, the
 optimizer generates a collection of candidate counterfac-
 tuals by running NSGA-II.
+
 2) The sampling algorithm collects a set of objective prior-
 ity weights from the user. By collecting these weights af-
 ter training, MCD allows rapid counterfactual sampling
 under different objective weights without the need for
 retraining, unlike other approaches.
+
 3) Each candidate counterfactual is assigned an aggregate
 quality score, which is calculated as a sum of individual
 objective scores, weighted by their priority. Objectives
 can also be provided with specified targets, in which
-case the Design Target Achievement Index [33] is used
+case the Design Target Achievement Index is used
 to quantify target achievement before factoring into the
-aggregate score. The aggregate score, fa of a counterfac-
+aggregate score. The aggregate score, f,, of a counterfac-
 tual candidate, x, is given in terms of objective priority
 weights Wpr, Wsp, Wmp by:
-fa (p)=wpr fpr (x, q)
+
+Sa(P) =Wpr fpr(#; 9)
 + Wspfsp(x, q)
-+ Wmpfmp(x, S)
-+ Σ wifi (x)
-iЄO
-(9)
-Here, we are weights for the user-specified auxiliary
-objectives, i = 0.
++ Wmpfinp(x, 8) (9)
+
+i€O
+
+Here, w; are weights for the user-specified auxiliary
+objectives, i € O.
+
 4) A performance-weighted diversity matrix is calculated
-using a Gower distance-based similarity kernel, dĠ(i, j)
+using a Gower distance-based similarity kernel, dg(i, j)
 to evaluate the similarity between counterfactuals. Ma-
 trix entries are calculated as a function of aggregate
-scores and a diversity parameter, wd as:
-Di,j = §G(i, j) (fa(i) fa(j)) wa
-(10)
+scores and a diversity parameter, wa as:
+
+Dig = Sali, J) (fali) fa(9)) *4
 5) A diverse subset of high-performing counterfactuals is
+
 selected from this matrix using greedy diverse subset
 selection.
+
+(10)
+
 F. Requirements
-A block diagram demonstrating MCD's anticipated usage
-scenario is shown in Figure 1. MCD's requirements can be
+
+A block diagram demonstrating MCD’s anticipated usage
+scenario is shown in Figure fj MCD’s requirements can be
 summarized as follows:
+
 1) Query (required): MCD needs an original design, which
+
 is referenced in proximity and sparsity calculations.
+
 2) Evaluators (required): MCD needs one or several evalu-
+
 ators to calculate the performance of design candidates.
+
+--- Page 7 ---
 These may be numerical simulations, analytical equa-
-tions (as in Sec. III-G), predictive surrogate models (as
-in Sec. IV), an entire evaluation pipeline (as in Sec. V),
+tions (as in Sec. {0I-G}, predictive surrogate models (as
+in Sec. {IV}. an entire evaluation pipeline (as in Sec. [Yp.
 or something else.
+
 3) Evaluator Output Constraints (required): Users must
 define at least one constraint on the output of an eval-
 uator. This is the counterfactual outcome that the user
 wants to achieve and is a necessity for counterfactual
 search.
-4) Dataset (recommended): MCD's manifold proximity is
+
+4) Dataset (recommended): MCD’s manifold proximity is
 calculated by referencing a dataset. However, the dataset
 can optionally be foregone and the manifold proximity
 unused, though several features of MCD will be lost.
+
 5) Design Space Constraints (optional): As discussed in
-Sec. III-B, the user can constrain actionable features and
+Sec. the user can constrain actionable features and
 parameter bounds to constraint the design space over
 which MCD can explore
+
 6) Auxiliary Objectives (optional): The user may option-
 ally specify auxiliary objectives or performance targets
 for MCD to consider.
+
 G. Showcasing Functionality on 2D Examples
+
 Before showcasing the capabilities of MCD on real design
 datasets, we will first demonstrate its functionality on a simple
 two-dimensional problem for ease of visualization. In this
 problem, five distinct regions of a two-dimensional design
 problem are designated valid, and we have a starting query
-that is in none of the regions (Fig. 2a). We seek a design
+that is in none of the regions (Fig. . We seek a design
 modification that will be valid. We first optimize for several
 generations, yielding thousands of possible solutions (Fig.
-2b), then sample high-performing counterfactual sets of 10
+[2bp, then sample high-performing counterfactual sets of 10
 designs from the set of all valid solutions identified during
 optimization. During sampling, we consider different choices
-of objective weights (Wpr, Wsp, Wmp, wd).
-1) When sampling using “balanced" objective weights,
+of objective weights (Wp, Wsp, Wmp, Wa)-
+
+1) When sampling using “balanced” objective weights,
 the sampled counterfactual sets achieve a balance of
 proximity, diversity, and sparsity. Designs in the most
 proximal region are favored, but at least one design is
-sampled from each region (Fig. 2c).
-2) When proximity weight (wpr) is relatively high, most
+sampled from each region (Fig
+
+2) When proximity weight (wp,) is relatively high, most
 counterfactuals in each set are sampled from the mode
-nearest to the query (Fig. 2d).
+nearest to the query (Fig. [2dp.
+
 3) When diversity weight (wa) is relatively high, two
-counterfactuals are sampled from each mode (Fig. 2e).
-4) Finally, when sparsity (wsp) is relatively high, coun-
+counterfactuals are sampled from each mode (Fig. Zep.
+
+4) Finally, when sparsity (w,,) is relatively high, coun-
 terfactuals are only sampled from locations in the
 space where only one parameter differs from the query
-(Fig. 2e).
+(Fig. [2e).
+
 Each of these subsets is sampled from the same set of
 counterfactual candidates with no re-optimization necessary.
-Now, having demonstrated MCD's functionality on a simple
+Now, having demonstrated MCD’s functionality on a simple
 2D problem, we move on to a more complex real-world
 design problem: Bicycle design. The following experiments
-will utilize the BIKED ecosystem [17], [34], [35], a set of
+will utilize the BIKED ecosystem (7. (34). 35]. a set of
 datasets, predictive models, and other computational tools
-Query
-(a) Problem setup (target region
-shown in gray)
-Query
+
+Qi ery
+
+(a) Problem setup (target region (b) All solutions found during
+
+shown in gray) optimization
+%e
+Va .
+x Query z Query
+
 (c) Sampling using balanced
 objective weights
-Query
-(e) Sampling using high
-diversity weight
-Query
-(b) All solutions found during
-optimization
-Query
+
 (d) Sampling using high
 proximity weight
+
 Query
+
+(e) Sampling using high
+diversity weight
+
 (f) Sampling using high
 sparsity weight
+
 Fig. 2: Demonstration of inverse counterfactual search in 2D
+
 space. The relative priority weighting of objectives has a sig-
+
 nificant impact on counterfactuals sampled during sampling.
+
 aimed at facilitating data-driven bicycle design. We provide
 an overview of BIKED in the appendix.
+
 IV. MODIFYING DESIGNS TO MAXIMIZE STRUCTURAL
 EFFICIENCY
+
 In our first case study, we consider the counterfactual:
-"What if my design were 30% lighter?" Specifically, we
+“What if my design were 30% lighter?” Specifically, we
 consider a bicycle frame design problem where we are trying
 to improve the structural properties and reduce the weight of
-a given query design. The query, q, and any counterfactual x
+a given query design. The query, g, and any counterfactual x
 are represented using a set of 37 continuous and categorical
 variables (e.g. [Steel, 565.6 ... 1.24, 4.26]). We use a regression
 model trained on the FRAMED dataset consisting of Finite El-
 ement (FE) simulation results from 4500 community-designed
-bike frames [34], including weight, safety factors, and deflec-
+bike frames Ba, including weight, safety factors, and deflec-
+
+--- Page 8 ---
 tions under various loading conditions. The trained regression
-model is an AutoGluon tabular AutoML regressor [36] trained
+model is an AutoGluon tabular AutoML regressor (36) trained
 to accurately predict various structural performance attributes
 of bicycle frames.
-To illustrate MCD's capabilities, we define three distinct
+
+To illustrate MCD’s capabilities, we define three distinct
 but related problems. The first has a single objective: finding
 counterfactuals that reduce the predicted mass of the given
 design. The second has two competing objectives: Maximize
-a design's safety factor while minimizing its mass. The third
+a design’s safety factor while minimizing its mass. The third
 has the same objectives as the second but restricts MCD to
 only vary a more constrained and actionable set of features.
 In each example, we query the same design q: a steel tube
 road bike with minor structural inefficiencies. Experts would
-likely suggest that the bike's insufficiently thick down tube is
+ikely suggest that the bike’s insufficiently thick down tube is
 a key shortcoming of the design, requiring other components
 to be over-engineered to compensate. This bike has a safety
-factor of 1.24 and a mass of 4.26 kg4.
-=
-=
+actof] of 1.24 and a mass of 4.26 kg
+
 a) Single objective query:: In the first variant, MCD is
 tasked with finding counterfactuals that reduce the mass of the
 original design from 4.26 kg to under 3 kg. Mathematically,
-f1(x) Rmass (x), U1 3 kg, and L₁ = -∞ kg. Here,
-Rmass is a regression model trained to estimate the mass of
+fi(z) = Rmass(x), Ui = 3 kg, and Ly = —oo kg. Here,
+Rmass iS a regression model trained to estimate the mass of
 designs. MCD successfully discovers hundreds of valid coun-
 terfactuals and samples a set of three diverse counterfactuals,
-x*1-3 which have, on average, a mass of 2.0 kg, as tabulated
-in Table I. Although MCD succeeds in its explicitly stated
+x*!—3 which have, on average, a mass of 2.0 kg, as tabulated
+in Table |I} Although MCD succeeds in its explicitly stated
 objective, a closer look reveals that it does nothing to remedy
 the wall thickness issue in the down tube, and as a consequence
 of weight savings in other parts of the sampled frames,
 the average safety factor across sampled counterfactuals is
 an abysmal 0.52. This disregard for secondary objectives
 is quite characteristic of the many existing single-objective
-counterfactual search algorithms and illustrates why MCD's
+counterfactual search algorithms and illustrates why MCD’s
 novel support of multi-objective queries is so essential for
 design problems. Our next example showcases how to leverage
 multi-objective requirements to avoid these issues.
-TABLE I: Generated counterfactuals x*
-*1-3 (CF) for a Single
+
+TABLE I: Generated counterfactuals x*!~* (CF) for a Single
 Objective Query. 34 columns are omitted. Like many single-
 objective counterfactual engines, MCD tends to achieve single-
 objective queries at the expense of secondary objectives.
-MCD's unique support of multi-objective queries remedies this
+MCD’s unique support of multi-objective queries remedies this
 problem.
-Down Tube Safety Frame
-Thick. (mm) Factor Mass (kg)
-minimum value of 1.5. Mathematically, f2(x)
-=
-RSF(x),
-U₂ = ∞, and L2 = 1.5, where RSF(x) is a regression model
+
+Material Stack Down Tube Safety Frame
+
+aterta (mm) “ Thick. (mm) Factor Mass (kg)
+q (Query) Steel 565.6 ... 0.52 1.24 4.26
+x*! (CF) Steel 570.8 ... 0.52 0.52 1.99
+x*? (CF) Steel 565.6... 0.52 0.27 1.64
+x*3 (CF) Steel 565.6. ... 0.52 0.76 2.48
+
+b) Bi-objective query:: In the second variant, a sec-
+ond objective is introduced: Increase the safety factor to a
+
+3We use predicted safety factor in FRAMED’s in-plane loading sce-
+nario
+4ach optimization ran for 100 generations with a population size of 500.
+
+minimum value of 1.5. Mathematically, f(x) = Rspr(x),
+Un = oc, and Ly = 1.5, where Rg p(x) is a regression model
 trained to estimate the safety factor of a design, x. Again,
 MCD successfully discovers numerous counterfactuals, and
 the diverse 3-bike sample set has an average mass of 2.3 kg
-and a safety factor of 1.8, as shown in Table II. This time,
+and a safety factor of 1.8, as shown in Table This time,
 MCD realizes that the bike can be made significantly more
 weight-efficient by increasing the down tube wall thickness to
 relieve structural stress on other components to be lightened.
@@ -822,119 +979,58 @@ model, MCD could consider cost as another query objective.
 However, even without such a model, MCD can be ordered to
 leave certain design parameters unchanged, as we demonstrate
 in our final example.
-TABLE II: Generated counterfactuals x*1-3 (CF) for a Bi-
+
+TABLE II: Generated counterfactuals x*!~3 (CF) for a Bi-
 objective query. 34 columns are omitted. By querying multi-
 ple objectives simultaneously, MCD avoided the safety factor
 issue that occurred in variant 1.
-Down Tube Safety Frame
-Thick. (mm) Factor Mass (kg)
-Material
-x*
-x*2
-*1
-(CF)
-x*3
-q (Query)
-(CF) Aluminum 565.0
-Titanium 561.6
-(CF) Aluminum 532.2
-Stack
-(mm)
-Steel 565.6
-...
-0.52
-1.24
-4.26
-2.20
-1.91
-2.81
-2.46
-1.82
-2.21
-1.81
-1.58
-1.75
+
+Material Stack Down Tube Safety Frame
+
+aterial (mm) “* Thick. (mm) Factor Mass (kg)
+q (Query) Steel 565.6 ... 0.52 1.24 4.26
+x*! (CF) Aluminum 565.0 ... 2.20 1.91 2.81
+x*? (CF) Titanium 561.6 ... 2.46 1.82 2.21
+«*3 (CF) Aluminum 532.2 ... 1.81 1.58 1.75
+
 c) Bi-objective query with constraints: In the third vari-
 ant, MCD is no longer allowed to vary frame material. Math-
 ematically, we specify that the material parameter (mat) of x
-and զ must be the same: xmat = Imat = Steel. MCD proceeds
+and g must be the same: %mat = Ymat = Steel. MCD proceeds
 to find tens of valid designs through variations in certain tube
 diameters, lengths, and other structural configurations. From
 these valid designs, a 3-bike sample set achieves an average
 mass of 2.7 kg and an average safety factor of 1.9, as shown
-in Table III.
-TABLE III: Generated counterfactuals x*1-3 (CF) for a Bi-
+in Table [I]
+
+TABLE III: Generated counterfactuals «*!~* (CF) for a Bi-
 Objective query with constraints. 34 columns are omitted.
 When restricted from modifying frame material, MCD is still
 able to recommend design modifications that meet the safety
 factor and mass targets.
-q (Query)
-x*
-1
-(CF)
-*2
-Stack
-(mm)
-Steel 565.6
-Steel 570.8
-x (CF) Steel 565.6
-Material
-Material
-0.52
-...
-1.24
-4.26
-0.52
-0.52
-1.99
-0.52
-0.27
-1.64
-.*3
-x
-(CF) Steel 565.6
-0.52
-0.76
-2.48
-x
-*3
-q (Query)
-x*1 (CF) Steel
-x*2 (CF) Steel 601.7
-(CF) Steel 565.6
-Stack
-(mm)
-Steel 565.6
-Down Tube Safety Frame
-Thick. (mm) Factor Mass (kg)
-0.52
-1.24
-4.26
-565.6
-2.44
-2.05
-2.93
-3.38
-2.06
-2.31
-3.22
-1.58
-2.71
-b) Bi-objective query:: In the second variant, a sec-
-ond objective is introduced: Increase the safety factor to a
-3 We use predicted safety factor in FRAMED's in-plane loading sce-
-nario [34].
-4Each optimization ran for 100 generations with a population size of 500.
+
+Material Stack Down Tube Safety Frame
+
+ateria! (mm) °° Thick. (mm) Factor Mass (kg)
+q (Query) Steel 565.6 0.52 1244.26
+x1 (CF) Steel 565.6 2.44 2.05 2.93
+x2 (CF) Steel 6017... 3.38 2.06 231
+x*3 (CF) Steel 565.6 3.22 158 2.71
+
 Through these examples, we have demonstrated that MCD
 excels at handling multi-objective quantitative performance
 queries and can identify performance-enhancing design modi-
 fications in these settings. In our next example, we consider a
+
+--- Page 9 ---
 scenario in which more subjective text and image requirements
 are provided instead of quantifiable performance requirements.
+
 V. MODIFYING PARAMETRIC CAD DESIGNS TO MATCH
 TEXT PROMPTS OR IMAGES
+
 In this case study we examine subjective counterfactuals
-like: "What if my design looked more ‘cyberpunk'-themed?"
+like: “What if my design looked more ‘cyberpunk’-themed?”
 Classically, counterfactual search requires a clear and quan-
 tifiable counterfactual requirement. This can be constraining,
 since subjective counterfactual requirements may be more
@@ -948,167 +1044,212 @@ to features in a Computer-Aided Design (CAD) model. This
 can be seen as a cross-modal counterfactual search problem,
 where a CAD model is being modified to adhere to an image
 or text-based requirement.
+
 A. Enabling Cross-modal Counterfactual Search
-To modify the user's current parametric CAD design to be
+
+To modify the user’s current parametric CAD design to be
 more similar to a text or image, MCD needs an evaluator
 that can calculate the similarity between a parametrically-
 represented bicycle design and a text string or image. To
-do so, we use a model introduced in [35], trained on 1.4
+do so, we use a model introduced in (35), trained on 1.4
 million bicycle designs to directly map parametric bike designs
 into a shared embedding space with text and images. Our
 optimization objectives are then calculated using a cosine
-similarity between the bike's embedding and the target text
+similarity between the bike’s embedding and the target text
 or image embedding.
+
 In this example, we select a subset of 97 variables from
-BIKED's parameter space as our design space, meaning that
-xk and qk for k = [1...97] are 97-dimensional parametric
-vectors. Objectives ftext(x) and fimage (x) are expressed as
+BIKED’s parameter space as our design space, meaning that
+xp and qx for k € [1...97] are 97-dimensional parametric
+vectors. Objectives frext(x) and fimage(w) are expressed as
 a function of a design, x, a reference text prompt, T, and
 reference image, I, as:
-ftext (x) = Scos (Ep(x), Et(T)),
-fimage (x) = Scos (Ep(x), E¿(I)),
-(11)
-where, Ep is the trained parametric embedding model
-from [35], while Et and E¿ are the trained text and image
-embedding models from CLIP [29]. Ep(x), Et(x), and E₁(x)
+
+fimage(®) = Scos (p(x), Ei(Z)) ,
+
+where, E, is the trained parametric embedding model
+from , while E, and EF; are the trained text and image
+embedding models from CLIP E,(x), E;(x), and E;(x)
 are each 512-dimensional embedding vectors. The cosine
-similarity, Scos is expressed as:
-Scos (A, B)
-=
-A. B
-A || B|
-(12)
+similarity, Sos is expressed as:
+
+(1)
+
+. A-B
+Seos(A, B) =
 We select a generic red road bike design from BIKED as our
-parametric query, q, the phrase "A futuristic black cyberpunk-
-style road racing bicycle" as our text prompt T and an image of
+parametric query, q, the phrase “A futuristic black cyberpunk-
+style road racing bicycle” as our text prompt T and an image of
 a blue Fuji Wendigo 1.1 mountain bike as our image prompt,
 I. In this context, the user is effectively asking questions like:
-"How would I change my red road bike's parameters if I
+“How would I change my red road bike’s parameters if I
+
+(12)
+
 wanted it to look more like a black cyberpunk-style bike or
 like this blue mountain bike design?” We optimize for 150
 generations with a population size of 100. Next, we perform a
 series of sampling operations with different objective weights.
 By selecting the optimal bikes at a sweep of different objective
 weights, we can visualize the best bikes under numerous
-configurations of objective priorities, as shown in Fig 3.
-Counterfactual quality objective weights in the ith row are
+configurations of objective priorities, as shown in Fig B]
+Counterfactual quality objective weights in the i‘” row are
 chosen as:
-=
-Wpr = Wsp Wmp = 1.52-i
+
+527%
+
 (13)
+
+Wpr = Wsp = Wmp = 1.
+
 In this way, counterfactuals with better proximity, sparsity,
 and manifold proximity are prioritized toward the top of the
 grid, while counterfactuals are given more leeway to deviate
 from the query design and data manifold toward the bottom.
-Diversity weight, wd, was irrelevant, as only one design was
+Diversity weight, wa, was irrelevant, as only one design was
 sampled for each combination of objective weights. Similarly,
-auxiliary objective weights in the jth column were set in terms
-of the number of columns, 5, as:
-Wtext
-1.55-1, Wimage
-= 1.50-1
+auxiliary objective weights in the j*” column were set in terms
+
+of the number of columns, 5, as
+
 (14)
+
+— 155-73 —7157-1
+Wreat = 1.5°-7, Wimage = 1.57
+
 These objectives allowed similarity to the first text prompt to
 take precedence on the left edge of the grid and similarity to
 the image prompt to take precedence on the right.
+
 B. Cross-modal Counterfactual Results
+
 As expected, when we render the CAD models at the top
 of the grid, they are appreciably similar to the red query
 design. Bikes further down the grid become progressively
 more visually different. As the counterfactual quality weights
 are relaxed toward the bottom, the counterfactuals are also
 more likely to have geometric incompatibilities or other types
-of "implicit constraint” violations. For example, the seat tube
+of “implicit constraint” violations. For example, the seat tube
 in the bottom left bike intersects slightly with the rear tire.
+
 Bikes in the lower left corner of the grid can be subjectively
 identified as more similar to “A futuristic black cyberpunk-
-style road racing bicycle." Among the key modifications are
+style road racing bicycle.’ Among the key modifications are
 a color change and a shift to tri-spoke wheels, which are
-arguably more on-theme for a ‘cyberpunk-style' bike.
+arguably more on-theme for a ‘cyberpunk-style’ bike.
+
 Likewise, bikes towards the bottom right corner of the grid
 can be subjectively identified as more similar to the blue
 mountain bike image. Bikes in this corner have the slanted
 down tube which is characteristic of mountain bikes, feature
 mountain bike handlebars and thicker tires, and even match
 the color of the image.
+
 In this case study we demonstrated that MCD can leverage
 cross-modal evaluators to optimize a design in a parametric
 design space to match text or image prompts in a cross-
 modal fashion. Next, we move on to consider a challenging
 multi-modal problem with six multidisciplinary quantitative
 and qualitative objectives as our final case study.
+
 VI. MODIFYING DESIGNS WITH MANY
 MULTIDISCIPLINARY DESIGN REQUIREMENTS
+
 In this case study we tackle a fully multidisciplinary
 counterfactual search problem. We combine the qualitative
-Similar to text:
-"A futuristic black
-cyberpunk-style
-road racing bike"
-Wtext
-↑ Wimage↓
+
+--- Page 10 ---
 Similar to
 CAD Query:
-बैठ
-Wpr↑ Wsp
-Т Штр
-↑
-Wpr
-Wsp↓ Wmp ↓
-Similar to Image:
-Wtext Wimage ↑
+
+OA
+
+Wor t Wsp t Wmp t
+
+Similar to text: BOEOHSOHAOSO Similar to Image:
+
+"A futuristic black
+cyberpunk-style
+
+Wteat t Wimage +
+
+BBSHSSWSOSIH
+road racing bike" BaeaaD ADE
+
+Wtert +
+
+Wimage t
+
+GO BHEBSH OO
+
+Wr + Wsp + Wmp +
+
 Fig. 3: Visualization of the objective manifold for cross-modal counterfactual selection. Designs sampled from the top of the
 manifold prioritize proximity, sparsity, and manifold proximity. Designs on the left and right sides prioritize similarity to a
 text prompt and reference image, respectively. Note: Designs are optimized parametrically by modifying CAD features and
 are rendered for visualization purposes. Objectives are calculated in a cross-modal fashion.
+
 aesthetics-focused requirements of the second case study with
 the quantitative structural-mechanics-focused requirements of
 the first case study. In addition, we introduce two new re-
 quirements focused on user-customizability. These require-
 ments quantify aerodynamic drag on the cyclist and overall
-ergonomic 'fit.' These functions are calculated as a function
-of both the bicycle design and the rider's body dimensions.
+ergonomic ‘fit.’ These functions are calculated as a function
+of both the bicycle design and the rider’s body dimensions.
+
 A. Configuring MCD with Many Requirements
-in a direct 10 m/s relative headwind. Gergo is a composite
-score calculating:
--
-Gergo = |0K -0×| + |OH − 0¾¼µ| + |01 − 0 A| (17)
-Here, OK, OH, and OA are the rider's joint angles at the knee,
-hip, and armpit, respectively, while 0, 0, and 0* are optimal
-reference values for the three angles sourced from [38]. Joint
-angles OK, OH, and OA are derived analytically using a set
-of trigonometric relations included in the project's codebase.
-Rider body dimensions for this example were selected semi-
-randomly using a reference of anthropometric statistics. Li
-and U¿ are selected as indicated by the gray regions in Fig. 4.
-We select a starting query from the BIKED dataset and a
-challenging set of objective targets across the six objectives.
-These targets are so demanding that none of the 4500
-(15) existing designs in the dataset simultaneously achieve all
-six targets. 100 counterfactuals are generated as potential
-modifications to the query design.
+
 We summarize the counterfactual requirements as follows.
 The first four requirements and reference text and image
-prompts, T and I, are reused from the previous application
-examples (Sec. IV and V):
-f1(x) = Scos (Ep(x), Et(T))
-f2(x) = Scos (Ep(x), E¿(I))
-f3(x) = Rmass(x)
-f4(x) = RSF(x)
-We add two new requirements ƒ5(x) and f6(x) that are
+prompts, 7’ and I, are reused from the previous application
+examples (Sec. [IV] and [V}:
+
+fi(®) = Scos (E,(2), E “(T))
+
+f2(@) = Seos (Ep(x), Ei(Z)) (15)
+fa(x) = aa x)
+
+a(x) = Rsp(x)
+
+We add two new requirements f5(x) and f¢(a) that are
 calculated as a function of a set of rider dimensions, r,
 comprised of five key body dimensions: lower leg length,
 upper leg length, torso length, arm length, and overall height.
 These functions are expressed as follows:
-f5(x) = Rdrag(x,r)
-f6(x) = Gergo (x,r)
+
+f(a) = Rarag(2,7)
+fo(x) = Gergo(,r)
+
+Here, Rarag is a model trained on the cyclist aerodynamic drag
+dataset introduced in to predict drag force on the cyclist
+
 (16)
-Here, Rdrag is a model trained on the cyclist aerodynamic drag
-dataset introduced in [37] to predict drag force on the cyclist
-B. MCD's Performance with Many Requirements
-~
+
+in a direct 10 m/s relative headwind. G.,g. is a composite
+score calculating:
+
+Gergo = Ox — OK| + |On — Oy | + |0a—O4| (17)
+
+Here, 0%, 4, and 64 are the rider’s joint angles at the knee,
+hip, and armpit, respectively, while 07,, 07,, and 6% are optimal
+reference values for the three angles sourced from (38). Joint
+angles 0x, 0, and 0,4 are derived analytically using a set
+of trigonometric relations included in the project’s codebase.
+Rider body dimensions for this example were selected semi-
+randomly using a reference of anthropometric statistics. L;
+and Uj are selected as indicated by the gray regions in Fig.
+
+We select a starting query from the BIKED dataset and a
+challenging set of objective targets across the six objectives.
+These targets are so demanding that none of the ~ 4500
+existing designs in the dataset simultaneously achieve all
+six targets. 100 counterfactuals are generated as potential
+modifications to the query design.
+
+B. MCD’s Performance with Many Requirements
+
 The sampled counterfactuals comfortably achieve all six
-design requirements. Figure 4 shows the objective score den-
+design requirements. Figure [4] shows the objective score den-
 sities for each individual objective (diagonal) and pairwise
 scatterplots over every set of two objectives (off-diagonal).
 The generated counterfactuals, query, and dataset are plotted.
@@ -1116,64 +1257,39 @@ The small white regions constitute the counterfactual require-
 ments. We also plot the distribution of sparsity, proximity,
 and manifold proximity scores over sampled counterfactuals.
 Notably, MCD finds counterfactuals that change only half of
-Text Match
-0.14
-0.13
-0.12
-0.11
-0.10
-0.09
-Image Match
-Drag Force
-0.75
-0.74
-0.73
-0.72
-18
-16-
-20
-Ergonomics
-24
-60
-Frame Mass
-80
-Dataset
+
+--- Page 11 ---
+e Dataset
 Counterfactuals
-Query
-=AAA
+% = ©Query
 Invalid Region
-0.5
-0.6
-0.7 0.8
-0.10
-0.15
-0.20
-Sparsity↓
-Proximity↓
-0.10
-0.15
-Manifold Prx.↓
-6
-Safety Factor ↑
-8
-40
-60
-80
-17.5 20.0 22.5
-25.0
-0.72 0.73 0.74 0.75
-Frame Mass↓
-Ergonomics↓
-0.10
-0.12
-Drag Force↓ Text Match↓ Image Match↓
-0.14
+
+05 06 O7 O08 010 015 0.20 0.10 0.15
+
+Sparsity J Proximity 1 Manifold Prx. 1
+
+Frame Mass
+
+Ergonomics
+
+Drag Force
+
+Text Match
+
+Image Match
+
+2 : 4 6 8 2 4 z: 40 60 80 oor 20.0 22.5 25.0 0.72 0.73 0.74 0.75 0.10 0.12 0.14
+Safety Factor T Frame Mass J Ergonomics J Drag Force 1 Text Match J Image Match J
+
 Fig. 4: Pairplots visualizing objective score distributions for identified counterfactuals and the dataset. Individual kernel density
-estimates are shown on the diagonal, while pairwise scatterplots are shown on the off-diagonal. The counterfactual query's
+estimates are shown on the diagonal, while pairwise scatterplots are shown on the off-diagonal. The counterfactual query’s
 objective scores are marked with a black X. We also show sparsity, proximity, and manifold proximity score distributions over
 the counterfactuals.
+
+--- Page 12 ---
 the design parameters or change parameters by on average
 only 10% compared to the span of the dataset.
+
 We stress that many of these objectives are challenging
 to simultaneously optimize. As discussed in the first case
 study, increasing the safety factor while reducing mass is
@@ -1187,14 +1303,17 @@ may require extreme joint angles. As the case study demon-
 strates, MCD can effectively find solutions that balance this
 demanding set of requirements, creating many options for
 highly efficient bikes, specially customized for an individual
-user's biomechanical needs and a set of arbitrary subjective
+user’s biomechanical needs and a set of arbitrary subjective
 preferences.
+
 VII. PERFORMANCE ANALYSIS AND ABLATION
+
 In this section, we contrast the performance and compu-
 tational cost of counterfactual search using MCD to classic
 optimization.
+
 A. Comparing MCD to Classic Optimization
-_
+
 Counterfactual search has several advantages over classic
 optimization. These advantages are largely enabled by the
 counterfactual quality attributes optimized in MCD — sparsity,
@@ -1209,62 +1328,66 @@ increases the likelihood of generating valid counterfactuals.
 Furthermore, manifold proximity encourages MCD to select
 designs that lie within a data manifold of valid designs. We
 demonstrate this advantage over classic optimization in Fig-
-ure 5. For this figure, we give the same optimization problem,
+ure [5] For this figure, we give the same optimization problem,
 adapted from the structural optimization case study, to both
 MCD and a plain optimization (NSGA-II) algorithm. The
 designs generated by NSGA-II are littered with intersecting
 geometry and functional issues (such as pedals impeding the
 steering of the front wheels), which are apparent when the
-designs are rendered. Though MCD's designs have a few
+designs are rendered. Though MCD’s designs have a few
 problems, they are much more viable overall, and one design
 does not have any obvious issues.
+
 To quantitatively substantiate this argument, we evaluate
 MCD against NSGA-II but withhold the constraint checks
 provided in BIKED. We only use the constraints to later eval-
-uate the validity of generated designs. As shown in Table IV,
+uate the validity of generated designs. As shown in Table [IV]
 designs identified by MCD violate on average 0.92 constraints
 versus 1.51 for designs generated by NSGA-II. Collectively,
 MCD can identify valid designs that do not violate any
-constraints 35% of the time to NSGA-II's 15%. These scores
-0
+constraints 35% of the time to NSGA-II’s 15%. These scores
+
+dT
+
 (a) Counterfactual Search (MCD)
-00
-(b) Optimization (NSGA-II)
-0
+
+(b) Optimization (NSGA-ID
+
 Fig. 5: Comparison of bikes generated by MCD and bikes
 generated by classic optimization. Optimization is heavily
 reliant on explicit and exhaustive constraints and tends to
 fail in their absence. In contrast, counterfactual search can
 implicitly obey unknown constraints through its proximity,
 sparsity, and manifold proximity objectives.
+
 TABLE IV: Counterfactual search significantly outperforms
 classic optimization in constraint satisfaction. MCD can gen-
 erate more than double as many valid designs as NSGA-II.
 Constraint violation and valid design fraction scores are shown
 in the table, averaged over three runs, with standard deviations
 shown.
-Constraint Violation (Avg. #)
-Fraction of Valid Designs ↑
+
 CF Search Optimization
 (MCD) (NSGA-II)
-0.92±0.03
-0.35±0.04
-1.51±0.12
-0.15±0.05
+Constraint Violation (Avg. #) | — 0.9240.03 1.51+40.12
+Fraction of Valid Designs + 0.3540.04 0.15+0.05
+
 are averaged over three tests, with standard deviations shown
 in the table.
-B. Timing MCD's Computational Requirements
-MCD's additional functionality adds modest computational
+
+B. Timing MCD’s Computational Requirements
+
+MCD’s additional functionality adds modest computational
 cost as compared to conventional optimization. We calcu-
 late the cumulative computational cost for the counterfactual
 search performed in the final (multidisciplinary) case study
 and sort major components by type. Any cost directly incurred
 through the evaluation of the six objective scores for a design
-is considered part of the "evaluator" cost. Any computation
+is considered part of the “evaluator” cost. Any computation
 that is introduced by MCD (would not be performed during a
 classic optimization run) is associated with MCD. Any other
 cost is attributed to the optimizer itself. Both the optimizer and
-MCD's costs (9 and 20 seconds, respectively) are dwarfed by
+MCD’s costs (9 and 20 seconds, respectively) are dwarfed by
 the evaluation functions (375 seconds), despite all evaluation
 functions being fast predictive models or analytical equations
 in this study. Since 15K design evaluations are performed,
@@ -1273,34 +1396,48 @@ that computational cost is dependent on a variety of factors
 like population size and dataset size. Regardless, converting an
 optimization process into a counterfactual search using MCD
 should generally be a lightweight modification.
-Objective
-Evaluators
-(92.8%)
-Ergo (11.6%) Aero (1.1%)
-Weight/SF (70.9%) Similarity (9.3%)
+
+--- Page 13 ---
+— Objective Ergo (11.6%) Aero (1.1%)
+;--- Evaluators |
+(92.8%)  Weight/SF (70.9%) Similarity (9.3%)
+
 Proximity (0.01%)
+
 CF Quality
-Scores
+-- Scores
 (4.26%)
-Repair (0.69%)
+
+—————
+
 Manif. Prox. (4.2%) Sparsity (0.01%)
-Others (0.23%)
+
+Repair (0.69%) Others (0.23%)
+aes as
+=
+
 Genetic
-Operators
-(2.18%) Crossover (0.82%) Mutation (0.44%)
-Msc. 375 s Evaluator 20 s MCD 9s Optimizer
+; Operators
+
+ne (2.18%) Crossover (0.82%) Mutation (0.44%)
+=* Msc. |[375 s|Evaluator [20 s]|MCD
+
 Fig. 6: Computation time breakdown for the final multidis-
-ciplinary counterfactual search example. Functions are sorted
+ciplinary counterfactual search example. Functions are sorte:
 and color-coded as evaluation functions, features of the un-
-derlying optimization, or specific features of MCD. MCD's
+derlying optimization, or specific features of MCD. MCD’s
 functions take on the same order of time as the internal
-optimizer's functions. Even though the evaluators are all fast
+optimizer’s functions. Even though the evaluators are all fast
 predictive models or analytical equations, they still take the
 overwhelming majority of the computational expense.
+
+9 s|Optimizer
+
 VIII. LIMITATIONS
+
 MCD makes several key contributions to counterfactual
 search, primarily targeting designers. However, it also has
-a few limitations. For example, MCD's model agnosticism
+a few limitations. For example, MCD’s model agnosticism
 allows it to support nondifferentiable evaluators but comes
 at the cost of potentially lower sample efficiency compared
 to gradient-based methods. Another key limitation stems from
@@ -1311,16 +1448,19 @@ dimensionality issue of multi-objective genetic algorithms.
 Future work will explore MCD variants that leverage gradi-
 ent information and many-objective optimization methods to
 address these limitations.
+
 Finally, we note that the CLIP-based text- and image-
 matching approach is effective at capturing abstract and sub-
 jective aesthetics, but may struggle to capture technical details
 supplied in reference prompts. As such, we recommend that
 users with highly technical constraints specify them paramet-
-rically, instead of through text. However, as machine learning
+tically, instead of through text. However, as machine learning
 models continue to improve, querying counterfactual models
 for precise technical details through text and images may
 improve significantly.
+
 IX. BROADER IMPACT
+
 Design tools like MCD have the power to both accelerate
 and democratize design. By recommending high-performing
 design modifications, MCD can save designers many rounds
@@ -1328,13 +1468,16 @@ of painstaking trial and error. This would enable design-
 ers to rapidly iterate and accelerate their design workflows.
 Cross-modal counterfactual search can also enable designers
 to interact more intuitively with computational design tools
+
 by specifying design requirements through text and images.
 This may lower the bar of entry for prospective designers
 who would lack sufficient expertise to rigorously define and
 constrain optimization problems. In short, we are optimistic
 that MCD takes a step towards more powerful and intuitive
 computational design tools.
+
 X. CONCLUSION
+
 In this paper, we have introduced Multi-objective Counter-
 factuals for Design (MCD), a specialized counterfactual search
 method for design modification tasks. We first illustrated how
@@ -1346,162 +1489,247 @@ and the inherent coupling of the optimization and sampling
 process. Next, we demonstrated how MCD solves these two
 challenges using several case studies from the challenging real-
 world engineering problem of bicycle design. We first showed
-how MCD's support for multi-objective queries allowed it to
+how MCD’s support for multi-objective queries allowed it to
 recommend meaningful modifications to improve the structural
 efficiency of bicycle frames. We then showed that MCD can
 leverage cross-modal evaluators to identify counterfactuals
 that satisfy highly subjective requirements specified through
 images or text prompts. We finally showed that MCD can in-
-dividually customize design modifications (such as for a user's
+dividually customize design modifications (such as for a user’s
 biomechanical attributes), while simultaneously optimizing for
 quantitative performance requirements and subjective design
 requirements.
+
 All in all, MCD is a intuitive computatonal design tool that
 can quickly recommend design modifications customized to
 fulfill both quantitative and subjective design requirements.
 We are excited to release our code, demos, and experiments at
-http://decode.mit.edu/projects/counterfactuals/ and anticipate a
+
+http://decode.mit.edu/projects/counterfactuals//and anticipate a
+
 variety of interesting use cases across the community.
+
 REFERENCES
-[1] N. J. Roese and J. M. Olson, What might have been: The social
+
+N. J. Roese and J. M. Olson, What might have been: The social
 psychology of counterfactual thinking. Psychology Press, 2014.
-[2] C. Hoerl, T. McCormack, and S. R. Beck, Understanding counterfac-
+
+2] C. Hoerl, T. McCormack, and S. R. Beck, Understanding counterfac-
 tuals, understanding causation: Issues in philosophy and psychology.
 Oxford University Press, 2011.
-[3] J. D. Fearon, "Counterfactuals and hypothesis testing in political sci-
-ence," World politics, vol. 43, no. 2, pp. 169–195, 1991.
-[4] S. Verma, V. Boonsanong, M. Hoang, K. E. Hines, J. P. Dickerson,
-and C. Shah, "Counterfactual explanations and algorithmic recourses for
-machine learning: A review," arXiv preprint arXiv:2010.10596, 2020.
-[5] R. Guidotti, “Counterfactual explanations and how to find them: litera-
+
+3] J. D. Fearon, “Counterfactuals and hypothesis testing in political sci-
+ence,” World politics, vol. 43, no. 2, pp. 169-195, 1991.
+
+4] S. Verma, V. Boonsanong, M. Hoang, K. E. Hines, J. P. Dickerson,
+and C. Shah, “Counterfactual explanations and algorithmic recourses for
+machine learning: A review,” arXiv preprint arXiv:2010.10596, 2020.
+5] R. Guidotti, “Counterfactual explanations and how to find them: litera-
 ture review and benchmarking,” Data Mining and Knowledge Discovery,
 pp. 1-55, 2022.
-[6] P. Y. Papalambros and D. J. Wilde, Principles of optimal design:
+
+6] P. Y. Papalambros and D. J. Wilde, Principles of optimal design:
 modeling and computation. Cambridge university press, 2000.
-[7] J. Gero, Design Optimization. Elsevier Science, 2012. [Online].
-Available: https://books.google.com/books?id=xsG0kZupSJYC
-[8] N. Gunantara, “A review of multi-objective optimization: Methods and
-its applications," Cogent Engineering, vol. 5, no. 1, p. 1502242, 2018.
-[9] K. Deb, A. Pratap, S. Agarwal, and T. Meyarivan, "A fast and elitist
-multiobjective genetic algorithm: Nsga-ii," IEEE transactions on evolu-
-tionary computation, vol. 6, no. 2, pp. 182–197, 2002.
-[10] S. Wachter, B. Mittelstadt, and C. Russell, “Counterfactual explanations
-without opening the black box: Automated decisions and the gdpr,"
+
+7) J. Gero, Design Optimization. Elsevier Science, 2012. [Online].
+Available: https://books.google.com/books?id=xsGO0kZupSJ YC
+8] N. Gunantara, “A review of multi-objective optimization: Methods and
+its applications,” Cogent Engineering, vol. 5, no. 1, p. 1502242, 2018.
+9] K. Deb, A. Pratap, S. Agarwal, and T. Meyarivan, “A fast and elitist
+multiobjective genetic algorithm: Nsga-ii,’ JEEE transactions on evolu-
+tionary computation, vol. 6, no. 2, pp. 182-197, 2002.
+
+S. Wachter, B. Mittelstadt, and C. Russell, “Counterfactual explanations
+without opening the black box: Automated decisions and the gdpr,”
 Harv. JL & Tech., vol. 31, p. 841, 2017.
-[11] R. K. Mothilal, A. Sharma, and C. Tan, "Explaining machine learning
+
+(10
+
+--- Page 14 ---
+20.
+
+21
+
+22)
+
+23
+
+24.
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+R. K. Mothilal, A. Sharma, and C. Tan, “Explaining machine learning
 classifiers through diverse counterfactual explanations,” in Proceedings
 of the 2020 conference on fairness, accountability, and transparency,
-2020, pp. 607–617.
-[12] R. Poyiadzi, K. Sokol, R. Santos-Rodriguez, T. De Bie, and P. Flach,
-"Face: feasible and actionable counterfactual explanations,” in Proceed-
-ings of the AAAI/ACM Conference on AI, Ethics, and Society, 2020, pp.
+2020, pp. 607-617.
+
+R. Poyiadzi, K. Sokol, R. Santos-Rodriguez, T. De Bie, and P. Flach,
+“Face: feasible and actionable counterfactual explanations,” in Proceed-
+ings of the AAAI/ACM Conference on Al, Ethics, and Society, 2020, pp.
 344-350.
-[13] S. Dandl, C. Molnar, M. Binder, and B. Bischl, "Multi-objective
-counterfactual explanations,” in Parallel Problem Solving from Nature-
+
+S. Dandl, C. Molnar, M. Binder, and B. Bischl, “Multi-objective
+counterfactual explanations,” in Parallel Problem Solving from Nature—
 PPSN XVI: 16th International Conference, PPSN 2020, Leiden, The
 Netherlands, September 5-9, 2020, Proceedings, Part I. Springer, 2020,
 pp. 448-469.
-[14] M. T. Ribeiro, S. Singh, and C. Guestrin, "why should i trust you?”
+
+M. T. Ribeiro, S. Singh, and C. Guestrin, “why should i trust you?”
 explaining the predictions of any classifier,” in Proceedings of the 22nd
 ACM SIGKDD international conference on knowledge discovery and
-data mining, 2016, pp. 1135–1144.
-[15] S. M. Lundberg and S.-I. Lee, “A unified approach to interpreting model
-predictions," Advances in neural information processing systems, vol. 30,
+data mining, 2016, pp. 1135-1144.
+
+S. M. Lundberg and S.-I. Lee, “A unified approach to interpreting model
+predictions,” Advances in neural information processing systems, vol. 30,
 2017.
-[16] J. Joung and H. M. Kim, “Approach for importance-performance anal-
-ysis of product attributes from online reviews," Journal of Mechanical
+
+J. Joung and H. M. Kim, “Approach for importance—performance anal-
+ysis of product attributes from online reviews,” Journal of Mechanical
 Design, vol. 143, no. 8, 2021.
-[17] L. Regenwetter, B. Curry, and F. Ahmed, “Biked: A dataset for compu-
-tational bicycle design with machine learning benchmarks," Journal of
+
+L. Regenwetter, B. Curry, and F. Ahmed, “Biked: A dataset for compu-
+tational bicycle design with machine learning benchmarks,” Journal of
 Mechanical Design, vol. 144, no. 3, 2022.
-[18] R. Rodríguez-Pérez and J. Bajorath, “Interpretation of machine learning
+
+R. Rodriguez-Pérez and J. Bajorath, “Interpretation of machine learning
 models using shapley values: application to compound potency and
 multi-target activity predictions,” Journal of computer-aided molecular
 design, vol. 34, pp. 1013-1026, 2020.
-[19] A. Dachowicz, K. Mall, P. Balasubramani, A. Maheshwari, A. K. Raz,
+
+A. Dachowicz, K. Mall, P. Balasubramani, A. Maheshwari, A. K. Raz,
 J. H. Panchal, and D. A. DeLaurentis, “Mission engineering and design
-using real-time strategy games: An explainable ai approach," Journal of
+using real-time strategy games: An explainable ai approach,” Journal of
 Mechanical Design, vol. 144, no. 2, 2022.
-[20] B. Song, R. Zhou, and F. Ahmed, "Multi-modal machine learning in
-engineering design: A review and future directions," arXiv preprint
+
+B. Song, R. Zhou, and F. Ahmed, “Multi-modal machine learning in
+engineering design: A review and future directions,” arXiv preprint
 arXiv:2302.10909, 2023.
-[21] F. Ahmed, Y. Cui, Y. Fu, and W. Chen, “Product Competition Prediction
-in Engineering Design Using Graph Neural Networks," ASME Open
+
+F. Ahmed, Y. Cui, Y. Fu, and W. Chen, “Product Competition Prediction
+in Engineering Design Using Graph Neural Networks,” ASME Open
 Journal of Engineering, vol. 1, 05 2022, 011020. [Online]. Available:
+
 https://doi.org/10.1115/1.4054299
-[22] L. Regenwetter, A. H. Nobari, and F. Ahmed, “Deep generative models
+
+L. Regenwetter, A. H. Nobari, and F. Ahmed, “Deep generative models
 in engineering design: A review,” Journal of Mechanical Design, vol.
 144, no. 7, p. 071704, 2022.
-[23] L. Regenwetter, A. Srivastava, D. Gutfreund, and F. Ahmed, "Beyond
+
+L. Regenwetter, A. Srivastava, D. Gutfreund, and F. Ahmed, “Beyond
 statistical similarity: Rethinking metrics for deep generative models in
-engineering design," arXiv preprint arXiv:2302.02913, 2023.
-[24] H. Cai, V. W. Zheng, and K. C.-C. Chang, “A comprehensive survey
-of graph embedding: Problems, techniques, and applications,” IEEE
+engineering design,” arXiv preprint arXiv:2302.02913, 2023.
+
+H. Cai, V. W. Zheng, and K. C.-C. Chang, “A comprehensive survey
+of graph embedding: Problems, techniques, and applications,’ JEEE
 Transactions on Knowledge and Data Engineering, vol. 30, no. 9, pp.
 1616-1637, 2018.
-[25] F. Faghri, D. J. Fleet, J. R. Kiros, and S. Fidler, "Vse++: Improv-
-ing visual-semantic embeddings with hard negatives," arXiv preprint
+
+F. Faghri, D. J. Fleet, J. R. Kiros, and S. Fidler, “Vse++: Improv-
+ing visual-semantic embeddings with hard negatives,” arXiv preprint
 arXiv:1707.05612, 2017.
-[26] G. Dai, J. Xie, and Y. Fang, “Siamese cnn-bilstm architecture for 3d
-shape representation learning." in IJCAI, 2018, pp. 670–676.
-[27] J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova, "Bert: Pre-training
+
+G. Dai, J. Xie, and Y. Fang, “Siamese cnn-bilstm architecture for 3d
+shape representation learning.” in JJCAI, 2018, pp. 670-676.
+
+J. Devlin, M.-W. Chang, K. Lee, and K. Toutanova, “Bert: Pre-training
 of deep bidirectional transformers for language understanding,” arXiv
-preprint arXiv:1810.04805, 2018.
-[28] D. Cer, Y. Yang, S.-y. Kong, N. Hua, N. Limtiaco, R. S. John,
+preprint arXiv: 1810.04805, 2018.
+
+D. Cer, Y. Yang, S.-y. Kong, N. Hua, N. Limtiaco, R. S. John,
 N. Constant, M. Guajardo-Cespedes, S. Yuan, C. Tar et al., “Universal
-sentence encoder," arXiv preprint arXiv:1803.11175, 2018.
-[29] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal,
+sentence encoder,” arXiv preprint arXiv:1803.11175, 2018.
+
+A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal,
 G. Sastry, A. Askell, P. Mishkin, J. Clark et al., “Learning transferable
-visual models from natural language supervision," in International
+visual models from natural language supervision,” in International
 conference on machine learning. PMLR, 2021, pp. 8748-8763.
-[30] R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer, “High-
+
+R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer, “High-
 resolution image synthesis with latent diffusion models,” in Proceedings
 of the IEEE/CVF Conference on Computer Vision and Pattern Recogni-
 tion, 2022, pp. 10684-10695.
-[31] J. C. Gower, "A general coefficient of similarity and some of its
-properties," Biometrics, pp. 857-871, 1971.
-[32] J. Blank and K. Deb, “pymoo: Multi-objective optimization in python,"
+
+J. C. Gower, “A general coefficient of similarity and some of its
+properties,” Biometrics, pp. 857-871, 1971.
+
+J. Blank and K. Deb, “pymoo: Multi-objective optimization in python,”
 IEEE Access, vol. 8, pp. 89 497-89 509, 2020.
-[33] L. Regenwetter and F. Ahmed, "Design target achievement index:
+
+33] L. Regenwetter and F. Ahmed, “Design target achievement index:
+
 A differentiable metric to enhance deep generative models in multi-
+
 objective inverse design,” in International Design Engineering Technical
+
 Conferences and Computers and Information in Engineering Confer-
-ence, vol. 86236.
-American Society of Mechanical Engineers, 2022,
-p. V03BT03A046.
-[34] L. Regenwetter, C. Weaver, and F. Ahmed, "Framed: An automl
-approach for structural performance prediction of bicycle frames,"
+
+ence, vol. 86236. American Society of Mechanical Engineers, 2022,
+
+p. VO3BT03A046.
+
+34] L. Regenwetter, C. Weaver, and F. Ahmed, “Framed: An automl
+
+approach for structural performance prediction of bicycle frames,”
+
 Computer-Aided Design, vol. 156, p. 103446, 2023.
-[35] L. Regenwetter, Y. A. Obaideh, A. H. Nobari, and F. Ahmed, "Biked++:
+
+35] L. Regenwetter, Y. A. Obaideh, A. H. Nobari, and F. Ahmed, “Biked++:
+
 A multimodal dataset of 1.4 million bicycle image and parametric cad
-designs," arXiv preprint arXiv:2402.05301, 2024.
-[36] N. Erickson, J. Mueller, A. Shirkov, H. Zhang, P. Larroy, M. Li, and
-A. Smola, "Autogluon-tabular: Robust and accurate automl for structured
-data," arXiv preprint arXiv:2003.06505, 2020.
-[37] L. Regenwetter, “Data-driven bicycle design using performance-aware
+
+designs,” arXiv preprint arXiv:2402.05301, 2024.
+
+36] N. Erickson, J. Mueller, A. Shirkov, H. Zhang, P. Larroy, M. Li, and
+
+A. Smola, “Autogluon-tabular: Robust and accurate automl for structured
+
+data,” arXiv preprint arXiv:2003.06505, 2020.
+
+37] L. Regenwetter, “Data-driven bicycle design using performance-aware
+
 deep generative models,” Ph.D. dissertation, Massachusetts Institute of
+
 Technology, 2022.
-[38] P. Burt, Bike Fit 2nd Edition: Optimise Your Bike Position for High
+
+38] P. Burt, Bike Fit 2nd Edition: Optimise Your Bike Position for High
 Performance and Injury Avoidance. Bloomsbury Publishing, 2022.
+
 APPENDIX
+
 This paper builds several case studies on the BIKED
-dataset [17] and associated datasets which interface with and
+dataset and associated datasets which interface with and
 augment the main dataset. The BIKED dataset is composed
 of 4,500 community-designed bicycle designs. It is a multi-
 modal dataset: each design is represented parametrically, as
 a set of component images, and as an assembly image. The
 parametric representation is quite detailed, with more than
-23,000 dimensions in the 'raw' dataset. In the case studies
+23,000 dimensions in the ’raw’ dataset. In the case studies
 presented, we use smaller subsets of the full parametric design
 space. These parametric representations directly correspond to
 features from BikeCAD models and can be quickly rendered
-using a tool introduced in [35]. In the first study, we leverage
-the FRAMED dataset [34], which expands on BIKED with
+using a tool introduced in (35). In the first study, we leverage
+the FRAMED dataset , which expands on BIKED with
 structural analysis data from finite element simulations of
-4,000 human-designed bikes and 10,000 AI-generated bikes.
-In the second case study, we additionally use BIKED++ [35],
+4,000 human-designed bikes and 10,000 Al-generated bikes.
+In the second case study, we additionally use BIKED++ (35).
 a dataset of 1.4 million procedurally-generated bicycle designs
 represented parametrically and as images. Finally, in the third
-case study, we use an aerodynamic drag predictor from [37]
+case study, we use an aerodynamic drag predictor from
 trained on finite element simulations of 4000 cyclist configu-
 rations.
+
+

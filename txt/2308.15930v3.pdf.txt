@@ -1,46 +1,60 @@
+--- Page 1 ---
 arXiv:2308.15930v3 [cs.CL] 16 Sep 2023
+
 LLASM:
 LARGE LANGUAGE AND SPEECH MODEL
-Yu Shu¹*, Siwei Dong¹*, Guangyao Chen 1,2*, Wenhao Huang³,
-Ruihua Zhang, Daochen Shi, Qiqi Xiang & Yemin Shi¹†
-t
-¹LinkSoul.AI, ²Peking University, 301.ai
-Equal contribution
-7 Corresponding author: ymshi@linksoul.ai
+
+Yu Shu!”, Siwei Dong!", Guangyao Chen!", Wenhao Huang’,
+Ruihua Zhang, Daochen Shi, Qiqi Xiang & Yemin Shi'*
+
+'LinkSoul.AI, Peking University, 301.ai
+
+* Equal contribution
+t Corresponding author: ymshi @linksoul.ai
+
 ABSTRACT
+
 Multi-modal large language models have garnered significant interest recently. Though, most
 of the works focus on vision-language multi-modal models providing strong capabilities in fol-
 lowing vision-and-language instructions. However, we claim that speech is also an important
 modality through which humans interact with the world. Hence, it is crucial for a general-purpose
 assistant to be able to follow multi-modal speech-and-language instructions. In this work, we
-propose Large Language and Speech Model (LLASM). LLaSM is an end-to-end trained large
+propose Large Language and Speech Model (LLaSM). LLaSM is an end-to-end trained large
 multi-modal speech-language model with cross-modal conversational abilities, capable of follow-
 ing speech-and-language instructions. Our early experiments show that LLaSM demonstrates
 a more convenient and natural way for humans to interact with artificial intelligence. Specifi-
 cally, we also release a large Speech Instruction Following dataset LLaSM-Audio-Instructions.
-Code and demo are available at https://github.com/LinkSoul-AI/LLASM and https://
-huggingface.co/spaces/LinkSoul/LLaSM. The LLaSM-Audio-Instructions dataset is available
-at https://huggingface.co/datasets/LinkSoul/LLaSM-Audio- Instructions.
+Code and demo are available at https: //github.com/LinkSoul-AI/LLaSM| and https: //
+
+huggingface.co/spaces/LinkSoul/LLaSM The LLaSM-Audio-Instructions dataset is available
+at https: //huggingface.co/datasets/LinkSoul/LLaSM- Audio- Instructions
+
 1 Introduction
+
 Speech contains semantic information and contains paralinguistic information like intonation at the same time, it carries
 more quantity of information than text. Additionally, speech is a more convenient and natural way for humans to
 interact with artificial intelligence. Therefore, following speech-and-language instructions is crucial when developing a
 general-purpose assistant.
-However, most large language models [1, 2, 3] receive text input only, which restricts the ability of large language
-models. Vision-and-language multi-modal models [4, 5, 6, 7, 8, 9] offer the ability to understand the vision information,
+
+However, most large language models [I] [2] 3]] receive text input only, which restricts the ability of large language
+models. Vision-and-language multi-modal models (4](5]{6] [7)[8]|9] offer the ability to understand the vision information,
 making a huge step toward general artificial intelligence (AGI), but it is still inconvenient for humans to input the tasks
-by typing a text instruction. The cascading paradigm methods [10, 11] use an automatic speech recognition (ASR)
+by typing a text instruction. The cascading paradigm methods [10] [II] use an automatic speech recognition (ASR)
 model to convert the speech input into the text input, then the model can process the task with the text input. However, it
 still leads to information consumption during the modal transformation from speech to text and might import mistakes
-of the ASR system. Recently, speech-language multi-modal models [12, 13] focusing on processing and generating
+of the ASR system. Recently, speech-language multi-modal models [12] {T3] focusing on processing and generating
 speech and text with a large language model are capable of understanding and generating multi-modal content. The
 speech signals are encoded into discrete tokens, and then discrete speech tokens are expanded into the vocabulary of the
 LLM. In this way, the LLM needs to be retrained with plenty of multi-modal data and huge computing resources.
+
 In this paper, we propose LLaSM, a large speech-and-language model with cross-modal conversational abilities, capable
 of understanding and following speech-and-language instructions. Following the manner of LLaVA [6], we leverage
 the well-trained speech modal encoder and the LLM, which makes LLaSM more resource-friendly. Specifically, we
-use Whisper [14] as a speech encoder to encode the speech signals into embeddings. Then a modal adaptor learns to
+use Whisper as a speech encoder to encode the speech signals into embeddings. Then a modal adaptor learns to
+
+--- Page 2 ---
 A PREPRINT - SEPTEMBER 19, 2023
+
 align speech embeddings with the input text embeddings of the large language model. The speech embeddings and
 the text embeddings are concatenated together to form interleaved sequences, then the interleaved sequences are input
 to the LLM for supervised fine-tuning. The training process is divided into two stages. In the first stage, we use the
@@ -56,151 +70,167 @@ selecting dialogues from GPT4-LLM [15], ShareGPT [16], WizardLM [17], and using 
 generate a large amount of dialogue audio data. In total, it contains 199k conversations, in which there are 80k Chinese
 audio samples and 428k English audio samples, which is the largest Chinese and English speech-text cross-modal
 instruction-following dataset to our knowledge.
+
 Our paper makes the following contributions:
-• We build a speech-language multi-modal model that can understand and follow speech-language instructions,
+* We build a speech-language multi-modal model that can understand and follow speech-language instructions,
 which provides a more convenient and natural way for humans to interact with artificial intelligence.
-• We construct and release LLaSM-Audio-Instrustions, a large-scale Chinese and English speech-text cross-
-modal instruction-following dataset. We release the data in https://huggingface.co/datasets/
-LinkSoul/LLaSM-Audio-Instructions.
-• We release the code in https://github.com/LinkSoul-AI/LLASM and the demo is shown in https:
-//huggingface.co/spaces/LinkSoul/LLaSM.
+
+* We construct and release LLaSM-Audio-Instrustions, a large-scale Chinese and English speech-text cross-
+
+modal instruction-following dataset. We release the data in https: //huggingface.co/datasets
+LinkSoul/LLaSM- Audio-Instructions
+
+* We release the code in https: //github.com/LinkSoul-AI/LLaSM and the demo is shown in https!
+//nuggingface.co/spaces/LinkSoul/LLaSM
+
 2 Related Work
-Vision Large Language Model has gained significant traction [4, 5, 6, 7, 8, 9] recently. Most of them leverage the
-pre-trained LLMs and vision encoders to perform vision tasks. Flamingo [18] aligns a pre-trained vision encoder
-and language model using gated cross-attention and is trained on billions of image-text pairs. BLIP-2 [19] employs a
-Flan-T5 [20] with a Q-Former to efficiently align visual features with the language model. Palm-E [5], featuring 562
+
+Vision Large Language Model has gained significant traction [4] |5}[6}[7)|8) [9] recently. Most of them leverage the
+pre-trained LLMs and vision encoders to perform vision tasks. Flamingo aligns a pre-trained vision encoder
+and language model using gated cross-attention and is trained on billions of image-text pairs. BLIP-2 employs a
+Flan-T5 with a Q-Former to efficiently align visual features with the language model. Palm-E [5], featuring 562
 billion parameters, integrates the 540B PaLM [2] and 22B Vision Transformer [21] into the largest vision-language
-model. LLAVA [6] leverages pre-trained CLIP [22] visual encoder and LLAMA [3] and conducts instruct tuning on
+model. LLaVA [6] leverages pre-trained CLIP visual encoder and LLaMA [3] and conducts instruct tuning on
 GPT4-assisted visual instruction data. GPT-4 [4] also shows powerful visual understanding and reasoning abilities. The
 success of the multi-modal large language model in the visual domains has brought a lot of inspiration to the research in
 the speech domains as well.
+
 Speech Large Language Model has gained more and more interest, for the success of the vision multi-modal LLMs.
-The cascading paradigm methods [10, 11] use an automatic speech recognition (ASR) model to convert the speech
+The cascading paradigm methods {10| [I] use an automatic speech recognition (ASR) model to convert the speech
 input into the text input, which still leads to information consumption and might import mistakes of the ASR system.
-Recently, speech-language multi-modal models [12, 13] focusing on processing and generating speech and text with a
+Recently, speech-language multi-modal models focusing on processing and generating speech and text with a
 large language model are capable of understanding and generating multi-modal content. The speech signals are encoded
 into discrete tokens, and then discrete speech tokens are expanded into the vocabulary of the LLM. In this way, the
 LLM needs to be retrained with plenty of multi-modal data and huge computing resources.
+
 3 Approach
+
 3.1 Model
+
 The focus of training multi-modal models is to fuse cross-modal complementary information of multi-modalities and
 effectively exploit the capabilities of well-trained large language models. The LLaSM model architecture is shown in
-Figure 1. We use Whisper [14] to encode the raw audio data into embeddings first, then a modal adaptor is trained
+Figure[T] We use Whisper [14] to encode the raw audio data into embeddings first, then a modal adaptor is trained
 during the pre-training stage to align the audio embeddings and the text embeddings. The audio embeddings and the
 text embeddings are concatenated together to form interleaved input sequences to input to the large language model. We
 choose Chinese-LLAMA2-7B [23] as our LLM, for its capabilities in both Chinese and English. During the cross-modal
 instruction fine-tuning stage, the modal adaptor and the LLM are trained with multi-tasks.
-2
-Audio
-Text
-TOTT
-10.10
-Modal Encoder
-Modal Adaptor
-Tokenize & Embed
-+
+
+--- Page 3 ---
 A PREPRINT - SEPTEMBER 19, 2023
-Embeddings
-Language Model
-Embeddings
+
+Audio
+
+° 7
+5 %y—___. Embeddings
+Modal Encoder — Modal Adaptor + ee
+: Language Model
+= Text A Embeddings guag
+
+Tokenize & Embed
+
 Figure 1: Model framework of the LLaSM
+
 The pre-training stage. During this stage, the modal encoder and the LLM remain frozen. To enable the LLM
 to understand the audio embeddings from the modal encoder, the modal adaptor is trained with public ASR data
 to align the text and the audio embeddings. The data sample (audio data, text label) of ASR data is formatted as a
 tuple of (simple instruction, audio data, text label), in which the simple instruction is an automatic speech recognition
-instruction. According to the different languages of the audio data, an English simple instruction listed in Figure 2
-or a Chinese simple instruction listed in Figure 3 will be chosen. The unified format of the pre-training multi-modal
-sequence Xsample is shown in Figure 4. Each data sample is formatted as X sample, then we will replace the audio
+instruction. According to the different languages of the audio data, an English simple instruction listed in Figure [2]
+or a Chinese simple instruction listed in Figure[3}will be chosen. The unified format of the pre-training multi-modal
+sequence X sample is Shown in Figure|4| Each data sample is formatted as Xsampie, then we will replace the audio
 patch embeddings from the text sequence with the audio embeddings of the modal adaptor. The final interleaved input
 embeddings will be input to the large language model. The training target is to predict the text label of each data sample.
-• "Transcribe the following speech into text."
-•
-"Convert the spoken words into written text."
-"Transform the speech into a written transcript."
-"Record the oral communication as written text."
-"Render the verbal message into written form."
-"Transpose the spoken language into written script."
-"Translate the spoken words into written text."
-"Write down the words spoken in the speech."
-• "Transform the spoken discourse into a written document."
-• "Convert the spoken utterances into written transcription."
-"Create a written record of the spoken speech."
-Figure 2: English simple instructions.
-"
-“请将以下语音转译为文本"
-“请将这段语音转换成文字。
-"能否把这段语音转成文字形式?"
-"把这段语音转写成文字。
-“将此录音转化为文字。
-“把这段音频转换成文字。
-"能否把这段录音转成文字?”
-“把这段语音转化为文本。
-“将这段录音转为文字。
-“把这段语音转为文字格式。
-"能否将这段录音转换成文本?"
-Figure 3: Chinese simple instructions.
+
+* “Transcribe the following speech into text.” + "RU PBSREANA
+
+* "Convert the spoken words into written text.” + "PRARBSRRANS. "
+
++ "Transform the speech into a written transcript." + "EBTRRBSRMNSCK ?"
+
++ "Record the oral communication as written text." + "“ERRARRSALS. "
+
+* "Render the verbal message into written form.” + "RUERB RAF. "
+
+* "Transpose the spoken language into written script.” + "PERRERMRARS. "
+
+* "Translate the spoken words into written text.” + "RAR RRERRRS ?"
+
+* "Write down the words spoken in the speech.” + "JORIS RLAA. "
+
++ "Transform the spoken discourse into a written document.” + "RS RRERARE. "
+
+* "Convert the spoken utterances into written transcription.” + "ERR BBRA Sst. "
+
+* "Create a written record of the spoken speech.” + "REGIS CA?"
+Figure 2: English simple instructions. Figure 3: Chinese simple instructions.
+
 The cross-modal instruction fine-tuning. During this stage, only the modal encoder is frozen, the modal adaptor and
 the LLM are joint-trained with multi-tasks. We build complex cross-modal instructions using several conversational
 data. The questions from humans are generated to audio data by using Microsoft Azure text-to-speech API, then
 the training target is to predict the responses from the chatbot. A round of question and answer will be processed
-into a multi-modal sequence X sample, and multiple rounds of question and answer will be concatenated with the
-EOS token. The unified format of the cross-modal instruction fine-tuning sequence is shown in Figure 5. As the
+into a multi-modal sequence Xsampie, and multiple rounds of question and answer will be concatenated with the
+EOS token. The unified format of the cross-modal instruction fine-tuning sequence is shown in Figure [5] As the
 effectiveness of text-only conversational data with multi-task instructions has been demonstrated in several open-source
-language-only instruction-tuning works [15, 16, 17], the cross-modal instructions are able to improve the capacity of
+language-only instruction-tuning works [15] [16)[17], the cross-modal instructions are able to improve the capacity of
 following multi-modal instructions.
+
 3.2 Data Collection
+
 To enable the LLM to understand the audio signals, we collect several public ASR data sets to form the Modality
 Adaptation Pre-training Data with simple instructions of automatic speech recognition. And, for cross-modal instruction
 tuning, we use several open-source language-only instruction-tuning data sets to build the Cross-modal Instruction
 Fine-Tuning Data by generating the speech data. The details are as follows.
+
 Modality Adaptation Pre-training Data. To align the embeddings of text and audio, we collect several public ASR
 data sets in both English and Chinese, including Aishell [24], LibriSpeech [25], Magicdata [26] and Primewords [27].
 The data sample of ASR data usually consists of a pair of speech audio and text utterances, especially, when we add a
-simple instruction to the data sample as the task instruction. These simple instructions are listed in Figure 2 and Figure
-3, which are different representations of the automatic speech recognition task in both English and Chinese. While
+simple instruction to the data sample as the task instruction. These simple instructions are listed in Figure|2]and Figure
+
+which are different representations of the automatic speech recognition task in both English and Chinese. While
 pre-training, the simple instruction and the audio data are input to the model to predict the text label of the audio data.
-3
+
+--- Page 4 ---
 A PREPRINT - SEPTEMBER 19, 2023
-X sample
-content user
-=
-{audiotoken} + "\n" + Isimple ( or content user =
-= B_INST + B_SYS + SYSTEM + E_SYS + {contentuser} + E_INST + {content gpt}
-Isimple + "\n" + {audio token})
-content gpt
-audio token
-= TEXT_LABEL
-= AUDIO_START_TOKEN + AUDIO_PATCH_TOKEN * {audio_token_len} + AUDIO_END_TOKEN
-Figure 4: The sample sequence format for the pre-training. We follow the manner of Llama-2, and B_INST = '[INST]',
-E_INST = '[/INST]', B_SYS = '<<SYS>> \n', E_SYS = '\n <</SYS>> \n\n'. The SYSTEM = 'You are a
+
+Xsample = B_INST + B SYS + SYSTEM + E_SYS + {content,,-,} + E_INST + {content,,;}
+contentyser = {audio;oxen} + “\n” + Isimple ( or contentyser = Isimple + “\n” + {audiozoxen})
+contentgy, = TEXT_LABEL
+
+audidryken = AUDIO_START_TOKEN + AUDIO_PATCH_TOKEN * {audio_token_len} + AUDIO_END_TOKEN
+
+Figure 4: The sample sequence format for the pre-training. We follow the manner of Llama-2, and B_INST = ’[INST]’,
+E_INST = ’[/INST]’, B_LSYS = ’<<SYS>> \n’, E_SYS =’\n <</SYS>> \n\n’. The SYSTEM = ’ You are a
 helpful language and speech assistant. You are able to understand the speech content that the user provides, and assist
-the user with a variety of tasks using natural language.', and the TEXT_LABEL is the text label of the ASR data sample.
-The audio_token_len is set to 64 by default. Special audio tokens are used, AUDIO_START_TOKEN = '<au_start>',
-AUDIO_END_TOKEN = '<au_end>', AUDIO_PATCH_TOKEN = '<au_patch>'. The content user consists of the
-audiotoken and the Isimple, in which Isimple is a simple instruction and is randomly put before or after the audiotoken.
+the user with a variety of tasks using natural language.’, and the TEXT_LABEL is the text label of the ASR data sample.
+The audio_token_len is set to 64 by default. Special audio tokens are used, AUDIO_START_TOKEN = ’<au_start>’,
+AUDIO_END_TOKEN = ’<au_end>’, AUDIO_PATCH_TOKEN = ’<au_patch>’. The contentyser consists of the
+audiotoren and the Igimpte, in which Iimpie is a simple instruction and is randomly put before or after the audioporen-
 While training the BOS token and the EOS token will be added to each sample at the beginning and the end of the
 sequence, only the green tokens are used to compute the loss.
-Xinstruction
+
+<BOS> + Xsampie + SEOS> + Xsampte + SEOS> + «+ + <EOS>
+
+Xx; instruction
+
+B_INST + B SYS + SYSTEM + E SYS + {content,se,} + E_INST + {content,,;}
+
 X sample
-content user
-audio token
-= <BOS> + X sample + <EOS> + X sample + <EOS> + *** + <EOS>
-= B_INST + B_SYS + SYSTEM + E_SYS + {content user} + E_INST + {content gpt}
-=
-{audiotoken}, content gpt = TEXT_RESPONSE
-= AUDIO_START_TOKEN + AUDIO_PATCH_TOKEN * {audio_token_len} + AUDIO_END_TOKEN
+contentyser = {audiozoxen}, contentgp, = TEXT_RESPONSE
+
+audiotoxen = AUDIO_START_TOKEN + AUDIO_PATCH_TOKEN * {audio_token_len} + AUDIO_END_TOKEN
+
 Figure 5: The sample sequence format for the cross-modal instruction fine-tuning. We follow the manner of Llama-2,
-and B_INST = '[INST]', E_INST = '[/INST]', B_SYS='<<SYS>> \n', E_SYS = '\n <</SYS>> \n\n'. The SYS-
-TEM = 'You are a helpful language and speech assistant. You are able to understand the speech content that the user pro-
-vides, and assist the user with a variety of tasks using natural language.', and the TEXT_RESPONSE is the text response
+and B_INST =’[INST]’, E_INST = ’[/INST]’, B_SYS =’<<SYS>> \n’, E_SYS =’\n <</SYS>> \n\n’. The SYS-
+TEM = ’ You are a helpful language and speech assistant. You are able to understand the speech content that the user pro-
+vides, and assist the user with a variety of tasks using natural language.’, and the TEXT_RESPONSE is the text response
 from the chatbot. The audio_token_len is set to 64 by default. Special audio tokens are used, AUDIO_START_TOKEN
-= '<au_start>', AUDIO_END_TOKEN = '<au_end>', AUDIO_PATCH_TOKEN = '<au_patch>'. The content user is
-the audiotoken which will be replaced by the audio embeddings during training. Each round of question and answer
-will be formatted as X sample, which will be concatenated together with the EOS token. While training the BOS token
+= ’<au_start>’, AUDIO_END_TOKEN = ’<au_end>’, AUDIO_PATCH_TOKEN = ’<au_patch>’. The contentuser is
+the audiozoken Which will be replaced by the audio embeddings during training. Each round of question and answer
+will be formatted as Xsampie, Which will be concatenated together with the EOS token. While training the BOS token
 will be added at the beginning of the sequence, and the EOS token will be added at the end of the sequence, only the
 green tokens are used to compute the loss.
+
 Cross-modal Instruction Fine-Tuning Data. As the effectiveness of the open-source language-only instruction-tuning
-data sets has been demonstrated in previous works[15, 16, 17], a natural idea is to generate audio data of these
+data sets has been demonstrated in previous works[15] [16] [17], a natural idea is to generate audio data of these
 language-only data sets to build a cross-modal instruction-tuning data. In the process of building this dataset, we
 first carefully filtered all the conversation data, by removing the conversations that are not suitable for vocalization,
 including codes, a large number of symbols, URLs, and other non-readable text. To ensure the data quality, in
@@ -209,196 +239,231 @@ valuable information are dropped. In the third stage, we use Microsoft Azure tex
 speech data from humans in these data sets. The speech data of humans are used as the complex instructions and
 the responses from the chatbot are predicted during the instruction fine-tuning. Specifically, 80k conversation data
 which contains 160k samples is selected from WizardLM [17], 23k conversation data which contains 155k samples is
-selected from ShareGPT [16] and 96k conversation data which contains 192k samples is selected from GPT-4-LLM
-[15]. Table 1 shows the specific details of the dataset, which contains 199k conversation data and 508k samples in
-total. Several examples of the dataset are shown in Figure 6. We release this dataset as LLaSM-Audio-Instructions at
-https://huggingface.co/datasets/LinkSoul/LLaSM-Audio-Instructions.
-4
+selected from ShareGPT and 96k conversation data which contains 192k samples is selected from GPT-4-LLM
+(15). Table[T]shows the specific details of the dataset, which contains 199k conversation data and 508k samples in
+total. Several examples of the dataset are shown in Figure/6] We release this dataset as LLaSM-Audio-Instructions at
+(https ://huggingface.co/datasets/LinkSoul/LLaSM- Audio- Instructions
+
+
+--- Page 5 ---
 A PREPRINT - SEPTEMBER 19, 2023
+
 Table 1: LLaSM-Audio-Instructions Data.
+
 LLaSM-Audio-Instructions
-Conversations Samples English Samples
-160k
-159k
-Chinese Samples
-BITTT
-Source
-WizardLM
-ShareGPT
-GPT-4-LLM
-80k
-23k
-96k
-155k
-192k
-Total
-199k
-508k
-140k
-128k
-64k
-What are the three primary colors?
-Human: /dataset/1038/1.mp3
-Agent: The three primary colors are red, blue, and
-yellow. These colors are called primary
-because they cannot be created by mixing
-other colors and all other colors can be made
-by combining them in various proportions. In
-the additive color system, used for light, the
-primary colors are red, green, and blue (RGB).
-How are cellular networks tested in labs for performance?
-Human: /dataset/1203/1.mp3
-Agent:
-帮我找一个适合我兄弟的礼物。他
-→是一个狂热的体育迷。
-Human: /dataset/19791/1.mp3
-Agent: 根据您的描述,您的兄弟是一名狂热的体
-育迷。对于这样的人来说,有一些很棒的
-礼物选择,包括:
-Agent:
-Cellular networks are typically tested in labs
+
+Source Conversations Samples English Samples Chinese Samples
+
+WizardLM 80k 160k 159k <lk
+
+ShareGPT 23k 155k 140k 15k
+
+GPT-4-LLM 96k 192k 128k 64k
+
+Total 199k 508k 428k 80k
+
+What are the three primary colors? | | How are cellular networks tested in labs for performance?
+2
+A)
+Human: /dataset/1038/1.mp3 Human: /dataset/1203/1.mp3
+
+Agent: Cellular networks are typically tested in labs
 using specialized equipment such as cellular
 network simulators and test mobile devices.
-The network simulator generates simulated
-network traffic and conditions, while the test
-mobile devices are used to measure the
-performance of the network under test. The
+
+Agent: The three primary colors are red, blue, and
+yellow. These colors are called primary
+
+because they cannot be created by mixing The network simulator generates simulated
+other colors and all other colors can be made network traffic and conditions, while the test
+by combining them in various proportions. In mobile devices are used to measure the
+the additive color system, used for light, the performance of the network under test. The
+
 performance metrics that are typically
 measured include throughput, latency, signal
 strength, and error rates. Additionally, various
 tests such as drive tests and walk tests are
-also performed
-measure network
-perfo
-scen
-to
-What are drive tests in context of cellular networks?
-1. 球队服装:例如,如果他是一名足球迷,
-您可以为他购买他最喜欢球队的球衣或
-帽子。
-2. 运动装备:根据他喜欢的运动,您可以
-为他购买一些相关的运动装备,如篮球、
-足球、棒球等。
-3.球票:如果可能的话,您可以为他购买
-他最喜欢的体育比赛的门票,让他有机
-会亲身感受现场的激情与刺激。
-4. 运动类书籍/杂志/纪录片:您可以为他
-购买一些关于运动的书籍、杂志或纪录
-片,让他能够更深入地了解他喜欢的运
-动。
-5. 运动类游戏:您可以为他购买一些运动
-类电子游戏,让他能够在家中也能享受
-运动的乐趣。
-希望这些建议能够帮到您,为您的兄弟选
-购一份他喜欢的礼物。
-Human: /dataset/1203/3.mp3
-Drive tests, also known as "drive-by testing",
-are a type of field test that is used to measure
-the performance of a cellular network while a
-vehicle is in motion. The test vehicle is
-equipped with specialized test equipment,
-such as a data logger and a test mobile device,
-which is used to measure the performance of
-the network as the vehicle travels through
-different areas of the network's coverage. The
-test vehicle typically drives along a pre-
-determined route, and the test equipment is
-used to collect data on key performance
-indicators such as signal strength, call quality,
-and data throughput. This data is then
-analyzed to identify areas of the network that
-may be experiencing poor performance or
-capacity issues. Drive tests are useful for
-measuring the performance of cellular
-networks in real-world conditions and can
+also performed to _measure _network
+
+primary colors are red, green, and blue (RGB).
+
+PREK-MERRRANILY. fh
+
+B—MEAM IAB K. oa What are drive tests in context of cellular networks?
+Human: /dataset/19791/1.mp3 Human: /dataset/1203/3.mp3
+
+Agent: #RZGHHR, BHRBE—BEAHA Agent: Drive tests, also known as “drive-by testing”,
+Bik. WFREMARH, BHR are a type of field test that is used to measure
+3M, BHR the performance of a cellular network while a
+1. EREAARAR: PIM, MR he A CE, vehicle is in motion. The test vehicle is
+FETT A th SE tthe SERA ERA equipped with specialized test equipment,
+et. such as a data logger and a test mobile device,
+2. BRE: AEH, BTY which is used to measure the performance of
+AthMR—HABK NAME, PER. the network as the vehicle travels through
+EK, BRE. different areas of the network's coverage. The
+3. RE MRI, SIMAhMS test vehicle typically drives along a pre-
+TERRE AAA RIE, ibthSsl determined route, and the test equipment is
+SRIRAM ASR: used to collect data on key performance
+4. BMRBB/AB/ARA: BIWATH indicators such as signal strength, call quality,
+WOX—-BKFRMHBE. REMARK and data throughput. This data is then
+A, ibe eS RASH hE NE analyzed to identify areas of the network that
+wy may be experiencing poor performance or
+5. BMRB: BTAAhWK Kaw capacity issues. Drive tests are useful for
+KAT HM, ihe BeRHhARSS measuring the performance of cellular
+eh Ra. networks in real-world conditions and can
 help network operators identify and resolve
-issues related to network coverage, capacity,
-and quality.
+PRE NAB, ABH RR issues related to network coverage, capacity,
+
+BP bk NFAY. and quality.
+
 Figure 6: Data samples of the LLaSM-Audio-Instructions.
-5
-请介绍一下北京
+
+--- Page 6 ---
+i>)
+
+ME—Mtm
+
 0:03
-A PREPRINT - SEPTEMBER 19, 2023
-Which country in Africa is known for diamonds?
-北京是中国的首都,位于华北地区,是一个历史悠久、文化
-底蕴深厚得城市。它拥有丰富的人文景观和历史遗产,如故
-宫、天安门广场、长城等。此外,北京还是一个现代化得大
-都市,拥有许多现代化得建筑和设施,如北京塔、国家大剧
-院等。北京冬奥组委在2022年成功举办了冬季奥林匹克运动
-会,进一步提升了北京的国际影响力。
-Diamonds are primarily found in Africa, specifically in
-countries such as Botswana, Democratic Republic of Congo,
-South Africa, and Sierra Leone. These diamonds are mined
-from kimberlite pipes, which are geological formations that
-contain diamonds.
-如果去北京旅游,你有什么建议吗
+
+ARATE, MEEK, Z-THRIEA, KH
+KERFRAN. CHALRBAXAMADLE™, mK
+By. RRM BH, MS. Wess, ARB —NARKBA
+Bh, RAVSRARKSBAMRI, MItRUe. ARAB
+RS. ARSRBRE202F KEN TERA eas
+&, UHRA TIRHERwBDA.
+
+i>)
+
+RAR, PATA
+
 0:04
-如果您计划去北京旅游,我可以为您提供以下建议:
-1.游览北京的著名景点,如故宫、天安门广场、长城等。
-2. 品尝北京的特色美食,如烤鸭、豆汁、炸酱面等。
-3.逛逛北京的夜市和商场,购买一些纪念品或者当地特产。
-4. 参观一些历史博物馆和文化遗址,了解北京的历史和文化。
-5. 体验一下北京的夜生活,如去酒吧、夜市等。
-6. 如果您对中国文化感兴趣,可以参加一些文化体验活动,
-如学习书法、剪纸、京剧等。
-希望这些建议能够对您有所帮助,如果您需要更多信息,请
-随时告诉我。
-第一次和女孩约会有什么建议吗?
-在约会的初始阶段,以下是一些建议可以考虑的活动:
-1. 约会前,可以通过社交媒体或短信聊天了解对方的兴趣
-爱好和喜欢的活动,这样可以为约会提供一些参考。
-2. 约会时间可以选择一个适合双方的时间和地点,例如咖
-啡馆、餐厅、公园等。
-3. 可以选择一些共同的兴趣爱好进行活动,例如看电影、
-演唱会、运动等。
-4. 可以尝试一些新鲜的活动,例如射箭、攀岩、烹饪课等。
-5. 可以选择一些文化活动,例如博物馆、画廊、历史遗迹
-等。
-6. 可以选择一些轻松愉快的活动,例如逛街、逛公园、看
-日落等。
+
+PRET WAACRIE, RTA ARERR TR :
+
+1 BRILRHSS MRE. REIT, KAS.
+
+2 IRE ER, WB. SH. hems.
+
+3. BIRR MAH, BKK SaMs Swe.
+4. SU -EGLOMRAR RH, THERA LAHL.
+5. BR—THRAREA, MAAN. Rs.
+
+6. MRE PMN, TS MHL a,
+
+MFABR. BR. RHF.
+
+HELABNEBURAMBH, MRERERSIES,
+aR SRR.
+
+Oo
+
 Who is Jackie Chan?
+
 0:02
-最重要的是,要根据对方的喜好和兴趣选择活动,并尽量
-让约会过程中的气氛轻松愉快。
+
 Jackie Chan is a famous actor and stuntman from Hong Kong.
 He is known for performing his own stunts in his movies, and
 has become one of the most recognizable and successful
 actors in the action film genre. He has appeared in over 150
 films and is one of the most popular and recognizable
 celebrities in the world.
+
+0:03
+
+>)
+
 Who is the richest man in the world?
-0:03
-中国最著名的诗人是谁?
-中国最著名的诗人之一是李白(701年-762年),他被誉为
-“诗仙”,是唐代最伟大的诗人之一。他的诗歌清新豪放,
-充满想象力和浪漫主义情怀,对后世的诗歌创作产生了深远
-的影响。
-他的代表作有哪些?
-0:04
-0:06
-0:03
-0:03
+
 The richest man in the world is currently Elon Musk, who is a
 business magnate, industrial designer, and engineer. He is
 the founder and CEO of SpaceX, co-founder and CEO of
 Tesla Inc., co-founder of Neuralink, and founder of The
-Boring Company. As of 2021, Musk' s net worth is estimated
+Boring Company. As of 2021, Musk’ s net worth is estimated
 to be around $251 billion USD, making him richest person in
 the world.
-李白的代表作品有很多,其中最著名的诗歌包括《将进酒》、
-《庐山谣寄卢侍御虚舟》、《夜泊牛渚怀古》、《早发白帝
-城》等。这些诗歌充满了豪放不羁的情怀和奔放的诗风,被
-誉为李白的代表作。
-Figure 7: Examples of experiments.
+
+2
+
+g
+
 A PREPRINT - SEPTEMBER 19, 2023
+
+i>)
+
+Which country in Africa is known for diamonds?
+
+0:04
+
+Diamonds are primarily found in Africa, specifically in
+countries such as Botswana, Democratic Republic of Congo,
+South Africa, and Sierra Leone. These diamonds are mined
+from kimberlite pipes, which are geological formations that
+contain diamonds.
+
+oO
+
+AB RALBALSATABUG ?
+
+0:06
+
+ENSOMRR, A TA—HBW WA BAA :
+LAS, THERA aA T RUAN
+BHABKM A, RETMANSRA HSS,
+
+2 HAT AE MESRANN EAM, fls00
+RE. #7. ABS.
+
+3. TARR-KEENXRORTUT AM, HMB H
+RBS eas.
+
+4. Tiere aw, PIN. BA. RITE.
+
+5. DG eat, PII. BR, ki
+
+=.
+ee ee
+i=)
+
+KEENE, PREVNANETANBAR AM, FRE
+LASSE NARB rR.
+
+i>)
+
+PRBS SANSA BIE?
+
+0:03
+
+alg aN a | (701%E-762%F) , hake
+RERRRANBAZ—. (hha RM,
+SRNR DMRAS INT ats OMER Az T RE
+
+i>)
+
+ROH Zet PB ?
+
+0:03
+
+SANRRERARS, APRAANARBI CH) .
+CAWBS AREA) . GONE). (RRAR
+WM) SF. REGRET RATS,
+BASRA.
+
+Figure 7: Examples of experiments.
+
+--- Page 7 ---
+A PREPRINT - SEPTEMBER 19, 2023
+
 4 Experiments
-As shown in Figure 7, our proposed model, LLaSM, can adaptively recognize and respond to speech in Chinese
-and English. Figure 7 further demonstrates the effectiveness of LLaSM in a bilingual setting. Unlike conventional
+
+As shown in Figure |7| our proposed model, LLaSM, can adaptively recognize and respond to speech in Chinese
+and English. Figure{7|further demonstrates the effectiveness of LLaSM in a bilingual setting. Unlike conventional
 models that rely on speech-to-text conversion as a preprocessing step, LLaSM can directly process speech inputs,
 which improves its execution efficiency. Furthermore, LLaSM can support multiple languages and scenarios, which
 expands its application range. Therefore, LLaSM is a promising model for convenient and interactive human-artificial
 intelligence communication.
+
 5 Conclusion
+
 This work presents LLaSM, a large language model with cross-modal conversational abilities, capable of understanding
 and following speech-and-language instructions. Experiments show that LLaSM demonstrates a more convenient and
 natural way for humans to interact with artificial intelligence. Specifically, to alleviate the scarcity of cross-modal speech-
@@ -406,13 +471,18 @@ and-language instructions data, we build a large Speech Instruction Following da
 the largest Chinese and English speech-text cross-modal instruction-following data set to our knowledge. Finally, by
 adopting a visual modal encoder that can easily provide LLaSM with visual capabilities, we will explore combining
 both vision and audio modalities in future work.
+
 References
+
 [1] Tom B. Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind Nee-
 lakantan, Pranav Shyam, Girish Sastry, Amanda Askell, Sandhini Agarwal, Ariel Herbert-Voss, Gretchen Krueger,
 Tom Henighan, Rewon Child, Aditya Ramesh, Daniel M. Ziegler, Jeffrey Wu, Clemens Winter, Christopher Hesse,
 Mark Chen, Eric Sigler, Mateusz Litwin, Scott Gray, Benjamin Chess, Jack Clark, Christopher Berner, Sam
 McCandlish, Alec Radford, Ilya Sutskever, and Dario Amodei. Language models are few-shot learners, 2020.
-[2] Aakanksha Chowdhery, Sharan Narang, Jacob Devlin, Maarten Bosma, Gaurav Mishra, Adam Roberts,
+
+[2
+
+Aakanksha Chowdhery, Sharan Narang, Jacob Devlin, Maarten Bosma, Gaurav Mishra, Adam Roberts,
 Paul Barham, Hyung Won Chung, Charles Sutton, Sebastian Gehrmann, Parker Schuh, Kensen Shi, Sasha
 Tsvyashchenko, Joshua Maynez, Abhishek Rao, Parker Barnes, Yi Tay, Noam Shazeer, Vinodkumar Prabhakaran,
 Emily Reif, Nan Du, Ben Hutchinson, Reiner Pope, James Bradbury, Jacob Austin, Michael Isard, Guy Gur-Ari,
@@ -423,6 +493,7 @@ Dai, Thanumalayan Sankaranarayana Pillai, Marie Pellat, Aitor Lewkowycz, Erica M
 sandr Polozov, Katherine Lee, Zongwei Zhou, Xuezhi Wang, Brennan Saeta, Mark Diaz, Orhan Firat, Michele
 Catasta, Jason Wei, Kathy Meier-Hellstern, Douglas Eck, Jeff Dean, Slav Petrov, and Noah Fiedel. Palm: Scaling
 language modeling with pathways, 2022.
+
 [3] Hugo Touvron, Louis Martin, Kevin Stone, Peter Albert, Amjad Almahairi, Yasmine Babaei, Nikolay Bashlykov,
 Soumya Batra, Prajjwal Bhargava, Shruti Bhosale, Dan Bikel, Lukas Blecher, Cristian Canton Ferrer, Moya
 Chen, Guillem Cucurull, David Esiobu, Jude Fernandes, Jeremy Fu, Wenyin Fu, Brian Fuller, Cynthia Gao,
@@ -434,71 +505,110 @@ Schelten, Ruan Silva, Eric Michael Smith, Ranjan Subramanian, Xiaoqing Ellen Tan
 Adina Williams, Jian Xiang Kuan, Puxin Xu, Zheng Yan, Iliyan Zarov, Yuchen Zhang, Angela Fan, Melanie
 Kambadur, Sharan Narang, Aurelien Rodriguez, Robert Stojnic, Sergey Edunov, and Thomas Scialom. Llama 2:
 Open foundation and fine-tuned chat models, 2023.
-[4] OpenAI. Gpt-4 technical report, 2023.
+
+[4] OpenAL. Gpt-4 technical report, 2023.
 [5] Danny Driess, Fei Xia, Mehdi S. M. Sajjadi, Corey Lynch, Aakanksha Chowdhery, Brian Ichter, Ayzaan Wahid,
 Jonathan Tompson, Quan Vuong, Tianhe Yu, Wenlong Huang, Yevgen Chebotar, Pierre Sermanet, Daniel
+
 Duckworth, Sergey Levine, Vincent Vanhoucke, Karol Hausman, Marc Toussaint, Klaus Greff, Andy Zeng, Igor
 Mordatch, and Pete Florence. Palm-e: An embodied multimodal language model, 2023.
-[6] Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning, 2023.
+
+[6
+
 [7] Deyao Zhu, Jun Chen, Xiaoqian Shen, Xiang Li, and Mohamed Elhoseiny. Minigpt-4: Enhancing vision-language
 understanding with advanced large language models, 2023.
-7
+
+Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee. Visual instruction tuning, 2023.
+
+--- Page 8 ---
 A PREPRINT - SEPTEMBER 19, 2023
-[8] Rohit Girdhar, Alaaeldin El-Nouby, Zhuang Liu, Mannat Singh, Kalyan Vasudev Alwala, Armand Joulin, and
+
+8] Rohit Girdhar, Alaaeldin El-Nouby, Zhuang Liu, Mannat Singh, Kalyan Vasudev Alwala, Armand Joulin, and
 Ishan Misra. Imagebind: One embedding space to bind them all, 2023.
-[9] Quan Sun, Qiying Yu, Yufeng Cui, Fan Zhang, Xiaosong Zhang, Yueze Wang, Hongcheng Gao, Jingjing Liu,
+
+9] Quan Sun, Qiying Yu, Yufeng Cui, Fan Zhang, Xiaosong Zhang, Yueze Wang, Hongcheng Gao, Jingjing Liu,
 Tiejun Huang, and Xinlong Wang. Generative pretraining in multimodality, 2023.
-[10] Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li, Weiming Lu, and Yueting Zhuang. Hugginggpt: Solving ai
+
+[10
+
+Yongliang Shen, Kaitao Song, Xu Tan, Dongsheng Li, Weiming Lu, and Yueting Zhuang. Hugginggpt: Solving ai
 tasks with chatgpt and its friends in hugging face, 2023.
-[11] Rongjie Huang, Mingze Li, Dongchao Yang, Jiatong Shi, Xuankai Chang, Zhenhui Ye, Yuning Wu, Zhiqing Hong,
+
+Rongjie Huang, Mingze Li, Dongchao Yang, Jiatong Shi, Xuankai Chang, Zhenhui Ye, Yuning Wu, Zhiqing Hong,
 Jiawei Huang, Jinglin Liu, Yi Ren, Zhou Zhao, and Shinji Watanabe. Audiogpt: Understanding and generating
 speech, music, sound, and talking head, 2023.
-[12] Dong Zhang, Shimin Li, Xin Zhang, Jun Zhan, Pengyu Wang, Yaqian Zhou, and Xipeng Qiu. Speechgpt:
+
+XN
+
+Dong Zhang, Shimin Li, Xin Zhang, Jun Zhan, Pengyu Wang, Yaqian Zhou, and Xipeng Qiu. Speechgpt:
 Empowering large language models with intrinsic cross-modal conversational abilities, 2023.
-[13] Paul K. Rubenstein, Chulayuth Asawaroengchai, Duc Dung Nguyen, Ankur Bapna, Zalán Borsos, Félix de Chau-
+
+w
+
+Paul K. Rubenstein, Chulayuth Asawaroengchai, Duc Dung Nguyen, Ankur Bapna, Zalan Borsos, Félix de Chau-
 mont Quitry, Peter Chen, Dalia El Badawy, Wei Han, Eugene Kharitonov, Hannah Muckenhirn, Dirk Padfield,
 James Qin, Danny Rozenberg, Tara Sainath, Johan Schalkwyk, Matt Sharifi, Michelle Tadmor Ramanovich, Marco
-Tagliasacchi, Alexandru Tudor, Mihajlo Velimirović, Damien Vincent, Jiahui Yu, Yongqiang Wang, Vicky Zayats,
+Tagliasacchi, Alexandru Tudor, Mihajlo Velimirovic, Damien Vincent, Jiahui Yu, Yongqiang Wang, Vicky Zayats,
 Neil Zeghidour, Yu Zhang, Zhishuai Zhang, Lukas Zilka, and Christian Frank. Audiopalm: A large language
 model that can speak and listen, 2023.
-[14] Alec Radford, Jong Wook Kim, Tao Xu, Greg Brockman, Christine McLeavey, and Ilya Sutskever. Robust speech
+
+Alec Radford, Jong Wook Kim, Tao Xu, Greg Brockman, Christine McLeavey, and Ilya Sutskever. Robust speech
 recognition via large-scale weak supervision, 2022.
-[15] Baolin Peng, Chunyuan Li, Pengcheng He, Michel Galley, and Jianfeng Gao. Instruction tuning with gpt-4, 2023.
-[16] Dom Eccleston. Sharegpt. https://github.com/domeccleston/sharegpt, 2023.
-[17] Can Xu, Qingfeng Sun, Kai Zheng, Xiubo Geng, Pu Zhao, Jiazhan Feng, Chongyang Tao, and Daxin Jiang.
+
+&
+
+5] Baolin Peng, Chunyuan Li, Pengcheng He, Michel Galley, and Jianfeng Gao. Instruction tuning with gpt-4, 2023.
+
+6] Dom Eccleston. Sharegpt. https://github.com/domeccleston/sharegpt, 2023.
+
+7] Can Xu, Qingfeng Sun, Kai Zheng, Xiubo Geng, Pu Zhao, Jiazhan Feng, Chongyang Tao, and Daxin Jiang.
 Wizardlm: Empowering large language models to follow complex instructions, 2023.
-[18] Jean-Baptiste Alayrac, Jeff Donahue, Pauline Luc, Antoine Miech, Iain Barr, Yana Hasson, Karel Lenc, Arthur
+
+8] Jean-Baptiste Alayrac, Jeff Donahue, Pauline Luc, Antoine Miech, Iain Barr, Yana Hasson, Karel Lenc, Arthur
 Mensch, Katie Millican, Malcolm Reynolds, Roman Ring, Eliza Rutherford, Serkan Cabi, Tengda Han, Zhitao
 Gong, Sina Samangooei, Marianne Monteiro, Jacob Menick, Sebastian Borgeaud, Andrew Brock, Aida Ne-
 matzadeh, Sahand Sharifzadeh, Mikolaj Binkowski, Ricardo Barreira, Oriol Vinyals, Andrew Zisserman, and
 Karen Simonyan. Flamingo: a visual language model for few-shot learning, 2022.
-[19] Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-2: Bootstrapping language-image pre-training with
+
+&
+
+Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-2: Bootstrapping language-image pre-training with
 frozen image encoders and large language models, 2023.
+
 [20] Hyung Won Chung, Le Hou, Shayne Longpre, Barret Zoph, Yi Tay, William Fedus, Yunxuan Li, Xuezhi Wang,
 Mostafa Dehghani, Siddhartha Brahma, Albert Webson, Shixiang Shane Gu, Zhuyun Dai, Mirac Suzgun, Xinyun
 Chen, Aakanksha Chowdhery, Alex Castro-Ros, Marie Pellat, Kevin Robinson, Dasha Valter, Sharan Narang,
 Gaurav Mishra, Adams Yu, Vincent Zhao, Yanping Huang, Andrew Dai, Hongkun Yu, Slav Petrov, Ed H. Chi,
 Jeff Dean, Jacob Devlin, Adam Roberts, Denny Zhou, Quoc V. Le, and Jason Wei. Scaling instruction-finetuned
 language models, 2022.
+
 [21] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,
 Mostafa Dehghani, Matthias Minderer, Georg Heigold, Sylvain Gelly, Jakob Uszkoreit, and Neil Houlsby. An
 image is worth 16x16 words: Transformers for image recognition at scale, 2021.
+
 [22] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry,
 Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen Krueger, and Ilya Sutskever. Learning transferable visual
 models from natural language supervision, 2021.
+
 [23] Yu Shu, Siwei Dong, Guangyao Chen, Wenhao Huang, Ruihua Zhang, Daochen Shi, and Yemin Shi. Chinese
-llama2 7b. arXiv, 2023.
+Ilama2 7b. arXiv, 2023.
+
 [24] Hui Bu, Jiayu Du, Xingyu Na, Bengu Wu, and Hao Zheng. Aishell-1: An open-source mandarin speech corpus
 and a speech recognition baseline. In Oriental COCOSDA 2017, page Submitted, 2017.
+
 [25] Vassil Panayotov, Guoguo Chen, Daniel Povey, and Sanjeev Khudanpur. Librispeech: an asr corpus based on
 public domain audio books. In Acoustics, Speech and Signal Processing (ICASSP), 2015 IEEE International
 Conference on, pages 5206-5210. IEEE, 2015.
+
 [26] Magic data technology co., ltd., 2019.
-[27] Ltd. Primewords Information Technology Co. Primewords chinese corpus set 1, 2018. https://www.
-primewords.cn.
-8
-[28] Microsoft.
-Microsoft azure text-to-speech api.
-ai-services/ai-speech.
+
+[27] Ltd. Primewords Information Technology Co. Primewords chinese corpus set 1, 2018. https://www
+
+--- Page 9 ---
 A PREPRINT - SEPTEMBER 19, 2023
-https://azure.microsoft.com/en-us/products/
+
+[28] Microsoft. Microsoft azure text-to-speech api. https://azure.microsoft.com/en-us/products
+
+jai-services/ai-speech|
+
+

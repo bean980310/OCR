@@ -1,0 +1,1134 @@
+arXiv:2306.16700v2 [cs.RO] 30 Jun 2023
+Particle repr. Real scene (w/ goal mask)
+Dynamic-Resolution Model Learning for
+Object Pile Manipulation
+Yixuan Wang 2* Yunzhu Li¹,2* Katherine Driggs-Campbell² Li Fei-Fei¹ Jiajun Wu¹
+1 Stanford University 2University of Illinois Urbana-Champaign
+{yixuan22, yunzhuli, krdc}@illinois.edu, {feifeili, jiajunwu}@cs.stanford.edu
+> t
+Predicted Resolution
+28
+Particle #: 27,
+Particle #: 20
+20-
+Particle #: 29.
+Particle #: 18
+Fig. 1.
+Particle #: 20
+Particle #: 27
+Particle #: 29
+18 Particle #: 18
+0
+9
+2 3
+6 7
+Model-Predictive Control Steps
+Dynamic-Resolution Model Learning for Object Pile Manipulation in the Real World. Depending on the progression of a
+task, representations at different granularity levels may be needed at each model-predictive control (MPC) step to make the most effective
+progress on the overall task. In this work, we construct dynamic-resolution particle representations of the environment and learn a unified
+dynamics model using graph neural networks (GNNs) that allows adaptive selection of the abstraction level. In this figure, we demonstrate
+a real-world task of gathering the object pile into a target region. Figures on the left show the task execution process and the corresponding
+particle representation. The plot on the right shows the predicted optimal resolution at each MPC step, where the red circles correspond to
+the frames on the left. For video illustrations, we invite you to visit our project page*.
+Abstract Dynamics models learned from visual observations
+have shown to be effective in various robotic manipulation tasks.
+One of the key questions for learning such dynamics models is
+what scene representation to use. Prior works typically assume
+representation at a fixed dimension or resolution, which may be
+inefficient for simple tasks and ineffective for more complicated
+tasks. In this work, we investigate how to learn dynamic and
+adaptive representations at different levels of abstraction to
+achieve the optimal trade-off between efficiency and effectiveness.
+Specifically, we construct dynamic-resolution particle represen-
+tations of the environment and learn a unified dynamics model
+using graph neural networks (GNNs) that allows continuous
+selection of the abstraction level. During test time, the agent
+can adaptively determine the optimal resolution at each model-
+predictive control (MPC) step. We evaluate our method in object
+pile manipulation, a task we commonly encounter in cooking,
+agriculture, manufacturing, and pharmaceutical applications.
+Through comprehensive evaluations both in the simulation and
+the real world, we show that our method achieves significantly
+better performance than state-of-the-art fixed-resolution base-
+lines at the gathering, sorting, and redistribution of granular
+object piles made with various instances like coffee beans,
+*Denotes equal contribution.
+https://RoboPIL.github.io/dyn-res-pile-manip/
+almonds, corn, etc.
+I. INTRODUCTION
+Predictive models have been one of the core components
+in various robotic systems, including navigation [26], locomo-
+tion [29], and manipulation [23, 73]. For robotic manipulation
+in particular, people have been learning dynamics models of
+the environment from visual observations and demonstrated
+impressive results in various manipulation tasks [17, 35, 69,
+55]. A learning-based dynamics model typically involves an
+encoder that maps the visual observation to a scene rep-
+resentation, and a predictive model predicts the representa-
+tion's evolution given an external action. Different choices
+of scene representations (e.g., latent vectors [21, 20, 34],
+object-centric [71, 15] or keypoint representations [41, 38, 67])
+imply different expressiveness and generalization capabilities.
+Therefore, it is of critical importance to think carefully about
+what scene representation to use for a given task.
+Prior works typically use a fixed representation throughout
+the entire task. However, to achieve the best trade-off between
+efficiency and effectiveness, the optimal representation may
+need to be different depending on the object, the task, or
+even different stages of a task. An ideal representation should
+be minimum in its capacity (i.e., efficiency) but sufficient to
+accomplish the downstream tasks (i.e., effectiveness) [62, 5].
+Take the object pile manipulation task as an example. When
+the task objectives are different, the more complicated target
+configuration will require a more fine-grained model to capture
+all the details. On the other hand, if the targets are the same,
+depending on the progression of the task, we might want
+representations at different abstraction levels to come up with
+the most effective action, as illustrated in Figure 1.
+In this work, we focus on the robotic manipulation of object
+piles, a ubiquitous task critical for deploying robotic manipu-
+lators in cooking, agriculture, manufacturing, and pharmaceu-
+tical scenarios. Object pile manipulation is challenging in that
+the environment has extremely high degrees of freedom [53].
+Therefore, developing methods that solve this complex task
+allows us to best demonstrate how we can learn dynamics
+models at different levels of abstraction to achieve the optimal
+trade-off between efficiency and effectiveness.
+Our goal is to learn a unified dynamics model that can
+adaptively express the world at different granularity levels,
+from which the agent can automatically determine the optimal
+resolution given the task objective and the current observation.
+Specifically, we introduce a resolution regressor that predicts
+the optimal resolution conditioned on the current observation
+and the target configuration. The regressor is learned in a
+self-supervised fashion with labels coming from Bayesian
+optimization [19] that determines the most effective resolution
+for minimizing the task objective under a given time budget.
+Besides the resolution regressor, our model also includes
+perception, dynamics, and planning modules (Figure 2).
+During task execution, we follow a model-predictive control
+(MPC) framework. At each MPC step, the resolution regressor
+predicts the resolution most effective for control optimization.
+The perception module then samples particles from the RGBD
+visual observation based on the predicted resolution. The
+derived particle-based scene representation, together with the
+robot action, will be the input to the dynamics model to predict
+the environment's evolution. The dynamics model can then be
+used for trajectory optimization to derive the action sequence.
+Specifically, the dynamics model is instantiated as a graph
+neural network consisting of node and edge encoders. Such
+compositional structures naturally generalize to particle sets of
+different sizes and densities-a unified graph-based dynamics
+model can support model-predictive control at various abstrac-
+tion levels, selected continuously by the resolution regressor.
+We evaluate the model in various object pile manipulation
+tasks, including gathering spread-out pieces to a specific loca-
+tion, redistributing the pieces into complicated target shapes,
+and sorting multiple object piles. The tasks involve the manip-
+ulation of piles consisting of different instances, including corn
+kernels, coffee beans, almonds, and candy pieces (Figure 3b).
+We show that our model can automatically determine the
+resolution of the scene representation conditioned on the
+current observation and the task goal, and make plans to
+accomplish these tasks.
+We make three core contributions: (1) We introduce a
+framework that, at each planning step, can make continuous
+predictions to dynamically determine the scene representation
+at different abstraction levels. (2) We conduct comprehensive
+evaluations and suggested that our dynamic scene representa-
+tion selection performs much better than the fixed-resolution
+baselines. (3) We develop a unified robotic manipulation
+system capable of various object pile manipulation tasks, in-
+cluding gathering, sorting, and redistributing into complicated
+target configurations.
+II. RELATED WORK
+A. Scene Representation at Different Abstraction Levels
+To build multi-scale models of the dynamical systems, prior
+works have adopted wavelet-based methods and windowed
+Fourier Transforms to perform multi-resolution analysis [13,
+14, 30]. Kevrekidis et al. [27, 28] investigated equation-free,
+multi-scale modeling methods via computer-aided analysis.
+Kutz et al. [31] also combined multi-resolution analysis with
+dynamic mode decomposition for the decomposition of multi-
+scale dynamical data. Our method is different in that we
+directly learn from vision data for the modeling and planning
+of real-world manipulation systems.
+In computer vision, Marr [39] laid the foundation by
+proposing a multi-level representational framework back in
+1982. Since then, people have investigated pyramid methods
+in image processing [1, 7] using Gaussian, Laplacian, and
+Steerable filters. Combined with deep neural networks, the
+multi-resolution visual representation also showed stunning
+performance in various visual recognition tasks [22, 72].
+In the field of robotics, reinforcement learning researchers
+have also studied task- or behavior-level abstractions and
+come up with various hierarchical reinforcement learning
+algorithms [46, 2, 6, 66, 45, 16, 48]. Our method instead
+focuses on spatial abstractions from vision, where we learned
+structured representations based on particles to model the
+object interactions within the environment at different levels.
+B. Compositional Model Learning for Robotic Manipulation
+Physics-based models have demonstrated their effectiveness
+in many robotic manipulation tasks (e.g., [23, 73, 47, 59]).
+However, they typically rely on complete information about
+the environment, limiting their use in scenarios where full-
+state estimation is hard or impossible to acquire (e.g., precise
+shape and pose estimation of each one of the object pieces in
+Figure 1). Learning-based approaches provide a way of build-
+ing dynamics models directly from visual observations. Prior
+methods have investigated various scene representations for
+dynamics modeling and manipulation of objects with compli-
+cated physical properties, including clothes [35, 25], ropes [10,
+42], fluids [34], softbodies [54], and plasticine [55]. Among
+the methods, graph-structured neural networks (GNNs) have
+shown great promise by introducing explicit relational induc-
+tive biases [4]. Prior works have shown GNNs' effectiveness
+in modeling compositional dynamical systems involving the
+interaction between multiple objects [3, 9, 33, 51, 18, 56],
+systems represented using particles or meshes [44, 32, 65,
+52, 49], or for compositional video prediction [70, 24, 68,
+71, 50, 63, 74]. However, these works typically assume scene
+representation at a fixed resolution, whereas our method learns
+a unified graph dynamics model that can generalize to scene
+representations at different levels of abstraction.
+C. Object Pile Manipulation
+Robotic manipulation of object piles and granular pieces has
+been one of the core capabilities if we want to deploy robot
+systems for complicated tasks like cooking and manufacturing.
+Suh and Tedrake [58] proposed to learn visual dynamics based
+on linear models for redistributing the object pieces. Along the
+lines of learning the dynamics of granular pieces, Tuomainen
+et al. [64] and Schenck et al. [53] also proposed the use of
+GNNs or convolutional neural dynamics models for scooping
+and dumpling granular pieces. Other works introduced success
+predictors for excavation tasks [36], a self-supervised mass
+predictor for grasping granular foods [60], visual serving
+for shaping deformable plastic materials [11], or data-driven
+methods to calibrate the physics-based simulators for both
+manipulation and locomotion tasks [75, 40]. Audio feedback
+has also shown to be effective at estimating the amount and
+flow of granular materials [12]. Our work instead focuses on
+three tasks (i.e., gather, redistribute, and sort object pieces)
+using a unified dynamic-resolution graph dynamics to balance
+efficiency and effectiveness for real-world deployment.
+III. METHOD
+In this section, we first present the overall problem formula-
+tion. We then discuss the structure of our dynamic-resolution
+dynamics models, how we learn a resolution regressor to
+automatically select the scene representation, and how we use
+the model in a closed loop for the downstream planning tasks.
+A. Problem Formulation
+Our goal is to derive the resolution w to represent the
+environment to achieve the best trade-off between efficiency
+and effectiveness for control optimization. We define the
+following trajectory optimization problem over a horizon T:
+min c(z, Yg),
+{ut}
+s.t.
+=3
+g(yo, Yg),
+z = h(yo, w),
+w
+24+1 = f (zw, ut, w),
+(1)
+where the resolution regressor g(.,.) takes the current obser-
+vation yo and the goal configuration yg as input and predicts
+the model resolution. h(.·, ·), the perception module, takes in
+the current observation yo and the predicted resolution w,
+then derives the scene representation zu for the current time
+step. The dynamics module f(.,.,.) takes the current scene
+representation zu, the input action ut, and the resolution was
+inputs, and then predicts the representation's evolution at the
+next time step 4 4+1. The optimization aims to find the action
+sequence {u} to minimize the task objective c(x, y).
+In the following sections, we describe (1) the details of the
+perception module h(.,.) and the dynamics module f(.,.,.) in
+Section III-B, (2) how we obtain the self-supervision for the
+resolution regressor g(.,.) in Section III-C, and (3) how we
+solve Equation 1 in a closed planning loop in Section III-D.
+B. Dynamic-Resolution Model Learning Using GNNs
+=
+To instantiate the optimization problem defined in Equa-
+tion 1, we use graphs of different sizes as the representation
+zw (Ot, Et), where w indicates the number of vertices in
+the graph. The vertices O₁ = {0} i=1,..., |ot| denote the particle
+set and of represents the 3D position of the ith particle. The
+edge set
+denotes the relations between the
+{e}}j=1,...,]&t\
+particles, where e₁ = (u, v) denotes an edge pointing from
+particle of index v to u.
+=
+To obtain the particle set Ot from the RGBD visual observa-
+tion yt, we first transform the RGBD image into a point cloud
+and then segment the point cloud to obtain the foreground
+according to color and depth information t Є RN×³. We
+then deploy the farthest point sampling technique [43] to
+subsample the foreground but ensure sufficient coverage of
+1,...,i-1
+Yt. Specifically, given already sampled particles of
+apply
+ο
+= arg max min
+yk Eyt oЄo.,
+,...,i-1
+||yk - o ||
+we
+(2)
+to find the ¿th particle of. We iteratively apply this process until
+we reach w particles. Different choices of w indicate scene
+representations at different abstraction levels, as illustrated
+in Figure 2a. The edge set is constructed dynamically over
+time and connects particles within a predefined distance while
+limiting the maximum number of edges a node can have.
+We instantiate the dynamics model f(·, ·, ·) as graph neural
+networks (GNNs) that predict the evolution of the graph
+representation zw under external actions ut and the selected
+resolution w. f(.,.,.) consists of node and edge encoders
+ƒenc (·, ·, ·), ƒɛnc (·, ·, ·) to obtain node and edge representations:
+p₁ = fen (ot, ut, w), i = 1,..., |0t|,
+"
+renc
+q² = fen (044, 0%, w), j = 1,..., |Et|.
+(3)
+We then have node and edge decoders fdec (.,.), fdec (.,.)
+to obtain the corresponding representations and predict the
+representation at the next time step:
+r² = ƒdec (q², w), j = 1,...,|Et|,
+ỗ t+1 = fdec (pt, Σ r²), i = 1,..
+jЄNi
+|0t|, (4)
+where N is the index set of the edges, in which particle i
+is the receiver. In practice, we follow Li et al. [33] and use
+multi-step message passing over the graph to approximate the
+instantaneous propagation of forces.
+To train the dynamics model, we iteratively predict future
+particle states over a time horizon of T and then optimize the
+neural network's parameters by minimizing the mean squared
+Robot Workspace RGBD
+ωο
+h
+W1
+h
+Yg
+Goal
+Уо
+0
+RGBD
+Resolution
+Regressor
+0
+31
+Dynamics
+Prediction
+c(Z, Yg)
+h
+Z0
+f
+f
+Z
+Perception
+Trajectory
+Optimization
+ио
+UT-1
+(a) Representations at different resolutions
+Fig. 2.
+(b) Dynamics prediction and inverse planning
+Overview of the proposed framework. (a) Our perception module h processes the input RGBD image and generates particle
+representations at different levels of abstraction depending on the resolution w. (b) The resolution regressor g takes the current observation
+yo and the goal yg as input. It then predicts the resolution w we intend to represent the environment. The dynamics model f, conditioned
+on the dynamically-selected resolution w and the input action ut, predicts the temporal evolution of the scene representation z. During
+planning time, we calculate the task objective c(zr, yg) and backpropagate the gradients to optimize the action sequence {ut}.
+error (MSE) between the predictions and the ground truth
+future states:
+L
+T Ot
+1
+T. Ot
+-
+ΣΣ 110 +1 - 0+113.
+t'=1 i=1
+t+t'
+C. Adaptive Resolution Selection via Self-Supervised Learning
+The previous sections discussed how to obtain the particle
+set and how we predict its evolution given a resolution w.
+In this section, we present how we learn the resolution
+regressor g(.,.) in Equation 1 that can automatically determine
+the resolution in a self-supervised manner. Specifically, we
+intend to find the resolution w that is the most effective for
+minimizing the task objective given the current observation
+yo and the goal yg. We reformulate the optimization problem
+in Equation 1 by considering w as a variable of the objective
+function as the following:
+c* (yo, Yg, w) = min
+{ut}
+c(x, y),
+s.t.
+(6)
+z = h(yo, w),
+4+1 = f (zu, ut, w).
+For a given w, we solve the above optimization problem via a
+combination of sampling and gradient descent using shooting
+methods [61] under a given time budget—the higher resolution
+representation will go through fewer optimization iterations.
+For simplicity, we denote the objective in Equation 6 as c* (w)
+in the following part of this section.
+Given the formulation, we are then interested in finding the
+parameter w that can minimize the following objective:
+min c (w) = c* (w) + R(w),
+3
+s.t.
+WE (wmin, wmax),
+(7)
+where R(w) is a regularizer penalizing the choice of an
+excessively large w to encourage efficiency. Regularizer details
+can be found in supplementary materials. We use Bayesian
+optimization [57] to find the optimal w by iteratively sampling
+w and approximating c+ (w) using the Gaussian process. At
+each sampling stage, we sample one or more data points
+w; according to the expected improvement of the objective
+function and evaluate their value c+ (wi). Then, at the approx-
+imation stage, we assume the distribution of c+ (w) follows the
+Gaussian distribution N(µ(w), σ²); thus, the joint distribution
+of the evaluated points train = [W1,..., wn] and the testing
+points test = [1,..., wm] can be expressed as the following:
+Ctrain = [c (w1),..., c† (wn)],
+-
+Mtrain = [(w1), . . ., μ(wn)],
+Ctest = [c (w),...,c+(wm)],
+Mtest = [μ(w),..., μ (w/m)],
+[Ctrain
+~N
+Ctest
+[Mtrain K K*
+Mtest
+KT K**
+(8)
+=
+where K is a kernel function matrix derived via K
+K(train, train). K(.,.) is the kernel function used to com-
+pute the covariance. Similarly, K*
+K**K(test, test).
+=
+K(train, test) and
+Equation 8 shows the joint probability of Ctrain and Ctest
+conditioned on train and test. Through marginalization, we
+could fit c+(w) using the following conditional distribution:
+Ctest Ctrain, train, test
+~
+N(KKC train, K** – KÖ‍K¯¹K*).
+(9)
+We can then use the mean value of the Gaussian distribution
+in Equation 9 as the metric to minimize c+ (w). Therefore, the
+solution to Equation 7 is approximated as the following:
+w*
+=
+arg min KKCtrain
+w
+(10)
+s.t.
+WE (wmin, max).
+To train the resolution regressor, we randomly generate a
+dataset containing the observation and goal pairs (yo, Yg).
+For each pair, we follow the above optimization process to
+generate the optimal resolution label w*. We then train the
+resolution regressor w = g(yo, yg) to predict the resolution
+based on the observation and the goal via supervised learning.
+Training the w regressor is a self-supervised learning process,
+as the labels are automatically generated via an optimization
+process without any human labeling.
+D. Closed-Loop Planning via Adaptive Repr. Selection
+Now that we have obtained the resolution regressor g, the
+perception module h, and the dynamics module f. We can
+wire things together to solve Equation 1 and use the optimized
+action sequence in a closed loop within a model-predictive
+control (MPC) framework [8]. Specifically, for each MPC step,
+we follow Algorithm 1, which first determines the resolution
+to represent the environment, then uses a combination of
+sampling and gradient descent to derive the action sequence
+through trajectory optimization using the shooting method. We
+then execute the first action from the action sequence in the
+real world, obtain new observations, and apply Algorithm 1
+again. Such a process allows us to take feedback from the
+environment and adaptively select the most appropriate reso-
+lution at each step as the task progresses. Figure 2b also shows
+an overview of the future prediction and inverse planning
+process. Details including task objective definition and MPC
+hyperparameter are included in supplementary materials.
+Algorithm 1 Trajectory optimization at each MPC step
+Input: Current observation yo, goal yg, time horizon T,
+the resolution regressor 9, the perception module h,
+the dynamics module ƒ, and gradient descent iteration N
+Output: Actions uo:T-1
+Predict the resolution w← g(yo, Yg)
+Obtain the current representation zu h(yo, w)
+Sample M action sequences 0:T-1
+for m = 1,..., M do
+for i
+=
+: 1,
+N do
+for t = 0, T- 1 do
+1:M
+Predict the next step z +41 + f (zu, um, w)
+end for
+Calculate the task loss cm+ - c(z, Yg)
+if i < N then
+m
+ст
+Update T-1 using gradients Vam-10
+end if
+end for
+end for
+marg minm
+cm*
+Return o:T-1
+cm
+IV. EXPERIMENTS
+In this section, we evaluate the proposed framework in
+various object pile manipulation tasks. In particular, we aim to
+KINOVA
+Pusher
+Object Piles
+RGBD
+Camera
+(a) Robot setup
+Workspace
+(b) Object piles considered in this work
+Fig. 3.
+Robot setup and the testing object piles. (a) The dashed
+black square shows the robot's workspace. The robotic manipulator,
+equipped with a pusher at the end effector, pushes the object piles
+within the workspace. A calibrated RGBD camera mounted at the
+top provides visual observations of the environment. (b) We show
+the object piles considered in this work, including M&M, almond,
+granola, candy, carrot, rice, corn, and coffee beans.
+answer the following three questions through the experiments.
+(1) Does a trade-off exist between efficiency and effectiveness
+as we navigate through representations at different abstraction
+levels? (2) Is a fixed-resolution dynamics model sufficient,
+or do we need to dynamically select the resolution at each
+MPC step? (3) Can our dynamic-resolution model accomplish
+three challenging object pile manipulation tasks: Gather,
+Redistribute, and Sort?
+A. Setup
+We conduct experiments in both the simulation environment
+and the real world. The simulation environment is built using
+NVIDIA FleX [37, 32], a position-based simulator capable of
+simulating the interactions between a large number of object
+pieces. In the real world, we conducted experiments using the
+setup shown in Figure 3a. We use RealSense D455 as the top-
+K
+Negative Loss Reduction
+Negative Loss Reduction
+---- μω)
+Observations
+Resolution
+100
+---- μω)
+.
+Observations
+Negative Loss Reduction
+Negative Loss Reduction
+པྲྀ ཎྜ བ ཞེ ཀྶཾ ༅ ཀ ུཊྚཎྜ
+-2.5
+----H(w)
+Observations
+10.0
+0
+20
+40
+100
+Resolution
+---H(w)
+. Observations
+Current observation
+Overlay the target
+20
+Resolution
+Bayesian optimization
+(a) Same initial but different goal configurations
+100
+Current observation
+20
+Resolution
+Overlay the target Bayesian optimization
+(b) Same goal but different initial configurations
+100
+Fig. 4. Optimal resolution differs depending on the initial and goal configurations. (a) We show two examples with the same initial but
+different goal configurations. We apply Bayesian optimization to solve the problem discussed in Section III-C to find the optimal resolution
+for both cases. The example with a more complicated target shape requires a higher-resolution representation to be the most effective at
+making task progress. (b) When the goal is to gather the pieces in the center of the workspace, a coarse representation is sufficient for
+examples with spread-out pieces. The task progresses as long as the agent pushes any outlying pieces toward the goal region. In contrast, a
+higher-resolution representation is needed to reveal the subtle difference between the initial and goal configurations when they are close.
+down camera to capture the RGBD visual observations of the
+workspace. We attach a flat pusher to the robotic manipulator's
+end effector to manipulate the object piles.
+B. Tasks
+We evaluate our methods on three object pile manipulation
+tasks that are common in daily life.
+• Gather: The robot needs to push the object pile into a
+target blob with different locations and radii.
+⚫ Redistribute: The robot is tasked to manipulate the object
+piles into many complex target shapes, such as letters.
+• Sort: The robot has to move two different object piles to
+target locations without mixing each other.
+We use a unified dynamics model for all three tasks, which
+involve objects pieces of different granularities, appearances,
+and physical properties (Figure 3b).
+C. Trade-Off Between Efficiency and Effectiveness
+The trade-off between efficiency and effectiveness can vary
+depending on the tasks, the current, and the goal configura-
+tions. As we have discussed in Section III-C, given the reso-
+lution w, we set a fixed time budget to solve the optimization
+problem defined in Equation 6. Intuitively, if the resolution is
+too low, the representation will not contain sufficiently detailed
+information about the environment to accomplish the task, the
+optimization of which is efficient but not effective enough to
+finish the task. On the contrary, if we choose an excessively
+high resolution, the representation will carry redundant infor-
+mation not necessary for the task and can be inefficient in
+optimization. We thus conduct experiments evaluating whether
+the trade-off exists (i.e., whether the optimal resolution w
+calculated from Equation 10 is different for different initial
+and goal configurations).
+Task Score
+0.7
+2
+25
+0.6
+50
+75
+0.5
+100
+Auto (Ours)
+0.4
+CNN
+0.3
+0.2
+0.1
+0.0
+0
+3
+6
+9
+Distribution Distance Threshold
+12
+15
+Fig. 5. Model-predictive control (MPC) results. We evaluated the
+MPC performance on different representation choices. We use the
+task score as the evaluation metric. Task execution trial results in a
+distribution distance lower than the threshold is considered a success.
+The task score is the number of successful trials divided by the total
+number of task trials for both the Gather and Redistribute tasks. Our
+method automatically and adaptively selects the scene representation,
+which achieves the best overall performance compared with the scores
+of fixed-resolution baselines and a method that uses convolutional
+neural networks (CNN) as the dynamics model class.
+We use Bayesian optimization and follow the algorithm
+described in Section III-C to find the optimal trade-off on
+Gather and Redistribute tasks in the simulation. As shown
+in Figure 4a, higher-resolution dynamics models do not nec-
+essarily lead to better performance due to their optimization
+inefficiency. Compared between goal configurations, even if
+the current observation is the same, a more complicated goal
+typically requires a higher resolution representation to make
+Result
+Initial
+Task Loss
+Result
+Initial
+300
+250
+200
+150
+100
+50
+2 particles
+Outlying
+Pieces
+25 particles
+50 particles
+75 particles
+100 particles
+(a) Qualitative comparison between fixed-resolution baselines and our automatic resolution selection method
+0
+0
+2
+4
+6
+8
+2
+25
+50
+75
+100
+Auto (Ours)
+10
+12
+Model-Predictive Control Steps
+(b) Task loss reduction on the gathering trial shown in (a)
+Carrots
+Almond
+Rice
+Granola
+(c) Gather object piles of different materials
+Almond
+Coffee & Carrot
+Corn kernel
+Auto (Ours)
+M&M
+Coffee & Candy
+Almond & Candy
+(d) Redistribute to target configurations
+(e) Sort different object piles
+Fig. 6. Qualitative results in the real world. (a) Qualitative comparison of MPC performance between our method with fixed-resolution
+baselines. Our method could gather corn pieces into the target region clearly, whereas the fixed-resolution baselines fail to reach the goal or
+leave outlying pieces. (b) Quantitative comparisons for the qualitative results in (a). Starting from similar initial configurations, our automatic
+resolution selection method performs the best throughout the MPC steps. (c) Evaluation of our method on the Gather task with different
+objects. The objects vary in their scales and physical properties (e.g., while rice and granola are quasi-static during MPC steps, M&M can
+exhibit rolling motions after pushing). (d) Redistribute the object pieces into more complicated target configurations. Our method can push
+randomly-spread object piles into the desired letter shapes with clear boundaries. (e) Our method can also be coupled with a simple high-level
+planner to accomplish more complex tasks, such as sorting different object piles into target regions without mixing them.
+the most effective task progression. More specifically, when
+the target region is a plain circle, the coarse representation
+captures the rough shape of the object pile, sufficient for
+the task objective, allowing more efficient optimization than
+the higher-resolution counterparts. However, when the target
+region has a more complicated shape, low-resolution represen-
+tation fails to inform downstream MPC of detailed object pile
+shapes. Therefore, high-resolution representation is necessary
+for effective trajectory optimization.
+The desired representation does not only depend on goal
+configurations. Even if the goal configurations are the same,
+different initial configurations can also lead to different opti-
+mal resolutions, as illustrated in Figure 4b. When the initial
+configuration is more spread out, the most effective way
+of decreasing the loss is by pushing the outlying pieces to
+the goal region. Our farthest sampling strategy, even with
+just a few particles, could capture outlying pieces and helps
+the agent to make good progress. Therefore, when pieces
+are sufficiently spread out, higher particle resolution does
+not necessarily contain more useful information for the task
+but makes the optimization process inefficient. On the other
+hand, when the initial configuration concentrates on the goal
+region, to effectively decrease the task objective, MPC needs
+more detailed information about the object pile's geometry to
+pinpoint the mismatching area. For example, the agent needs
+to know more precise contours of the goal region and the
+outlying part of object piles to decide how to improve the
+planning results further. Low-resolution representations will be
+less effective in revealing the difference between the current
+observation and the goal, thus less helpful in guiding the agent
+to make action decisions.
+D. Is a Single Resolution Dynamics Model Sufficient?
+Although there is a trade-off between representation reso-
+lution and task progression, can we benefit from this trade-
+off in trajectory optimization? We compared our dynamic-
+resolution dynamics model with fixed-resolution dynamics
+models on Gather and Redistribute tasks. Figure 1 shows
+how our model changes its resolution prediction as MPC
+proceeds in the real world. Trained on the generated dataset
+of optimal w, our regressor learned that fixing a resolution
+throughout the MPC process is not optimal. Instead, our
+regressor learns to adapt the resolution according to the current
+observation feedback. In addition, for the example shown in
+Figure 1, we can see that the resolution increases as object
+piles approach the goal. This matches our expectation as
+explained in Section IV-C.
+We quantitatively evaluate different fixed-resolution base-
+lines and our adaptive representation learning algorithms in
+simulation. We record the final step distribution distance
+between object piles and the goal. Specifically, given a distance
+threshold Tp, the number of tasks with a distance lower than
+Tp is Np, and the total number of tasks is N. The task
+score is then defined as Np/N (i.e., y-axis in Figure 5). Our
+adaptive resolution model almost always achieves the highest
+task score, regardless of the threshold used.
+Figure 6a shows a qualitative comparison between the
+fixed-resolution baselines and our dynamic-resolution selec-
+tion method on the Gather task in the real world. All methods
+start from a near-identical configuration. We can see from the
+qualitative results that our method manipulates the object pile
+to a configuration closest to the goal region, whereas the best-
+performing fixed-resolution baseline still has some outlying
+pieces far from the goal region. In addition, we could see
+from the quantitative evaluation curve in Figure 6b that our
+model is always the best throughout the whole MPC process.
+Representations with an excessively high resolution are un-
+likely to converge to a decent solution within the time budget,
+as demonstrated by resolutions 75 and 100. Conversely, if the
+representation is too low resolution, it will converge to a loss
+much higher than our model. A resolution of 25 reached a
+comparable final loss to our method. However, because the
+same resolution was ineffective for initial timesteps, its loss
+does not reduce as rapidly as our adaptive approach. Because
+our model could adapt to different resolutions in different
+scenes, making it more effective at control optimization.
+That is why our model could reach the goal region faster
+than all other fixed-resolution models and consistently per-
+forms better at all timestamps, highlighting the benefits of
+adaptive resolution selection.
+E. Can a Unified Dynamics Model Achieve All Three Tasks?
+We further demonstrate that our method could work on
+all three tasks and diverse object piles. For the Gather task,
+we test our method on different objects with different initial
+and goal configurations. From left to right in Figure 6c, our
+agent gathers different object piles made with almond, granola,
+or M&M™. Different appearances and physical properties
+challenge our method's generalization capability. For example,
+while almonds and granola are almost quasi-static during
+the manipulation, M&M™ will roll around and have high
+uncertainties in its dynamics. In addition, unlike almonds and
+M&MTM, granola pieces are non-uniform. Our method has a
+good performance for all these objects and configurations.
+For the Redistribute task, we redistribute carrots and al-
+monds into target letters ‘J', ‘T’, and ‘U' with spread-out
+initial configurations. The final results match the desired letter
+shape. Please check our supplementary materials for video
+illustrations of the manipulation process.
+For the Sort task, we use a high-level motion planner to
+find the intermediate waypoints in the image space. Then
+we use a similar method as Gather task to push the object
+pile into the target location. For the three examples shown
+in Figure 6e, we require object piles to go to their own
+target locations while not mixing with each other. Objects
+with different scales and shapes are present here. For example,
+coffee beans have smaller granularity and round shapes, while
+candies are relatively large and square. Here we demonstrate
+success trials of manipulating the object piles to accomplish
+the Sort task for different objects and goal configurations.
+Please check our video for the manipulation process.
+V. CONCLUSION
+Dynamics models play an important role in robotics. Prior
+works developed dynamics models based on representations
+of various choices, yet they are typically fixed throughout
+the entire task. In this work, we introduced a dynamic and
+adaptive scene representation learning framework that could
+automatically find a trade-off between efficiency and effec-
+tiveness for different tasks and scenes. The resolution of the
+scene representation is predicted online at each time step.
+And a unified dynamics model, instantiated as GNNs, predicts
+the evolution of the dynamically-selected representation. The
+downstream MPC then plans the action sequence to minimize
+the task objective. We evaluate our method on three chal-
+lenging object pile manipulation tasks with diverse initial and
+goal configurations. We show that our model can dynamically
+determine the optimal resolution online and has better control
+performance compared to fixed-resolution baselines.
+Acknowledgments: This work is in part supported by
+Stanford Institute for Human-Centered Artificial Intelligence
+(HAI), Toyota Research Institute (TRI), NSF RI #2211258,
+ONR MURI N00014-22-1-2740, and Amazon.
+REFERENCES
+[1] Edward H Adelson, Charles H Anderson, James R
+Bergen, Peter J Burt, and Joan M Ogden. Pyramid
+methods in image processing. RCA engineer, 29(6):33–
+41, 1984.
+[2] Andrew G Barto and Sridhar Mahadevan. Recent ad-
+vances in hierarchical reinforcement learning. Discrete
+event dynamic systems, 13(1-2):41–77, 2003.
+[3] Peter Battaglia, Razvan Pascanu, Matthew Lai, Danilo
+Jimenez Rezende, et al. Interaction networks for learning
+about objects, relations and physics. Advances in neural
+information processing systems, 29, 2016.
+[4] Peter W Battaglia, Jessica B Hamrick, Victor Bapst,
+Alvaro Sanchez-Gonzalez, Vinicius Zambaldi, Mateusz
+Malinowski, Andrea Tacchetti, David Raposo, Adam
+Santoro, Ryan Faulkner, et al. Relational inductive
+biases, deep learning, and graph networks. arXiv preprint
+arXiv:1806.01261, 2018.
+[5] Yoshua Bengio, Aaron Courville, and Pascal Vincent.
+Representation learning: A review and new perspectives.
+IEEE transactions on pattern analysis and machine in-
+telligence, 35(8):1798–1828, 2013.
+[6] Matthew Michael Botvinick. Hierarchical reinforcement
+learning and decision making. Current opinion in neu-
+robiology, 22(6):956–962, 2012.
+[7] Peter J Burt and Edward H Adelson. The laplacian
+pyramid as a compact image code. In Readings in
+computer vision, pages 671-679. Elsevier, 1987.
+[8] Eduardo F Camacho and Carlos Bordons Alba. Model
+predictive control. Springer science & business media,
+2013.
+[9] Michael B Chang, Tomer Ullman, Antonio Torralba, and
+Joshua B Tenenbaum. A compositional object-based
+approach to learning physical dynamics. arXiv preprint
+arXiv:1612.00341, 2016.
+[10] Peng Chang and Taşkın Padır. Model-based manipulation
+of linear flexible objects with visual curvature feed-
+back. In 2020 IEEE/ASME International Conference on
+Advanced Intelligent Mechatronics (AIM), pages 1406-
+1412. IEEE, 2020.
+[11] Andrea Cherubini, Valerio Ortenzi, Akansel Cosgun,
+Robert Lee, and Peter Corke. Model-free vision-based
+shaping of deformable plastic materials. The Interna-
+tional Journal of Robotics Research, 39(14):1739–1759,
+2020.
+[12] Samuel Clarke, Travers Rhodes, Christopher G Atke-
+son, and Oliver Kroemer. Learning audio feedback
+for estimating amount and flow of granular material.
+Proceedings of Machine Learning Research, 87, 2018.
+[13] Ingrid Daubechies. Ten lectures on wavelets. SIAM,
+1992.
+[14] Lokenath Debnath and Firdous Ahmad Shah. Wavelet
+transforms and their applications. Springer, 2002.
+[15] Danny Driess, Zhiao Huang, Yunzhu Li, Russ Tedrake,
+and Marc Toussaint. Learning multi-object dynamics
+with compositional neural radiance fields. arXiv preprint
+arXiv:2202.11855, 2022.
+[16] Nima Fazeli, Miquel Oller, Jiajun Wu, Zheng Wu,
+Joshua B Tenenbaum, and Alberto Rodriguez. See,
+feel, act: Hierarchical learning for complex manipulation
+skills with multisensory fusion. Science Robotics, 4(26):
+eaav3123, 2019.
+[17] Chelsea Finn and Sergey Levine. Deep visual foresight
+for planning robot motion. In 2017 IEEE International
+Conference on Robotics and Automation (ICRA), pages
+2786-2793. IEEE, 2017.
+[18] Niklas Funk, Georgia Chalvatzaki, Boris Belousov, and
+Jan Peters. Learn2assemble with structured representa-
+tions and search for robotic architectural construction.
+In Conference on Robot Learning, pages 1401–1411.
+PMLR, 2022.
+[19] Roman Garnett. Bayesian optimization. Cambridge
+University Press, 2023.
+[20] Danijar Hafner, Timothy Lillicrap, Jimmy Ba, and Mo-
+hammad Norouzi. Dream to control: Learning behaviors
+by latent imagination. arXiv preprint arXiv:1912.01603,
+2019.
+[21] Danijar Hafner, Timothy Lillicrap, Ian Fischer, Ruben
+Villegas, David Ha, Honglak Lee, and James Davidson.
+Learning latent dynamics for planning from pixels. In
+International conference on machine learning, pages
+2555-2565. PMLR, 2019.
+[22] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian
+Sun. Spatial pyramid pooling in deep convolutional
+networks for visual recognition. IEEE transactions on
+pattern analysis and machine intelligence, 37(9):1904–
+1916, 2015.
+[23] François Robert Hogan and Alberto Rodriguez. Feedback
+control of the pusher-slider system: A story of hybrid
+and underactuated contact dynamics. arXiv preprint
+arXiv:1611.08268, 2016.
+[24] Jun-Ting Hsieh, Bingbin Liu, De-An Huang, Li F Fei-
+Fei, and Juan Carlos Niebles. Learning to decompose
+and disentangle representations for video prediction. Ad-
+vances in neural information processing systems, 31,
+2018.
+[25] Zixuan Huang, Xingyu Lin, and David Held. Mesh-based
+dynamics with occlusion reasoning for cloth manipula-
+tion. arXiv preprint arXiv:2206.02881, 2022.
+[26] Boris Ivanovic, Amine Elhafsi, Guy Rosman, Adrien
+Gaidon, and Marco Pavone. Mats: An interpretable
+trajectory forecasting representation for planning and
+control. arXiv preprint arXiv:2009.07517, 2020.
+[27] Ioannis G Kevrekidis, C William Gear, James M Hyman,
+Panagiotis G Kevrekidis, Olof Runborg, Constantinos
+Theodoropoulos, et al. Equation-free, coarse-grained
+multiscale computation: enabling microscopic simulators
+to perform system-level analysis. Commun. Math. Sci, 1
+(4):715-762, 2003.
+[28] Ioannis G Kevrekidis, C William Gear, and Gerhard
+Hummer. Equation-free: The computer-aided analysis
+of complex multiscale systems. AIChE Journal, 50(7):
+1346-1355, 2004.
+[29] Scott Kuindersma, Robin Deits, Maurice Fallon, Andrés
+Valenzuela, Hongkai Dai, Frank Permenter, Twan
+Koolen, Pat Marion, and Russ Tedrake. Optimization-
+based locomotion planning, estimation, and control de-
+sign for the atlas humanoid robot. Autonomous robots,
+40:429-455, 2016.
+[30] J Nathan Kutz. Data-driven modeling & scientific
+computation: methods for complex systems & big data.
+Oxford University Press, 2013.
+[31] J Nathan Kutz, Xing Fu, and Steven L Brunton. Mul-
+tiresolution dynamic mode decomposition. SIAM Journal
+on Applied Dynamical Systems, 15(2):713-735, 2016.
+[32] Yunzhu Li, Jiajun Wu, Russ Tedrake, Joshua B Tenen-
+baum, and Antonio Torralba. Learning particle dynamics
+for manipulating rigid bodies, deformable objects, and
+fluids. arXiv preprint arXiv:1810.01566, 2018.
+[33] Yunzhu Li, Jiajun Wu, Jun-Yan Zhu, Joshua B Tenen-
+baum, Antonio Torralba, and Russ Tedrake. Propagation
+networks for model-based control under partial observa-
+tion. In 2019 International Conference on Robotics and
+Automation (ICRA), pages 1205–1211. IEEE, 2019.
+[34] Yunzhu Li, Shuang Li, Vincent Sitzmann, Pulkit
+Agrawal, and Antonio Torralba. 3d neural scene rep-
+resentations for visuomotor control. In Conference on
+Robot Learning, pages 112–123. PMLR, 2022.
+[35] Xingyu Lin, Yufei Wang, Zixuan Huang, and David
+Held. Learning visible connectivity dynamics for cloth
+smoothing. In Conference on Robot Learning, pages
+256–266. PMLR, 2022.
+[36] Qingkai Lu and Liangjun Zhang. Excavation learning for
+rigid objects in clutter. IEEE Robotics and Automation
+Letters, 6(4):7373-7380, 2021.
+[37] Miles Macklin, Matthias Müller, Nuttapong Chentanez,
+and Tae-Yong Kim. Unified particle physics for real-time
+applications. ACM Transactions on Graphics (TOG), 33
+(4):1-12, 2014.
+[38] Lucas Manuelli, Yunzhu Li, Pete Florence, and Russ
+Tedrake. Keypoints into the future: Self-supervised
+correspondence in model-based reinforcement learning.
+arXiv preprint arXiv:2009.05085, 2020.
+[39] David Marr. Vision: A computational investigation into
+the human representation and processing of visual infor-
+mation. MIT press, 2010.
+[40] Carolyn Matl, Yashraj Narang, Ruzena Bajcsy, Fabio
+Ramos, and Dieter Fox. Inferring the material properties
+of granular media for robotic tasks. In 2020 ieee inter-
+national conference on robotics and automation (icra),
+pages 2770-2777. IEEE, 2020.
+[41] Matthias Minderer, Chen Sun, Ruben Villegas, Forrester
+Cole, Kevin P Murphy, and Honglak Lee. Unsupervised
+learning of object structure and dynamics from videos.
+Advances in Neural Information Processing Systems, 32,
+2019.
+[42] Peter Mitrano, Dale McConachie, and Dmitry Berenson.
+Learning where to trust unreliable models in an unstruc-
+tured world for deformable object manipulation. Science
+Robotics, 6(54):eabd8170, 2021.
+[43] Carsten Moenning and Neil A Dodgson. Fast marching
+farthest point sampling. Technical report, University of
+Cambridge, Computer Laboratory, 2003.
+[44] Damian Mrowca, Chengxu Zhuang, Elias Wang, Nick
+Haber, Li F Fei-Fei, Josh Tenenbaum, and Daniel L
+Yamins. Flexible neural representation for physics pre-
+diction. Advances in neural information processing
+systems, 31, 2018.
+[45] Ofir Nachum, Shixiang Shane Gu, Honglak Lee, and
+Sergey Levine. Data-efficient hierarchical reinforcement
+learning. Advances in neural information processing
+systems, 31, 2018.
+[46] Monica N Nicolescu and Maja J Matarić. A hierarchical
+architecture for behavior-based robots. In Proceedings
+of the first international joint conference on Autonomous
+agents and multiagent systems: part 1, pages 227-233,
+2002.
+[47] Tao Pang, HJ Suh, Lujie Yang, and Russ Tedrake. Global
+planning for contact-rich manipulation via local smooth-
+ing of quasi-dynamic contact models. arXiv preprint
+arXiv:2206.10787, 2022.
+[48] Shubham Pateria, Budhitama Subagdja, Ah-hwee Tan,
+and Chai Quek. Hierarchical reinforcement learning:
+A comprehensive survey. ACM Computing Surveys
+(CSUR), 54(5):1-35, 2021.
+[49] Tobias Pfaff, Meire Fortunato, Alvaro Sanchez-Gonzalez,
+and Peter W Battaglia. Learning mesh-based simulation
+with graph networks. arXiv preprint arXiv:2010.03409,
+2020.
+[50] Haozhi Qi, Xiaolong Wang, Deepak Pathak, Yi Ma, and
+Jitendra Malik. Learning long-term visual dynamics with
+region proposal interaction networks. arXiv preprint
+arXiv:2008.02265, 2020.
+[51] Alvaro Sanchez-Gonzalez, Nicolas Heess, Jost Tobias
+Springenberg, Josh Merel, Martin Riedmiller, Raia Had-
+sell, and Peter Battaglia. Graph networks as learnable
+physics engines for inference and control. In Interna-
+tional Conference on Machine Learning, pages 4470-
+4479. PMLR, 2018.
+[52] Alvaro Sanchez-Gonzalez, Jonathan Godwin, Tobias
+Pfaff, Rex Ying, Jure Leskovec, and Peter Battaglia.
+Learning to simulate complex physics with graph net-
+works. In International conference on machine learning,
+pages 8459-8468. PMLR, 2020.
+[53] Connor Schenck, Jonathan Tompson, Sergey Levine, and
+Dieter Fox. Learning robotic manipulation of granular
+media. In Conference on Robot Learning, pages 239–
+248. PMLR, 2017.
+[54] Bokui Shen, Zhenyu Jiang, Christopher Choy, Leonidas J
+Guibas, Silvio Savarese, Anima Anandkumar, and Yuke
+Zhu. Acid: Action-conditional implicit visual dynamics
+for deformable object manipulation. arXiv preprint
+arXiv:2203.06856, 2022.
+[55] Haochen Shi, Huazhe Xu, Zhiao Huang, Yunzhu Li, and
+Jiajun Wu. Robocraft: Learning to see, simulate, and
+shape elasto-plastic objects with graph networks. arXiv
+preprint arXiv:2205.02909, 2022.
+[56] Tom Silver, Rohan Chitnis, Aidan Curtis, Joshua B
+Tenenbaum, Tomás Lozano-Pérez, and Leslie Pack Kael-
+bling. Planning with learned object importance in large
+problem instances using graph neural networks. In Pro-
+ceedings of the AAAI conference on artificial intelligence,
+volume 35, pages 11962-11971, 2021.
+[57] Jasper Snoek, Hugo Larochelle, and Ryan P Adams.
+Practical bayesian optimization of machine learning al-
+gorithms. Advances in neural information processing
+systems, 25, 2012.
+[58] HJ Suh and Russ Tedrake. The surprising effectiveness
+of linear models for visual foresight in object pile ma-
+nipulation. arXiv preprint arXiv:2002.09093, 2020.
+[59] Hyung Ju Terry Suh, Tao Pang, and Russ Tedrake. Bun-
+dled gradients through contact via randomized smooth-
+ing. IEEE Robotics and Automation Letters, 7(2):4000–
+4007, 2022.
+[60] Kuniyuki Takahashi, Wilson Ko, Avinash Ummadisingu,
+and Shin-ichi Maeda. Uncertainty-aware self-supervised
+target-mass grasping of granular foods. In 2021 IEEE
+International Conference on Robotics and Automation
+(ICRA), pages 2620-2626. IEEE, 2021.
+[61] Russ Tedrake. Underactuated robotics: Learning, plan-
+ning, and control for efficient and agile machines course
+notes for mit 6.832. Working draft edition, 3:4, 2009.
+[62] Naftali Tishby, Fernando C Pereira, and William Bialek.
+The information bottleneck method. arXiv preprint
+physics/0004057, 2000.
+[63] Hsiao-Yu Fish Tung, Zhou Xian, Mihir Prabhude-
+sai, Shamit Lal, and Katerina Fragkiadaki. 3d-oes:
+Viewpoint-invariant object-factorized environment simu-
+lators. arXiv preprint arXiv:2011.06464, 2020.
+[64] Neea Tuomainen, David Blanco-Mulero, and Ville Kyrki.
+Manipulation of granular materials by learning particle
+interactions. IEEE Robotics and Automation Letters, 7
+(2):5663-5670, 2022.
+[65] Benjamin Ummenhofer, Lukas Prantl, Nils Thuerey, and
+Vladlen Koltun. Lagrangian fluid simulation with con-
+tinuous convolutions. In International Conference on
+Learning Representations, 2020.
+[66] Alexander Sasha Vezhnevets, Simon Osindero, Tom
+Schaul, Nicolas Heess, Max Jaderberg, David Silver, and
+Koray Kavukcuoglu. Feudal networks for hierarchical
+reinforcement learning. In International Conference on
+Machine Learning, pages 3540–3549. PMLR, 2017.
+[67] Weiyao Wang, Andrew S Morgan, Aaron M Dollar,
+and Gregory D Hager. Dynamical scene representation
+and control with keypoint-conditioned neural radiance
+field. In 2022 IEEE 18th International Conference
+on Automation Science and Engineering (CASE), pages
+1138–1143. IEEE, 2022.
+[68] Nicholas Watters, Daniel Zoran, Theophane Weber, Peter
+Battaglia, Razvan Pascanu, and Andrea Tacchetti. Visual
+interaction networks: Learning a physics simulator from
+video. Advances in neural information processing sys-
+tems, 30, 2017.
+[69] Philipp Wu, Alejandro Escontrela, Danijar Hafner, Ken
+Goldberg, and Pieter Abbeel. Daydreamer: World
+models for physical robot learning. arXiv preprint
+arXiv:2206.14176, 2022.
+[70] Yufei Ye, Maneesh Singh, Abhinav Gupta, and Shubham
+Tulsiani. Compositional video prediction. In Proceedings
+of the IEEE/CVF International Conference on Computer
+Vision, pages 10353-10362, 2019.
+[71] Kexin Yi, Chuang Gan, Yunzhu Li, Pushmeet Kohli,
+Jiajun Wu, Antonio Torralba, and Joshua B Tenenbaum.
+Clevrer: Collision events for video representation and
+reasoning. arXiv preprint arXiv: 1910.01442, 2019.
+[72] Hengshuang Zhao, Jianping Shi, Xiaojuan Qi, Xiaogang
+Wang, and Jiaya Jia. Pyramid scene parsing network. In
+Proceedings of the IEEE conference on computer vision
+and pattern recognition, pages 2881-2890, 2017.
+[73] Jiaji Zhou, Yifan Hou, and Matthew T Mason. Pushing
+revisited: Differential flatness, trajectory planning, and
+stabilization. The International Journal of Robotics
+Research, 38(12-13):1477-1489, 2019.
+[74] Guangxiang Zhu, Zhiao Huang, and Chongjie Zhang.
+Object-oriented dynamics predictor. Advances in Neural
+Information Processing Systems, 31, 2018.
+[75] Yifan Zhu, Laith Abdulmajeid, and Kris Hauser. A data-
+driven approach for fast simulation of robot locomotion
+on granular media. In 2019 international conference
+on robotics and automation (ICRA), pages 7653-7659.
+IEEE, 2019.
