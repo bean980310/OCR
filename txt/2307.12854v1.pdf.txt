@@ -1,15 +1,28 @@
-arXiv:2307.12854v1 [cs.CV] 24 Jul 2023
+--- Page 1 ---
+2307.12854v1 [cs.CV] 24 Jul 2023
+
+arXiv
+
 Multiscale Video Pretraining for Long-Term Activity Forecasting
-Reuben Tan¹
-Matthias De Lange²
-Kate Saenko1,3
-3
-Michael luzzolino Bryan A. Plummer¹
-Karl Ridgeway³ Lorenzo Torresani³
-¹Boston University, 2KU Leuven, ³ Meta
-{rxtan,bplum, saenko}@bu.edu, {matthias.delange} @kuleuven.be
+
+Reuben Tan! Matthias De Lange?”
+
+Kate Saenko!?
+
+Michael Iuzzolino 2
+Karl Ridgeway
+
+Bryan A. Plummer!
+Lorenzo Torresani®
+
+‘Boston University, 7KU Leuven, *Meta
+rxtan, um, saenko u.edu, ymatthias.delange uleuven.be
+bpl ko}@bu.edi hias.delange}@kul b
+
 {mliuzzolino, karl.ridgeway, torresani}@meta.com
+
 Abstract
+
 Long-term activity forecasting is an especially challeng-
 ing research problem because it requires understanding the
 temporal relationships between observed actions, as well as
@@ -34,9 +47,11 @@ performs state-of-the-art methods by significant margins.
 Notably, MVP obtains a relative performance gain of over
 20% accuracy in video summary forecasting over existing
 methods.
+
 1. Introduction
+
 Long-term forecasting of human activities (illustrated in
-Figure 1) is a key capability that is crucial for developing in-
+Figure[I) is a key capability that is crucial for developing in-
 telligent and collaborative machines. Machines that reason
 about future actions given some observations are better able
 to plan their own behavior accordingly and interact more ef-
@@ -45,40 +60,38 @@ ever, forecasting future actions is inherently challenging. To
 begin, the model has to understand the current state of the
 environment under partial observability. More importantly,
 the non-deterministic nature of the future compounds the
+
 Downstream long-term forecasting tasks
+
 Input
 partially
 observed
+
 video
-Predict future actions !!
+
 Retrieve correct summary
-☑
-Х
-Summary 3: CI
-kneads the
-dough and
-make a pizza. I
-I
-I
-repair close tighten
-board cover knob
-Action forecasting
-Summary 1: C Summary 2: C
-repairs the removes the
-Ilcircuit and turn circuit and put
-Ithe switch on.
-away the tool.
-Video summary forecasting
---
-L
+
+eee eX
+
+Predict future actions ! '
+
+summary 1:C — Summary 2:C Summary 3: CI
+repair close tighten ! 'repairs the removes the kneads the
+board cover knob !'circuit and turn circuit and put dough and
+
+Ithe switch on. away the tool. make a pizza. I
+
+Action forecasting Video summary forecasting
+
 Figure 1: Long-term activity forecasting tasks. We pre-
 train a video model and transfer its learnt representations to
-long-term action and video summary forecasting. 'C' de-
+long-term action and video summary forecasting. ‘C’ de-
 notes the camera-wearer in the summaries.
+
 difficulty of having to infer the relationships between ac-
 tions and objects observed over time and also predict how
 these relationships will evolve in the future. State-of-the-art
-long-term forecasting methods (e.g., [16, 17]) have focused
+long-term forecasting methods (e.g., [ ) have focused
 on learning more effective functions for modeling long-term
 temporal dynamics in videos by leveraging fully attentional
 models [29], but still rely on pretrained visual representa-
@@ -92,43 +105,53 @@ to long-term forecasting tasks. Despite relying on strong
 training supervision from human-annotated action labels,
 the above-mentioned approaches still generalize poorly to
 unseen data [16], which lends support to our theory.
+
 To improve pretraining for long-term forecasting, we
 first make the observation that videos generally have a mul-
 tiscale nature, where actions can be decomposed into sub-
 actions that occur at different levels of granularity. Con-
-sider Figure 2 that depicts a video of someone preparing a
-Video
-Encoder
+sider Figure [2|that depicts a video of someone preparing a
+
+----------- eet ee ee eS Le SL
+
+--- Page 2 ---
 Video clip pair pretraining (prior work)
-Maximize
-Video
-similarity Encoder
+
+Video Maximize yigeg Maximize video
+
+imilarity
+
+Encoder ‘Similarity Encoder ©
+
+Encoder
+
+Multiscale video pretrai
 Predict contextualized
-future representations
-Prediction heads
-Video Encoder
+
+future representations Video
+
+= 7” = © Encoder
+Predictionheads <”
+
+nn Video
+
+VideoEncoder | “* ™ Encoder
+
+\ Video
+
+> © Encoder
+
+similarity
+
 Observed video clips
-Maximize
-similarity
-Video
-Encoder
-Multiscale video pretraining (ours)
-Video
-Encoder
-Video
-Encoder
-Video
-Encoder
-Maximize
-similarity
-Future video clips over
-multiple timescales
+
 Figure 2: Multiscale Video Pretraining (MVP). In con-
-trast to prior self-supervised methods [24, 13] that maxi-
+trast to prior self-supervised methods that maxi-
 mize the similarity between representations of clips from
 the same video, MVP trains a model to predict future con-
 textual information over different time scales, helping it to
 generalize better to long-term forecasting tasks.
+
 meal. At the highest level of abstraction, the complex action
 of making an omelette comprises multiple actions, which
 generally occur at shorter timescales, such as cracking eggs
@@ -140,8 +163,9 @@ We endeavor to encode the multiscale nature of actions into
 the learnt video representations in a self-supervised manner
 during pretraining, which will generalize more effectively
 to downstream long-term forecasting tasks.
+
 To this end, we introduce a novel Multiscale Video Pre-
-training (MVP) approach (illustrated in Figure 2), which
+training (MVP) approach (illustrated in Figure which
 encourages a video model to learn to predict contextual-
 ized representations of future video clips that have been ag-
 gregated over different timescales using information from a
@@ -153,14 +177,16 @@ events that occur over multiple scales and temporal resolu-
 tions. During pretraining, MVP learns to infer the knowl-
 edge from an observed clip sequence that is required to pre-
 dict the contextual information contained in future clips.
+
 Given the lack of ground-truth labels in our self-
 supervised formulation, we generate prediction targets by
 computing contextualized representations of future video
 clips. This key aspect of MVP distinguishes it from the
 state-of-the-art video pretraining objective of maximizing
 the similarity between representations of different clips
-sampled from the same video [24, 13] (Figure 2 top). Fe-
-ichtenhofer et al. [13] demonstrate that the latter objective
+sampled from the same video [2: (Figure 2] top). Fe-
+
+ichtenhofer et al. demonstrate that the latter objective
 encourages different clips of the same video to have similar
 representations over the spatiotemporal dimensions. While
 learning clip-invariant video representations may be ben-
@@ -173,10 +199,11 @@ the relations between different actions in long videos at dif-
 ferent levels of granularity, the video model can better un-
 derstand the underlying structure of videos and make more
 accurate predictions about what will happen next.
+
 We evaluate the effectiveness of MVP by transferring its
 pretrained representations to downstream long-term fore-
 casting tasks including order-agnostic and specific action
-forecasting (Figure 1). Furthermore, we also introduce the
+forecasting (Figure|1). Furthermore, we also introduce the
 novel multimodal task of video summary forecasting, where
 the goal is to retrieve the corresponding textual summary of
 the observed and future activities from a set of distractors.
@@ -186,33 +213,40 @@ training approaches across the Ego4D and Epic-Kitchens-
 on the contributions of different aspects of MVP through an
 extensive ablation study that we hope will be beneficial to
 future work on learning multiscale video representations.
+
 2. Related work
+
 Self-supervised video pretraining. Self-supervised video
-pretraining [13, 18, 31] has been demonstrated to be bene-
+pretraining 1] has been demonstrated to be bene-
 ficial for improving performance on downstream tasks such
-as activity recognition [10, 12, 13, 18, 19, 25, 31], video
-object segmentation [20], early action prediction [27] and
-unintentional action detection [18, 19] on target datasets in-
-cluding Kinetics-400/600 [2, 3, 21], HMDB-51 [22] and
-UCF101 [28]. Inspired by image-based self-supervised
-pretraining objectives [4, 5, 6], state-of-the-art video ap-
-proaches [13, 24, 31, 33] often use a similar learning objec-
+as activity recognition video
+object segmentation [20], early action prediction [ and
+unintentional action detection [18] [19] on target datasets in-
+cluding Kinetics-400/600 , HMDB-51 and
+
+UCFI101 [28]. Inspired by image-based self-supervised
+pretraining objectives | [6], state-of-the-art video ap-
+proaches [1 often use a similar learning objec-
+
 tive of maximizing the similarity between representations
 of two clips sampled from the same video. The Contrastive
-Video Representation Learning (CVRL) [24] approach also
+Video Representation Learning (CVRL) approach also
 demonstrates that the applied transformations have to be
 consistent across all frames for optimal performance.
-Feichtenhofer et al. [13] also demonstrate that this ob-
+Feichtenhofer et al. also demonstrate that this ob-
 jective of learning video clip-invariant representions can be
 extended beyond pairs of clips, which further improves the
 robustness of the learnt representations to the downstream
 task of action recognition. Additionally, the Contrastive
-Predictive Coding (CPC) [23] and Dense Predictive Cod-
-ing (DPC) [18] approaches are also similar in spirit, where
+Predictive Coding (CPC) and Dense Predictive Cod-
+ing (DPC) approaches are also similar in spirit, where
 their learning objectives are to predict coarse clip-level and
 fine-grained spatiotemporal region representations of future
 clips given an observed sequence of clips for context, re-
-spectively. Han et al. [19] further build on this by introduc-
+
+
+--- Page 3 ---
+spectively. Han er al. (19] further build on this by introduc-
 ing a memory bank of learnable vectors to account for the
 non-deterministic nature of predicting the future. However,
 in contrast to our MVP approach, the aforementioned ap-
@@ -222,38 +256,40 @@ portantly, they only predict the base representations of fu-
 ture video clips instead of their contextualized representa-
 tions, where their information has been aggregated over all
 preceding future clips in a causal manner.
-Additionally, BraVe [25] and LSTCL [31] embody a
+
+Additionally, BraVe and LSTCL embody a
+
 similar idea of learning to encode long-term temporal cues
 in clip-level representations by maximizing the similarity
 between a pair of short and long clips from the same video.
 The multiscale aspect of MVP distinguishes it from BraVe
 and LSTCL. While these methods help the video model
 to extrapolate the contextual information contained in the
-longer clip from the short clip, their learning objective does
+onger clip from the short clip, their learning objective does
 not explicitly encourage it to understand how the contextual
 information may change over different durations. This may
-limit the video model's ability to understand the relations
+imit the video model’s ability to understand the relations
 between short actions that occur within a few frames and
-long-term actions that may span several seconds or more.
+ong-term actions that may span several seconds or more.
 In contrast, by learning to predict future contextual infor-
 mation over varying temporal spans, MVP may enable the
 trained video model to gain a deeper understanding of ac-
 tions at different levels of abstraction and recognize com-
 plex actions by identifying their sub-actions.
-Action forecasting. State-of-the-art approaches [8, 15] are
+Action forecasting. State-of-the-art approaches [8] [15] are
 often aimed at addressing the short-term problem formu-
 lation where the goal is to anticipate the action that will
-occur in the next 7 seconds using the context of an ob-
-served video sequence of 7 seconds. Prior approaches have
+occur in the next 7, seconds using the context of an ob-
+served video sequence of 7, seconds. Prior approaches have
 proposed to address this task by leveraging free additional
 information in the query videos either by aggregating past
-temporal context [14, 26] or predicting representations of
-future frames and video clips [30, 32]. Gong et al. [16] also
+temporal context [L ] or predicting representations of
+future frames and video clips [3 . Gong et al.
 leverage fully-attentional models to compute a more effec-
 tive understanding of long-term temporal dynamics in the
 partially observed videos to generate more accurate predic-
-tions in the more challenging task of long-term forecast-
-ing [8, 11, 15, 17, 26]. However, these strongly-supervised
+tions in th challenging task of long-term forecast-
+ing . However, these strongly-supervised
 approaches often leverage pretrained visual representations
 that do not encode the multiscale nature of actions in videos,
 which limits their effectiveness. As such, MVP is orthog-
@@ -261,9 +297,12 @@ onal to these methods since we aim to learn more efficient
 base representations for downstream long-term forecasting
 tasks. We leave it to future work to integrate multiscale rep-
 resentations into state-of-the-art forecasting approaches.
+
 3. Multiscale Video Pretraining
+
 Our goal is to learn robust video representations that
 generalize well to downstream long-term forecasting tasks
+
 from a set of unlabeled videos. To this end, we introduce
 a self-supervised Multiscale Video Pretraining (MVP) ob-
 jective, that aims to enable a video model to generate more
@@ -288,8 +327,9 @@ ized by aggregating information over varying numbers of
 future clips. We hypothesize that this objective encourages
 a video model to learn representations that encode future
 contextual information over multiple temporal spans.
-Unlike state-of-the-art video pretraining approaches [13,
-23, 24, 31] which generally encourage different clips of the
+
+Unlike state-of-the-art video pretraining approaches
+(23) [24] [31] which generally encourage different clips of the
 same video to have similar representations, MVP trains a
 video model to effectively represent the spatial and tem-
 poral structure of the observed video to extrapolate long-
@@ -299,98 +339,87 @@ video model to better reason about and recognize complex
 actions by identifying their sub-actions. Such an under-
 standing may help the model to compute a more accurate
 prior distribution to condition its predictions on.
+
 3.1. Temporal aggregation of video clip sequences
-While state-of-the-art video pretraining methods [13, 24]
+
+While state-of-the-art video pretraining methods [1
 often utilize pairs of video clips from the same video, our
 MVP objective trains a video model with pairs of video clip
-sequences V and VF instead. MVP requires the video
-model to observe VO and infer the knowledge required to
+sequences V? and V*" instead. MVP requires the video
+model to observe V° and infer the knowledge required to
 predict future contextual information that have been aggre-
-gated over the clips in VF at multiple timescales. To begin,
+gated over the clips in V” at multiple timescales. To begin,
 we partition an input video into non-overlapping clips of 8
 frames each (about 0.8s) and randomly sample the observed
-as well as future clip sequences V° = {√₁°,
-VF = {VN+
-V No
-+K,···, Vo+K+NÅ }, where No, NF, and K
+
+as well as future clip sequences V? = {V,°,---, VP, } and
+VP = {VR 445°° Vio en, } Where No, Np, and K
+
 denote the number of observed, future, and temporal offset
 clips, respectively. We also define the temporal stride S as
 the difference in number of clips between two timescales.
-NF
-Thus, MVP makes Np predictions, where Np
-S
-=
-V} and
-Our video model (Figure 3) is comprised of a video clip
+Thus, MVP makes Np predictions, where Np = Me.
+
+Our video model (Figure[3) is comprised of a video clip
+
+--- Page 4 ---
 Future video representation predictions
 Pred
-Head 3
-Pred
-Head 2
-Pred
-Head 1
-Temporal Aggregator ho
-Multiscale
-predictions
-Maximize
-similarity
-Temporal Aggregator hμ
-Video Video Video
-Video
-encoder encoder encoder
-encoder
-會
-Video
-encoder
-Video
-encoder
-T-2
-T-1
-T
-T+K
-Observed video clips
-T+K+S
-T+K+2S
-Future video clips
-Video
-encoder
-T+K+3S
+
+Head 37 ~ — Multiscale
+Pred ~>~._ predictions
+Head 2” "7 ~~~~~ teen
+Pred | ia . imi:
+; Head 1 similarity
++ t t +
+Temporal Aggregator hg Temporal Aggregator /, in
++ + + t + t t
+j j j s J j J
++ + + + + + +
+Video Video Video Video Video Video Video
+encoder encoder encoder encoder encoder encoder encoder
+om i i i i
+T-2 T-1 T THK T+K+S: T+K+2S T+K+3S
+~< >
+
+“Observed video clips” Future video clips
+
 Figure 3: Multiscale Video Pretraining. Given an ob-
 served sequence of video clips, MVP learns to extract in-
 formation that is required to predict contextualized repre-
 sentations of future video clips over multiple timescales.
-encoding function go as well as temporal context aggrega-
-tion functions ho and hμ. go is used to encode an input clip
-into a set of spatiotemporal region representations while ho
-and hμ are used to aggregate the temporal context of the ob-
+
+encoding function gg as well as temporal context aggrega-
+tion functions hg and h,,. go is used to encode an input clip
+into a set of spatiotemporal region representations while hg
+and h,, are used to aggregate the temporal context of the ob-
 served and future clip sequences, respectively, by combin-
 ing information over their constituent clip representations.
+
 Due to the computationally demanding nature of our
 MVP objective, we adopt the lightweight yet powerful Mul-
-tiscale Vision Transformers (MViT) [10] as our base en-
-coder ge without modifications, which has been shown to
+tiscale Vision Transformers (MViT) as our base en-
+coder gg without modifications, which has been shown to
 outperform prior video encoders in action recognition de-
 spite containing significantly fewer parameters. We encode
-the i-th video clip as: fi = go (Vi), fi Є RL×H×W×D
+the i-th video clip as: f; = go(Vi), fi € R&*2*W*?
 where L, H, W and D denote the temporal, height, width
 and channel dimensions, respectively. Then, we compute
 contextualized representations for both input sequences by
 aggregating information over the clips:
-zº =
-No
-=
-F
-= h$(go(V°)), z³ = z¦µ = hµ(go(VF)),
-(1)
-where z and z are the contextualized representations for
+
+2 = 2h, = holge(V°)), 2° = 2h, = hu(go(V")),
+qd)
+where z° and z” are the contextualized representations for
 the observed and future sequences, respectively.
+
 3.2. Spatiotemporal multi-head self-attention
-argue
-We that learning to predict fine-grained region rep-
+
+We argue that learning to predict fine-grained region rep-
 resentations over the spatial and temporal dimensions may
 be beneficial to understanding interactions between objects
 and actions in videos, unlike prior work focused on predict-
-ing global clip representations [23, 24, 31]. To this end, we
+ing global clip representations [2: . To this end, we
 train our model to predict spatiotemporal region representa-
 tions of future clip sequences that have been contextualized
 over multiple timescales. This requires our temporal aggre-
@@ -399,8 +428,9 @@ tion between different spatial regions across multiple time
 steps. Intuitively, this objective can only be achieved with a
 strong understanding of the movement of objects over time
 and their relevance to different actions.
+
 A widely adopted convention for learning this function
-is to use multi-head self-attention (MHA) [1] over the en-
+is to use multi-head self-attention (MHA) [I] over the en-
 tire set of spatiotemporal regions in the video clip sequence.
 However, since self-attention has quadratic complexity, the
 computational requirements increase rapidly even for short
@@ -409,154 +439,98 @@ gate temporal context information between video clips by
 computing self-attention over all regions at the same spa-
 tial locations in the video clip sequence. This is motivated
 by our observation that the output region representations of
-MVIT for each time step have already been contextualized
+MViT for each time step have already been contextualized
 by aggregating information over other spatial regions, since
 the self-attention operation is an implicit function compos-
 ited in the final video clip encoding function learnt by the
-MVIT model. We refer interested readers to [10] for more
+MViT model. We refer interested readers to for more
 details on the MViT architecture.
-To begin, given an input spatiotemporal block SЄ
-RLxHxWxD, we project the set of temporal region features
-for the j-th spatial location S; E RLXD, where j = hw,
+
+To begin, given an input spatiotemporal block S €
+RLX4xWxD. we project the set of temporal region features
+for the j-th spatial location $; € R’*?, where j € hw,
 into its queries, keys and values:
-Sj,q = SjWq, Sj‚k = SjWk, Sj,v = SjWv,
-where Wq,
-Wk
-and W₁, are the query, key and value projec-
+
+Sig =5j)Wo, Six = SjWe,
+
+where W,, W;, and W, are the query, key and value projec-
 tion weights of dimensions DxD. Then, we compute con-
 textualized representations for the sequence using the MHA
 operation as follows:
-MHA(Sj,q, Sj,k, Sj,vw) = Sj,v Softmax
-SqSj,k
-(3)
-√D
-For a given spatiotemporal region representation Zi,t,h,w
+
+Siu =Sj)Wo, (2)
+
+SES
+
+MHA(S),¢,. 55,4, 5j,0W) = Sj,» Softmax ( VD ) (3)
+
+For a given spatiotemporal region representation 2;¢,p,w
 from the i-th video clip, we compute its contextualized
-representations as: Zi,t,h,w MHA(Zi,t,h,w). Finally,
+representations as: Zit hw = MHA(Zit,n,w)- Finally,
 we predict the j-th future region representation at the k-th
 time step with a temporal stride of S by passing the con-
 textualized spatiotemporal region representations through
-a two-layer multilayer perceptron (MLP), i.e., Zi,t,h,w
-MLPk (2,t,h,w). The entire set of predicted region repre-
-sentations is used in Section 3.3 to compute the training
+a two-layer multilayer perceptron (MLP), i.e., 2i4,r,0 =
+MLP:.(z; ; w): The entire set of predicted region repre-
+sentations % is used in Section to compute the training
 loss. Note that we use a different prediction head for each
 predicted timestep.
+
 3.3. Multiscale targets and loss formulation
-=
+
 To compute the prediction targets for self-supervision,
-we apply the aggregation function hμ to VF in a causal man-
+we apply the aggregation function h,, to Vr in a causal man-
 ner, i.e. the set of contextualized spatial region representa-
-tions St,j for the j-th spatial region at the 1-th time step is
+tions S;; for the j-th spatial region at the /-th time step is
 computed by attending only to the regions that precede it
 temporally. For the b-th sequence of future video clips in
 a sampled batch, we extract a set of target representations
-Z₁ = {¾‚k}, where k % S = 0 and Z₁ € RÑ³×LHW×D¸
+Z, = {z,}, wherek % S =Oand Z € RNPXEHWxD_
 Given a batch of unlabeled videos, we train the video model
-Pretraining
-Multiple Pretraining
-Ego4D ↑
-EK55 ↑
-EK100 ↑
-approach
-clips used supervision Verb
-Action recognition
-No
-CVRL [24]
-No
-Self
-Strong 20.70
-25.90
-CPC [23]
-Yes
-Self
-27.26
-26.57
-Noun
-14.41
-17.56 18.11
-25.85 25.88 22.17
-26.91 23.00
-Mean Verb
-Noun
-Mean Verb
-Noun
-Mean
-11.48
-17.07
-17.24
-LSTCL [31]
-Yes
-Self
-26.82
-27.76
-18.52
-DPC [18]
-Yes
-Self
-28.18
-29.03
-19.03
-CVRL [24]
-Yes
-Self
-CONSTCL [33]
-Yes
-Self
-MVP (Ours)
-Yes
-Self
-28.27 29.74
-27.49 29.13
-30.18 32.33
-27.29 23.59
-28.61 24.02
-29.00 23.91 18.32
-28.31 24.47 19.52 22.00 25.41
-31.25 25.83 20.78 23.31 26.69 20.18 23.44
-14.80 18.82
-19.62 22.92 16.60
-20.13 23.16 17.06
-21.05 23.47
-12.46 15.64
-19.76
-20.11
-17.15 20.31
-21.52 25.25
-18.18 21.72
-21.12 24.94
-19.24 22.09
-19.35 22.38
+
+--- Page 5 ---
+Pretraining Multiple | Pretraining Ego4D t EKS55 t+ EK100 t
+approach clips used | supervision] Verb Noun Mean] Verb Noun Mean] Verb Noun Mean
+Action recognition No Strong |20.70 14.41 17.56]18.11 11.48 14.80|18.82 1246 15.64
+CVRL No Self 25.90 25.85 25.88)22.17 17.07 19.62)22.92 16.60 19.76
+CPC Yes Self 27.26 26.57 26.91) 23.00 17.24 20.13|23.16 17.06 20.11
+LSTCL Yes Self 26.82 27.76 27.29|23.59 18.52 21.05)23.47 17.15 20.31
+DPC Yes Self 28.18 29.03 28.61)24.02 19.03 21.52)25.25 18.18 21.72
+CVRL [24] Yes Self 28.27 29.74 29.00)23.91 18.32 21.12)24.94 19.24 22.09
+CONSTCL Yes Self 27.49 29.13 28.31)24.47 19.52 22.00)25.41 19.35 22.38
+MVP (Ours) Yes Self 30.18 32.33 31.25 | 25.83 20.78 23.31| 26.69 20.18 23.44
 Table 1: Order-agnostic long-term forecasting. We report the mean average precision over all verb and noun classes. We
 see that self-supervised pretraining is generally more beneficial for long-term forecasting tasks than action recognition.
-end-to-end using a contrastive loss [23] formulation as:
-A =
-B Np LHW
--ΣΣΣ - 10g
-b=1 j=1 n=1
-exp(žb,j,n · Zb,j,n/T)
-exp(žb,j,n · Zb,j,n/T)+
-Σ exp(b,j,n Zb',j',n' /T)
+end-to-end using a contrastive loss [23] formulation as: models by optimizing the total cross-entropy losses for both
+
+exp(2p,j,n . 2,jn/T)
+
+exp(2p,j,n * 2,j,n/T)+
+exp(2p,j,n * 2b",j"n'/T)
+(61,j",n)1=(b,jn)
 (4)
-(b',j',n')!=(b,j,n)
+
 where 7 denotes the temperature value.
+
 4. Experiments
 4.1. Downstream tasks
+
 We compare our Multiscale Video Pretraining objective
 to state-of-the-art self-supervised video pretraining meth-
 ods on the tasks of order-agnostic and specific long-term
 action forecasting as well as video summary forecasting.
-We pretrain the video models on Ego4D [17] and finetune
-them on both Ego4D and EpicsKitchen-55/100 [7, 8] for the
+We pretrain the video models on Ego4D and finetune
+them on both Ego4D and EpicsKitchen-55/100 for the
 downstream tasks. Additionally, we use a transformer en-
 coder [29] and the meanpooling operation as our temporal
-context aggregators ho and hμ (Section 3.1), respectively.
+context aggregators hg and h,, (Section |3.1), respectively.
 We refer readers to the supplemental for more details of
 these datasets, implementation and baseline models.
 Order-agnostic action forecasting. In order-agnostic
 long-term forecasting, we observe K% of a video of dura-
 tion T and predict if an action will occur within the remain-
-ing video. Given a vocabulary of Nverb and Nnoun classes,
-we predict a Nverb-dimensional and Nnoun-dimensional bi-
+ing video. Given a vocabulary of Nyerp and Nnoun classes,
+we predict a Nye-dimensional and Npoun-dimensional bi-
 nary vectors, where each dimension indicate the probability
 of the class occurring in the future. We formulate this as a
 multi-label prediction task and finetune all pretrained mod-
@@ -569,141 +543,107 @@ nalized even if it predicts the correct verb or noun but in the
 wrong order. Since the accuracy of the predicted actions
 depends on their temporal ordering, this can be formulated
 as a sequence prediction task. We finetune the pretrained
-"
-models by optimizing the total cross-entropy losses for both
+
 verbs and nouns computed over all time steps. We adopt the
-edit distance metric [17] to quantify how dissimilar the pre-
+edit distance metric to quantify how dissimilar the pre-
 dicted and ground-truth action sequences are to each other.
 Video summary forecasting. In this multimodal task, for a
-video V of T temporal clips and an observed subsequence
-of length TO, the goal is to retrieve its corresponding sum-
+video V of T' temporal clips and an observed subsequence
+of length T°, the goal is to retrieve its corresponding sum-
 mary from a set of distractor summaries. Given the video
-V and its summary L containing NL words, we first ex-
+V and its summary L containing Nz, words, we first ex-
 tract the contextualized representation for the observed clip
-sequence: CTO ha (gy (Vo:TO)). We extract a natu-
-ral language representation fL = RLXDL for the summary
-using the pretrained BERT-Base [9] model: fL = k(L),
-where DL is the output dimension of the BERT model and
-ko denotes the BERT model that is parameterized by o. We
-use linear layers Wy and WL to project the video and lan-
+sequence: cro = hy*(g} (Vo.ro)). We extract a natu-
+ral language representation f;, € R**?+ for the summary
+using the pretrained BERT-Base [9] model: f;, = kg(L),
+where D7, is the output dimension of the BERT model and
+kg denotes the BERT model that is parameterized by ¢. We
+use linear layers Wy and Wy to project the video and lan-
 guage representations into the joint visual-semantic embed-
 ding space and finetune the models by optimizing the fol-
 lowing contrastive loss formulation:
-B
-=
-L = Σ - log
-b=1
-agg
-exp(Cb,To fb,L/T)
-еxp(СÛ‚Ã¤ · ƒÛ‚L/T)+
-Σexp(ь, fm,L/T)
-m#b
+
+Le S a exp(cp,ro + fo,t/T)
+bol s exp(cy,r0 + fs,n/T)+
+
+> exp(cy,r0 - fm,t/T)
+mAb
+
 (5)
+
 Intuitively, this objective encourages the model to learn an
 alignment between the video and language representations
 by maximizing the similarity between corresponding pairs
 of videos and text summaries. Consistent with prior work in
-text-to-video retrieval [34], we adopt the Recall @K metric
+text-to-video retrieval [34], we adopt the Recall@K metric
 which computes the percentage of times the ground-truth
-summary is ranked in the top K retrievals.
+summary is ranked in the top £ retrievals.
+
 4.2. Quantitative results
 4.2.1 Order-agnostic long-term forecasting
+
 We aim to evaluate the effectiveness of our proposed MVP
 pretraining approach at learning video representations that
 encode future context over different temporal horizons. As
 such, we predict the future actions over the next 8 time steps
-Pretraining
-approach
-Action recognition
-No
-Multiple Pretraining
-clips used approach
-Strong
-Ego4D↓
-CVRL [24]
-No
-Self
-CPC [23]
-Yes
-Self
-LSTCL [31]
-Yes
-Self
-DPC [18]
-Yes
-Self
-CVRL [24]
-Yes
-Self
-0.735
-CONSTCL [33]
-Yes
-Self
-MVP (Ours)
-Yes
-Self
-EK55↓
-Verb Noun Action Verb Noun
-0.754 0.901 0.977 0.741 0.947
-0.746 0.845 0.960 0.719 0.926
-0.735 0.838 0.956 0.719 0.936
-0.752 0.846 0.963 0.721 0.935
-0.734 0.821 0.950 0.708 0.927
-0.822 0.952 0.719 0.926
-0.735 0.818 0.951 0.704 0.922
-0.724 0.809 0.943 0.690 0.908
-EK100↓
-Action Verb Noun Action
-0.962 0.758 0.952 0.969
-0.948 0.753 0.948 0.954
-0.951 0.746 0.944 0.954
-0.950 0.739 0.939 0.950
-0.946 0.738 0.932 0.951
-0.930 0.948
-0.948 0.735
-0.946 0.732
-0.941 0.721 0.918 0.942
-0.930 0.948
+
+--- Page 6 ---
+Pretraining Multiple | Pretraining Ego4D | EK55 | EK100 |
+approach clips used| approach | Verb Noun Action} Verb Noun Action] Verb Noun Action
+Action recognition No Strong {0.754 0.901 0.977 |0.741 0.947 0.962 0.758 0.952 0.969
+CVRL No Self 0.746 0.845 0.960 | 0.719 0.926 0.948 /0.753 0.948 0.954
+CPC Yes Self 0.735 0.838 0.956 }0.719 0.936 0.951 |0.746 0.944 0.954
+LSTCL Yes Self 0.752 0.846 0.963 |0.721 0.935 0.950 |0.739 0.939 0.950
+DPC Yes Self 0.734 0.821 0.950 | 0.708 0.927 0.946 0.738 0.932 0.951
+CVRL [24] Yes Self 0.735 0.822 0.952 |0.719 0.926 0.948 0.735 0.930 0.948
+CONSTCL Yes Self 0.735 0.818 0.951 |0.704 0.922 0.946 |0.732 0.930 0.948
+MVP (Ours) Yes Self 0.724 0.809 0.943 | 0.690 0.908 0.941 [0.721 0.918 0.942
 Table 2: Order-specific long-term forecasting evaluation. We use edit distance as the metric and report performance on
 verb, noun and action classes. An action class is a combination of its verb and noun classes. The results suggest that learning
+
 to understand the multiscale nature of videos is crucial for making accurate fine-grained predictions.
+
 and report the results on Ego4D, EK55 and EK100 in Ta-
-ble 1. We observe that self-supervised video pretraining is
+ble[I] We observe that self-supervised video pretraining is
 generally more beneficial to tasks requiring the key capa-
 bility of long-term forecasting as compared to the strongly
 supervised variant of action recognition (first row of Ta-
-ble 1). Despite not requiring human-annotated labels dur-
+ble {ip. Despite not requiring human-annotated labels dur-
 ing pretraining, our proposed MVP approach leads to ap-
 proximately 14% improvement in future verb and noun pre-
 dictions over its strongly-supervised counterpart when fine-
 tuned on the Ego4D task annotations. We hypothesize that
 the learning objective of predicting future clip representa-
 tions is crucial for action anticipation.
+
 We also observe across all datasets that the state-of-
 the-art pretraining objective of learning clip-invariant video
-representations [24, 13] does not generalize well to down-
+representations does not generalize well to down-
 stream tasks that require effective reasoning over clip se-
 quences. In fact, simply extending the aforementioned pre-
 training objective to maximize the similarity between rep-
 resentations of two clip sequences sampled from the same
 video leads to significant improvements in future action pre-
 dictions, especially over the longer temporal horizon of 8
-clips. Our MVP approach also outperforms LSTCL [31] by
+clips. Our MVP approach also outperforms LSTCL by
 a significant margin (e.g., we obtain a 3-5% improvement
 on Ego4D). Since LSTCL aims to encode long-term tempo-
 ral cues in video representations of shorter clip sequences,
 our gains suggest that learning to predict contextual infor-
 mation of future clip sequences serves as an effective pre-
 training objective for long-term video understanding.
+
 4.2.2 Order-specific long-term forecasting
-Table 2 reports the results across all three datasets on the
+
+Table [2] reports the results across all three datasets on the
 more challenging task of predicting actions at specific time
 steps. Similar to our results for the order-unaware task
-in Section 4.2.1, we also observe that our proposed MVP
+in Section [4.2.1] we also observe that our proposed MVP
 approach generalizes better to a task that requires accu-
 rate fine-grained predictions. We note that pretraining ap-
 proaches that learn to predict future clip representations at
 the fine-grained region-level such as DPC, CONSTCL and
+
 ours generally perform better under this challenging setting
 as compared to variants that predict global representations
 of future video clips including CPC and CVRL. One pos-
@@ -722,6 +662,7 @@ tions, respectively. In contrast to the order-agnostic task,
 we see that the improvements achieved by our MVP objec-
 tive are smaller, which further emphasizes the difficulty of
 predicting actions precisely at specific timesteps.
+
 Additionally, we aim to understand the effectiveness of
 learning to predict future contextual information that is ag-
 gregated from video clips over different temporal horizons.
@@ -738,58 +679,29 @@ of predicting aggregated future spatiotemporal region rep-
 resentations helps a video model to better reason about the
 correlations between different atomic actions and how they
 contribute to the overarching goal in videos.
+
 4.2.3 Video summary forecasting
-Finally, Table 3 reports our results on the multimodal video
+
+Finally, Table3]reports our results on the multimodal video
 summary forecasting task. Besides video-only tasks, we
-Pretraining Multiple Pretraining
-approach
-clips
-Action recognition
-No
-supervision R@1↑ R@5↑ R@10+
-Strong 0.90 5.00 8.80
-CPC [23]
-Yes
-Self
-9.70 28.60 41.80
-DPC [18]
-Yes
-Self
-10.10 29.70 43.20
-CVRL [24]
-No
-Self
-11.00 34.80 49.50
-LSTCL [31]
-Yes
-Self
-12.70 38.90 53.10
-CONSTCL [33]
-Yes
-Self
-11.40 41.80 53.90
-CVRL [24]
-Yes
-Self
-MVP (Ours)
-Yes
-Self
-15.90 40.70 56.50
-19.30 50.70 65.00
-downstream task of order-unaware forecasting on Ego4D.
-Order-unaware long-term forecasting on Ego4D
-Mean average precision (MAP)
-24
-22
-20
-18
-16
-verbs
-nouns
+
+--- Page 7 ---
+Pretraining Multiple | Pretraining
+approach clips |supervision|R@It R@5t R@10t
+Action recognition] No Strong | 0.90 5.00 8.80
+CPC [23] Yes Self 9.70 28.60 41.80
+Yes Self 10.10 29.70 43.20
+No Self 11.00 34.80 49.50
+LSTCL BI) Yes Self 12.70 38.90 53.10
+CONSTCL {33} Yes Self 11.40 41.80 53.90
+CVRL [24) Yes Self 15.90 40.70 56.50
+MVP (Ours) Yes Self 19.30 50.70 65.00
 Table 3: Video summary forecasting on the Ego4D
 dataset. MVP helps the video model to learn more ro-
 bust representations that generalize better than prior work
+
 to the multimodal task of text summary retrieval.
+
 note that the self-supervised pretraining approaches also
 generalize much better to a downstream task that involves
 the language modality than the strongly-supervised task of
@@ -798,7 +710,8 @@ of order-unaware and specific long-term forecasting, we ob-
 serve that the pretraining objective of learning clip-invariant
 video representations such as CVRL (single and multiple
 clips) and LSTCL outperforms DPC by a substantial mar-
-gin of 15% in R@ 1 accuracy.
+gin of 1 — 5% in R@1 accuracy.
+
 We hypothesize that this may be due to the DPC pre-
 training approach training the video model to predict the
 representations of consecutive video clips in the future. In
@@ -814,62 +727,81 @@ ing pretraining may be not be as critical for understanding
 the overarching context of a video as the previous eval-
 uation tasks. This is evidenced by the fact that CVRL
 pretrained with multiple video clips actually outperforms
-CONSTCL by 4 % in R@1 accuracy. Lastly, the per-
-formance gains of approximately 3 – 8% in R@ 1 accuracy
+CONSTCL by 4 ~ % in R@1 accuracy. Lastly, the per-
+formance gains of approximately 3 — 8% in R@1 accuracy
 achieved by our proposed MVP approach over CVRL clip
 sequence, LSTCL and CONSTCL suggest that learning to
 reason about aggregated future contextual information over
 multiple time scales is especially beneficial to helping a
 model to extrapolate the semantics of the entire video.
-~
+
 4.2.4 Ablation studies
+
 We ablate different aspects of MVP approach to determine
 their relative contributions to the robustness of the learnt
 representations. Specifically, we compare the effectiveness
 of the representations of different model variants on the
-14
-45.0 47.5
-60.0 62.5
-50.0 52.5 55.0 57.5
+
+downstream task of order-unaware forecasting on Ego4D.
+
+Order-unaware long-term forecasting on Ego4D
+
+a
+
+<q 244
+
+é
+
+5 224
+
+a
+
+3 204
+
+2
+
+a
+
+& 184
+
+6
+
+G
+
+qz 167 —@- verbs
+
+Ee —@® nouns
+o 1445 7 7 7 7 7 7 7
+= 45.0 47.5 50.0 52.5 55.0 57.5 60.0 62.
+
 MVP top-1 accuracy on Ego4D
 Figure 4: Benefit of MVP. We study the relation between
 self-supervised pretraining prediction accuracy and mean
 average precision on order-agnostic long-term forecasting.
-Temporal offset K
-Verb↑
-1
-23.47
-Noun ↑
-21.10
-Mean↑
-22.28
-4
-27.15 26.09
-26.62
-8
-27.95
-26.78
-27.37
-12
-26.39
-25.98
-26.18
-16
-27.88
-26.09
-26.99
-Geometric
-26.80
-25.99
-26.39
-Random (ours)
-30.18
-32.33 31.25
+
+Temporal offset K | Verb Nount Meant
+
+1 23.47 21.10 22.28
+
+4 27.15 26.09 26.62
+
+8 27.95 26.78 27.37
+
+12 26.39 25.98 26.18
+
+16 27.88 26.09 26.99
+
+Geometric 26.80 25.99 26.39
+Random (ours) 30.18 32.33 31.25
+
 Table 4: Temporal offset ablation on Ego4D. We ablate
+
 the effect of the temporal offset during pretraining on the
+
 downstream task of order-unaware long-term forecasting.
 Effectiveness of MVP. We evaluate the benefit of our Mul-
-tiscale Video Pretraining approach in Figure 4 by studying
+
+tiscale Video Pretraining approach in Figure [4] by studying
 the correlation between the prediction accuracy of the video
 model during pretraining and the downstream performance
 by using checkpoints at various stages of pretraining. While
@@ -881,8 +813,9 @@ tion accuracy during pretraining and the mean mAP score
 over all verb and noun classes, which suggests that learning
 to encode the multiscale nature of videos in the base repre-
 sentations is beneficial for long-term forecasting tasks.
-Temporal offset K. In Table 4, we observe that verb and
-noun prediction accuracy increases as we increase K dur-
+
+Temporal offset K. In Table [4] we observe that verb and
+noun prediction accuracy increases as we increase [x dur-
 ing pretraining. This is unsurprising since the video model
 should be able to better predict future actions by learning
 to reason about the contextual information further into the
@@ -891,51 +824,60 @@ ing a temporal offset of 12 clips actually leads to a drop in
 performance. One possible reason is that the future is non-
 deterministic and predicting information too far into the fu-
 ture introduces a high degree of noise during pretraining.
-E27
-Mean MAP
-26
-28
-Aggregation scale ablation
-30
-29
-Mean MAP
+
+--- Page 8 ---
 # Predicted steps = 4,
-Temporal stride s = 1
-30
-Mean MAP
-# Input clips = 4,
-Temporal stride s = 1
-31
-25
-27
-27
+Aggregation scale ablation 30 Temporal stride s = 1
+
+N
+©
+
+7
+28 7
+a 7 37° ~
+=27 a E 7X“
+fn” a an
+7 a .
+25° K \
+
+Single-scale Multiscale 77 2
+
+4 6
+agg agg (ours) # Input clips
+
+(a) (b)
+
 No agg
-Single-scale
-agg
-Multiscale
-agg (ours)
-2
-4
-(a)
-# Input clips
-(b)
-#Predicted clips
-(c)
-30
-Mean MAP
-6
-27
-28
+
+# Input clips = 4,
+30 Temporal stride s = 1
+
 # Input clips = 4,
 # Predicted steps = 4
-1
-Temporal stride S
-(d)
+
+a A
+& ~“, 30 / \
+79) / “Ms / \
+/ E20 \
+28 Fs 228 d \
+7 27 \
+
+o-—.W1
+4
+
+#
+
+4 6 2 3
+#Predicted clips Temporal stride S
+
+(c) (d)
+
 Figure 5: Ablation of MVP. (a) The results suggest that learning to model the temporal dynamics in videos at multiple
 timescales is crucial for action forecasting. (b) Providing more context with more observed video clips is generally helpful
 for learning more robust representations. (c) Increasing the number of predicted steps helps the video model to make more
 accurate action predictions to a certain degree. (d) Using a small temporal stride to aggregate context in the future clip
 sequence over multiple timescales is more beneficial than higher values.
+
 We also hypothesize that sampling random temporal offset
 values works the best because learning to predict future con-
 textual information over varying temporal horizons acts as
@@ -943,7 +885,7 @@ a form of regularization and prevents the model from over-
 fitting to predictions over a constant temporal period.
 Multiscale benefits. We investigate the importance of mul-
 tiscale aggregation during pretraining on downstream per-
-formance (Fig 5(a)). Specifically, we train the video model
+formance (Fig|5{a)). Specifically, we train the video model
 with a variant of MVP where we only predict the uncon-
 textualized representations of future clips (no aggregation)
 and another where the aggregation of context is computed
@@ -958,8 +900,9 @@ ized over a single timescale. These results may support our
 hypothesis that learning to understand the multiscale nature
 of actions helps the video model to better infer the underly-
 ing goals and thus, anticipate future actions.
-Number of input clips No. In Figure 5(b), we observe that
-increasing the number of clips in the observed sequence V
+
+Number of input clips No. In Figure[5[), we observe that
+increasing the number of clips in the observed sequence V°
 during pretraining generally leads to better downstream per-
 formance. However, we see that the forecasting results drop
 when we use 8 input clips. One possible reason is that us-
@@ -967,11 +910,13 @@ ing more input clips results in more observed context which
 may ease the difficulty of the pretraining objective and con-
 sequently, reducing the robustness of the learnt representa-
 tions to downstream forecasting tasks.
+
 Number of predicted clips Np. We also aim to understand
 the importance of varying the number of predicted clips dur-
 ing pretraining on downstream forecasting performance in
-Figure 5(c). Intuitively, setting a higher number of predicted
+Figure[5Ic). Intuitively, setting a higher number of predicted
 future clips increases the difficulty of our MVP objective
+
 since the video has to learn to predict contextual informa-
 tion that is further out into the future. While increasing the
 number of predicted clips is generally beneficial for down-
@@ -983,7 +928,7 @@ This may introduce some noise during pretraining which
 adversely affects the learnt video representations.
 Temporal stride S for aggregation. Last but not least, we
 ablate the effect of the temporal stride S during pretraining
-in Figure 5(d). We obtain the best downstream performance
+in Figure[5{d). We obtain the best downstream performance
 when we increase the temporal stride from 1 to 2, which
 may suggest that a higher temporal stride encourages the
 video model to learn to encode longer-term future contex-
@@ -992,13 +937,17 @@ ally results in a significant drop in performance because it
 may be too challenging for the video model to learn to un-
 derstand the structure and relationships between different
 atomic actions if they are very distant in time.
+
 4.3. Limitations
+
 The target representations in MVP are computed by ag-
 gregating information over future clips using a fixed tem-
 poral stride for different timescales. However, this may not
 always be realistic since different complex actions can con-
 sist of varying numbers of atomic actions.
+
 5. Conclusion
+
 In summary, we introduce Multiscale Video Pretrain-
 ing, a self-supervised approach that aims to learn robust
 video representations for downstream long-term forecast-
@@ -1006,6 +955,8 @@ ing tasks. Given an observed video clip sequence, we train a
 video model to predict aggregated representations of future
 clips over multiple timescales. We demonstrate empirically
 that learning to encode future contextual information helps
+
+--- Page 9 ---
 the video model to generalize better to long-term forecast-
 ing tasks than prior work, which highlights the importance
 of multiscale pretraining to long-term video understanding.
@@ -1018,177 +969,263 @@ ties of these representations for other video and multimodal
 tasks such as action recognition and text-to-video retrieval.
 Acknowledgements: This material is based upon work
 supported, in part, by DARPA under agreement number
-HR00112020054. We would like to thank Gideon Stocek
+HRO0112020054. We would like to thank Gideon Stocek
 and Nishanth Alapati for their assistance with setting up the
 compute infrastructure for the experiments.
+
 References
-[1] Gedas Bertasius, Heng Wang, and Lorenzo Torresani. Is
+
+1
+
+[10
+
+Gedas Bertasius, Heng Wang, and Lorenzo Torresani. Is
 space-time attention all you need for video understanding?
-In ICML, volume 2, page 4, 2021.
-[2] Joao Carreira, Eric Noland, Andras Banki-Horvath, Chloe
+In JCML, volume 2, page 4, 2021.
+
+Joao Carreira, Eric Noland, Andras Banki-Horvath, Chloe
 Hillier, and Andrew Zisserman. A short note about kinetics-
-600. arXiv preprint arXiv:1808.01340, 2018.
-[3] Joao Carreira, Eric Noland, Chloe Hillier, and Andrew Zis-
+600. arXiv preprint arXiv: 1808.01340, 2018.
+
+Joao Carreira, Eric Noland, Chloe Hillier, and Andrew Zis-
 serman. A short note on the kinetics-700 human action
-dataset. arXiv preprint arXiv:1907.06987, 2019.
-[4] Ting Chen, Simon Kornblith, Mohammad Norouzi, and Ge-
+dataset. arXiv preprint arXiv: 1907.06987, 2019.
+
+Ting Chen, Simon Kornblith, Mohammad Norouzi, and Ge-
 offrey Hinton. A simple framework for contrastive learning
-of visual representations. In International conference on ma-
-chine learning, pages 1597–1607. PMLR, 2020.
-[5] Xinlei Chen, Haoqi Fan, Ross Girshick, and Kaiming He.
+of visual representations. In Jnternational conference on ma-
+chine learning, pages 1597-1607. PMLR, 2020.
+
+Xinlei Chen, Haoqi Fan, Ross Girshick, and Kaiming He.
 Improved baselines with momentum contrastive learning.
 arXiv preprint arXiv:2003.04297, 2020.
-[6] Xinlei Chen and Kaiming He. Exploring simple siamese rep-
+
+Xinlei Chen and Kaiming He. Exploring simple siamese rep-
 resentation learning. In Proceedings of the IEEE/CVF con-
 ference on computer vision and pattern recognition, pages
 15750-15758, 2021.
-[7] Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
+
+Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
 Sanja Fidler, Antonino Furnari, Evangelos Kazakos, Da-
 vide Moltisanti, Jonathan Munro, Toby Perrett, Will Price,
 and Michael Wray. Scaling egocentric vision: The epic-
 kitchens dataset. In European Conference on Computer Vi-
 sion (ECCV), 2018.
-[8] Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
+
+Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
 Antonino Furnari, Evangelos Kazakos, Jian Ma, Davide
 Moltisanti, Jonathan Munro, Toby Perrett, Will Price,
 et al. Rescaling egocentric vision. arXiv preprint
 arXiv:2006.13256, 2020.
-[9] Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina
+
+Jacob Devlin, Ming-Wei Chang, Kenton Lee, and Kristina
 Toutanova. Bert: Pre-training of deep bidirectional
 transformers for language understanding. arXiv preprint
 arXiv:1810.04805, 2018.
-[10] Haoqi Fan, Bo Xiong, Karttikeya Mangalam, Yanghao Li,
+
+Haogqi Fan, Bo Xiong, Karttikeya Mangalam, Yanghao Li,
 Zhicheng Yan, Jitendra Malik, and Christoph Feichten-
 hofer. Multiscale vision transformers. In Proceedings of
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
 the IEEE/CVF International Conference on Computer Vi-
 sion, pages 6824-6835, 2021.
-[11] Yazan Abu Farha, Qiuhong Ke, Bernt Schiele, and Juergen
+
+Yazan Abu Farha, Qiuhong Ke, Bernt Schiele, and Juergen
 Gall. Long-term anticipation of activities with cycle consis-
 tency. arXiv preprint arXiv:2009.01142, 2020.
-[12] Christoph Feichtenhofer, Haoqi Fan, Jitendra Malik, and
+
+Christoph Feichtenhofer, Haoqi Fan, Jitendra Malik, and
 Kaiming He. Slowfast networks for video recognition. In
 Proceedings of the IEEE/CVF international conference on
 computer vision, pages 6202-6211, 2019.
-[13] Christoph Feichtenhofer, Haoqi Fan, Bo Xiong, Ross Gir-
+
+Christoph Feichtenhofer, Haoqi Fan, Bo Xiong, Ross Gir-
 shick, and Kaiming He. A large-scale study on unsupervised
 spatiotemporal representation learning. In Proceedings of
 the IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 3299-3309, 2021.
-[14] Antonino Furnari and Giovanni Maria Farinella. Rolling-
+
+Antonino Furnari and Giovanni Maria Farinella. Rolling-
 unrolling Istms for action anticipation from first-person
-video. IEEE transactions on pattern analysis and machine
+video. JEEE transactions on pattern analysis and machine
 intelligence, 43(11):4021-4036, 2020.
-[15] Rohit Girdhar and Kristen Grauman.
-Anticipative video
+
+Rohit Girdhar and Kristen Grauman. Anticipative video
 transformer. In Proceedings of the IEEE/CVF international
 conference on computer vision, pages 13505-13515, 2021.
-[16] Dayoung Gong, Joonseok Lee, Manjin Kim, Seong Jong Ha,
+Dayoung Gong, Joonseok Lee, Manjin Kim, Seong Jong Ha,
 and Minsu Cho. Future transformer for long-term action
 anticipation. In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 3052-
+on Computer Vision and Pattern Recognition, pages 3052—
 3061, 2022.
-[17] Kristen Grauman, Andrew Westbury, Eugene Byrne,
+Kristen Grauman, Andrew Westbury, Eugene Byrne,
 Zachary Chavis, Antonino Furnari, Rohit Girdhar, Jackson
 Hamburger, Hao Jiang, Miao Liu, Xingyu Liu, et al. Ego4d:
 Around the world in 3,000 hours of egocentric video. In Pro-
 ceedings of the IEEE/CVF Conference on Computer Vision
 and Pattern Recognition, pages 18995-19012, 2022.
-[18] Tengda Han, Weidi Xie, and Andrew Zisserman. Video rep-
+Tengda Han, Weidi Xie, and Andrew Zisserman. Video rep-
 resentation learning by dense predictive coding. In Proceed-
 ings of the IEEE/CVF International Conference on Com-
 puter Vision Workshops, pages 0-0, 2019.
-[19] Tengda Han, Weidi Xie, and Andrew Zisserman. Memory-
+
+Tengda Han, Weidi Xie, and Andrew Zisserman. Memory-
 augmented dense predictive coding for video representation
 learning. In Computer Vision-ECCV 2020: 16th European
 Conference, Glasgow, UK, August 23-28, 2020, Proceed-
-ings, Part III 16, pages 312–329. Springer, 2020.
-[20] Allan Jabri, Andrew Owens, and Alexei Efros. Space-time
+ings, Part III 16, pages 312-329. Springer, 2020.
+
+Allan Jabri, Andrew Owens, and Alexei Efros. Space-time
 correspondence as a contrastive random walk. Advances
 in neural information processing systems, 33:19545-19560,
 2020.
-[21] Will Kay, Joao Carreira, Karen Simonyan, Brian Zhang,
+
+Will Kay, Joao Carreira, Karen Simonyan, Brian Zhang,
 Chloe Hillier, Sudheendra Vijayanarasimhan, Fabio Viola,
 Tim Green, Trevor Back, Paul Natsev, et al. The kinetics hu-
-man action video dataset. arXiv preprint arXiv:1705.06950,
+man action video dataset. arXiv preprint arXiv: 1705.06950,
 2017.
-[22] Hildegard Kuehne, Hueihan Jhuang, Estibaliz Garrote,
+Hildegard Kuehne, Hueihan Jhuang, Estibaliz Garrote,
 Tomaso Poggio, and Thomas Serre. Hmdb: a large video
-database for human motion recognition. In 2011 Inter-
-national conference on computer vision, pages 2556–2563.
+database for human motion recognition. In 20/1 Inter-
+national conference on computer vision, pages 2556-2563.
 IEEE, 2011.
-[23] Aaron van den Oord, Yazhe Li, and Oriol Vinyals. Repre-
+Aaron van den Oord, Yazhe Li, and Oriol Vinyals. Repre-
 sentation learning with contrastive predictive coding. arXiv
-preprint arXiv:1807.03748, 2018.
-[24] Rui Qian, Tianjian Meng, Boqing Gong, Ming-Hsuan Yang,
+preprint arXiv: 1807.03748, 2018.
+
+
+--- Page 10 ---
+[24]
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+Rui Qian, Tianjian Meng, Boging Gong, Ming-Hsuan Yang,
 Huisheng Wang, Serge Belongie, and Yin Cui. Spatiotempo-
 ral contrastive video representation learning. In Proceedings
 of the IEEE/CVF Conference on Computer Vision and Pat-
 tern Recognition, pages 6964-6974, 2021.
-[25] Adria Recasens, Pauline Luc, Jean-Baptiste Alayrac, Luyu
+
+Adria Recasens, Pauline Luc, Jean-Baptiste Alayrac, Luyu
 Wang, Florian Strub, Corentin Tallec, Mateusz Malinowski,
-Viorica Pătrăucean, Florent Altché, Michal Valko, et al.
+Viorica Patraucean, Florent Altché, Michal Valko, et al.
 Broaden your views for self-supervised video learning. In
 Proceedings of the IEEE/CVF International Conference on
 Computer Vision, pages 1255-1265, 2021.
-[26] Fadime Sener, Dipika Singhania, and Angela Yao. Temporal
+
+Fadime Sener, Dipika Singhania, and Angela Yao. Temporal
 aggregate representations for long-range video understand-
-ing. In Computer Vision-ECCV 2020: 16th European Con-
+ing. In Computer Vision—ECCV 2020: 16th European Con-
 ference, Glasgow, UK, August 23-28, 2020, Proceedings,
-Part XVI 16, pages 154–171. Springer, 2020.
-[27] Dian Shao, Yue Zhao, Bo Dai, and Dahua Lin. Finegym:
+Part XVI 16, pages 154-171. Springer, 2020.
+
+Dian Shao, Yue Zhao, Bo Dai, and Dahua Lin. Finegym:
 A hierarchical video dataset for fine-grained action under-
 standing. In Proceedings of the IEEE/CVF conference on
 computer vision and pattern recognition, pages 2616-2625,
 2020.
-[28] Khurram Soomro, Amir Roshan Zamir, and Mubarak Shah.
+
+Khurram Soomro, Amir Roshan Zamir, and Mubarak Shah.
 Ucf101: A dataset of 101 human actions classes from videos
-in the wild. arXiv preprint arXiv:1212.0402, 2012.
-[29] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
-reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia
+in the wild. arXiv preprint arXiv: 1212.0402, 2012.
+
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
+reit, Llion Jones, Aidan N Gomez, Lukasz Kaiser, and Illia
 Polosukhin. Attention is all you need. Advances in neural
 information processing systems, 30, 2017.
-[30] Carl Vondrick, Hamed Pirsiavash, and Antonio Torralba. An-
+
+Carl Vondrick, Hamed Pirsiavash, and Antonio Torralba. An-
 ticipating visual representations from unlabeled video. In
 Proceedings of the IEEE conference on computer vision and
 pattern recognition, pages 98-106, 2016.
-[31] Jue Wang, Gedas Bertasius, Du Tran, and Lorenzo Torresani.
+
+Jue Wang, Gedas Bertasius, Du Tran, and Lorenzo Torresani.
 Long-short temporal contrastive learning of video transform-
 ers. In Proceedings of the IEEE/CVF Conference on Com-
 puter Vision and Pattern Recognition, pages 14010-14020,
 2022.
-[32] Yu Wu, Linchao Zhu, Xiaohan Wang, Yi Yang, and Fei
+
+Yu Wu, Linchao Zhu, Xiaohan Wang, Yi Yang, and Fei
 Wu. Learning to anticipate egocentric actions by imagina-
-tion. IEEE Transactions on Image Processing, 30:1143–
+tion. IEEE Transactions on Image Processing, 30:1143-
 1152, 2020.
-[33] Liangzhe Yuan, Rui Qian, Yin Cui, Boqing Gong, Flo-
+
+Liangzhe Yuan, Rui Qian, Yin Cui, Boging Gong, Flo-
 rian Schroff, Ming-Hsuan Yang, Hartwig Adam, and Ting
 Liu. Contextualized spatio-temporal contrastive learning
 with self-supervision. In Proceedings of the IEEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, pages
 13977-13986, 2022.
-[34] Luowei Zhou, Chenliang Xu, and Jason Corso. Towards
+
+Luowei Zhou, Chenliang Xu, and Jason Corso. Towards
 automatic learning of procedures from web instructional
 videos. In Proceedings of the AAAI Conference on Artificial
 Intelligence, volume 32, 2018.
+
+--- Page 11 ---
 In this supplemental, we provide the following additional
 material to the main submission:
+
 A. Training and evaluation datasets details
 B. Implementation details
 C. Spatiotemporal constrastive loss formulation
+
 D. Baseline models for comparisons
+
 A. Datasets
-Ego4D [17] is the largest dataset of egocentric videos span-
+
+Ego4D is the largest dataset of egocentric videos span-
 ning over 3600 hours of daily life activities ranging from
 household to outdoor leisure scenarios. These videos are
 collected by 931 camera-wearers from 9 different countries,
 who record their unscripted interactions as they engage in
 daily activities under a large variety of settings. In contrast
 to existing video recognition datasets, videos in Ego4D are
-generally much longer in duration since they span from 1 to
+generally much longer in duration since they span from | to
 10 hours as compared to 10 seconds video clips in Kinetics
-400/600 [2, 3]. Additionally, it is much larger in scale and
+400/600 [2] 3]. Additionally, it is much larger in scale and
 diversity of activities than existing egocentric video datasets
-such as Epic-Kitchens 55/100 [7, 8]. Each video is also
+such as Epic-Kitchens 55/100 [7] [8]. Each video is also
 densely annotated by humans, who provide annotations de-
 scribing notable interactions in the videos as well as high-
 level summaries. This dataset facilitates the exploration and
@@ -1197,7 +1234,7 @@ audio-visual diarization and forecasting. We use the pro-
 vided annotations to evaluate our proposed MTPL approach
 on long-term forecasting as well as video summary predic-
 tions. We adopt the same splits for training and evaluation
-on the target tasks as Grauman et al. [17]. In this dataset, we
+on the target tasks as Grauman et al. . In this dataset, we
 conduct our evaluations on the training and validation splits
 since the test evaluation is conducted on a held-out set via a
 submission to their challenge portal. We also note that the
@@ -1205,22 +1242,25 @@ number of verb and noun classes present in all 3 provided
 splits are not consistent since each split contains some verb
 and noun classes that are not present in other splits. Please
 refer to the supplementary material for more details.
-EpicsKitchen-55/100. EpicKitchens-100 (EK100) [8] is
+
+EpicsKitchen-55/100. EpicKitchens-100 (EK100) is
 another large dataset of egocentric videos. Similar to
 Ego4D, it also provides 700 long unscripted egocentric
 videos that span approximately 100 hours. It is less diverse
 than Ego4D since the participants only engage in daily ac-
-tivities in the kitchen. EpicKitchens-55 (EK55) [7] is an
+tivities in the kitchen. EpicKitchens-55 (EK55) is an
 earlier and smaller version of EK100 but it provides the
 same types of videos and annotations. We use EK55 and
 EK100 to evaluate on the tasks of order-agnostic and order-
 specific long-term forecasting.
+
 B. Implementation details
 B.1. Multiscale Video Pretraining
+
 We implement all models and experiments using the Py-
 torch deep learning library. We use the Multiscale Vision
-Transformer (MVIT) [10] as our base video encoder and
-1 transformer encoder layers with 1 attention heads as our
+Transformer (MViT) as our base video encoder and
+1 transformer encoder layers with | attention heads as our
 temporal context aggregator. The MVIT encoder typically
 accepts a video clip of 16 frames as input and outputs a
 global clip representation, which is the contextualized out-
@@ -1232,6 +1272,7 @@ dictions at the spatiotemporal region granularity. During the
 second stage of finetuning, we compute a global clip repre-
 sentation by performing meanpooling over the spatiotem-
 poral region representations.
+
 Since we sample the video frames at 10 frames per sec-
 ond (FPS), the temporal duration of each clip is approxi-
 mately 0.8 seconds long. Each input video clip is prepro-
@@ -1243,148 +1284,172 @@ clips including random horizontal flipping and color jitter-
 ing. The future feature prediction function is represented as
 a two-layer multilayer perceptron (MLP) with a non-linear
 ReLU operation and hidden dimension of 768.
+
 B.2. Downstream long-term forecasting tasks
-Figure 6 illustrates how our pretrained video model
+
+Figure (6 illustrates how our pretrained video model
 and its learnt representations are transferred to the order-
 agnostic and order-specific action forecasting as well as
 video summary forecasting. To begin, given the sequence of
-Ny observed video clips in each task V = {V₁, ···VNv }, we
+Ny observed video clips in each task V = {Vj, «Viv, }, we
 extract the contextualized representation of the last timestep
 as follows:
-ZNv = ho(90(Vz)),
-ZNv
-ЄRD
-(6)
+
+zny =he(go(V2)), zn, ER? (6)
 where D is the output channel dimension. For all down-
 stream tasks, we finetune linear probes on top of the pre-
 trained video model, which is kept frozen.
+
 Order-agnostic action forecasting. Given a vocabulary of
-and Nnoun classes, we predict a Nverb-dimensional and
-Nnoun-dimensional binary vectors as:
-Nverb
-Pverb=fverb (Ny),
-fnoun (NV),
-Pnoun
+Nyerp and Npoun classes, we predict a Nyer»-dimensional and
+Nyoun-dimensional binary vectors as:
+
+Dverb = frverd(Zny)s
+Pnoun = fnoun(ZNy )
+
 (7)
+
 where each dimension in the predicted vectors indicates the
 probability of the verb or noun class occurring in the future.
-Order-agnostic long-term forecasting |
-Number of
-verb classes
-Prediction
-head
-Number of
-noun classes
-Video Model
+
+--- Page 12 ---
+Order-agnostic long-term forecasting
+
 Order-specific long-term forecasting
-Verb: "cut"
-Noun: "banana"
-Verb: "pour"
-Noun: "milk"
-Prediction
-head 1
-Prediction
-head 2
-Video Model
+
 Video summary forecasting
-Predict
-Verb: "wash"
-Noun: "spoon"
-Video summary
-representation
-Prediction
-head N
-Text summary
-representation
-Visual-semantic
-projection
-Visual-semantic
-projection
-Video Model
-Language Model
-Summary: "The
+
+Verb: “cut”
+Noun: “banana”
+
+Verb: “pour”
+Noun: “milk”
+
+Verb: “wash”
+Noun: “spoon”
+
+Number of Number of ;
+Video summary Text summary
+verb classes noun classes :
+\ 4 \ representation representation
+Prediction Prediction Prediction 4 4
+Sac head head 2 headlN Visual-semantic Visual-semantic
+ea " ' u projection projection
+Video Model Video Model Video Model Language Model
+
+|
+|
+|
+|
+|
+|
+|
+t |
+|
+|
+|
+|
+I
+|
+
+Observed video clip sequence
+
+Summary: “The
 camera wearer
 cleans the dishes
 before making a
-smoothie...'
+smoothie...”
+
 Observed video clip sequence
-Observed video clip sequence
-Observed video clip sequence
+
 Figure 6: Implementation for downstream long-term forecasting tasks. We finetune our pretrained video models on the
 downstream tasks of order-agnostic and order-specific action forecasting as well as video summary forecasting on the target
+
 datasets with strong supervision.
+
 We formulate this as a multi-label prediction task and fine-
 tune all pretrained models by optimizing the binary cross-
 entropy loss computed over all verb and noun classes as:
-2T+K+S
-Predicted
-representations
-В Nverb
-Nnoun
-L = =
--Σ verb, b,¿ log (Pverb,b,i ) + Σ Ynoun,b,i ¿ log(Pnoun,b,¿)),
-Temporal
-negative
-b=1 i=1
-i=1
+
+Bo New Nooun
+
+L=- Os Yoerd,b,i log(Pvew,o,)+ >> Ynoun,b,i 108 (Pnoun,b,i))s
+
+b=1 i=1 i=1
+
 (8)
-Positive
-negative
-Temporal
-Spatial negative Ground-truth
-representations
-where Yverb,b,i and Ynoun,b,i are the ground-truth verb and
+
+where Yverb,b,¢ ANd Ynoun,b,; are the ground-truth verb and
 noun binary labels, respectively.
+
 Order-specific action forecasting. In this more challeng-
 ing setting, the goal is to make fine-grained action predic-
 tions at specific timesteps. For simplicity, we adopt the
-same training and evaluation setup as in [17] and use sep-
+same training and evaluation setup as in and use sep-
 arate prediction heads for different timesteps. For each
 timestep, we formulate the subtask as a multiclass predic-
 tion problem for both verbs and nouns. Consequently, we
 finetune the pretrained video models using the following
 loss formulation:
-L
+
 B Np
-->> (verb,b,t log (Pverb,b,t)+(Ynoun,b,t log(Pnoun,b,t)).
+
+L=-— Ss So rerb.b.0 log (Dyerb,b,t) + (Ynoun,b,t og (Pnoun,b,t))-
+
 b=1 t=1
+
 (9)
-Video summary forecasting. As shown in Figure 6 (right),
+
+Video summary forecasting. As shown in Figure(6|(right),
 we adopt the dual encoder architecture to address this mul-
 timodal task. Similar to prior work on learning joint visual-
 language representations including CLIP and ALIGN, we
 also use the late fusion mechanism where the semantic sim-
 ilarity between the final video and language representations
 are computed using a final dot product operation.
-I
-|
-I
-ZT+K
-ZT+K+S
------
-ZT+K+2S
+
+ZT+K4S
+
+Predicted
+representations
+
+Temporal
+negative
+
+Temporal
+
+Positive
+
 Figure 7: Spatiotemporal region predictions. Our MVP
 approach trains a video to predict future contextual infor-
 mation contained in fine-grained spatiotemporal regions.
+
 C. Spatiotemporal constrastive loss formula-
 tion
+
 We provide an illustration of how our proposed MVP
 objective trains a video model to predict fine-grained spa-
 tiotemporal region representations using the contrastive loss
-formulation in Figure 7. Given the predicted representation
-of the j-th spatial region at the t-th timestep 2t,j, we aim to
+formulation in Figure|7| Given the predicted representation
+of the j-th spatial region at the ¢-th timestep 2;,;, we aim to
 maximize its semantic similarity with its ground-truth ag-
-gregated representation zt,; and the negative samples in the
+gregated representation z;,; and the negative samples in the
 entire set of distractors consist of both hard negatives such
+
+
+--- Page 13 ---
 as other spatial regions at the same timestep and easy neg-
 atives including representations that belong to clips from
 other videos in the sampled batch.
+
 D. Baseline models
+
 We briefly describe the self-supervised video pretrain-
 ing baselines that we compare our proposed MVP objective
 against in our evaluations.
+
 Contrastive predictive coding (CPC). The Contrastive
-Predictive Coding (CPC) [23] approach aims to learn
+Predictive Coding (CPC) approach aims to learn
 video representations that encode global information that
 is shared between different clips of a video. CPC uses the
 context from an observed clip sequence to predict the future
@@ -1392,28 +1457,31 @@ uncontextualized information in the future clips that directly
 follow after the observed sequence. It also uses multiple
 prediction heads for representations of different timesteps
 that it tries to predict for.
+
 Dense predictive coding (DPC). The Dense Predictive
-Coding (DPC) [18] approach builds on top of CPC to learn
+Coding (DPC) approach builds on top of CPC to learn
 video representations of predicting uncontextualized infor-
 mation but conditions its predictions for a given timestep
 with the context of the predicted information at the preced-
 ing timestep. Additionally, unlike CPC, the DPC objective
 aims to compute spatiotemporal representations instead of
 global clip representations.
+
 Contrastive video representation learning (CVRL). We
 also compare MVP to the Contrastive Video Representation
-Learning (CVRL) [24] approach, which is largely inspired
+Learning (CVRL) approach, which is largely inspired
 by popular image-based self-supervised pretraining objec-
-tives [4, 5, 6]. CVRL trains a video model to maximize the
+tives [4] [5] 6]. CVRL trains a video model to maximize the
 similarity between representations of different clips that are
 randomly sampled from the same videos. While we com-
 pare to CVRL in its vanilla setting which uses pairs of video
 clips, we also train and evaluate a variant of CVRL which
 maximizes the similarity between representations of pairs
 of clip sequences.
+
 Long-Short Term Contrastive Learning (LSTCL). Simi-
 lar to the CVRL approach, the Long-Short Term Contrastive
-Learning (LSTCL) [31] is initially proposed to learn video
+Learning (LSTCL) [B]] is initially proposed to learn video
 representations by maximizing the similarity between rep-
 resentations of video clip pairs. During pretraining, it ac-
 cepts as input a short clip and another long clip which con-
@@ -1423,13 +1491,16 @@ information from a small observed temporal window. We
 also extend LSTCL to train on pairs of video clip sequences
 with the same total number of video clips per sample during
 pretraining to facilitate fair comparisons.
+
 Contextualized Spatio-Temporal Contrastive Learning
 with Self-Supervision (CONSTCL). Last but not least, we
 also compare to the Contextualized Spatio-Temporal Con-
 trastive Learning with Self-Supervision (CONSTCL) [33]
-approach. CONSTCL aims to address the limitation of: spa-
-tiotemporal invariance [13] enforced by the CVRL objec-
+approach. CONSTCL aims to address the limitation of spa-
+
+tiotemporal invariance enforced by the CVRL objec-
 tive. The CONSTCL objective leverages a region-based
 preraining task which trains the video model to transform
 video representations from one clip sequence to another,
 given the context from the first sequence.
+

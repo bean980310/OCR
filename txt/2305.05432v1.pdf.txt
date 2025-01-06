@@ -1,109 +1,126 @@
+--- Page 1 ---
 arXiv:2305.05432v1 [cs.CL] 9 May 2023
-Wiki Workshop (10th edition) - May 11, 2023
+
+Wiki Workshop (10th edition) — May 11, 2023
+
 WikiWeb2M: A Page-Level Multimodal Wikipedia Dataset
+
 Krishna Srinivasan
-Geoff Brown
+Google
+
 Andrea Burns
 Boston University*
-Kate Saenko
-FAIR, Boston University
-Google
-Joshua Ainslie
-Google
-Bryan A. Plummer
-Boston University
-Jianmo Ni
-Google
+
+Kate Saenko Bryan A. Plummer
+FAIR, Boston University Boston University
+
 Abstract
+
 Webpages have been a rich resource for lan-
 guage and vision-language tasks. Yet only
-pieces of webpages are kept: image-caption
-pairs, long text articles, or raw HTML, never
+ieces of webpages are kept: image-caption
+airs, long text articles, or raw HTML, never
 all in one place. Webpage tasks have result-
 ingly received little attention and structured
 image-text data underused. To study multi-
 modal webpage understanding, we introduce
-the Wikipedia Webpage 2M (WikiWeb2M)0
+he Wikipedia Webpage 2M (WikiWeb2M
 suite; the first to retain the full set of im-
 ages, text, and structure data available in a
-page. WikiWeb2M can be used for tasks like
-page description generation, section summa-
+age. WikiWeb2M can be used for tasks like
+age description generation, section summa-
 rization, and contextual image captioning.
+
 Keywords: Multimodal Data, Webpages, Machine
 Learning, Text Generation, Vision and Language
+
 Introduction
+
 Webpages are multimodal, structured content which
 can been used for pretraining and fine-tuning. Large
 scale noisy datasets scraped from the web have been
 used to pretrain large language or contrastive mod-
-els (Raffel et al., 2020; Jia et al., 2021). Downstream
+els (Raffel et al., 2020} Jia et al., 2021). Downstream
 tasks built from webpages have included instruction
 following, image captioning, news captioning, image-
 sentence retrieval, and image-article retrieval (Gur
-et al., 2022; Biten et al., 2019; Tan et al., 2022).
+et al., 2022} |Biten et al., 2019} |Tan et al., 2022).
 Yet little prior work has studied tasks to evaluate
 multimodal webpage understanding itself.
+
 Many classification and generation problems could
 be studied with webpages: taxonomic webpage clas-
 sification, webpage retrieval, web image captioning,
 and webpage summarization. However, to date there
 is no open source, multimodal dataset that retains
-all webpage content. E.g., the Wikipedia Image
+all webpage content. F.g., the Wikipedia Image
+
 Text (WIT) dataset (Srinivasan et al., 2021) does
+
 not keep HTML structure and misses out on many
-*Work was done during an internship at Google.
-Data is readily available at https://github.com/
-google-research-datasets/wit/blob/main/
-wikiweb2m.md
-Google
-Mandy Guo
-Google
-text sections, as shown in Table 1. Unified text, im-
+
+*Work was done during an inteams p at Goog g
+
+Joshua Ainslie Geoff Brown
+Google Google
+
+Jianmo Ni Mandy Guo
+Google Google
+
+text sections, as shown in Table[]] Unified text, im-
 age, and structure data would allow for greater study
 of multimodal content understanding with many-to-
 many text and image relationships. As a result, we
 propose the new Wikipedia Webpage (WikiWeb2M)
 dataset of over 2M pages, which unifies webpage con-
 tent to include all text, images, and their location
-(e.g., section index) in one example. Table 2 (left)
+(e.g., section index) in one example. Table |2| (left)
 includes the number of pages, sections, and images,
 along with sample counts for downstream tasks.
-Figure 1 (left) shows how one webpage can be
+Figure [1] (left) shows how one webpage can be
 used for page description, section summarization,
 and contextual captioning. These tasks can improve
 interaction with web content, e.g., a page description
 may provide a user who is blind more agency by al-
 lowing them to preview content before listening to
-the entire body with a screen reader (Vtyurina et al.,
+the entire body with a screen reader
 2019). On top of aiding assistive technology, tasks
 like contextual image captioning and section summa-
 rization can be used for modern content generation,
 as there is growing interest in providing multimodal
 snippets from the web (Nkemelu et al., 2023).
+
 The WikiWeb2M Dataset
-page
+
 WikiWeb2M is created by rescraping the ~2M En-
 glish articles in WIT. Each webpage sample includes
-the URL and title, section titles, text, and in-
+the page URL and title, section titles, text, and in-
 dices, images and their captions, and more; see Fig-
-ure 1 (right). This differs from WIT which defined
+ure [I] (right). This differs from WIT which defined
 individual samples as image-caption pairs with ad-
 ditional metadata (e.g., originating section title).
+
 We shuffle the WIT webpages to define a random
-1.8M/100K/100K train/val/test split. Table 2 (left)
+1.8M/100K/100K train/val/test split. Table [2] (left)
 shows the number of pages, sections, and images in
 our dataset after additional processing. In partic-
 ular, we only retain content sections (e.g., not the
-"See Also" section). For images, we keep JPEG and
+“See Also” section). For images, we keep JPEG and
 PNG and require the dimensions be greater than 1px
 to allow for a greater diversity of images to be in-
-cluded (e.g., icons)¹. We include metadata on image
+cluded (e.g., icons}] We include metadata on image
 dimensions to allow for additional filtering.
-In Table 1, we report the number of sections and
+
+In Table [I] we report the number of sections and
 images compared to the English subset of WIT. We
-¹We release image URLs, where they can be fetched.
+
+'We release image URLs, where they can be fetched.
+
 © Copyright held by the owner/author(s), published under Creative Commons CC BY 4.0 License
-Wiki Workshop (10th edition) – May 11, 2023
+
+--- Page 2 ---
+Wiki Workshop (10th edition) — May 11, 2023
+
 add nearly 1M total images to the dataset by keeping
 the images on a webpage regardless of whether they
 have image captions. We break down section counts
@@ -114,35 +131,40 @@ subsections). For heading sections, the section con-
 tent either linked to a different article, was empty, or
 only had tables. A notable 6.8M text sections are in
 WikiWeb2M, none of which were available in WIT.
+
 The WikiWeb2M Tasks
-We now describe WikiWeb2M's suite of multimodal
-generation tasks and task data processing. Table 2
+
+We now describe WikiWeb2M’s suite of multimodal
+generation tasks and task data processing. Table [2]
 (left) shows data statistics and (right) downstream
 task performance when using T5 and ViT base mod-
-els (Raffel et al., 2020; Dosovitskiy et al., 2021).
+els (Raffel et al., 2020; |Dosovitskiy et al., 2021).
+
 Page Description Generation The goal is to gen-
 erate a description of a page given the rest of the
-webpage's image, text, and structure. We use the
+webpage’s image, text, and structure. We use the
 Wikipedia-provided page descriptions for each arti-
 cle. We retain a page if the description has at least
 five words. A small subset of Wikipedia pages are
-lists²; we remove pages that explicitly have "list_of"
+listd?] we remove pages that explicitly have “list_of”
 in their URL or fewer than two rich content sections.
+
 Section Summarization The goal is to generate a
-sentence that highlights the section's content given
+sentence that highlights the section’s content given
 images and (non-summary) text in the section and
 other context sections. We take advantage of the
 leading sentence bias and use the first sentence of a
 section its pseudo summary. In a small pilot, a ma-
 jority of human annotators also deemed the first sen-
-tence as a reasonable summary. A section serves as
+ence as a reasonable summary. A section serves as
 a target section if it has at least five sentences, con-
-tains neither a table nor list, and is not the root sec-
-tion. We filter out the root because the root (first)
+ains neither a table nor list, and is not the root sec-
+ion. We filter out the root because the root (first)
 section is often the page description.
-Contextual Image Captioning (Nguyen et al., 2022)
+
+Contextual Image Captioning
 proposed Wikipedia image captioning given the im-
-age's webpage context. With WikiWeb2M, we can
+age’s webpage context. With WikiWeb2M, we can
 now utilize the entire webpage context for the image
 instead of just the section it originally came from.
 We only allow target images to be those from WIT
@@ -152,21 +174,23 @@ caption to be generated and require it must have at
 least three words. But, we do not input the attri-
 bution description, as it often contains large overlap
 with the reference description.
-Results Table 2 (right) shows results for each task.
+
+Results Table P| (right) shows results for each task.
 For contextual image captioning and section sum-
-2For example,
-https://en.wikipedia.org/
-wiki/List_of_mammals_of_the_United_States
-marization we verify that WikiWeb2M's additional
+
+marization we verify that WikiWeb2M’s additional
 sections (compared to only inputting the target sec-
 tion for image captioning or summarization) im-
 prove task performance; page description generation
 is only made possible with our dataset.
+
 References
-[Biten et al. 2019] Ali Furkan Biten, Lluís Gómez,
-Marçal Rusiñol, and Dimosthenis Karatzas. 2019.
+
+[Biten et al.2019] Ali Furkan Biten, Lluis Gomez,
+Margal Rusinol, and Dimosthenis Karatzas. 2019.
 Good news, everyone! context driven entity-aware
 captioning for news images. In CVPR.
+
 [Dosovitskiy et al.2021] Alexey Dosovitskiy, Lucas
 Beyer, Alexander Kolesnikov, Dirk Weissenborn,
 Xiaohua Zhai, Thomas Unterthiner, Mostafa De-
@@ -174,168 +198,172 @@ hghani, Matthias Minderer, Georg Heigold, Syl-
 vain Gelly, Jakob Uszkoreit, and Neil Houlsby.
 2021. An image is worth 16x16 words: Trans-
 formers for image recognition at scale. In ICLR.
+
 [Gur et al.2022] Izzeddin Gur, Ofir Nachum, Yingjie
 Miao, Mustafa Safdari, Austin Huang, Aakanksha
 Chowdhery, Sharan Narang, Noah Fiedel, and
 Aleksandra Faust. 2022. Understanding html
 with large language models.
+
 [Jia et al.2021] Chao Jia, Yinfei Yang, Ye Xia, Yi-
 Ting Chen, Zarana Parekh, Hieu Pham, Quoc V.
 Le, Yun-Hsuan Sung, Zhen Li, and Tom Duerig.
 2021. Scaling up visual and vision-language rep-
 resentation learning with noisy text supervision.
+
 In ICML.
-[Nguyen et al.2022] Khanh Nguyen, Ali Furkan
+
+Nguyen et al.2022] Khanh Nguyen, Ali Furkan
 Biten, Andres Mafla, Lluis Gomez, and Dimos-
 thenis Karatzas. 2022. Show, interpret and tell:
 Entity-aware contextualised image captioning in
 wikipedia.
-[Nkemelu et al. 2023] Daniel Nkemelu, Peggy Chi,
+
+Nkemelu et al.2023] Daniel Nkemelu, Peggy Chi,
 Daniel Castro Chin, Krishna Srinivasan, and Ir-
 fan Essa. 2023. Automatic multi-path web story
 creation from a structural article.
-[Raffel et al.2020] Colin Raffel, Noam Shazeer, Adam
-Roberts, Katherine Lee, Sharan Narang, Michael
+
+Raffel et al.2020] Colin Raffel, Noam Shazeer, Adam
+Roberts, Katherine Lee, Sharan Narang, Michae
 Matena, Yanqi Zhou, Wei Li, and Peter J. Liu.
 2020. Exploring the limits of transfer learning
 with a unified text-to-text transformer. JMLR.
-[Srinivasan et al.2021] Krishna Srinivasan, Karthik
-Raman, Jiecao Chen, Michael Bendersky, and
+
+Srinivasan et al.2021] Krishna Srinivasan, Karthik
+Raman, Jiecao Chen, Michael Bendersky, an
 Marc Najork. 2021. Wit: Wikipedia-based image
 text dataset for multimodal multilingual machine
 learning. In SIGIR.
-[Tan et al.2022] Reuben Tan, Bryan A. Plummer,
-Kate Saenko, J. P. Lewis, Avneesh Sud, and
+
+Tan et al.2022] Reuben Tan, Bryan A. Plummer,
+Kate Saenko, J. P. Lewis, Avneesh Sud, an
 Thomas Leung. 2022. Newsstories: Illustrating
 articles with visual summaries. In ECCV.
-[Vtyurina et al.2019] Alexandra Vtyurina, Adam
+
+Vtyurina et al.2019] Alexandra Vtyurina, Adam
 Fourney, Meredith Ringel Morris, Leah Findlater,
 and Ryen W. White. 2019. Bridging screen read-
 ers and voice assistants for enhanced eyes-free web
+
 search. In ASSETS.
+
 © Copyright held by the owner/author(s), published under Creative Commons CC BY 4.0 License
-Dataset
-Wiki Workshop (10th edition) - May 11, 2023
-# Webpage Sections
-Text
-# Images
-WIT (En)
-WikiWeb2M
-Structural
-Heading
-731,394
-686,376
-6,817,950
-Image Both
-199,872 2,847,929
-221,523 3,236,254
-Total
-3,047,801
-11,693,497
-Unique
-3,660,211
-Total
-4,955,835
-4,438,642 5,940,431
+
+--- Page 3 ---
+Wiki Workshop (10th edition) — May 11, 2023
+
+Dataset # Webpage Sections # Images
+Structural Heading Text Image Both Total Unique Total
+
+WIT (En) - - - 199,872 2,847,929 3,047,801 | 3,660,211 4,955,835
+
+WikiWeb2M | 731,394 686,376 6,817,950 221,523 3,236,254 11,693,497 | 4,438,642 5,940,431
+
 Table 1: Comparison of WikiWeb2M to WIT. We report the aggregate counts over all splits. WikiWeb2M and WIT
 (English subset) contain the same webpages.
-WikiWeb2M Statistic
-# Pages
-# Sections
-# Total Images
-# Task Samples
-Page Description
-Section Summarization
-Contextual Captioning
-Train
-Val
-Test
-1,803,225 100,475 100,833
-10,519,294 585,651 588,552
-5,340,708 299,057 300,666
-1,435,263 80,103 80,339
-3,082,031 172,984 173,591
-2,222,814 124,703 124,188
-Downstream Task
-B
-R
-C
-14.00 38.50 81.49
-8.90 27.82 60.20
-10.12 29.43 69.89
-10.92 36.21 148.53
-11.84 37.69 158.19
-Page Description
-Section Summarization
-Target Section Only
-WikiWeb2M
-Contextual Captioning
-Target Section Only
-WikiWeb2M
-Table 2: Statistics and experimental results on the WikiWeb2M dataset. On the left we report the number of pages,
+
+| WikiWeb2M Statistic Train Val Test Downstream Task B R Cc |
+# Pages 1,803,225 100,475 100,833 Page Description 14.00 38.50 81.49 |
+# Sections 10,519,294 585,651 588,552 Section Summarization
+# Total Images 5,340,708 299,057 300,666 Target Section Only 8.90 27.82 60.20
+# Task Samples WikiWeb2M 10.12 29.43 69.89
+Page Description 1,435,263 80,103 80,339 Contextual Captioning
+Section Summarization | 3,082,031 172,984 173,591 Target Section Only | 10.92 36.21 148.53
+Contextual Captioning | 2,222,814 124,703 124,188 WikiWeb2M 11.84 37.69 158.19
+
+Table 2: Statistics and experimental results on the WikiWeb2M
 sections, and images in the source WikiWeb2M dataset. Below, we report the number of samples for three task datasets
 that we generate from WikiWeb2M with additional processing: page description generation, section summarization,
 and contextual image captioning. On the right we report the task performance achieved with T5 and ViT base models
-(metrics include BLEU-4 (B), ROUGE-L (R), and CIDER (C)).
+(metrics include BLEU-4 (B), ROUGE-L (R), and CIDEr (C)).
+
 SECTION
 SUMMARIZATION
+
 By definition, succulent plants are
 drought-resistant plants in which
 the leaves, stem, or roots have
 become more than usually fleshy by
 the development of water-storing...
+
 CONTEXTUAL
 IMAGE CAPTIONING
+
+a a u
+
 A collection of succulent plants,
 including cacti, from the Jardin
-botanique d'Èze, France
+botanique d'Eze, France
+
 PAGE DESCRIPTION
 GENERATION
-Succulent plant
+
 WEBPAGE
+
+os
+
+MAR RBER ES
+
 In botany, succulent plants, also known as succulents, are plants with parts that are
 thickened, fleshy, and engorged, usually to retain water in arid climates or soil
 conditions. The word succulent comes from the Latin word sucus, meaning "juice" or
 "sap". Succulent plants may store water in various structures, such as leaves and
 stems. The water content of some succulent organs can get up to 90-95%...
-{ 'split': 'train',
-'page_url': 'https://en.wikipedia.org/wiki/Succulent plant',
-'page_title': 'Succulent Plant',
-'page_contains_images': 1,
-'page_content_sections_without_table_list': 5,
-'raw_page_description': 'In botany, succulent plants, also
+
+lataset. On the left we report the number of pages,
+
+{ ‘split’: ‘train’,
+‘page_ur1': ‘https://en.wikipedia.org/wiki/Succulent_plant’,
+‘page_title’: ‘Succulent Plant’,
+
+‘page ains images’:1
+‘page without_table list’: 5,
+‘raw_p : ‘In botany, succulent plants, also
+
 known as succulents, are plants with parts that are
 thickened, fleshy, and engorged, usually to retain water in
-arid climates or soil conditions. The word succulent...',
-'is_page_description_sample': 1,
-'section_index': [0, 1, 2, 3, 4, 5, 6],
-'section_title': ['Succulent plant', 'Definition', 'Appearance',
-'Habitat', 'Conservation', 'Families and genera',
-'Cultivation'],
-'section_text': ['In botany, succulent plants, also known as
+arid climates or soil conditions. The word succulent...’,
+
+‘is page description sample’: 1,
+
+‘section_index’: [0, 1, 2, 3, 4, 5, 6],
+
+‘section title’: [Succulent plant’, ‘Definition’, ‘Appearance’,
+‘Habitat’, ‘Conservation’, ‘Families and genera’,
+‘Cultivation’],
+
+‘section_text’: ['In botany, succulent plants, also known as
 succulents, are plants with parts that are thickened, fleshy,
-and...', 'By definition, succulent plants are drought-resistant
-plants in which the leaves, stem, or roots...', 'The storage of
+and...’, ‘By definition, succulent plants are drought-resistant
+plants in which the leaves, stem, or roots...’, ‘The storage of
 water often gives succulent plants a more swollen or
-fleshy...', 'Other than in Antarctica, succulents can be found
-within each continent...', 'In South Africa, several species
-have been threatened with extinction due to poaching...',
-'There are approximately sixty different plant families
-that...', 'Succulents are favored as houseplants for their
+fleshy...’, ‘Other than in Antarctica, succulents can be found
+within each continent...’, ‘In South Africa, several species
+have been threatened with extinction due to poaching...’,
+‘There are approximately sixty different plant families
+that...’, ‘Succulents are favored as houseplants for their
 attractiveness and ease of care. They have been...'],
-'section_contains_table_or_list': [0, 0, 1, 0, 0, 1, 0],
-'is_section_summarization_sample': [0, 1, 0, 1, 0, 0, 1],
-'section_image_url':
+
+‘section contains table or list’:[0,0, 1, 0,0, 1, 0],
+
+‘is_section_summarization_sample’:[0, 1,0, 1, 0,0, 1],
+
+‘section_image_url’:
 [[https://en.wikipedia.org/wiki/Succulent_plant#/media/File:S
-plit Aloe.jpg],
-[https://en.wikipedia.org/wiki/Succulent plant#/media/File:S
-ucculent in San Francisco.JPG], ...],
-'is_image_caption_sample': [[1], [1], [1], [1], [], ---],
-}
+
+plit_Aloe,jpa),
+[https://en.wikipedia.orq/wiki/Succulent_planti#/media/File:S
+icculent_in_San_Francisco.JP
+
+“ig_image caption sample" [1], [1], (1) [1], Oh.
+
 Figure 1: Example tasks and data samples from WikiWeb2M. On the left we show how our dataset provides a unified
 webpage sample that contains all text, image, and structure, enabling new tasks like page description generation.
 For image captioning and section summarization, remaining page text and images provide useful context, aiding task
 performance. On the right we show the WikiWeb2M page sample for the same Wikipedia article on succulents; we
 only include a subset of fields due to space. E.g., the WikiWeb2M sample also contains the image alt-text, attribution
 and reference descriptions, along with other metadata, but it is not illustrated on the right.
+
 © Copyright held by the owner/author(s), published under Creative Commons CC BY 4.0 License
+

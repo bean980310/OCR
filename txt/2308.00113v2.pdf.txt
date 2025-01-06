@@ -1,11 +1,16 @@
-arXiv:2308.00113v2 [cs.CL] 8 Nov 2023
+--- Page 1 ---
+2308.00113v2 [cs.CL] 8 Nov 2023
+
+arXiv
+
 Three Bricks to Consolidate
 Watermarks for Large Language Models
-Pierre Fernandez 1,3, Antoine Chaffin¹², Karim Tit¹, Vivien Chappelier², Teddy Furon¹
-1 Centre Inria de l'Université de Rennes
-2Imatag
-3 FAIR, Meta
-Abstract Discerning between generated and natural texts is
+
+Pierre Fernandez!?, Antoine Chaffin!?, Karim Tit!, Vivien Chappelier?, Teddy Furon!
+
+Centre Inria de l’Université de Rennes
+
+Abstract—Discerning between generated and natural texts is
 increasingly challenging. In this context, watermarking emerges
 as a promising technique for ascribing text to a specific generative
 model. It alters the sampling generation process to leave an invis-
@@ -14,61 +19,87 @@ consolidates watermarks for large language models based on
 three theoretical and empirical considerations. First, we introduce
 new statistical tests that offer robust theoretical guarantees
 which remain valid even at low false-positive rates (less than
-106). Second, we compare the effectiveness of watermarks using
+10°). Second, we compare the effectiveness of watermarks using
 classical benchmarks in the field of natural language processing,
 gaining insights into their real-world applicability. Third, we
 develop advanced detection schemes for scenarios where access
 to the LLM is available, as well as multi-bit watermarking.
-Index Terms-Watermarking, Large Language Model
+
+Index Terms—Watermarking, Large Language Model
+
 I. INTRODUCTION
+
 The misuse of Large Language Models (LLMs) like Chat-
-GPT [1], Claude [2], or the open-sourced LLAMA [3] may be-
-come a threat as their availability and capabilities expand [4]-
+GPT [1], Claude [2], or the open-sourced LLaMA [3] may be-
+come a threat as their availability and capabilities expand [4]—
 [6]. LLMs might help generate fake news by reducing costs to
 spread disinformation at scale [7], [8], with a potential impact
 on public opinion and democratic outcomes [9]. They could
 help impersonate people, facilitate scams [10], or make student
 assessments impossible. Enforcing fair and responsible usage
 through regulations and technical means would be useful.
+
 Monitoring the usage of LLMs with passive forensics is
 difficult because generated texts are hardly distinguishable
 from real ones, be it for humans or algorithms [11], [12].
 Watermarking is a promising technique explored for generative
-image models [13]–[15] and generative text LLMs [16]-[19].
+image models [13]-[15] and generative text LLMs [16]-[19].
 In this case, watermarking either alters the sample generation
 process [16], [19] or changes the probability distribution of
 the generated tokens [17], [20], to leave an imperceptible
 trace in the generated text. This literature then describes a
 detection mechanism analyzing the generated tokens to see if
 their distribution follows the one induced by the watermark.
+
 We introduce three contributions to consolidate the current
 literature, one for each of the following paragraphs and sec-
 tions. Each part can be read independently.
+
 First, false positives can have serious consequences in con-
 texts where the integrity and accuracy of results are essential,
 such as falsely accusing a user of producing fake news or a stu-
 dent of cheating in an exam. However, current approaches [17],
 [18] focus their study on sensitivity (True Positive Rate: TPR)
-Mail: pierre.fernandez@inria.fr - Code: facebookresearch/three_bricks/
-Hashing
+
+Mail: pierre.fernandez @inria.fr - Code: facebookresearch/three_bricks/
+
+2Imatag 3 FAIR, Meta
+
 Seed RNG
+
+Hashing
+
 Watermark context
-x(-h)x(-2)x(-1)
-☐ LLM context
+XD XD 2) DY
+
+LLM context
+
+——— logits /= (1,...1,,)
+
 Sample
-logits 1= (1,...)
-x(0)
+
+x
+
 Generation
+
 Detection
+a
+
 Seed RNG
-Watermark context
-LLM
+
 Hashing
-x(0) x (1)... x(h) x (h+1)... x(T)
-Current token
-Score
+
+Watermark context
+
++ Score
+XO DOD MD) 9D
+LH Current token
+
+5s)
+
 Fig. 1: General illustration of watermarking for LLM (top: generation,
 bottom: detection). Details and notations in Sect. II-B.
+
 rather than on specificity (linked to False Positive Rate: FPR).
 The FPR has never been empirically checked at interesting
 scales (with more than 1k negative examples). Our large-scale
@@ -78,7 +109,8 @@ the false positives at low FPR. This work provides grounded
 statistical tests that theoretically guarantee false positive-rates
 and accurate p-values in real-world regimes. We validate them
 empirically and show that they provide a close-to-perfect
-control of the FPR, even at low values (< 10-6).
+control of the FPR, even at low values (< 107°).
+
 Second, we compare the watermarking methods, analyzing
 practical implications of watermarks on traditional Natural
 Language Processing (NLP) benchmarks. Indeed, current wa-
@@ -89,6 +121,7 @@ rather evaluated on their effective usefulness, e.g. free-form
 completion tasks such as question answering. Such evaluations
 are much more informative on the actual abilities of the model
 when used on downstream tasks.
+
 Third, we expand these algorithms to advanced detection
 schemes. When access to the LLM is possible at detection
 time, we provide optimal statistical tests. We also investigate
@@ -97,114 +130,122 @@ marks) when current approaches only tackle zero-bit water-
 marking. This allows not only to determine whether the text
 was generated by the watermarked LLM, but also to identify
 which version of the model generated it.
-II. TECHNICAL BACKGROUND
+
+--- Page 2 ---
+Il. TECHNICAL BACKGROUND
 A. Large Language Models (LLMs)
+
 LLMs are neural networks that generate text by computing
 the likelihood of generating a sequence of tokens given a
 context [21]. This paper focuses on decoder-only models,
 a.k.a. auto-regressive LLMs. The tokens are pieces of words
-from a vocabulary V. From a context x (-C), x(-1), the
+from a vocabulary VY. From a context a‘-©),...,a(—)), the
 model estimates the probability of each token of V being the
-next. It computes a vector RV of logits, transformed into
-Є
-(P (X(0) = x|x(-),...,x(-1))) ZEV
-·(−1))) rey 
-= softmax(l;0) (1)
-where
-is a temperature. The generation of a sequence
+next. It computes a vector £ € R!”! of logits, transformed into
+
+(P (x =2|r-,, )) = softmax(@;6) (1)
+
+where @ is a temperature. The generation of a sequence
 from the context samples a token from this distribution, then
 appends it to the context and iterates the process. Various
 sampling schemes exist: greedy search, beam search, top-k
 sampling [22], [23], nucleus-sampling (top-p) [24], etc.
+
+x
+
 B. Watermarking Text Generation
--
+
 1) Modification of the Distribution [17], [18], [20]: The
 original distribution (1), denoted p for short, is replaced by a
-similar distribution q F(p, k) where k is a secret key and F
-an arbitrary function. In the work of Kirchenbauer et al. [17],
-the secret key determines a partitioning of V = Gk Uk. The
-greenlist Gk contains 7|V| tokens, where y = [0,1]. The logit
-of every token in the greenlist is incremented by 8 > 0, and
+similar distribution q = F(p, k) where k is a secret key and F
+an arbitrary function. In the work of Kirchenbauer ef al. [17],
+the secret key determines a partitioning of V = G;, U Gy. The
+greenlist G;, contains 7|V| tokens, where + € [0, 1]. The logit
+of every token in the greenlist is incremented by 6 > 0, and
 the softmax operator outputs q. The sampling then proceeds
 as usual. Intuitively, this increases the probabilty of generating
-greenlist tokens. On the other hand, E[F(p, K)] = p so on
+greenlist tokens. On the other hand, E[F(p, K)| = p so on
 expectation over the set of cryptographic keys, watermarking
-does not bias the global distribution of words (K being the
+does not bias the global distribution of words (AK being the
 random variable representing the key).
+
 The detection tokenizes the text and counts how many
 tokens are in their greenlist. More formally, for a text of T
-tokens, the score ST is the number of greenlist tokens (x(t)
-and k(t) respectively indicate the tth token and key):
+tokens, the score Sp is the number of greenlist tokens (x
+and k\ respectively indicate the t" token and key):
+
 T
-ST=1 (2) €).
-Σι (t)).
+Sp = S71 (2 € Guo). @)
 t=1
-1/pv
+
 2) Modification of the Sampling [16], [19]: The watermark
 embedding replaces the traditional sampling schemes by a de-
 terministic process. For instance, Aaronson et al. [16] choose
-the next token by computing x (0) = arg maxvЄV rv where
-p¹ is the distribution (1) and r = [0,1] V a secret vector
+the next token by computing x) = arg maxyey ri/?”, where
+p' is the distribution (1) and r € [0,1]!”! a secret vector
 generated from the secret key k. Intuitively, this encourages
-the generation of tokens that have both high r₁ and pv
-values. It also presents the interesting property that Vv Є V,
-P(X(0) = v) = P₁ over the randomness of the secret vector,
-when distributed uniformly over [0,1] || (demonstration in
+the generation of tokens that have both high r, and p,
+values. It also presents the interesting property that Vu € VY,
+P(X() = v) = py over the randomness of the secret vector,
+when distributed uniformly over [0, 1]!”! (demonstration in
 App. A). In other words, this watermarking does not bias the
 distribution on expectation over the secret vector.
-The detection computes the following score for T tokens:
-ST
+
+The detection computes the following score for T’ tokens:
+
 T
--Σ(1-r%).
+Sr=->on (1 - r,) . (3)
 t=1
-x(t)
-1 (Nucleus sampling can be applied before generating p)
-(3)
+
+‘(Nucleus sampling can be applied before generating p)
+
 C. Quality-Robustness Trade-off
+
 For both methods we can trade off generation quality against
 robustness by varying the watermarking strength. In [17],
-increasing the ♪ parameter increases the generation of green
+increasing the 6 parameter increases the generation of green
 tokens at the risk of including unlikely tokens. In [16],
-increasing the temperature 0 has the same effect, since it
+increasing the temperature 6 has the same effect, since it
 flattens the probability vector (1), thus diminishing the relative
-importance of p₁ over rv.
+importance of p,, over r,,.
+
 D. Key Management
--
--
-The secret key k giving birth to the greenlist Gk in [17] or to
+
+The secret key & giving birth to the greenlist G;, in [17] or to
 the sampling of r in [16] must have a wide diversity. A fixed
 key causes security issues and biases the text generation. One
 possibility is to make it dependent of the time t as proposed
 in [19]. The secret key is then different from one token to
 another. Yet, this brings synchronization issue at the detection
 stage (e.g. when a sentence is deleted). A common practice
-ensuring self-synchronization illustrated in Fig. 1 makes
-the key dependent of the window of h previous tokens: k(t)
-H(x(t−1)
-., x(t-h), k), where H is a cryptographic hash
-function and k the master key. This secret is the seed that
+ensuring self-synchronization - illustrated in Fig. 1 - makes
+the key dependent of the window of h previous tokens: k) =
+H(a-),...,2""),k), where H is a cryptographic hash
+function and & the master key. This secret is the seed that
 initializes a random number generator (RNG) at time t. In turn,
-the RNG is used to generate the greenlist Gk (t) or to sample
-r(t). The width of this window defines a trade-off between
+the RNG is used to generate the greenlist G, +) or to sample
+r‘), The width of this window defines a trade-off between
 diversity of the key and robustness of the watermarking. In
-the specific case where h 0, the key is the same for all
-tokens (k(t) = k), which makes the watermarking particularly
+the specific case where h = 0, the key is the same for all
+tokens (k = k), which makes the watermarking particularly
 robust to text editing [25].
+
 E. Z-Test
-=
+
 The detection tests the hypothesis Ho: “the text is natural”
-(human written or written without watermark), against H₁:
-"the text has been generated with watermark".
+(human written or written without watermark), against H,:
+“the text has been generated with watermark”.
+
 Current approaches [16], [17] approximate the underlying
-distribution of the score ST by using a Z-test. This statistical
+distribution of the score Sp by using a Z-test. This statistical
 hypothesis test determines whether a sample mean differs
 significantly from its expectation when the standard deviation
 is known. It computes the so-called Z statistics:
-Z =
-ST/T-HO
-00/√T
-(4)
-where μo and σ0 are the expectation and standard deviation
+
+_ S/T — bo
+aolvT
+
+where ji9 and oo are the expectation and standard deviation
 per token under the null hypothesis Ho, i.e. when the analyzed
 text is not watermarked. The Z-test is typically used for large
 sample sizes assuming a normal distribution under the null
@@ -212,83 +253,64 @@ hypothesis thanks to the central limit theorem. This assumption
 is key for computing the p-value, i.e. the probability of
 observing a value of Z at least as extreme as the one observed
 z, under the null hypothesis:
-p-value(z) = P(Z > z|Ho) = 1 − §(z),
-(5)
-where is the cumulative distribution function of the normal
+
+(4)
+
+p-value(z) = P(Z > z|Ho) = 1—- ®(z), (5)
+
+where ® is the cumulative distribution function of the normal
 distribution. At detection time, we fix a false positive rate
 (FPR) and flag the text as watermarked if p-value(z) < FPR.
-Empirical FPR
-100
-10-2
-1111
-10-4
-10-6
-10-8
-10-8
-Empirical FPR
-100
-10-2
-11 12
-10-4
-Aaronson et al.
-10-6
-Kirchenbauer et al.
-10-6
-Theoretical FPR
-10-4 10-2
-100
-10-8
-10-8
-10-6
-(a) Z-tests
-Aaronson et al.
-Kirchenbauer et al.
-10-2
-10-4
-Theoretical FPR
-(b) Tests of III-B
-100
-Empirical FPR
-10-2
+
+--- Page 3 ---
+10°
+
 Context width
-when seeding:
-0
-10-4
-1
-2
-Aaronson et al.
-Kirchenbauer et al.
-4
-100
-10-6
-10-6
-10-4
+
+& & & 2 when seeding:
+iy iy fr, 107 g:
+3 3 3 —_
+E E E °
+A A z 10-4 — i!
+#8 10-6 a a —2
+— Aaronson et al. — Aaronson et al. — Aaronson et al.
+” --- Kirchenbauer et al. . --- Kirchenbauer et al. if --- Kirchenbauer et al. —4
+10-8 « LC = = 10-8 LE = = 10-6 4 = = — 6
+10-8 10-6 10-4 10-2100 10-8 10-6 10-4 10-2100 10-6 10-4 10 10°
+Theoretical FPR Theoretical FPR 8
+
+(a) Z-tests (b) Tests of III-B
+
 Theoretical FPR
-10-2
-100
-8
+
 (c) Tests of III-B, rectified with III-C
+
 Fig. 2: Empirical checks of false positive rates for different watermarks and values of the context width h. Results are computed over 10
-master keys × 100k sequences of 256 tokens sampled from Wikipedia. We compare three detection tests: (Left) using Z-tests; (Middle)
+master keys x 100k sequences of 256 tokens sampled from Wikipedia. We compare three detection tests: (Left) using Z-tests; (Middle)
 using new statistical tests presented in III-B; (Right) using the new statistical tests with the rectified scoring strategy of III-C. Theoretical
 values do not hold in practice for Z-tests, even for high values of h, and empirical FPRs do not match theoretical ones. This is solved by
 basing detection on grounded statistical tests and analytic p-values, as well as by revising the scoring strategy.
+
 III. RELIABILITY OF THE DETECTION
+
 In this section, large-scale evaluations of the FPR show
 a gap between theory and practice. It is closed with new
 statistical tests and by rectifying the scoring method.
+
 A. Empirical Validation of FPR with Z-Scores
+
 So far, the FPR has been checked on only around 500
 negative samples [17], [18], [20]. We scale this further and
 select 100k texts from multilingual Wikipedia to cover the
-distribution of natural text. We tokenize with LLAMA's tok-
-enizer, and take T = 256 tokens/text. We run detection tests
+distribution of natural text. We tokenize with LLaMA’s tok-
+enizer, and take J’ = 256 tokens/text. We run detection tests
 with varying window length h when seeding the RNG. We
 repeat this with 10 different master keys, which makes 1M
-detection results under Ho for each method and h value. For
-the detection of the greenlist watermark, we use Y = 0.25.
+detection results under Hg for each method and h value. For
+the detection of the greenlist watermark, we use y = 0.25.
+
 Fig. 2a compares empirical and theoretical FPRs. Theoret-
-ical guarantees do not hold in practice: the empirical FPRS
+ical guarantees do not hold in practice: the empirical FPRs
 are much higher than the theoretical ones. We also observed
 that distributions of p-values were not uniform (which should
 be the case under Ho). Besides, the larger the watermarking
@@ -296,44 +318,53 @@ context window h, the closer we get to theoretical guarantees.
 In pratice, one would need h >> 8 to get reliable p-values,
 but this makes the watermarking method less robust to attacks
 on generated text because it hurts synchronization.
+
 B. New Non-Asymptotical Statistical Tests
+
 The Gaussian assumption of Z-tests breaks down for short
 or repetitive texts. Here are non-asymptotical tests for both
 methods that reduce the gap between empirical and theoretical
 FPR, especially at low FPR values as shown in Fig. 2.
+
 1) Kirchenbauer et al. [17]: Under Ho, we assume that the
-event x(t) = k(t) occurs with probability Y, and that these
-events are i.i.d. Therefore, ST (2) is distributed as a binomial
-of parameters T and y. Consider a text under scrutiny whose
+event x) € G1) occurs with probability y, and that these
+events are i.i.d. Therefore, S'p (2) is distributed as a binomial
+of parameters T’ and . Consider a text under scrutiny whose
 score equals s. The p-value is defined as the probability of
 obtaining a score higher than s under Ho:
-p-value(s) = P(ST > s|Ho) = I√(s, T − s + 1), (6)
-because S B(T,) whose c.d.f. is expressed by Ix (a, b) the
+
+p-value(s) = P(Sr > s|Ho) =1,(s,T-—s+1), ©
+
+because S ~ B(T, 7) whose c.d.f. is expressed by I, (a, b) the
 regularized incomplete Beta function.
-~
+
 2) Aaronson et al. [16]: Under Ho, we assume that the
 text under scrutiny and the secret vector are independent, so
-that rx(t)
-U(0, 1). Therefore, ST (3) follows a г(T, 1)
+that rj.) ie U(0,1). Therefore, Sr (3) follows a I'(T,1)
 distribution. The p-value associated to a score s reads:
-i.i.d.
-~
-p-value(s) = P(ST > s|Ho) :
-г(T, s)
-F(T)
-(7)
-where I is the upper incomplete gamma function. Under H1,
+I(T, s)
+
+MP)?
+where I is the upper incomplete gamma function. Under H,,
+
 the score is expected to be higher as proven in App. A, so the
 p-value is likely to be small.
+
+p-value(s) = P(S'p > s|Ho) =
+
+(7)
+
 C. Rectifying the Detection Scores
+
 Even with grounded statistical tests, empirical FPRs are still
 higher than theoretical ones. In fact, Kirchenbauer et al. [17]
 mention that random variables are only pseudo-random since
 repeated windows generate the same secret. This can happen
 even in a short text and especially in formatted data. For
-instance in a bullet list, the sequence of tokens \n\n* _ repeats
+instance in a bullet list, the sequence of tokens \n\n+*_ repeats
 a lot as shown in Fig. 3. Repetition pulls down the assumption
 of independence necessary for computing the p-values.
+
 We experimented with two simple heuristics mitigating this
 issue at the detection stage. The first one takes into account a
 token only if the watermark context window has not already
@@ -341,133 +372,81 @@ been seen during the detection. The second scores the tokens
 for which the h + 1-tuple formed by {watermark context +
 current token} has not already been seen. Note, that the latter
 is present in [17], although without ablation and without being
-Nes oth rips is a genus of th ri ps in the family Ph la e
-oth rip idae. \n
-\n
+
+Nes oth ri ps is a genus of th ri ps in the family Ph lae
+oth rip idae . \n
+n
 ## Species \n
 \n
-* N es oth rips a lex andra e \n
-* N es oth rips a or ist us \n
-* N es oth ri ps ar to car pi \n
-* N es oth ri ps bad ius \n
-* N es oth ri ps bar row i \n
-* N es oth ri ps bre vic oll is \n
-* N es oth rips brig al owi \n
-* N es oth rips cap ric orn is \n
-* N es oth rips car ver i \n
-* N es oth rips co or ong i \n
+* Nes oth ri ps a lex andrae \n
+*Nes oth rips aor ist us \n
+* Nes oth ri ps ar tocar pi \n
+* Nes oth ri ps bad ius \n
+* Nes oth ri ps bar row i \n
+* Nes oth ri ps bre vic oll is \n
+* Nes oth ri ps brig al owi \n
+* Nes oth ri ps cap ricorn is \n
+
+* Nes oth ri ps car ver i \n
+* Nes oth rips coor ongi \n
+
 Fig. 3: Typical example of a vanilla text with low p-value because
-of repeated tokens. It is 10-21, using the greenlist watermark with
+of repeated tokens. It is 10~*", using the greenlist watermark with
 y = 1/4 and h = 2 on 256 tokens (we only show half of the text).
-TABLE I: Performances on classical free-form generation benchmarks when completion is done with watermarking. h is the watermark
-context width. We report results for methods: Aaronson et al. [16] / Kirchenbauer et al. [17]. “-” means no watermarking.
-GSM8K
-Human Eval MathQA
-Model h
-7B
--
-MBPP
-NQ
-TQA
-Average
-10.3
-1
-10.3 / 11.1
-4
-10.4 / 10.8
-12.8
-12.8/9.8
-12.8/9.2
-13B
-17.2
-15.2
-1
-17.2 / 17.3
-15.2 / 14.6
-4
-17.2 / 16.8
-15.215.9
-30B
-35.1
-1
-4
-35.3 / 35.6
-35.1 / 34.1
-20.1
-20.7 / 20.7
-20.1 / 22.6
-3.0
-2.9 / 2.8
-3.0/2.8
-4.3
-4.3 / 3.6
-4.2 / 4.1
-6.8
-6.9 / 7.5
-6.9/7.0
-18.0
-18.2 / 16.0
-17.8 / 16.4
-23.0
-22.8 / 21.2
-22.6 / 21.2
-21.7
-21.8 / 19.5
-21.8/ 20.2
-56.9
-56.9 / 55.3
-56.9 / 55.1
-20.5
-20.5 / 19.1
-20.419.1
-28.2
-28.2 / 25.1
-28.2 / 24.5
-63.6
-63.6 / 62.2
-63.6 / 62.2
-25.3
-25.2 / 24.0
-25.2 / 24.1
-29.8
-29.6 / 28.8
-29.8 / 28.8
-33.5
-33.5 31.6
-33.5 / 31.6
-70.0
-32.6
-70.0 / 69.0
-70.0 / 68.7
-32.7 / 32.2
-32.6 / 32.1
+
+--- Page 4 ---
+TABLE I: Performances on cla
+
+al free-form generation benchmarks when completion is done with watermarking. h is the watermark
+context width. We report results for methods: Aaronson et al. [16] / Kirchenbauer et al. [17].
+
+means no watermarking.
+
+GSM8K Human Eval MathQA MBPP NQ TQA Average
+
+Model = h
+7B - 10.3 12.8 3.0 18.0 21.7 56.9 20.5
+1 10.3 / 11.1 128/98 2.9/2.8 182/160 218/195 569/55.3 205/19.1
+4 104/108 12.8/9.2 30/28 178/164 218/202 569/551 204/19.1
+13B - 17.2 15.2 4.3 23.0 28.2 63.6 25.3
+1 17.2/17.3 15.2/146 4.3/3.6 22.8/21.2 28.2/25.1 63.6/62.2 25.2/ 24.0
+4 172/168 15.2/15.9 42/41 22.6/21.2 282/245 63.6/62.2 25.2/24.1
+30B - 35.1 20.1 6.8 29.8 33.5 70.0 32.6
+1 35.3 / 35.6 20.7/20.7 69/75 29.6/28.8  33.5/31.6 70.0/69.0  32.7/ 32.2
+4 35.1 /34.1 20.1/22.6 69/7.0 298/288 33.5/31.6 70.0/68.7 32.6 / 32.1
+
 used in further experiments. Of the two, the second one is
 better since it counts more ngrams, and thus has better TPR.
 It can also deal with the specific case of h = 0.
-=
-Figure 2c reports empirical and theoretical FPRS when
+
+Figure 2c reports empirical and theoretical FPRs when
 choosing not to score already seen h + 1-tuples. They now
-match perfectly, except for h O where the FPR is still
+match perfectly, except for h = 0 where the FPR is still
 slightly underestimated. In short, we guarantee FPR thanks
 to new statistical tests and by scoring only tokens for which
 {watermark context + current token} has not been scored.
+
 IV. WATERMARK EVALUATION
+
 This section introduces evaluation with the revised statistical
 tests, and investigate the impact of LLM watermarking on
 classical NLP benchmarks.
+
 A. Robustness Analysis
+
 We now compare watermarking methods by analyzing the
 TPR when detecting watermarked texts. For detection, we
 employ the previous statistical tests and scoring strategy.
 We flag a text as watermarked if its p-value is lower than
-10-5 ensuring an FPR=10-5. For these experiments, we stay
+10~° ensuring an FPR=10~°. For these experiments, we stay
 close to a chatbot scenario. We prompt Guanaco-7b [26], an
-instruction fine-tuned version of LLAMA, with the first 1k
+instruction fine-tuned version of LLaMA, with the first 1k
 prompts from the Alpaca dataset [27]. For generation, we
 use top-p sampling with p = 0.95, and in the case of [17]
-a temperature 0 = 0.8 and y = 1/4. We simulate synonym
+a temperature 6 = 0.8 and y = 1/4. We simulate synonym
 attacks by randomly replacing tokens with probability 0.3
 (other attacks are studied in related work [18]).
+
 Tab. II reports the TPR for different strength of the water-
 mark (see Sect. II-C), and the S-BERT [28] similarity score
 between the generated texts with and without watermarking
@@ -477,65 +456,44 @@ Results in Tab. II reveals different behaviors. For instance,
 strength and quality. Its TPR values ranges from 0.0 to 0.9,
 while [16] is more consistent but fails to achieve TPR higher
 than 0.8 even when the S-BERT score is degraded a lot.
+
 The watermark context width also has a big influence.
-When his low, we observed that repetitions happen more
+When fh is low, we observed that repetitions happen more
 often because the generation is easily biased towards certain
 repetitions of tokens. It leads to average S-BERT scores below
 0.5 and unusable completions. On the other hand, low h also
 makes the watermark more robust, especially for [17]. It is
 also important to note that h has an influence on the number
+
 TABLE II: Robustness analysis of the watermarks, with rectified
-statistical tests. We report the TPR@FPR=10¯5 and the S-BERT
-scores over 10 × 1k completions, for different hyperparameters
-controling the strength of the watermark (8 in [17] and 0 in [16]
-- see Sect. II-C). The ‘TPR aug.' is the TPR when texts are attacked
+statistical tests. We report the TPR@FPR=10~° and the S-BERT
+scores over 10 x 1k completions, for different hyperparameters
+controling the strength of the watermark (6 in [17] and @ in [16]
+- see Sect. II-C). The “TPR aug.’ is the TPR when texts are attacked
 before detection by randomly replacing tokens with probability 0.3.
-Kirchenbauer et al. [17]
-8: 1.0 2.0
-3.0 4.0
-0.63 0.61 0.57 0.50
-0.00 0.16 0.58 0.70
-0.00 0.02 0.20 0.39
-0
-h Metric
-S-BERT
-TPR
-0 : 0.8
-TPR aug.
-Aaronson et al. [16]
-0.9 1.0 1.1
-0.60 0.56 0.52 0.44
-0.20 0.31 0.42 0.51
-0.04 0.06 0.09 0.10
-S-BERT
-0.62 0.61 0.59
-0.55
-1
-TPR
-TPR aug.
-4
-S-BERT
-TPR
-TPR aug.
-0.35 0.51 0.66 0.77
-0.04 0.10 0.20 0.36
-0.62 0.62 0.61 0.59
-0.43 0.59 0.71 0.80
-0.01 0.02 0.06 0.18
-0.63 0.62 0.60 0.56
-0.02 0.41 0.77 0.88
-0.00 0.05 0.30 0.58
-0.62 0.62 0.60 0.57
-0.02 0.44 0.76 0.88
-0.00 0.00 0.03 0.14
+
+Aaronson et al. [16] Kirchenbauer ef al. [17]
+
+h Metric 0:08 0.9 1.0 1.1 6:10 2.0 3.0 4.0
+0 S-BERT 0.60 0.56 0.52 0.44 0.63 0.61 0.57 0.50
+TPR 0.20 0.31 042 0.51 0.00 0.16 0.58 0.70
+TPR aug. 0.04 0.06 0.09 0.10 0.00 0.02 0.20 0.39
+1 S-BERT 0.62 061 0.59 0.55 0.63 0.62 0.60 0.56
+TPR 0.35 0.51 0.66 0.77 0.02 041 0.77 0.88
+TPR aug. 0.04 0.10 0.20 0.36 0.00 0.05 0.30 0.58
+4 S-BERT 0.62 0.62 0.61 0.59 0.62 0.62 0.60 0.57
+TPR 0.43 0.59 0.71 0.80 0.02 0.44 0.76 0.88
+TPR aug. 0.01 0.02 0.06 0.18 0.00 0.00 0.03 0.14
+
 of analyzed tokens since we only score tokens for which the
-h+ 1-tuple has not been seen before (see Sect. III-C). If h is
+h + 1-tuple has not been seen before (see Sect. III-C). If h is
 high, almost all these tuples are new, while if h is low, the
 chance of repeated tuples increases. For instance in our case,
 the average number of scored tokens is around 100 for h = 0,
-and 150 for h = 1 and h 4.
-=
+and 150 for h = 1 and h = 4.
+
 B. Impact of Watermarks on Free-Form Generation Tasks
+
 Previous studies measure the impact on quality using distor-
 tion metrics such as perplexity or similarity score as done in
 Tab. II. However, such metrics are not informative of the utility
@@ -544,27 +502,30 @@ of LLMs lies. Indeed, watermarking LLMs could be harmful
 for tasks that require very precise answers. This section rather
 quantifies the impact on typical NLP benchmarks, in order to
 assess the practicality of watermarking.
+
 LLMs are typically evaluated either by comparing samples
 of plain generation to a set of target references (free-form
 generation) or by comparing the likelihood of a predefined set
 of options in a multiple choice question fashion. The latter
 makes little sense in the case of watermarking, which only
 affects sampling. We therefore limit our evaluations to free-
-form generation tasks. We use the evaluation setup of LLAMA:
+form generation tasks. We use the evaluation setup of LLaMA:
 1) Closed-book Question Answering (Natural Questions [29],
 TriviaQA [30]): we report the 5-shot exact match performance;
 2) Mathematical reasoning (MathQA [31], GSM8k [32]), we
 report exact match performance without majority voting; 3)
 Code generation (HumanEval [33], MBPP [34]), we report
-the pass@1 scores. For [17], we shift logits with d
-= 1.0
+the pass@1 scores. For [17], we shift logits with 6 = 1.0
+
+--- Page 5 ---
 before greedy decoding. For [16], we apply top-p at 0.95 to
 the probability vector, then apply the watermarked sampling.
-Tab. I reports the performance of LLAMA models on the
+
+Tab. I reports the performance of LLaMA models on the
 aforementioned benchmarks, with and without the watermark
 and for different window size h. The performance of the LLM
 is not significantly affected by watermarking. The approach of
-Kirchenbauer et al. (II-B1) is slightly more harmful than the
+Kirchenbauer et al. (II-B 1) is slightly more harmful than the
 one of Aaronson et al. (II-B2), but the difference w.r.t. the
 vanilla model is small. Interestingly, this difference decreases
 as the size of the model increases: models with higher genera-
@@ -574,118 +535,141 @@ is better and thus more robust to small perturbations. Overall,
 evaluating on downstream tasks points out that watermarking
 may introduce factual errors that are not well captured by
 perplexity or similarity scores.
+
 V. ADVANCED DETECTION SCHEMES
+
 This section introduces improvements to the detection
 schemes of Sect. III. Namely, it develops a statistical test when
 access to the LLM is granted, as well as multi-bit decoding.
+
 A. Neyman-Pearson and Simplified Score Function
+
 The following is specific for the scheme of Aaronson et al.
 [16] (a similar work may be conducted with [18]). Under Ho,
-we have rv
-U[0,1], whereas r₁ Beta(1/pv, 1) under H₁
+we have r, ~ Ujo.1j, whereas r, ~ Beta(1/p,,1) under H,
 (see Corollary (14) in App. A). The optimal Neyman-Pearson
 score function is thus:
-T
-~
-~
-T
-fH₁ (rx(t))
-ST = In
-=
-fHo (rx(t))
-Px(t)
--1)
-In(rx(t)) + A
+
+Tr
+Sr yon
 t=1
-t=1
-where A doesn't depend on r and can thus be discarded. There
+
+where A doesn’t depend on r and can thus be discarded. There
 are two drawbacks: (1) detection needs the LLM to compute
-Px(t), (2) there is no close-form formula for the p-value.
+P,(:), (2) there is no close-form formula for the p-value.
 This last point may be fixed by resorting to a Chernoff
-bound, without guarantee on its tightness: p-value(s) ≤
-yet
-"
-eΣ In-cs with c solution of Σ+(c++)-1 = -s and
-At = Px(t)/(1 − Px(t)). Experiments show that this detection
+bound, yet without guarantee on its tightness: p-value(s) <
+
+ei Mx, with c solution of 0,(e+ :)7! = —s and
+At = Pr) /(1 — pew). Experiments show that this detection
 yields extremely low p-values for watermarked text, but they
 are fragile: any attack increases them to the level of the original
 detection scheme (3), or even higher because generated logits
 are sensitive to the overall LLM context. An alternative is to
 remove weighting:
+
 T
-ST
-Σ In (rx(t)),
+
+(2
+
+t=1 \Px®)
+
+fu (ta)
+Suto (Tac))
+
+- 1) In(r,@) +A
+
+Tv
+
+Sr = ona), (8)
 t=1
-whose p-value is given by: p-value(s)
-=
-T(T)
-(8)
-Y(T,-s). In our
+
+whose p-value is given by: p-value(s) = SNC In our
+
 experiments, this score function does not match the original
+
 detection presented in [16].
+
 B. Multi-bit Watermarking
+
 1) Theory: It is rather easy to turn a zero-bit watermarking
 scheme into multi-bit watermarking, by associating a secret
 key per message. The decoding runs detection with every key
 and the decoded message is the one associated to the key
-giving the lowest p-value p. The global p-value becomes 1 -
-(1 - p), where M is the number of possible messages.
+giving the lowest p-value p. The global p-value becomes 1 —
+(1—-p)™, where M is the number of possible messages.
+
 Algorithm 1 Multi-bit watermarking for LLMs
-Requires: model LLM, secret's dimension d = max(M, |V|),
-watermark context width h, message m = {0,..., M – 1}
+
+Requires: model LLM, secret’s dimension d =
+watermark context width h, message m € {0,...,
+
+ee \V}),
+M- 1}
 Generation (one step):
-logits + LLM (x(-),...,x (-1))
-seed
-Hash(x-h), -,x (-1))
-r← RNGseed (d)
-(rm,, rd, ro,.., rm-1)
-r(m) CyclicShift(r, m)
-(0)Sample(l, r(m) 1,...,\v\)
-x
+
+logits £<— LLM (2-©),..., a)
+
+seed + Hash(a~ gD)
+
+r < RNGeeeq (d)
+
+r(m) < CyclicShift(r, m) =
+
+x < Sample(é, r(m)1,
+
+(tims Ym-1)
+
+av)
+
+sTa,Tos +5
+
 Identification:
-S← Od
-for tЄ {h,..., T}:
-seed
-r(t)
-Hash(x(t-h),
-RNGseed (d)
-x(t-1))
-S+S+ CyclicShift(f(r(t)), x(t))
-pp-value (S1,...,M)
-margmin(p)
-p1 (1pm)M
-Running detection for M keys is costly, since it requires M
+S<+0a
+for t € {h,..., T}:
+seed < Hash(a—"),... a“)
+r) < RNG ceca (d)
+S&S +4 CyclicShift( f(r), 2)
+p « p-value(Si,...,.7)
+m + argmin(p)
+p1—-(1—pm)™
+
+Running detection for M keys is costly, since it requires Mf
 generations of the secret vector. This is solved by imposing
-that the secret vectors of the messages m = {0, . . ., M – 1}
-are crafted as circular shifts of m indices of r = = r(0):
-r(m) CyclicShift(r, m)
-=
-= (rm, rm+1, .., rd, ro, .., rm−1).
-།
-Generating r as a d-dimensional vector, with d ≥ |V|, we
-are able to embed M ≤ d different messages, by keeping
+that the secret vectors of the messages m € {0,..., M-1}
+are crafted as circular shifts of m indices of r = r(0):
+
+r(m) = CyclicShift(r, m)
+
+= (Im, Pm41)-5VdsT0, +5 Ym-—1) :
+
+Generating r as a d-dimensional vector, with d > |V|, we
+are able to embed M < d different messages, by keeping
 only the first |V| dimensions of each circularly-shifted vector.
 Thus, the number of messages may exceed the size of the
-token vocabulary |V|.
+token vocabulary |V].
+
 Besides, the scoring functions (2) (3) may be rewritten as:
-T
-Sr(m) = Σ ƒ (r") (m)).
-t=1
-x(t)
-(9)
-where f Rd Rd is a component-wise function, and
-x(t) is the selected token during detection. This represents the
-selection of f (r(t) (m)) at position x(t). From another point
-of view, if we shift f (r(t)) by x(t), the score for m = 0
+
+Ss (r(m)) (9)
+
+where f : R¢ ++ R¢@ is a component-wise function, and
+x) is the selected token during detection. This represents the
+selection of f (r“)(m)) at position «, From another point
+of view, if we shift f(r) by 2, the score for m = 0
 would be its first component, m = 1 its second one, etc. We
 may also write:
+
 T
-ST=CyclicShift (f(r()), 2(t)),
+
+Sr = S~ CyclicShitt (7 (r 0), 2),
 t=1
-(10)
-and the first M components of ST are the scores for each m.
+
+and the first 14 components of Sy are the scores for each m.
+
 As a side note, this is a particular case of the parallel
 computations introduced by Kalker et al. [35].
+
 2) Experiments: In a tracing scenario the message is the
 identifier of a user or a version of the model. The goal is to
 decide if any user or model generated a given text (detection)
@@ -693,44 +677,37 @@ and if so, which one (identification). There are 3 types of
 error: false positive: flag a vanilla text; false negative: miss
 a watermarked text; false accusation: flag a watermarked text
 but select the wrong identifier.
-We simulate M'=1000 users that generate 100 watermarked
+
+We simulate M/’=1000 users that generate 100 watermarked
 texts each, using the Guanaco-7b model. Accuracy can then
-be extrapolated beyond the M' identifiers by adding identifiers
+be extrapolated beyond the M’ identifiers by adding identifiers
+
+(10)
+
+--- Page 6 ---
 TABLE III: Identification accuracy for tracing users by watermarking.
 Sequences are between 4 and 252 tokens long, and 149 on average.
-102 103
-0.72 0.67
-0.77 0.73
-Number of users M
-10
-FPR= 10-3
-FPR= 10-6
-Aaronson et al. [16]
-Kirchenbauer et al. [17]
-Aaronson et al. [16]
-Kirchenbauer et al. [17]
-104
-0.80
-0.62
-0.84
-0.68
-0.61 0.56 0.51 0.46
-0.69 0.64 0.59 0.55
-we use
-we use
-=
-with no associated text, for a total of M > M' users. Text
+
+Number of users MM 10 10? 10% ~— 104
+
+FPR= 10-3 Aaronson ef al. [16] 0.80 0.72 0.67 0.62
+_ Kirchenbauer et al. [17] 0.84 0.77. 0.73 0.68
+FPR= 10-6 Aaronson ef al. [16] 0.61 0.56 0.51 0.46
+_ Kirchenbauer et al. [17] 0.69 0.64 0.59 0.55
+
+with no associated text, for a total of M > M’ users. Text
 generation uses nucleus sampling with top-p at 0.95. For [17],
-3.0, y = 1/4 with temperature 0 at 0.8. For [16],
-1.0. For both, the context width is h = 4. A text
+we use 6 = 3.0, y = 1/4 with temperature @ at 0.8. For [16],
+we use 6 = 1.0. For both, the context width is h = 4. A text
 is deemed watermarked if the score is above a threshold set
 for a given global FPR (see III). Then, the source is identified
 as the user with the lowest p-value.
-Tab. III shows that watermarking enables identification
+
+Tab. Ill shows that watermarking enables identification
 because its performance is dissuasive enough. For example,
-among 105 users, we successfully identify the source of a
+among 10° users, we successfully identify the source of a
 watermarked text 50% of the time while maintaining an FPR
-of 10-6 (as long as the text is not attacked). At this scale,
+of 10~® (as long as the text is not attacked). At this scale,
 the false accusation rate is zero (no wrong identification
 once we flag a generated text) because the threshold is set
 high to avoid FPs, making false accusations unlikely. The
@@ -738,7 +715,9 @@ identification accuracy decreases when M increases, because
 the threshold required to avoid FPs gets higher. In a nutshell,
 by giving the possibility to encode several messages, we trade
 some accuracy of detection against the ability to identify users.
+
 VI. CONCLUSION
+
 This research offers theoretical and empirical insights that
 were kept aside from the literature on watermarks for LLMs.
 Namely, existing methods resort to statistical tests which are
@@ -749,598 +728,362 @@ schemes to consolidate watermarks for LLMs. Further work
 may investigate how to adapt watermarks for more complex
 sampling schemes (e.g. beam search as in [17]), since gener-
 ation yield significantly better quality with these methods.
+
 Overall, we believe that watermarking is both reliable and
 practical. It already holds many promises as a technique for
 identifying and tracing LLM outputs, while being relatively
 new in the context of generative models.
+
 ACKNOWLEDGMENTS
+
 Work supported by ANR / AID under Chaire SAIDA ANR-
 20-CHIA-0011. We also thank Thomas Scialom, Hervé Jégou
 and Matthijs Douze for their insights throughout this work.
+
 REFERENCES
-[1] OpenAI, "ChatGPT: Optimizing language models for dialogue.,❞ 2022.
-[2] AnthropicAI, “Introducing Claude," 2023.
-[3] H. Touvron et al., "Llama: Open and efficient foundation language
-models," arXiv, 2023.
-[4] L. Weidinger et al., “Taxonomy of risks posed by language models," in
+
+[1] OpenAlI, “ChatGPT: Optimizing language models for dialogue.,” 2022.
+
+[2] AnthropicAI, “Introducing Claude,” 2023.
+
+[3] H. Touvron ef al., “Llama: Open and efficient foundation language
+models,” arXiv, 2023.
+
+[4] L. Weidinger er al., “Taxonomy of risks posed by language models,” in
 ACM Conference on Fairness, Accountability, and Transparency, 2022.
-[5] E. Crothers, N. Japkowicz, and H. Viktor, "Machine generated text: A
-comprehensive survey of threat models and detection methods," arXiv,
+
+[5] E. Crothers, N. Japkowicz, and H. Viktor, “Machine generated text: A
+comprehensive survey of threat models and detection methods,” arXiv,
 2022.
-[6] J. P. Cardenuto, J. Yang, R. Padilha, R. Wan, D. Moreira, H. Li, S. Wang,
-F. Andaló, S. Marcel, and A. Rocha, “The age of synthetic realities:
-Challenges and opportunities," arXiv, 2023.
-[7] K. Kertysova, "Artificial intelligence and disinformation: How AI
+
+[6
+
+(7
+
+[8
+
+19
+
+10.
+
+11
+
+15
+
+16
+
+18
+
+19
+20
+21
+22
+23
+24
+25
+26
+
+27
+
+28
+29
+
+30,
+
+31
+
+32
+33
+
+34)
+
+J. P. Cardenuto, J. Yang, R. Padilha, R. Wan, D. Moreira, H. Li, S. Wang,
+F. Andalé, S. Marcel, and A. Rocha, “The age of synthetic realities:
+Challenges and opportunities,” arXiv, 2023.
+
+K. Kertysova, “Artificial intelligence and disinformation: How AI
 changes the way disinformation is produced, disseminated, and can be
-countered," Security and Human Rights, vol. 29, no. 1-4, 2018.
-[8] S. Kreps, R. M. McCain, and M. Brundage, “All the news that's fit to
+countered,” Security and Human Rights, vol. 29, no. 1-4, 2018.
+
+S. Kreps, R. M. McCain, and M. Brundage, “All the news that’s fit to
 fabricate: Ai-generated text as a tool of media misinformation,” Journal
 of experimental political science, 2022.
-[9] E. Kušen and M. Strembeck, “Politics, sentiments, and misinformation:
+
+E. KuSen and M. Strembeck, “Politics, sentiments, and misinformation:
 An analysis of the twitter discussion on the 2016 austrian presidential
-elections," Online Social Networks and Media, 2018.
-[10] M. T. review, "Junk websites filled with ai-generated text are pulling in
-money from programmatic ads," 2023.
-[11] D. Ippolito, D. Duckworth, C. Callison-Burch, and D. Eck, “Automatic
-detection of generated text is easiest when humans are fooled," arXiv,
+elections,’ Online Social Networks and Media, 2018.
+
+M. T. review, “Junk websites filled with ai-generated text are pulling in
+money from programmatic ads,” 2023.
+
+D. Ippolito, D. Duckworth, C. Callison-Burch, and D. Eck, “Automatic
+detection of generated text is easiest when humans are fooled,” arXiv,
 2019.
-[12] E. Mitchell, Y. Lee, A. Khazatsky, C. D. Manning, and C. Finn,
-"Detectgpt: Zero-shot machine-generated text detection using probability
-curvature," arXiv, 2023.
-[13] N. Yu, V. Skripniuk, D. Chen, L. Davis, and M. Fritz, "Responsible
-disclosure of generative models using scalable fingerprinting,” in ICLR,
+
+E. Mitchell, Y. Lee, A. Khazatsky, C. D. Manning, and C. Finn,
+“Detectgpt: Zero-shot machine-generated text detection using probability
+curvature,” arXiv, 2023.
+
+N. Yu, V. Skripniuk, D. Chen, L. Davis, and M. Fritz, “Responsible
+disclosure of generative models using scalable fingerprinting,” in JCLR,
 2022.
-[14] P. Fernandez, G. Couairon, H. Jégou, M. Douze, and T. Furon, "The
-stable signature: Rooting watermarks in latent diffusion models,” ICCV,
+
+P. Fernandez, G. Couairon, H. Jégou, M. Douze, and T. Furon, “The
+stable signature: Rooting watermarks in latent diffusion models,” JCCV,
 2023.
-[15] Y. Wen, J. Kirchenbauer, J. Geiping, and T. Goldstein, "Tree-ring
+
+Y. Wen, J. Kirchenbauer, J. Geiping, and T. Goldstein, “Tree-ring
 watermarks: Fingerprints for diffusion images that are invisible and
-robust," arXiv, 2023.
-[16] S. Aaronson and H. Kirchner, "Watermarking GPT Outputs," 2023.
-[17] J. Kirchenbauer, J. Geiping, Y. Wen, J. Katz, I. Miers, and T. Goldstein,
-"A watermark for large language models," ICML, 2023.
-[18] J. Kirchenbauer, J. Geiping, Y. Wen, M. Shu, K. Saifullah, K. Kong,
-K. Fernando, A. Saha, M. Goldblum, and T. Goldstein, "On the
-reliability of watermarks for large language models," 2023.
-[19] M. Christ, S. Gunn, and O. Zamir, “Undetectable watermarks for
-language models," Cryptology ePrint Archive, 2023.
-[20] X. Zhao, P. Ananth, L. Li, and Y.-X. Wang, “Provable robust water-
-marking for ai-generated text," arXiv, 2023.
-[21] Y. Bengio, R. Ducharme, and P. Vincent, “A neural probabilistic lan-
-guage model," NeurIPS, vol. 13, 2000.
-[22] A. Fan, M. Lewis, and Y. Dauphin, "Hierarchical neural story genera-
-tion," arXiv, 2018.
-[23] A. Radford, J. Wu, R. Child, D. Luan, D. Amodei, I. Sutskever, et al.,
-"Language models are unsupervised multitask learners," OpenAI, 2019.
-[24] A. Holtzman, J. Buys, L. Du, M. Forbes, and Y. Choi, "The curious
-case of neural text degeneration," arXiv, 2019.
-[25] X. Zhao, Y.-X. Wang, and L. Li, “Protecting language generation models
-via invisible watermarking," arXiv, 2023.
-[26] T. Dettmers, A. Pagnoni, A. Holtzman, and L. Zettlemoyer, "Qlora:
-Efficient finetuning of quantized Ilms," arXiv, 2023.
-[27] R. Taori, I. Gulrajani, T. Zhang, Y. Dubois, X. Li, C. Guestrin,
-P. Liang, and T. B. Hashimoto, "Stanford Alpaca: An instruction-
-following LLAMA model," 2023.
-[28] N. Reimers and I. Gurevych, “Sentence-bert: Sentence embeddings using
-siamese bert-networks," arXiv, 2019.
-[29] T. Kwiatkowski et al., “Natural questions: a benchmark for question
-answering research," Trans. of the ACL, vol. 7, 2019.
-[30] M. Joshi, E. Choi, D. S. Weld, and L. Zettlemoyer, "Triviaqa: A large
-scale distantly supervised challenge dataset for reading comprehension,"
+robust,” arXiv, 2023.
+
+S. Aaronson and H. Kirchner, “Watermarking GPT Outputs,” 2023.
+
+J. Kirchenbauer, J. Geiping, Y. Wen, J. Katz, I. Miers, and T. Goldstein,
+“A watermark for large language models,” JCML, 2023.
+
+J. Kirchenbauer, J. Geiping, Y. Wen, M. Shu, K. Saifullah, K. Kong,
+K. Fernando, A. Saha, M. Goldblum, and T. Goldstein, “On the
+reliability of watermarks for large language models,” 2023.
+
+M. Christ, S. Gunn, and O. Zamir, “Undetectable watermarks for
+language models,” Cryptology ePrint Archive, 2023.
+
+X. Zhao, P. Ananth, L. Li, and Y.-X. Wang, “Provable robust water-
+marking for ai-generated text,” arXiv, 2023.
+
+Y. Bengio, R. Ducharme, and P. Vincent, “A neural probabilistic lan-
+guage model,” NeurIPS, vol. 13, 2000.
+
+A. Fan, M. Lewis, and Y. Dauphin, “Hierarchical neural story genera-
+tion,” arXiv, 2018.
+
+A. Radford, J. Wu, R. Child, D. Luan, D. Amodei, I. Sutskever, ef al.,
+“Language models are unsupervised multitask learners,” OpenAI, 2019.
+A. Holtzman, J. Buys, L. Du, M. Forbes, and Y. Choi, “The curious
+case of neural text degeneration,” arXiv, 2019.
+
+X. Zhao, Y.-X. Wang, and L. Li, “Protecting language generation models
+via invisible watermarking,” arXiv, 2023.
+
+T. Dettmers, A. Pagnoni, A. Holtzman, and L. Zettlemoyer, “Qlora:
+Efficient finetuning of quantized Ilms,” arXiv, 2023.
+
+R. Taori, I. Gulrajani, T. Zhang, Y. Dubois, X. Li, C. Guestrin,
+P. Liang, and T. B. Hashimoto, “Stanford Alpaca: An instruction-
+following LLaMA model,” 2023.
+
+N. Reimers and I. Gurevych, “Sentence-bert: Sentence embeddings using
+siamese bert-networks,” arXiv, 2019.
+
+T. Kwiatkowski ef al., “Natural questions: a benchmark for question
+answering research,” Trans. of the ACL, vol. 7, 2019.
+
+M. Joshi, E. Choi, D. S. Weld, and L. Zettlemoyer, “Triviaqa: A large
+scale distantly supervised challenge dataset for reading comprehension,”
 arXiv, 2017.
-[31] D. Hendrycks, C. Burns, S. Kadavath, A. Arora, S. Basart, E. Tang,
+
+D. Hendrycks, C. Burns, S. Kadavath, A. Arora, S. Basart, E. Tang,
 D. Song, and J. Steinhardt, “Measuring mathematical problem solving
-with the math dataset," arXiv, 2021.
-[32] K. Cobbe et al., “Training verifiers to solve math word problems," arXiv,
+with the math dataset,” arXiv, 2021.
+
+K. Cobbe et al., “Training verifiers to solve math word problems,” arXiv,
 2021.
-[33] M. Chen et al., “Evaluating large language models trained on code,"
+
+M. Chen et al., “Evaluating large language models trained on code,”
 arXiv, 2021.
-[34] J. Austin, A. Odena, M. Nye, M. Bosma, H. Michalewski, D. Dohan,
+
+J. Austin, A. Odena, M. Nye, M. Bosma, H. Michalewski, D. Dohan,
 E. Jiang, C. Cai, M. Terry, Q. Le, and C. Sutton, “Program synthesis
-with large language models," 2021.
-[35] T. Kalker, G. Depovere, J. Haitsma, and M. Maes, "Video watermarking
+with large language models,” 2021.
+
+T. Kalker, G. Depovere, J. Haitsma, and M. Maes, “Video watermarking
 system for broadcast monitoring,” in Proc. of SPIE, Security and
 Watermarking of Multimedia Contents, vol. 3657, 1999.
+
+--- Page 7 ---
 APPENDIX
 A. Demonstrations for [16]
 1) Sampling probability
-=
-Proposition. Consider a discrete distribution p
-Let V*
-R/P. Then P(V* = v) = Pv.
-= arg maxv
-iid
-(P1,, pv) and V random variables R
-=
-(R1,..., Ry) s.t. Rv
-U[0,1].
-==
-In(R). By
-Pv
-Proof. For any v € V, R₁ id U[0,1] so, - In(R₁) follows an exponential distribution ε(1). Let Zv
-construction, Z₁, ~ ε(pv), with density fz, (z) = p₁e Pvz. We now have:
-1
-V*
-=
-arg max Rev
-Pv
-=
-arg min Zv.
-v
-(11)
-บ
+Proposition. Consider a discrete distribution p = (p1,...,pv) and V random variables R = (R1,..., Ry) s.t. Ry ces Uo,1)-
+Let V* = arg max, Ri/?*. Then P(V* =v) =p.
+Proof. For any v € Y, R, Esa Ur) so, —In(R,) follows an exponential distribution €(1). Let Z, := — i (Ry). By
+construction, Z, ~ E(py), with density fz,(z) = pye?’’*. We now have:
+
+a
+gs gs
+v v
+
 A well known result about exponential laws is that (see the-gumbel-trick for following lines):
-Z =
-min Zv
-บ
-P(V* = v) = Pu
-Σ; Ρ;
-~
-εΣ ) = ε (1),
-(Σp)
-= Pv.
-(12)
-(13)
+
+Z = mnZ,~€ (=».) =E(1), (12)
+
+v
+
+Po
+P(V* =v) =Ppy- (13)
+Pi
 This shows that for a given secret vector r, the watermarking chooses a word which may be unlikely (low probability
-pv). Yet, on expectation over the secret keys, ie. over r.v. R (R1,...,
-1,..., 
-Ry), the distribution of the chosen token follows
+pv~). Yet, on expectation over the secret keys, ie. over rv. R = (Rj,..., Ry), the distribution of the chosen token follows
 the distribution given by the LLM.
-=
-Corollary. Ry*
+
+Corollary. Ry+ ~ Beta(1/py+,1).
+
 Proof.
-~
-Beta(1/pv*, 1).
-1
-Z = Zy⭑
-==
-PV⭑
-- ln(Ry×) ~ E(1),
-which translates to Ry* = e¯PvE with E ~ Ɛ(1), with p.d.f. fRv⋆(r)
+Z= 2. =-—-In(Ry-) ~ €(1), (14)
+Pv*
+
+14
+
+which translates to Ry» = e~?v*” with E ~ €(1), with p.df. fry. (r) = a . Therefore, Ry» ~ Beta(1/py~,1).
+
 2) Detection
--1
-г PV⭑
-=
-PV⭑
-Therefore, Ry*
-~
-(14)
-Beta(1/py*, 1).
-=
-x(t)
-R(t) and Pt=Px(t)
-(t)
-at time-step t. The score is
-We denote by x(1), ,x (T) the sequence of tokens in the text, by p(t) the probability vector output by the LLM and by
-the key random vector at time-step t. We define Rt:
-ln(1 – Rt).
-R(t) = [0,1]
-ST =
-=1
--
+
+We denote by a“),...,a°7 the sequence of tokens in the text, by p“ the probability vector output by the LLM and by
+R% € (0, ia the key random vector at time-step t. We define R; := RO, and p, := p, at time-step t. The score is
+; Tr w Fa
+
+Sp =-S7, m1 — Ry).
+
 Proposition (p-value under Ho). The p-value associated to a score s is defined as:
-p-value(s) = P(ST > s|Ho)
--
-г(T, s)
-г(T)
-"
+I(T, s)
+
+p-value(s) = P(Sp > s|Ho) = TT) °
+
 (15)
-where (T, s) is the upper incomplete gamma function.
-iid
-Proof. Under Ho, the assumption is s.t. Rt U[0,1]. Then, In(1 - Rt) follows an exponential distribution ε(1). Therefore
-S~F(T,1) (see sum of Gamma distributions). Therefore the p-value associated to a score s is
-p-value(s) = 1
--
-Y(T, s)
-г(T)
-г(T, s)
-г(T)
-"
-where Ã(T, s) is the upper incomplete gamma function, y(T, s) is the lower incomplete gamma function.
+where ['(T, s) is the upper incomplete gamma function.
+
+Proof. Under Ho, the assumption is s.t. Ry ig Yo,1)- Then, —In(1 — R;) follows an exponential distribution €(1). Therefore
+S ~T(T,1) (see sum of Gamma distributions). Therefore the p-value associated to a score s is
+
+(2,8) _ L(P,s)
+
+-value(s) = 1 — ; 16
+p-value(s) Tay = 16)
+where I'(T, s) is the upper incomplete gamma function, y(T', s) is the /ower incomplete gamma function.
 Corollary. Per token,
-(16)
-Ho= E(ST/T|H0) = 1,
-σ = V(ST/T|Ho) = 1/T.
-(17)
-Proposition (Bound on expected score under H1). Under H₁, E(ST) ≥ T +
+to = E(Sr/T|Ho) =1, 99 = V(Sr/T|Ho) = 1/T. (17)
+
+2
+Proposition (Bound on expected score under H1). Under Hy, E(Sr) > T + (= - 1) Hr, where Hy = — vw, pr n(pe)
+
 is the entropy of the completion.
-6
-(쯩-1)
-HT, where HT
-=
-Σ_1 Pt ln(pt)
-Proof. From (14), R₁ = exp(−ptE) with E ~ Ɛ(1), so:
-T
-(PE))]
-E(S) = -E Σ In(1 exp(−ptE))
-T
+
+--- Page 8 ---
+Proof. From (14), Ry = exp(—prE) with E ~ €(1), so:
+
+E(S) =—E
+
+Yona - ex-ne)|
+
 t=1
--Ptx -x
-- e
+
+T 0
+= ->/ In(l—e ?**)e*dx
+t=1 70
+
+T 1 1
+->/ rl/pe-1( In(1 — r))dr
+1=1/0 Pt
+
+(by change of variable x = —1/p;In(r) )
+
+Then, using integration by parts with uw = 1—r!/?* and v = In(1 —r), the integral becomes:
+
+1 14 _ pl/pe
+
+1 1
+
+-| a rlm'in(a ryder = [ a ar = Hyp,
+0 Pt 0 l-r
+
+where H., is the z-th harmonic number also defined as H, = ean i - wee Therefore, we have:
+1 oo
+1 1 1
+-| —r/Pe-lin(l — r)dr = Ss = - —__
+o Pt Aan n+ 1/y
 0
-1
-11/pt-1 (-In(1 − r))dr
-0
-Pt
-(by change of variable x = -1/pt ln(r) )
-Then, using integration by parts with u = 1 − r¹/Pt and v = ln(1 − r), the integral becomes:
-=
-H1/pt
-1/Pt-1
--
-Pt
-' ln(1 − r)dr = √
-1 — r1/Pt
-1- r
-dr
-where H₂ is the z-th harmonic number also defined as H₂ = Σn=1 —
-1
-1
-Therefore, we have:
-n+z
-- S
-∞
-1
-/pt-1 In(1 − r)dr = Σ
-1
-1
-Jo Pt
-n
-n+1/pt
-n=1
-∞
-1
-1
-Now, Vn EN*, we have:
-(n + 1)²
-(+1
-1
-=
-n+1/pt
-=
-1+
-n=1
-n+1 n+1/pt
-(n+1)(n+1/pt) − (n + 1)²
-1+n
-1/pt + n
-1+n
-n+1/pt
-(1/pt - 1)
-1/pt + n
-> - pt ln(pt).
-In(pt)
-Therefore, by summing over all t = [1,T],
-Σ
-E(S) ≥T + Σ
-=T+
-n=1
-1
-(n + 1)²
-(쯩-1) 5
-HT.
-T
-t=1
--Pt
-t ln(pt)
-Proposition (Variance of score under H₁). V(ST) ≤T
-П²
+1 1
+14 - .
+» n+1 n+1/y
+Now, Vn € N*, we have:
+(n +1? 1 1 — (n+1)(n+1/p:) — (n +:1)?
+‘ n+1 n+1/y n+1/p
+l+n
+= —— (1 -1
+I/p: rn /Dt )
+l+n n(p,)
+U/pptn Pt
+> — pe ln(pz)
+Therefore, by summing over all ¢ € [1, T],
+oo 1 T
+n=1 t=1
+2
+=T+ (= - 1) Hr.
 6
-Proof. For Rt ~ Beta(1/pt, 1):
-V(ln(1 − Rt)) = ¥₁ (1) − ¥1 (1 + 1/pt)
-(18)
--
-where 1 is the trigamma function, which can be expressed as the following serie 41(z) = x²-01/(n + z)². Then
-V1(1) : π²/6 and ₁(1+1/pt) > 0, so that V(ln(1 − Rt)) ≤ π²/6. The results comes because the sampled tokens are
+we
+Proposition (Variance of score under H,). V(Sr) < TT:
+Proof. For R, ~ Beta(1/p,, 1):
+V(In(1 — Rz)) = (1) — (1 + 1/pe) (18)
+where 7, is the trigamma function, which can be expressed as the following serie 7,(z) = ean 1/(n + z)?. Then
+
+wi(1) = 7?/6 and ui(1 + 1/p,) > 0, so that V(In(1 — R,)) < 77/6. The results comes because the sampled tokens are
 independent.
-=
+
 B. Free-form evaluations
+
 We provide in Table IV the full results of the free-form evaluations of the different models. This extends the results of
 Table I in the main paper. The models are evaluated with the same evaluation protocol as in LLaMA.
+
+--- Page 9 ---
 TABLE IV
-GSM8K
-Human Eval
-MathQA
-MBPP NQ TQA
-Average
-Model
-WM Method
-h
-7B
-None
-10.31
-12.80
-2.96
-18.00 21.72 56.89
-20.45
-Aaronson et al.
-0
-10.54
-12.80
-3.00
-18.00 21.77
-56.88
-20.50
-1
-10.31
-12.80
-2.88
-18.20 21.75 56.87
-20.47
-2
-10.31
-12.80
-2.94
-18.00 21.75 56.86
-20.44
-3
-10.39
-12.80
-2.96
-18.20 21.69 56.85
-20.48
-4
-10.39
-12.80
-2.98
-17.80 21.80 56.88
-20.44
-6
-10.61
-12.80
-2.96
-18.00 21.75
-56.86
-20.50
-8
-10.46
-12.80
-2.90
-18.20 21.75
-56.85
-20.49
-Kirchenbauer et al.
-0
-9.63
-12.80
-2.20
-16.20 20.06
-55.09
-19.33
-1
-11.14
-9.76
-2.82
-16.00 19.50
-55.30
-19.09
-2
-11.07
-6.71
-2.62
-16.00 20.44
-55.07
-18.65
-3
-10.16
-10.98
-2.38
-14.40 20.08
-55.65
-18.94
-4
-10.77
-9.15
-2.76 16.40
-20.17 55.14
-19.06
-6
-10.01
-9.76
-3.16
-17.00 20.78
-54.90
-19.27
-8
-11.37
-11.59
-2.90
-16.40 20.66
-55.36
-19.71
-13B
-None
-17.21
-15.24
-4.30
-23.00 28.17
-63.60
-25.25
-Aaronson et al.
-0
-17.29
-15.24
-4.24
-22.80 28.17
-63.60
-25.22
-1
-17.21
-15.24
-4.30
-22.80 28.20
-63.61
-25.23
-2
-17.51
-15.24
-4.20
-22.80 28.20 63.59
-25.26
-3
-17.44
-15.24
-4.22
-22.60 28.23
-63.57
-25.22
-4
-17.21
-15.24
-4.20
-22.60 28.20 63.63
-25.18
-6
-16.98
-15.24
-4.28
-23.20 28.23 63.61
-25.26
-8
-17.21
-15.24
-4.22
-22.80 28.20 63.62
-25.22
-Kirchenbauer et al.
-0
-14.33
-14.02
-3.04
-20.80 24.32
-62.13
-23.11
-1
-17.29
-14.63
-3.62 21.20 25.12
-62.23
-24.02
-2
-16.45
-11.59
-3.54
-20.60 25.54 62.44
-23.36
-3
-17.06
-16.46
-3.58
-19.80 25.90 62.37
-24.20
-4
-16.76
-15.85
-4.08
-21.20 24.49 62.24
-24.10
-6
-15.85
-14.63
-4.00
-18.20 26.32 62.19
-23.53
-8
-17.29
-14.63
-3.68
-21.00 25.46
-62.17
-24.04
-30B
-None
--
-35.10
-20.12
-6.80
-29.80 33.55
-70.00
-32.56
-Aaronson et al.
-0
-35.48
-20.12
-6.88
-29.80 33.52 69.98
-32.63
-1
-35.33
-20.73
-6.88
-29.60 33.52 70.03
-32.68
-2
-35.33
-20.73
-6.94
-30.00 33.49
-70.00
-32.75
-3
-35.71
-20.73
-6.92
-30.00 33.52 70.02
-32.82
-4
-35.10
-20.12
-6.90
-29.80 33.49
-70.01
-32.57
-6
-35.33
-20.73
-6.86
-29.80 33.49 69.98
-32.70
-8
-35.33
-20.73
-6.94
-30.00 33.52 70.01
-32.75
-Kirchenbauer et al.
-0
-31.84
-21.95
-6.88
-28.40 31.66 69.03
-31.63
-1
-35.56
-20.73
-7.54
-28.80 31.58 68.98
-32.20
-2
-33.21
-17.07
-6.48
-27.40 31.83 69.44
-30.91
-3
-33.89
-24.39
-6.54
-27.80 32.49 69.22
-32.39
-4
-34.12
-22.56
-6.96
-28.80 31.55 68.74
-32.12
-6
-34.34
-24.39
-7.32
-29.80 31.63 69.08
-32.76
-8
-34.95
-20.12
-7.42
-27.20 32.08 69.31
-31.85
+
+GSM8K Human Eval MathQA MBPP NQ TQA Average
+
+Model WM Method h
+7B None - 12.80 2.96 18.00 21.72 56.89 20.45
+Aaronson et al. 0 12.80 3.00 18.00 21.77 56.88 20.50
+1 12.80 2.88 18.20 21.75 56.87 20.47
+2 12.80 2.94 18.00 21.75 56.86 20.44
+3 12.80 2.96 18.20 21.69 56.85 20.48
+4 12.80 2.98 17.80 21.80 56.88 20.44
+6 12.80 2.96 18.00 21.75 56.86 20.50
+8 12.80 2.90 18.20 21.75 56.85 20.49
+Kirchenbauer et al. 0 12.80 2.20 16.20 20.06 55.09 19.33
+1 9.76 2.82 16.00 19.50 55.30 19.09
+2 6.71 2.62 16.00 20.44 55.07 18.65
+3 10.98 2.38 14.40 20.08 55.65 18.94
+4 9.15 2.76 16.40 20.17 55.14 19.06
+6 9.76 3.16 17.00 20.78 54.90 19.27
+8 11.59 2.90 16.40 20.66 55.36 19.71
+13B None - 15.24 4.30 23.00 28.17 63.60 25.25
+Aaronson et al. 0 15.24 4.24 22.80 28.17 63.60 25.22
+1 15.24 4.30 22.80 28.20 63.61 25.23
+2 15.24 4.20 22.80 28.20 63.59 25.26
+3 15.24 4.22 22.60 28.23 63.57 25.22
+4 15.24 4.20 22.60 28.20 63.63 25.18
+6 15.24 4.28 23.20 28.23 63.61 25.26
+8 15.24 4.22 22.80 28.20 63.62 25.22
+Kirchenbauer et al. 0 14.02 3.04 20.80 24.32 62.13 23.11
+1 14.63 3.62 21.20 25.12 62.23 24.02
+2 11.59 3.54 20.60 25.54 62.44 23.36
+3 16.46 3.58 19.80 25.90 62.37 24.20
+4 15.85 4.08 21.20 2449 62.24 24.10
+6 14.63 4.00 18.20 26.32 62.19 23.53
+8 14.63 3.68 21.00 25.46 62.17 24.04
+30B None - 20.12 6.80 29.80 33.55 70.00 32.56
+Aaronson et al. 0 20.12 6.88 29.80 33.52 69.98 32.63
+1 20.73 6.88 29.60 33.52 70.03 32.68
+2 20.73 6.94 30.00 33.49 70.00 32.75
+3 20.73 6.92 30.00 33.52 70.02 32.82
+4 20.12 6.90 29.80 33.49 70.01 32.57
+6 20.73 6.86 29.80 33.49 69.98 32.70
+8 20.73 6.94 30.00 33.52 70.01 32.75
+Kirchenbauer et al. 0 21.95 6.88 28.40 31.66 69.03 31.63
+1 20.73 7.54 28.80 31.58 68.98 32.20
+2 17.07 6.48 2740 31.83 69.44 30.91
+3 24.39 6.54 27.80 32.49 69.22 32.39
+4 22.56 6.96 28.80 31.55 68.74 32.12
+6 24.39 7.32 29.80 31.63 69.08 32.76
+8 20.12 7.42 27.20 32.08 69.31 31.85
+
+

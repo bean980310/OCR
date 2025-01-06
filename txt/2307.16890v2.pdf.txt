@@ -1,12 +1,17 @@
-arXiv:2307.16890v2 [cs.RO] 13 Oct 2023
+--- Page 1 ---
+2307.16890v2 [cs.RO] 13 Oct 2023
+
+arXiv
+
 Discovering Adaptable Symbolic Algorithms from Scratch
-Stephen Kelly 1,4, Daniel S. Park¹, Xingyou Song1,2, Mitchell McIntire³, Pranav Nashikkar³,
-Ritam Guha 5, Wolfgang Banzhaf5, Kalyanmoy Deb5, Vishnu Naresh Boddeti5, Jie Tan¹,2, Esteban Real 1,2
-¹ Google Research, 2 Google DeepMind, ³ Google, 4McMaster University, 5 Michigan State University
-Abstract
-Autonomous robots deployed in the real world
+
+Stephen Kelly!4, Daniel S. Park!, Xingyou Song! ?, Mitchell McIntire®, Pranav Nashikkar?,
+Ritam Guha’, Wolfgang Banzhaf?, Kalyanmoy Deb®, Vishnu Naresh Boddeti?, Jie Tan!?, Esteban Real!:?
+‘Google Research, ? Google DeepMind, “Google, “McMaster University, "Michigan State University
+
+Abstract— Autonomous robots deployed in the real world
 will need control policies that rapidly adapt to environmental
-changes. To this end, we propose Auto Robotics-Zero (ARZ),
+changes. To this end, we propose AutoRobotics-Zero (ARZ),
 a method based on AutoML-Zero that discovers zero-shot
 adaptable policies from scratch. In contrast to neural network
 adaptation policies, where only model parameters are optimized,
@@ -23,12 +28,14 @@ challenging non-stationary control task dubbed Cataclysmic
 Cartpole. Results confirm our findings that ARZ is significantly
 more robust to sudden environmental changes and can build
 simple, interpretable control policies.
+
 I. INTRODUCTION
+
 Robots deployed in the real world will inevitably face
-many environmental changes. For example, robots' internal
+many environmental changes. For example, robots’ internal
 conditions, such as battery levels and physical wear-and-tear,
 and external conditions, such as new terrain or obstacles,
-imply that the system's dynamics are non-stationary. In these
+imply that the system’s dynamics are non-stationary. In these
 situations, a static controller that always maps the same state
 to the same action is rarely optimal. Robots must be capable
 of continuously adapting their control policy in response to the
@@ -45,55 +52,65 @@ poor generalization and long inference time; and (3) difficult
 to interpret. Ideally, we would like to find a policy that can
 express multiple modes of behavior while still being simple
 and interpretable.
+
 We propose AutoRobotics-Zero (ARZ), a new framework
 based on AutoML-Zero (AMLZ) [3] to specifically support
 the evolution of dynamic, self-modifying control policies in a
 realistic quadruped robot adaptation task. We represent these
+
 Published and Best Overall Paper Finalist at IROS 2023.
-Videos: https://youtu.be/SEFP1Hay4nE
-Correspondence: spkelly@mcmaster.ca
-# wX: vector memory at address X.
+Videos: |https: //youtu.be/sEFP 1Hay4nE
+Correspondence:
+
+# wX: vector memory at addr
 def f(x, v, i):
-WO = copy(v)
-W0 [i] = 0
-w1 = abs(v)
-w1 [0] -0.858343 * norm (w2)
-w2wO WO
+
+wO = copy(v)
+
+wo[i] = 0
+
+wi = abs(v)
+
+wi[0] = -0.858343 * norm(w2)
+
+w2 = wO * wO
+
 return log(x), wi
-# SX: scalar memory at address X.
-# vX: vector memory at address X.
-#obs, action: observation and action vectors.
+
+# obs, action: observation
 def GetAction(obs, action):
-if s13s15: s5 = -0.920261 * s15
-if s15 < s12: s8, v14, 113 = 0, min(v8, sqrt (min(0, v3))), −1
-if s1s7: s7, action = f(s12, v0, 18)
-action = heaviside (v12)
-if s13 <s2: s15, v3 = f(s10, v7, 12)
-if s2s0: s11, v9, 113 = 0, 0, -1
-s7 arcsin (s15)
-if ss13: s3 = -0.920261 * s13
-s12 dot (v3, obs)
-s1, s3, s15 = maximum (s3, s5), cos(s3), 0.947679 * s2
-if s2s8: s5, v13, i5 = 0, min(v3, sqrt (min (0, v13))), -1
-if s6s0: s15, v9, i11 = 0, 0, -1
-if s2 s3: s2, v7 = f3(s8, v12, 11)
-if s1 < s6: s13, v14, 13 = 0, min(v8, sqrt (min(0, 0))), -1
-if s13s2: s7 = -0.920261 * s2
-if ss1: s3 = -0.920261 * s1
-if ss1 s8, action = f(s5, v15, 13)
-if ss13: s5, v7 = f(s15, v7, i15)
-s2s10 + s3
-if s7s12: s11, v13 = f(s9, v15, i5)
-if s4s11: s0, v9, 113 = 0, 0, -1
-s10, action [15] = sqrt(s7), s6
-if s7s9: s15 = 0
-if s14s11: s3 = -0.920261 * s11
-if s8s5: s10, v15, i1 = 0, min(v13, sqrt (min(0, 0))), -1
+if s13 < s15: s5 = -0.920261 * si5
+if si5 < si2: s8, v14, i13 = 0, min(v8, sqrt(min(0, v3))), -1
+if sl <s7: s7, action = £(s12, vO, i8)
+action = heaviside(v12)
+if s13 < s2: s15, v3 = £(s10, v7, i2)
+if s2<s0: sll, v9, i13 = 0, 0, -1
+s7 = arcsin(s15)
+if s1 < s13: s3 = -0.920261 * s13
+s12 = dot(v3, obs)
+si, s3, s15 = maximum(s3, s5), cos(s3), 0.947679 * s2
+if s2 <s8: s5, vi3, i5 = 0, min(v3, sqrt(min(0, v13))), -1
+if s6 < s0: s15, v9, i11 = 0, 0, -1
+if s2 <s3: s2, v7 = £3(s8, v12, il)
+if si < s6: s13, v4, i3 = 0, min(v8, sqrt(min(0, v0))), -1
+if s13 < s2: s7 = -0.920261 * s2
+if s0 < si: s3 = -0.920261 * si
+if s7 < si: s8, action = f(s5, v15, i3)
+if sO < si3: s5, v7 = £(s15, v7, i15)
+s2 = s10 + s3
+if s7 < si2: sll, v13 = £(s9, v15, iS)
+if s4 < sil: s0, v9, i13 = 0, 0, -1
+s10, action[i5] = sqrt(s7), s6
+if s7 < s9: s15
+if s14 < s11: s3 = -0.920261 * sil
+if s8 < s5: s10, vi5, i1 = 0, min(v13, sqrt(min(0, vO))), -1
 return action
+
 Fig. 1: Automatically discovered Python code representing an adaptable
 policy for a realistic quadruped robot simulator (top-right inset). This evolved
 policy outperforms MLP and LSTM baselines when a random leg is suddenly
 broken at a random time. (Lines in red will be discussed in the text).
+
 policies as programs instead of neural networks and demon-
 strate how the adaptable policy and its initial parameters
 can be evolved from scratch using only basic mathematical
@@ -108,17 +125,20 @@ simulator for the actual Laikago robot [4]. To facilitate this,
 we shifted away from the supervised learning paradigm of
 AMLZ. We show that evolved programs can adapt during
 their lifetime without explicitly receiving any supervised input
+
+--- Page 2 ---
 (such as a reward signal). Furthermore, while AMLZ relied on
 the hand-crafted application of three discovered functions, we
 allow the number of functions used in the evolved programs
 to be determined by the evolutionary process itself. To do this,
-we use conditional automatically defined functions (CADFS)
+we use conditional automatically defined functions (CADFs)
 and demonstrate their impact. With this approach, we find that
 evolved adaptable policies are significantly simpler than state-
 of-the-art solutions from the literature because evolutionary
 search begins with minimal programs and incrementally adds
 complexity through interaction with the task domain. Their
 behavior is highly interpretable as a result.
+
 In the quadruped robot, ARZ is able to evolve adaptable
 policies that maintain forward locomotion and avoid falling,
 even when all motors on a randomly selected leg fail
@@ -128,6 +148,7 @@ hyperparameter tuning and being trained with state-of-the-art
 reinforcement learning methods, MLP and LSTM baselines
 are unable to learn robust behaviors under such challenging
 conditions.
+
 While the quadruped is a realistic complex task, simulating
 the real robot is time-consuming. Due to the lack of efficient
 yet challenging benchmarks for adaptive control, we created a
@@ -136,18 +157,23 @@ our analysis on this task with similar findings. In both cases,
 we provide a detailed analysis of evolved control programs
 to explain how they work, something notoriously difficult
 with black box neural network representations.
+
 In summary, this paper develops an evolutionary method
 for the automated discovery of adaptable robotic policies
 from scratch. We applied the method to two tasks in
 which adaptation is critical, Quadruped Leg-Breaking and
 Cataclysmic Cartpole. On each task, the resulting policies:
-surpass carefully-trained MLP and LSTM baselines;
-•
-•
-are represented as interpretable, symbolic programs; and
-• use fewer parameters and operations than the baselines.
-These points are demonstrated for each task in Section V.
-II. RELATED WORK
+
+© surpass carefully-trained MLP and LSTM baselines;
+
+* are represented as interpretable, symbolic programs; and
+
+¢ use fewer parameters and operations than the baselines.
+
+These points are demonstrated for each task in Section [V|
+
+Il. RELATED WORK
+
 Early demonstrations of Genetic Programming (GP) estab-
 lished its power to evolve optimal nonlinear control policies
 from scratch that were also simple and interpretable [5]. More
@@ -157,6 +183,7 @@ Learning into interpretable and explainable programs without
 sacrificing control quality [6]. In this work, we extend these
 methods to evolve programs that can change their behavior
 in response to a changing environment.
+
 We demonstrate how to automatically discover a controller
 that can context switch between distinct behavior modes
 when it encounters diverse tasks, thus avoiding trade-offs
@@ -166,6 +193,7 @@ change a robot is likely to encounter, we can simulate
 environments similar to the expected changes and focus on
 building multitask control policies [2], [7]. In this case, some
 form of domain randomization [8] is typically employed
+
 to expose candidate policies to a breadth of task dynamics.
 However, policies trained with domain randomization often
 trade optimality in any particular environment dynamics
@@ -179,6 +207,7 @@ curriculum learning. This alleviates some burden on robotics
 engineers and reduces researcher bias toward known machine
 learning algorithms, opening the possibility for a complex
 adaptive system to discover something new.
+
 In addition to anticipated non-stationary dynamics, another
 important class of adaptation tasks in robotics is sim-to-
 real transfer [11], where the robot needs to adapt policies
@@ -187,61 +216,66 @@ real-world. Successful approaches to learn adaptive policies
 can be categorized by three broad areas of innovation: (1)
 New adaptation operators that allow policies to quickly tune
 their model parameters within a small number of interactions
-[10], [11], [12], [13]; (2) Modular policy structures that
+10], [11], [12], [13]; (2) Modular policy structures that
 separate the policy from the adaptation algorithm and/or
 world model, allowing both to be learned [14], [15], [16],
-[17]; and (3) Hierarchical methods that allow a diverse set
+17]; and (3) Hierarchical methods that allow a diverse set
 of complete or partial behaviors to be dynamically switched
 in and out of use at run-time, adapting by selecting the
 best strategy for the current environmental situation [9],
-[2], [18]. These algorithmic models of behavioral plasticity,
+2], [18]. These algorithmic models of behavioral plasticity,
 modular structure, and hierarchical representations reflect the
-fundamental properties of meta-learning. In nature, these
+undamental properties of meta-learning. In nature, these
 properties emerged through adaptation at two timescales
 (evolution and lifetime learning) [19]. ARZ makes these two
 time scales explicit by implementing an evolutionary search
-loop that acts on a "genome" of code, and an evaluation that
-steps through an episode which is analogous to the "lifetime"
+loop that acts on a “genome” of code, and an evaluation that
+steps through an episode which is analogous to the “lifetime”
 of the robot.
-III. METHODS
+
+Ill. METHODS
 A. Algorithm Representation
+
 As in the original AutoML-Zero [3], policies are rep-
 resented as linear register machines that act on virtual
 memory [20]. In this work, we support four types of memory:
-scalar, vector, matrix, and index (e.g. s1, v1, m1, i1).
+scalar, vector, matrix, and index (e.g. si, v1, m1, i1).
 Scalar, vector, and matrix memory are floating-point, while
 index memory stores integers. Algorithms are composed of
-two core functions: StartEpisode () and GetAction().
+two core functions: StartEpisode() and GetAction().
 StartEpisode() runs once at the start of each episode
 of interaction with the environment. Its sole purpose is
 to initialize the contents of virtual memory with evolved
 constants. The content of these memories at any point in
-time can be characterized as the control program's state. Our
+time can be characterized as the control program’s state. Our
 goal is to discover algorithms that can adapt by tuning their
 memory state or altering their control code on-the-fly while
 interacting with their environment. This adaptation, as well
-as the algorithm's decision-making policy, are implemented
+as the algorithm’s decision-making policy, are implemented
 by the GetAction() function, in which each instruction
-executes a single operation (e.g.s0=s7*s1 or s3=v1 [12]).
-We define a large library of operations (Table S2) and place no
+
+--- Page 3 ---
+executes a single operation (e.g.s0=s7*s1 or s3=v1[i2]).
+We define a large library of operations (Table[S2p and place no
 bounds on the complexity of programs. Evolutionary search
 is employed to discover what sequence of operations and
 associated memory addresses appear in the GetAction()
 function.
+
 Conditional Automatically Defined Functions: In ad-
 dition to StartEpisode() and GetAction(), up to 6
 Conditionally-invoked Automatically Defined Functions [21]
 (CADFs) may be generated in an algorithm. Each CADF
 represents an additional function block, itself automatically
 discovered, which is callable from GetAction(). Since each
-CADF is conditionally invoked, the sequence of CADFS
+CADF is conditionally invoked, the sequence of CADFs
 executed at each timestep throughout an episode is dynamic.
 This property is advantageous for multi-task learning and
 adaptation because programs that can switch control code
 in and out of the execution path on-the-fly are able to
 dynamically integrate general, re-useable code for related
 tasks and specialized code for disjoint tasks. We demonstrate
-in Section IV how this improves performance for the
+in Section how this improves performance for the
 quadruped task. Each CADF receives 4 scalars, 2 vectors, and
 2 indices as input, and execution of the function is conditional
 on a < comparison of the first 2 scalars (a configuration
@@ -255,65 +289,76 @@ is persistent across timesteps, allowing functions to integrate
 variables over time. Post-execution, the CADF returns the
 single most recently written index, scalar, and vector from
 its local memory.
+
 The policy-environment interface and evaluation procedure
-are illustrated in Fig. 2. Sections V-A and V-B provide
+are illustrated in Fig. [2] Sections [V-A] and [V-B] provide
 examples of evolved programs in this representation for the
 quadruped robot and Cataclysmic Cartpole task, respectively.
+
 B. Evolutionary Search
+
 Two evolutionary algorithms are employed in this work:
 Multi-objective search with the Nondominated Sorting genetic
-algorithm II (NSGA-II) [22] and single-objective search
+algorithm Il (NSGA-II) [22] and single-objective search
 with Regularized evolution (RegEvo) [23], [3]. Both search
 algorithms iteratively update a population of candidate control
 programs using an algorithmic model of the Darwinian prin-
 ciple of natural selection. The generic steps for evolutionary
 search are:
+
 1) Initialize a population of random control programs.
-2) Evaluate each program in the task (Fig. 2).
+
+2) Evaluate each program in the task (Fig
+
 3) Select promising programs using a task-specific fitness
-metric (See Fig. 2 caption).
+metric (See Fig. [2| caption).
+
 4) Modify selected individuals through crossover and then
-mutation (Fig. S1).
+mutation (Fig. [STp
+
 5) Insert new programs into the population, replacing some
 proportion of existing individuals.
-6) Go to step 2.
+
+6) Go to step [2]
+
 # StartEpisode = initialization code.
 # GetAction = control algorithm.
-# Sim simulation environment.
+# Sim = simulation environment.
 # episodes = number of evaluation episodes.
 # sX/vX/mX/iX: scalar/vector/matrix/index memory
 # at address X.
-def EvaluateFitness (StartEpisode, GetAction):
+def EvaluateFitness(StartEpisode, GetAction):
 sum_reward = 0
 for e in episodes:
 reward = 0
 steps = 0
 # Initialize sX/vX/mX with evolved parameters.
 # iX is initialized to zero.
-StartEpisode ()
+StartEpisode()
 # Set environment initial conditions.
-state Sim. Reset()
-while (!Sim. Terminal ()):
+state = Sim.Reset()
+while (!Sim.Terminal()):
 # Copy state to memory, will be accessible
-# to Get Action.
-v1 = state
+# to GetAction.
+vi = state
 # Execute action-prediction instructions.
 GetAction(state)
-if Sim. NumAction() > 1:
+if Sim.NumAction() > 1:
 action = v4
 else:
 action = s3
-state
-Sim. Update (action)
+state = Sim.Update(action)
 reward += Reward(state, action)
-steps += 1
-sum reward += reward
+steps t= 1
+sum_reward += reward
 sum_steps += steps
 return sum_reward/episodes, sum_steps/episodes
+
 Fig. 2: Evaluation process for an evolved control algorithm. The single-
-objective evolutionary search uses the mean episodic reward as the algorithm's
+objective evolutionary search uses the mean episodic reward as the algorithm’s
 fitness, while the multi-objective search optimizes two fitness metrics: mean
 reward (first return value) and mean steps per episode (second return value).
+
 For the purposes of this study, the most significant difference
 between NSGA-II and RegEvo is their selection method.
 NSGA-II identifies promising individuals using multiple
@@ -323,7 +368,8 @@ Both search methods simultaneously evolve: (1) Initial
 algorithm parameters (i.e. initial values in floating-point
 memory sX, vX, mX), which are set by StartEpisode();
 and (2) Program content of the GetAction() function and
-CADFS.
+CADFs.
+
 1) Multi-Objective Search: In the Quadruped robot tasks,
 the goal is to build a controller that continuously walks at
 a desired pace in the presence of motor malfunctions. It is
@@ -341,7 +387,10 @@ diverse population of partial solutions, or building blocks,
 evolutionary search operators (mutation and cross-over) can
 build policies that are competent in both objectives. NSGA-II
 objective functions and constraints for the quadruped robot
-task are discussed in Section IV.
+
+--- Page 4 ---
+task are discussed in Section
+
 2) Single-Objective Search: The Cataclysmic Cartpole task
 provides a challenging adaptation benchmark environment
 without the safety constraints and simulation overhead of
@@ -353,6 +402,7 @@ parallel workers in RegEvo also perform selection, which
 eliminates the bottleneck of waiting for the entire population
 to be evaluated prior to ranking, selecting, and modifying
 individuals.
+
 Crossover and Mutation Operators: We use a simple
 crossover operator that swaps a randomly selected CADF
 between two parent algorithms. Since all CADFs have the
@@ -361,8 +411,10 @@ matching is required to select crossover points. If either parent
 algorithm contains no CADFs, one randomly selected parent
 is returned. Post-crossover, the child program is subject to
 stochastic mutation, which adds, removes, or modifies code
-using operators listed in Table S1.
+using operators listed in Table [SI]
+
 C. Algorithm Configurations and Baselines
+
 Temporal memory is the primary mental system that allows
 an organism to change, learn, or adapt during its lifetime.
 In order to predict the best action for a given situation in a
@@ -373,6 +425,7 @@ current state and a prediction of how the environment is
 changing. Our evolved algorithms are able to adapt partly
 because they are stateful: the contents of their memory (sX,
 vX, mX, and iX) are persistent across timesteps of an episode.
+
 We compare ARZ against stateless and stateful baselines.
 These policy architectures consist, respectively, of multilayer
 perceptrons (MLP) and long short-term memory (LSTM)
@@ -384,22 +437,25 @@ robot locomotion tasks [12], [25]. In comparison, Proximal
 Policy Optimization [26] underperformed significantly; we
 omit the results and leave investigation for future work. All
 methods were allowed to train until convergence with details
-in Supplement S1-A.
+
+in Supplement |ST-A]
+
 IV. NON-STATIONARY TASK DOMAINS
+
 We consider two different environments: a realistic sim-
 ulator for a quadruped robot and the novel Cataclysmic
 Cartpole. In both cases, policies must handle changes in
-the environment's transition function that would normally
-impede their
-function. These changes might be sudden
-proper
+the environment’s transition function that would normally
+impede their proper function. These changes might be sudden
 or gradual, and no sensor input is provided to indicate when
 a change is occurring or how the environment is changing.
+
 A. Quadruped Robot
+
 We use the Tiny Differentiable Simulator [27] to simulate
 the Unitree Laikago robot [4]. It is a quadruped robot with 3
-actuated degrees of freedom per leg. Thus the action
-space has
+
+actuated degrees of freedom per leg. Thus the action space has
 12-dimensional real values corresponding to desired motor
 angles. A Proportional-Derivative controller is used to track
 these desired angles. The observation space includes 37 real
@@ -409,6 +465,7 @@ body. Each episode begins with the robot in a stable upright
 position and continues for a maximum of 1000 timesteps (10
 seconds). Each action suggested by the policy is repeated for
 10 consecutive steps.
+
 The goal of the non-stationary quadruped task is to move
 forward (x-axis) at 1.0 meters/second. Adaptation must handle
 sudden leg-breaking in which all joints on a single, randomly
@@ -417,67 +474,78 @@ each episode. The leg effectively becomes a double pendulum
 for the remainder of the episode. The episode will terminate
 early if the robot falls and this results in less return. We
 design the following reward function:
-*
--
-r(t) = 1.0 — 2 × |v(t) − v| – ||ā(t) – ā(t − 1)||2, (1)
-where the first term 1.0 is the survival bonus, ō is the target
-forward velocity of 1 m/s, v(t) is the robot's current forward
-velocity, and a(t) and a(t − 1) are the policy's current and
+
+r(t) = 1.0 — 2 * |v(t) — o| — |Ja(t) — a(t — fo, CD
+
+where the first term 1.0 is the survival bonus, v is the target
+forward velocity of 1 m/s, u(t) is the robot’s current forward
+velocity, and a(t) and a(t — 1) are the policy’s current and
 previous action vectors. This reward function is shaped to
 encourage the robot to walk at a constant speed for as long
 as possible while alleviating motor stress by minimizing the
 change in the joint acceleration. In the context of multi-
-objective search, maximizing the mean of Equation 1 over a
+objective search, maximizing the mean of Equation [I] over a
 maximum of 1000 timesteps is Objective 1. To discourage
 behaviors that deviate too much along the y-axis, we terminate
-an episode if the robot's y-axis location exceeds ±3.0 meters.
+an episode if the robot’s y-axis location exceeds +3.0 meters.
 Objective 2 is simply the number of timesteps the robot
 was able to survive without falling or reaching this y-axis
 threshold. Importantly, we are not interested in policies that
 simply stand still. Thus, if Objective 2 is greater than 400
-and Objective 1 is less than 50, both fitnesses are set to
-0. As shown in Fig. S2, these fitness constraints eliminate
+and Objective | is less than 50, both fitnesses are set to
+0. As shown in Fig. 83 these fitness constraints eliminate
 policies that would otherwise persist in the population without
 contributing to progress on the forward motion objective.
+
 B. Cataclysmic Cartpole Environment
+
 To study the nature of adaptation in more detail, we
 introduce a new, highly challenging but computationally
 simple domain called Cataclysmic Cartpole in which multiple
 aspects of the classic Cartpole ([28]) physics are made
 dynamic. Adaptation must handle the following non-stationary
 properties:
-• Track Angle: The track tilts to a random angle at a
-random time. Because the robot's frame of reference for
-the pole angle (0) is relative to the cart, it must figure
+
+¢ Track Angle: The track tilts to a random angle at a
+
+random time. Because the robot’s frame of reference for
+the pole angle (9) is relative to the cart, it must figure
 out the new direction of gravity and desired value of
-O to maintain balance, and respond quickly enough to
+@ to maintain balance, and respond quickly enough to
 keep the pole balanced. The track angle is variable in
 [-15, 15] degrees. This simulates a change in the external
 environment.
-• Force: A force multiplier f is applied to the policy's
+
+¢ Force: A force multiplier f is applied to the policy’s
+
 action such that its actuator strength may increase or
-decrease over time. The policy's effective action is ƒ ×
+
+--- Page 5 ---
+decrease over time. The policy’s effective action is f x
 action, where f changes over time within the range [0.5,
 2]. This simulates a drop in actuator strength due to a
 low battery, for example.
-• Damping: A damping factor D simulates variable joint
-friction by modifying joint torque as TD
--Dar, where
-=
-qr is the joint velocity (see eqns. 2.81, 2.83 in [29]).
+
+¢ Damping: A damping factor D simulates variable joint
+friction by modifying joint torque as Tp = —D4@,, where
+dr is the joint velocity (see eqns. 2.81, 2.83 in [29]).
 This simulates joint wear and tear. D changes over time
 in the range [0.0, 0.15].
+
 Each type of change is controlled by a single parameter.
 We investigate two schedules for how these parameters might
-change during an episode, illustrated in Fig. S4.
+change during an episode, illustrated in Fig.
+
 V. RESULTS
 A. Quadruped Leg-Breaking
-1) Comparison with Baselines: ARZ-with the inclusion
-of CADFS is the only method that produced a viable control
+
+1) Comparison with Baselines: ARZ—with the inclusion
+
+of CADFs—is the only method that produced a viable control
 policy in the leg-breaking task. This problem is exceedingly
 difficult: finding a policy that maintains smooth locomotion
 and is robust to leg breaking requires 20 evolution experiment
-repetitions (Fitness > 600 in Fig. 3a). In Fig. 3a, training
+repetitions (Fitness > 600 in Fig. [3a). In Fig. training
 fitness between 500 and 600 typically indicates either (1)
 a viable forward gait behavior that is only robust to 3/4
 legs breaking or (2) a policy robust to any leg breaking
@@ -486,124 +554,133 @@ real robot, with its reward being significantly penalized by
 fitness shaping as a result. Within the single best repeat, the
 NSGA-II search algorithm produces a variety of policies with
 performance trade-offs between smooth forward locomotion
-(reward objective) and stability (steps objective), Fig. 3b.
+(reward objective) and stability (steps objective), Fig. |3b}
 From this final set of individuals, we select a single policy
 to compare with the single best policy from each baseline.
 Due to practical wall-clock time limits, we were only able
-to train both ARS+MLP and ARS+LSTM policies up to 106
+to train both ARS+MLP and ARS+LSTM policies up to 10°
 trials in total, but found that under this sample limit, even
 the best ARS policy only achieved a reward of 360, much
 lower than the 570 found by the best ARZ policy, suggesting
 that ARZ can even be more sample efficient than standard
 neural network baselines.
-Fig. 4 confirms that ARZ is the only method capable of
+i confirms that ARZ is the only method capable of
 building a controller that is robust to multiple different legs
 breaking mid-episode. We plot post-training test results for
 one champion ARZ policy in comparison with the single-
 best controller discovered by ARS+MLP and ARS+LSTM.
-ARZ's adaption quality (as measured by mean reward) is
+ARZ’s adaption quality (as measured by mean reward) is
 superior to baselines in the case of each individual leg, and
-its performance on the stationary task (See "None" in Fig. 4)
+its performance on the stationary task (See "None" in Fig.
 is significantly better than any other method. Interestingly,
-Fig. 4 indicates that the MLP also learned a policy that is
+ndicates that the MLP also learned a policy that is
 robust to the specific case of the back-right leg breaking.
 Unlike ARZ, it is unable to generalize this adaptation to any
 other leg. Finally, while the LSTM policy performed better
 than the MLP on the stationary task, it fails to adapt to any
 of the leg-breaking scenarios.
+
 Visualizing trajectories for a sample of 5 test episodes from
-Fig. 4 confirms that the ARZ policy is the only controller
-Reward (max)
+Fig. 4] confirms that the ARZ policy is the only controller
+
 700
+
 600
+
+ee
+
 500
-400-
-300
-200-
-100
-0
-0
+
+&
+8
+
 Reward (max)
-700
-600-
-500
-400-
-300-
-200-
-With CADFS
-Without CADFS
-100
-0
-3 4 5
-900
-Individuals
-le7
-(a) Evolution progress
-•
-With CADFS
-•
-Without CADFS
-960 980 1000
-920 940
-Steps Per Episode (max)
-(b) Best Pareto fronts
-Fig. 3: CADFS speed up evolution on average and produced the best final
+Reward (max)
+
+8
+
+8
+
+8
+
+——= With caDFs
+<== Without CADFs
+
+© With CADFs
+© Without CADFs
+
+°
+
+0 1 2 3 4 5 900 920 940 960 980 1000
+Individuals 1e7 Steps Per Episode (max)
+
+(a) Evolution progress (b) Best Pareto fronts
+
+Fig. 3: CADFs speed up evolution on average and produced the best final
 result. (a) shows ARZ search data recorded over 20 independent repeats
-with and without the use of CADFS. The horizontal axis for (a) shows the
+with and without the use of CADFs. The horizontal axis for (a) shows the
 total number of individual programs evaluated, while the vertical axis shows
-mean return (Equation 1) over 32 episodes for the single best individual
+mean return (Equation|1) over 32 episodes for the single best individual
 discovered so far. (b) shows Pareto fronts for the single repeats with max
 reward from each experiment. Each point in (b) represents the bi-objective
 fitness of one control program.
-Average Reward
-800-
-ARZ
-MLP
-LSTM
-600
-400-
-200-
-Front-Right
-Front-Left
-Back-Right
-Back-Left
-None
+
+50] MARZ mm MLP Rm LSTM
+FA 600
+
+2
+
+Fa
+
+2 400
+
+g
+
+= 200
+
+Front-Right Front-Left Back-Right Back-Left None
+
 Fig. 4: ARZ discovers the only policy that can adapt to any leg breaking.
 The plot shows test results for the single best policy from ARZ and ARS
 baselines (MLP and LSTM) in the mid-episode leg-breaking task. For each
 leg, bars show mean reward over 100 episodes in which that leg is broken
 at a randomly selected timestep. A reward < 400 in any column indicates
 the majority of test episodes for that leg ended with a fall.
+
 that can avoid falling in all scenarios, although in the case of
 the front-left leg breaking, it has trouble maintaining forward
-motion, Fig. 5. This is reflected in its relatively weak test
-reward for the front-left leg (See Fig. 4). The MLP policy
+motion, Fig. |5| This is reflected in its relatively weak test
+reward for the front-left leg (See Fig. |4). The MLP policy
 manages to keep walking with a broken back-right leg but
 falls in all other dynamic tasks. The LSTM, finally, is only
 able to avoid falling in the stationary task in which all legs
 are reliable.
-(a) ARZ
-(b) MLP
-(c) LSTM
+
+(a) ARZ (b) MLP (c) LSTM
+
 Fig. 5: ARZ discovers the only policy that consistently avoids falling. Plot
 shows sample trajectories in each leg-breaking task. The vertical bar indicates
-the change point (step 500). ▲ indicates that the robot fell over. Each plot
+the change point (step 500). & indicates that the robot fell over. Each plot
 shows 4 test episodes in which a unique leg breaks. From top to bottom,
 the affected legs are: None, Back-Left, Back-Right, Front-Left, Front-Right.
+
 2) On Simplicity and Interpretability: The policy for the
 Quadruped Leg-Breaking task discovered by evolutionary
-search is presented in Fig. 1. This algorithm uses 608
+search is presented in Fig. i} This algorithm uses 608
 parameters and can be expressed in less than 40 lines of code,
+
+--- Page 6 ---
 executing at most 2080 floating point operations (FLOPs)
 per step. This should be contrasted with the number of
 parameters and FLOPs expended in the baseline MLP/LSTM
 models, which use more than 2.5k/9k parameters and 5k/18k
-FLOPS per step, respectively. A detailed account of how these
-numbers were obtained can be found in Section S4. We note
+FLOPs per step, respectively. A detailed account of how these
+numbers were obtained can be found in Section [S4] We note
 that each function possesses its own variables and memory,
 which persists throughout the run. The initialization value for
 the variables are tuned for the GetAction function, thus
 counted as parameters, while they are all set to zero for f.
+
 Here we provide an initial analysis of the ARZ policy,
 leaving a full analysis and interpretation of the algorithm
 to future work. The key feature of the algorithm is that it
@@ -612,44 +689,39 @@ quadruped is completely determined by its internal state and
 the discrete label. The temporal transitions of the discretized
 states show a stable periodic motion when the leg is not
 broken, and the leg-breaking introduces a clear disruption in
-this pattern, as shown in Fig. 6. This being a stateful algorithm
+this pattern, as shown in Fig. 6] This being a stateful algorithm
 with multiple variables accumulating and preserving variables
 from previous steps, we conjecture that the temporal pattern of
 the discrete states serves as a signal for the adaptive behavior
 of the quadruped.
-3.
-2
+
 No Breaking
-A l l l l l l l l W W
-A
-150
-Front-Right Breaking
-200
-600
-0
-100
-3
-2
-1
-0
-500
+
+AB se ctivan stint st nate
+
+ba ai hy '
+
+Ain —! :
+
 550
 Back-Right Breaking
-3
-2
-1
-0
-500
+
+Cecile Ai
+
 550
-600
 Back-Left Breaking
-3
-2
+
+State
+
+State
+
+State
+
 breaking, can be accurately detected by the change in the
 pattern of the state trajectory, because the variables s7 and
 s15 defining the decision boundary of the states form a stable
-periodic function in time. We demonstrate this in Fig. 7, where
-we plot the values of the three scalars s12, $15 and s7 for
+periodic function in time. We demonstrate this in Fig. [7] where
+we plot the values of the three scalars s12, s15 and s7 for
 front-leg breaking, whose occurrence is marked by the vertical
 red line. Despite the marked change of behavior of the input
 s12 after leg-breaking, we see that the behavior of the two
@@ -657,43 +729,40 @@ scalars s7 and s15 are only marginally affected. Intriguingly,
 the behavior of the scalar registers s7 and s15 resemble that
 of central pattern generators in biological circuits responsible
 for generating rhythmic movements [30].
-10
-5
-0
-450
-www
-500
-Step
-550
-s12
-s15
-s7
+
+Float Value
+
+step
+
 Fig. 7: The scalar values s12, s15 and s7 of the quadruped during front-leg
 breaking. Note the consistent periodic behavior of the scalars s15 and s7
 despite leg breaking, marked by the vertical red line. The same periodicity
 is observed for all leg-breaking scenarios analyzed.
-The policy's ability to quickly identify and adapt to multiple
-unique failure conditions is clear in Fig. 8a, which plots the
-controller's actions one second before and after a leg breaks.
+
+The policy’s ability to quickly identify and adapt to multiple
+unique failure conditions is clear in Fig. [8a| which plots the
+controller’s actions one second before and after a leg breaks.
 We see a clear, instantaneous change in behavior when a
 leg fails. This policy is able to identify when a change has
-occurred and rapidly adapt. Fig. 8b shows the particular
+occurred and rapidly adapt. Fig. shows the particular
 sequence of CADFs executed at each timestep before and
 after the change, indicating that CADFs do play a role in the
-policy's ability to rapidly adjust its behavior. Indeed, only
+policy’s ability to rapidly adjust its behavior. Indeed, only
 evolutionary runs that included CADFs were able to discover
 a policy robust to any leg breaking.
-0
-500
-550
-Step
+
+indi iil
+
 600
+step
+
 Fig. 6: State trajectories of various leg-breaking patterns. The leg-breaking
 event is marked by a vertical red line. Note that different leg breaking patterns
 result in different state trajectories. We conjecture that these trajectories
 serve as signals that trigger the adaptive response in the algorithm.
+
 We now expand upon how the continuous input signal is
-discretized in the ARZ algorithm presented in Fig. 1. We first
+discretized in the ARZ algorithm presented in Fig.}1} We first
 observe that the only way the incoming observation vector
 interacts with the rest of the algorithm is by forming scalar
 s12, by taking an inner-product with a dynamical vector v3
@@ -702,67 +771,58 @@ s12 affects the action only through the two if statements
 colored in red. Thus the effect of the input observation on the
 action is entirely determined by the relative position of the
 scalar s12 with respect to the two decision boundaries set
-by the scalars $15 and s7. In other words, the external input
+by the scalars s15 and s7. In other words, the external input
 of the observation to the system is effectively discretized into
-four states: 0 (s12 ≤ s15, s7), 1 (s15, s7 < s12),
-2 (s7s12 ≤ s15) or 3 (s15 < s12 ≤ s7).
+four states: 0 (s12 < s15, s7), 1(s15,
+2(s7 < sl2 < s15)or3(s15 < sl2 < s7).
+
 Thus external changes in the environment, such as leg
+
+s7 < 812),
+
 Action
-300 350 400 450 500 550 600 650 700
-Steps
-(a) Actions
+
 CADF Sequence
-Other
-5,6,5,3,6,3,3,3,7,5-
-4,54.6.5.3-
-5,364.3.3.7-
-4.6.6.74-
-363664-
-4,5,3,6,5,4,3,3,7-
-4.54.6.3-
-54.6.3.7-
-45.3664.3.7-
-4,5,3,6,4,6,7,4-
-4.5.363664-
-5,6,3,6,3,3,3,7
-5,3,6,4,3,7-
-6.3.3.6.6.7.4
-5.3.6.3.6.3.6.4-
-4,5,3,6,4,36,36,4-
-4.5.6,3-
-3,6,4,3,6,36,4-
-400
-450
-500
-550
-600
+
+300 350 400 450 500 550 600 650 700
+
 Steps
-(b) CADF call sequences
+
+ee
+Steps
+
+(a) Actions (b) CADF call sequences
+
 Fig. 8: ARZ policy behavior changes when Front-Left leg breaks mid-episode
 (step 500), as shown by the dynamics of the actions and the program control
-flow due to CADFS.
+flow due to CADFs.
+
 B. Cataclysmic Cartpole
+
 Introducing a novel benchmark adaptation task is an infor-
 mative addition to results in the realistic quadruped simulator
 because we can empirically adjust the nature of the benchmark
 dynamics until they are significant enough to create an
 adaptation gap: when stateless policies (i.e., MLP generalists)
 fail to perform well because they cannot adapt their control
-policy in the non-stationary environment (See Section S2
+policy in the non-stationary environment (See Section
+
+--- Page 7 ---
 for details.). Having confirmed that Cataclysmic Cartpole
 requires adaptation, we only examine stateful policies in this
 task.
+
 1) Comparison with Baselines: In Cataclysmic Cartpole,
 we confirm that ARZ produces superior control relative to
 the (stateful) ARS+LSTM baseline in tasks with a sudden,
-dramatic change. Fig. 9 and 10 show testing that was done
+dramatic change. Fig. [9] and [10] show testing that was done
 after the search is complete. A fitness score of 800 indicates
-the policy managed to balance the pole for ≈ 800 timesteps,
+the policy managed to balance the pole for ~ 800 timesteps,
 surviving up to the last point in an episode with any active
-dynamics (See Fig. S4). "Stationary" is the standard Cartpole
+dynamics (See Fig. [S4). "Stationary" is the standard Cartpole
 task while "Force", "Damping", and "Track Angle" refer
 to Cartpole with sudden or continuous change in these
-parameters only (See Section IV-B). "All" is the case where all
+parameters only (See Section|I . "All" is the case where all
 change parameters are potentially changing simultaneously.
 Legends indicate the policy type and corresponding task
 type used during evolution. First, note that strong adaptable
@@ -774,118 +834,129 @@ However, when exposed to non-stationary properties during
 the search, ARZ and ARS+LSTM discover policies that adapt
 to all sudden and continuous non-stationary tasks. ARZ is
 significantly more proficient in the sudden change tasks (Fig.
-10), achieving near perfect scores of 1000 in all tasks. In
+achieving near perfect scores of 1000 in all tasks. In
 continuous change, the single best LSTM policy achieves the
 best multitasking performance with a stronger score than ARZ
 on the Track Angle problem, and it is at least as proficient as
 ARZ on all other tasks. However, unlike the LSTM network,
 ARZ policies are uniquely interpretable.
-Average Reward
-Policy Type [Train Task]:
-ARZ [All]
-ARZ [Stationary]
-LSTM [All]
-1000
-800-
-600
-400
-200
-0
-Stationary
-Force
-Damping
-Track Angle
-LSTM [Stationary]
-All
+
+Policy Type [Train Task]: HH ARZ (All) HM ARZ (Stationary) I LSTM (All) ll LSTM [Stationary]
+
+83
+83
+
+‘Average Reward
+838
+88
+
+8
+o 8
+
+Stationary Force Damping Track Angle All
+
 Fig. 9: Post-evolution test results in the Cataclysmic Cartpole continuous-
 change task. Legend indicates policy type and search task. [A11] marks
 policies exposed to all tasks during evolution. ARZ and LSTM both solve
 this adaptation task, and no direct transfer from stationary tasks to dynamic
 tasks is observed. The best 5 policies from each experiment are shown.
-Average Reward
-1000
-800-
-600
-Stationary
-Force
-Policy Type [Train Task]:
-ARZ [All]
-Damping
-Track Angle
-LSTM [All]
-All
+
+Policy Type (Train Task]: MM ARZ All] lm LSTM (All)
+p 1000
+
+=
+
+3g
+
+Ea
+
+‘@ 800
+
+g
+
+= 600
+
+Stationary Force Damping Track Angle All
+
 Fig. 10: Post-evolution test results in the Cataclysmic Cartpole sudden-
 change task. [A11] marks policies exposed to all tasks during evolution.
 ARZ discovers the only policy that adapts to all sudden-change Cataclysmic
 Cartpole tasks. The best 5 policies from each experiment are shown.
+
 2) On Simplicity and Interpretability: Here we decompose
 an ARZ policy to provide a detailed explanation of how it
 integrates state observations over time to compute optimal
+
 actions in a changing environment. An example of an
-algorithm discovered in the ARZ [All] setting of Fig. 9
-is presented in Fig. 11. Note that CADFs were not required
+algorithm discovered in the ARZ [All] setting of Fig. |
+is presented in Fig. {] Note that CADFs were not required
 to solve this task and have thus been omitted from the search
 space in order to simplify program analysis. What we find are
 three accumulators that collect the history of observation and
 action values from which the current action can be inferred.
-# sX: scalar memory at address X.
-# obs: vector (x, theta, ✗_dot, theta_dot].
-#23 a, b, c fixed scalar parameters.
-#23 V, W: 4-dimensional vector parameters.
+
+alar memory at address X.
+tor [x, theta dot, theta_dot].
+# a,b, fixed scalar parameters.
+#V, W: 4-dimensional vector parameters.
 def GetAction(obs, action):
 s0 = a * s2 + action
-s1 s0s1 + b * action + dot (V, obs)
-s2s0+ c * s1
-action = s0 + dot(obs, W)
+si = sO + si + b * action + dot(V, obs)
+s2=s0 +c * sl
+action = sQ + dot(obs, W)
 return action
+
 Fig. 11: Sample stateful action function evolved on the task where all
-parameters are subject to continuous change (ARZ [All] in Fig. 9). Code
+parameters are subject to continuous change (ARZ [All] in Fig. J). Code
 shown in Python.
-This algorithm uses 11 variables and executes 25 FLOPS
+
+This algorithm uses 11 variables and executes 25 FLOPs
 per step. Meanwhile, the MLP and LSTM counterparts use
 more than 1k and 4.5k parameters, expending more than 2k
 and 9k FLOPs per step, respectively. More details for this
-computation are presented section S4.
-=
+computation are presented section
+
 There are two useful ways to view this algorithm. First,
-by organizing the values of so, s1, and s2 at step n into
-a vector Zn, which can be interpreted as a vector in latent
+by organizing the values of sO, s1, and s2 at step n into
+a vector Z,,, which can be interpreted as a vector in latent
 space of d = 3 dimensions, we find that the algorithm can
-be expressed in the form: Sn+1 = concat(obs n+1, actn);
-Zn+1 = Ũ · Zn+P· Sn+1; act n+1
-AT. Zn+1+WT. Sn+1,
+be expressed in the form: sp41 = concat(obs;.+1 , actn);
+Zng1 =U -Zy +P 8n413 try = AT Zt W? Sy 41,
 with the projection matrix P that projects the state vector
-to the latent space, and a d x d evolution matrix Ũ. This
-is a linear recurrent neural network with internal state Zn.
+to the latent space, and a d x d evolution matrix U. This
+is a linear recurrent neural network with internal state Z,,.
 The second way to view the algorithm is to interpret it as
-a generalization of a proportional-integral-derivative (PID)
+a generalization of a proportional—integral—derivative (PID)
 controller. This can be done by first explicitly solving the
 recurrent equations presented above and taking the continuous
-limit. Introducing a single five-dimensional state vector s(t)
-[x(t)‚O(t), x(t),Ġ(t), act(t)], and d-dimensional vectors u, v,
+limit. Introducing a single five-dimensional state vector s(t) =
+[x(t), O(t), x(t), A(t), act(t)], and d-dimensional vectors u, v,
 and w, a five-dimensional vector p and a constant term c, the
 algorithm in the continuous time limit can be written in the
-form: act(t) = c+w. Ut.u+pT · s(t) +v² · Så dт Ut−˜ .
-P s(7) where P and U are the continuous-time versions of
-P and Ū. In our particular discovered algorithm (Fig. 11), d
+form: act(t) = c+ wl -Ut-utp? -s(t) +" - fi dr Ut -
+P.-s(r) where P and U are the continuous-time versions of
+P and U. In our particular discovered algorithm (Fig
 happens to be 3. Notice that the integration measure now has
 a time-dependent weight factor in the integrand versus the
 conventional PID controller. Further derivations, discussions,
 and interpretations regarding this algorithm are presented in
 the supplementary material.
-.
+
 VI. CONCLUSION AND DISCUSSION
-=
+
 We have shown that using ARZ to search simultaneously
 in program space and parameter space produces proficient,
 simple, and interpretable control algorithms that can perform
 zero-shot adaptation, rapidly changing their behavior to
 maintain near-optimal control in environments that undergo
+
+--- Page 8 ---
 radical change. In the remainder of this section, we briefly
 motivate and speculate about future work.
-CADFS and the Distraction Dilemma. In the quadruped
+
+CADFs and the Distraction Dilemma. In the quadruped
 robot domain, we have observed that including Conditionally
-invoked Automatically Defined Functions (CADFS) in our
+invoked Automatically Defined Functions (CADFs) in our
 search space improves the expressiveness of evolved control
 algorithms. In the single best policy, CADFs have been used
 to discretize the observation space into four states. The action
@@ -901,6 +972,7 @@ network did not produce policies that can adapt to more than
 one unique change event (i.e., a single leg breaking). A deeper
 study of modular/hierarchical policies and their impact on
 the distraction dilemma is left to future work.
+
 The Cataclysmic Cartpole Task. Given the computationally
 intensive nature of simulating a real robot, we felt compelled
 to also include a more manageable toy task where adaptation
@@ -909,6 +981,7 @@ it useful for doing quick experiments and emphasizing the
 power and interpretability of ARZ results. We hope that it
 may also provide an easily reproducible environment for use
 in further research.
+
 Adapting to Unseen Task Dynamics. Looking to the future,
 we have included detailed supplementary material which
 raises an open and ambitious question: how can we build
@@ -917,7 +990,7 @@ what type of environmental change may occur in the future?
 Surprisingly, preliminary results with ARZ on the cataclysmic
 cartpole task suggest that injecting partial-observability and
 dynamic actuator noise during evolution (training) can act as
-a general surrogate for non-stationary task dynamics S2. In
+a general surrogate for non-stationary task dynamic
 preliminary work, we found this to support the emergence of
 policies that can adapt to novel task dynamics that were not
 experienced during search (evolution). This was not possible
@@ -927,351 +1000,398 @@ control policies without complete prior knowledge of their
 task environment dynamics, thus relaxing the need for an
 accurate physics simulator. Future work may investigate the
 robustness of this preliminary finding.
+
 AUTHOR CONTRIBUTIONS
+
 SK and ER led the project. ER and JT conceived the project and acted
 as principal advisors. All authors contributed to the methodology. SK, MM,
 PN, and DP ran the evolution experiments. XS ran the baselines. MM and
 DP analysed the algorithms. SK, DP, and MM wrote the paper. All authors
 edited the paper.
+
 ACKNOWLEDGEMENTS
+
 We would like to thank Wenhao Yu, Chen Liang, Sehoon Ha, James
 Lee and the Google Brain Evolution and AutoML groups for technical
 discussions; Erwin Coumans for physics simulations advice; Erwin Coumans,
+
 Kevin Yap, Jacob Budzis, Heng Li, Kaiyuan Wang, and Ryan Gillard for
 code contributions; and Quoc V. Le, Vincent Vanhoucke, Ed Chi, and Erik
 Goodman for guidance and support.
+
 REFERENCES
-[1] M. Hessel, H. Soyer, L. Espeholt, W. Czarnecki, S. Schmitt, and H. van
-Hasselt, “Multi-Task Deep Reinforcement [...]]." AAAI, 2019.
-[2] S. Kelly, T. Voegerl, W. Banzhaf, and C. Gondro, “Evolving hierarchical
-memory-prediction [...]]," Genet. Program. Evolvable Mach., 2021.
-[3] E. Real, C. Liang, D. R. So, and Q. V. Le, "AutoML-Zero: Evolving
-Machine Learning Algorithms From Scratch," ICML, 2020.
-[4] “Unitree Robotics." [Online]. Available: http://www.unitree.cc/
-[5] J. R. Koza and M. A. Keane, “Genetic breeding of non-linear optimal
-control strategies [...]]," in Analysis and Optimization of Systems, 1990.
-[6] Y. Dhebar, K. Deb, S. Nageshrao, L. Zhu, and D. Filev, "Toward
-Interpretable-AI Policies [...]]," IEEE. Trans. Cybern., 2022.
-[7] W. Yu, J. Tan, C. K. Liu, and G. Turk, “Preparing for the unknown:
-Learning a universal policy [...]," in RSS, 2017.
-[8] J. Tobin, R. Fong, A. Ray, J. Schneider, W. Zaremba, and P. Abbeel,
-"Domain randomization for transferring [...]]," CORR, 2017.
-[9] A. Cully, J. Clune, D. Tarapore, and J.-B. Mouret, "Robots that can
-adapt like animals," Nature, 2015.
-[10] X. Song, Y. Yang, K. Choromanski, K. Caluwaerts, W. Gao, C. Finn,
-and J. Tan, "Rapidly Adaptable Legged Robots [...]," in IROS, 2020.
-[11] X. Song, W. Gao, Y. Yang, K. Choromanski, A. Pacchiano, and Y. Tang,
-"ES-MAML: simple hessian-free meta learning," in ICLR, 2020.
-[12] W. Yu, J. Tan, Y. Bai, E. Coumans, and S. Ha, “Learning fast adaptation
-with meta strategy optimization," IEEE Robot. Autom. Lett., 2020.
-[13] C. Finn, P. Abbeel, and S. Levine, “Model-agnostic meta-learning for
-fast adaptation of deep networks," in ICML, 2017.
-[14] A. Kumar, Z. Fu, D. Pathak, and J. Malik, "RMA: rapid motor
-adaptation for legged robots," CORR, 2021.
-[15] E. Najarro and S. Risi, “Meta-Learning through Hebbian Plasticity in
-Random Networks," CORR, 2020.
-[16] D. Floreano and J. Urzelai, “Evolutionary robots with on-line self-
-organization and behavioral fitness," Neural Networks, 2000.
-[17] T. Anne, J. Wilkinson, and Z. Li, “Meta-learning for fast adaptive
-locomotion with uncertainties [...]]," in IROS, 2021.
-[18] A. Li, C. Florensa, I. Clavera, and P. Abbeel, “Sub-policy adaptation
-for hierarchical reinforcement learning," in ICLR, 2020.
-[19] J. X. Wang, “Meta-learning in natural and artificial intelligence,"
+
+sel, H. Soyer, L. Espeholt, W. Czarnecki, S. Schmitt, and H. van
+
+SS Multi-Task Deep Reinforcement [...]]”? AAAI, 2019.
+
+2] S. Kelly, T. Voegerl, W. Banzhaf, and C. Gondro, “Evolving hierarchical
+
+memory-prediction [...]],” Genet. Program. Evolvable Mach., 2021.
+
+3] E. Real, C. Liang, D. R. So, and Q. V. Le, “AutoML-Zero: Evolving
+
+Machine Learning Algorithms From Scratch,” JCML, 2020.
+
+4] “Unitree Robotics.” [Online]. Available:
+
+5] J. R. Koza and M. A. Keane, “Genetic breeding of non-linear optimal
+
+control strategies [...]],” in Analysis and Optimization of Systems, 1990.
+
+6] Y. Dhebar, K. Deb, S. Nageshrao, L. Zhu, and D. Filev, “Toward
+
+Interpretable-AI Policies [...]].” JEEE. Trans. Cybern., 2022.
+
+7) W. Yu, J. Tan, C. K. Liu, and G. Turk, “Preparing for the unknown:
+
+Learning a universal policy [...],” in RSS, 2017.
+
+8] J. Tobin, R. Fong, A. Ray, J. Schneider, W. Zaremba, and P. Abbeel,
+
+“Domain randomization for transferring [...]]7’ CoRR, 2017.
+
+9] A. Cully, J. Clune, D. Tarapore, and J.-B. Mouret, “Robots that can
+
+adapt like animals,” Nature, 2015.
+
+10] X. Song, Y. Yang, K. Choromanski, K. Caluwaerts, W. Gao, C. Finn,
+
+and J. Tan, “Rapidly Adaptable Legged Robots [...],” in JROS, 2020.
+
+11] X. Song, W. Gao, Y. Yang, K. Choromanski, A. Pacchiano, and Y. Tang,
+
+“ES-MAML: simple hessian-free meta learning,” in JCLR, 2020.
+
+12] W. Yu, J. Tan, Y. Bai, E. Coumans, and S. Ha, “Learning fast adaptation
+
+with meta strategy optimization,’ JEEE Robot. Autom. Lett., 2020.
+
+13] C. Finn, P. Abbeel, and S. Levine, “Model-agnostic meta-learning for
+
+fast adaptation of deep networks,” in JCML, 2017.
+
+14] A. Kumar, Z. Fu, D. Pathak, and J. Malik, “RMA: rapid motor
+
+adaptation for legged robots,” CoRR, 2021.
+
+15] E. Najarro and S. Risi, “Meta-Learning through Hebbian Plasticity in
+
+Random Networks,” CoRR, 2020.
+
+16] D. Floreano and J. Urzelai, “Evolutionary robots with on-line self-
+
+organization and behavioral fitness,” Neural Networks, 2000.
+
+17] T. Anne, J. Wilkinson, and Z. Li, “Meta-learning for fast adaptive
+
+locomotion with uncertainties [...]],” in JROS, 2021.
+
+18] A. Li, C. Florensa, I. Clavera, and P. Abbeel, “Sub-policy adaptation
+
+for hierarchical reinforcement learning,” in JCLR, 2020.
+
+19] J. X. Wang, “Meta-learning in natural and artificial intelligence,”
+
 Current Opinion in Behavioral Sciences, 2021.
-[20] M. Brameier and W. Banzhaf, Linear Genetic Programming. Springer,
+
+20] M. Brameier and W. Banzhaf, Linear Genetic Programming. Springer,
+
 2007.
-[21] J. R. Koza, Genetic Programming II: Automatic Discovery of Reusable
+
+21] J. R. Koza, Genetic Programming I: Automatic Discovery of Reusable
+
 Programs. Cambridge, MA, USA: MIT Press, 1994.
-[22] K. Deb, A. Pratap, S. Agarwal, and T. Meyarivan, “A fast and elitist
-multiobjective genetic [...],” IEEE Trans. Evol. Comput., 2002.
-[23] E. Real, A. Aggarwal, Y. Huang, and Q. V. Le, “Regularized evolution
-for image classifier architecture search," AAAI, 2019.
-[24] H. Mania, A. Guy, and B. Recht, "Simple random search of static
-linear policies is competitive [...]]," in NeurIPS, 2018.
-[25] K.-H. Lee, O. Nachum, T. Zhang, S. Guadarrama, J. Tan, and W. Yu,
-"PI-ARS: Accelerating Evolution-Learned [...]]," in IROS, 2022.
-[26] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov,
-"Proximal policy optimization algorithms," CoRR, 2017.
-[27] E. Heiden, D. Millard, E. Coumans, Y. Sheng, and G. S. Sukhatme,
-"NeuralSim: Augmenting Differentiable [...]],” in ICRA, 2021.
-[28] R. S. Sutton and A. G. Barto, Reinforcement Learning: An Introduction.
+
+22] K. Deb, A. Pratap, S. Agarwal, and T. Meyarivan, “A fast and elitist
+
+multiobjective genetic [...],” JEEE Trans. Evol. Comput., 2002.
+
+23] E. Real, A. Aggarwal, Y. Huang, and Q. V. Le, “Regularized evolution
+
+for image classifier architecture search,’ AAAI, 2019.
+
+24] H. Mania, A. Guy, and B. Recht, “Simple random search of static
+
+linear policies is competitive [...]],” in NewrIPS, 2018.
+
+25] K.-H. Lee, O. Nachum, T. Zhang, S. Guadarrama, J. Tan, and W. Yu,
+
+“PI-ARS: Accelerating Evolution-Learned [...]],” in JROS, 2022.
+
+26] J. Schulman, F. Wolski, P. Dhariwal, A. Radford, and O. Klimov,
+
+“Proximal policy optimization algorithms,” CoRR, 2017.
+
+27) E. Heiden, D. Millard, E. Coumans, Y. Sheng, and G. S. Sukhatme,
+
+“NeuralSim: Augmenting Differentiable [...]],” in JCRA, 2021.
+
+28] R. S. Sutton and A. G. Barto, Reinforcement Learning: An Introduction.
+
 Cambridge, MA, USA: A Bradford Book, 2018.
-[29] S. Sueda, "Analytically differentiable articulated [...]]," 2021. [Online].
-Available: https://github.com/sueda/redmax/blob/master/notes.pdf
-[30] E. Marder and D. Bucher, “Central pattern generators and the control
-of rhythmic movements," Current Biology, 2001.
-[31] R. Gillard, S. Jonany, Y. Miao, M. Munn, C. de Souza, J. Dungay,
+
+29] S. Sueda, “Analytically differentiable articulated [...]]’’ 2021. [Online].
+
+Availabe: nps/athub com/suedalredmax/bloblmasternotes. pa
+
+30] E. Marder and D. Bucher, “Central pattern generators and the control
+
+of rhythmic movements,” Current Biology, 2001.
+
+31] R. Gillard, S. Jonany, Y. Miao, M. Munn, C. de Souza, J. Dungay,
+
 C. Liang, D. R. So, Q. V. Le, and E. Real, “Unified functional hashing
-in automatic machine learning," arXiv, 2023.
-[32] K. O. Stanley and R. Miikkulainen, “Evolving neural networks through
-augmenting topologies," Evolutionary Computation, 2002.
-[33] J. Bergstra and Y. Bengio, “Random search for hyper-parameter
-optimization," JMLR, 2012.
-[34] D. Hafner, J. Davidson, and V. Vanhoucke, “Tensorflow agents: Efficient
-batched reinforcement learning in tensorflow," CORR, 2017.
-[35] G. Brockman, V. Cheung, L. Pettersson, J. Schneider, J. Schulman,
-J. Tang, and W. Zaremba, "OpenAI Gym," 2016.
+
+in automatic machine learning,” arXiv, 2023.
+
+32] K. O. Stanley and R. Miikkulainen, “Evolving neural networks through
+
+augmenting topologies,” Evolutionary Computation, 2002.
+
+33] J. Bergstra and Y. Bengio, “Random search for hyper-parameter
+
+optimization,” JMLR, 2012.
+
+34] D. Hafner, J. Davidson, and V. Vanhoucke, “Tensorflow agents: Efficient
+
+batched reinforcement learning in tensorflow,” CoRR, 2017.
+
+35] G. Brockman, V. Cheung, L. Pettersson, J. Schneider, J. Schulman,
+J. Tang, and W. Zaremba, “OpenAI Gym,” 2016.
+
+
+--- Page 9 ---
 Supplementary Material
+
+$1. METHODS ADDITIONAL DETAILS
+
+def StartEpisode(): def StartEpisode(): def StartEpisode():
+
+s1 = 0.2 s6= 1.5 vO = -2.6
 Old
-Population
-New
-Population
-S1. METHODS ADDITIONAL DETAILS
-def Start Episode():
-s1 = 0.2
-def GetAction(state):
-so s7 state [0]
-def CADF (memory):
-v3
-abs (memory [2])
-def StartEpisode():
-s1 = 0.2
-def GetAction(state):
-s0 s7state [0]
-def StartEpisode():
-s6 1.5
-def GetAction (state):
-v2sin(state [4])
-def CADF (memory):
-v3 = s2 memory [0]
-def StartEpisode():
-s6 1.5
-def GetAction(state):
-v2 sin(state [4])
-v3 = s2 memory [0]
-def CADF (memory):
-v3
-abs (memory [2]),
-def CADF (memory):
-def StartEpisode():
-v0 = -2.6
-def GetAction(state):
-v2s1s3 + s6
-def CADF (memory):
-s0
-s5 memory [4]
-def StartEpisode():
-v2 = -2.6
-def GetAction(state):
-v2s1s3 + s6
-def CADF (memory):
-s0 s5 memory [4]
-Fig. S1: Simplified example of a population of algorithms, modified via
+Population def GetAction(state) : def GetAction(state): def GetAction(state):
+80 = 87 * state[0] v2 = sin(state[4]) v2 = si * s3 + 56
+def CADF (memory): def CADF (memory): def CADF (memory) :
+v8 = abs(memory[2]) v8 = 82 * memory [0] s0 = s5 + menory[4]
+def StartEpisode(): def StartEpisode():
+si = 0.2 86 = 1.5
+New def GetAction(state): def GetAction(state): def GetAction(state):
+Population “59 = s7 * state[0] v2 = sin(state[4]) v2 = 81 * 53 + 56
+
+‘det CADF (memory):
+
++ 493 Z_abs (memory [2]) ;
+
+CADF (memory):
+\_v3 = s2 * menory[0]
+
+def CADF(memory) :
+s0 = 85 + memory(4]
+
+Fig. Sl: Simplified example of a population of algorithms, modified via
 crossover and mutation to produce a new population. Complete list of
-mutation operators is provided in Table S1
-C. Cataclysmic Cartpole Tasks
-Cartpole [28], [35] is a classic control task in which a pole is attached by
-an un-actuated joint to a cart that moves Left or Right along a frictionless
-track, Figure S3. The observable state of the system at each timestep, s(t),
-is described by 4 variables including the cart position (x), cart velocity (x),
-pole angle relative to the cart (0), and pole angular velocity (ė). We use a
-continuous-action version of the problem in which the system is controlled
-by applying a force = [(-1, 1] to the cart. The pole starts nearly upright,
-and the goal is to prevent it from falling over. An episode ends when the
-pole is more than 12 degrees from vertical, the cart moves more than 2.4
-units from the center, or a time constraint is reached (1000 timesteps). A
-reward of (1 − | Overt | /12)2 is provided for every timestep that the pole
-remains upright, where Overt is a fixed reference for the angle of the pole
-relative to the vertical plane. As such, the objective is to balance the pole
-close to vertical for as long as possible.
--
-Ꮎ
-Ꮎ
+mutation operators is provided in Table [ST]
+
 A. Baseline Details
+
 Augmented Random Search (ARS): We used a standard implementation
 from [24] and hyperparameter tuned over a cross product between:
-• learning rate: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
-• Gaussian standard deviation: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
+
+© learning rate: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
+© Gaussian standard deviation: [0.001, 0.005, 0.01, 0.05, 0.1, 0.5]
+
 and used a 2-layer MLP of hidden layer sizes (32,32) with Tanh non-linearity,
 along with an LSTM of size 32.
+
 Proximal Policy Optimization (PPO): We used a standard implementation
 from TF-Agents [34], which we verified to reproduce standard Mujoco
 results from [26]. We varied the following hyperparameters:
-• nsteps ("collect sequence length"): [256, 1024]
-learning rate: [5e-5, 1e-4, 5e-4, 1e-3, 5e-3]
-• entropy regularization: [0.0, 0.05, 0.1, 0.5]
+
+* nsteps ("collect sequence length"): [256, 1024]
+
+© learning rate: [Se-5, le-4, 5e-4, le-3, Se-3]
+
+© entropy regularization: [0.0, 0.05, 0.1, 0.5]
 and due to the use of a shared value network, we used a 2-layer MLP of
 hidden layer sizes (256, 256) with ReLU nonlinearity alongside an LSTM
 of size 256. Since PPO significantly underperformed (e.g., obtaining only
-≈100 reward on quadruped tasks), we omitted its results in this paper to
+100 reward on quadruped tasks), we omitted its results in this paper to
 save space.
+
 B. Quadruped Tasks
+
 We perform 20 independent repeats for each method with unique random
 seeds. All repeats are allowed to train until convergence. NSGA-II uses parent
 and child population sizes of 100 and 1000, respectively. No search restarts or
 FEC are enabled. The set of operations available for inclusion in any program
-are listed in Table S2. For ARS experiments, we run a hyperparameter
+are listed in Table |S2} For ARS experiments, we run a hyperparameter
 sweep consisting of 36 repeats with unique hyperparameters. We then run
 an additional 20 repeats using the best hyperparameter configuration.
-Steps
-440
-430
-420
-410
-400
-390
-380
-0
-50
-100
+
+s
+8
+6
+@.--------
+
+400 7 ¢----' e
+e
+390 © ee
+e
+0 50 100 150 200
 Reward
-150
-200
+
 Fig. S2: A typical Pareto front early in NSGA-II search. The dashed box
 shows policies that are effectively eliminated through fitness constraints.
-X
-X
--
-Χ
+
+C. Cataclysmic Cartpole Tasks
+
+Cartpole [28], [35] is a classic control task in which a pole is attached by
+an un-actuated joint to a cart that moves Left or Right along a frictionless
+track, Figure The observable state of the system at each timestep, 5(t),
+is described by 4 variables including the cart position (a), cart velocity (x),
+pole angle relative to the cart (9), and pole angular velocity (0). We use a
+continuous-action version of the problem in which the system is controlled
+by applying a force € [—1, 1] to the cart. The pole starts nearly upright,
+and the goal is to prevent it from falling over. An episode ends when the
+pole is more than 12 degrees from vertical, the cart moves more than 2.4
+units from the center, or a time constraint is reached (1000 timesteps). A
+reward of (1 — |@ert|/12)? is provided for every timestep that the pole
+remains upright, where @,e,r¢ is a fixed reference for the angle of the pole
+relative to the vertical plane. As such, the objective is to balance the pole
+close to vertical for as long as possible.
+
+=
+
 Fig. S3: Illustration of a track angle change in the Cataclysmic Cartpole
-task with the 4 variables in the state observation s(t). Note that 0 always
+task with the 4 variables in the state observation 5(t). Note that 6 always
 represents the angle between the pole and the line running perpendicular to
-= 0)
-the track and cart, thus the desired value of 0 to maintain balance (Overt =
+the track and cart, thus the desired value of @ to maintain balance (Overt = 0)
 changes with the track angle and is not directly observable to the policy.
+
 1) Sudden: A sudden change in each change parameter occurs at a
-unique random timestep in [200, 800], Figure S4a.
+unique random timestep in [200, 800], Figure
 2) Continuous: Each parameter changes over a window with random,
 independently chosen start and stop timesteps in [200, 800], Figure
-S4b.
+
 For the ARZ methods, we execute 10 repeats of each experiment with
 unique random seeds. For ARS, we run a hyperparameter sweep consisting
 of 36 repeats with unique hyperparameters. In each case, we select 5 repeats
 with the best search fitness and test the single best policy from each. Plots
 show mean fitness over 100 episodes for each policy in each task.
-S2. ADDITIONAL EXPERIMENTS: CATACLYSMIC
+
+$2. ADDITIONAL EXPERIMENTS: CATACLYSMIC
 CARTPOLE
+
 A. Adaptation Gap
+
 In this section we use stateless policies (ARZ and MLP) to confirm
 that Cataclysmic Cartpole dynamics are significant enough to create an
 adaptation gap: when stateless policies (i.e. generalists) fail to perform
 well because they cannot adapt their control policy in the non-stationary
-environment. As mentioned in Section III-C our evolved algorithms are
+environment. As mentioned in Section [TEC] our evolved algorithms are
 able to adapt partly because they are stateful: the contents of their memory
 (sX, vX, mX, and iX) are persistent across timesteps of an episode. The
 representation can easily support stateless algorithms simply by forcing the
 policy to wipe its memory content and re-initialize constants at the beginning
-of the GetAction() function (See Figure 2).
-Fig. S5 indicates that, in the continuous change environment, the stateless
-baselines (MLP and ARZ stateless) fail to achieve sufficient fitness (800)
+of the GetAction() function (See Figure|2).
+dicates that, in the continuous change environment, the stateless
+[LP and ARZ stateless) fail to achieve sufficient fitness (~ 800)
 when all types of change occur simultaneously (ALL). This confirms that the
 continuous change paradigm provides a suitably challenging non-stationary
 problem environments to study adaptation and life-long learning. In the
-sudden change task (Figure S6), the MLP baseline still fails. Surprizingly,
+sudden change task (Figur the MLP baseline still fails. Surprizingly,
 ARZ can discover stateless policies that succeed under this type of non-
 stationarity.
-Operator
-Insert Instruction
-Delete Instruction
-Randomize Instruction
+
+
+--- Page 10 ---
+Operator Allowed Functions Prob Description
+
+Insert Instruction GetAction() CADF() 0.5 Insert randomly generated instruction at uniformly sampled line number
+Delete Instruction GetAction() CADF() 1.0 Delete the instruction at a uniformly sampled line number
+
+Randomize Instruction GetAction() CADF() 1.0 Randomize the instruction at a uniformly sampled line number
+
 Randomize Function
 Randomize constants
-Randomize Parameter
-Randomize dim indices
-Allowed Functions
-Prob
-GetAction() CADF ()
-GetAction () CADF ()
-0.5
-1.0
-GetAction () CADF ( )
-GetAction () CADF ( )
-Start Episode ()
-1.0
-0.1
-0.5
-GetAction () CADF ( )
-GetAction() CADF ( )
-0.5
-0.5
-Description
-Insert randomly generated instruction at uniformly sampled line number
-Delete the instruction at a uniformly sampled line number
-Randomize the instruction at a uniformly sampled line number
+
+GetAction() CADF() 0.1
+StartEpisode() 0.5
+
 Randomly shuffles all lines of code
 Modify a fraction (0.2) of uniformly sampled constants in a uniformly sampled
-instruction. For each constant, add noise sampled from N(0, 0.052).
+
+instruction. For each constant, add noise sampled from V(0, 0.052).
+
+GetAction() CADF() 0.5
+GetAction() CADF() 0.5
+
+Randomize Parameter
+Randomize dim indices
+
 Randomize a uniformly sampled parameter in a uniformly sampled instruction
 Randomize a fraction (0.2) of uniformly sampled dim indices in a uniformly sampled
+
 instruction. Each chosen dim index is set to a new integer uniformly sampled from
-[0, dim) where dim is the size of the memory structure being referenced.
+(0, dim) where dim is the size of the memory structure being referenced.
+
 TABLE S1: Mutation operators. Prob column lists the relative probability of applying each operation. For example, the Delete Instruction op will be applied
+
 twice as often as the Insert instruction.
+
+— Force —— Damping —— Track Angle
+
+a
+
+a
+
 Normalized Value
-Force
-Damping
-Track Angle
-0
-200
-400
-600
-800
-1000
+°
+
+-14
+i} 200 400 600 800 1000
 Step
-Force
 (a) Sudden
-Damping
-Track Angle
-Average Reward
-1000
-800
-600
-400
-200
-0
-Stationary
-Force
-Policy Type [Train Task]:
-ARZ [All]
-MLP [All]
-Damping
-Track Angle
-All
-Fig. S6: ARZ can discover stateless policies that succeed in the sudden change
-tasks. The plot shows test results for stateless baselines in the Cartpole
-sudden change tasks. The legend indicates policy type and search task.
-"Stationary" is the standard Cartpole task while "Force", "Damping", and
-"Track Angle" refer to Cartpole with continuous change in these parameters
-only (See Section IV-B). "All" is the case where all change parameters are
-potentially changing simultaneously. Y-axis is the average reward of 100
-episodes in each task. See Section S2-A for discussion.
-Average Reward
+— Force —— Damping —— Track Angle
+
+Renee ee eee eee
+
+Se
+
 Normalized Value
-1000
-800
-600
-400
-200
-0
-H
-H
-0
-200
-400
-600
-800
-1000
+°
+
+-14
+i} 200 400 600 800 1000
 Step
 (b) Continuous
 Fig. S4: A typical randomly-created change schedule.
-Force
-Policy Type [Train Task]:
-ARZ [All]
-Damping
-All
-MLP [All]
-Stationary
-Track Angle
-Fig. S5: Stateless baselines fail to achieve sufficient fitness (≈ 800) when
+Policy Type (Train Task]: Mmm ARZ (All) mmm MLP (All)
+1000
+§ 200
+@
+600
+. Wi
+< rf | ll
+200
+°
+Stationary Force Damping Track Angle All
+
+Fig. S5: Stateless baselines fail to achieve sufficient fitness (= 800) when
 all types of change occur simultaneously (ALL). The plot shows test results
 for stateless baselines in the Cataclysmic Cartpole continuous change
 tasks. The legend indicates policy type and search task. "Stationary" is the
 standard Cartpole task while "Force", "Damping", and "Track Angle" refer
 to Cartpole with continuous change in these parameters only (See Section
-IV-B). "All" is the case where all change parameters are potentially changing
-simultaneously. Y-axis is the average reward of 100 episodes in each task.
-See Section S2-A for discussion.
+. "All" is the case where all change parameters are potentially changing
+
+for discussion.
+
+See Section |S:
+
 B. Adapting to Unseen Dynamics in Cataclysmic Cartpole
+
 How can we build adaptive control policies without any prior knowledge
 about what type of environmental change might occur? Surprisingly, for
 ARZ, we find that injecting partial-observability and dynamic actuator noise
@@ -1280,31 +1400,58 @@ task dynamics, supporting the emergence of policies that can adapt to novel
 task dynamics that were not experienced during evolution. This was not
 possible for our LSTM baselines. It is a significant finding that deserves more
 attention in future work because it implies we can potentially evolve proficient
+
+simultaneously. Y-axis is the average reward of 100 episodes in each task.
+
+Policy Type (Train Task]: MN ARZ [All] lm MLP [All]
+
+1000
+
+800
+
+600
+
+Average Reward
+
+200
+
+Stationary Force Damping Track Angle All
+
+Fig. S6: ARZ can discover stateless policies that succeed in the sudden change
+tasks. The plot shows test results for stateless baselines in the Cartpole
+sudden change tasks. The legend indicates policy type and search task.
+"Stationary" is the standard Cartpole task while "Force", "Damping", and
+"Track Angle" refer to Cartpole with continuous change in these parameters
+only (See Section "All" is the case where all change parameters are
+potentially changing simultaneously. Y-axis is the average reward of 100
+episodes in each task. See Section for discussion.
+
 control policies without complete prior knowledge of their task environment
 dynamics, thus relaxing the need for an accurate physics simulator.
 If we assume that no simulator is available for any of the non-stationary
 tasks in Cataclysmic Cartpole (Force, Damping, Track Angle), can we still
-build policies that cope with these changes? From a policy's perspective,
+build policies that cope with these changes? From a policy’s perspective,
 changes to the physics of the environment will (1) change the meaning
-of its sensor observations (e.g. pole angle sensor value (0) corresponding
+of its sensor observations (e.g. pole angle sensor value (6) corresponding
 to vertical suddenly changes); and/or (2) change the effect of its actions
 (e.g. a particular actuator value suddenly has a much greater effect on the
-cart's trajectory). To prepare policies for these uncertainties, we evolve
+cart’s trajectory). To prepare policies for these uncertainties, we evolve
 them with non-stationary noise applied to their actions and introduce a
 partially-observable observation space. Specifically, we modify the task to
 add:
-• Actuator Noise: Each action value v is modified such that v = v+n,
-where n is sampled from a Gaussian distribution with mean that varies
-in [-2, 2] following the continuous change schedule in Figure S4b.
-Partial Observability: Positional state variables (cart position (x) and
-pole angle relative to the cart (0)) are set to zero prior to passing the
+© Actuator Noise: Each action value v is modified such that v = v +n,
+where n is sampled from a Gaussian distribution with mean that vari
+in [-2, 2] following the continuous change schedule in Figure
+
+© Partial Observability: Positional state variables (cart position (2) and
+pole angle relative to the cart (9)) are set to zero prior to passing the
 state observation to the policy.
-.
+
 Our hypothesis is that this will encourage policies to rely less on their
 observations and actions, and as a result they might build a stronger, more
 dynamic internal world-model to predict how their actions will affect future
-states. That is, there is more pressure to model the environment's dynamic
-transition function. In Figure S7, ARZ [PO + Act Noise] shows test results
+states. That is, there is more pressure to model the environment’s dynamic
+transition function. In Figure[S7] ARZ [PO + Act Noise] shows test results
 for an ARZ experiment that uses the stationary task simulator during
 evolution (i.e. the unmodified Cartpole environment) but applies actuator
 noise and partial observability as described above. Remarkably, these evolved
@@ -1313,171 +1460,188 @@ in the Cataclysmic Cartpole environment, achieving an average reward of
 > 700 in all tasks. Using the same search configuration, ARS does not
 discover parameters for an LSTM network that supports adaptation to all
 non-stationary tasks (LSTM [PO + Act Noise]).
+
 In summary, preliminary data presented in this section suggests that
 adding partial-observability and actuator noise to the stationary Cartpole
 task during search allows ARZ to discover policies that can adapt to unseen
 non-stationary tasks, a methodology that does not work for ARS with LSTM
 networks. We leave comprehensive analysis of these findings to future work.
+
 S3. CARTPOLE ALGORITHM ANALYSIS
-Here we analyze the algorithm presented in Figure 11:
-Average Reward
-Equation (2) being a simple linear model, we may write act+1 explicitly
-Policy Type [Train Task]:
-ARZ [PO + Act Noise]
-LSTM [PO + Act Noise]
+Here we analyze the algorithm presented in Figure [IT]
+
+--- Page 11 ---
+Policy Type [Train Task]: MIN ARZ(PO + Act Noise] ll LSTM [PO + Act Noise]
+
 1000
-as a sum:
-800
+
 600
+
 400
-200
-0
-Stationary
-Force
-Damping
-Track Angle
-All
+
+Average Reward
+
+Stationary Force Damping Track Angle All
+
 Fig. S7: ARZ can discover policies that adapt to unseen tasks. The plot shows
 post-evolution test results for adapting policies in the Cartpole continuous
-change tasks. The legend indicates policy type and search task. [All]
+change tasks. The legend indicates policy type and search task. [A11)
 indicate policies were exposed to all tasks during evolution. [PO + Act
 Noise] indicates policies were evolved with partial observability and action
 noise on the stationary task, while the dynamic change tasks were unseen
 until test. Y-axis is the average reward of 100 episodes in each task. See
-Section S2-B for discussion.
-# sX: scalar memory at address X.
-# obs: vector (x, theta, ✗_dot, theta_dot].
-%23 a, b, c: fixed scalar parameters.
-#3 V, W: 4-dimensional vector parameters.
+Section ‘or discussion.
+
+#= sX: scalar memory at address X.
+
+# obs: vector [x, theta, x_dot, theta_dot].
+# a,b, c: fixed scalar parameters.
+
+# V, W: 4-dimensional vector parameters.
 def GetAction(obs, action):
-s0 = a * s2 + action
-s1 = s0s1 + b * action + dot (V, obs)
-s2 = s0 + c * s1
-action = s0 + dot(obs, W)
+
+sO = a * s2 + action
+
+si = sO + si + b * action + dot(V, obs)
+s2=s0 +c * st
+
+action = sO + dot(obs, W)
+
 return action
-act, =ẤT . Un . Zo+WT
-n
-. Sn
-+Ãª . ΣỮn-i ‚ Ñ.
-i=0
-· Si⋅
-When taking the continuous limit of this expression, there is a subtlety in
-that the sn+1 vector is obtained by composing the observation vector at
-time step n + 1 and the action value at time step n. We can nevertheless
-be careful to redefine s to be made up of concurrent components and still
-arrive at an expression which in the continuous limit, takes the form:
-act(t) =c+w. Ut . u+pT · s(t)
-+vT
-.
-du Ut-u. P.s(u).
-(3)
-We note that when we set U = Id this expression straightforwardly reduces
-to a PID controller-like model:
-act(t) =(c+wu) +pT · s(t) + (vT · P) ·
-.
-* dus(u).
-An instructive way of re-writing Equation (3) is to explicitly use the
-eigenvalues e-wk of U. The equation can be re-parameterized as
-d
-act(t) =c+ cke
--wkt
-+p s(t)
-d
-+
-S
-0
+
 Fig. S8: Sample stateful action function evolved on the Cataclysmic Cartpole
 task where all parameters are subject to continuous change (ARZ [All] in
-Fig. 9). Code shown in Python. This figure is a repeat of Figure 11.
-Organizing the values of μ = s0, v = s1 and = s2 at step n into a
+Fig. [9}. Code shown in Python. This figure is a repeat of Figure
+
+Organizing the values of ps = sO, vy = si and € = s2 at step n intoa
+
 vector:
-Zn =
-: (μn, Vn+1, εn)T,
+Zn = (Mins Untis &n)™
+
 and concatenating the observation vector at step n + 1 and the action at
-step n into a state vector Sn+1:
-Sn+1 = (xn+1, On+1, xn+1, On+1, actn)T,
+step n into a state vector 5741:
+
+Snt1 = (@n41; Ontis nti, On4f1, acta)” ,
 we can re-write the value of these accumulators at step n in the following
 way:
 Sn+1 = concat(obsn+1, actn)
-Zn+1 = Ũ · Zn + P · Sn+1,
-actn+1 =
-.
-ÃT · Zn+1+WT · Sn+1 ·
-(2)
+Znyi =U+Zn+P-sn4i, (2)
+actny1 = AT: Zagat wr. Sn41-
+
 The particular variables used in this formula map to the parameters of Figure
-11 as follows:
-du e-wk (t-u)s(u).
+
+(Jas follows:
+
+_ 0 0 a
+U={0 1 a ;
+0 c¢ a(l+c)
+_ 0 0 0 0 1
+P=|M VW V3 Va b+1 >
+cy, cV2 cV3) cV4. at+be+e
+
+A=(I1, 0, 0)",
+W = (Wi, We, Ws, Wa, 0)".
+The numerical values of the parameters of the model found are given by
+
+a= —0.549, b=—0.673, c= 0.082,
+V = (1.960, —0.7422, 0.7373, —5.284)" ,
+W = (0.0, 0.365, 2.878, 2.799)".
+Equation can be viewed as a linear recurrent model, where Z,, is the
+internal state of the model. The action at the n-th step is obtained as a linear
+
+function of the internal state, the observation vector and the action value at
+the previous step. An interesting aspect of the particular model found is that
+
+the matrix U by construction has eigenvalues 0, 1 and a(1 +c) © —0.594.
+
+Equation (2) being a simple linear model, we may write act,+1 explicitly
+as a sum:
+
+actn =AT.U” *Zot wr. Sn
+~ "~ ~
++ AT. SOU" Posi.
+i=0
+When taking the continuous limit of this expression, there is a subtlety in
+that the s,+41 vector is obtained by composing the observation vector at
+time step n + 1 and the action value at time step n. We can nevertheless
+
+be careful to redefine s to be made up of concurrent components and still
+arrive at an expression which in the continuous limit, takes the form:
+
+act(t) =c-+ w? -U-u+p? - s(t)
+t
+orf du Ut". P- s(u). @)
+0
+
+We note that when we set U = Id this expression straightforwardly reduces
+to a PID controller-like model:
+
+act(t) =(e + w7 -u) +p? + s(t) + (v7 - P)- i dus(u).
+0
+
+An instructive way of re-writing Equation is to explicitly use the
+eigenvalues e~“* of U. The equation can be re-parameterized as
+
+d
+act(t) =c + > cpe hk" + p™ - s(t)
+k=1
+
+d
+
++ > op
+k=l
+
 Here it is clear that the expression is a straightforward generalization of
 the PID controller, where only the weight-one cumulant of the history is
 utilized to compute the action. Now, a multitude of cumulants with distinct
 decay rates can be utilized.
-A. Baselines
+
+t
+ff du e~ #8) g(a) ,
+0
+
 S4. COMPLEXITY COMPARISON
-As noted in section S1, MLP and LSTM networks have been trained with
+
+A. Baselines
+
+As noted in section MLP and LSTM networks have been trained with
 ARS as baselines for the adaptation tasks in the paper. We can estimate a
 lower bound for the number parameters and floating point operations required
 for each model by only counting the matrix variables for the parameter count
 and matrix multiplications for the floating point operations. This negelects
 the bias variables and non-matrix multiplication ops such as application of
 non-linearities or vector component-wise multiplications.
-Given the input dimension din, the output dimension dout and the internal
+
+Given the input dimension djn, the output dimension doy, and the internal
 dimension d, we find that the number of parameters and the floating point
 operations for the MLP and LSTM model per step is given by:
-0 0
-a
-Ū
-FLOPS MLP
-FLOPSLSTM
-2 × ParamsMLP > 2d(din + d + dout)
-2 × Params LSTM > 2d(4din + 4d + dout)
-(4)
-(5)
-=
-0 1
-a
-0 C
-a (1 + c)
+
+FLOPSmp ¥ 2 x Paramsmip > 2d(din + d + dout) (4)
+FLOPS, s1m © 2 X Paramsystm > 2d(4din + 4d + dout) (5)
+
 B. Quadruped Leg-Breaking
-0
-0
-0
-0
-1
-P =
-Vi
-V2 V3 V4
-cVi CV2 CV3 cV4
-b+1
-a+be+c
-Ã = (1, 0, 0),
-W
-=
-(W1, W2, W3, W4, 0)T.
-The numerical values of the parameters of the model found are given by
-a = -0.549, b = -0.673, c = 0.082,
-V = (-1.960, -0.7422, 0.7373, -5.284),
-W = (0.0, 0.365, 2.878, 2.799).
-Equation (2) can be viewed as a linear recurrent model, where Zn is the
-internal state of the model. The action at the n-th step is obtained as a linear
-function of the internal state, the observation vector and the action value at
-the previous step. An interesting aspect of the particular model found is that
-the matrix Ũ by construction has eigenvalues 0, 1 and a(1+ c) ≈ −0.594.
-The algorithm presented in Figure 1 contains 16 + 16 × 37 = 608
-parameters and executes a maximum of 54 × 37 + 82 = 2080 floating
+
+The algorithm presented in Figure [T] contains 16 + 16 x 37 = 608
+parameters and executes a maximum of 54 x 37 + 82 = 2080 floating
 point ops per step, where we have counted all operations acting on floats
-or pairs of floats, assuming that all of the "if" statements pass. The input
+or pairs of floats, assuming that all of the “if" statements pass. The input
 and output dimensions of the tasks are 37 and 12, while the ARS-trained
 models have internal dimensions d = 32. Using the formulae above, we
 see that the MLP model contains over 2592 parameters and uses more than
 5184 FLOPs. Meanwhile the LSTM model uses more than 9216 parameters
-and 18432 FLOPS.
+and 18432 FLOPs.
+
 C. Cataclysmic Cartpole
-The algorithm presented in Figure 9 contains 11 parameters and executes
+
+The algorithm presented in Figure[9] contains 11 parameters and executes
 25 floating point ops per step. The input and output dimensions of the tasks
 are 4 and 1, with internal dimensions d = 32 for the neural networks. The
 MLP model contains over 1184 parameters and uses more than 2368 FLOPs.
-The LSTM model uses more than 4604 parameters and 9280 FLOPS.
+The LSTM model uses more than 4604 parameters and 9280 FLOPs.
+
+--- Page 12 ---
 D. Discussion
+
 The efficiency of ARZ policies stems from two characteristics of the
 system. First, like many genetic programming methods, ARZ builds policies
 starting from simple algorithms and incrementally adds complexity through
@@ -1486,477 +1650,121 @@ computational cost of action inference is low early in evolution, and only
 increases as more complex structures provide fitness gains. In other words,
 the search is bound by incremental growth. Second, in ARZ, mutation is
 twice as likely to remove an instruction than insert an instruction (See Table
-S1), which has been found to have a regularization effect on the population
-[3].
-S5. SEARCH SPACE ADDITIONAL DETAILS
-Supplementary Table S2 describes the set of operations in our search
+, which has been found to have a regularization effect on the population
+
+$5. SEARCH SPACE ADDITIONAL DETAILS
+
+Supplementary Table describes the set of operations in our search
 space. Note that no matrix operations were used for the quadruped robot
 domain.
-TABLE S2: Ops vocabulary. s, v and M denote a scalar, vector, and matrix, resp. Early-alphabet letters (a, b, etc.) denote memory addresses. Mid-alphabet
-letters (e.g. i, j, etc.) denote vector/matrix indexes ("Index" column). Greek letters denote constants ("Consts." column). U(a, B) denotes a sample from a
-uniform distribution in [a, b]. N(μ, σ) is analogous for a normal distribution with mean μ and standard deviation σ. 1 x is the indicator function for set
-X. Example: "M(i,j) = u(a,B)" describes the operation “assign to the i,j-th entry of the matrix at address a a value sampled from a uniform random
-distribution in [a,ß]”.
-Ор
-ID
-Code
-Example
-Input Args
-Addresses
-Consts.
-Output Args
-Address
-Index
-Description
-(see caption)
-/types
-/ type
-OP1
-no_op
-OP2
-s2=s3+s0
-a,b / scalars
-c/ scalar
-OP3
-s4=s0-s1
-a,b / scalars
-c/ scalar
-OP4
-s8=s5*s5
-a,b / scalars
-c/ scalar
-OP5
-s7=s5/s2
-a,b/scalars
-c/ scalar
-OP6
-s8=abs (s0)
-a / scalar
-b/ scalar
-OP7
-s4=1/s8
-a / scalar
-b/ scalar
-OP8
-s5=sin(s4)
-a / scalar
-b/ scalar
-OP9
-s1=cos(s4)
-a / scalar
-b/ scalar
-OP10
-s3=tan (s3)
-a / scalar
-b/ scalar
-OP11
-s0=arcsin (s4)
-a scalar
-b/ scalar
-OP12
-s2 arccos (s0)
-a / scalar
-b/ scalar
-OP13
-s4-arctan (s0)
-a / scalar
-b/ scalar
-OP14
-s1=exp(s2)
-a / scalar
-b/ scalar
-OP15
-s0=log(s3)
-a / scalar
-b/ scalar
-OP16
-s3=heaviside (so)
-a scalar
-b/ scalar
-OP17
-v2=heaviside (v2)
-a / vector
-b/ vector
-OP18
-m7=heaviside (m3)
-a / matrix
-b/ matrix
-OP19
-v1-s7*v1
-a,b / sc,vec
-c/ vector
-OP20
-v1=bcast (s3)
-a / scalar
-b/ vector
-OP21
-OP22
-v5=1/v7
-s0=norm(v3)
-a / vector
-b/ vector
-a scalar
-b/ vector
-OP23
-v3=abs (v3)
-a / vector
-b/ vector
-OP24
-v5=v0+v9
-a,b / vectors
-c/ vector
-OP25
-v1 v0-v9
-a,b / vectors
-c/ vector
-OP26
-v8=v1*v9
-a,b / vectors
-c/ vector
-OP27
-v9=v8/v2
-a,b / vectors
-c/ vector
-OP28
-s6 dot (v1,v5)
-a,b / vectors
-c/ scalar
-OP29
-m1=outer (v6,v5)
-a,b / vectors
-c / matrix
-OP30
-OP31
-m1=s4*m2
-m3=1/m0
-a,b/sc/mat
-c / matrix
-a / matrix
-b/ matrix
-OP32
-v6 dot (m1, v0)
-a,b / mat/vec
-c/ vector
-OP33
-m2=bcast (v0, axis=0)
-a / vector
-b/ matrix
-OP34
-m2=bcast (v0, axis=1)
-a / vector
-b/ matrix
-OP35
-s2=norm (m1)
-a / matrix
-b/ scalar
-OP36
-v4=norm(m7,axis=0)
-a / matrix
-b/ vector
-OP37
-v4 norm (m7, axis=1)
-a / matrix
-b/ vector
+
+TABLE S82: Ops vocabulary. s, @ and M denote a scalar, vector, and matrix, resp. Early-alphabet letters (a, b, etc.) denote memory addresses. Mid-alphabet
+letters (e.g. i, j, etc.) denote vector/matrix indexes (“Index” column). Greek letters denote constants (“Consts.” column). (a, 8) denotes a sample from a
+uniform distribution in [a, 8]. N(j4, 0) is analogous for a normal distribution with mean j. and standard deviation o. 1x is the indicator function for set
+
+X. Example: «Med =U(a, 8)” describes the operation “assign to the i,j-th entry of the matrix at address a a value sampled from a uniform random
+
+distribution in [a, 8)”.
+
+Op Code Input Args Output Args Description
+ID Example Addresses Consts. ‘Address Index (see caption)
+
+/ types / type
+oP! no_op - - - - -
+op2 52=s3+s0 a,b / scalars - e/ scalar -
+op3 s4=s0-st a,b / scalars - e/ scalar -
+op4 s8=s5*s5 a,b / scalars - e/ scalar -
+ops 87=85/s2 a,b / scalars - e/ scalar - a/Sb
+oP6 s8=abs(s0) a/ scalar - b/ scalar - 8b = [sal
+op7 s4=1/s8 a/ scalar - b/ scalar - 8p = 1/80
+ops s5=sin(s4) a/ scalar - b/ scalar - sp = sin(sa)
+op9 si=cos(s4) a/ scalar - b/ scalar - 8» = cos(8a)
+P10 s3=tan(s3) a/ scalar - b/ scalar - sp = tan(sa)
+Pil s0=arcsin(s4) a/ scalar - b/ scalar - sp = arcsin(sa)
+P12 s2=arccos(s0) a/ scalar - b/ scalar - 8» = arccos(sa)
+P13 s4=arctan(s0) a/ scalar - b/ scalar - 8» = arctan(sa)
+opi4 si=exp(s2) a/ scalar - b/ scalar - sp = e%*
+opis s0=log(s3) a/ scalar - b/ scalar - 8p = log sa
+OP16 s3=heaviside(s0) a/ scalar - b/ scalar - sb = p+ (Sa)
+OPI7 v2=heaviside(v2) a/ vector - b / vector - BO = 14 (0) vi
+opis m7=heaviside(m3) a/ matrix - b/ matrix - MO? = 1p4 (ME) Vi, j
+P19 viss7#v1 a,b / se,vec - e/ vector - Be = Sate
+P20 vi=beast (s3) a / scalar - b / vector - BO =sa Vi
+p21 v8=1/v7 a / vector - b/ vector - BO =1/8 vi
+P22 s0=norm(v3) a/ scalar - b/ vector - so = |@al
+P23 v3=abs (v3) a / vector - b / vector - BO = [8] vi
+OP24 v5=v0tv9 a,b / vectors - c/ vector - Be. = ta + Ve
+op25 vi=v0-v9 a,b / vectors - e/ vector -
+OP26 v8=v1+v9 a,b / vectors - c / vector -
+P27 v9=v8/v2 a,b / vectors - e/ vector -
+op28 s6=dot (v1,v5) a,b / vectors - e/ scalar -
+P29 m1=outer (v6, v5) a,b / vectors - / matrix -
+P30 mi=s4*m2 a,b / scimat - / matrix -
+OP31 m3=1/m0 a/ matrix - b / matrix - MEP =1/MO&9 Wi, 5
+P32 v6=dot (m1 ,v0) a,b / mat/vec - e/ vector - Be = Mat
+OP33 m2=beast (vO, axis=0) a / vector - b / matrix - MOP = 8 Vig
+OP34 m2=beast (v0, axis=1) a/ vector - b / matrix - ME? = 6 Vi, 5
+P35 s2=norm(m1) a/ matrix - b/ scalar - 86 = ||Mal|
+OP36 v4snorm(m7 ,axis=0) a / matrix - b / vector - 8 = [M&O | vi
+OP37 v4=norm(m7 ,axis=1) a@/ matrix - b / vector - BY = [MOD] vy
+
 [Table continues on the next page.]
-Sc Sasb
-Sc Sa Sb
-Sc = Sa Sb
-Sc = Sa/8b
-Sb = |sa|
-8b = 1/8a
-86 = sin(sa)
-8b = cos(Sa)
-S₁ = tan(sa)
-Sb = arcsin(sa)
-Sb = arccos(sa)
-Sarctan(sa)
-8b = e³a
-Sb = log sa
-Sb = 1 R+ (Sa)
-√(i) = ¹R+ (√(²)) Vi
-M(i,j) = 1R+ (M(i,j)) \i, j
-บี. = Sa Üb
-v (i) = Sa Vi
-(i) = 1/σ (i) Vi
-8b = |va|
-(i) = |v (i)| Vi
-vc = va + √b
-vc = va — Ub
-√ (i) = √(i) (i) Vi
-√ (i) = √(i) /
-8c = JT Jb
-Mc = va v
-Mc = sa Mb
-Vi
-M(i,j) = 1/M(i,j) \i, j
-vc = Ma vb
-M(i,j) = √(i) Vi, j
-M(j, i) = √(i) Vi, j
-Sb = || Ma||
-(i) = |M(i)| Vi
-√(i) = |(i)|\j
-TABLE S2: Ops vocabulary (continued)
-Op
-ID
-Code
-Example
-OP38
-m9-transpose(m3)
-a / matrix
-OP39
-m1=abs (m8)
-a / matrix
-b/ matrix
-OP40
-m2=m2+m0
-a,b / matrixes
-c/ matrix
-OP41
-m2=m3-m1
-a,b / matrixes
-c/ matrix
-OP42
-OP43
-m3=m2*m3
-m4=m2/m4
-a,b / matrixes
-c / matrix
-a,b / matrixes
-c/ matrix
-OP44
-m5 matmul (m5,m7)
-a,b matrixes
-c/ matrix
-OP45
-s1=minimum (s2, s3)
-a,b / scalars
-c/ scalar
-OP46
-v4=minimum (v3, v9)
-a,b / vectors
-c/ vector
-OP47
-OP48
-m2=minimum (m2, m1)
-s8=maximum (s3, s0)
-a,b / matrixes
-c/ matrix
-a,b scalars
-c/ scalar
-OP49
-v7=maximum (v3, v6)
-a,b / vectors
-c/ vector
-OP50
-m7=maximum (m1, mo)
-a,b matrixes
-c/ matrix
-OP51
-s2=mean (v2)
-a / vector
-b/ scalar
-OP52
-s2=mean (m8)
-a / matrix
-b/ scalar
-OP53
-v1-mean (m2, axis=0)
-a / matrix
-b/ vector
-OP54
-v3-std (m2, axis=0)
-a / matrix
-b/ vector
-OP55
-s3=std (v3)
-a / vector
-b/ scalar
-OP56
-s4=std (m0)
-a / matrix
-b/ scalar
-OP57
-s2=C1
-a / scalar
-OP58
-v3 [5]=C2
-a / vector
-i
-OP59
-m2 [5,1]=C1
-a / matrix
-i, j
-OP60
-s4=uniform (C2, C3)
-α, β
-a / scalar
-OP61
-m2=m4
-a / matrix
-b/ matrix
-OP62
-v2=v4
-OP63
-12-14
-a / vector
-a/index
-OP64
-v2 power (v5,v3)
-a,b / vectors
-Input Args
-Addresses
-Consts
-/types
-Output Args
-Address
-/type
-Index
-b/ matrix
-b/ vector
-b/index
-c/ vector
-Description
-(see caption)
-Mb = |MT|
-M(i,j) = |M(i,j) | Vi, j
-M(i,j)
-M(i,j)
-Mc = Ma + M₁
-McMa M₁
-=
-M(i,j) M(i,j) Vi, j
-M(i,j)/M(i,j) Vi, j
-Mc = Ma Mb
-Sc = min(sa, b)
-√(i) = min(ʊ(i), (i)) Vi
-M(i,j) = min(M(i,j), M(i,j)) \i, j
-Sc max(sa, Sb)
-7(i) = max(7ái), 7) Vi
-= max(M(i,j), M(i,j)) \i, j
-v (i)
-Sb mean (a)
-Sb
-mean (Ma)
-= mean (M()) Vi
-=
-stdev(M(i)) Vi
-S₁ = stdev (va)
-Sbstdev(Ma)
-Sa = Y
-√(i) = 7
-M(i,j) = Y
-Sa = u(a, ẞ)
-M₁ = Ma
-√₁ = va
-i₁ = ia
-(i) = power (σ(i), (i)) Vi
-M(i,j)
-OP65
-v3 m2 [,1]
-a,b matrix,index
-c/ vector
-vc
-=
-M
-(·,jb)
-OP66
-v3 m2 [1,]
-a,b matrix,index
-c/ vector
-OP67
-s3 m2 [1,5]
-a,b,c / m,i,i
-d / scalar
-OP68
-s3=v2 [5]
-a,b vector,index
-c/ scalar
-OP69
-v3=0
-a / vector
-OP70
-s5=0
-OP71
-12=0
-OP72
-v2=sqrt(v5)
-a / vector
-OP73
-v2 power (v5,2)
-a / vector
-b/ vector
-OP74
-OP75
-OP76
-OP77
-OP78
-OP79
-s1=sum(v5)
-s5=sqrt(s1)
-s3=s0*s2+s5
-s2=s4*C1
-m2 [1,]=v3
-m2[,1]=v3
-a / vector
-b/ scalar
-a / scalar
-b/ scalar
-a,b,c / scalars
-d / scalar
-a / scalar
-b/ scalar
-a / vector
-b/ matrix
-a / vector
-b/ matrix
-OP80
-i3 = size(m1, axis=0) - 1
-a / matrix
-b/index
-OP81
-i3
-OP82
-size (m1, axis=1) - 1
-13 len(v1) - 1
-a / matrix
-b/index
-a / vector
-b/index
-OP83
-s1 v0 [3] * v1 [3] + s0
-a,b,c,dv,v,s,i
-e / scalar
-OP84
-s3=dot (v0[:5],v1 [:5])
-a,b,c / v,s,i
-d/ scalar
-a / scalar
-a / index
-b/ vector
-√₁ =
-M(ib,.)
-Sd = M(b,jc)
-= √(2b)
-Sc =
-บี. = 0
-8a=0
-ia = 0
-√(i) = sqrt(v (i)) Vi
-(i) = power ((i), 2) Vi
-8b = sum (v (i)) Vi
-SdSa8b + sc
-Sb Sbr
-(i,.)
-Mv
-= va
-Mε,j) = va
-·(·,j)
-ib = size(M(i)) - 1
-ib =
-size (M())-1
-i₁ = len(va) - 1
-Se Va *
-(id)
-+ Sc
-8d = √(:ic+1)(:ic+1)
-a
+
+
+--- Page 13 ---
+TABLE S82: Ops vocabulary (continued)
+
+Op Code Input Args Output Args Description
+ID Example Addresses Consts ‘Address Index (see caption)
+
+/ types / type
+P38 m9=transpose (m3) a/ matrix - b / matrix - M, = |M?|
+P39 mi=abs (m8) a/ matrix - b/ matrix - MO?) = [MOD | Wi, j
+oP40 m2=m2+m0 a,b / matrixes - / matrix - Me = Ma + Mp
+opal m2=m3-mt a,b / matrixes - / matrix - Me = Ma - My
+op42 m3=m2+m3 a,b / matrixes - ¢/ matrix - M&O) = MOI) MOP Vi, j
+P43 m4=m2/m4 a,b / matrixes - c/ matrix - MED = MOD (MOD Va, 5
+opad mS=matmul (mS ,m7) a,b / matrixes - ¢/ matrix - Me = Ma My
+opas s1=minimum(s2,s3) a,b / scalars - c/ scalar - = min(sa, 8»)
+OP46 v4=minimum(v3,v9) a,b / vectors - c¢/ vector - BO = mint, #) vi
+OP47 m2=minimum(m2,m1) a,b / matrixes - c/ matrix - M&) = min(Ml), MO) vi, j
+opas s8=maximum(s3,s0) a,b / scalars - c/ scalar - se = max(sa, 8»)
+op49 v7=maximum(v3,v6) a,b / vectors - © / vector - BL = max(# 7) vi
+OPS50 m7=maximum(m1,m0) a,b / matrixes - c/ matrix - M&) = max(MO9, MO) Vi, 5
+PS! s2=mean (v2) a / vector - b/ scalar - 8» = mean(ta)
+ops2 s2=mean (m8) a/ matrix - b/ scalar - sp = mean(M,)
+OPs53 vi=mean(m2,axis=0) a/ matrix - b / vector - 5? = mean(M{) vi
+ops4 v3=std(m2,axis=0) a / matrix - b / vector - 3 = stdev(Ml)) Wi
+opss s3=std(v3) a / vector - b/ scalar - sy = stdev(éa)
+OPs6 s4=std(m0) a/ matrix - b/ scalar - sp = stdev(Ma)
+ops7 s2=C1 - y a/ scalar -
+opss v3[5]=C2 - y a/ vector i
+oPs9 m2(5,1]=C1 - y a / matrix i
+OP60 s4=uniform(C2,C3) - a, 6 a/ scalar -
+P61 m=m4 a/ matrix - b/ matrix -
+P62 v2=v4 a/ vector - b/ vector -
+OP 63 i2=i4 a / index - b / index -
+OP64 v2=power (v5,v3) a,b / vectors - c¢/ vector - BL) = power(G), &) vi
+OP65 v3=m20:,1] a,b / matrix,index - / vector - w= Mb)
+OP66 v3=m2[1,:] a,b / matrix,index - c/ vector - Be = Mie?
+OP67 s3=m2[1,5] abe / mii - d/ scalar - sq = Moye)
+OP68 s3-v2[5] a,b / vector,index - c/ scalar - se = 36»
+OP69 v3=0 - - a/ vector - Ba =0
+P70 s5=0 - - a/ scalar - sa =0
+p71 i2=0 - - a/ index - ia =0
+OP72 v2=sqrt (v5) a / vector - b / vector - BL = sqrt (8) vi
+OP73 v2=power (v5,2) a / vector - b / vector - BL = power(5.), 2) vi
+OP74 si=sum(v5) a / vector - b / scalar - sp = sum(0Y) Vi
+p75 sS=sqrt (st) a/ scalar - b/ scalar -
+OP76 s3=s0*s2+s5 a,b,c / scalars - d/ scalar -
+P77 s2=s4*C1 a/ scalar y b/ scalar -
+op78 m2(1, :]=v3 a / vector - b/ matrix i
+P79 m2(:, 1]=v3 a / vector - b/ matrix i
+OP80 i3 = size(m1, axis=0) - 1 a / matrix - b / index - iy = size(MO)) — 1
+OP81 i3 = size(m1, axis=1) - 1 a / matrix - b / index - iy = size( MOI) — 1
+P82 43 = len(v1) - 1 a / vector - b / index - iy = len(Ga) — 1
+OP83 si = vo[3] * vi[3] + so a,b,c, | v.vsii - e / scalar - 80 = TED BEY 4 5,
+
+OPs4 s3=dot (v0[:5] ,v1[:5]) a,bye 1 v8 - d/ scalar - sq = PCED Bier D
+
+

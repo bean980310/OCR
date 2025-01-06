@@ -1,13 +1,18 @@
+--- Page 1 ---
 arXiv:2305.16806v4 [cs.CL] 6 Jun 2023
+
 Do GPTs Produce Less Literal Translations?
-Vikas Raunak
-Arul Menezes
-Matt Post
-Hany Hassan Awadalla
+
+Vikas Raunak Arul Menezes
+
+Matt Post Hany Hassan Awadalla
+
 Microsoft Azure AI
 Redmond, Washington
-{viraunak, arulm, mpost, hanyh}@microsoft.com
+{viraunak, arulm,mpost , hanyh}@microsoft.com
+
 Abstract
+
 Large Language Models (LLMs) such as GPT-
 3 have emerged as general-purpose language
 models capable of addressing many natural lan-
@@ -31,7 +36,9 @@ this finding is borne out in human evaluations
 as well. We then show that these differences
 are especially pronounced when translating sen-
 tences that contain idiomatic expressions.
+
 1 Introduction
+
 Despite training only on a language-modeling ob-
 jective, with no explicit supervision on aligned
 parallel data (Briakou et al., 2023), LLMs such
@@ -46,19 +53,21 @@ using older surface-based metrics such as BLEU
 losses against NMT systems. This raises a question:
 How do these LLM translations differ qualitatively
 from those of traditional NMT systems?
+
 We explore this question using the property of
 translation literalness. Machine translation systems
 have long been noted for their tendency to produce
-source
-NMT
-GPT-3
-He survived by the skin of his teeth.
-Il a survécu par la peau de ses dents
-Il a survécu de justesse.
+
+| source _ He survived by |the skin of his teeth . |
+
+NMT _ Ilasurvécu par la peau de ses dents .
+GPT-3 Ila survécu de justesse .
+
 Table 1: An example where GPT-3 produces a more nat-
 ural (non-literal) translation of an English idiom. When
 word-aligning these sentences, the source word skin
 remains unaligned for the GPT-3 translation.
+
 overly-literal translations (Dankers et al., 2022b),
 and we have observed anecdotally that LLMs seem
 less susceptible to this problem (Table 1). We in-
@@ -70,6 +79,7 @@ NMT systems, and ground these numbers in human
 evaluation (§ 2). Next, we look specifically at id-
 ioms, comparing how literally they are translated
 under both natural and synthetic data settings (§ 3).
+
 Our investigations focus on the translation be-
 tween English and German, Chinese, and Russian,
 three typologically diverse languages. Our find-
@@ -79,7 +89,9 @@ of LLMs are indeed generally less literal than those
 of their NMT counterparts when translating out of
 English, and (2) that this is particularly true in the
 case of sentences with idiomatic expressions.
+
 2 Quantifying Translation Literalness
+
 We compare the state-of-the-art NMT systems
 against the most capable publicly-accessible GPT
 models (at the time of writing) across measures
@@ -87,25 +99,32 @@ designed to capture differences in translation liter-
 alness. We conduct both automatic metric-based as
 well as human evaluations. We explain the evalua-
 tion and experimental details below.
+
 Datasets We use the official WMT21 En-De, De-
 En, En-Ru and Ru-En News Translation test sets
-System Source
-Time is running out for Iran nuclear deal, Germany says,
-Time is running out for Iran nuclear deal, Germany says,
-MS
-GPT
-MS
-You're welcome, one moment please.
-Translation
-Die Zeit für das Atomabkommen mit dem Iran läuft ab, sagt Deutschland
-Deutschland sagt, die Zeit für das iranische Atomabkommen läuft ab.
+
+--- Page 2 ---
+| Translation
+
+System | Source
+MS Time is running out for Iran nuclear deal, Germany says,
+GPT Time is running out for Iran nuclear deal, Germany says,
+
+Die Zeit fiir das Atomabkommen mit dem Iran lauft ab, sagt Deutschland
+Deutschland sagt, die Zeit fiir das iranische Atomabkommen liuft ab.
+
+MS You’re welcome, one moment please.
+GPT You’re welcome, one moment please.
+
 Sie sind willkommen, einen Moment bitte.
 Bitte sehr, einen Moment bitte.
-GPT You're welcome, one moment please.
+
 Table 2: Translation examples with different Non-Monotonicity (NM) and Unaligned Source Word (USW) scores for
 MS-Translator (lower) and text-davinci-003 translations (higher) from the WMT-22 En-De test set, for illustration.
+
 for evaluation (Barrault et al., 2021).
-Measures of Quality We use COMET-QE¹ (Rei
+
+Measures of Quality We use COMET-QE! (Rei
 et al., 2020) as the Quality Estimation (QE) mea-
 sure (Fomicheva et al., 2020) to quantify the flu-
 ency and adequacy of translations. Using QE as
@@ -122,11 +141,13 @@ tifier (Joulin et al., 2017) on the translation output
 and set the translation to null if the translation lan-
 guage is the same as the source language. There-
 fore, we name this metric COMET-QE + LID.
+
 Measures of Translation Literalness There do
 not exist any known metrics with high correlation
 geared towards quantifying translation literalness.
 We propose and consider two automatic measures
 at the corpus-level:
+
 1. Unaligned Source Words (USW): Two transla-
 tions with very similar fluency and adequacy
 could be differentiated in terms of their lit-
@@ -137,6 +158,7 @@ left unaligned. When controlled for quality,
 a less literal translation is likely to contain
 more unaligned source words (as suggested in
 Figure 1).
+
 2. Translation Non-Monotonicity (NM): Another
 measure of literalness is how closely the trans-
 lation tracks the word order in the source. We
@@ -144,74 +166,143 @@ use the non-monotonicity metric proposed in
 Schioppa et al. (2021), which computes the de-
 viation from the diagonal in the word to word
 alignment as the non-monotonicity measure.
-wmt20-comet-qe-da
+
+'wmt20-comet-qe-da
+
 This can also be interpreted as (normalized)
 alignment crossings, which has been shown
 to correlate with translation non-literalness
 (Schaeffer and Carl, 2014).
+
 We use the multilingual-BERT-based awesome-
 aligner (Devlin et al., 2019; Dou and Neubig, 2021)
 to obtain the word to word alignments between the
 source and the translation. Table 2 presents an il-
 lustration of translations with different USW and
-NM scores², obtained from different systems.
+NM scores?, obtained from different systems.
+
 Systems Under Evaluation We experiment with
 the below four systems (NMT and LLMs):
+
 1. WMT-21-SOTA: The Facebook multilingual
 system (Tran et al., 2021) won the WMT-21
 News Translation task (Barrault et al., 2021),
 and thereby represents the strongest NMT sys-
-tem on the WMT'21 test sets.
+tem on the WMT’21 test sets.
+
 2. Microsoft-Translator: MS-Translator is one
 of the strongest publicly available commercial
 NMT systems (Raunak et al., 2022).
+
 3. text-davinci-002: The text-davinci-002 model
 is an instruction fine-tuned model in the GPT
 family (Brown et al., 2020). It represents
 one of the strongest publicly-accessible LLMs
 (Liang et al., 2022).
+
 4. text-davinci-003: The text-davinci-003 model
 further improves upon text-davinci-002 for
-many tasks³ (Liang et al., 2022).
+many tasks* (Liang et al., 2022).
+
 For both the GPT models, we randomly select eight
 samples from the corresponding WMT-21 develop-
 ment set, and use these in the prompt as demonstra-
 tions for obtaining all translations from GPTs.
+
 Results We compare the performance of the four
 systems on the WMT-21 test sets. Figure 1 shows
 the results of this comparison. A key observation is
 that while the GPT based translations achieve supe-
 rior COMET-QE+LID scores than Microsoft Trans-
 lator across the language pairs (except En-Ru), they
-2 Metrics: https://github.com/vyraun/literalness
-3LLMs: https://beta.openai.com/docs/models/
-Translation Non-Monotonicity (NM)
-Unaligned Source Words Percentage (USW
-COMET-QE+LID Score (C-QE)
+
+Metrics: https: //github.com/vyraun/literalness
+3LLMs: https: //beta.openai.com/docs/models/
+
+--- Page 3 ---
 50
-20
-MS-Translator
-WMT-21-SOTA
-davinci-002
-davinci-003
-Tual
-EN-DE
-DE-EN
-MS-Translator
-WMT-21-SOTA
-davinci-002
-davinci-003
-RU-EN
+(5) MS-Translator
+(_- WMT-21-SOTA
+(=) davinci-002
+M9 davinci-003
+
+(Nddi
+
+EN-DE DE-EN RU-EN
 WMT'21 Dataset
-EN-RU
-است
-EN-DE
-DE-EN
+
+COMET-QE+LID Score (C-QE)
+Ny N w w PS FS
+8 Pd 8 a és &
+
+N
+nN
+
+(50 MS-Translator
+(:- WMT-21-SOTA
+(=) davinci-002
+M5 davinci-003
+
+fal
+
+BoP eB BON
+RB & & 8
+
+Unaligned Source Words Percentage (USW
+w
+$
+
+©
+
+EN-DE DE-EN RU-EN
 WMT'21 Dataset
+
+*
+&
+
 MS-Translator
 WMT-21-SOTA
 davinci-002
 davinci-003
+
+oo
+BOG
+
+»
+o
+
+roe
+eo © S&S FF
+
+Translation Non-Monotonicity (NM)
+w
+5
+
+WMT" 21 Dataset
+
+Figure 1: Measurements: The NMT Systems and GPT
+models achieve similar COMET-QE+LID Scores (Top),
+there exists a significant gap in the number of unaligned
+source words (USW) across the datasets (Bottom). Fur-
+ther, GPT translations obtain higher non-monotonicity
+scores for E-X translations (Middle).
+
+also consistently obtain considerably higher num-
+ber of unaligned source words. This result holds for
+the comparison between the WMT-21-SOTA and
+GPT systems as well. Further, GPT translations
+also consistently show higher non-monotonicity for
+EX < translations. However, this is not the case
+for translations into English, wherein the multi-
+lingual WMT-21-SOTA system obtains very close
+non-monotonicity measurements. The combined
+interpretation of these measurements suggests that
+GPTs do produce less literal EX translations.
+
+Human Evaluation We verify the conclusion
+from the results in Figure | by conducting a human
+evaluation of translation literalness on 6 WMT-22
+
 language pairs: En-De, En-Ru, En-Zh and De-En,
 Ru-En, Zh-En. For each language pair, we ran-
 domly sample 100 source-translation pairs, with
@@ -229,75 +320,27 @@ and select which of the two translations is more lit-
 eral. The human annotation interface is described
 in Appendix A. The results in Table 3 show that the
 annotators rate the GPT translations as less literal.
-Lang-Pair MS-Translator
-Davinci-003 Equal Diff
-RU-EN
-EN-RU
-En-De
-52
-32
-En-Zh
-42
-32
-En-Ru
-41
-37
-De-En
-48
-26
-Zh-En
-42
-38
-Ru-En
-52
-28
-122222
-16
-+20
-24
-+10
-+4
-26
-+12
-20
-+4
-20
-+24
-EN-DE
-DE-EN
-RU-EN
-WMT'21 Dataset
-EN-RU
-Figure 1: Measurements: The NMT Systems and GPT
-models achieve similar COMET-QE+LID Scores (Top),
-there exists a significant gap in the number of unaligned
-source words (USW) across the datasets (Bottom). Fur-
-ther, GPT translations obtain higher non-monotonicity
-scores for E-X translations (Middle).
-also consistently obtain considerably higher num-
-ber of unaligned source words. This result holds for
-the comparison between the WMT-21-SOTA and
-GPT systems as well. Further, GPT translations
-also consistently show higher non-monotonicity for
-E→X translations. However, this is not the case
-for translations into English, wherein the multi-
-lingual WMT-21-SOTA system obtains very close
-non-monotonicity measurements. The combined
-interpretation of these measurements suggests that
-GPTs do produce less literal E→X translations.
-Human Evaluation We verify the conclusion
-from the results in Figure 1 by conducting a human
-evaluation of translation literalness on 6 WMT-22
+
+Lang-Pair | MS-Translator | Davinci-003 | Equal | Diff
+
+En-De 52 32 16 +20
+En-Zh 42 32 24 +10
+En-Ru 41 37 22 +4
+De-En 48 26 26 +12
+Zh-En 42 38 20 +4
+Ru-En 52 28 20 +24
+
 Table 3: Human Evaluation Results across different lan-
 guage pairs on which is the more literal translation: the
 numbers are from annotations done on 100 translations
 obtained from both MS-Translator and Davinci-003.
+
 Experiments on Best WMT-22 NMT Systems
 Further, we also experiment with the WMT-Best
 systems on the WMT-22 General Machine Transla-
 tion task (Kocmi et al., 2022). We evaluate USW
 and NM on De-En, Ja-En, En-Zh and Zh-En, since
-on each of these language pairs, text-davinci-003's
+on each of these language pairs, text-davinci-003’s
 few-shot performance is very close to that of the
 WMT-Best system as per COMET-22 (Rei et al.,
 2022), based on the evaluation done in Hendy et al.
@@ -315,37 +358,32 @@ sured over character-level alignments. Further, we
 refer the reader to Hendy et al. (2023) for similar
 USW and NM comparisons of translations from
 text-davinci-003 and MS-Translator.
-Language Pair
-USW Diff NM Diff
-+ 4.93
-+ 12.94
-En-Zh
-De-En
-+1.04
--0.10
-Zh-En
-+ 4.93
-+ 13.06
-Ja-En
-+ 6.10
-+11.13
+
+
+--- Page 4 ---
+Language Pair | USW Diff | NM Diff
+
+En-Zh = | -+4.93 | + 12.94
+De-En + 1.04 - 0.10
+
+Zh-En +4.93 | + 13.06
+Ja-En +6.10 | +11.13
+
 Table 4: USW and NM score differences of text-davinci-
 003 relative to WMT-Best on the WMT-22 test sets.
-MT System
-C-QE↑ USW↓↓ NM↓
-MS-Translator
-21.46
-13.70 9.63
-WMT'21 SOTA 23.25
-text-davinci-002
-23.67
-14.47 10.21
-18.08 11.39
+
+MT System | C-QEt | USW| | NMI
+MS-Translator 21.46 13.70 9.63
+WMT’21 SOTA | 23.25 14.47 | 10.21
+text-davinci-002 | 23.67 18.08 | 11.39
+
 Table 5: Natural Idiomatic Sentences: Combined Re-
 sults over MAGPIE, EPIE, PIE (5,712 sentences).
+
 3 Effects On Figurative Compositionality
+
 In this section, we explore whether the less lit-
-eral nature of E→X translations produced by GPT
+eral nature of EX translations produced by GPT
 models could be leveraged to generate higher qual-
 ity translations for certain inputs. We posit the
 phenomenon of composing the non-compositional
@@ -357,14 +395,15 @@ ality would be able to abstract the meaning of the
 idiomatic expression in the source sentence and
 express it in the target language non-literally, ei-
 ther through a non-literal (paraphrased) expression
-of the idiom's meaning or through an equivalent
+of the idiom’s meaning or through an equivalent
 idiom in the target language. Note that greater non-
 literalness does not imply better figurative compo-
 sitionality. Non-literalness in a translation could
 potentially be generated by variations in translation
 different from the desired figurative translation.
-3.1
-Translation with Idiomatic Datasets
+
+3.1 Translation with Idiomatic Datasets
+
 In this section, we quantify the differences in the
 translation of sentences with idioms between tra-
 ditional NMT systems and a GPT model. There
@@ -374,25 +413,30 @@ experiment with monolingual (English) sentences
 with idioms. The translations are generated with
 the same prompt in Section 2. The datasets with
 natural idiomatic sentences are enumerated below:
-• MAGPIE (Haagsma et al., 2020) contains a set
+
+¢ MAGPIE (Haagsma et al., 2020) contains a set
 of sentences annotated with their idiomaticity,
-•
+
 alongside a confidence score. We use the sen-
 tences pertaining to the news domain which
 are marked as idiomatic with cent percent an-
 notator confidence (totalling 3,666 sentences).
-EPIE (Saxena and Paul, 2020) contains id-
+
+¢ EPIE (Saxena and Paul, 2020) contains id-
 ioms and example sentences demonstrating
 their usage. We use the sentences available
 for static idioms (totalling 1,046 sentences).
-• The PIE dataset (Zhou et al., 2021) contains
+
+¢ The PIE dataset (Zhou et al., 2021) contains
 idioms along with their usage. We randomly
 sample 1K sentences from the corpus.
+
 Results The results are presented in Table 5. We
 find that text-davinci-002 produces better quality
-translations than the WMT'21 SOTA system, with
+translations than the WMT’21 SOTA system, with
 greater number of unaligned words as well as with
 higher non-monotonicity.
+
 Further Analysis Note that a direct attribution
 of the gain in translation quality to better transla-
 tion of idioms specifically is challenging. Further,
@@ -400,7 +444,7 @@ similarity-based quality metrics such as COMET-
 QE themselves might be penalizing non-literalness,
 even though they are less likely to do this than
 surface-level metrics such as BLEU or ChrF (Pa-
-pineni et al., 2002b; Popović, 2015). Therefore,
+pineni et al., 2002b; Popovic, 2015). Therefore,
 while a natural monolingual dataset presents a use-
 ful testbed for investigating figurative composition-
 ality abilities, an explicit comparison of figurative
@@ -411,7 +455,9 @@ grained attributes of the input sentences. We do
 this by allocating most of the variation among the
 input sentences to certain constituent expressions
 in synthetic data generation.
+
 3.2 Synthetic Experiments
+
 For our next experiments, we generate synthetic
 English sentences, each containing expressions of
 specific type(s): (i) names, (ii) random descriptive
@@ -424,21 +470,18 @@ tems, in order to investigate the relative effects on
 our literalness metrics between systems and across
 types. In each of the control experiments, we trans-
 late the synthetic English sentences to German.
-Expression C-QE
-Random Phrases
--2.45
-Named Entities
-Idioms
--1.50
-+5.90
-USW↓ NM↓
-+1.62 +0.14
-+0.81 +0.39
-+2.82 +1.95
+
+--- Page 5 ---
+Expression C-QEt | USW| | NMI
+Random Phrases -2.45 +1.62 | +0.14
+Named Entities -1.50 +0.81 | +0.39
+Idioms +5.90 +2.82 | +1.95
+
 Table 6: Synthetic sentences with Idioms vs Synthetic
 sentences containing other expressions: The difference
 between GPT (text-davinci-002) performance and NMT
 performance (Microsoft Translator) is reported.
+
 Synthetic Dataset 1 As described, we generate
 sentences containing expressions of the three types,
 namely, named entities (e.g., Jessica Alba), ran-
@@ -446,25 +489,25 @@ dom descriptive phrases (e.g., large cake on plate)
 and idioms (e.g., a shot in the dark). Expression
 sources as well as further data generation details
 are presented in Appendix B. Results are in Table 6.
-Num Idioms 1
-USW
-2
-3
-4
-17.58 18.39 18.28 18.99
+
+Num Idioms 1 2 3 4
+USW 17.58 | 18.39 | 18.28 | 18.99
+
 Table 7: Synthetic sentences with multiple idioms (1-4):
 Increasing the number of idioms increases the number of
 unaligned source words in text-davinci-002 translations.
+
 Synthetic Dataset 2 We generate sentences con-
-taining multiple idioms (varying from 1 to 4). The
+taining multiple idioms (varying from | to 4). The
 prompts & examples are presented in appendix B.
 The results are presented in Table 7.
+
 Results Table 6 shows that the percentage of un-
 aligned source words is highest in the case of id-
 ioms, followed by random descriptive phrases &
 named entities. The results are consistent with the
 hypothesis that the explored GPT models produce
-less literal E→X translations, since named entities
+less literal EX translations, since named entities
 or descriptive phrases in a sentence would admit
 more literal translations as acceptable, unlike sen-
 tences with idioms. Davinci-002 obtains a much
@@ -478,13 +521,17 @@ results of the GPT model, together with the lower
 literalness numbers, stem from correct translation
 of idiomatic expressions. Table 7 shows that this
 effect only increases with the number of idioms.
+
 4 Discussion
+
 In our experiments conducted across different
 NMT systems and GPT models, we find evidence
 that GPTs produce translations with greater non-
-literalness for E→X in general. There could be
+literalness for EX in general. There could be
+
 a number of potential causes for this; we list two
 plausible hypotheses below:
+
 Parallel Data Bias NMT models are trained on
 parallel data, which often contains very literal web-
 collected outputs. Some of this may even be the
@@ -492,10 +539,11 @@ output of previous-generation MT systems, which
 is highly adopted and hard to detect. In addition,
 even high quality target text in parallel data always
 contains artifacts that distinguishes it from text orig-
-inally written in that language, i.e. the 'transla-
-tionese' effect (Gellerstam, 2005). These factors
+inally written in that language, i.e. the ‘transla-
+tionese’ effect (Gellerstam, 2005). These factors
 could likely contribute to making NMT translations
 comparatively more literal.
+
 Language Modeling Bias Translation capabil-
 ity in GPTs arises in the absence of any explicit
 supervision for the task during the pre-training
@@ -505,36 +553,45 @@ might be different from NMT models, imparting
 them greater abstractive abilities. This could have
 some measurable manifestation in the translations
 produced, e.g., in the literalness of the translations.
-Differences in E→X and X→E In E→X, we
+
+Differences in E>X and XE In EX, we
 consistently find that GPT translations of similar
-quality are less literal and in the X→E direction,
-we observe a few anomalies. For X→E, in Fig-
+quality are less literal and in the XE direction,
+we observe a few anomalies. For X—E, in Fig-
 ure 1, in all but one comparison (WMT-21-SOTA
 vs GPTs for De-En) GPTs obtain higher measures
 for non-literalness. On the other hand, we did not
-see anomalies in the trend for E→X directions.
+see anomalies in the trend for EX directions.
+
 Variations in Experimental Setup We also ex-
 perimented with a variant of USW and NM which
-doesn't use the alignments pertaining to stopwords.
+doesn’t use the alignments pertaining to stopwords.
 Each of our findings remain the same, with rel-
 atively minor changes in magnitudes but not in
 system rankings. Similarly, we observed a greater
 tendency towards less literalness in GPT transla-
 tions in both few-shot and zero-shot settings, when
 compared across a range of NMT systems.
+
 5 Summary and Conclusion
+
 We investigated how the translations obtained
 through LLMs from the GPT family are qualita-
 tively different by quantifying the property of trans-
-lation literalness. We find that for E→X trans-
+lation literalness. We find that for EX trans-
 lations, there is a greater tendency towards non-
 literalness in GPT translations. In particular, this
-tendency becomes evident in GPT systems' ability
+tendency becomes evident in GPT systems’ ability
 to figuratively translate idioms.
+
+--- Page 6 ---
 6 Acknowledgements
+
 We thank Hitokazu Matsushita for help in conduct-
 ing human evaluations.
+
 7 Limitations
+
 Measurement of translation literalness is neither
 well studied nor well understood. We rely on a
 combined interpretation of multiple measurements
@@ -552,7 +609,9 @@ zero-shot and few-shot settings and it is quite con-
 ceivable that more specific & verbose instructions
 could steer the LLMs to produce translations with
 different characteristics.
+
 References
+
 Loic Barrault, Ondrej Bojar, Fethi Bougares, Rajen
 Chatterjee, Marta R. Costa-jussa, Christian Feder-
 mann, Mark Fishel, Alexander Fraser, Markus Fre-
@@ -563,10 +622,12 @@ Martins, Makoto Morishita, and Christof Monz, edi-
 tors. 2021. Proceedings of the Sixth Conference on
 Machine Translation. Association for Computational
 Linguistics, Online.
+
 Eleftheria Briakou, Colin Cherry, and George Foster.
 2023. Searching for needles in a haystack: On the
-role of incidental bilingualism in palm's translation
+role of incidental bilingualism in palm’s translation
 capability.
+
 Tom Brown, Benjamin Mann, Nick Ryder, Melanie
 Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind
 Neelakantan, Pranav Shyam, Girish Sastry, Amanda
@@ -581,11 +642,14 @@ Language models are few-shot learners. In Ad-
 vances in Neural Information Processing Systems,
 volume 33, pages 1877-1901. Curran Associates,
 Inc.
+
 Aakanksha Chowdhery, Sharan Narang, Jacob Devlin,
 Maarten Bosma, Gaurav Mishra, Adam Roberts, Paul
+
 Barham, Hyung Won Chung, Charles Sutton, Sebas-
 tian Gehrmann, et al. 2022. Palm: Scaling language
 modeling with pathways.
+
 Verna Dankers, Elia Bruni, and Dieuwke Hupkes. 2022a.
 The paradox of the compositionality of natural lan-
 guage: A neural machine translation case study. In
@@ -593,13 +657,15 @@ Proceedings of the 60th Annual Meeting of the As-
 sociation for Computational Linguistics (Volume 1:
 Long Papers), pages 4154-4175, Dublin, Ireland. As-
 sociation for Computational Linguistics.
+
 Verna Dankers, Christopher Lucas, and Ivan Titov.
 2022b. Can transformer be too compositional?
 analysing idiom processing in neural machine trans-
 lation. In Proceedings of the 60th Annual Meeting of
 the Association for Computational Linguistics (Vol-
-ume 1: Long Papers), pages 3608-3626, Dublin,
+ume I: Long Papers), pages 3608-3626, Dublin,
 Ireland. Association for Computational Linguistics.
+
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
 Kristina Toutanova. 2019. BERT: Pre-training of
 deep bidirectional transformers for language under-
@@ -609,41 +675,50 @@ Computational Linguistics: Human Language Tech-
 nologies, Volume 1 (Long and Short Papers), pages
 4171-4186, Minneapolis, Minnesota. Association for
 Computational Linguistics.
+
 Zi-Yi Dou and Graham Neubig. 2021. Word alignment
 by fine-tuning embeddings on parallel corpora. In
 Proceedings of the 16th Conference of the European
 Chapter of the Association for Computational Lin-
-guistics: Main Volume, pages 2112–2128, Online.
+guistics: Main Volume, pages 2112-2128, Online.
 Association for Computational Linguistics.
+
 Marina Fomicheva, Shuo Sun, Lisa Yankovskaya,
-Frédéric Blain, Francisco Guzmán, Mark Fishel,
+Frédéric Blain, Francisco Guzman, Mark Fishel,
 Nikolaos Aletras, Vishrav Chaudhary, and Lucia Spe-
 cia. 2020. Unsupervised quality estimation for neural
 machine translation. Transactions of the Association
 for Computational Linguistics, 8:539-555.
+
 Martin Gellerstam. 2005. Chapter 13. Fingerprints in
-Translation, pages 201–213. Multilingual Matters,
+Translation, pages 201-213. Multilingual Matters,
 Bristol, Blue Ridge Summit.
+
 Tanya Goyal, Junyi Jessy Li, and Greg Durrett. 2022.
 News summarization and evaluation in the era of
 gpt-3. arXiv preprint arXiv:2209.12356.
+
 Hessel Haagsma, Johan Bos, and Malvina Nissim. 2020.
 MAGPIE: A large corpus of potentially idiomatic
 expressions. In Proceedings of the Twelfth Lan-
 guage Resources and Evaluation Conference, pages
 279-287, Marseille, France. European Language Re-
 sources Association.
+
 Tianxing He, Jingyu Zhang, Tianle Wang, Sachin
 Kumar, Kyunghyun Cho, James Glass, and Yulia
 Tsvetkov. 2022. On the blind spots of model-based
 evaluation metrics for text generation. arXiv preprint
 arXiv:2212.10020.
+
+--- Page 7 ---
 Amr Hendy, Mohamed Abdelrehim, Amr Sharaf,
 Vikas Raunak, Mohamed Gabr, Hitokazu Matsushita,
 Young Jin Kim, Mohamed Afify, and Hany Hassan
 Awadalla. 2023. How good are gpt models at ma-
 chine translation? a comprehensive evaluation. arXiv
 preprint arXiv:2302.09210.
+
 Armand Joulin, Edouard Grave, Piotr Bojanowski, and
 Tomas Mikolov. 2017. Bag of tricks for efficient
 text classification. In Proceedings of the 15th Con-
@@ -651,30 +726,34 @@ ference of the European Chapter of the Association
 for Computational Linguistics: Volume 2, Short Pa-
 pers, pages 427-431, Valencia, Spain. Association
 for Computational Linguistics.
-Tom Kocmi, Rachel Bawden, Ondřej Bojar, Anton
+
+Tom Kocmi, Rachel Bawden, Ondiej Bojar, Anton
 Dvorkovich, Christian Federmann, Mark Fishel,
 Thamme Gowda, Yvette Graham, Roman Grund-
 kiewicz, Barry Haddow, Rebecca Knowles, Philipp
 Koehn, Christof Monz, Makoto Morishita, Masaaki
-Nagata, Toshiaki Nakazawa, Michal Novák, Martin
-Popel, and Maja Popović. 2022. Findings of the 2022
+Nagata, Toshiaki Nakazawa, Michal Novak, Martin
+Popel, and Maja Popovié. 2022. Findings of the 2022
 conference on machine translation (WMT22). In
 Proceedings of the Seventh Conference on Machine
 Translation (WMT), pages 1-45, Abu Dhabi, United
 Arab Emirates (Hybrid). Association for Computa-
 tional Linguistics.
+
 Percy Liang, Rishi Bommasani, Tony Lee, Dimitris
 Tsipras, Dilara Soylu, Michihiro Yasunaga, Yian
 Zhang, Deepak Narayanan, Yuhuai Wu, Ananya Ku-
 mar, et al. 2022. Holistic evaluation of language
 models. arXiv preprint arXiv:2211.09110.
+
 Kishore Papineni, Salim Roukos, Todd Ward, and Wei-
 Jing Zhu. 2002a. Bleu: a method for automatic eval-
 uation of machine translation. In Proceedings of the
 40th Annual Meeting of the Association for Compu-
-tational Linguistics, pages 311–318, Philadelphia,
+tational Linguistics, pages 311-318, Philadelphia,
 Pennsylvania, USA. Association for Computational
 Linguistics.
+
 Kishore Papineni, Salim Roukos, Todd Ward, and Wei-
 Jing Zhu. 2002b. Bleu: a method for automatic eval-
 uation of machine translation. In Proceedings of the
@@ -682,36 +761,44 @@ uation of machine translation. In Proceedings of the
 tational Linguistics, pages 311-318, Philadelphia,
 Pennsylvania, USA. Association for Computational
 Linguistics.
-Maja Popović. 2015. chrF: character n-gram F-score
+
+Maja Popovié. 2015. chrF: character n-gram F-score
 for automatic MT evaluation. In Proceedings of the
 Tenth Workshop on Statistical Machine Translation,
 pages 392-395, Lisbon, Portugal. Association for
 Computational Linguistics.
+
 Vikas Raunak, Matt Post, and Arul Menezes. 2022.
 Salted: A framework for salient long-tail translation
 error detection.
+
 Ricardo Rei, José G. C. de Souza, Duarte Alves,
 Chrysoula Zerva, Ana C Farinha, Taisiya Glushkova,
 Alon Lavie, Luisa Coheur, and André F. T. Martins.
 2022. COMET-22: Unbabel-IST 2022 submission
 for the metrics shared task. In Proceedings of the
+
 Seventh Conference on Machine Translation (WMT),
 pages 578-585, Abu Dhabi, United Arab Emirates
 (Hybrid). Association for Computational Linguistics.
+
 Ricardo Rei, Craig Stewart, Ana C Farinha, and Alon
 Lavie. 2020. COMET: A neural framework for MT
 evaluation. In Proceedings of the 2020 Conference
 on Empirical Methods in Natural Language Process-
 ing (EMNLP), pages 2685-2702, Online. Association
 for Computational Linguistics.
+
 Prateek Saxena and Soma Paul. 2020. Epie dataset: A
 corpus for possible idiomatic expressions.
+
 Moritz Schaeffer and Michael Carl. 2014. Measuring
 the cognitive effort of literal translation processes.
 In Proceedings of the EACL 2014 Workshop on Hu-
-mans and Computer-assisted Translation, pages 29-
+mans and Computer-assisted Translation, pages 29-—
 37, Gothenburg, Sweden. Association for Computa-
 tional Linguistics.
+
 Andrea Schioppa, David Vilar, Artem Sokolov, and
 Katja Filippova. 2021. Controlling machine transla-
 tion for multiple attributes with additive interventions.
@@ -719,6 +806,7 @@ In Proceedings of the 2021 Conference on Empiri-
 cal Methods in Natural Language Processing, pages
 6676-6696, Online and Punta Cana, Dominican Re-
 public. Association for Computational Linguistics.
+
 Simone Tedeschi and Roberto Navigli. 2022. MultiN-
 ERD: A multilingual, multi-genre and fine-grained
 dataset for named entity recognition (and disambigua-
@@ -726,80 +814,112 @@ tion). In Findings of the Association for Compu-
 tational Linguistics: NAACL 2022, pages 801-812,
 Seattle, United States. Association for Computational
 Linguistics.
+
 Chau Tran, Shruti Bhosale, James Cross, Philipp Koehn,
 Sergey Edunov, and Angela Fan. 2021. Facebook
-AI's WMT21 news translation task submission. In
+AI’s WMT21 news translation task submission. In
 Proceedings of the Sixth Conference on Machine
 Translation, pages 205-215, Online. Association for
 Computational Linguistics.
+
 David Vilar, Markus Freitag, Colin Cherry, Jiaming Luo,
 Viresh Ratnakar, and George Foster. 2022. Prompt-
 ing palm for translation: Assessing strategies and
 performance.
+
 Chenyun Wu, Zhe Lin, Scott Cohen, Trung Bui, and
 Subhransu Maji. 2020. Phrasecut: Language-based
 image segmentation in the wild. In Proceedings of
 the IEEE/CVF Conference on Computer Vision and
-Pattern Recognition, pages 10216–10225.
+Pattern Recognition, pages 10216-10225.
+
 Jianing Zhou, Hongyu Gong, and Suma Bhat. 2021.
 PIE: A parallel idiomatic expression corpus for id-
 iomatic sentence generation and paraphrasing. In
 Proceedings of the 17th Workshop on Multiword Ex-
 pressions (MWE 2021), pages 33-48, Online. Asso-
 ciation for Computational Linguistics.
+
+--- Page 8 ---
 Source: The party has been unable to disqualify
 the rebels to bring down the majority mark in the
 assembly.
+
 System A: Die Partei war nicht in der Lage, die
 Rebellen zu disqualifizieren, um die
 Mehrheitsmarke in der Versammlung zu senken.
+
 System B: Die Partei war bisher nicht in der Lage,
 die Rebellen von der Wahl zu disqualifizieren, um
 die Mehrheitsmarke im Parlament zu senken.
+
 1 System A Translation is More Literal
-Synthetic Dataset 2: Figure 6 presents an ex-
-ample of the prompt as well as for a generated
-synthetic sentence containing two idioms.
-Prompt: Q: Generate a sentence containing the
-phrase: white chair, in the form of a news article
-sentence. \n A:
-Output: The white chair was found to be com-
-fortable by the majority of the participants in the
-study.
-Figure 5: Synthetic Dataset 1: Example (Phrase)
-2
-O System B Translation is More Literal
-3
-Both Translations are Equally Literal
+2 System B Translation is More Literal
+3 Both Translations are Equally Literal
+
 Figure 2: Annotation Interface Screenshot for Human
 Evaluation. The translations are randomized b/w the
 systems under evaluation to prevent biased evaluation.
+
 A Human Annotation Interface
+
 We use the annotation interface in Figure 2, in
 which the annotators are asked to rate the two trans-
 lations. The bilingual and native speaker annotators
 were recruited in-house.
-B Synthetic Dataset Details
+
+B_ Synthetic Dataset Details
+
 Synthetic Dataset 1: For each of the three expres-
 sion types, 100 synthetic sentences are generated.
 Figures 3, 4, 5 present examples. The sources of the
 named entities and descriptive phrase expressions
 are MultiNERD (Tedeschi and Navigli, 2022) and
 PhraseCut (Wu et al., 2020) datasets respectively.
+
 Prompt: Q: Generate a sentence containing the
 idiom: a short fuse, in the form of a news article
 sentence. \n A:
+
 Output: The man was known to have a short
 fuse, and often exploded into fits of anger without
 warning.
+
 Figure 3: Synthetic Dataset 1: Example (Idiom)
+
+Prompt: Q: Generate a sentence containing the
+entity: Wolfgang Amadeus Mozart, in the form
+of a news article sentence. \n A:
+
+Output: Wolfgang Amadeus Mozart, a world
+renowned composer, died today at the age of 35.
+
+Figure 4: Synthetic Dataset 1: Example (Entity)
+
+Synthetic Dataset 2: Figure 6 presents an ex-
+ample of the prompt as well as for a generated
+synthetic sentence containing two idioms.
+
+Prompt: Q: Generate a sentence containing the
+phrase: white chair, in the form of a news article
+sentence. \n A:
+
+Output: The white chair was found to be com-
+fortable by the majority of the participants in the
+study.
+
+Figure 5: Synthetic Dataset 1: Example (Phrase)
+
 Prompt: Q: Generate a sentence using the two
 idioms: off the wall, claim to fame in the form
 of a news article sentence. \n A:
-Output: The company's off-the-wall marketing
+Output: The company’s off-the-wall marketing
 campaign was its claim to fame.
+
 Figure 6: Synthetic Dataset 2: Example (2 Idioms)
-C Alignments and Literalness
+
+C_ Alignments and Literalness
+
 Schaeffer and Carl (2014) find that more align-
 ment crossings (which is measured by the non-
 monotonicity metric) between the source and trans-
@@ -809,9 +929,4 @@ required by human translators in processing non-
 literal translations. This links alignment crossings
 (the non-monotonicity measure is normalized align-
 ment crossing) with greater non-literalness.
-Prompt: Q: Generate a sentence containing the
-entity: Wolfgang Amadeus Mozart, in the form
-of a news article sentence. \n A:
-Output: Wolfgang Amadeus Mozart, a world
-renowned composer, died today at the age of 35.
-Figure 4: Synthetic Dataset 1: Example (Entity)
+

@@ -1,10 +1,15 @@
+--- Page 1 ---
 arXiv:2305.16411v1 [cs.CV] 25 May 2023
+
 ZeroAvatar: Zero-shot 3D Avatar Generation from a
 Single Image
+
 Zhenzhen Weng, Zeyu Wang, Serena Yeung
 Stanford University
 {zzweng, wangzeyu, syyeung}@stanford.edu
+
 Abstract
+
 Recent advancements in text-to-image generation have enabled significant progress
 in zero-shot 3D shape generation. This is achieved by score distillation, a methodol-
 ogy that uses pre-trained text-to-image diffusion models to optimize the parameters
@@ -20,114 +25,133 @@ texture regularization term to further guide the completion of texture on invisi
 body parts. We show that ZeroAvatar significantly enhances the robustness and 3D
 consistency of optimization-based image-to-3D avatar generation, outperforming
 existing zero-shot image-to-3D methods.
+
 1 Introduction
+
 The ability to extract rich and accurate 3D information from a single image holds great importance
 in content creation, where realistic and immersive visual experiences are crucial. By automatically
 inferring the 3D structure and appearance of objects, artists and designers can efficiently generate
 lifelike virtual scenes, characters, and objects. Beyond the realms of content creation and AR/VR, the
 ability to perceive 3D geometry and appearance from a single image has broader implications, and
-plays a pivotal role in robotics and scene understanding [40, 46]. Despite the recent advancements in
+plays a pivotal role in robotics and scene understanding [40]|46]. Despite the recent advancements in
 computer vision, 3D perception from a single image remains a challenging task. This is primarily due
 to the loss of information in the image projection process, which obscures important depth cues and
 object characteristics. Consequently, researchers have proposed various approaches and algorithms to
 tackle this problem, aiming to extract accurate and detailed 3D information from a single image.
+
 3D reconstruction from a single image has traditionally been approached through learning-based
-methods [38, 9, 43]. These approaches involve training neural networks to map an input image to a
+methods [38}|9|[43]. These approaches involve training neural networks to map an input image to a
 corresponding 3D representation. However, a challenge with this approach is the scarcity of high
 quality 3D training data. Recently, driven by the advancements in Large Language Models (LLMs)
-[27] and text-to-2D generative models [30, 24, 29] that are trained on large-scale data, a new avenue
+and text-to-2D generative models [30}/24](29] that are trained on large-scale data, a new avenue
 of exploration has opened up, offering the possibility of zero-shot generation for 3D representations.
-These type of approaches [17, 32, 36, 45, 26] harnesses the prior information embedded in pre-trained
+These type of approaches harnesses the prior information embedded in pre-trained
 models to optimize the parameters of implicit 3D representations of the object, leading to enhanced
 fidelity of the reconstructed 3D geometry and appearance. Despite showing impressive results on
+
 Preprint. Under review.
+
+--- Page 2 ---
+Let wWetr We}
+
+(a) Zero 1-to-3 (b) Make-it-3D (c) ZeroAvatar (Ours)
+
 Input Image
-(a) Zero 1-to-3
-(b) Make-it-3D
-(c) ZeroAvatar (Ours)
+
 Fig. 1: We propose ZeroAvatar, a zero-shot method that generates high-fidelity 3D avatars from single-view
 images. ZeroAvatar significantly improves over existing zero-shot methods in preserving the human structure.
 Zero 1-to-3 predicts 2D views from novel angles, whereas Make-it-3D and ZeroAvatar output a 3D model.
+
 a vast variety of objects, these approaches have a notable limitation when it comes to accurately
-reconstructing humans with complex poses (Figure 1). This is because these methods do not explicitly
+reconstructing humans with complex poses (Figure[Ip. This is because these methods do not explicitly
 model the structure of human bodies.
+
 In this work, we present ZeroAvatar, a zero-shot 3D generation method that generates a high-fidelity
 3D avatar from a single image. We address the limitations of existing works by employing several
-strategies. First, we initiate the average density field of neural radiance field (NeRF) [22] by deriving
+strategies. First, we initiate the average density field of neural radiance field (NeRF) by deriving
 a rough shape from an estimated human body shape (in the form of a parametric body model).
 Subsequently, we employ the depth information obtained from the posed body model as an extra
 conditioning for the text-to-image model (i.e. Stable Diffusion [29]), which enables us to generate
 results that better align with the geometric characteristics of the posed human. Furthermore, we
 incorporate a UV-guided texture prior to regularize the appearance of invisible points. We show that
 ZeroAvatar effectively enhances the overall fidelity and realism of the generated humans.
+
 Our main contributions can be summarized as follows:
-• We propose ZeroAvatar, a method for creating high-fidelity 3D avatars from a single image,
+
+* We propose ZeroAvatar, a method for creating high-fidelity 3D avatars from a single image,
 using a pre-trained text-to-image diffusion model as a prior.
-•
-By incorporating SMPL body model as an explicit geometry prior, along with a depth-
+
+¢ By incorporating SMPL body model as an explicit geometry prior, along with a depth-
 conditioned score distillation loss and a UV-guided prior for invisible body parts, ZeroAvatar
 significantly improves both geometry and appearance of the generated avatars, surpassing
 existing state-of-the-art zero-shot 3D generation techniques.
-• ZeroAvatar enables applications such as zero-shot text-to-3D avatar generation. We show
+
+* ZeroAvatar enables applications such as zero-shot text-to-3D avatar generation. We show
 that using the generated image from a pre-trained text-to-image model as a stepping stone,
 ZeroAvatar is able to generate 3D avatars with pose or text control, allowing for a wide
 range of downstream applications.
+
 2 Related Work
+
 2.1 3D Generation from 2D Observations
+
 Inferring 3D geometry from multi-view data is a classical computer vision problem. Earlier ap-
 proaches perform multi-view or multi-modal fusion, which involves combining information from
 multiple views or modalities to generate more accurate 3D representations. However, completeness
 of the observations is essential in this type of approach, which would require dense observations
 of the scene from various angles. In recent years, there have been significant breakthroughs in this
-field enabled by implicit neural representations (e.g. neural radiance fields (NeRF))[33, 22], which
+field enabled by implicit neural representations (e.g. neural radiance fields (NeRF)){33} [22], which
 reduces the need for dense observations. For articulated objects (e.g. humans) in particular, prior
-works learn pose-conditioned NeRF from 2D observations, e.g. a monocular video [34, 39], or sparse
+works learn pose-conditioned NeRF from 2D observations, e.g. a monocular video [34] [39], or sparse
 2D observations [51].
+
 2.2 3D Humans from a Single Image
+
 The task of estimating human pose and shape from a single image is referred to as single-view Human
 Mesh Recovery (HMR). There are typically two approaches for model-based HMR: learning-based
-and optimization-based. Learning-based methods [14] train an HMR model end-to-end on large
+and optimization-based. Learning-based methods train an HMR model end-to-end on large
 human pose datasets, and can be bottle-necked by the scarcity of training data paired with 3D ground
-truths. Consequently, for challenging out-of-domain scenarios, domain adaptation [10, 41] is often
-needed to close the domain gap. On the other hand, optimization-based methods [2, 25] employ
-an iterative fitting routine to estimate the body pose and shape of a parametric human body model
-2
-IUV
-Prediction
-Human Mesh
-Recovery
-IUV map
-UV for occluded
-parts
-Initialized geometry
-NeRF
-(MLP)
-Novel view
-UV loss
-Depth-guided SDS
-Stable
-Diffusion
-Depth loss
-Volume
-Rendering
+truths. Consequently, for challenging out-of-domain scenarios, domain adaptation is often
+needed to close the domain gap. On the other hand, optimization-based methods employ
+an iterative fitting routine to estimate the body Pgse and shape of a parametric human body model
+
+
+--- Page 3 ---
+6 ANG Novel view
+D AN
+luv . -
+Prediction cf
+i , Depth-guided SOS Stable
+: < Diffusion
+
 Novel view optimization
-Reference view
-Reconstruction loss
-Ref image
-Depth loss
+
+@ * on WO
+R 20 os
+Human Mesh ss Ret mage
+Recovery —_
+, oom
+
 Depth map
-Reference view optimization
+
+IUV map UV for occluded
+
+Reference view
+Initialized geometry Reference view optimization
+
 Fig. 2: Overview of ZeroAvatar. Given a single image, we first estimate the body pose, shape, and UV map of
 the person. We use the estimated body mesh to initialize the density field of the 3D representation. Then, we
 optimize the appearance and refine the geometry of the person using Score Distillation Sampling, during which
 depth information from the posed body model is used as conditioning in addition to text (i.e. image caption).
 When optimizing given a sampled novel view, we additionally use the inferred UVs on the invisible body parts
 to aid the learning of appearance.
+
 that best explains 2D observations, e.g. 2D joint locations or human silhouettes. Since explicitly
 optimizing for the agreement of the model with image features, the body model ends up having good
 alignment with the reference image.
+
 Besides the model-based human recovery, there is also a line of work that directly learns the volumetric
-representation of a human from single-view images [31, 44, 43]. These methods require end-to-end
+representation of a human from single-view images | 3]. These methods require end-to-end
 training, and therefore have limited generalization capability due to the scarcity of available 3D
 human scans. ZeroAvatar is analogous to the optimization-based model-based HMR methods in that
 we optimize a 3D representation of the human body to achieve consistency with the input image.
@@ -138,114 +162,127 @@ range of generalization, demonstrating superior performance on real-world humans
 avatars, such as cartoon characters. The ability to handle such a broad range of humans expands
 the potential applications and creative possibilities of our method in the realm of virtual character
 generation and animation.
+
 2.3 Zero-Shot 3D Generation
+
 Existing zero-shot 3D generation methods typically employ pre-trained vision-language models.
-Earlier works such as Text2Mesh [21] and DreamFields [13] use pre-trained CLIP model [27] as
+Earlier works such as Text2Mesh [21] and DreamFields use pre-trained CLIP model as
 guidance to optimize the appearance and geometry of the 3D representation, e.g. mesh or neural
-radiance field (NeRF). Analogously for human subjects, CLIP-actor [47] and AvatarCLIP [12] employ
+radiance field (NeRF). Analogously for human subjects, CLIP-actor and AvatarCLIP employ
 CLIP-guided losses for generating stylized human avatars based on text descriptions.
+
 A more recent type of approach (e.g. DreamFusion [26], Magic3D [16], Score Jacobian Chaining
-[37]) have made significant advancements in pushing the quality of generated 3D representations
-to new levels leveraging large diffusion models [30, 29]. These works leverage the idea of Score
+[B7]) have made significant advancements in pushing the quality of generated 3D representations
+to new levels leveraging large diffusion models (30) [29]. These works leverage the idea of Score
 Distillation Sampling (SDS), where a score distillation loss derived from pre-trained text-to-image
 diffusion models (e.g. [30]) is used as a prior for optimization, such that the 2D renderings from
 random angles look like good generations from text-to-image models. Following these pioneering
-works, recent works [36, 17] have approached the problem of zero-shot image-conditioned 3D
+works, recent works have approached the problem of zero-shot image-conditioned 3D
 generation. Although these methods are able to recover high-fidelity 3D representation of objects
 with simple geometry, they often struggle to hallucinate the geometry of relatively more complex
-structure. To overcome this limitation, an increasing number of works [18, 45, 32] are starting to
+structure. To overcome this limitation, an increasing number of works 2 are starting to
 utilize shape priors as a more robust guide to aid the learning of geometry. In creating shape priors,
 ISS [18] and Dream3D [45] utilize a fine-tuned image-to-mesh model, and 3D Fuse [32] leverages an
 off-the-shelf model to generate a coarse point cloud of the scene.
-3
-3 ZeroAvatar
-Given a reference image I of a human avatar, ZeroAvatar optimizes a neural radiance field (NeRF)
-[22] that represents the 3D avatar. To achieve this, we first initialize the mean density field of
-NERF with a coarse shape computed from a parametric body model (Section 3.2). Then, we use the
+
+
+--- Page 4 ---
+3  ZeroAvatar
+
+Given a reference image T of a human avatar, ZeroAvatar optimizes a neural radiance field (NeRF)
+(22]] that represents the 3D avatar. To achieve this, we first initialize the mean density field of
+NeRF with a coarse shape computed from a parametric body model (Section[3.2). Then, we use the
 depth of the posed body model as additional conditioning for the Stable Diffusion model to produce
-generations that are more faithful to the geometry of the posed human (Section 3.3). In addition, we
+generations that are more faithful to the geometry of the posed human (Section[3.3). In addition, we
 regularize the appearance of invisible points using a UV-guided texture prior leveraging a common
-property of human textures (Section 3.4).
+property of human textures (Section
+
 3.1 Background
-Neural radiance field (NeRF) [22] represents a 3D scene via an implicit function
-F0(√(x)) = (σ(x), c(x))
-(1)
-where (.) is a frequency encoder, and σ and c are density and colors and can be learned by a
-small MLP with parameters 0. We render a neural field using the volume rendering equation from
+
+Neural radiance field (NeRF) represents a 3D scene via an implicit function
+Fa(y(x)) = (a(x), ex) (1)
+
+where 7(-) is a frequency encoder, and o and c are density and colors and can be learned by a
+small MLP with parameters 9. We render a neural field using the volume rendering equation from
 Mildenhall et al. [22]. For each image pixel, a ray r is casted from the pixel location into the 3D
 scene and the RGB value at the pixel location can be calculated using the density and color values
-(predicted by Fe) from the D sampled 3D points x; along r. Formally, color C(r) can be expressed
+(predicted by Fy) from the D sampled 3D points x; along r. Formally, color C(r) can be expressed
 as
-Ꭰ
-C(r) = Wi(a;j<i(1 − αj))c(xi)
-i=1
-(2)
-where ai = 1 — exp(−σ(xi)▲¿), and Ai ||Xi Xi+1 1|| is the interval between sample i and i+1.
-Skinned Multi-Person Linear (SMPL) [19] body model is a differentiable function M(Q, ẞ, t) that
-takes a pose parameter (i.e. K joint rotations along the kinematic tree) ERK×³, shape parameter
-BER¹0 and a 3D translation vector R³, and returns the body mesh MER6890×3 with 6890 vertices.
+
+D
+Clr) = > Wi(aillj<i(1 — a5) )e(%) Q)
+i=l
+
+where a; = 1 — exp(—o(x;)A;), and A; = ||x; — xj+1]| is the interval between sample i and i+1.
+
+Skinned Multi-Person Linear (SMPL) body model is a differentiable function M(Q, , t) that
+takes a pose parameter (i.e. K joint rotations along the kinematic tree) Q € R**%, shape parameter
+6 € R" and a 3D translation vector R°, and returns the body mesh M € R%°*? with 6890 vertices.
 We use SMPL as a 3D human body shape prior in ZeroAvatar.
+
 3.2 Density Field Initialization
+
 The goal of this stage is to initialize the density field with a reasonable human shape. This provides a
 reasonable starting point for the geometry of the person, and prevents the optimization from diverging.
+
 Given an input image, we first estimate the pose and shape of the person using an off-the-shelf human
-mesh recovery (HMR) model [48]. The proposed optimization losses in Section 3.3 and 3.4 assume
+mesh recovery (HMR) model . The proposed optimization losses in Section|3.3]and|3.4]assume
 good alignment between the SMPL body and the image. Direct SMPL mesh estimation M may not
-align well with the reference image. Therefore, using a similar loss term as in Xiu et al. [44], we
+align well with the reference image. Therefore, using a similar loss term as in Xiu et al. » we
 refine the predicted SMPL parameters by encouraging the consistency between the SMPL prediction,
 normal map and silhouette. The loss function for the refinement is
-LSMPL
-=
-min¸‚ß‚t(\N\N – NM| + λs|S – S³|)
-where NM and SM are the normals and silhoutte of the predicted mesh M, N and S are the normals
-and mask of the human in the image. AN and As are hyper-parameters.
+
+Lever = ming,aAvW —N™| + As|S — so!) (3)
+
+where V™ and S™ are the normals and silhoutte of the predicted mesh M, N and S are the normals
+and mask of the human in the image. Ay and Ags are hyper-parameters.
+
 Next, we use the refined human mesh M* to initialize the neural radiance field. Specifically, for each
 point x in space, we compute the signed distance between x and the closest point on SMPL surface.
-Following Xu et al. [45], we then initialize the density field using the signed distance d(x,M*).
-Vx =
-sigmoid (-
-d(x, M*)
-B
-στ
-=
-max(0, softplus¹(vx))
-(4)
-(5)
-ẞ is a hyper-parameter controlling the sharpness of the shape boundary, and we set it to 0.05. In
+Following Xu et al. , we then initialize the density field using the signed distance d(x, M"*).
+
+1. da, M*)
+Ur = poigmoid(———F—) (4)
+G» = max(0, softplus~!(v,)) (5)
+
+8 is a hyper-parameter controlling the sharpness of the shape boundary, and we set it to 0.05. In
 optimizing NeRF, we use a MLP to predict the residual density at a point x. That is,
-(σ(x), c(x)) = Fo(√(x)) + (σx, 0)
-(6)
-4
+
+--- Page 5 ---
 3.3 Depth-guided Geometry Optimization
+
 In this stage, we optimize the neural radiance field leveraging a pre-trained text-to-image diffusion
 model (i.e. Stable Diffusion [29]). Diffusion models are generative models that are trained to invert a
 multi-step noising process. The denoising process at each step is learned by a neural network €. To
 optimize the 3D representation of the human such that the renderings are close to the good generation
-samples, Poole et al. [26] proposed Score Distillation Sampling (SDS).
-Given a novel view rendering x = Ge (B) of the 3D representation from viewpoint ẞ (G is the volume
-rendering function as described in Section 3.1), SDS optimizes the parameters of NeRF 0 via the
-objective VoLSDs (0, x = Go(ß)) = Et,e[w(t) (€ (Zt; y, t) − e) az Ox]. Here y is the text embedding
-of the reference image caption, and z₁ is the noisy latent of the novel view, obtained by the image
+samples, Poole et al. proposed Score Distillation Sampling (SDS).
+
+Given a novel view rendering x = Gg() of the 3D representation from viewpoint 6 (G is the volume
+rendering function as described in Section[3-Ip, SDS optimizes the parameters of NeRF @ via the
+objective Ve£sns(¢, x = Go(B)) = Ex,.[w(t) (es (Ze; y, t) — c) 92 ox) Here y is the text embedding
+of the reference image caption, and z, is the noisy latent of the novel view, obtained by the image
 encoder of Stable Diffusion. While SDS is effective in optimizing scenes that have a simple geometry
 such as a blob, we observe that for objects with complex geometry such as a human with stretched
 out limbs, the vanilla SDS alone often fails to preserve the underlying structure of the scene. In this
 work, we leverage depths of the SMPL mesh as a geometric prior for Stable Diffusion to regularize
-the structure of the generated images. Specifically, we first use a depth renderer Rd to render the
-depth values of SMPL mesh from viewpoint ẞ to get a depth map d = Ra(M, B), and then use the
-depth-conditioned denoising model ed, (a variant of & that takes an additional depth channel). The
+the structure of the generated images. Specifically, we first use a depth renderer Ry to render the
+depth values of SMPL mesh from viewpoint to get a depth map d = Ra(M, 3), and then use the
+depth-conditioned denoising model ef, (a variant of ¢€ that takes an additional depth channel). The
 depth-conditioned score distillation objective is then
-VoLd-SDS (0, x = Go(ß)) = Et,e[w(t) (ed, (zt; y, t, d) — €)
--
-ди дх
-Эх дв
-(7)
+
+Ou Ox)
+Ox 00
 With the density initialization and depth-conditioned SDS, geometry of the person improves quickly
 in beginning epochs of the optimization. However, since SMPL body model does not include surface
 details such as clothing and hair, conditioning on SMPL depth throughout training would hurt the
-optimization if the person's surface is far from the body surface. Hence, we utilize SMPL depth
+optimization if the person’s surface is far from the body surface. Hence, we utilize SMPL depth
 conditioning for the first 10 epochs of the optimization, and then switch to using the predicted depth
 map as conditioning so that clothing details are preserved.
+
+VoLa—sps(o,x = Go(B)) = Er,<[w(t)(€4) (a1; y, t, d) — €) (7)
+
 3.4 UV-Guided Texture Completion
+
 Since we are using a parametric mesh model as a proxy of the 3D representation, it is advantageous
 to leverage one of its inherent benefits, which is the existing correspondence between vertices across
 the views enabled by UV maps. Notably, in the case of human meshes, the textures often exhibit
@@ -254,124 +291,102 @@ we introduce a term to facilitate the texture learning of the occluded body part
 useful when the side of the person is visible, in which case score distillation loss alone often results
 in blurry textures on the occluded region. With the predicted back textures generated by the reflection
 of the visible part, the back textures get better prior, and the final results have better appearance on
-the invisible part (Figure 5a).
-We first use DensePose [11] to regress the UV coordinates from the reference image, and sample the
-RGB colors from the reference image to fill in the visible region of the UV map Tvisible. Then, we
+the invisible part (Figure[5ap.
+
+We first use DensePose to regress the UV coordinates from the reference image, and sample the
+RGB colors from the reference image to fill in the visible region of the UV map Tyisibie. Then, we
 find the symmetrical counterparts of the visible region, and render the SMPL body using the reflected
 textures on the invisible region Tinvisible. The predicted invisible textures will then be used as a prior
 during optimization to serve as a stronger guide than SDS.
-Overall Losses. For the reference view Bref, we directly minimize the per-pixel reconstruction loss
-between I and Go (ẞref), as well as the depth correlation loss [36] between the rendered depth and the
-depth map (predicted by Eftekhar et al. [6]).
-Lref view
--
-Lrgb+Ldepth
-Lrgb = ||Go (Bref)
--
-- I||; depth
-Cov(d(Bref), d)
-Var(d(Bref)) Var(d)
-For a novel view ẞnovel, we minimize the SMPL-depth-conditioned SDS loss and
-Lnovel view =
-Ld-SDS+Linvisible-RGB + LSMPL-depth + LCLIP-D
-5
-(8)
-(9)
-(10)
-SK
-民本
-Novel view
-(d) Make-it-3D (e) 3D Fuse
-Reference view
-(f) ZeroAvatar (Ours)
+
+Overall Losses. For the reference view (yer, we directly minimize the per-pixel reconstruction loss
+between Z and Go (Ser), a8 well as the depth correlation loss between the rendered depth and the
+depth map (predicted by Eftekhar et al. [6])).
+
+Lret view = Lrgo + Laepth (8)
+Cov(d(Srer), d)
+
+= Bret) — Z|; =
+Lieb = ||Go (Bret) ls Laepth Var(d( Bret) Var(d) (9)
+For a novel view Bnovel, We minimize the SMPL-depth-conditioned SDS loss and
+Lyovel view = La—~sps + Linvisible-rcB + Lsmpt-depth + LoL P—D (10)
+
+--- Page 6 ---
+Novel view Reference view
+
+(a) Reference (b) DreamFusion* (c) DreamFusion (d) Make-it-3D —_(e) 3D Fuse (f) ZeroAvatar (Ours)
 w/ Zero 1-to-3
-(a) Reference (b) DreamFusion* (c) DreamFusion
+
 Fig. 3: Comparison to state-of-the-art image-conditioned zero-shot optimization methods. ZeroAvatar demon-
-strates superiority over baselines Zero 1-to-3 [17] Make-it-3D [36] where the underlying 3D geometry is not
-modeled explicitly. Although 3D Fuse [32] approximates the 3D geometry using a point cloud, it still encounters
-the Janus problem (3rd row). Overall, ZeroAvatar yields results with higher fidelity and maintains greater
+strates superiority over baselines Zero 1-to-3 Make-it-3D where the underlying 3D geometry is not
+modeled explicitly. Although 3D Fuse approximates the 3D geometry using a point cloud, it still encounters
+the Janus problem (3,4 row). Overall, ZeroAvatar yields results with higher fidelity and maintains greater
 consistency with the reference image.
+
 where
-Linvisible-RGB
-||R(M, B; Tinvisible) ○ Miny - IO Minv||
-(11)
-LSMPL-depth
-(12)
-Cov(Rd (M, B), d)
-Var(Ra(M, B)) Var(d)
+
+Linvisible-RGB = |[R(M, 8; Tinvisible) © Minv — Z © miny|| (1)
+~_ Cov(Ra(M, 8), 4)
+Var(Ra(M, 3))Var(d)
 Here miny is the mask for the invisible region whose symmetrical counterpart is visible, and
-R(M, B; T) is a mesh renderer that renders mesh M with texture T from view ẞ. LCLIP-D
+R(M, 8;7) is a mesh renderer that renders mesh M with texture T from view 6. Lozrp_p
+
 is a CLIP consistency loss [36] that enforces semantic consistency between the rendered view and
 the reference image.
+
+LsmPL-depth (12)
+
 4 Experiments
+
 Implementation details. For efficiency, we adopt the multi-resolution hash encoding from Instant-
 NGP [23], and follow several design choices from [26], such as view sampling and shading aug-
-mentation. We use DensePose [11] for UV coordinate regression, and PIXIE [7] for human mesh
-recovery. PIXIE outputs parameters of SMPL-X [25] model, and we convert them into SMPL model
+mentation. We use DensePose for UV coordinate regression, and PIXIE for human mesh
+recovery. PIXIE outputs parameters of SMPL-X model, and we convert them into SMPL model
 parameters by finding the SMPL parameters that result in best mesh fit. NeRF rendering resolution
 during training is 100 by 100, and field of view is set to 20 degrees. We adopt progressive training
 following prior work [36], where we start with a narrow range of 90 degrees view symmetrical around
 the reference view and then gradually expand the range to cover 360 degrees during training. The
 narrow view is trained for 1,000 iterations, and the wide view is trained for 5,000 iterations. We turn
-6
-off Linvisible-RGB and LSMPL-depth after 2,000 iterations to avoid over-regularization of the geometry and
-appearance. We use Adam [15] optimizer with learning rate 0.001, and optimize for 6,000 iterations
+
+--- Page 7 ---
+off LinvisibleRGB and Lsmpt-depth after 2,000 iterations to avoid over-regularization of the geometry and
+appearance. We use Adam (15) optimizer with learning rate 0.001, and optimize for 6,000 iterations
 for a single image, which takes about 50 minutes on a single NVIDIA TITAN RTX GPU.
+
 Evaluation and metrics. Our method demonstrates greatest applicability for reconstructing out of
 distribution humans and virtual avatars that are difficult to curate ground truths for, and therefore
 unfeasible for learning-based methods. For this reason, we assess the performance of ZeroAvatar on a
 set of 27 images that include a wide variety of virtual avatars as well as challenging real-world humans.
 The persons from the evaluation set have a wide range of appearances, body poses and orientations.
-In Table 1, we report Learned Perceptual Image Patch Similarity (LPIPS) [50], contextual loss [20],
-and CLIP [27] similarity scores. LPIPS is computed on reference views. Contextual loss and CLIP
+In Table[I] we report Learned Perceptual Image Patch Similarity (LPIPS) [50], contextual loss [20],
+and CLIP similarity scores. LPIPS is computed on reference views. Contextual loss and CLIP
 similarity scores are computed on 360 degree views around the human, with each view positioned
 at 45-degree intervals from one another. CLIP similarity measures the semantic similarity between
 the novel view and the reference image (or text). Specifically, CLIP-I is the (normalized cosine)
 similarity score between the novel view and reference view computed using CLIP image embeddings,
 and CLIP-T is the similarity between novel view image embeddings and text (i.e. image captions)
 embeddings. We calculate all metrics for each test scene, and report the average over all test scenes.
+
 Table 1: Quantitative results. Best numbers are in bold. (*: Stable-Dream Fusion* is a variant of DreamFusion
 that that additionally minimizes reconstructions loss for reference view every few iterations.)
-Model
-LPIPS (↓)
-Contextual (↓).
-CLIP-I (1)
-CLIP-T (1)
-Stable-DreamFusion* [26]
-0.596
-3.55
-73.55
-26.64
-Stable-DreamFusion (w. Zero 1-to-3) [17]
-0.391
-3.35
-76.19
-27.05
-3D Fuse [32]
-0.704
-3.20
-81.07
-30.50
-Make-it-3D Coarse [36]
-0.342
-3.35
-85.86
-32.00
-ZeroAvatar (Ours)
-0.359
-3.15
-87.67
-32.59
-Results. We compare ZeroAvatar to state-of-the-art zero-shot methods (Figure 3), namely
-DreamFusion [26], Zero 1-to-3 [17], 3D Fuse [32], and Make-it-3D [36]. For DreamFusion[26]
-we use the open-sourced implementation Stable-DreamFusion [35]. DreamFusion* (column
+
+Model LPIPS (1) Contextual (1) CLIP-I(t) CLIP-T ()
+Stable-DreamFusion* 0.596 3.55 73.55 26.64
+Stable-DreamFusion (w. Zero 1-to-3) 0.391 3.35 76.19 27.05
+3D Fuse 0.704 3.20 81.07 30.50
+Make-it-3D - Coarse 0.342 3.35 85.86 32.00
+ZeroAvatar (Ours) 0.359 3.15 87.67 32.59
+
+Results. we compare ZeroAvatar to state-of-the-art zero-shot methods (Figure 3p. name
+DreamFusion , Zero 1-to-3 [17], 3D Fuse [2], and Make-it-3D [36]. For DreamFusion|26}
+we use the hem sourced implementation Stable-DreamFusion DreamFusion* (column
 b) is an image-conditioned variant of DreamFusion that additionally minimizes reconstructions
 loss for reference view every few iterations. In column c, we use pre-trained Zero 1-to-3
-model from Liu et al. [17] as supervision to optimize the neural radiance field. Zero 1-to-3
+model from Liu et al. as supervision to optimize the neural radiance field. Zero 1-to-3
 is trained on a large-scale open-source dataset containing 800K+ 3D models [5], and learns
 good prior of how an object should look like from novel view points. However, for humans
 in general, the novel views predicted by Zero 1-to-3 are not sufficient as supervision signal.
-Make-it-3D [36] (column d) is a recent
+Make-it-3D (column d) is a recent
 state-of-the-art image-conditioned zero-
 shot method that has two stages of training.
 We compare to the results after first stage
@@ -388,25 +403,20 @@ simple geometry (e.g. a near cylindrical
 volume as in the bottom row). For humans
 with more difficult poses, however, the ge-
 ometry quickly diverges for novel views
-and score distillation loss with text condi-
-tioning fails to correct the geometry. The
-degenerate geometry from novel views re-
-sults in higher contextual loss and lower
-CLIP scores.
-Reference view
-ICON
-Front view
-Side view
-ECON
-ECON + TEXTure
-ZeroAvatar (Ours)
-Fig. 4: Comparison to learning-based methods: ICON [44]
-and ECON [43]. Learning-based methods have limited gener-
-alization capability due to the limited variety of the training
-data. In comparison, ZeroAvatar as a zero-shot method is able
-to recover rare details such as cape (3rd row) and basketball
+and score distillation loss with text condi- Fig. 4: Comparison to learning-based methods: ICON
+tioning fails to correct the geometry. The and ECON [43]. Learning-based methods have limited gener-
+
+degenerate geometry from novel views re- alization capability due to the limited variety of the training
+
+sults in higher contextual loss and lower data. In comparison, ZeroAvatar as a zero-shot method is able
+
+CLIP scores. to recover rare details such as cape (3rd row) and basketball
 (4th row).
-7
+
+Reference view ICON ECON ECON+TEXTure — ZeroAvatar (Ours)
+
+
+--- Page 8 ---
 3D Fuse [32] (column e) incorporates 3D awareness in the form of a coarse point cloud, which
 enhances the robustness and 3D consistency of learned neural radiance field. We use the image-to-3D
 version of 3D Fuse for comparison. Since explicitly modelling the underlying shape, 3D Fuse yields
@@ -416,99 +426,110 @@ comes to humans with complex poses (e.g. 3rd row). In addition, since 3D Fuse do
 image-level reconstruction loss, the output model does not align well with the reference image. In
 comparison, ZeroAvatar consistently produces more realistic avatars that are more consistent with the
 input image.
-Quantitatively (Table 1), ZeroAvatar consistently outperforms DreamFusion, DreamFusion with
-Zero 1-to-3, and 3D Fuse [26, 17, 32] across all metrics, which demonstrate its effectiveness and
+
+Quantitatively (Table |1), ZeroAvatar consistently outperforms DreamFusion, DreamFusion with
+Zero 1-to-3, and 3D Fuse [26] [17] [32] across all metrics, which demonstrate its effectiveness and
 superiority in comparison to these baselines. ZeroAvatar achieves similar metrics as Make-it-3D [36].
 However, we note that for some test images, while quantitative metrics are close or even lower for
 ZeroAvatar, the qualitative results for novel views show significant improvement over Make-it-3D
-[36], where learned geometry tends to over-fit to reference view and drastically distorts when viewed
-from novel angles (Figure 3). To further showcase that our method is better at preserving human
+(36), where learned geometry tends to over-fit to reference view and drastically distorts when viewed
+from novel angles (Figure[3). To further showcase that our method is better at preserving human
 structure, we use the detection score from an off-the-shelf human detector [8] on novel views as
 a proxy for evaluating the structural integrity of human subjects. On average, novel views from
 DreamFusion (image-conditioned or with Zero 1-to-3) both have lower than 50% detection score.
 Make-it-3D and 3D Fuse attain 67% and 74% respectively, and ZeroAvatar achieves 83%. This
 indicates that ZeroAvatar is better at preserving the structural integrity of human subjects as compared
 to alternative approaches.
-(a) Without depth-conditioned
-SDS
-(b) Without UV loss
+
 Additional qualitative results and animated results can be found in Supplemental Materials.
+
 Comparison to learning-based methods. There is a line of
 research that directly estimates volumetric representations of hu-
 mans from single-view images. We compare to ICON [44] and
-ECON [43] (Figure 4). Additionally, we include the textures
+ECON [43] (Figure [4} squditionally, we include the textures
 optimized by TEXTure [28] using the mesh predicted by ECON.
-Since ICON and ECON are trained end-to-end on 3D scans such
+Since ICON and ECON are trained end-to-end on 3D scans such — Without dgetconcitioned ——_(b) Without UV loss
+
 as Renderpeople [1]. Although they achieve impressive results on
-comparable images (i.e. real humans), they demonstrate limited
+comparable images (i.e. real humans), they demonstrate limited “A
+
+~w
+
 generalization capability to virtual avatars such as cartoon char-
 acters and out-of-distribution scenarios (e.g. basketball player
-holding a ball). As shown in Figure 4, ZeroAvatar is better at
+holding a ball). As shown in Figure[4] ZeroAvatar is better at (©) Full model
 generalization. In the case of real humans (4th row), ZeroA-
+
+: ye re : (a) Ablated models.
 vatar shows superior capability at capturing intricate details and
-displaying better geometry overall.
-(c) Full model
-(a) Ablated models.
-Reference image Reference view
-(b) Failure cases.
-Side view
+
+displaying better geometry overall
 Model ablations. We demonstrate the effect of each component
-of our method in Figure 5a. First, we only initialize the density
+
+a»
+~y
+
+of our method in Figure[Sal First, we only initialize the density
 field with the occupancy of SMPL body mesh, but do not use
-the depth values of SMPL for SDS. As shown in Figure 5a (a),
+the depth values of SMPL for SDS. As shown in Figure [5a](a),
 the learned body often exhibits unrealistic anatomy. Second, we
-take out the UV prior loss and observe that the appearance of the
+take out the UV prior loss and observe that the appearance of the Reference image Reference view ‘Side view
 non-visible side of the person is less realistic than our full model.
+
+oe
+eo i
+
+(b) Failure cases.
 Application: zero-shot text-to-3D avatar generation. ZeroA-
 vatar can be used with text-to-image models to achieve zero-shot
 text-to-3D capability with optional pose control. We showcase such applications using Diffusion
-HPC [42] and ControlNet [49]. In top half of Figure 6, given a text prompt, we use Diffusion HPC
-[42], to generate a synthetic image as the reference image, and then apply ZeroAvatar on the reference
+HPC and ControlNet [49]. In top half of Figure[6] given a text prompt, we use Diffusion HPC
+, to generate a synthetic image as the reference image, and then apply ZeroAvatar on the reference
 image. As shown, as compared to baselines DreamFusion and 3D Fuse that directly optimize the
 3D representation given a text prompt, our result attains much higher fidelity due to the usage of an
 intermediate photo-realistic synthetic image.
+
 Fig. 5: Ablations and limitations.
-For pose-conditioned text-to-3D generation (bottom half of Figure 6), we use ControlNet [49] to
+
+For pose-conditioned text-to-3D generation (bottom half of Figure[6}, we use ControlNet [49] to
 generate a synthetic image given the input pose in the form of 2D keypoints. We compare to Drea-
 mAvatar [3], a SDS-based method that adopts a dual-space (i.e. canonical and observed pose space)
 optimization scheme to regularize the shape of the person, which incurs additional computational
-8
+
+--- Page 9 ---
 costs and takes about 2 hours on a GPU to optimize a single model. In comparison, ZeroAvatar with
 text-to-image generation as stepping stone alleviates the need for further regularization, and achieves
 comparable or better fidelity with much less time (about 50 minutes).
+
 Limitations and future directions. ZeroAvatar assumes that the geometry of the human avatar in the
 reference image can be approximated by a parameterized body model (i.e. SMPL). The SMPL model
 is designed to capture the average shape and pose variations of human bodies. Thus, in scenarios
 when the proportion of the human deviates too much from the shape space represented by SMPL, the
-resulting estimation may lead to disproportionate representations (Figure 5b). A promising avenue
+resulting estimation may lead to disproportionate representations (Figure|5b). A promising avenue
 for future research could be enhancing the generalizability of the human body prior. In addition,
-despite ZeroAvatar's superior capability of preserving human geometry, the 3D mesh extracted from
+despite ZeroAvatar’s superior capability of preserving human geometry, the 3D mesh extracted from
 the learned density fields are still relatively coarse. Nonetheless, our work could be synergistically
-combined with other approaches [4] that refine geometry and texture resolution, thereby further
+combined with other approaches that refine geometry and texture resolution, thereby further
 improving the visual appearance and geometric fidelity.
-"A man is
-sprinting"
-"An athlete is
-playing soccer"
-Input Text
-DreamFusion
-3D Fuse
-Ref. Image
+
+“Amanis
+sprinting”
+“An athlete is
+playing soccer”
+Input Text DreamFusion 3D Fuse Ref. Image ZeroAvatar (Ours)
 (Diffusion-HPC)
-ZeroAvatar (Ours)
-"Superman"
-"Dragon Ball"
-Input Text
-Input Pose
-DreamAvatar
-Ref. Image
-(ControlNet)
-ZeroAvatar (Ours)
+“Superman”
+“Dragon Ball”
+Input Text Input Pose DreamAvatar Ref. Image ZeroAvatar (Ours)
+(ControINet)
+
 Fig. 6: Application of ZeroAvatar in text-to-3D avatar generation using text-to-image model as a stepping
 stone. Top: Text-to-3D generation. Bottom: Pose-conditioned text-to-3D generation. Compare to DreamFusion
-[26], 3D Fuse [32] and DreamAvatar [3] that directly optimize a NeRF from text, our method can efficiently
+(26), 3D Fuse and DreamAvatar [3] that directly optimize a NeRF from text, our method can efficiently
 reconstruct a high-fidelity 3D model from text, using synthetic image as an intermediate representation.
+
 5 Conclusion
+
 In this work, we proposed ZeroAvatar, a zero-shot method for creating high-fidelity 3D avatars
 from a single image, using a pre-trained text-to-image diffusion model as a prior. ZeroAvatar
 significantly enhances the robustness and ensure 3D consistency of optimization-based image-to-3D
@@ -516,219 +537,360 @@ avatar generation. On images of posed humans, ZeroAvatar surpasses existing zero
 terms of the optimized geometry and appearance. Further, ZeroAvatar can be seamlessly combined
 with a pre-trained text-to-2D method, enabling the generation of 3D avatars with text or pose control,
 allowing for a wide range of usage scenarios and creative possibilities.
+
 General impact. ZeroAvatar offers a efficient way for content creators to generate 3D human avatar
 models with image, text or pose control. Due to the usage of a pre-trained text-to-image model,
 our approach inherits any biases and limitations associated with it. There is also potential risk of
 generating 3D models of individuals without their consent. We recommend that users adhere to
 proper usage practices.
-9
+
+--- Page 10 ---
 Appendix
+
 Effect of Pose Complexity
+
 We observe that qualitatively, ZeroAvatar exhibits the most significant improvement compared to
 the baselines, particularly when the pose deviates significantly from the canonical pose (hence being
-more “complex"). In order to further understand how poses impact the optimization results, we
+more “‘complex"). In order to further understand how poses impact the optimization results, we
 perform evaluation on poses with varying complexity. Specifically, we use VPoser [25], a pre-trained
 pose prior, to quantify the complexity of the poses, which we define as the amount of deviation from
 the canonical pose in the VPoser embedding space. Formally, complexity score is computed as
-score= mean (EVPoser (2)²)
-(13)
-where is the pose of the person, and Exposer is the encoder of VPoser. A higher score indicates a
+
+score = mean(Evyposer(®)”) (13)
+
+where 22 is the pose of the person, and Evposer is the encoder of VPoser. A higher score indicates a
 more complex pose. We then bin the test cases into easy, medium and hard categories based on the
 pose complexity score. Easy poses are those that fall within the 50th percentile, medium poses are
-within the 75th percentile, and hard poses encompass the remaining cases. In Table 2 we report the
+within the 75th percentile, and hard poses encompass the remaining cases. In Table[2|we report the
 quantitative results on binned categories. We observe that ZeroAvatar shows consistent improvement
 for different types of poses over baselines in terms of contextual loss and CLIP similarity scores.
 Although we sometimes attain worse LPIPS, we observe that it is because baselines tend to over-fit to
-the reference view at the price of distorting the overall geometry (e.g. Figure 9).
+the reference view at the price of distorting the overall geometry (e.g. Figure[9p.
+
 Table 2: Quantitative results on test cases with easy / medium / hard poses.
-Model
-Stable-DreamFusion* [26]
-Stable-DreamFusion (w. Zero 1-to-3) [17]
-3D Fuse [32]
-Make-it-3D Coarse [36]
-ZeroAvatar (Ours)
-LPIPS (↓)
-0.60/0.51 0.67
-0.42 0.33/0.44
-0.68 0.670.75
-0.37/0.34/0.39
-0.38/0.34/0.37
-Contextual (↓)
-CLIP-I (†)
-CLIP-T (↑)
-3.8/3.4/3.6
-3.5/3.3/3.3
-3.3/3.1/3.2
-77.180.3/76.4
-76.9/77.1/74.6
-80.784.183.4
-3.4/3.3/3.3
-3.3/3.0/3.2
-83.7 89.7/85.2
-85.0/89.7/87.0
-28.0/29.0/29.0
-27.7/27.0/26.6
-30.5 31.6/32.1
-32.133.5/32.0
-32.2/33.8/32.0
+
+Model LPIPS ({) Contextual (|) CLIP-I (t) CLIP-T (1)
+
+Stable-DreamFusion” 0.60/0.51/0.67 3.8/3.4/3.6 77.1/80.3/76.4  28.0/29.0/29.0
+Stable-DreamFusion (w. Zero 1-to-3) 0.42/0.33/0.44 3.5/3.3/3.3 76.9/77.1/74.6  27.7/27.0/26.6
+3D Fuse 0.68/0.67/0.75  3.3/3.1/3.2  80.7/84.1/83.4 30.5/31.6/32.1
+Make-it-3D - Coarse 0.37/0.34/0.39 3.4/3.3/3.3  83.7/89.7/85.2  32.1/33.5/32.0
+ZeroAvatar (Ours) 0.38 /0.34/0.37  3.3/3.0/3.2  85.0/89.7/87.0  32.2/33.8/32.0
+
 Additional Qualitative Reults
+
 To visually showcase the progress of optimization, we showcase renderings from 3 viewpoints at end
-of epoch 5 and 10 (Figure 7). As shown, ZeroAvatar has much faster convergence speed. Since it uses
+of epoch 5 and 10 (Figure[7). As shown, ZeroAvatar has much faster convergence speed. Since it uses
 a coarse geometry as initialization, the optimized NeRF shows roughly correct geometry and colors
 as early as epoch 5, whereas baseline Make-it-3D takes at least 10 epochs to attain a bounded shape.
-In addition, we observe that Make-it-3D occasionally diverges (Figure 8) after which point optimizing
+
+In addition, we observe that Make-it-3D occasionally diverges (Figure[8) after which point optimizing
 for reference view reconstruction loss shows little effect in rectifying the geometry of the person. In
 comparison, ZeroAvatar consistently produces more robust results.
-Lastly, we include example for a failure case (Figure 9) where the person's shape cannot be accurately
+
+Lastly, we include example for a failure case (Figure|9) where the person’s shape cannot be accurately
 represented by SMPL body model [19]. As shown, although ZeroAvatar has slight misalignment
 with the input image, the shape of the person from novel views are more consistent with the reference
 view, whereas novel view renderings from Make-it-3D often get distorted.
+
 10
-10
-Epoch 5
-Epoch 10
-Epoch 5
-Epoch 10
-Make-it-3D
+
+--- Page 11 ---
+¥
+= e'a* i
+ork ~ -
+Epoch 5 ath | = rt
+=~ |
+©. a
+\ 25 e
+Epoch 10 ,) - .
+~ a
+
+,
+
+|
+f
+f
+
+Epoch 10 f ' f
 ZeroAvatar
+
+f
+f
+
+Make-it-3D
 Fig. 7: Renderings of learned NeRFs using Make-it-3D [36] and ZeroAvatar at end of epoch 5 and 10.
-Epoch 5
-AAA
-Epoch 10
-A
-Make-it-3D
+
+- PARAS ARK
+
+Make-it-3D ZeroAvatar
+
+s optimization sometimes results in divergence, whereas ZeroAvatar demonstrates more
+
+WE RSA
+
 ZeroAvatar
-Fig. 8: Make-it-3D [36]'s optimization sometimes results in divergence, whereas ZeroAvatar demonstrates more
+
+Fig. 8: Make-it-3D
 robust optimization.
+
 Make-it-3D
-ZeroAvatar
+
 Fig. 9: Failure scenario where SMPL cannot faithfully represent the proportion of the avatar. Nonetheless,
 ZeroAvatar still produces novel view renderings that are more consistent with reference view as compare to
+
 baseline (Make-it-3D).
+
 11
+
+--- Page 12 ---
 References
-[1] Renderpeople. URL https://renderpeople.com/.
-[2] F. Bogo, A. Kanazawa, C. Lassner, P. Gehler, J. Romero, and M. J. Black. Keep it smpl: Automatic
+
+1
+2
+
+20
+
+21
+
+Renderpeople. URL https: //renderpeople.com/
+
+F. Bogo, A. Kanazawa, C. Lassner, P. Gehler, J. Romero, and M. J. Black. Keep it smpl: Automatic
 estimation of 3d human pose and shape from a single image. In Computer Vision-ECCV 2016: 14th
 European Conference, Amsterdam, The Netherlands, October 11-14, 2016, Proceedings, Part V 14, pages
 561-578. Springer, 2016.
-[3] Y. Cao, Y.-P. Cao, K. Han, Y. Shan, and K.-Y. K. Wong. Dreamavatar: Text-and-shape guided 3d human
+
+Y. Cao, Y.-P. Cao, K. Han, Y. Shan, and K.-Y. K. Wong. Dreamavatar: Text-and-shape guided 3d human
 avatar generation via diffusion models. arXiv preprint arXiv:2304.00916, 2023.
-[4] R. Chen, Y. Chen, N. Jiao, and K. Jia. Fantasia3d: Disentangling geometry and appearance for high-quality
+
+R. Chen, Y. Chen, N. Jiao, and K. Jia. Fantasia3d: Disentangling geometry and appearance for high-quality
 text-to-3d content creation. arXiv preprint arXiv:2303.13873, 2023.
-[5] M. Deitke, D. Schwenk, J. Salvador, L. Weihs, O. Michel, E. VanderBilt, L. Schmidt, K. Ehsani, A. Kemb-
+
+M. Deitke, D. Schwenk, J. Salvador, L. Weihs, O. Michel, E. VanderBilt, L. Schmidt, K. Ehsani, A. Kemb-
 havi, and A. Farhadi. Objaverse: A universe of annotated 3d objects. arXiv preprint arXiv:2212.08051,
 2022.
-[6] A. Eftekhar, A. Sax, J. Malik, and A. Zamir. Omnidata: A scalable pipeline for making multi-task mid-level
+
+A. Eftekhar, A. Sax, J. Malik, and A. Zamir. Omnidata: A scalable pipeline for making multi-task mid-level
 vision datasets from 3d scans. In Proceedings of the IEEE/CVF International Conference on Computer
 Vision, pages 10786-10796, 2021.
-[7] Y. Feng, V. Choutas, T. Bolkart, D. Tzionas, and M. J. Black. Collaborative regression of expressive bodies
-using moderation. In 2021 International Conference on 3D Vision (3DV), pages 792–804. IEEE, 2021.
-[8] R. Girshick. Fast r-cnn. In Proceedings of the IEEE international conference on computer vision, pages
+
+Y. Feng, V. Choutas, T. Bolkart, D. Tzionas, and M. J. Black. Collaborative regression of expressive bodies
+using moderation. In 2021 International Conference on 3D Vision (3DV), pages 792-804. IEEE, 2021.
+
+R. Girshick. Fast r-cnn. In Proceedings of the IEEE international conference on computer vision, pages
 1440-1448, 2015.
-[9] G. Gkioxari, J. Malik, and J. Johnson. Mesh r-cnn. In Proceedings of the IEEE/CVF International
+
+G. Gkioxari, J. Malik, and J. Johnson. Mesh r-cnn. In Proceedings of the IEEE/CVF International
 Conference on Computer Vision, pages 9785-9795, 2019.
-[10] S. Guan, J. Xu, Y. Wang, B. Ni, and X. Yang. Bilevel online adaptation for out-of-domain human mesh
+
+S. Guan, J. Xu, Y. Wang, B. Ni, and X. Yang. Bilevel online adaptation for out-of-domain human mesh
 reconstruction. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,
 pages 10472-10481, 2021.
-[11] R. A. Güler, N. Neverova, and I. Kokkinos. Densepose: Dense human pose estimation in the wild. In
+
+R. A. Giiler, N. Neverova, and I. Kokkinos. Densepose: Dense human pose estimation in the wild. In
 Proceedings of the IEEE conference on computer vision and pattern recognition, pages 7297-7306, 2018.
-[12] F. Hong, M. Zhang, L. Pan, Z. Cai, L. Yang, and Z. Liu. Avatarclip: Zero-shot text-driven generation and
+
+F. Hong, M. Zhang, L. Pan, Z. Cai, L. Yang, and Z. Liu. Avatarclip: Zero-shot text-driven generation and
 animation of 3d avatars. arXiv preprint arXiv:2205.08535, 2022.
-[13] A. Jain, B. Mildenhall, J. T. Barron, P. Abbeel, and B. Poole. Zero-shot text-guided object generation with
+
+A. Jain, B. Mildenhall, J. T. Barron, P. Abbeel, and B. Poole. Zero-shot text-guided object generation with
 dream fields. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition,
 pages 867-876, 2022.
-[14] A. Kanazawa, M. J. Black, D. W. Jacobs, and J. Malik. End-to-end recovery of human shape and pose. In
+
+A. Kanazawa, M. J. Black, D. W. Jacobs, and J. Malik. End-to-end recovery of human shape and pose. In
 Proceedings of the IEEE conference on computer vision and pattern recognition, pages 7122-7131, 2018.
-[15] D. P. Kingma and J. Ba. Adam: A method for stochastic optimization. arXiv preprint arXiv:1412.6980,
+
+D. P. Kingma and J. Ba. Adam: A method for stochastic optimization. arXiv preprint arXiv: 1412.6980,
 2014.
-[16] C.-H. Lin, J. Gao, L. Tang, T. Takikawa, X. Zeng, X. Huang, K. Kreis, S. Fidler, M.-Y. Liu, and T.-Y. Lin.
+
+C.-H. Lin, J. Gao, L. Tang, T. Takikawa, X. Zeng, X. Huang, K. Kreis, S. Fidler, M.-Y. Liu, and T.-Y. Lin.
 Magic3d: High-resolution text-to-3d content creation. arXiv preprint arXiv:2211.10440, 2022.
-[17] R. Liu, R. Wu, B. Van Hoorick, P. Tokmakov, S. Zakharov, and C. Vondrick. Zero-1-to-3: Zero-shot one
+
+R. Liu, R. Wu, B. Van Hoorick, P. Tokmakov, S. Zakharov, and C. Vondrick. Zero-1-to-3: Zero-shot one
 image to 3d object. arXiv preprint arXiv:2303.11328, 2023.
-[18] Z. Liu, P. Dai, R. Li, X. Qi, and C.-W. Fu. Iss: Image as stetting stone for text-guided 3d shape generation.
+
+Z. Liu, P. Dai, R. Li, X. Qi, and C.-W. Fu. Iss: Image as stetting stone for text-guided 3d shape generation.
 arXiv preprint arXiv:2209.04145, 2022.
-[19] M. Loper, N. Mahmood, J. Romero, G. Pons-Moll, and M. J. Black. Smpl: A skinned multi-person linear
-model. ACM transactions on graphics (TOG), 34(6):1–16, 2015.
-[20] R. Mechrez, I. Talmi, and L. Zelnik-Manor. The contextual loss for image transformation with non-aligned
+
+M. Loper, N. Mahmood, J. Romero, G. Pons-Moll, and M. J. Black. Smpl: A skinned multi-person linear
+model. ACM transactions on graphics (TOG), 34(6):1-16, 2015.
+
+R. Mechrez, I. Talmi, and L. Zelnik-Manor. The contextual loss for image transformation with non-aligned
 data. In Proceedings of the European conference on computer vision (ECCV), pages 768-783, 2018.
-[21] O. Michel, R. Bar-On, R. Liu, S. Benaim, and R. Hanocka. Text2mesh: Text-driven neural stylization for
+
+O. Michel, R. Bar-On, R. Liu, S$. Benaim, and R. Hanocka. Text2mesh: Text-driven neural stylization for
 meshes. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages
 13492-13502, 2022.
+
 12
-[22] B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi, and R. Ng. Nerf: Representing
-scenes as neural radiance fields for view synthesis. Communications of the ACM, 65(1):99–106, 2021.
-[23] T. Müller, A. Evans, C. Schied, and A. Keller. Instant neural graphics primitives with a multiresolution
+
+--- Page 13 ---
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+41
+
+B. Mildenhall, P. P. Srinivasan, M. Tancik, J. T. Barron, R. Ramamoorthi, and R. Ng. Nerf: Representing
+scenes as neural radiance fields for view synthesis. Communications of the ACM, 65(1):99-106, 2021.
+
+T. Miiller, A. Evans, C. Schied, and A. Keller. Instant neural graphics primitives with a multiresolution
 hash encoding. ACM Transactions on Graphics (ToG), 41(4):1-15, 2022.
-[24] A. Nichol, P. Dhariwal, A. Ramesh, P. Shyam, P. Mishkin, B. McGrew, I. Sutskever, and M. Chen. Glide:
+
+A. Nichol, P. Dhariwal, A. Ramesh, P. Shyam, P. Mishkin, B. McGrew, I. Sutskever, and M. Chen. Glide:
 Towards photorealistic image generation and editing with text-guided diffusion models. arXiv preprint
 arXiv:2112.10741, 2021.
-[25] G. Pavlakos, V. Choutas, N. Ghorbani, T. Bolkart, A. A. A. Osman, D. Tzionas, and M. J. Black. Expressive
+
+G. Pavlakos, V. Choutas, N. Ghorbani, T. Bolkart, A. A. A. Osman, D. Tzionas, and M. J. Black. Expressive
 body capture: 3d hands, face, and body from a single image. In Proceedings IEEE Conf. on Computer
 Vision and Pattern Recognition (CVPR), 2019.
-[26] B. Poole, A. Jain, J. T. Barron, and B. Mildenhall. Dreamfusion: Text-to-3d using 2d diffusion. arXiv
-preprint arXiv:2209.14988, 2022.
-[27] A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin,
-J. Clark, et al. Learning transferable visual models from natural language supervision. In International
+
+B. Poole, A. Jain, J. T. Barron, and B. Mildenhall. Dreamfusion: Text-to-3d using 2d diffusion. arXiv
+preprint arXiv:2209. 14988, 2022.
+
+A. Radford, J. W. Kim, C. Hallacy, A. Ramesh, G. Goh, S. Agarwal, G. Sastry, A. Askell, P. Mishkin,
+J. Clark, et al. Learning transferable visual models from natural language supervision. In Jnternational
 conference on machine learning, pages 8748-8763. PMLR, 2021.
-[28] E. Richardson, G. Metzer, Y. Alaluf, R. Giryes, and D. Cohen-Or. Texture: Text-guided texturing of 3d
+
+E. Richardson, G. Metzer, Y. Alaluf, R. Giryes, and D. Cohen-Or. Texture: Text-guided texturing of 3d
 shapes. arXiv preprint arXiv:2302.01721, 2023.
-[29] R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer. High-resolution image synthesis with
+
+R. Rombach, A. Blattmann, D. Lorenz, P. Esser, and B. Ommer. High-resolution image synthesis with
 latent diffusion models. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
 Recognition (CVPR), pages 10684-10695, June 2022.
-[30] C. Saharia, W. Chan, S. Saxena, L. Li, J. Whang, E. Denton, S. K. S. Ghasemipour, B. K. Ayan, S. S. Mah-
+
+C. Saharia, W. Chan, S. Saxena, L. Li, J. Whang, E. Denton, S. K. S. Ghasemipour, B. K. Ayan, S. S. Mah-
 davi, R. G. Lopes, et al. Photorealistic text-to-image diffusion models with deep language understanding.
 arXiv preprint arXiv:2205.11487, 2022.
-[31] S. Saito, Z. Huang, R. Natsume, S. Morishima, A. Kanazawa, and H. Li. Pifu: Pixel-aligned implicit
+
+S. Saito, Z. Huang, R. Natsume, S. Morishima, A. Kanazawa, and H. Li. Pifu: Pixel-aligned implicit
 function for high-resolution clothed human digitization. In Proceedings of the IEEE/CVF international
-conference on computer vision, pages 2304-2314, 2019.
-[32] J. Seo, W. Jang, M.-S. Kwak, J. Ko, H. Kim, J. Kim, J.-H. Kim, J. Lee, and S. Kim. Let 2d diffusion model
+conference on computer vision, pages 2304—2314, 2019.
+
+J. Seo, W. Jang, M.-S. Kwak, J. Ko, H. Kim, J. Kim, J.-H. Kim, J. Lee, and S. Kim. Let 2d diffusion model
 know 3d-consistency for robust text-to-3d generation. arXiv preprint arXiv:2303.07937, 2023.
-[33] V. Sitzmann, M. Zollhöfer, and G. Wetzstein. Scene representation networks: Continuous 3d-structure-
+
+V. Sitzmann, M. Zollhdfer, and G. Wetzstein. Scene representation networks: Continuous 3d-structure-
 aware neural scene representations. Advances in Neural Information Processing Systems, 32, 2019.
-[34] S.-Y. Su, F. Yu, M. Zollhöfer, and H. Rhodin. A-nerf: Articulated neural radiance fields for learning human
+
+S.-Y. Su, F. Yu, M. Zollhéfer, and H. Rhodin. A-nerf: Articulated neural radiance fields for learning human
 shape, appearance, and pose. Advances in Neural Information Processing Systems, 34:12278-12291, 2021.
-[35] J. Tang. Stable-dreamfusion: Text-to-3d with stable-diffusion, 2022. https://github.com/ashawkey/stable-
+
+J. Tang. Stable-dreamfusion: Text-to-3d with stable-diffusion, 2022. https://github.com/ashawkey/stable-
 dreamfusion.
-[36] J. Tang, T. Wang, B. Zhang, T. Zhang, R. Yi, L. Ma, and D. Chen. Make-it-3d: High-fidelity 3d creation
+
+J. Tang, T. Wang, B. Zhang, T. Zhang, R. Yi, L. Ma, and D. Chen. Make-it-3d: High-fidelity 3d creation
 from a single image with diffusion prior. arXiv preprint arXiv:2303.14184, 2023.
-[37] H. Wang, X. Du, J. Li, R. A. Yeh, and G. Shakhnarovich. Score jacobian chaining: Lifting pretrained 2d
+
+H. Wang, X. Du, J. Li, R. A. Yeh, and G. Shakhnarovich. Score jacobian chaining: Lifting pretrained 2d
 diffusion models for 3d generation. arXiv preprint arXiv:2212.00774, 2022.
-[38] N. Wang, Y. Zhang, Z. Li, Y. Fu, W. Liu, and Y.-G. Jiang. Pixel2mesh: Generating 3d mesh models from
-single rgb images. In Proceedings of the European conference on computer vision (ECCV), pages 52–67,
+
+N. Wang, Y. Zhang, Z. Li, Y. Fu, W. Liu, and Y.-G. Jiang. Pixel2mesh: Generating 3d mesh models from
+single rgb images. In Proceedings of the European conference on computer vision (ECCV), pages 52-67,
 2018.
-[39] C.-Y. Weng, B. Curless, P. P. Srinivasan, J. T. Barron, and I. Kemelmacher-Shlizerman. Humannerf:
+
+C.-Y. Weng, B. Curless, P. P. Srinivasan, J. T. Barron, and I. Kemelmacher-Shlizerman. Humannerf:
 Free-viewpoint rendering of moving people from monocular video. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition, pages 16210-16220, 2022.
-[40] Z. Weng and S. Yeung. Holistic 3d human and scene mesh estimation from single view images. In
-Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 334–343,
+
+Z. Weng and S. Yeung. Holistic 3d human and scene mesh estimation from single view images. In
+Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 334-343,
 2021.
-[41] Z. Weng, K.-C. Wang, A. Kanazawa, and S. Yeung. Domain adaptive 3d pose augmentation for in-the-wild
+
+Z. Weng, K.-C. Wang, A. Kanazawa, and S. Yeung. Domain adaptive 3d pose augmentation for in-the-wild
 human mesh recovery. International Conference on 3D Vision (3DV), 2022.
+
 13
-[42] Z. Weng, L. Bravo-Sánchez, and S. Yeung. Diffusion-hpc: Generating synthetic images with realistic
+
+--- Page 14 ---
+42
+
+43
+
+44
+
+45
+
+46
+
+47
+
+48
+
+49
+
+50
+
+51
+
+Z. Weng, L. Bravo-Sanchez, and S. Yeung. Diffusion-hpc: Generating synthetic images with realistic
 humans. arXiv preprint arXiv:2303.09541, 2023.
-[43] Y. Xiu, J. Yang, X. Cao, D. Tzionas, and M. J. Black. Econ: Explicit clothed humans obtained from
+
+Y. Xiu, J. Yang, X. Cao, D. Tzionas, and M. J. Black. Econ: Explicit clothed humans obtained from
 normals. arXiv preprint arXiv:2212.07422, 2022.
-[44] Y. Xiu, J. Yang, D. Tzionas, and M. J. Black. Icon: implicit clothed humans obtained from normals. In
+
+Y. Xiu, J. Yang, D. Tzionas, and M. J. Black. Icon: implicit clothed humans obtained from normals. In
 2022 IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pages 13286-13296.
 IEEE, 2022.
-[45] J. Xu, X. Wang, W. Cheng, Y.-P. Cao, Y. Shan, X. Qie, and S. Gao. Dream3d: Zero-shot text-to-3d
+
+J. Xu, X. Wang, W. Cheng, Y.-P. Cao, Y. Shan, X. Qie, and S. Gao. Dream3d: Zero-shot text-to-3d
 synthesis using 3d shape prior and text-to-image diffusion models. arXiv preprint arXiv:2212.14704, 2022.
-[46] W. Yin, J. Zhang, O. Wang, S. Niklaus, L. Mai, S. Chen, and C. Shen. Learning to recover 3d scene
+
+W. Yin, J. Zhang, O. Wang, S. Niklaus, L. Mai, S. Chen, and C. Shen. Learning to recover 3d scene
 shape from a single image. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 204-213, 2021.
-[47] K. Youwang, K. Ji-Yeon, and T.-H. Oh. Clip-actor: Text-driven recommendation and stylization for
-animating human meshes. In Computer Vision-ECCV 2022: 17th European Conference, Tel Aviv, Israel,
-October 23-27, 2022, Proceedings, Part III, pages 173–191. Springer, 2022.
-[48] H. Zhang, Y. Tian, X. Zhou, W. Ouyang, Y. Liu, L. Wang, and Z. Sun. Pymaf: 3d human pose and shape
+
+K. Youwang, K. Ji-Yeon, and T.-H. Oh. Clip-actor: Text-driven recommendation and stylization for
+animating human meshes. In Computer Vision—ECCV 2022: 17th European Conference, Tel Aviv, Israel,
+October 23-27, 2022, Proceedings, Part III, pages 173-191. Springer, 2022.
+
+H. Zhang, Y. Tian, X. Zhou, W. Ouyang, Y. Liu, L. Wang, and Z. Sun. Pymaf: 3d human pose and shape
 regression with pyramidal mesh alignment feedback loop. In Proceedings of the IEEE/CVF International
 Conference on Computer Vision, pages 11446-11456, 2021.
-[49] L. Zhang and M. Agrawala. Adding conditional control to text-to-image diffusion models. arXiv preprint
+
+L. Zhang and M. Agrawala. Adding conditional control to text-to-image diffusion models. arXiv preprint
 arXiv:2302.05543, 2023.
-[50] R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang. The unreasonable effectiveness of deep
+
+R. Zhang, P. Isola, A. A. Efros, E. Shechtman, and O. Wang. The unreasonable effectiveness of deep
 features as a perceptual metric. In Proceedings of the IEEE conference on computer vision and pattern
 recognition, pages 586-595, 2018.
-[51] F. Zhao, W. Yang, J. Zhang, P. Lin, Y. Zhang, J. Yu, and L. Xu. Humannerf: Generalizable neural human
+
+F. Zhao, W. Yang, J. Zhang, P. Lin, Y. Zhang, J. Yu, and L. Xu. Humannerf: Generalizable neural human
 radiance field from sparse inputs. arXiv preprint arXiv:2112.02789, 2021.
+
 14
+

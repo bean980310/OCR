@@ -1,29 +1,24 @@
-arXiv:2306.06638v1 [cs.CV] 11 Jun 2023
-Face0: Instantaneously Conditioning a Text-to-Image Model on a Face
-DANI VALEVSKI*, Google Research
-DANNY WASSERMAN*, Google Research
+--- Page 1 ---
+2306.06638v1 [cs.CV] 11 Jun 2023
+
+arXiv
+
+Face0: Instantaneously Conditioning a Text-to-lmage Model on a Face
+
+DANI VALEVSKI", Google Research
+DANNY WASSERMAN, Google Research
 YOSSI MATIAS, Google Research
-YANIV LEVIATHAN*, Google Research
+
+YANIV LEVIATHAN’, Google Research
+
 Original
-Superhero
-Action Figure
+
+Superhero Action Figure
+
 Van Gogh Style
-Doctor
-Pirate
-पा
-1
-INTRODUCTION
-The field of text-to-image synthesis has recently experienced rapid
-development, largely thanks to advances in diffusion models. By
-conditioning on free-form text, images of unprecedented quality
-and diversity can now be generated. However, generating an image
-depicting a person from a user-supplied image is still a challenging
-task. To overcome this gap, existing methods rely on solving an
-optimization problem during inference time, e.g. fine-tuning the
-model [Ruiz et al. 2022] or reversing the image into the textual
-embedding space [Gal et al. 2022]. While these methods produce
-good results they are costly in time or memory.
+
 Fig. 1. Example generations from Face0. It only takes a couple of seconds to generate an image given a single face image (left) and a textual prompt (top).
+
 We present Face0, a novel way to instantaneously condition a text-to-image
 generation model on a face, in sample time, without any optimization proce-
 dures such as fine-tuning or inversions. We augment a dataset of annotated
@@ -38,40 +33,59 @@ manipulation of the input face embeddings. In addition, when using a fixed
 random vector instead of a face embedding from a user supplied image, our
 method essentially solves the problem of consistent character generation
 across images. Finally, while requiring further research, we hope that our
-method, which decouples the model's textual biases from its biases on faces,
+method, which decouples the model’s textual biases from its biases on faces,
 might be a step towards some mitigation of biases in future text-to-image
 models.
+
+1 INTRODUCTION
+
+The field of text-to-image synthesis has recently experienced rapid
+development, largely thanks to advances in diffusion models. By
+conditioning on free-form text, images of unprecedented quality
+and diversity can now be generated. However, generating an image
+depicting a person from a user-supplied image is still a challenging
+task. To overcome this gap, existing methods rely on solving an
+optimization problem during inference time, e.g. fine-tuning the
+model [Ruiz et al. 2022] or reversing the image into the textual
+embedding space [Gal et al. 2022]. While these methods produce
+good results they are costly in time or memory.
+
 In this work we develop a novel method for instantaneously
 conditioning an image generation model, we use Stable Diffusion,
 on a face. At inference time our method is practically identical
 to standard inference from the base diffusion model, and enables
 instantly generating images in the likeness of a person from a single
-"Equal contribution.
-Authors' addresses: Dani Valevski, Google Research, daniv@google.com; Danny Wasser-
+
+“Equal contribution.
+
+Authors’ addresses: Dani Valevski, Google Research, daniv@google.com; Danny Wasser-
 man, Google Research, dwasserman@google.com; Yossi Matias, Google Research,
 yossi@google.com; Yaniv Leviathan, Google Research, leviathan@google.com.
-2.
-Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
-Add
-noise
-Detect
-&
-Embed
-crop
+
+--- Page 2 ---
+2 + Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
+
 Training
-"A tennis player"
-Embed
+
 with
 CLIP
+
 Project
-Diffusion
-Model
-MSE Loss
+
+“A tennie player” - (Te —
+
+Embed
+
+—+ MSE Loss
+
 Fig. 2. The training scheme for Face0 (see Sec. 2). Everything except the dashed red arrows is part of the standard diffusion model training procedure. For
+
 simplicity, we omit the details of converting from pixel space to latent space.
+
 photo. For example, the images in Fig. 1 were generated in just a
 couple of seconds, given the original images on the left and the
 textual prompts at the top.
+
 Face0 generates pleasing results (Fig. 1), while being especially
 simple and efficient. In addition, it has several other advantages: (1) it
 enables easy and natural control of the generated faces, e.g. changing
@@ -82,27 +96,30 @@ vectors, instead of a user-supplied face image, it trivially solves the
 problem of generating consistent characters across generated images,
 and (3) since it encourages the model to decode the facial features
 from the face embedding, instead of from the textual prompt, it
-decouples some of the model's textual biases from its biases for
+decouples some of the model’s textual biases from its biases for
 facial features and, while more research is needed, we are hopeful
-that this is a step towards mitigating some of the model's inherent
+that this is a step towards mitigating some of the model’s inherent
 biases for facial features (Fig. 3).
+
 Our core idea is to leverage a face embedding model. Specifically,
 we take our dataset of training images and augment those that
 contain a face with the embeddings of the face. We use a simple
-module (a small MLP) to project the embeddings to Stable Diffusion's
-context's space, and then jointly train the base diffusion model
+module (a small MLP) to project the embeddings to Stable Diffusion’s
+context’s space, and then jointly train the base diffusion model
 and this projection module to generate images conditioned on the
 face embeddings (see Fig. 2). In sampling time, we calculate the
 face embeddings from the user-supplied image, add it to Stable
-Diffusion's context, and sample an image in practically the standard
+Diffusion’s context, and sample an image in practically the standard
 way (we use a slightly modified classifier free guidance).
-2
-METHOD
+
+2 METHOD
+
 The main idea is to train the underlying diffusion model to be con-
 ditioned on both text and the output of an efficient face embedding
 mechanism.
+
 2.1
-Architecture and Training
+
 For our face embedding module we use part of an Inception Resnet
 V1 model (i.e. we drop the last layers), trained on vggface2 [Cao
 et al. 2018]. The model, with the dropped layers, is not suitable for
@@ -114,54 +131,65 @@ of annotated images transforming each (image, caption) pair into a
 to convert from the face embedding space into the CLIP embedding
 space, and jointly fine-tune the underlying model to receive both the
 CLIP embedding and the projected face embedding as conditions.
-Specifically, we fine-tune the parameters 0 of our model Mo to
+Specifically, we fine-tune the parameters @ of our model Mg to
 optimize the standard diffusion model MSE loss objective, with an
-additional conditioning on the embedding of the face:
-L(0) = Et,xo,d,f,€[wt||M₁(α+x + σ₁€, t, d, ƒ) − e)² ||]
-Where Me is the full model, including the projection MLP, param-
-eterized by 0, t~ U(0, 1), e ~ N(0, 1), at, σt and we are the diffusion
+conditioning on the embedding of the face:
+
+Architecture and Training
+
+additional
+
+L(8) = Epxq,a,felwellMo(aexo + o16, 6.4, f) — 6)" II]
+
+Where Mp is the full model, including the projection MLP, param-
+eterized by 0, t ~ U(0,1),€ ~ N(0, 1), @t, or and wy are the diffusion
 noise parameters (see [Ho et al. 2020]), xo is an image sampled from
 the dataset, d is its associated text condition, and finally f is our
 newly introduced face embedding condition (see Fig. 2).
-Face0: Instantaneously Conditioning a Text-to-Image Model on a Face 3
+
+--- Page 3 ---
 2.2 Sampling
+
 At sample time, given the user-supplied image, we run the same face
 extraction logic we used in training time, calculate the projected
 face embedding, and use it to override the last three tokens.
+
 We then use a slight variation of classifier free guidance (CFG)
 [Ho and Salimans 2022]. Similarly to standard CFG, we calculate the
 following linear combination for the unconditioned result (with a
 negative weight) and the conditioned result (with a positive weight).
 Specifically, we evaluate the following standard CFG formula:
--
-Єt = w • et (zt, d, f) + (1 − w) · Єt (Zt)
-.
-.
+
+er = w- (2rd, f) + (1 — w) - €¢(Z2)
+
 Where d is the textual prompt and f is the face embedding. In
 our experiments we use a classifier free guidance weight of w =
 7.5. Unlike standard classifier free guidance, to allow more refined
 control of the result, we use a weighted mean of three separate
 conditioned vectors. The conditioned vectors are those conditioned
-on the textual prompt d alone, the face embedding of alone, and
+on the textual prompt d alone, the face embedding f alone, and
 their combination. We choose a parametrization where c represents
 the relative weight of the combined vector, and a represents the
 relative weight of the vector conditioned on the face-only from the
 remainder. Overall we have:
-êt(2t, d, f) = c€t(2t,d, f)+(1−c)(a-€t(2t,f)+(1−a).€t(2t,d))
+
+(20d, f) = c-€r(Zt,d, f) + (1-0) - (a er (ze, f)+(1—@) er (Zt, d))
+
 In practice, at least one of these three weight terms is always 0.
 See Sec. 3.4 and Fig. 7.
+
 Finally, we note that our method tends to maintain extremely
 high consistency to the face across generations (see Fig. 10). If this is
 undesirable, adding a small amount of noise to the input embedding
 can increase variety.
-2.3
-Details
-~
+
+2.3 Details
+
 We train our model on the LAION dataset [Schuhmann et al. 2022],
 filtered by an aesthetics threshold of 5.5, and we further filter it
 to only include images that include a face larger than 20 pixels.
 We note that this filtering operation might amplify biases in the
-dataset [Birhane et al. 2021]. This results in 10M (image, caption)
+dataset [Birhane et al. 2021]. This results in ~ 10M (image, caption)
 pairs. We use MTCNN [Zhang et al. 2016] for face detection. If an
 image has multiple faces we only take the largest one (images with
 multiple faces are useful for conditioning the model on multiple
@@ -177,11 +205,14 @@ our experiments. We then run our face embedding module, which
 outputs an embedding vector. To project the vector into the CLIP
 embedding space, we use a simple 4-layer feed-forward network
 with dimensions of 768 and ReLU non-linearities after the hidden
-layers. This results in 10M additional total parameters.
+layers. This results in ~ 10M additional total parameters.
+
 The output of the projection is three 768-dimensional vectors
 which we use to override the last three tokens (tokens 75-77) in
-~
-Stable Diffusion's CLIP embedding vector. To support classifier free
+
+Face0: Instantaneously Conditioning a Text-to-Image Model on a Face + 3
+
+Stable Diffusion’s CLIP embedding vector. To support classifier free
 guidance, we zero out the projected embedding with a probability of
 10%. Note that we do not do the same for the text embedding, which
 might have improved the quality of the generations, and could be
@@ -191,9 +222,10 @@ the projection network, which is initialized randomly. We train on
 64 TPU-v4s for 500K steps with a learning rate of 2e-5 and a batch
 size of 256. We use EMA of 0.9999. We keep the CLIP encoder for
 the textual prompt and the VAE frozen during training.
-3
-RESULTS
-3.1 Model Bias
+
+3 RESULTS
+3.1. Model Bias
+
 Text-to-image diffusion models may inherit unfair biases from their
 underlying training data. One type of bias might be correlating
 facial features with specific words unrelated to facial features. Since
@@ -205,7 +237,7 @@ given image, we can instead, for every generation from the model,
 use a randomly sampled face embedding vector. This procedure
 conditions the model on the random embedding which is decoupled
 from the biases the model might have for the textual prompts (see
-Fig. 3). We note that this doesn't affect the model's running time,
+Fig. 3). We note that this doesn’t affect the model’s running time,
 and can be applied horizontally to all generations containing a face.
 This is only a preliminary result, and there are many important
 questions still open, for example what biases might exist within
@@ -215,36 +247,50 @@ random face embedding (for our experiments we used a simple mix-
 ture of Gaussians). In spite of these shortcomings, we hope that our
 preliminary results encourage further research on this important
 topic.
-3.2 Consistent Characters
+
+3.2. Consistent Characters
+
 When generating images with a diffusion model, a user might en-
+
 counter a character that they like. Unfortunately it is usually non-
 trivial to recreate the same character with the base model. With
 Face0, consistent character creation is trivial - we can just random-
 ize an embedding when generating the character, and maintain
 one that we like for maximum fidelity, or simply calculate the face
 embedding from an image generated without one.
+
 We can also do the reverse: if we get a generation that we like
 but would like to use a different face, we can keep the latent seed
 and prompt fixed, and only change the conditioning embedding.
 While this sometimes results in larger changes, often the main effect
 would be to just change the face (see Fig. 1).
-3.3
-Controllability
+
+3.3. Controllability
+
 The embedding mechanism we use in Face0 mostly fixes facial
 features, pose and expression when no other conditions are provided.
 However, our model allows controlling the generated face in two
 ways. First, we can modify the generated faces by using the textual
 prompt and specifying a trait that contradicts the embedding. For
-Programmer
-CEO
+
+--- Page 4 ---
+4 + Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
+
 Doctor
-4.
-Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
+
+ceo
+
+Progretmser
+
 Base model
-Face with random embedding
-Fig. 3. Samples for the prompts "A stock photo of X" for X in {"doctor", "CEO", "programmer"} from the base model (left) and our model with a random
+
+Face0 with random embedding
+
+Fig. 3. Samples for the prompts “A stock photo of X” for X in {“doctor”, “CEO”, “programmer”} from the base model (left) and our model with a random
+
 face embedding (right).
-example, "a person with blue hair" (see Fig. 4). Second, our model
+
+example, “a person with blue hair” (see Fig. 4). Second, our model
 provides additional controllability for features that are harder to
 describe textually. For example, with a simple linear interpolation
 between two face embeddings, we can create a meaningful semantic
@@ -255,13 +301,16 @@ a weighted average with different weights between several images
 of the same person. Since generation is immediate, the weights can
 be tuned interactively. We only did minimal experimentation with
 this but this showed promising results for further research.
+
 Finally, we can combine the two control methods to attenuate
 the strength of the textual control. For example, we can create an
-image with a face embedding esrc and the prompt "a person with
-a mustache," then calculate the embedding mustache and, using
+image with a face embedding es;¢ and the prompt “a person with
+a mustache,” then calculate the embedding emystache and, using
 linear interpolation between the embeddings, control the amount
 of mustache (See Fig. 6).
+
 3.4 Sampling Variations
+
 When generating images with Face0, we found that changing the
 weights of the facial, textual and combined embeddings indepen-
 dently allowed for fine-grained control over the resulting images in
@@ -272,25 +321,27 @@ standard CFG; in other words, all of the CFG strength was given to
 the combined vector. When non-photo-realistic image generations
 were desired (ex. the Van Gogh style paintings or the action figures
 in Fig. 1) we simply increased the weight of the textual embedding
-over the combined embedding. Values in the range 0.4 <c< 0.7 and
-a = 0 work well. We also experimented with assigning a negative
+over the combined embedding. Values in the range 0.4 < c < 0.7 and
+a= 0 work well. We also experimented with assigning a negative
 weight to the facial embedding, and increasing the weight of the
-combined vector, e.g. c = 1.4, a = 1, for very non-photo-realistic
+combined vector, e.g. c = 1.4,a = 1, for very non-photo-realistic
 images.
+
 Fig. 7 illustrates the effect of changing the weights. As c increases,
 we give more weight to the combined embedding and as a increases,
 we shift weight from the textual embedding to the facial embedding.
-4
-COMPARISONS
+
+4 COMPARISONS
+
 We compare our method to Dreambooth [Ruiz et al. 2022], a method
 that conditions a diffusion model on a given subject by fine-tuning
 it on 3-5 images of that subject. One key difference between the
-methods is inference time training a Dreambooth model on a
+methods is inference time — training a Dreambooth model on a
 subject took 15 minutes on an A100 GPU, while Face0 does not
 require per-subject training.
-4.1
-Dataset
--
+
+4.1 Dataset
+
 To perform the comparison, we created a dataset of 20 synthetic
 identities, with multiple photos for each identity (we extracted faces
 from these photos as described in Sec. 2). In addition, we used 10
@@ -300,126 +351,112 @@ and 5 artistic). Dreambooth was trained on all available images (4-
 5) and Face0 received only a single photo as input. We collected
 results from both methods on 8 random seeds using standard DDIM
 sampling (i.e. we used c = 1 for Face0).
+
 4.2 Qualitative results
+
 Qualitative results can be seen in Fig. 8. We observe comparable
 results, and note that it was easier to get consistent appearance
 of the face when using Face0 (Dreambooth often ignored the face
 altogether requiring multiple seeds to obtain a good result). On
-the other hand, when there is an identity mismatch in Face0, it is
+the other hand, when there is an identity mismatch in Face, it is
 preserved across seeds.
-4.3
-Quantitative results
+
+4.3 Quantitative results
+
 To perform a quantitative evaluation of the methods we measure
 alignment with the provided text and the provided face. For text
 alignment, we measure the cosine similarity between the CLIP [Rad-
 ford et al. 2021] embeddings of the generated image and the textual
-Face0: Instantaneously Conditioning a Text-to-Image Model on a Face
-Original
-Red hair
-Light hair
+
+--- Page 5 ---
+Original Red hair Light hair
+
 Blue hair
+
+Face0: Instantaneously Conditioning a Text-to-Image Model ona Face +
+
+Short hair Mustache
+
 Curly hair
-Short hair
-Mustache
-Fig. 4. Our model allows overriding features from the face embedding via the textual prompt.
-0.0
-0.1
-0.2
-0.3
-0.4
-0.5
-0.6
-0.7
-0.8
-0.9
-1.0
-5
+
 Fig. 5. Face0 enables control of facial features that are harder to describe textually via direct manipulation of the face embedding. Here we see simple linear
+
 interpolation between the left and right faces.
+
 prompt. For face alignment, we extract the largest face from the
 generated image and compare it with a face provided to the model
 using cosine similarity of the CLIP embeddings. When no faces exist
 in the generated image, we set the similarity to 0. We define the
 overall score of each generated image as the sum of the face and
 text scores.
+
 Both methods perform comparably on text alignment, but Face0
 scored better at aligning with the provided face (Tab. 1). In addition,
 both methods performed slightly better on synthetic images. To ver-
 ify our qualitative observations we also measured the performance
 of the methods when considering the best generation out of the
 8 random seeds (Tab. 2). We see a performance improvement for
-Dreambooth, showing that it's less consistent than Face0.
-Table 1. Quantitative comparison of Face0 and Dreambooth over synthetic
+Dreambooth, showing that it’s less consistent than Face0.
+
+Table 1. Quantitative comparison of Faced and Dreambooth over synthetic
 faces (SYN) and faces from the LFW dataset (LFW).
-Method
-Face0 (SYN)
-DreamBooth (SYN)
-Face0 (LFW)
-DreamBooth (LFW)
+
+Method Text Align. Face Align. Overall
+Face0 (SYN) 0.24+0.02 0.72+0.07 0.96 + 0.07
+DreamBooth (SYN) 0.23+0.03 0.46+0.19 0.69 + 0.18
+Face0 (LFW) 0.23+0.03 0.66+0.06 0.89 + 0.06
+DreamBooth (LFW) 0.24+0.02 0.39+0.14 0.62 + 0.13
+
 5 RELATED WORK
-Text Align.
-0.24 ± 0.02
-0.23 ± 0.03
-0.23 ± 0.03
-0.24 ± 0.02
-Face Align.
-0.72 ± 0.07
-0.46 ± 0.19
-Overall
-0.96 ± 0.07
-0.69 ± 0.18
-0.66 ± 0.06
-0.39 ± 0.14
-0.89 ± 0.06
-0.62 ± 0.13
+
 Text-to-Image Models. Deep generative models for image gen-
 eration have shown tremendous progress in recent years. Early
-6.
-Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
-Curly Hair
-Red Hair
+
+--- Page 6 ---
+6 + Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
+
 Mustache
-0.0
-0.2
-ra
-0.4
-0.6
-0.8
-1.0
+
+Red Hair
+
+Carly Hair
+
 Fig. 6. Face0 enables fine-grained control of facial features that are harder to describe textually via direct manipulation of the face embedding. Here we see a
 simple linear interpolation between the facial embeddings of two generated photos from the same source (the top-left image in Fig. 4) with different textual
+
 prompts.
+
+20.0
+
 Original
-C=0.5
-c=0.4
-C=0.3
-c=0.1
-c=0.0
-a=0.0
-a=0.1
-a=0.2
-a=0.3
-a=0.4
-a=0.5
+
+c=0.
+
+04
+
+©
+S
+
+05,
+
+eeeeee
+
+III
+eeeee
+
 Fig. 7. Face0 can independently weight the textual, facial, combined and
 unconditioned embeddings. All images were generated with the prompt
 "latte art of a face in a mug" and a fixed latent seed. See Sec. 3.4 for details.
-Table 2. Overall scores for Face0 and Dreambooth when selecting the best
+
+Table 2. Overall scores for Faced and Dreambooth when selecting the best
 score out of 8 seeds vs. the average.
-Face0
-Best (SYN)
-Average (SYN)
-Best (LFW)
-Average (LFW)
-1.04 ± 0.06
-0.96 ± 0.07
-0.98 ± 0.04
-0.89 ± 0.06
-DreamBooth
-0.93 ± 0.11
-0.69 ± 0.18
-0.83 ± 0.10
-0.62 ± 0.13
+
+Face0 DreamBooth
+Best (SYN) 1.044£0.06 0.9340.11
+Average (SYN) 0.96+0.07 0.69 + 0.18
+Best (LFW) 0.98£0.04 0.83+0.10
+Average (LFW) 0.89+0.06 0.62 + 0.13
+
 approaches relied on training a GAN [Goodfellow et al. 2014] gen-
 erator (like StyleGAN [Karras et al. 2018]) and guiding it using
 CLIP [Radford et al. 2021] in various methods [Abdal et al. 2021;
@@ -451,50 +488,31 @@ during inference, on the provided images. MyStyle [Nitzan et al.
 image. DreamBooth [Ruiz et al. 2022] and Textual Inversion [Gal
 et al. 2022] enable personalization in diffusion models using fine-
 tuning (either of the model itself or of an entry in the embedding
+
+
+--- Page 7 ---
+Dreambooth Ours
+
 Superhero
+
 Pencil
 sketch
+
 At the
 beach
+
 Greek
 statue
-Original
-Dreambooth
-Ours
-Face0: Instantaneously Conditioning a Text-to-Image Model on a Face 7
-practically at the same cost as the base model. Our method allows
-for controlling more or less photo-realistic generations (by varying
-the text-only, face-only and combination CFG weights balance). We
-show that it is easy to override properties of the face embedding
-with the textual prompt. We also show that our method can help
-solve the problem of consistent character generation, by keeping a
-fixed face embedding vector. Finally, while more research is needed,
-we show that training the model to decouple its textual conditioning
-from its conditioning on a face, is hopefully a step towards some
-mitigation of some of the biases of the base model.
-There are several interesting related directions for further re-
-search and improvements. For example, we choose a face embed-
-ding mechanism that mostly fixes the face pose and expression, but
-it would be interesting to experiment with other face embedding
-mechanisms. In addition, while generating pleasing results, Face0
-is not always able to fully preserve a provided identity, and some-
-times creates "look-alike" characters that are close in appearance
-but still distinguishable from the input face. We are hopeful that
-this can be improved by smart noising of the embedding vector and
-by experimenting with conditioning the model on multiple faces (in
-our experiments we only allowed one) which we leave for future
-work. Another interesting idea would be to use the face embedding
-model to guide sampling at each sampling step. Finally, while faces
-are especially important to condition on, it might be interesting to
-apply the same method to additional domains.
+
 Police
 officer
+
 Basketball
 player
-BOOKER
-421
+
 Fig. 8. Comparison of Face0 and Dreambooth. Images shown are the best
 out of 8 random samples.
+
 table of the textual encoder). Other methods [Molad et al. 2023;
 Valevski et al. 2022] use fine-tuning for text-guided editing of a
 single input image or video. These methods perform fine-tuning
@@ -505,11 +523,44 @@ work, [Gal et al. 2023] suggest to use intermediate layers in CLIP
 [Radford et al. 2021] as input to an image encoder. This significantly
 lowers the amount of fine-tuning required for high quality inference,
 but does not eliminate it.
+
 6 DISCUSSION AND LIMITATIONS
+
 We presented Face0, a novel and simple method for conditioning
 a diffusion based image generation model on a face. Once trained,
 the model is able to produce pleasing results extremely quickly,
+
+Face0: Instantaneously Conditioning a Text-to-Image Model ona Face + 7
+
+practically at the same cost as the base model. Our method allows
+for controlling more or less photo-realistic generations (by varying
+the text-only, face-only and combination CFG weights balance). We
+show that it is easy to override properties of the face embedding
+with the textual prompt. We also show that our method can help
+solve the problem of consistent character generation, by keeping a
+fixed face embedding vector. Finally, while more research is needed,
+we show that training the model to decouple its textual conditioning
+from its conditioning on a face, is hopefully a step towards some
+mitigation of some of the biases of the base model.
+
+There are several interesting related directions for further re-
+search and improvements. For example, we choose a face embed-
+ding mechanism that mostly fixes the face pose and expression, but
+it would be interesting to experiment with other face embedding
+mechanisms. In addition, while generating pleasing results, Faced
+is not always able to fully preserve a provided identity, and some-
+times creates "look-alike" characters that are close in appearance
+but still distinguishable from the input face. We are hopeful that
+this can be improved by smart noising of the embedding vector and
+by experimenting with conditioning the model on multiple faces (in
+our experiments we only allowed one) which we leave for future
+work. Another interesting idea would be to use the face embedding
+model to guide sampling at each sampling step. Finally, while faces
+are especially important to condition on, it might be interesting to
+apply the same method to additional domains.
+
 SOCIETAL IMPACT
+
 Face0, like other image generation techniques, has a great potential
 to complement and augment human creativity by creating new
 tools for professionals and empowering non-professionals with the
@@ -521,6 +572,7 @@ which such models can be used to alter sensitive characteristics
 such as skin color, age and gender. Although this has long been
 possible by means of image editing software, text-to-image models
 can make it easier.
+
 Another cause of concern is reproducing unfair bias that may be
 found in the underlying model training data. This is also relevant
 for the underlying model, Stable Diffusion. Moreover, these unfair
@@ -533,127 +585,172 @@ software, for example, single image personalization methods, such
 as Face0, may increase the ability to forge convincing images of
 non-public individuals, or make it easier to generate disinformation
 and manipulate images in hateful and harassing ways.
+
 We encourage future research to help mitigate and measure the
 potential negative impact of generative models if misused, and be-
 lieve thoughtful consideration and further research in all of these
 matters is necessary prior to determining how such technologies
 can be made broadly available.
-8.
-Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
+
+--- Page 8 ---
+8 + Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
+
 ACKNOWLEDGMENTS
+
 We would like to thank Matan Kalman, Jason Baldridge, Kathy
 Meier-Hellstern, Tom Duerig, Caroline Pantofaru, Michael Nechyba,
 Dmitry Lagun, Viral Carpenter, Eyal Segalis, Eyal Molad, Yael Pritch,
 Shlomi Fruchter, the Theta Labs team at Google, and our families.
+
 REFERENCES
+
 Rameen Abdal, Peihao Zhu, John Femiani, Niloy J. Mitra, and Peter Wonka. 2021.
 CLIP2StyleGAN: Unsupervised Extraction of StyleGAN Edit Directions. https:
 //doi.org/10.48550/ARXIV.2112.05219
-Mul-
-Abeba Birhane, Vinay Uday Prabhu, and Emmanuel Kahembwe. 2021.
+
+Abeba Birhane, Vinay Uday Prabhu, and Emmanuel Kahembwe. 2021. Mul-
 timodal datasets: misogyny, pornography, and malignant stereotypes.
 arXiv:cs.CY/2110.01963
+
 Qiong Cao, Li Shen, Weidi Xie, Omkar M. Parkhi, and Andrew Zisserman. 2018. VG-
 GFace2: A dataset for recognising faces across pose and age. arXiv:cs.CV/1710.08092
+
 Huiwen Chang, Han Zhang, Jarred Barber, AJ Maschinot, Jose Lezama, Lu Jiang, Ming-
 Hsuan Yang, Kevin Murphy, William T. Freeman, Michael Rubinstein, Yuanzhen Li,
 and Dilip Krishnan. 2023. Muse: Text-To-Image Generation via Masked Generative
 Transformers. arXiv:cs.CV/2301.00704
+
 Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov, Dirk Weissenborn, Xiaohua
 Zhai, Thomas Unterthiner, Mostafa Dehghani, Matthias Minderer, Georg Heigold,
 Sylvain Gelly, Jakob Uszkoreit, and Neil Houlsby. 2021. An Image is Worth 16x16
 Words: Transformers for Image Recognition at Scale. arXiv:cs.CV/2010.11929
-Patrick Esser, Robin Rombach, and Björn Ommer. 2020. Taming Transformers for
+
+Patrick Esser, Robin Rombach, and Bjérn Ommer. 2020. Taming Transformers for
 High-Resolution Image Synthesis. https://doi.org/10.48550/ARXIV.2012.09841
+
 Rinon Gal, Yuval Alaluf, Yuval Atzmon, Or Patashnik, Amit H. Bermano, Gal Chechik,
 and Daniel Cohen-Or. 2022. An Image is Worth One Word: Personalizing Text-to-
 Image Generation using Textual Inversion. https://doi.org/10.48550/ARXIV.2208.
 01618
+
 Rinon Gal, Moab Arar, Yuval Atzmon, Amit H. Bermano, Gal Chechik, and Daniel
 Cohen-Or. 2023. Encoder-based Domain Tuning for Fast Personalization of Text-to-
 Image Models. arXiv:cs.CV/2302.12228
+
 Ian J. Goodfellow, Jean Pouget-Abadie, Mehdi Mirza, Bing Xu, David Warde-Farley,
 Sherjil Ozair, Aaron Courville, and Yoshua Bengio. 2014. Generative Adversarial
 Networks. https://doi.org/10.48550/ARXIV.1406.2661
+
 Jonathan Ho, Ajay Jain, and Pieter Abbeel. 2020. Denoising Diffusion Probabilistic
 Models. https://doi.org/10.48550/ARXIV.2006.11239
-Jonathan Ho and Tim Salimans. 2022. Classifier-Free Diffusion Guidance. https:
+
+Jonathan Ho and Tim Salimans. 2022. Classifier-Free Diffusion Guidance. _ https:
 //doi.org/10.48550/ARXIV.2207.12598
+
 Edward J. Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang,
-Lu Wang, and Weizhu Chen. 2021. LORA: Low-Rank Adaptation of Large Language
+Lu Wang, and Weizhu Chen. 2021. LoRA: Low-Rank Adaptation of Large Language
 Models. arXiv:cs.CL/2106.09685
+
 Gary B Huang, Marwan Mattar, Tamara Berg, and Eric Learned-Miller. 2008. La-
 beled faces in the wild: A database forstudying face recognition in unconstrained
-environments. In Workshop on faces in 'Real-Life'Images: detection, alignment, and
+environments. In Workshop on faces in'Real-Life'Images: detection, alignment, and
 recognition.
+
 Tero Karras, Samuli Laine, and Timo Aila. 2018. A Style-Based Generator Architecture
 for Generative Adversarial Networks. https://doi.org/10.48550/ARXIV.1812.04948
+
 Eyal Molad, Eliahu Horwitz, Dani Valevski, Alex Rav Acha, Yossi Matias, Yael Pritch,
 Yaniv Leviathan, and Yedid Hoshen. 2023. Dreamix: Video Diffusion Models are
 General Video Editors. arXiv:cs.CV/2302.01329
+
 Yotam Nitzan, Kfir Aberman, Qiurui He, Orly Liba, Michal Yarom, Yossi Gandelsman,
 Inbar Mosseri, Yael Pritch, and Daniel Cohen-or. 2022. MyStyle: A Personalized
 Generative Prior. arXiv:cs.CV/2203.17272
+
 Aaron van den Oord, Oriol Vinyals, and Koray Kavukcuoglu. 2017. Neural Discrete
 Representation Learning. https://doi.org/10.48550/ARXIV.1711.00937
+
 Or Patashnik, Zongze Wu, Eli Shechtman, Daniel Cohen-Or, and Dani Lischinski. 2021.
-StyleCLIP: Text-Driven Manipulation of StyleGAN Imagery. https://doi.org/10.
+StyleCLIP: Text-Driven Manipulation of StyleGAN Imagery. _https://doi.org/10.
 48550/ARXIV.2103.17249
+
 Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini
 Agarwal, Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, Gretchen
 Krueger, and Ilya Sutskever. 2021. Learning Transferable Visual Models From
 Natural Language Supervision. https://doi.org/10.48550/ARXIV.2103.00020
+
 Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and Mark Chen. 2022.
 Hierarchical Text-Conditional Image Generation with CLIP Latents. https://doi.
 org/10.48550/ARXIV.2204.06125
+
 Aditya Ramesh, Mikhail Pavlov, Gabriel Goh, Scott Gray, Chelsea Voss, Alec Radford,
 Mark Chen, and Ilya Sutskever. 2021. Zero-Shot Text-to-Image Generation. https:
 //doi.org/10.48550/ARXIV.2102.12092
-Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn
+
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bjérn
 Ommer. 2021. High-Resolution Image Synthesis with Latent Diffusion Models.
-arXiv:cs.CV/2112.10752
+arXiv:es.CV/2112.10752
+
 Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch, Michael Rubinstein, and Kfir
 Aberman. 2022. DreamBooth: Fine Tuning Text-to-image Diffusion Models for
 Subject-Driven Generation.
+
 Simo Ryu. 2013. Low-rank Adaptation for Fast Text-to-Image Diffusion Fine-tuning.
 https://github.com/cloneofsimo/lora.
+
 Chitwan Saharia, William Chan, Saurabh Saxena, Lala Li, Jay Whang, Emily Den-
 ton, Seyed Kamyar Seyed Ghasemipour, Burcu Karagol Ayan, S. Sara Mahdavi,
 Rapha Gontijo Lopes, Tim Salimans, Jonathan Ho, David J Fleet, and Mohammad
 Norouzi. 2022. Photorealistic Text-to-Image Diffusion Models with Deep Language
 Understanding. https://doi.org/10.48550/ARXIV.2205.11487
+
 Christoph Schuhmann, Romain Beaumont, Richard Vencu, Cade Gordon, Ross Wight-
 man, Mehdi Cherti, Theo Coombes, Aarush Katta, Clayton Mullis, Mitchell Worts-
 man, Patrick Schramowski, Srivatsa Kundurthy, Katherine Crowson, Ludwig
 Schmidt, Robert Kaczmarczyk, and Jenia Jitsev. 2022. LAION-5B: An open large-scale
 dataset for training next generation image-text models. arXiv:cs.CV/2210.08402
+
 Christian Szegedy, Sergey Ioffe, Vincent Vanhoucke, and Alex Alemi. 2016. Inception-
 v4, Inception-ResNet and the Impact of Residual Connections on Learning.
 arXiv:cs.CV/1602.07261
+
 Christian Szegedy, Wei Liu, Yangqing Jia, Pierre Sermanet, Scott Reed, Dragomir
 Anguelov, Dumitru Erhan, Vincent Vanhoucke, and Andrew Rabinovich. 2014. Going
 Deeper with Convolutions. arXiv:cs.CV/1409.4842
+
 Dani Valevski, Matan Kalman, Yossi Matias, and Yaniv Leviathan. 2022. UniTune:
 Text-Driven Image Editing by Fine Tuning an Image Generation Model on a Single
-Image. arXiv:cs.CV/2210.09477
+Image. arXiv:es.CV/2210.09477
+
 Jiahui Yu, Yuanzhong Xu, Jing Yu Koh, Thang Luong, Gunjan Baid, Zirui Wang, Vijay
 Vasudevan, Alexander Ku, Yinfei Yang, Burcu Karagol Ayan, Ben Hutchinson, Wei
 Han, Zarana Parekh, Xin Li, Han Zhang, Jason Baldridge, and Yonghui Wu. 2022.
 Scaling Autoregressive Models for Content-Rich Text-to-Image Generation. https:
 //doi.org/10.48550/ARXIV.2206.10789
+
 Kaipeng Zhang, Zhanpeng Zhang, Zhifeng Li, and Yu Qiao. 2016. Joint Face Detection
 and Alignment Using Multitask Cascaded Convolutional Networks. IEEE Signal
-Processing Letters 23, 10 (oct 2016), 1499-1503. https://doi.org/10.1109/lsp.2016.
+Processing Letters 23, 10 (oct 2016), 1499-1503. https://doi.org/10.1109/Isp.2016.
 2603342
-Face0: Instantaneously Conditioning a Text-to-Image Model on a Face 9
+
+--- Page 9 ---
+Face0: Instantaneously Conditioning a Text-to-Image Model on a Fac 9
+
+| Veda
+OY SUM
+
+ws sek
+
+Sin RB da
+
 Fig. 9. Face 0 maintains consistency across generations. Non-cherry picked examples using the face embeddings from the original photos in Fig. 1.
-B
-D
+
+
+--- Page 10 ---
+10 + Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
+
+)
+
 Fig. 10. Additional examples using several images of the same person and a variety of prompts.
-B
-10
-.
-Dani Valevski, Danny Wasserman, Yossi Matias, and Yaniv Leviathan
-D
-B
-49
+
+

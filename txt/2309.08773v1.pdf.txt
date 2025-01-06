@@ -1,16 +1,15 @@
+--- Page 1 ---
 arXiv:2309.08773v1 [cs.SD] 15 Sep 2023
+
 ENHANCE AUDIO GENERATION CONTROLLABILITY THROUGH REPRESENTATION
 SIMILARITY REGULARIZATION
-Yangyang Shi
-Gael Le Lan
-Ernie Chang
-Varun Nagaraja
-Forrest landola
+
+Yangyang Shi Gael Le Lan Varun Nagaraja Zhaoheng Ni Xinhao Mei
+Ernie Chang Forrest Iandola Yang Liu Vikas Chandra
 Meta AI
-Zhaoheng Ni
-Yang Liu Vikas Chandra
-Xinhao Mei
+
 ABSTRACT
+
 This paper presents an innovative approach to enhance con-
 trol over audio generation by emphasizing the alignment be-
 tween audio and text representations during model training.
@@ -19,7 +18,7 @@ model leverages input from both textual and audio token rep-
 resentations to predict subsequent audio tokens. However,
 the current configuration lacks explicit regularization to en-
 sure the alignment between the chosen text representation and
-the language model's predictions. Our proposal involves the
+the language model’s predictions. Our proposal involves the
 incorporation of audio and text representation regularization,
 particularly during the classifier-free guidance (CFG) phase,
 where the text condition is excluded from cross attention dur-
@@ -31,9 +30,12 @@ dio generation tasks demonstrate that our proposed methods
 lead to improvements in objective metrics for both audio and
 music generation, as well as an enhancement in the human
 perception for audio generation.
-Index Terms Audio Generation, Music Generation,
+
+Index Terms— Audio Generation, Music Generation,
 Representation regularization
+
 1. INTRODUCTION
+
 Generating sound effects, music, and speech to meet specific
 requirements holds immense importance as a pivotal tool in
 content creation spanning various domains, including aug-
@@ -41,22 +43,27 @@ mented, virtual and mixed reality, video game development,
 and movie production. The advent of recent neural genera-
 tive models have brought about a transformative shift in the
 landscape of digital content generation. Drawing inspiration
-from the remarkable progress in image generation [1, 2], the
-realm of audio generation has undergone a paradigm shift
+from the remarkable progress in image generation [1] [2], the
+realm of audio generation has undergone a paradigm shift —
 transitioning from conventional signal processing approaches
-to neural generative models [3, 4, 5, 6, 7, 8, 9, 10].
-Just as in the case of text-to-image generation models [1,
-11], harnessing the potential of diffusion probability mod-
-els [12, 13], the studies [9, 14, 15, 16, 4, 5, 17, 18] have show-
+to neural generative models | {8} (9\ {10}.
+
+Just as in the case of text-to-image generation models
+, harnessing the potential of diffusion probability mod-
+els (12)(I3], the studies [9| [14] (15) [16] (4) (5) [17|[18]] have show-
+
 cased impressive capacity in the realms of speech synthesis,
+
 sound effects creation, and music generation. Alongside the
 diffusion-based approach, a parallel avenue has been pursued
 using transformer-based language models [19], which have
 also exhibited exceptional performance in audio generation
-tasks [20, 21, 22, 8, 6, 7].
+
+sla [7.
+
 In language model driven approach like MusicGen [8] and
 AudioGen [6], it first encodes raw audio into discrete tokens
-via a neural audio compression model (e.g., [23, 24]). This
+via a neural audio compression model (e.g., [23] [24]). This
 model is end-to-end trained to compress and reconstruct in-
 put audio from discrete tokens with high quality and mini-
 mum perceptual loss. The generation model then employs
@@ -73,35 +80,40 @@ tion. However, in the whole training process, there is not any
 regularization to enforce the next audio token prediction to
 fully leverage representations from both audio token and con-
 ditioning text. As a consequence, the generated audio often
-isn't fully aligned with the provided text prompt. It is of-
-ten that the music generated based on the description "Highly
+isn’t fully aligned with the provided text prompt. It is of-
+ten that the music generated based on the description Highly
 rhythmic orchestral piece illustrating wonder and awe. Fea-
 tures staccato violins, cellos, basses, trombone and grand pi-
-ano", misses one or more instruments from the description.
-The sound effects generated from the condition "the sound of
-a ping pong ball bounce back once from the hard wood floor"
+ano”, misses one or more instruments from the description.
+The sound effects generated from the condition ”the sound of
+a ping pong ball bounce back once from the hard wood floor”
 has multiple ping pong ball bouncing sounds.
+
 This paper introduces a method aiming at improving the
 training of the generation model to effectively capture rep-
 resentations from text conditions. This is achieved by mini-
 mizing the similarity between text and audio representations
 through regularization. Language model training comprises
 two modes: text-conditioned training and classifier-free guid-
-ance (CFG) training [26, 6]. In CFG, the text condition is
+ance (CFG) training (6). In CFG, the text condition is
 omitted during language model training. We enhance the au-
 dio and text representation similarity by reducing discrepan-
+
+--- Page 2 ---
 cies in audio and text similarity compared to other samples
 within the same training batch. Experimental results in mu-
 sic and sound effects generation demonstrate the effective-
 ness of the proposed approach, showcasing improvements in
-Frechet audio distance (FAD) using VGG classifier [27], kull-
-back-leibler (KL) divergence using PaSST model [28], text
+Frechet audio distance (FAD) using VGG classifier kull-
+back-—leibler (KL) divergence using PaSST model text
 and audio alignment score based on the contrastive language
 audio pretrained models (CLAP) [29], and human subjective
 evaluation for audio generation.
+
 2. RELATED WORK
+
 This study applies the language model approach presented in
-works such as [20, 21, 22, 8, 6, 7], in which the compression
+works such as [2 [6] [7], in which the compression
 model discretizes audio into tokens for training and then de-
 codes these tokens to audio. The language model learns to
 generate audio tokens. However, our emphasis lies in aug-
@@ -109,6 +121,7 @@ menting the semantic correlation between provided text de-
 scriptions and the generated audio. This enhancement is built
 upon the foundation of the MusicGen [8] and AudioGen [6]
 for language model-driven audio generation.
+
 To model the representation similarity between text and
 audio, one related work is CLAP [29] which uses contrastive
 loss. However, we found that using the contrastive loss in
@@ -116,121 +129,127 @@ CLAP for generation model training did not improve the per-
 formance. Instead, we propose a new approach that first com-
 putes the representation similarities of audios and texts be-
 tween different samples. We then minimize the discrepan-
-cies between the audios' similarities and the texts' similari-
+cies between the audios’ similarities and the texts’ similari-
 ties. Additionally, we found that max pooling is better than
 average pooling for obtaining the sequence level representa-
 tion from individual time step output.
+
 3. REPRESENTATION REGULARIZATION
-Text Input
-Text Encoder
-Text Representation
-Representation
-Regularization
+
+>
+
+ry
+
+Text Input +{ Tea Encoder} —| Text Representation
+
+' (Cinear Projection ~)
+
+((stackoF Transformers)». Audio Representation
+
 Each embedding table
-corresponds to one
+comtesponds to one
 cookbook
-Stack of Transformers
-Audio Representation
-Embedding
-Tables
-Encodec
-Audio Tokens
-Shift One Time Step-
-Linear Projection
-Linear Projection
-Linear Projection
-Linear Projection
-Each linear projection
-corresponds to one
-cookbook
-CE Loss
+
+‘uso Tokens Shit One Time Step
+
+ata] -Ceeme)
+
 Fig. 1. Illustration of the language model training with cross
 entropy loss and representation regularization.
+
 3.1. Language model based audio generation
+
 The language model based audio generation model is com-
-posed of several pivotal elements as shown in Fig 1. Firstly,
+posed of several pivotal elements as shown in Fig[T] Firstly,
 it employs a compression model, such as the EnCodec
-model [30, 23] to encode the raw audio data into a discrete
-multi-stream sequence of tokens ak,i. Here i Є [1, Ta] and Ta
-is the length of the audio token sequence, while k = [1, K],
+
+model ] to encode the raw audio data into a discrete
+multi-stream sequence of tokens a,,;. Here i € [1,T,,] and T,
+is the length of the audio token sequence, while k € [1, K],
 indicating the particular codebook indexed as the k-th. Ad-
 ditionally, the model incorporates a pre-trained text encoder,
 which transforms the text input into a sequence of embed-
-ding representations identified as v;, where j Є [1,T₂],
-T₁ corresponds to the length of the sequence containing
+ding representations identified as v;, where 7 € [1,T7,],
+T, corresponds to the length of the sequence containing
 text embedding representations. Lastly, there is a language
 model component that is a stack of Transformer layers. The
 language model leverages both the text embedding repre-
 sentation and the preceding audio tokens to generate the
 probability distribution for the subsequent audio token as
-po(ak,i+1|ak,1, ..., ak,i, V1, ..., VT). To render audio genera-
+Po(Gk,i+1|@k,1, ++) 4k,i, V1, +, UT, ). To render audio genera-
 tion more manageable, the generation of multi-stream audio
 tokens is trained in parallel, resulting in a substantial reduc-
 tion in the effective sequence length during model training.
 The loss for the language model is the sum of the cross
 entropy loss for each stream k.
-Lcond
 K Ta
--Σ log(pe (ak,i+1|ak,1, ..., ak,i, V1, ..., UT₁)) (1)
-k=1 i=1
+
+Leond = — Sy log (Po (Akit1|@k.1s +5 Oki) V1; «5 02,)) CD)
+
+k=1i=1
 3.2. Representation regularization
+
 However, the cross entropy loss in language model lacks ex-
 plicit mechanism to enforce the audio token prediction align
 with the provided text conditions. Furthermore, the correla-
 tion between text and audio gets even loosen as the classifier-
-free guidance (CFG) method [26, 6, 8] is used in the training
+free guidance (CFG) method [26] [6]/8] is used in the training
 to regulate the balance between sample quality and diversity.
 Employing CFG involves training the language model both
 conditionally and unconditionally. Similar to AudioGen [6],
 10% of the training samples have their accompanying text
 omitted during language model training. In unconditional sit-
 uation, the loss is simply
-Luncond
 K Ta
--Σ log(pe (ak,i+1|Ak,1, ..., Ak,i))
-k=1 i=1
+Luncond = — S S log(pe(ak,i41|@k,1, «++; @k,i)) (2)
+k=1i=1
+
 In this work, the proposed representation regularization
 strengthens the correlation between audio representation and
 text representation while still maintains the effects of CFG
 method to train the language model unconditionally on text.
 Given a batch of training samples, a pooling method F is used
-to get the text sequence representation as T₁ = F(v₁₁, ..., v)
-and audio sequence representation as A³ = F(u), ..., u) for
+to get the text sequence representation as T? = F(v}, ..., vf, )
+and audio sequence representation as A’ = F(u, ..., u4,, ) for
 the particular sample b in the batch. In our experiments, the
 max pooling achieved the best results.
+
 Rather than directly mapping the text and audio represen-
 tations to the same space and maximizing the similarity be-
 tween audio and text as CLAP [29], we propose to minimize
 discrepancies in audio and text similarity compared to other
 samples within the same training batch as follows:
-ты, б
-=
-ть жто
-||Tb ||||T||
-(3)
-Ab✶ A¹
-||4b|||| A6 ||
-Lrr
-Eo:=ô (TB, A, 2
-B* (B − 1)
-(4)
-(5)
-Here Tb, denotes the representation similarity between
-text inputs in sample b and 6. And Ab, b denotes the represen-
-tation similarity between audio in sample b and ô. B is the
-batch size. The Lrr enforces the text and audio in one sample
+
+bb T«T?
+
+= —-*_ @)
+ZP| |Z ||
+
+--- Page 3 ---
+bb AP x AP 4)
+\|A°||||A5||
+(bb ab,by2
+
+Bx(B-1)
+
+Here T°” denotes the representation similarity between
+text inputs in sample b and b. And A®® denotes the represen-
+tation similarity between audio in sample b and b. B is the
+batch size. The L,.,. enforces the text and audio in one sample
 have the same differences regarding to the other samples.
+
 In this study, the proposed representation regularization
 is exclusively applied during the CFG phase. The complete
 model training loss is defined as follows:
-Here,
-L =
-Luncond + XLrr
-Lcond
+
 if CFG is utilized
+
+Le Luncond + ALpr i ©
 if CFG is not used
-(6)
-represents the weighting factor for the representa-
+
+Leona
+
+Here, represents the weighting factor for the representa-
 tion regularization. Note that representation regularization is
 only employed during regular training steps when CFG is in
 use. We also conducted experiments involving representation
@@ -240,15 +259,19 @@ believe the degradation may be attributed to the fact that rep-
 resentation regularization has the potential to hinder language
 model learning by copying the text representation from cross-
 attention as the audio representation in non-CFG.
-4. EXPERIMENTS
+
+4, EXPERIMENTS
+
 In this work, we use two sets of experiments including the
 sound effects generation and the music generation to verify
 the effectiveness of proposed methods.
+
 4.1. Datasets
+
 In music generation, we utilize a total of 20K hours of li-
 censed music which comprises an internal compilation of 10K
 music tracks of high quality, and 390k instrument-only mu-
-sic tracks from the ShutterStock¹ and Pond52. All datasets
+sic tracks from the ShutterStock!] and Pond] All datasets
 are full-length music with 32 kHz sampling rate, accompa-
 nied by comprehensive metadata such as textual descriptions,
 genre categorizations, BPM, and tags. Our evaluation uses the
@@ -256,13 +279,16 @@ MusicCaps benchmark [7]. The MusicCaps benchmark com-
 prises 5.5K samples including a subset of 1K samples bal-
 anced across various genres. We report objective metrics on
 the unbalanced subset as [8].
+
 For sound effect model training, a dataset encompass-
 ing 4k hours of training data is employed. This dataset
-1www.shutterstock.com/music
+
+'www.shutterstock.com/music
 2www.pond5.com
+
 incorporates resources like AudioSet [31], BBC sound ef-
-fects³, AudioCaps[32], Clotho v2 [33], VGG-Sound [34],
-FSD50K [35] and Free To Use Sounds 4. All audio files
+fects*| AudioCaps[32], Clotho v2 [33], VGG-Sound [34],
+FSDS0K and Free To Use Sound##] All audio files
 are sampled at a rate of 16kHz. We adopt a preprocessing
 methodology akin to [6] for textual descriptions. To be-
 gin, we utilize multi-label annotations from datasets such
@@ -272,19 +298,22 @@ dio samples. Subsequently, we eliminate stop words and
 numbers, and lemmatize natural language captions available
 in datasets including AudioCaps, Clotho v2, Free To Use
 Sounds, and BBC Sound Effects. Lastly, samples containing
-the term "speech" in their tag or caption are filtered out, given
+the term speech” in their tag or caption are filtered out, given
 that speech predominates in the data.
+
 4.2. Setup
+
 Our approach involves a non-causal five-layer EnCodec
 model tailored for music generation, operating at 32 kHz
 for monophonic music, and 16 kHz for sound effects genera-
 tion. These EnCodec models maintain a frame rate of 50 Hz,
 commencing with an initial hidden size of 64, which doubles
-across the model's five layers. Embeddings are subjected to
+across the model’s five layers. Embeddings are subjected to
 quantization using an RVQ comprising four quantizers, each
 featuring a codebook size of 2048. These EnCodec models
 are trained using the same audio data as those in the language
 model training.
+
 The transformer models used in this work have 300M pa-
 rameters. To enhance efficiency with long sequences, we em-
 ploy memory-efficient Flash attention [36] from the xFormers
@@ -295,103 +324,66 @@ eration model setup. For music generation model training,
 the complete track. In sound effects generation training, 10-
 second audio clips are used. Model training spans 100K steps,
 utilizing the AdamW optimizer [38], a batch size of 192 ex-
-amples, B1 0.9, 62 = 0.95, a decoupled weight decay
+amples, 6; = 0.9, 62 = 0.95, a decoupled weight decay
 of 0.1, and gradient clipping of 1.0. A cosine learning rate
 schedule is employed, with a warmup of 4k steps. Further-
 more, an exponential moving average is applied, character-
 ized by a decay factor of 0.99. The model training employs
 the mixed precision with Fully Sharded Data Parallel (FSDP)
-bfloat16. We used 16 GPUs and 32 GPUs for sound effects
+bfloatl6. We used 16 GPUs and 32 GPUs for sound effects
 generation and music generation training, respectively. In the
 sampling process for inference, we adopt top-k sampling [39],
 retaining the top 250 tokens and applying a temperature of
 1.0.
-=
+
 4.3. Ablation Study
-=
-Table 1 presents the results of the ablation study conducted
+
+Table [I] presents the results of the ablation study conducted
 on the sound effects generation model using the AudioCaps
 dataset. The optimal model was trained with representation
-3 https://sound-effects.bbcrewind.co.uk/
+
+3https://sound-effects.bbcrewind.co.uk/
 4https://www.freetousesounds.com/all-in-one-bundle/
+
+--- Page 4 ---
 regularization based on max pooling, employing a weight pa-
 rameter of = 3.0 and allocating 10% of the training data
 for CFG training. In contrast, the use of average pooling-
 based sequence representation regularization did not demon-
 strate any improvement over the baseline. Furthermore, Ta-
-ble 1 reaffirms the significant role of CFG training in reducing
+ble[I]reaffirms the significant role of CFG training in reducing
 both FAD and KL scores.
-CFG 入 FAD(↓) KL(↓) CLAP(†)
-model performance on FAD, KL and CLAP. The results of
-AudioGen is referring to the github³.
-FAD(↓) KL(↓) CLAP(↑)
-Methods
-AudioGen [6]
-1.77
-1.58
-0.30
-ours w/o rr
-ours w/ rr
-1.52
-1.60
-0.30
-1.43
-1.57
-0.31
-pool
-max
-0.1 3
-1.43
-1.57
-0.31
-max
-0.1 4
-1.44
-1.58
-0.30
-max
-0.1 2
-1.56
-1.57
-0.31
-max
-0.1 1
-1.58
-1.61
-0.30
-0.2
-0
-1.56
-1.60
-0.30
-0.1
-0
-1.52
-1.60
-0.30
-0.0 0
-1.69
-1.58
-0.30
-max
-0.2
-3
-1.59
-1.64
-0.30
-average
-0.1 3
-1.54
-1.59
-0.30
+
+pool CFG | FAD() KL() CLAP(t)
+
+max 01 3 1.43 1.57 0.31
+
+max 01 4 1.44 1.58 0.30
+
+max 01 2 1.56 1.57 0.31
+
+max O11 1.58 1.61 0.30
+
+- 0.2 0 1.56 1.60 0.30
+
+- 01 0 1.52 1.60 0.30
+
+- 0.0 0 1.69 1.58 0.30
+
+max 0.2 3 1.59 1.64 0.30
+
+average 0.1 3 1.54 1.59 0.30
 Table 1. Ablation study using sound effects generation
-based on AudioCaps. The column ‘pool' denotes the pool-
+based on AudioCaps. The column ‘pool’ denotes the pool-
 ing method to get the sequence level representation for both
-audio and text representation. ‘CFG' column gives the ratio
-of using CFG in training. 'X' represents the weight used in
+
+audio and text representation. ‘CFG’ column gives the ratio
+of using CFG in training. ‘\’ represents the weight used in
 representation regularization.
+
 4.4. Music Generation
-Table 2 gives the objective metrics on the MusicCaps data.
+
+Table [2] gives the objective metrics on the MusicCaps data.
 We report the original metrics for MuiscLM, Noise2Music
 and MusicGen 1.5B model without melody. Notably, the in-
 troduction of the proposed representation regularization re-
@@ -399,36 +391,41 @@ sults in enhancements across all metrics. Our 300M param-
 eter model, which incorporates representation regularization,
 surpasses the performance of the MusicGen 1.5B parameter
 model in terms of FAD and CLAP.
-FAD(↓) KL(↓) CLAP(†)
-Methods
-MusicLM [7]
-4.0
-Noise2Music[40]
-2.1
-MusicGen 1.5B[8]
-5.0
-1.31
-0.28
-ours 300M w/o rr
-5.28
-1.36
-0.30
-ours 300M w/ rr
-4.83
-1.32
-0.31
-Table 2. Music generation using MusicCaps. 'w/ rr' and 'w/o
-rr' mean with and without represenation regularization, re-
+
+Methods FAD()) KL({) CLAP(t)
+
+MusicLM [7 4.0 - -
+Noise2Music[40] 2.1 - -
+MusicGen 1.5B[8] 5.0 1.31 0.28
+
+ours 300M w/o rr 5.28 1.36 0.30
+ours 300M w/ rr 4.83 1.32 0.31
+
+Table 2. Music generation using MusicCaps. ’w/ rr’ and ’w/o
+rr’ mean with and without represenation regularization, re-
 spectively.
+
 4.5. Sound Effects Generation
+
 The sound effects generation results on AudioCaps are shown
-in Table 3. The trend is the same as the music generation
+in Table 3] The trend is the same as the music generation
 experiments. The representation regularization improves the
-Table 3. Sound effects generation using AudioCaps. 'w/ rr'
-and 'w/o rr' mean with and without represenation regulariza-
+
+model performance on FAD, KL and CLAP. The results of
+AudioGen is referring to the githutf|
+
+Methods FAD()) KL) CLAP(t)
+AudioGen [6] 1.77 1.58 0.30
+ours w/o rr 1.52 1.60 0.30
+ours w/ rr 1.43 1.57 0.31
+
+Table 3. Sound effects generation using AudioCaps. ’w/ rr’
+and ’w/o rr’ mean with and without represenation regulariza-
 tion, respectively.
+
 4.6. Human preference evaluation
-Table 4 gives the subjective metrics for the sound and mu-
+
+Table [4] gives the subjective metrics for the sound and mu-
 sic generation models. Our subjective evaluation employed a
 blind pairwise comparison test, where evaluators were pre-
 sented with two samples generated by distinct models, all
@@ -437,6 +434,7 @@ ducted across a set of 20 text prompts, and eight human eval-
 uators were tasked with determining their preference for the
 sample they believed exhibited better quality and better align-
 ment with the provided prompt in each pair.
+
 Notably, both music and sound effects generation, when
 incorporating representation regularization, garnered higher
 user preference ratings. A possible explanation for the more
@@ -444,17 +442,14 @@ significant trend in the sound effects generation is that music
 tends to be more abstract than sound effects. Consequently,
 any discrepancies in alignment with the provided text may not
 be as readily apparent to human evaluators.
-Methods
-music
-sound effects
-ours w/o rr
-ours w/ rr
-48%
-52%
-33%
-67%
+
+Methods music — sound effects
+ours w/orr 48% 33%
+oursw/tr 52% 67%
+
 Table 4. Human preference evaluation
 5. CONCLUSION
+
 This paper has introduced representation regularization to
 improve controllability over audio generation by prioritiz-
 ing alignment between audio and text representations during
@@ -469,105 +464,210 @@ in objective metrics for both audio and music generation.
 Moreover, these improvements have translated into a no-
 ticeable enhancement in human perception regarding audio
 generation quality and alignment.
-5https://github.com/facebookresearch/audiocraft/blob/main/model_cards
+
+Shttps://github.com/facebookresearch/audiocraft/blob/main/model_cards
+
+--- Page 5 ---
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
 6. REFERENCES
-[1] Robin Rombach, Andreas Blattmann, et al., “High-resolution
-image synthesis with latent diffusion models," in CVPR, 2022.
-[2] Aditya Ramesh, Prafulla Dhariwal, et al., “Hierarchical Text-
-Conditional image generation with CLIP latents," arXiv, 2022.
-[3] Yang Song, Jascha Sohl-Dickstein, et al., “Score-Based gen-
-erative modeling through stochastic differential equations,"
+
+Robin Rombach, Andreas Blattmann, et al., “High-resolution
+image synthesis with latent diffusion models,” in CVPR, 2022.
+
+Aditya Ramesh, Prafulla Dhariwal, et al., “Hierarchical Text-
+Conditional image generation with CLIP latents,” arXiv, 2022.
+
+Yang Song, Jascha Sohl-Dickstein, et al., “Score-Based gen-
+erative modeling through stochastic differential equations,”
 arXiv, 2020.
-[4] Haohe Liu, Qiao Tian, et al., “AudioLDM 2: Learning holistic
+
+Haohe Liu, Qiao Tian, et al., “AudioLDM 2: Learning holistic
 audio generation with self-supervised pretraining,” arXiv, Aug.
 2023.
-[5] Haohe Liu, Zehua Chen, et al., "AudioLDM: Text-to-Audio
-generation with latent diffusion models," arXiv, 2023.
-[6] Felix Kreuk, Gabriel Synnaeve, et al., “AudioGen: Textually
+
+Haohe Liu, Zehua Chen, et al., “AudioLDM: Text-to-Audio
+generation with latent diffusion models,” arXiv, 2023.
+
+Felix Kreuk, Gabriel Synnaeve, et al., “AudioGen: Textually
 guided audio generation,” arXiv, 2022.
-[7] Andrea Agostinelli, Timo I Denk, et al., “MusicLM: Generat-
-ing music from text," arXiv, 2023.
-[8] Jade Copet, Felix Kreuk, et al., “Simple and controllable music
-generation," arXiv, 2023.
-[9] Matthew Le, Apoorv Vyas, et al., “Voicebox: Text-Guided
-multilingual universal speech generation at scale," arXiv, 2023.
-[10] Max W Y Lam, Qiao Tian, et al., “Efficient neural music gen-
-eration," arXiv, 2023.
-[11] Prafulla Dhariwal and Alexander Nichol, “Diffusion models
-beat gans on image synthesis," Adv. Neural Inf. Process. Syst.,
+
+Andrea Agostinelli, Timo I Denk, et al., “MusicLM: Generat-
+ing music from text,” arXiv, 2023.
+
+Jade Copet, Felix Kreuk, et al., “Simple and controllable music
+generation,” arXiv, 2023.
+
+Matthew Le, Apoorv Vyas, et al., “Voicebox: Text-Guided
+multilingual universal speech generation at scale,” arXiv, 2023.
+Max W Y Lam, Qiao Tian, et al., “Efficient neural music gen-
+eration,” arXiv, 2023.
+
+Prafulla Dhariwal and Alexander Nichol, “Diffusion models
+beat gans on image synthesis,” Adv. Neural Inf. Process. Syst.,
 2021.
-[12] Jonathan Ho, Ajay Jain, and Pieter Abbeel, “Denoising dif-
-fusion probabilistic models," Adv. Neural Inf. Process. Syst.,
+
+Jonathan Ho, Ajay Jain, and Pieter Abbeel, “Denoising dif-
+fusion probabilistic models,’ Adv. Neural Inf. Process. Syst.,
 2020.
-[13] Diederik Kingma, Tim Salimans, et al., “Variational diffusion
-models," Adv. Neural Inf. Process. Syst., 2021.
-[14] Rongjie Huang, Max W Y Lam, et al., “FastDiff: A fast con-
-ditional diffusion model for High-Quality speech synthesis,"
+
+Diederik Kingma, Tim Salimans, et al., “Variational diffusion
+models,” Adv. Neural Inf. Process. Syst., 2021.
+
+Rongjie Huang, Max W Y Lam, et al., “FastDiff: A fast con-
+ditional diffusion model for High-Quality speech synthesis,”
 arXiv, 2022.
-[15] Sungwon Kim, Heeseung Kim, and Sungroh Yoon, "Guided-
+
+Sungwon Kim, Heeseung Kim, and Sungroh Yoon, “Guided-
 TTS 2: A diffusion model for high-quality adaptive Text-to-
-Speech with untranscribed data," arXiv, 2022.
-[16] Kai Shen, Zeqian Ju, et al., “NaturalSpeech 2: Latent diffusion
+Speech with untranscribed data,” arXiv, 2022.
+
+Kai Shen, Zeqian Ju, et al., “NaturalSpeech 2: Latent diffusion
 models are natural and Zero-Shot speech and singing synthe-
-sizers," arXiv, 2023.
-[17] Rongjie Huang, Jiawei Huang, et al., “Make-An-Audio: Text-
+sizers,” arXiv, 2023.
+
+Rongjie Huang, Jiawei Huang, et al., “Make-An-Audio: Text-
 To-Audio generation with Prompt-Enhanced diffusion mod-
-els," arXiv, 2023.
-[18] Flavio Schneider, Zhijing Jin, and Bernhard Schölkopf,
-"Moûsai: Text-to-Music generation with Long-Context latent
-diffusion," arXiv, 2023.
-[19] Ashish Vaswani, Noam Shazeer, et al., “Attention is all you
-need," Adv. Neural Inf. Process. Syst., 2017.
-[20] Zalán Borsos, Raphaël Marinier, et al., "AudioLM: A language
-modeling approach to audio generation,” IEEE/ACM Transac-
+els,” arXiv, 2023.
+
+Flavio Schneider, Zhijing Jin, and Bernhard Schélkopf,
+“Moiisai: Text-to-Music generation with Long-Context latent
+diffusion,’ arXiv, 2023.
+
+Ashish Vaswani, Noam Shazeer, et al., “Attention is all you
+need,” Adv. Neural Inf. Process. Syst., 2017.
+
+Zalan Borsos, Raphaél Marinier, et al., “AudioLM: A language
+modeling approach to audio generation,” JEEE/ACM Transac-
 tions on Audio, Speech, and Language Processing, 2023.
-[21] Ewan Dunbar, Mathieu Bernard, et al., “The zero resource
-speech challenge 2021: Spoken language modelling," arXiv,
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+Ewan Dunbar, Mathieu Bernard, et al., “The zero resource
+speech challenge 2021: Spoken language modelling,” arXiv,
+
 2021.
-[22] Kushal Lakhotia, Eugene Kharitonov, et al., “On generative
-spoken language modeling from raw audio," Transactions of
+
+Kushal Lakhotia, Eugene Kharitonov, et al., “On generative
+spoken language modeling from raw audio,” Transactions of
 the Association for Computational Linguistics, 2021.
-[23] Neil Zeghidour, Alejandro Luebs, et al., “SoundStream: An
-End-to-End neural audio codec," IEEE/ACM Transactions on
+
+Neil Zeghidour, Alejandro Luebs, et al., “SoundStream: An
+End-to-End neural audio codec,” [IEEE/ACM Transactions on
 Audio, Speech, and Language Processing, 2022.
-[24] Alexandre Défossez, Jade Copet, et al., “High fidelity neural
-audio compression," arXiv, 2022.
-[25] Colin Raffel, Noam Shazeer, et al., “Exploring the limits
-of transfer learning with a unified Text-to-Text transformer,"
+
+Alexandre Défossez, Jade Copet, et al., “High fidelity neural
+audio compression,” arXiv, 2022.
+
+Colin Raffel, Noam Shazeer, et al., “Exploring the limits
+of transfer learning with a unified Text-to-Text transformer,”
 arXiv, 2019.
-[26] Jonathan Ho and Tim Salimans,
-guidance," arXiv, 2022.
-"Classifier-Free diffusion
-[27] Shawn Hershey, Sourish Chaudhuri, et al., “CNN architectures
-for large-scale audio classification," in ICASSP, 2017.
-[28] Khaled Koutini, Jan Schlüter, et al., “Efficient training of audio
-transformers with patchout," arXiv, 2021.
-[29] Benjamin Elizalde, Soham Deshmukh, Mahmoud Al Ismail,
+
+Jonathan Ho and Tim Salimans,
+guidance,” arXiv, 2022.
+
+Shawn Hershey, Sourish Chaudhuri, et al., “CNN architectures
+for large-scale audio classification,” in JCASSP, 2017.
+
+“Classifier-Free diffusion
+
+Khaled Koutini, Jan Schliiter, et al., “Efficient training of audio
+transformers with patchout,” arXiv, 2021.
+
+Benjamin Elizalde, Soham Deshmukh, Mahmoud AI Ismail,
 and Huaming Wang, “CLAP: Learning audio concepts from
 natural language supervision,” arXiv, 2022.
-[30] Alexandre Défossez, Jade Copet, Gabriel Synnaeve, and Yossi
-Adi, “High fidelity neural audio compression," arXiv, 2022.
-[31] Jort F Gemmeke, Daniel P W Ellis, et al., "Audio set: An ontol-
-ogy and human-labeled dataset for audio events," in ICASSP,
+
+Alexandre Défossez, Jade Copet, Gabriel Synnaeve, and Yossi
+Adi, “High fidelity neural audio compression,” arXiv, 2022.
+
+Jort FGemmeke, Daniel P W Ellis, et al., “Audio set: An ontol-
+ogy and human-labeled dataset for audio events,” in ICASSP,
 2017.
-[32] Chris Dongjoo Kim, Byeongchang Kim, et al., “AudioCaps:
+
+Chris Dongjoo Kim, Byeongchang Kim, et al., “AudioCaps:
 Generating captions for audios in the wild,” in NAACL, 2019.
-[33] Konstantinos Drossos, Samuel Lipping, and Tuomas Virtanen,
-"Clotho: an audio captioning dataset,” in ICASSP, 2020.
-[34] Honglie Chen, Weidi Xie, et al., “Vggsound: A Large-Scale
-Audio-Visual dataset," in ICASSP, 2020.
-[35] Eduardo Fonseca, Xavier Favory, et al., “FSD50K: An open
-dataset of Human-Labeled sound events," IEEE/ACM Trans-
+Konstantinos Drossos, Samuel Lipping, and Tuomas Virtanen,
+“Clotho: an audio captioning dataset,” in ICASSP, 2020.
+Honglie Chen, Weidi Xie, et al., “Vggsound: A Large-Scale
+Audio-Visual dataset,” in ICASSP, 2020.
+
+Eduardo Fonseca, Xavier Favory, et al., “FSDSOK: An open
+
+dataset of Human-Labeled sound events,’ IEEE/ACM Trans-
 actions on Audio, Speech, and Language Processing, 2022.
-[36] Tri Dao, Daniel Y Fu, et al., "FlashAttention: Fast and
-memory-efficient exact attention with IO-awareness," arXiv,
+
+Tri Dao, Daniel Y Fu, et al., “FlashAttention: Fast and
+memory-efficient exact attention with IO-awareness,” arXiv,
 2022.
-[37] Benjamin Lefaudeux, Francisco Massa, et al., “xformers: A
-modular and hackable transformer modelling library," 2021.
-[38] Ilya Loshchilov and Frank Hutter, “Decoupled weight decay
-regularization," arXiv, 2017.
-[39] Angela Fan, Mike Lewis, and Yann Dauphin, "Hierarchical
-neural story generation," arXiv, 2018.
-[40] Qingqing Huang, Daniel S Park, et al., “Noise2Music: Text-
-conditioned music generation with diffusion models," arXiv,
+
+Benjamin Lefaudeux, Francisco Massa, et al., “xformers: A
+modular and hackable transformer modelling library,” 2021.
+Ilya Loshchilov and Frank Hutter, “Decoupled weight decay
+regularization,” arXiv, 2017.
+
+Angela Fan, Mike Lewis, and Yann Dauphin, “Hierarchical
+neural story generation,” arXiv, 2018.
+
+Qingqing Huang, Daniel S Park, et al., “Noise2Music: Text-
+conditioned music generation with diffusion models,” arXiv,
 2023.
+

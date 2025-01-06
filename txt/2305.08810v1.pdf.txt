@@ -1,9 +1,20 @@
-arXiv:2305.08810v1 [cs.CV] 15 May 2023
+--- Page 1 ---
+2305.08810v1 [cs.CV] 15 May 2023
+
+arXiv
+
 AutoRecon: Automated 3D Object Discovery and Reconstruction
-Yuang Wang Xingyi He Sida Peng Haotong Lin Hujun Bao
+
+Yuang Wang XingyiHe Sida Peng
+
+Haotong Lin
+
+Hujun Bao Xiaowei Zhou'
+
 State Key Lab of CAD&CG, Zhejiang University
-Xiaowei Zhou+
+
 Abstract
+
 A fully automated object reconstruction pipeline is cru-
 cial for digital content creation. While the area of 3D recon-
 struction has witnessed profound developments, the removal
@@ -23,24 +34,9 @@ DTU, BlendedMVS and CO3D-V2 datasets demonstrate the
 effectiveness and robustness of AutoRecon. The code and
 supplementary material are available on the project page:
 https://zju3dv.github.io/autorecon/.
-Structure-from-Motion
-Trans.
-Input Images
-Reg.
-SDF Radiance
-Field
-DINO Point Cloud Coarse Segmentation
-Foreground Reconstruction
-Foreground Segmentation
-Figure 1. Overview of our fully-automated pipeline and results.
-Given an object-centric video, we achieve coarse decomposition by
-segmenting the salient foreground object from a semi-dense SfM
-point cloud, with pointwise-aggregated 2D DINO features [3]. Then
-we train a decomposed neural scene representation from multi-view
-images with the help of coarse decomposition results to reconstruct
-foreground objects and render multi-view consistent high-quality
-foreground masks.
+
 1. Introduction
+
 3D object reconstruction has long been investigated in
 computer vision. In this work, we focus on the specific set-
 ting of reconstructing a salient foreground object from multi-
@@ -49,14 +45,41 @@ the background without any annotation, which enables scal-
 able 3D content creation for VR/AR and may open up the
 possibility to generate free 2D and 3D object annotations at
 a large scale for supervised-learning tasks.
-Traditional multi-view stereo [8, 32] and recent neural
-scene reconstruction methods [40, 46] have attained impres-
+
+Traditional multi-view stereo [8,32] and recent neural
+scene reconstruction methods [40,46] have attained impres-
 sive reconstruction quality. However, these methods cannot
 identify objects and the reconstructed object models are typ-
 ically coupled with the surrounding background. A straight-
 forward solution is utilizing the foreground object masks to
+
 The authors are affiliated with the ZJU-SenseTime Joint Lab of 3D Vision.
-*Corresponding author: Xiaowei Zhou.
++ Corresponding author: Xiaowei Zhou.
+
+Input Images
+
+Structure-from-Motion
+
+Foreground Reconstruction
+
+f R
+ND
+
+DINO Point Cloud Coarse Segmentation
+
+Fi
+
+Foreground Segmentation
+
+Figure 1. Overview of our fully-automated pipeline and results.
+Given an object-centric video, we achieve coarse decomposition by
+segmenting the salient foreground object from a semi-dense Sf{M
+point cloud, with pointwise-aggregated 2D DINO features [3]. Then
+we train a decomposed neural scene representation from multi-view
+images with the help of coarse decomposition results to reconstruct
+foreground objects and render multi-view consistent high-quality
+foreground masks.
+
 obtain clean foreground object models. However, accurate
 2D object masks are expensive to annotate, and salient ob-
 ject segmentation techniques [21,34,41] generally produce
@@ -69,18 +92,19 @@ or pixel labels. But the requirement of manual annotations
 limits the feasibility of more scalable 3D content creation.
 In this paper, we propose a novel two-stage framework for
 the fully-automated 3D reconstruction of salient objects, as
-illustrated in Fig. 1. We first perform coarse decomposition to
+illustrated in Fig. |. We first perform coarse decomposition to
 automatically segment the foreground SfM point cloud, and
 then reconstruct the foreground object geometry by learning
 an implicit neural scene representation under explicit super-
 vision from the coarse decomposition. The key idea of our
 coarse decomposition is to leverage the semantic features
-1
+
+--- Page 2 ---
 provided by a self-supervised 2D Vision Transformer (ViT)
 [3]. Specifically, we aggregate multi-view ViT features from
 input images to the SfM point cloud and then segment salient
-foreground points with a point cloud segmentation Trans-
-former. To train the Transformer on large-scale unlabeled
+‘oreground points with a point cloud segmentation Trans-
+‘ormer. To train the Transformer on large-scale unlabeled
 data, we devise a pseudo-ground-truth generation pipeline
 based on Normalized Cut [33] and show its ability to pro-
 duce accurate segmentations and 3D bounding boxes upon
@@ -98,21 +122,26 @@ that our approach can automatically and robustly recover
 accurate 3D object models and high-quality segmentation
 masks from RGB videos, even with cluttered backgrounds.
 In summary, we make the following contributions:
-• We propose a fully-automated framework for recon-
+
+* We propose a fully-automated framework for recon-
 structing background-free object models from multi-
 view images without any annotation.
-•
-We propose a coarse-to-fine pipeline for scene decom-
+
+* We propose a coarse-to-fine pipeline for scene decom-
 position by first decomposing the scene in the form of
 an SfM point cloud, which then guides the decomposi-
 tion of a neural scene representation.
-• We propose an SfM point cloud segmentation Trans-
+
+* We propose an SfM point cloud segmentation Trans-
 former and devise an unsupervised pseudo-ground-truth
 generation pipeline for its training.
-• We demonstrate the possibility of automatically creat-
+
+* We demonstrate the possibility of automatically creat-
 ing object datasets with 3D models, 3D bounding boxes,
 and 2D segmentation masks.
+
 2. Related Work
+
 Multi-view 3D object reconstruction. The reconstruction
 of 3D objects from multi-view images has long been stud-
 ied with broad applications. Aside from multi-view images,
@@ -126,8 +155,9 @@ tion methods, built upon differentiable neural renderers and
 scene representations, have witnessed profound development.
 Surface-rendering-based methods [26,47] get rid of 3D su-
 pervision, but they still rely on object masks as substitutive
+
 geometry constraints. The recent volume-rendering-based
-reconstruction methods [27, 40, 46] allow mask-free train-
+reconstruction methods [27, 40,46] allow mask-free train-
 ing but still require object masks supervision to produce
 background-free object models. Aside from object masks,
 existing methods also require manual annotation of the 3D
@@ -135,6 +165,7 @@ spatial extent of the foreground object. Instead, we propose
 a fully-automated object reconstruction pipeline without any
 human labeling, which further improves the usability and
 scalability of 3D object reconstruction.
+
 Decomposition of neural scene representations. Many re-
 cent works try to decompose neural scene representations
 (NSR). We categorize related works based on the annota-
@@ -143,13 +174,13 @@ simple but effective decompositions of different entities.
 NeRF++ [50] separates foreground and background with a
 sphere. 3D bounding boxes manually annotated or predicted
 by category-specific models are used for decomposed mod-
-eling of static and dynamic scenes [16,24,28]. Multi-view
+eling of static and dynamic scenes [16, 24, 28]. Multi-view
 segmentation masks provide dense annotations for scene
 decomposition. It has been shown that semantic fields can
-be learned with multi-view semantic masks [15,39,51] for
+be learned with multi-view semantic masks [15, 39,51] for
 semantic scene decomposition. Moreover, decomposed ob-
 ject representations can also be built from multi-view object
-masks [42, 43]. To alleviate the annotation cost of multi-view
+masks [42,43]. To alleviate the annotation cost of multi-view
 segmentation, methods relying on human interactions [52]
 and different forms of sparse human annotations are pro-
 posed, such as scribbles [30] and seed points [23]. The
@@ -164,11 +195,12 @@ local editing and impedes applications requiring global rea-
 soning upon a scene, such as the decomposition of a salient
 object. Different from existing approaches, our pipeline re-
 quires no annotation and facilitates global reasoning.
+
 Unsupervised object discovery. Unsupervised object dis-
 covery (UOD) aims at the unsupervised learning of ob-
 ject concepts from a large-scale dataset. Recently, many
 works strive for UOD with compositional generative mod-
-eling [2,6,9]. Slot Attention [18] facilitates the inference
+eling [2, 6,9]. Slot Attention [18] facilitates the inference
 of object-centric representations directly from images. This
 idea is further extended to 3D-aware modeling and inference
 with neural radiance fields or light fields [31, 35, 36, 48].
@@ -179,7 +211,8 @@ single-object representations and is shown to work on real-
 world data such as casual video captures. Another recent
 trend makes use of self-supervised visual representations
 for unsupervised object discovery in various forms, such
-2
+
+--- Page 3 ---
 as object localization [34], salient detection, and seman-
 tic segmentation [49]. TokenCut [41] and DSM [21] show
 promising results by localizing and segmenting salient ob-
@@ -190,54 +223,62 @@ we propose to perform unsupervised object discovery from
 videos in 3D, which facilitates coherent salient object discov-
 ery upon a global representation, instead of many isolated
 inferences upon local 2D observations.
+
 3. Preliminaries
+
 In this section, we briefly review the following preliminar-
 ies: the self-supervised ViT features used to segment point
 clouds, the Normalized Cut algorithm employed to generate
 pseudo segmentation labels, and the neural surface recon-
 struction method NeuS utilized for object reconstruction.
+
 Self-supervised ViTs. A Vision Transformer [5] flattens
-an H x W sized image I into a sequence of P × P sized 2D
-patches Ip. Each image patch is embedded with a trainable
+an H x W sized image I into a sequence of P x P sized 2D
+patches I,,. Each image patch is embedded with a trainable
 linear projection and added with a positional embedding.
 A special learnable [CLS] token is usually prepended to
 the sequence of patches for modeling global and contextual
 information. The 1D sequence of token embeddings is fed to
 several Transformer encoder blocks composed of multi-head
 self-attention (MSA) and MLP layers:
-z = MSA (LN (z−1)) + ze
-ze
-e-1
-"
-z² = MLP (LN (z")) + z",
-(1)
-where z is the output of the l-th Transformer encoder layer.
+
+zl = MSA (LN (2/-!)) +2/-1,
+1
+2! = MLP (LN (z")) + af, @
+
+where z° is the output of the ¢-th Transformer encoder layer.
+
 It has been shown in [3] that self-supervised ViT features
 contain explicit semantic information such as scene layout
 and object boundaries, which is not found in the supervised
 counterparts.
+
 Normalized cut algorithm (NCut) [33]. Spectral cluster-
 ing is a wildly used clustering technique that originated from
-graph partitioning. Given a set of data points x¿, spectral clus-
-tering builds an undirected graph G = (V,E) and partitions
+graph partitioning. Given a set of data points x;, spectral clus-
+tering builds an undirected graph G = (V, E) and partitions
 it into two disjoint sets A, B. Each data point x; corresponds
-to a vertex v¿, and the weight w(i, j) of each graph edge rep-
+to a vertex v;, and the weight w(i, j) of each graph edge rep-
 resents the similarity or the connectivity between two data
 points. Normalized Cut (NCut) is a wildly used criterion for
 spectral clustering, which can be efficiently minimized by
 solving a generalized eigenvalue problem as shown in [33].
+
 Neural surface reconstruction with NeuS. NeuS [40]
-uses the zero-level set of a signed distance function (SDF) ƒ :
-R3 R to represent a surface S {x = R³ | f(x) = 0}
+uses the zero-level set of a signed distance function (SDF) f :
+R? — R to represent a surface S = {x € R* | f(x) = 0}
 and models appearance with a radiance field c(x, v). The
-=
+
 SDF-based radiance field is rendered via volume rendering.
-Given a ray {r(t) = 0 + tv| t > 0}, where o denotes the
+Given a ray {r(t) = o + tv| t > 0}, where o denotes the
 camera center and v is the view direction, we can render its
-color Ĉ by
-ĉ = [* w(t) c(r(t), v)dt,
+color C by
+
+C= [ w(t) e(r(t), v)at, (2)
+
 where w(t) is an unbiased and occlusion-aware weight func-
 tion as detailed in [40].
+
 Notably, the spatial extent of the foreground object of
 interest needs to be manually annotated, which is scaled
 into a unit-sphere and represented with the SDF-based ra-
@@ -246,7 +287,9 @@ represented with NeRF++ [50]. Since the object of interest
 can hardly be exclusively enclosed with a single sphere, the
 reconstructed object model includes background geometries,
 requiring manual post-processing for its removal.
+
 4. Methods
+
 An overview of our pipeline is illustrated in Fig. 1. Given
 an object-centric video, we aim to automatically decompose
 and reconstruct the salient foreground object whose high-
@@ -255,13 +298,15 @@ geometry. To achieve this goal, we propose a novel coarse-
 to-fine pipeline that decomposes a neural scene representa-
 tion with the help of point cloud decomposition. Our coarse
 decomposition stage segments the foreground object from a
-scene-level SfM point cloud and estimates its compact 3D
+scene-level S{M point cloud and estimates its compact 3D
 bounding box (Sec. 4.1). Then, a decomposed neural scene
 representation of the foreground object is recovered under
 explicit supervision of the coarse decomposition (Sec. 4.2).
+
 4.1. Coarse decomposition of the salient object
+
 To coarsely decompose the foreground object, we first re-
-construct its SfM point cloud and fuse multi-view DINO [3]
+construct its S{M point cloud and fuse multi-view DINO [3]
 features on it. Then, the point cloud is segmented by our
 lightweight 3D segmentation Transformer, upon which a
 3D bounding box of the salient foreground object is gener-
@@ -272,43 +317,59 @@ to generate pseudo-ground-truth segmentations, as shown
 in Fig. 3. Upon training, the 3D segmentation Transformer
 outperforms our unsupervised pipeline and can be applied to
 point clouds at larger scales.
-Neural point cloud reconstruction. We leverage the SfM
-point clouds for efficient coarse decomposition since SfM
+
+Neural point cloud reconstruction. We leverage the Sf{M
+point clouds for efficient coarse decomposition since Sf{M
 is usually performed prior to the dense reconstruction for
 camera pose recovery. Specifically, we use the recent semi-
 dense image matcher LoFTR [37] for SfM to reconstruct
-3
+
+--- Page 4 ---
 Extract 2D
-DINO Features
-Input
-Images
-SfM
+= DINO Features
+a
+
+Input SfM
+
+Images Point Cloud
+
+1. Neural Point Cloud Reconstruction
+
 Average
-[CLS]
-0!00000
+
 Aggregate 2D Features to
-Point Cloud
-Point Cloud
-with DINO Features
-Linear
-Trans.
+
 Pseudo-GTs
-Segmentation
+
+[CLs] Segmentation
+4 @ fat
+. 1 Ma
+Linear 7
+Trans. 0
+1
+0)
 Labels
 Estimated
-Bounding Box
-Ground
-1. Neural Point Cloud Reconstruction
+Point Cloud Bounding Box Ground
+
+with DINO Features
+
 2. 3D Segmentation Transformer
+
 Figure 2. Coarse Decomposition. Given an object-centric image sequence, we first reconstruct the semi-dense Structure-from-Motion (SfM)
 point cloud and extract pointwise features by aggregating multi-view 2D DINO features, which are semantically rich as illustrated by the
 PCA-projected colors. Then, we segment the foreground object from the SfM point cloud with a lightweight 3D Transformer, which takes
-pointwise features (☐☐) and a global [CLS] feature () as input and predicts pointwise labels (10). Finally, the 3D bounding box of the
+
+pointwise features (
+
+) and a global [CLS] feature (©) as input and predicts pointwise labels (®@). Finally, the 3D bounding box of the
+
 object and an optional ground plane are estimated from the decomposed point cloud.
+
 semi-dense point clouds. It can recover the complete ge-
 ometry of foreground objects, even the low-textured ones,
 which is discussed in [11]. This capability is appealing for
-robustly locating an object's complete spatial extent, which
+robustly locating an object’s complete spatial extent, which
 is less reliable with sparse keypoints-based SfM. To facilitate
 3D segmentation, we lift self-supervised 2D ViT features to
 3D. More specifically, frame-wise DINO-ViT features are
@@ -320,6 +381,7 @@ frame-wise features of the [CLS] token globally describing
 each frame are also fused as a global description of our point
 cloud and further used as a segmentation prototype in our
 proposed 3D Transformer.
+
 Point cloud segmentation with Transformer. As shown
 in Fig. 2, the neural point cloud already contains discrimina-
 tive semantic features separating foreground and background.
@@ -338,92 +400,100 @@ information of [CLS] token to reason about the salient ob-
 ject and its global-local relationship with other pointwise
 features for segmentation. The use of pre-trained 2D ViT fea-
 tures alleviates the reliance on large-scale data for training
+
 Transformers.
+
 Dataset generation with unsupervised segmentation.
 In order to generate training data for our 3D Transformer, we
-propose an unsupervised SfM segmentation pipeline, which
+propose an unsupervised Sf{M segmentation pipeline, which
 can produce robust segmentations but is computationally
 more intensive. We propose to apply NCut on the previously
 built neural point clouds as it facilitates scene-level global
 reasoning. A large-scale dataset with pseudo-ground-truth
 segmentations can be automatically generated with the pro-
 posed pipeline. An overview is presented in Fig. 3.
+
 To apply the NCut algorithm on our neural point cloud
 for 3D segmentation, we build a fully connected graph
-G = (V,E) using the neural point cloud, where each graph
+G = (V, E) using the neural point cloud, where each graph
 vertex V; corresponds to a 3D point. We combine feature
 similarities and spatial affinities when modeling the edge
-weights w(i, j) between V₂ and Vj. Though the DINO fea-
+weights w(i, 7) between V; and V;. Though the DINO fea-
 ture is semantically rich, it is hierarchical, and the salient
 object inferred is sometimes ambiguous in terms of its po-
 sition in the part-whole hierarchy. We propose a grouped
 cosine similarity to avoid the saliency dominated by a certain
 object part, especially for objects with complex structures.
+
 Formally, denote a group of multi-head attention fea-
-tures Z₁ = {z,..., z½-1} from h heads of an MSA module,
-we compute the grouped cosine similarity S* between Zi
-and Zj:
-S* (Zi, Zj)
-=
+tures Z; = {z9,...,2?~"} from h heads of an MSA module,
+we compute the grouped cosine similarity S” between Z;
+and Z;:
+
+S*(Zi,Zj) = S(2f, 2), @)
+
 max
-S(z, z),
-(3)
-kЄ{0,...,h-1}
+kE{0,....h—1} J
 where S is the cosine similarity. The intuition is, taking the
 maximum similarity between a group of multi-head features
 assigns two points of high similarity if they are similar in
 any aspect, thus reducing the chances that the saliency is
+
 only dominated by a local part of an object. The foreground
-4
+
+--- Page 5 ---
+pet
 Down
 Sample
+
 Point Cloud
 with DINO Features
-of
-Normalized Cut
+
 Coarse Segmentation
 and Bounding Box
-+000-
--000-
-SDF Field
-Color Field
-S, C
-SDF Radiance Field
-Foreground Renderings
-Point Cloud Reg.
-Ground Plane Reg.
-Mask Renderings
-Positive O--
-Ignored o
-Negative Q
-Pseudo Label Generation
-Pseudo-GTs
+
+Positive ©
+
+Ignored @,
+
+Negative o
+
+&
+
+Ps on Pseudo-GTs
+
+Labe
+
 Figure 3. Pseudo-ground-truth generation and label definition.
 To train our point cloud segmentation Transformer with unlabeled
 data, we propose an unsupervised pipeline to generate pseudo labels.
 We segment the downsampled neural point cloud with Normalized
 Cut [33] (NCut) and estimate a bounding box for the foreground
-points. Taking the segmentation noise into account, we treat NCut's
+points. Taking the segmentation noise into account, we treat NCut’s
 foreground segmentations as positive samples (O), and background
 points outside the bounding box as negative ones (O). Background
 segmentations located within the bounding box are regarded as
-segmentation noise (O) and thus ignored in training.
+segmentation noise (©) and thus ignored in training.
+
 point cloud is then segmented with NCut on the graph de-
 fined above. An oriented 3D bounding box is subsequently
 inferred based on plane-aligned principle component analy-
 sis of the foreground point cloud. The pipeline is illustrated
 by Fig. 3. More details about our unsupervised segmentation
 pipeline are provided in the appendix.
+
 4.2. Background-free salient object reconstruction
+
 To reconstruct a background-free salient object model,
 we explicitly partition a scene with the coarse decomposi-
 tion result and model each partition separately with neu-
-ral scene representations [22, 40], which are trained upon
+ral scene representations [22,40], which are trained upon
 multi-view posed images. Moreover, we incorporate multiple
 constraints into the optimization, which facilitates conver-
 gence and the decomposition of foreground objects from
 surroundings. Fig. 4 illustrates our foreground modeling.
-Decomposed scene modeling. Previous methods [40,47]
+
+Decomposed scene modeling. Previous methods [40, 47]
 scale the foreground object into a unit-sphere with manual an-
 notation of its spatial extent and further rely on mask culling
 or manual manipulation of the reconstructed mesh to remove
@@ -433,7 +503,21 @@ ual annotation, thanks to the estimated object bounding box
 in Sec. 4.1. More specifically, we use an SDF-based radiance
 field [40] to represent regions within the object bounding
 box and use a NeRF for regions outside. We use an addi-
-Foreground Modeling
+
+Vx Color Field
+B Foreground Renderings
+
+8,€
+
+SDF Field
+
+SDF Radiance Field a
+
+Point Cloud Reg.
+Ground Plane Reg. .
+
+Foreground Modeling Mask Renderings
+
 Figure 4. Salient object reconstruction and 2D mask rendering.
 We model the salient foreground object enclosed in the coarse
 bounding box with an SDF-based radiance field [40]. We use a
@@ -444,6 +528,7 @@ radiance field with coarse decomposition results, i.e., the segmented
 foreground SfM point cloud and the estimated ground plane, for
 more robust foreground decomposition. After reconstruction, we
 can render high-quality multiview-consistent 2D object masks.
+
 tional tiny NeRF to model regions around the ground plane
 supporting the object, which can be located with the bottom
 plane of the object bounding box. Though there are overlaps
@@ -451,9 +536,10 @@ between the inner region and the ground plane region, NeRF
 normally converges faster than the SDF-based radiance field
 and thus has an inductive bias to occupy the overlapped
 region. We use a foreground-object-aware version of the
-contraction function with L∞ norm in MipNeRF-360 [1] to
+contraction function with L. norm in MipNeRF-360 [1] to
 model unbounded scenes. More details are provided in the
 appendix.
+
 Explicit regularization with coarse decomposition. We
 empirically find that decomposed modeling alone cannot
 robustly separate a foreground object from its surroundings,
@@ -462,49 +548,49 @@ Therefore, we leverage the geometric cues in the coarse
 decomposition results, including the segmented foreground
 SfM point cloud and the estimated ground plane, to provide
 extra regularization for training the SDF-based radiance field.
-Firstly, the unsigned distances |f(x)| of SfM points x Є Pg
-located on the estimated ground plane Pg are constrained to
-be larger than a lower bound 0(x):
+Firstly, the unsigned distances | f(x)| of SfM points x € P,
+located on the estimated ground plane P, are constrained to
+be larger than a lower bound 6(x):
+
 1
-Lg
-=
-9
-Σ max(0(x) = |f(x)\,0),
-Ng XЄPg
-.
-0(x) = µ(x) + λ · σ(x),
-(4)
-where μ(x) and σ(x) are means and standard deviations
-of unsigned distances between point x and its K neareast
+Ly = — max(4(x) — | f(x)|,0),
+a Ne (600) — [0
+
+O(x) = w(x) + A+ a(x),
+
+where ju(x) and o(x) are means and standard deviations
+of unsigned distances between point x and its KX neareast
 neighbors. This constraint prevents the foreground network
 from modeling the ground plane.
+
 Moreover, the foreground SfM point cloud is regarded
 as a rough surface prior to regularize the signed distance
-5
+
+--- Page 6 ---
 field, similar to Geo-NeuS [7]. This regularization can speed
 up convergence, alleviate the shape-radiance ambiguity and
 improve the reconstruction quality of thin structures. Instead
 of directly constraining the SDF value of each SfM point to
-zero like in [7], we take the noise of SfM point clouds into
+zero like in [7], we take the noise of S{M point clouds into
 account. Specifically, we model the positional uncertainty
-T(x) of each point x = Pƒg from the foreground SfM point
-cloud Pfg by its distances to the neighboring points similar
+T(x) of each point x € Py, from the foreground SfM point
+cloud P /, by its distances to the neighboring points similar
 to 0(x) in Eq. (4). Then we constrain the unsigned distance
-|f(x) of x to be smaller than 7(x):
-=
-1
-Σ max(|f(x)| -7(x),0).
-Lfg Nfg xEP fg
-(5)
+|f(x)| of x to be smaller than r(x):
+
+Lig = Dy maxl|fO0|-709),0). 6)
+
+I xEP fy
+
 To further enhance high-quality foreground renderings
 with sharp boundaries, we add a beta distribution prior [19]
-Lbin on the accumulated weights O(r) of each ray r = Rfg
+Loin on the accumulated weights O(r) of each ray r € Ryg
 intersecting with the object bounding box. Finally, we use
-the eikonal term Leik [10] on sampled foreground points.
+the eikonal term £,;, [10] on sampled foreground points.
 Our total loss is:
-L
-=
-: Lcolor + αLeik + ß£g + V£ f g + SLbin. (6)
+
+L = Leotor + Lik + BLg +L fq t+ Loin. (6)
+
 Foreground rendering and salient object extraction.
 With the reconstructed SDF-based radiance field of the fore-
 ground object, we can easily render its multi-view consistent
@@ -516,10 +602,12 @@ box as object masks, which are binarized with a threshold of
 0.5. We use Marching Cubes [20] to extract the object mesh.
 We can obtain a background-free object 3D model without
 post-processing thanks to our decomposed scene modeling.
+
 4.3. Implementation details
+
 The input images used for SfM reconstruction are resized
 to a max area of 720,000. We extract frame-wise 2D features
-from the ViT-S/8 version of DINO-VIT. We use our data
+from the ViT-S/8 version of DINO-ViT. We use our data
 generation pipeline to process 880 object-centric videos from
 the CO3D-V2 dataset, which includes various categories. All
 chair objects are kept as a holdout set for validation. This
@@ -530,18 +618,25 @@ proposal MLPs [1] in all fields of our scene representation.
 We train our scene representation for 60k iterations, which
 takes 2 hours on a single NVIDIA V100 GPU. All loss
 weights in Eq. (6) are set to 0.1. The explicit regularization
-terms are only applied during the initial 15k iterations with
+terms are only applied during the initial 15% iterations with
 their loss weights gradually annealed to zero.
+
 CO3D
+
 BlendedMVS
-Ref. Image
-Extracted Mesh
+
+Ref. Image Extracted Mesh
+
 Fg. Rendering
+
 Figure 5. Background-free salient object reconstruction results.
+
 5. Experiments
 5.1. Datasets
+
 We evaluate the proposed method on CO3D-V2 [29],
 BlendedMVS [45] and DTU [12] datasets.
+
 CO3D contains 19,000 video sequences of objects from
 50 MS-COCO categories. Many objects in CO3D contain
 thin structures, which are challenging for detection and seg-
@@ -553,6 +648,7 @@ manually annotate ground-truth 3D bounding boxes of 80
 objects from the chair category based on the given MVS
 point clouds. Moreover, we annotate detailed 2D foreground
 masks of 5 objects to evaluate 2D segmentation.
+
 BlendedMVS and DTU datasets are widely used for 3D
 reconstruction. We use these datasets to evaluate 3D salient
 object detection, reconstruction, and 2D segmentation. Since
@@ -562,30 +658,26 @@ view masks of 5 objects for evaluation. Foreground ob-
 ject meshes are also used for producing ground truth 3D
 bounding boxes. When evaluating reconstruction results, all
 meshes are preprocessed with object masks.
+
 5.2. 3D salient object detection
+
 In this part, we evaluate our coarse decomposition re-
 sults based on the 3D bounding boxes inferred from seg-
 mented foreground point clouds. More details about generat-
 ing bounding boxes can be found in appendix.
-6
-TokenCut
-Seg. Agg.
-Ours NCut (ablation)
-Ours Transformer
-CO3D
-BlendedMVS
-DTU
-AP@0.5 AP@0.7 AP@0.5 AP@0.7 AP@0.5 AP@0.7
-0.816 0.204 0.875 0.625
-0.867 0.306 1.00 0.75
-0.908 0.581 1.00 1.00
-0.500 0.167
-1.00 0.667
-0.833 0.833
-CO3D
+
+--- Page 7 ---
+CO3D BlendedMVS DTU
+AP@0.5 AP@0.7|/AP@0.5 AP@0.7/AP@0.5 AP@0.7
+
+TokenCut + Seg. Agg.|| 0.816 0.204 | 0.875 0.625 | 0.500 0.167
+Ours NCut (ablation) || 0.867 0.306 1.00 0.75 1.00 0.667
+Ours Transformer || 0.908 0.581 | 1.00 1.00 | 0.833 0.833
+
 Table 1. Quntitative results of 3D salient object detection. Our
 method is compared with baselines using the average precision
 (AP) of 3D bounding box IoU with different thresholds.
+
 Baselines. To the best of our knowledge, there is no ex-
 isting baseline that holds the same setting as our coarse de-
 composition pipeline, which detects 3D salient objects from
@@ -593,20 +685,21 @@ SfM point clouds without manual annotation for model train-
 ing. Therefore, we devise two straightforward pipelines for
 comparison to demonstrate the effectiveness of our design.
 The first baseline is TokenCut + segmentation aggregation
-(TokenCut Seg. Agg.). We first use TokenCut [41] for 2D
+(TokenCut + Seg. Agg.). We first use TokenCut [41] for 2D
 salient object segmentation on each image and then aggre-
-gate multi-view segmentation confidences to the SfM point
+gate multi-view segmentation confidences to the S{M point
 cloud by averaging. Finally, we segment the SfM point cloud
-with a threshold of 0.5 to determine the salient object's 3D
+with a threshold of 0.5 to determine the salient object’s 3D
 region. Another baseline is our neural point cloud + NCut-
 based segmentation (Ours NCut), which is used to generate
 pseudo-GTs for training Ours Transformer.
-Evaluation metrics. We use the
-Intersection-over-
+
+Evaluation metrics. We use the Intersection-over-
 Union (IoU) metric with thresholds of 0.5 and 0.7
 to evaluate the bounding box accuracy. The average
 percision (AP) is used for comparison.
-Results. As shown in Table 1, our approach substantially
+
+Results. As shown in Table |, our approach substantially
 achieves better salient object detection performances on all
 datasets, especially on the challenging CO3D [29] dataset.
 Instead of individually segmenting 2D images as in TokenCut
@@ -616,41 +709,45 @@ reasoning of the salient object and eliminates multi-view
 inconsistency. The proposed Ours Transformer also outper-
 forms Ours NCut baseline on most datasets and metrics
 although trained on pseudo-GTs generated by Ours NCut.
-We attribute this improvement to Our Transformer's ability
+We attribute this improvement to Our Transformer’s ability
 to accept point clouds with a higher density as inputs, its
 ability to capture global dependencies, and the extra learning
 on the dataset generated by Ours NCut.
+
 5.3. Object reconstruction and 2D segmentation
+
 We evaluate the reconstructed object geometry and 2D
 foreground mask renderings to demonstrate the capability of
 our approach to reconstruct and segment complex objects.
+
 Baselines. For 3D reconstruction, we compare our method
 with the neural surface reconstruction baseline NeuS [40].
 As for the evaluation of 2D segmentation, the proposed
 method is compared with following baselines in two cat-
 egories: 1) single-view image segmentation baseline Token-
+
+CO3D
+
 BlendedMVS
-NeuS
-Ours
+
+NeuS Ours
+
 Ours w/o
 regularization
+
 Figure 6. Qualitative results of salient object reconstruction.
 Our method is compared with NeuS on the CO3D and Blend-
 edMVS datasets. We present results with and without our explicit
 regularization to illustrate its effectiveness.
-1
-2
-3
-4
-5
-6
-Mean
-Scan ID
-NeuS (w/ annotated fg. region) 0.390 0.216 0.245 0.223 0.345 0.271 0.282
+
+Scan ID 1 2 3 4 5 6 |Mean
+NeuS (w/ annotated fg. region) 0.390 0.216 0.245 0.223 0.345 0.271 /0.282
 Ours (fully-automated) 0.411 0.200 0.240 0.218 0.379 0.264 0.285
+
 Table 2. Quantitative results on the BlendedMVS dataset. We
 normalize the GT mesh so that its longest side equals one. Results
-on the Chamfer 12 distance are presented as percentages.
+on the Chamfer /2 distance are presented as percentages.
+
 Cut [41], which performs 2D salient object segmentation
 on each image and does not consider multi-view informa-
 tion. 2) multi-view image segmentation baseline SemanticN-
@@ -658,12 +755,14 @@ eRF [51], which fuses noisy masks with a neural field and
 produces high-quality masks with neural rendering. Specifi-
 cally, we use the segmentations from TokenCut as inputs for
 SemanticNeRF and evaluate its mask renderings.
+
 Evaluation metrics. We evaluate 3D reconstruction on the
-Chamfer 12 distance. Mask IoU and Boundary IoU [4] met-
+Chamfer /2 distance. Mask IoU and Boundary IoU [4] met-
 rics are used to evaluate 2D segmentation, with the former
 reflecting overall segmentation quality and the latter focus-
 ing on boundary quality. The definitions of these metrics can
 be found in the appendix.
+
 Results. For foreground object reconstruction, qualitative
 results are shown in Figs. 5 and 6, and quantitative re-
 sults on the BlendedMVS dataset are presented in Table 2.
@@ -674,55 +773,37 @@ and requires manual post-processing for background re-
 moval. Our pipeline eliminates these tedious labors and thus
 demonstrates the potential to automatically create large-scale
 datasets.
+
 Our method also achieves better 2D segmentation accu-
 racy on most of the evaluated scans, as shown in Table 3
-7
-Scan ID
-1
-CO3D
-4
-5 Mean
-BlendedMVS
-2
-3
-4
+
+--- Page 8 ---
+CO3D BlendedMVS DTU
+Scan ID T 23 a3 [Mean] Z 345 [Mean |f I 23 ___3_|Mean
 Mask IoU
-5 Mean
-1
-DTU
-4
-5 Mean
-Ours
-TokenCut (single-view)
-TokenCut + SemanticNeRF
-Ours
-0.933 0.951 0.958 0.962 0.934 0.947 0.959 0.987 0.916 0.936 0.977 0.955 0.931 0.969 0.961 0.959 0.903 0.945
-0.784 0.888 0.976 0.975 0.966 0.918
-0.825 0.861 0.952 0.980 0.914 0.906
-0.785 0.904 0.919 0.855 0.943 0.881
-0.972 0.906 0.924 0.877 0.941 0.924
-Boundary IoU
-0.816 0.914 0.767 0.896 0.817 0.842
-0.493 0.562 0.664 0.688 0.695 0.620
-0.829 0.921 0.905 0.955 0.971 0.916
-0.828 0.921 0.907 0.957 0.975 0.918
-0.628 0.842 0.752 0.707 0.613 0.877
-0.572 0.693 0.525 0.636 0.803 0.646
-0.912 0.937 0.839 0.771 0.843 0.860
-TokenCut (single-view) 0.635 0.832 0.877 0.839 0.887 0.814
-TokenCut + SemanticNeRF 0.701 0.819 0.847 0.822 0.769 0.792 0.512 0.578 0.699 0.730 0.642 0.632 0.539 0.633 0.522 0.661 0.836 0.638
+Ours 0.933 0.951 0.958 0.962 0.934 [0.947 || 0.959 0.987 0.516 0.936 0.977 | 0.955 || 0.931 0.969 0.961 0.959 0.903 | 0.945
+TokenCut (single-view) || 0.784 0.888 0.976 0.975 0.966 | 0.918 || 0.785 0.904 0.919 0.855 0.943 | 0.881 |] 0.829 0.921 0.905 0.955 0.971 | 0.916
+TokenCut + SemanticNeRF |] 0.825 0.861 0.952 0.980 0.914 | 0.906 || 0.972 0.906 0.924 0.877 0.941 | 0.924 || 0.828 0.921 0.907 0.957 0.975 | 0.918
+Boundary ToU
+Ours 0912 0.937 0.839 0.771 0.843 [0.860 || 0.816 0.914 0.767 0.896 0.817 | 0.842 |] 0.628 0.842 0.752 0.707 0.613 | 0.877
+TokenCut (single-view) || 0.635 0.832 0.877 0.839 0.887 | 0.814 || 0.493 0.562 0.664 0.688 0.695 | 0.620 |] 0.572 0.693 0.525 0.636 0.803 | 0.646
+TokenCut + SemanticNeRF |] 0.701 0.819 0.847 0.822 0.769 | 0.792 |] 0.512 0.578 0.699 0.730 0.642 | 0.632 || 0.539 0.633 0.522 0.661 0.836 | 0.638
 Table 3. Quantitative results of 2D segmentation. We compare our foreground mask renderings with baselines on Mask IoU and Boundary
 IoU metrics on multiple datasets, including CO3D, BlendedMVS, and DTU. AutoRecon outperforms baselines on most of the scans.
+
 CO3D
-BMVS
-Ref. Image
+
 TokenCut
+
 TokenCut +
-Semantic NeRF
-Ours
+SemanticNeRF
+
+Ref. Image Ours
+
 Figure 7. Qualitative results of 2D segmentation. We show fore-
 ground segmentation on the challenging chair category in CO3D
 and an object in BlendedMVS with complex geometry.
+
 and visualized in Fig. 7. The results of the 2D salient ob-
 ject segmentation baseline TokenCut lack multi-view con-
 sistency and are noisy on scans with complex backgrounds.
@@ -732,21 +813,26 @@ handle complex objects and backgrounds and outperforms
 these baselines significantly on the Boundary IoU metric,
 which demonstrates the capability of producing high-quality
 segmentations.
+
 5.4. Ablation studies
+
 We conduct experiments to validate the effectiveness of
 our point cloud segmentation Transformer for the coarse
 decomposition and regularization terms for training our de-
 composed neural scene representation. More ablation studies
 are provided in the supplementary material.
+
 Segmentation Transformer for coarse decomposition.
 We show the effectiveness of our 3D segmentation Trans-
 former over our NCut-based pipeline from the higher 3D
-detection AP on multiple datasets, as shown in Table 1. Re-
+detection AP on multiple datasets, as shown in Table |. Re-
 sults show that although trained with pseudo-labels, the 3D
+
 detection accuracy improves significantly, especially on the
-CO3D dataset. Moreover, Ours Transformer runs ~ 100×
+CO3D dataset. Moreover, Ours Transformer runs ~ 100x
 times faster than Ours NCut to segment a point cloud with
 10k points and is applicable to large-scale point clouds.
+
 Explicit regularization for training decomposed neural
 scene representation. The qualitative results in Fig. 6
 demonstrate the effectiveness of explicit regularization in
@@ -754,7 +840,9 @@ disentangling foreground objects from their surroundings.
 Regularization provided by the coarse decomposition also
 alleviates the shape-radiance ambiguity as shown in the chair
 example.
+
 6. Conclusion
+
 We present a novel pipeline for fully-automated object dis-
 covery and reconstruction from multi-view images, without
 any human annotation. Experiments conducted on multiple
@@ -763,210 +851,347 @@ building high-quality background-free object models. We
 also demonstrate the capability of our pipeline in producing
 high-quality segmentation masks, which are directly applica-
 ble to 2D supervised learning.
+
 Limitations and future work. Problems faced by neu-
 ral reconstruction methods remain in our pipeline, like sen-
 sitivity to shadows and transient occluders and degraded
 results on thin-structured and non-Lambertian objects. Stor-
 ing multi-view ViT features is memory-intensive, which
 we expect to be alleviated by distance-preserving compres-
-sion techniques. The reconstruction quality of SfM point
+sion techniques. The reconstruction quality of S{M point
 clouds can be further improved with refinement methods
-like [11, 17], which can further improve the quality of sur-
+like [11,17], which can further improve the quality of sur-
 face reconstruction and potentially eliminate reconstruction
 ambiguities. Our automated object reconstruction pipeline
 can be used to create large-scale 3D object datasets for graph-
 ics and perception tasks, such as training 2D segmentation
 networks and 3D generative models.
+
 Acknowledgement. This work was supported by NSFC
 (No. 62172364), the ZJU-SenseTime Joint Lab of 3D Vision,
 and the Information Technology Center and State Key Lab
 of CAD&CG, Zhejiang University.
-8
+
+--- Page 9 ---
 References
-[1] Jonathan T Barron, Ben Mildenhall, Dor Verbin, Pratul P
+
+1
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+Jonathan T Barron, Ben Mildenhall, Dor Verbin, Pratul P
 Srinivasan, and Peter Hedman. Mip-nerf 360: Unbounded
 anti-aliased neural radiance fields. In CVPR, 2022. 5, 6
-[2] Christopher P Burgess, Loic Matthey, Nicholas Watters,
+Christopher P Burgess, Loic Matthey, Nicholas Watters,
 Rishabh Kabra, Irina Higgins, Matt Botvinick, and Alexander
 Lerchner. Monet: Unsupervised scene decomposition and
 representation. arXiv:1901.11390, 2019. 2
-[3] Mathilde Caron, Hugo Touvron, Ishan Misra, Hervé Jégou,
+
+Mathilde Caron, Hugo Touvron, Ishan Misra, Hervé Jégou,
 Julien Mairal, Piotr Bojanowski, and Armand Joulin. Emerg-
 ing properties in self-supervised vision transformers. In
-CVPR, 2021. 1, 2, 3
-[4] Bowen Cheng, Ross Girshick, Piotr Dollár, Alexander C Berg,
+CVPR, 2021. 1, 2,3
+
+Bowen Cheng, Ross Girshick, Piotr Dollar, Alexander C Berg,
 and Alexander Kirillov. Boundary iou: Improving object-
 centric image segmentation evaluation. In CVPR, 2021. 7
-[5] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
 Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,
 Mostafa Dehghani, Matthias Minderer, Georg Heigold, Syl-
 vain Gelly, Jakob Uszkoreit, and Neil Houlsby. An image is
 worth 16x16 words: Transformers for image recognition at
-scale. In ICLR, 2021. 3
-[6] Martin Engelcke, Adam R. Kosiorek, Oiwi Parker Jones, and
+scale. In JCLR, 2021. 3
+
+Martin Engelcke, Adam R. Kosiorek, Oiwi Parker Jones, and
 Ingmar Posner. GENESIS: generative scene inference and
-sampling with object-centric latent representations. In ICLR,
+sampling with object-centric latent representations. In JCLR,
 2020. 2
-[7] Qiancheng Fu, Qingshan Xu, Yew-Soon Ong, and Wenbing
+
+Qiancheng Fu, Qingshan Xu, Yew-Soon Ong, and Wenbing
 Tao. Geo-neus: Geometry-consistent neural implicit surfaces
 learning for multi-view reconstruction. In NeurIPS, 2022. 6
-[8] Yasutaka Furukawa, Brian Curless, Steven M. Seitz, and
+Yasutaka Furukawa, Brian Curless, Steven M. Seitz, and
 Richard Szeliski. Towards internet-scale multi-view stereo.
-In CVPR, 2010. 1
-[9] Klaus Greff, Raphaël Lopez Kaufman, Rishabh Kabra, Nick
+In CVPR, 2010. |
+
+Klaus Greff, Raphaél Lopez Kaufman, Rishabh Kabra, Nick
 Watters, Christopher Burgess, Daniel Zoran, Loic Matthey,
 Matthew Botvinick, and Alexander Lerchner. Multi-object
 representation learning with iterative variational inference. In
 ICML, 2019. 2
-[10] Amos Gropp, Lior Yariv, Niv Haim, Matan Atzmon, and
+
+Amos Gropp, Lior Yariv, Niv Haim, Matan Atzmon, and
 Yaron Lipman. Implicit geometric regularization for learning
 shapes. In ICML, 2020. 6
-[11] Xingyi He, Jiaming Sun, Yuang Wang, Di Huang, Hujun
+
+Xingyi He, Jiaming Sun, Yuang Wang, Di Huang, Hujun
 Bao, and Xiaowei Zhou. Onepose++: Keypoint-free one-shot
 object pose estimation without CAD models. In NeurIPS,
-2022. 4,8
-[12] Rasmus Ramsbøl Jensen, Anders Lindbjerg Dahl, George
-Vogiatzis, Engil Tola, and Henrik Aanæs. Large scale multi-
-view stereopsis evaluation. In CVPR, 2014. 2,6
-[13] Angelos Katharopoulos, Apoorv Vyas, Nikolaos Pappas, and
-François Fleuret. Transformers are rnns: Fast autoregressive
-transformers with linear attention. In ICML, 2020. 4
-[14] Sosuke Kobayashi, Eiichi Matsumoto, and Vincent Sitzmann.
+2022. 4, 8
+
+Rasmus Ramsbgl Jensen, Anders Lindbjerg Dahl, George
+Vogiatzis, Engil Tola, and Henrik Aanes. Large scale multi-
+view stereopsis evaluation. In CVPR, 2014. 2, 6
+
+Angelos Katharopoulos, Apoorv Vyas, Nikolaos Pappas, and
+Francois Fleuret. Transformers are rnns: Fast autoregressive
+transformers with linear attention. In JCML, 2020. 4
+
+Sosuke Kobayashi, Eiichi Matsumoto, and Vincent Sitzmann.
 Decomposing nerf for editing via feature field distillation. In
 NeurIPS, 2022. 2
-[15] Amit Pal Singh Kohli, Vincent Sitzmann, and Gordon Wet-
+
+Amit Pal Singh Kohli, Vincent Sitzmann, and Gordon Wet-
 zstein. Semantic implicit neural scene representations with
 semi-supervised training. In 3DV, 2020. 2
-[16] Abhijit Kundu, Kyle Genova, Xiaoqi Yin, Alireza Fathi, Caro-
+
+Abhijit Kundu, Kyle Genova, Xiaoqi Yin, Alireza Fathi, Caro-
 line Pantofaru, Leonidas J Guibas, Andrea Tagliasacchi, Frank
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
 Dellaert, and Thomas Funkhouser. Panoptic neural fields: A
 semantic object-aware neural scene representation. In CVPR,
 2022. 2
-[17] Philipp Lindenberger, Paul-Edouard Sarlin, Viktor Larsson,
+
+Philipp Lindenberger, Paul-Edouard Sarlin, Viktor Larsson,
 and Marc Pollefeys. Pixel-perfect structure-from-motion with
-featuremetric refinement. In ICCV, 2021. 8
-[18] Francesco Locatello, Dirk Weissenborn, Thomas Unterthiner,
+featuremetric refinement. In JCCV, 2021. 8
+
+Francesco Locatello, Dirk Weissenborn, Thomas Unterthiner,
 Aravindh Mahendran, Georg Heigold, Jakob Uszkoreit,
 Alexey Dosovitskiy, and Thomas Kipf. Object-centric learn-
 ing with slot attention. In NeurIPS, 2020. 2
-[19] Stephen Lombardi, Tomas Simon, Jason Saragih, Gabriel
+
+Stephen Lombardi, Tomas Simon, Jason Saragih, Gabriel
 Schwartz, Andreas Lehrmann, and Yaser Sheikh. Neural
 volumes: learning dynamic renderable volumes from images.
 ACM TOG, 2019. 6
-[20] William E. Lorensen and Harvey E. Cline. Marching cubes:
-A high resolution 3D surface construction algorithm. SIG-
+
+William E. Lorensen and Harvey E. Cline. Marching cubes:
+A high resolution 3D surface construction algorithm. S/G-
 GRAPH Comput. Graph., 1987. 6
-[21] Luke Melas-Kyriazi, Christian Rupprecht, Iro Laina, and An-
+
+Luke Melas-Kyriazi, Christian Rupprecht, Iro Laina, and An-
 drea Vedaldi. Deep spectral methods: A surprisingly strong
 baseline for unsupervised semantic segmentation and local-
-ization. In CVPR, 2022. 1, 3
-[22] Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
+ization. In CVPR, 2022. 1,3
+
+Ben Mildenhall, Pratul P Srinivasan, Matthew Tancik,
 Jonathan T Barron, Ravi Ramamoorthi, and Ren Ng. Nerf:
 Representing scenes as neural radiance fields for view synthe-
 sis. Communications of the ACM, 2021. 5
-[23] Ashkan Mirzaei, Yash Kant, Jonathan Kelly, and Igor
+
+Ashkan Mirzaei, Yash Kant, Jonathan Kelly, and Igor
 Gilitschenski. Laterf: Label and text driven object radiance
 fields. In ECCV, 2022. 1, 2
-[24] Norman Müller, Andrea Simonelli, Lorenzo Porzi,
-Samuel Rota Bulò, Matthias Nießner, and Peter Kontschieder.
+
+Norman Miiller, Andrea Simonelli, Lorenzo  Porzi,
+Samuel Rota Buld, Matthias NieBner, and Peter Kontschieder.
 Autorf: Learning 3d object radiance fields from single view
 observations. In CVPR, 2022. 2
-[25] Thomas Müller, Alex Evans, Christoph Schied, and Alexander
+
+Thomas Miiller, Alex Evans, Christoph Schied, and Alexander
 Keller. Instant neural graphics primitives with a multiresolu-
 tion hash encoding. ACM ToG, 2022. 6
-[26] Michael Niemeyer, Lars M. Mescheder, Michael Oechsle,
+
+Michael Niemeyer, Lars M. Mescheder, Michael Oechsle,
 and Andreas Geiger. Differentiable volumetric rendering:
 Learning implicit 3d representations without 3d supervision.
 In CVPR, 2020. 2
-[27] Michael Oechsle, Songyou Peng, and Andreas Geiger.
+
+Michael Oechsle, Songyou Peng, and Andreas Geiger.
 Unisurf: Unifying neural implicit surfaces and radiance fields
-for multi-view reconstruction. In ICCV, 2021. 2
-[28] Julian Ost, Fahim Mannan, Nils Thuerey, Julian Knodt, and
+for multi-view reconstruction. In JCCV, 2021. 2
+
+Julian Ost, Fahim Mannan, Nils Thuerey, Julian Knodt, and
 Felix Heide. Neural scene graphs for dynamic scenes. In
 CVPR, 2021. 2
-[29] Jeremy Reizenstein, Roman Shapovalov, Philipp Henzler,
+Jeremy Reizenstein, Roman Shapovalov, Philipp Henzler,
 Luca Sbordone, Patrick Labatut, and David Novotny. Com-
 mon objects in 3d: Large-scale learning and evaluation of
-real-life 3d category reconstruction. In ICCV, 2021. 2, 6, 7
-[30] Zhongzheng Ren, Aseem Agarwala, Bryan Russell, Alexan-
+real-life 3d category reconstruction. In JCCV, 2021. 2, 6,7
+Zhongzheng Ren, Aseem Agarwala, Bryan Russell, Alexan-
 der G Schwing, and Oliver Wang. Neural volumetric object
-selection. In CVPR, 2022. 1,2
-[31] Mehdi SM Sajjadi, Daniel Duckworth, Aravindh Mahendran,
+selection. In CVPR, 2022. 1, 2
+
+Mehdi SM Sajjadi, Daniel Duckworth, Aravindh Mahendran,
 Sjoerd van Steenkiste, Filip Pavetic, Mario Lucic, Leonidas
 Guibas, Klaus Greff, and Thomas Kipf. Object scene repre-
 sentation transformer. In NeurIPS, 2022. 2
-9
-[32] Johannes L. Schönberger, Enliang Zheng, Jan-Michael Frahm,
+
+
+--- Page 10 ---
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+41
+
+42
+
+43
+
+44
+
+45
+
+46
+
+47
+
+Johannes L. Schénberger, Enliang Zheng, Jan-Michael Frahm,
 and Marc Pollefeys. Pixelwise View Selection for Unstruc-
-tured Multi-View Stereo. In ECCV. 2016. 1,2
-[33] Jianbo Shi and Jitendra Malik. Normalized Cuts and Image
-Segmentation. IEEE TPAMI, 2000. 2, 3, 5
-[34] Oriane Siméoni, Gilles Puy, Huy V Vo, Simon Roburin, Spy-
+tured Multi-View Stereo. In ECCV. 2016. 1, 2
+
+Jianbo Shi and Jitendra Malik. Normalized Cuts and Image
+Segmentation. JEEE TPAMI, 2000. 2, 3, 5
+
+Oriane Siméoni, Gilles Puy, Huy V Vo, Simon Roburin, Spy-
 ros Gidaris, Andrei Bursuc, Patrick Pérez, Renaud Marlet,
 and Jean Ponce. Localizing objects with self-supervised trans-
 formers and no labels. In BMVC, 2021. 1, 3
-[35] Cameron Smith, Hong-Xing Yu, Sergey Zakharov, Fredo Du-
+
+Cameron Smith, Hong-Xing Yu, Sergey Zakharov, Fredo Du-
 rand, Joshua B. Tenenbaum, Jiajun Wu, and Vincent Sitzmann.
 Unsupervised Discovery and Composition of Object Light
 Fields. arXiv:2205.03923, 2022. 2
-[36] Karl Stelzner, Kristian Kersting, and Adam R Kosiorek. De-
+
+Karl Stelzner, Kristian Kersting, and Adam R Kosiorek. De-
 composing 3d scenes into objects via unsupervised volume
 segmentation. arXiv:2104.01148, 2021. 2
-[37] Jiaming Sun, Zehong Shen, Yuang Wang, Hujun Bao, and
+
+Jiaming Sun, Zehong Shen, Yuang Wang, Hujun Bao, and
 Xiaowei Zhou. Loftr: Detector-free local feature matching
 with transformers. In CVPR, 2021. 3
-[38] Vadim Tschernezki, Iro Laina, Diane Larlus, and Andrea
+
+Vadim Tschernezki, Iro Laina, Diane Larlus, and Andrea
 Vedaldi. Neural Feature Fusion Fields: 3D Distillation of
 Self-Supervised 2D Image Representations. In 3DV, 2022. 2
-[39] Suhani Vora, Noha Radwan, Klaus Greff, Henning Meyer,
+Suhani Vora, Noha Radwan, Klaus Greff, Henning Meyer,
 Kyle Genova, Mehdi S. M. Sajjadi, Etienne Pot, Andrea
 Tagliasacchi, and Daniel Duckworth. NeSF: Neural Seman-
 tic Fields for Generalizable Semantic Segmentation of 3D
 Scenes. arXiv:2111.13260, 2021. 2
-[40] Peng Wang, Lingjie Liu, Yuan Liu, Christian Theobalt, Taku
+Peng Wang, Lingjie Liu, Yuan Liu, Christian Theobalt, Taku
 Komura, and Wenping Wang. Neus: Learning neural implicit
+
 surfaces by volume rendering for multi-view reconstruction.
-In NeurIPS, 2021. 1, 2, 3, 5, 7
-[41] Yangtao Wang, Xi Shen, Shell Hu, Yuan Yuan, James Crow-
+In NeurIPS, 2021. 1, 2,3, 5,7
+
+Yangtao Wang, Xi Shen, Shell Hu, Yuan Yuan, James Crow-
 ley, and Dominique Vaufreydaz. Self-Supervised Transform-
 ers for Unsupervised Object Discovery using Normalized Cut.
-In CVPR, 2022. 1, 3, 7
-[42] Qianyi Wu, Xian Liu, Yuedong Chen, Kejie Li, Chuanxia
+In CVPR, 2022. 1, 3,7
+
+Qianyi Wu, Xian Liu, Yuedong Chen, Kejie Li, Chuanxia
 Zheng, Jianfei Cai, and Jianmin Zheng. Object-Compositional
 Neural Implicit Surfaces. In ECCV, 2022. 2
-[43] Bangbang Yang, Yinda Zhang, Yinghao Xu, Yijin Li, Han
+
+Bangbang Yang, Yinda Zhang, Yinghao Xu, Yijin Li, Han
 Zhou, Hujun Bao, Guofeng Zhang, and Zhaopeng Cui. Learn-
 ing Object-Compositional Neural Radiance Field for Editable
-Scene Rendering. In ICCV, 2021. 2
-[44] Yao Yao, Zixin Luo, Shiwei Li, Tian Fang, and Long Quan.
+Scene Rendering. In JCCV, 2021. 2
+
+Yao Yao, Zixin Luo, Shiwei Li, Tian Fang, and Long Quan.
 Mvsnet: Depth inference for unstructured multi-view stereo.
-In ECCV, 2018. 2
-[45] Yao Yao, Zixin Luo, Shiwei Li, Jingyang Zhang, Yufan Ren,
+In ECCYV, 2018. 2
+
+Yao Yao, Zixin Luo, Shiwei Li, Jingyang Zhang, Yufan Ren,
 Lei Zhou, Tian Fang, and Long Quan. Blendedmvs: A large-
 scale dataset for generalized multi-view stereo networks. In
-CVPR, 2020. 2,6
-[46] Lior Yariv, Jiatao Gu, Yoni Kasten, and Yaron Lipman. Vol-
+CVPR, 2020. 2, 6
+
+Lior Yariv, Jiatao Gu, Yoni Kasten, and Yaron Lipman. Vol-
 ume rendering of neural implicit surfaces. In NeurIPS, 2021.
 1,2
-[47] Lior Yariv, Yoni Kasten, Dror Moran, Meirav Galun, Matan
+
+Lior Yariv, Yoni Kasten, Dror Moran, Meirav Galun, Matan
 Atzmon, Ronen Basri, and Yaron Lipman. Multiview neural
 surface reconstruction by disentangling geometry and appear-
 ance. In NeuIPS, 2020. 2, 5
-[48] Hong-Xing Yu, Leonidas J. Guibas, and Jiajun Wu. Unsu-
-pervised discovery of object radiance fields. In ICLR, 2022.
+
+10
+
+48
+
+49
+
+50
+
+51
+
+52
+
+Hong-Xing Yu, Leonidas J. Guibas, and Jiajun Wu. Unsu-
+pervised discovery of object radiance fields. In JCLR, 2022.
 2
-[49] Andrii Zadaianchuk, Matthaeus Kleindessner, Yi Zhu,
+
+Andrii Zadaianchuk, Matthaeus Kleindessner, Yi Zhu,
 Francesco Locatello, and Thomas Brox. Unsupervised se-
 mantic segmentation with self-supervised object-centric rep-
-resentations. In ICLR, 2023. 3
-[50] Kai Zhang, Gernot Riegler, Noah Snavely, and Vladlen
+resentations. In JCLR, 2023. 3
+
+Kai Zhang, Gernot Riegler, Noah Snavely, and Vladlen
 Koltun. NeRF++: Analyzing and Improving Neural Radi-
-ance Fields. arXiv:2010.07492, 2020. 1, 2, 3
-[51] Shuaifeng Zhi, Tristan Laidlow, Stefan Leutenegger, and An-
+ance Fields. arXiv:2010.07492, 2020. 1, 2,3
+
+Shuaifeng Zhi, Tristan Laidlow, Stefan Leutenegger, and An-
 drew J Davison. In-place scene labelling and understanding
-with implicit scene representation. In ICCV, 2021. 2, 7
-[52] Shuaifeng Zhi, Edgar Sucar, Andre Mouton, Iain Haughton,
+with implicit scene representation. In JCCV, 2021. 2,7
+Shuaifeng Zhi, Edgar Sucar, Andre Mouton, Jain Haughton,
 Tristan Laidlow, and Andrew J Davison. ilabel: Revealing
 objects in neural fields. IEEE Robot. Autom. Lett., 2022. 2
-10
-10
+

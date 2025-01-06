@@ -1,17 +1,38 @@
+--- Page 1 ---
 arXiv:2307.10168v2 [cs.CL] 20 Jul 2023
+
 LLMs as Workers in Human-Computational Algorithms?
 Replicating Crowdsourcing Pipelines with LLMs
-Tongshuang Wu* Haiyi Zhu Maya Albayrak Alexis Axon
-Amanda Bertsch Wenxing Deng Ziqi Ding Bill Guo
-Sireesh Gururaja Tzu-Sheng Kuo Jenny T. Liang
-Ihita Mandal Jeremiah Milbauer
-Ryan Liu
+
+Tongshuang Wu* Haiyi Zhu
+
+Maya Albayrak Alexis Axon
+
+Amanda Bertsch Wenxing Deng ZiqiDing Bill Guo
+
+Sireesh Gururaja
+
+Thita Mandal Jeremiah Milbauer
+Subhashini Ramkumar
+
+Patricia Vaidos
+
+Tzu-Sheng Kuo
+
+Alexis Sudjianto
+Zhijin Wu
+
+Jenny T. Liang Ryan Liu
+
 Xiaolin Ni Namrata Padmanabhan
-Subhashini Ramkumar Alexis Sudjianto Jordan Taylor Ying-Jui Tseng
-Patricia Vaidos Zhijin Wu Wei Wu Chenyang Yang
+Jordan Taylor Ying-Jui Tseng
+Wei Wu Chenyang Yang
+
 Carnegie Mellon University, Pittsburgh, PA, USA
 sherryw@cs.cmu.edu
+
 Abstract
+
 LLMs have shown promise in replicating
 human-like behavior in crowdsourcing tasks
 that were previously thought to be exclusive
@@ -20,13 +41,13 @@ focus mainly on simple atomic tasks. We ex-
 plore whether LLMs can replicate more com-
 plex crowdsourcing pipelines. We find that
 modern LLMs can simulate some of crowd-
-workers' abilities in these "human computation
+workers’ abilities in these “human computation
 algorithms,” but the level of success is vari-
-able and influenced by requesters' understand-
+able and influenced by requesters’ understand-
 ing of LLM capabilities, the specific skills re-
 quired for sub-tasks, and the optimal interaction
 modality for performing these sub-tasks. We
-reflect on human and LLMs' different sensitiv-
+reflect on human and LLMs’ different sensitiv-
 ities to instructions, stress the importance of
 enabling human-facing safeguards for LLMs,
 and discuss the potential of training humans
@@ -35,18 +56,20 @@ cially, we show that replicating crowdsourcing
 pipelines offers a valuable platform to inves-
 tigate (1) the relative strengths of LLMs on
 different tasks (by cross-comparing their perfor-
-mances on sub-tasks) and (2) LLMs' potential
+mances on sub-tasks) and (2) LLMs’ potential
 in complex tasks, where they can complete part
 of the tasks while leaving others to humans.
+
 1 Introduction
+
 The rapid advancement of AI systems has revolu-
 tionized our understanding of the capabilities of
 machines. One remarkable breakthrough in this
 field is the emergence of Large Language Mod-
 els (LLMs, e.g., ChatGPT). With a combination
 of extensive pre-training (Brown et al., 2020) and
-*
-This work builds upon an assignment from CMU 05-
+
+* This work builds upon an assignment from CMU 05-
 499/899: Human-Centered NLP. Tongshuang Wu is the course
 instructor, who designed the assignment based on discussions
 with Haiyi Zhu, and wrote the majority of the paper. The
@@ -55,11 +78,17 @@ Following the principles of participatory research, all students
 were informed of the research, chose to participate, and were
 given opportunities to cease participation/authorship after the
 initial experiments and after reviewing the paper draft.
-Crowd pipeline
-LLM Chains
+
+Crowd pipeline LLM Chains
+
+?
+
+L2222-BESee
+
 Figure 1: We study whether LLMs can be used to repli-
 cate crowdsourcing pipelines and replace human work-
-ers in certain advanced "human-computational process."
+ers in certain advanced “human-computational process.”
+
 instruction tuning (Stiennon et al., 2020; Wu et al.,
 2023; Ziegler et al., 2019), LLMs now not only pos-
 sess a large amount of world knowledge, but can
@@ -76,11 +105,11 @@ that were previously considered exclusive to hu-
 man computational capabilities (Bernstein, 2013).
 For example, LLMs can generate annotations of
 higher quality at a reduced cost compared to crowd-
-workers or even experts (Gilardi et al., 2023; Törn-
+workers or even experts (Gilardi et al., 2023; Térn-
 berg, 2023), and can approximate human opinions
 in subjective tasks, allowing for simulated human
 responses to crowdsourced questionnaires and in-
-terviews (Hämäläinen et al., 2023; Argyle et al.,
+terviews (Hamilainen et al., 2023; Argyle et al.,
 2022). These observations indicate that LLMs will
 have significant social and economic implications,
 potentially reshaping the workforce by replacing
@@ -91,7 +120,9 @@ production tasks (Veselovsky et al., 2023).
 However, most existing efforts tend to focus on
 atomic tasks that are simple, self-contained, and
 easy for a single crowdworker to complete in a
-short amount of time - the most basic version of
+
+--- Page 2 ---
+short amount of time — the most basic version of
 human computational power. These efforts also are
 scattered across various tasks and domains, making
 it hard to systematically compare and understand
@@ -100,7 +131,8 @@ and to what extent they can simulate, replace, or
 augment humans on specific tasks. Such emphases
 prompt us to ask, how far does the LLM replica-
 bility generalize? Will they be useful in more ad-
-vanced formats of “human computation"?
+vanced formats of “human computation”?
+
 We are especially interested in whether LLMs
 can be used to replicate crowdsourcing pipelines,
 which represent a more sophisticated approach to
@@ -116,7 +148,8 @@ crowdworkers with limited level of commitment
 and unknown expertise (e.g., summarizing lengthy
 novels, software development, or deciphering heav-
 ily blurred text; Kittur et al., 2011).
-Interestingly, research on LLMS has also ex-
+
+Interestingly, research on LLMs has also ex-
 plored scaling their capabilities for more complex
 tasks through chaining. Though named differently,
 LLM chains and crowdsourcing pipelines share
@@ -133,6 +166,7 @@ to better align with humans in following instruc-
 tions and handling complex contexts (Ouyang et al.,
 2022), it is possible for human and LLM workers
 to adopt the same task division strategies.
+
 In this study, we investigate the potential of
 LLMs to replace human workers in advanced hu-
 man computation processes. To accomplish this,
@@ -142,14 +176,16 @@ Mellon University. In the assignment, 20 students
 were tasked to select one (out of seven) crowd-
 sourcing pipelines depicted in prior work, and repli-
 cate them by employing LLMs to handle each sub-
+
 task. The replication study also offers an interest-
 ing bonus analysis point: While LLM modules in a
 chain perform unique sub-tasks, all the sub-tasks
 occur in the same application domain (e.g., process-
 ing the same document in different ways), making
-it fairer to compare LLMs' performance in differ-
+it fairer to compare LLMs’ performance in differ-
 ent sub-tasks and uncovering the relative strengths
 and weaknesses.
+
 We find that while LMs appear to be able to
 replicate crowdsourcing pipelines, there is a wide
 variance in which parts they tend to perform well /
@@ -158,7 +194,7 @@ ings in Table 2b). The differences emerge from two
 primary reasons. First, LLMs and humans respond
 differently to instructions. LLMs are more respon-
 sive to adjectives and comparison-based instruc-
-tions, such as “better” or “more diverse," whereas
+tions, such as “better” or “more diverse,” whereas
 humans handle instructions involving trade-off cri-
 teria better. Second, humans receive more scaffolds
 through disagreement resolution mechanisms and
@@ -168,11 +204,12 @@ to LLMs. These observations highlight the need
 to improve LLM instruction tuning to better han-
 dle ambiguous or incomplete instructions, as well
 as the necessity to consider how non-textual “in-
-structions" can be employed either during LLM
+structions” can be employed either during LLM
 finetuning or actual usage. Moreover, the effective-
-ness of replicated LLM chains depends on students'
+ness of replicated LLM chains depends on students’
 perceptions of LLM strengths, which calls for more
 investigations on assisted prompting.
+
 In addition to offering immediate insights into
 the differences between LLMs and crowdwork-
 ers, our research demonstrates that replicating
@@ -186,15 +223,20 @@ form on par with humans. This evidence can
 then be utilized to distribute sub-tasks between
 LLMs and human workers, optimizing the alloca-
 tion of responsibilities. We opensource the prompt
-chains, outputs, and evaluation at https://github.
+chains, outputs, and evaluation at https: //github.
 com/tongshuangwu/11m-crowdsourcing-pipeline.
+
 2 Background and Related Work
+
 Crowdsourcing helps solve problems that require
 human inputs, at scale (Howe et al., 2006). Partic-
 ularly in earlier times when AI capabilities were
+
+--- Page 3 ---
 limited, crowdsourcing was seen as a promising
 approach to leverage and enhance the unique com-
 putational powers possessed by humans.
+
 A key focus of crowdsourcing research has been
 the development of pipelines to tackle increasingly
 complex crowdsourcing goals (Kittur et al., 2011).
@@ -216,14 +258,15 @@ ticated designs, crowdsourcing pipelines are often
 referred to as human computation algorithms or
 crowd algorithms (Howe et al., 2006; Law and
 Zhang, 2011; Kittur et al., 2011; Little et al., 2010).
+
 Though emerged in a completely separate field
 (NLP), LLM Chains share similar goals with
-crowdsourcing pipelines to complete com-
+crowdsourcing pipelines — to complete com-
 plex tasks that are challenging to perform in one
 pass. This decomposition can take either an ex-
 plicit or implicit form. For example, Chain-of-
 Thought (Kojima et al., 2022; Wei et al., 2022) em-
-ploys prompts like “let's consider this step-by-step"
+ploys prompts like “let’s consider this step-by-step”
 makes LLMs to resolve sub-tasks that are not pre-
 defined, whereas AI Chains (Wu et al., 2022b) and
 Decomposed Prompting (Khot et al., 2022) explic-
@@ -233,16 +276,18 @@ braries like LangChain (Chase) and services like
 PromptChainer (Wu et al., 2022a; noa) have en-
 abled practitioners to create LLM chains for tack-
 ling tasks involving intricate compositionality.
+
 As reviewed in Section 1, Wu et al. (2022b) has
 drawn explicit connections between LLM chain-
 ing and crowdsourcing pipelines. Besides similar
 motivations, these two methods also share similar
 challenges, e.g., handling cascading errors that af-
 fect later stages (Kittur et al., 2011) or synthesizing
-workers' inconsistent contributions (Kittur et al.,
+workers’ inconsistent contributions (Kittur et al.,
 2011; Bernstein et al., 2010), but these challenges
 can be utilized for enhancing the transparency and
-debuggability of Al-infused systems. More impor-
+debuggability of AI-infused systems. More impor-
+
 tantly, Wu et al. (2022b) distinguished the task de-
 composition objectives for the two approaches: for
 tackling different limitations of humans and LLM
@@ -264,12 +309,15 @@ of which are similar to crowdsourcing pipelines.
 These recent developments of LLMs, and the suc-
 cess of crowdsourcing pipelines, prompt us to re-
 assess whether the idea of human computation al-
-gorithms can be directly transferred to AIs.
+gorithms can be directly transferred to Als.
+
 3 Study Design
+
 Study Procedure The study required partic-
 ipants (students) to replicate a crowdsourcing
 pipeline by writing multiple prompts that instruct
 LLMs to complete different microtasks.
+
 To accomplish this, the students began by thor-
 oughly reading a crowdsourcing pipeline paper for
 replication. To demonstrate the effectiveness of
@@ -290,136 +338,194 @@ Finally, they concluded the task by reflecting on
 why the LLM chain replication either succeeded or
 failed and brainstormed possible ways to improve
 the chains in the future.
+
 After students submitted their assignments, they
 underwent a peer-grading process. In this process,
-each student's submission was assessed by three of
-Pipeline Description
-Map-Reduce Partition tasks into discrete subtasks, Map subtasks to
-(Kittur et al., 2011) | workers, Reduce / merge their results into a single output
-Input Essay topic
+each student’s submission was assessed by three of
+
+--- Page 4 ---
+Pipeline
+
+Replication evaluation
+
+Description Total |
+
+| Sample Task |
+
+nique | Correct | Effective
+
+Map-Reduce
+(Kittur et al., 2011)
+
+{ Input } Ess:
+
 The history of
 religious influence on
 American schools
-Humor Tool
-(Chilton et al., 2016)
-Input News headline
-FDA Approves First
-Over-The-Counter
-Narcan To Reduce
-Overdoses
-Partition Outline
-Origins of Religious
-Education
-The Blaine Amendment
+
 and Its Impact
-...
-The Future of Religious
+
 Education in the U.S.
-Мар
-Facts
-The earliest educational
-institutions ... were founded by
-religious groups in the 1600s...
-...Protestant denominations
-established colleges and the
-teaching of moral values.
-20th century...offer religious
-classes, although the scope...
-varied widely from state to state.
-| Define semantic roles as the answers to a series of
-questions that are intuitive for non-experts.
-Overdoses
-Aspect from headline
-Association Related concepts
-Drug
-Withdrawal symptoms
-Supplements
-Pharmacies
-Over-The-Counter
-Reduce
-Sample Task
-Write essay
-Paragraph
-Replication evaluation
-Total | Unique | Correct | Effective
-| 41 1313
-The Origins of Religious Education in the United States can be traced
-back to the earliest educational institutions of the 1600s, which were
-established by religious groups in order to provide religious instruction
+
+Partition tasks into discrete subtasks, Map subtasks to Write essay 4 1 3
+workers, Reduce / merge their results into a single output
+
+(Map_} Facts
+
+Partition |Outline (Reduce } Paragraph
+
+The earliest educational The Origins of Religious Education in the United States can be traced
+institutions ... were founded by back to the earliest educational institutions of the 1600s, which were
+religious groups in the 1600s ... established by religious groups in order to provide religious instruction
 and moral guidance to their students. During the 19th century,
 Protestant denominations established colleges and universities that
-focused on religious instruction and the teaching of moral values. This
+>> focused on religious instruction and the teaching of moral values. This
 led to the development of religious education as a distinct field of
-study in the United States. In the 20th century, some states began to
+‘study in the United States. In the 20th century, some states began to
 allow public schools to offer religious classes, although the scope and
 content of such classes varied widely from state to state. This allowed
 religious education to become more widely available to US students...
-Create satire
-| 4 2 3
-1
-Expected Reason
-Belief
-Joke on headline using aspect and association.
-Guess I know what I'm buying next time I'm at
-the grocery store... Narcan and chips, anyone?
+
+Origins of Religious
+Education
+
+...-Protestant denominations
+established colleges and the
+teaching of moral values.
+
+The Blaine Amendment.
+
+20th century...offer religious
+classes, although the scope...
+varied widely from state to state.
+
+The Future of Religious
+
+3
+
+HumorTool
+(Chilton et al., 2016)
+
+Input |N
+
+FDA Approves First
+Over-The-Counter. —>
+Narcan To Reduce
+Overdoses
+
+Overdoses
+
+Define semantic roles as the answers to a series of
+
+: ee Create satire 4 2 3
+questions that are intuitive for non-experts.
+
+Aspect | from headline [Association | Related concepts { Joke | on headline using aspect and association Unused steps
+
+Drug
+
+___) Guess | know what I'm buying next time I'm at |
+
+ES the grocery store... Narcan and chips, anyone?
+Withdrawal symptoms grocery PS. any,
+
+(Violation }
 Wow, you can now buy Narcan over-the-counter?
-Now you don't even need a prescription to get
+
+"Now you don't even need a prescription to get
 your hands on the latest party drug!
-Iterative Process | Feed the result of one creation task into the next, so
-(Little et al., 2010) | workers see content generated by previous workers.
-Input Query
-Iter 5 titles
-1. A Woof of a Tale
-2. Barking Up the Right Tree
+
+Supplements (Expected Reason |
+
+Over-The-Count re y
+ver-The-Counter 5 (Betier
+
+Pharmacies
+
+(Expected Reaction
+
+Iterative Process
+
+Feed the result of one creation task into the next, so
+
+(Little et al., 2010)
+
+( Input | Query
+
 Title for a short story
 about talking dogs
-3. The Adventures of the Chatty Canines
-4. The Dog Who Could Speak
-5. The Journey of the Talking Dogs
-Brainstorm
-Iter 1 "better and more creative" titles
-1. A Ruff and Ready Conversation
-2. The Speak of the Dogs
-3. A Lively Pack of Pups
-4. Tales From the Bark Side
-Unused steps
-Expected Reaction
-Violation
-3
-2
-3
-2
-1. A Fido's Flap of the Tongue
-Iter 2 "better and more creative" titles
-2. The Secret Dialogues of Dogs
-3. The Woofs of Wisdom
-4. Canine Conversations in Canine-ese
-5. The Barkings of a Different Breed
-5. Tongue-Tied Terriers
-3
-3
-3
-1
-Microtasking Concrete microtasking for sorting task: an implementation Sorting
-(Cheng et al., 2015) | of human-powered quicksort
-Input Number list Pair Pairwise combine.
-Compare #odd numbers
-Sort
-54321 23456
-5432123456
-12345
-54321
+
+1. 1
+2. 2.
+13. The Adventures of the Chatty Canines 3.
+4. 4,
+5. 5.
+
+‘ Brainstorm 3 2 3
+workers see content generated by previous workers.
+(Iter 0) Stiles
+
+AWoof of a Tale
+Barking Up the Right Tree
+
+(Iter 1} "better and more creative" titles (Iter 2 }"better and more creative’ titles
+
+. ARuff and Ready Conversation 1
+. The Speak of the Dogs 2
+A Lively Pack of Pups —>3
+. Tales From the Bark Side 4.
+. The Barkings of a Different Breed 5
+
+A Fido's Flap of the Tongue
+
+The Secret Dialogues of Dogs
+
+The Woofs of Wisdom
+
+Canine Conversations in Canine-ese
+Tongue-Tied Terriers
+
+The Dog Who Could Speak
+The Journey of the Talking Dogs
+
+Microtasking
+(Cheng et al., 2015)
+
+(Input | Number list
+
+Pair | Pairwi
+54321? 23456 -——® 54321 >
+12345 2? 23456 ——-— > 12345 >
+12345 ? 54321 ——> 123456
+
+Concrete microtasking for sorting task: an implementation Sorting 3 3 3
+of human-powered quicksort
+
+e combine (Compare J #odd numbers
 23456
 23456
-12345 23456
-1234523456
-12345
+
 54321
-12345 54321
-12345 54321
-Find-Fix-Verify | For writing and editing: Find problems, Fix the identified |Shorten text
-(Bernstein et al., 2010) problems, Verify these edits
-Input Text to be shortened.
+
+Sort |
+
+23456
+12345
+
+54321
+
+Find-Fix-Verify
+(Bernstein et al., 2010)
+
+Input
+
+Text to be shortened
+
+For writing and editing: Find problems, Fix the identified | shorten text 3 3 2
+problems, Verify these edits
+
+Find |Verbose pars { Fix | Shorten the verbose parts and put back in context Verify ) Fix grammar issues
+
 Print publishers are in a tizzy over Apple's
 new iPad because they hope to finally be
 able to charge for their digital editions.
@@ -427,86 +533,114 @@ But in order to get people to pay for their
 magazine and newspaper apps, they are
 going to have to offer something
 different that readers cannot get at the
-newsstand or on the open Web.
-Find Verbose parts
-hope to finally...
+
+hope to finally ...
 their digital editions
+
 in order to get
-people to... apps
-offer something...
-on the open Web
-Fix Shorten the verbose parts and put back in context
-hoping to charge for
+people to.
+
+hoping to charge for Print publishers are in a tizzy
+
 digital editions
-to get people to pay
-for apps
-offer something unique
-not available elsewhere
-Print publishers are in a tizzy
+“> they hoping to charge for
+‘to get people to pay digital editions. But to get
+pps for apps
+~_> going to have to offer
+
+offer something unique| _|something offer something
+
 over Apple's new iPad because
-they hoping to charge for
-digital editions. But to get
+
 people to pay for apps, they are
-going to have to offer
-something offer something
-unique not available elsewhere.
-Price-Divide-Solve Workers recursively divide complex steps until they are at Write essay
-(Kulkarni et al., 2012) an appropriately simple level, then solve them.
-Input Topic
-Write a 1-paragraph
-description about
-mascot at Carnegie
-Mellon University
-Split Find subtasks
-Research the mascot
-Write paragraph
-Proof read & shorten
-Complete Complete subtasks (or further split)
-The mascot... is the Tartan Scot...cartoon character...
-Our mascot is... It is a representation of our
-school's commitment to excellence in education...
-.↳ Carnegie Mellon University's mascot is...
-Task Paraphrase | Define semantic roles as the answers to a series of
-(He et al., 2015) | questions that are intuitive for non-experts.
-Input Unlabeled text
-On Friday, Clark posted to
-Facebook to explain his decision
-saying, "I usually don't post political
-items, but today is different."
-Question about verb "posted"
-Who posted something?
-SRL labeling
-Answer
-Clark
-Why did someone post something?
-When did someone post something?
-to explain their decision
-On Friday
-3
-3
-Verify Fix grammar issues
+
 Print publishers are in a tizzy
-over Apple's new iPad because
+‘over Apple's new iPad because
+
 they hoping to charge for digital
+
 editions. But to get people to
 pay for apps, they are going to
 have to offer something offer
 something unique that is not
-available elsewhere.
-Global solution
-Carnegie Mellon University's mascot is the
+
+newsstand or on the open Web.
+
+offer something...
+lon the open Web unique not available elsewhere. |_| available elsewhere.
+
+not available elsewhere
+
+Price-Divide-Solve
+(Kulkarni et al., 2012)
+
+Input | Topic
+
+Write a 1-paragraph
+description about
+mascot at Carnegie
+Mellon University
+
+—
+
+Workers recursively divide complex steps until they are at | write essay 1 1 1
+an appropriately simple level, then solve them.
+
+( Split ] Find subtasks [ Complete |
+
+plete subtasks (or further split) Global solution]
+
+Research the mascot ——> The mascot ... is the Tartan Scot...cartoon character... Carnegie Mellon University's mascot is the
 Tartan Scot, a cheerful cartoon character
-representing the school's Scottish heritage.
+
+—> representing the school's Scottish heritage.
 The mascot is... embodying the school's
+
 commitment to excellence in education...
-1
-1
-1 1 1 1
-Labeling Map answers to SRL
-ARGO: Clark
-ARGM-PRP: to explain his decision
-ARGM-TMP: On Friday
+
+| our mascotis... It is a representation of our
+
+Write paragraph ‘ . ‘
+peragrap school's commitment to excellence in education...
+
+Proof read & shorten Ly camegie Mellon University's mascot is..
+
+Task Paraphrase
+(He et al., 2015)
+
+Input | Unlabeled text
+
+On Friday, Clark posted to
+
+Facebook to explain his deci
+
+saying , “I usually don't post political
+
+items, but today is different.”
+
+Define semantic roles as the answers to a series of
+
+: ee SRL labeling 1 1 1
+questions that are intuitive for non-experts.
+
+asted"
+
+(Question J about verb “p Answer (Labeling | Map answers to SRL
+
+—> Clark -—>|ARGo: Clark
+
+> to explain their decision ——>|ARGM-PRP: to explain his decision
+> On Friday }-—>|ARGM-TMP: On Friday
+
+Who posted something?
+
+ston Why did someone post something?
+
+When did someone post something?
+
 Table 1: Crowdsourcing pipelines replicated, and their example outputs from student-replicated LLM chains.
+
+--- Page 5 ---
 their peers in a double-blind manner. The peers
 rated the submissions based on replication cor-
 rectness, thoroughness, and comprehensiveness of
@@ -516,20 +650,24 @@ and supplied detailed reasoning for their grading.
 The instructor carefully reviewed the gradings and
 excluded any assessments that appeared to lack
 thoughtful reflections or misunderstood the sub-
-missions. The full assignment instruction, the
+The full assignment instruction, the
 peer grading form, as well as the student sub-
 missions are all available at https://github.com/
-tongshuangwu/11m-crowdsourcing-pipeline.
+tongshuangwu/11m-crowdsourcing-pipeline
+
+missions.
+
 Participants 21 students (13 females, 8 males)
 completed the task as one of their assignments
 for the Spring 2023 course 05-499/899: Human-
-Centered NLP. This comprised of 6 undergradu-
-ates, 10 master's students, and 5 PhD students spe-
+Centered NLP.! This comprised of 6 undergradu-
+ates, 10 master’s students, and 5 PhD students spe-
 cializing in Sociology, Learning Science, Human-
 Computer Interaction, or Natural Language Pro-
 cessing. The paper presents findings from 20 stu-
-dents' submissions, as one student opted for a non-
+dents’ submissions, as one student opted for a non-
 programming approach for partial credit.
+
 Crowdsourcing papers We selected crowdsourc-
 ing papers based on three criteria: (1) Diversity: the
 papers should represent different pipeline designs
@@ -544,58 +682,70 @@ tasks with textual inputs and outputs. (3) Asyn-
 chronized: For the ease of setup, the papers should
 allow (LLM) workers to complete their microtasks
 independently, without the need of synchronized
-discussions. The instructor pre-selected six papers
+discussions.” The instructor pre-selected six papers
 meeting these criteria (the first six in Table 1), and
 students could propose additional papers for ap-
 proval (Task Paraphrase in Table 1). Up to four stu-
 dents could sign up to replicate the same pipeline
 in a first-come-first-serve manner.
+
 LLM version Students are required to use
-text-davinci-003³ for their final implementa-
+text-davinci-003° for their final implementa-
 tions and testing, the most capable model that uses
-'http://www.cs.cmu.edu/~sherryw/courses/
+
+‘http: //www.cs.cmu.edu/~sherryw/courses/
 2023s-hcnlp.html
-2 we note that it should also be easy to setup synchronized
+
+2we note that it should also be easy to setup synchronized
 discussions if we instruct two LLM APIs to discuss.
-³https://platform.openai.com/docs/models
+
+shttps://platform. openai .com/docs/models
+
 the autocompletion interface at the time of assign-
 ment design. However, they were encouraged to ini-
 tially experiment and fine-tune their prompts using
 more cost-effective models (e.g., text-ada-001).
-We evaluate the repli-
-Replication assessment
+
+Replication assessment We evaluate the repli-
+
 cated chains on two dimensions:
+
 1. Replication correctness: We measure the suc-
 cess of replication using the peer grading re-
 sults. A replication is considered successful if
 the average peer score for Correct Replication
 is greater than three.
+
 2. Chain effectiveness: We evaluate whether the
 replicated chains are more effective than the
-baselines using the students' own assessment.
+baselines using the students’ own assessment.
 If students indicate that their replicated chains
 outperform the baselines on the majority of
 their tested inputs (recall that they were re-
 quired to test at least three inputs), then the
 pipeline is deemed effective.
+
 Since multiple students replicated the same
 pipelines, it is also interesting to compare replicas
 for the same pipeline to reveal key factors for suc-
-cessful replication. We look into students' replica-
+cessful replication. We look into students’ replica-
 tion strategies, and report the number of (3) Unique
 replicas. Specifically, we manually grouped the
-students' LLM chains based on the microtasks in-
+students’ LLM chains based on the microtasks in-
 volved, deeming two chains identical if they in-
 clude steps that essentially serve the same intended
 functionality, even if there are wording differences
 in the LLM prompts.
+
 4 Results and Reflection
+
 4.1 Replication Overview: Partial Success
+
 As shown in Table 1, all the pipelines are replicable
 with LLMs. For each pipeline, there is at least
 one correct replication and an effective one. To
 denote the successes, we show one actual input-
-output sequence generated using students' LLM
+output sequence generated using students’ LLM
 chain replications that they found preferable. These
 results re-iterate that LLMs can now accomplish
 a subset of tasks that were previously considered
@@ -605,89 +755,102 @@ they experimented with, echoing the prior obser-
 vation that pipelines/chains enable rapid prototyp-
 ing (Wu et al., 2022a). Some of their explorations
 focused on single steps (e.g., P7 in Find-Fix-Verify
-choosing between different wordings among “frag-
-ment”, “clauses”, “substrings" etc.), while some
+choosing between different wordings among “‘frag-
+ment”, “clauses”, “substrings” etc.), while some
 other students experimented with globally redesign-
+
+--- Page 6 ---
+Dimensions Observations
+
+Idea | Both: Breakdown complex tasks into pieces that can be done independently, then combined.
+
+Limitations
+
 Pipelines
-Pipelines
-Per-step/task
-Dimensions
-Observations
-Idea Both: Breakdown complex tasks into pieces that can be done independently, then combined.
-Limitations | Both: Cascading errors, conflicts between parallel paths, etc.
+
+Both: Cascading errors, conflicts between parallel paths, etc.
+
 Gains
-Optimal design
+
 Both: Scale to tasks that are otherwise hard, more structured interactions, more resilient to interruptions.
 LLM chains: Can take advantage of cascading effects & parallel paths, for explainability.
+
+Optimal design
+
 Crowd. pipelines: Address pitfalls of a single worker: high task variance, limited cognitive load, etc.
 LLM chains: Address pitfalls of a single LLM: limited reasoning capabilities, etc.
+
 (a) Similarities between crowdsourcing pipelines and LLM chains summarized in prior work (e.g., Wu et al., 2022b).
-Dimensions
-Practical design
-(§4.2)
-Sensitivity to
-instructions
-(§4.3)
-Observations
-Both: Can benefit from similar pipeline designs (as
-LLMs are finetuned on instructions).
-LLM chains: Vary based on students' beliefs about
-LLM strengths and weaknesses.
-Crowds: Can subconsciously balance trade-offs in
-instructions, vs. LLMs need explicit prioritization.
-LLMs: Responsive to abstract instructions ("more
-diverse titles"), vs. crowdworkers face anchoring bias.
-Output quality Crowds: Noise and disagreement resolution
-scaffolds (§4.2) |LLMs: None; LLM non-determinism is overlooked.
-Crowds: Multimodal "instructions" (e.g., textual
-Output structure
-descriptions, interface regulations).
-scaffolds (§4.4)
-LLMS: Textual instructions only.
+
+Dimensions Observations
+
 Reflections & Opportunities
-Develop frameworks that can enable practitioners to
-adapt their perception of LLM usefulness by adjusting
-prompt granularity.
-Assess the effects of LLM instruction tuning (e.g.,
-sensitivity to adjectives, emphasis on singular needs);
-Tune LLMs to follow more ambiguous instructions;
-Train humans to identify and develop skills
-complementary to LLM strengths.
-Treat different LLM generations using the same prompt
-as votes of multiple LLM workers.
+
+g Both: Can benefit from similar pipeline designs (as Develop fi ks th bl ae
+.& | Practical design | LLMs are finetuned on instructions). dest te it percwoti sd Ma hap ones
+2 (§4.2) | LLM chains: Vary based on students’ beliefs about ron t rail ton o! usefulness Dy adjusting
+a LLM strengths and weaknesses. Prompt $1 y:
+
+Sensitivi Crowds: Can subconsciously balance trade-offs in Assess the effects of LLM instruction tuning (cg. .
+
+ensitivity to | ructions, vs. LLMs need explicit prioritization sensitivity to adjectives, emphasis on singular needs);
+
+~~ instructions | "8 aeer . PI pr ” . Tune LLMs to follow more ambiguous instructions;
+& LLMs: Responsive to abstract instructions (“more . . : °
+Rad (§4.3) | 3: tigi . . Train humans to identify and develop skills
+~ diverse titles”), vs. crowdworkers face anchoring bias.
+& complementary to LLM strengths.
+é Output quality | Crowds: Noise and disagreement resolution Treat different LLM generations using the same prompt
+& | scaffolds (§4.2) | LLMs: None; LLM non-determinism is overlooked. as votes of multiple LLM workers.
+
+Output structure
+
+scaffolds ($4.4) descriptions, interface regulations).
+
+LLMs: Textual instructions only.
+
+Crowds: Multimodal “instructions” (e.g., textual
+
 Extend the human-LLM alignment to also consider
 optimal modality of instruction;
+
 Explore mapping observations on LLM-simulated
 humans to actual humans.
-(b) An overview of observations and reflections on students' replications on crowdsourcing pipelines.
-ing certain pipeline connections (e.g., P11 in Iter-
+
+(b) An overview of observations and reflections on students’ replications on crowdsourcing pipelines.
+
+ing certain pipeline connections (e.g., P11 in Jter-
 ative Process varied how the prior results should
 be passed onto the next step). Interestingly, by ex-
-amining students' final submissions and their own
+amining students’ final submissions and their own
 reflections, it becomes evident that (students be-
 lieve) certain pipelines require adjustments (e.g.,
 Microtasking, and Find-Fix-Verify), while others
 can be replicated more literally (e.g., Map-Reduce).
+
 That said, most pipelines did not achieve 100%
 success or effectiveness. Students largely attributed
-the replication failure to prompting challenges -
-"translating the pipeline into a LLM required a lot
+the replication failure to prompting challenges —
+“translating the pipeline into a LLM required a lot
 of work (in terms of figuring out the correct prompt
 + the pre-processing that was required in order
 to move from one step in the pipeline to the next)
 compared to when it was implemented with crowd-
-source workers" (P14, Find-Fix-Verify). However,
+source workers” (P14, Find-Fix-Verify). However,
 we believe there are more nuanced reasons under-
 lying these prompting difficulties. In the following
 sections, we delve into several qualitative observa-
 tions that have emerged from the replication prac-
 tice and reflect on their implications (an overview
 of observations and opportunities are in Table 2b).
+
 4.2 Replication Variance: Impacted by
-students' perceptions on LLM capabilities
+students’ perceptions on LLM capabilities
+
 One interesting aspect that emerges from the re-
 sults is that some pipelines have more replication
-variance than others (i.e., different students' repli-
+
+variance than others (i.e., different students’ repli-
 cations to the same pipeline differ from each other
 significantly). For instance, while both papers pro-
 vided sufficient details for replication, the three
@@ -696,112 +859,164 @@ similar chains. The only difference was created by
 P11 who introduced another step for choosing top
 previous results to show subsequent workers, i.e.,
 original steps were not changed.
+
 However, the three students replicating Find-
 Fix-Verify implemented quite different versions
 (Figure 2): P14 mostly followed Bernstein et al.
-(2010)'s descriptions (e.g., having a voting mech-
+(2010)’s descriptions (e.g., having a voting mech-
 anism in the Verify step for reducing human er-
 rors), but extended the Find step to include a lot
 more types of writing issues. They also designed
-their prompts "using data structures that are eas-
+their prompts “using data structures that are eas-
 ily understandable by a computer versus natural
-language", because the LLM "has a background
-with computer code". P7, on the other hand, only
+language”, because the LLM “has a background
+with computer code”. P7, on the other hand, only
 dedicated the Find step to locate phrases that can
 be shortened, and instead implemented the Verify
 step to fix grammatical errors that arose during the
 preceding shortening steps. They explained that
 they consciously reshaped the design because they
-believed that "LLMs do not have these issues [of
-the high variance of human efforts and errors]."
+believed that “LLMs do not have these issues [of
+the high variance of human efforts and errors].”
 However, this belief is arguably inaccurate. Just
+
+--- Page 7 ---
 Initiation
-Iterative
+
 Little et al. (2010): Show workers content generated by previous workers
+
 Company details: {description}
-Please supply 5 new company name ideas for
+
+Please supply 5 new company name ideas for—>
+
 the company: {five new names}
-P13: Show workers content generated by
+
+P13: Show workers content generated by previous workers
+
 Please suggest five possible names for a
 company based on the following
 description: {description}
-{five new names}
-Company details: {description}
-Names suggested so far: {previous names}
-Please supply 5 new company name ideas for
-the company: {five new names}
-previous workers
-{description}
-Five previously suggested names:
-{previous names}
-Five newly generated names: {five new names}
-P3: Show workers content generated by previous workers (ask for "better" ones)
+
+|{five new names}
+
+P3: Show workers content generated by previous workers (ask for “better” ones)
+
 Provide 5 potential titles for a short
 story about {concept}.
 {five new titles}
+
+P11: Show workers content generated by previous workers,
+
+Project Description: {project_description}
+Goal: Brainstorm a {need}
+
+List of {n} new {need} ideas:
+
+{n new ideas}
+
+Iterative
+
+Company details: {description}
+
+Names suggested so far: {previous names}
+Please supply 5 new company name ideas for
+the company: {five new names}
+
+{description}
+
+Five previously suggested names:
+{previous names}
+
+Five newly generated names:{five new names}
+
 Here are 5 potential titles for a short
 story about {concept}
+
 {previous titles}
-Provide 5 additional titles that are better.
+
+Provide 5 additional titles that are better
 and more creative. {five new titles}
-P11: Show workers content generated by previous workers,
-Project Description: {project_description}
+
+{Project Description: {project_description}
 Goal: Brainstorm a {need}.
-List of {n} new {need} ideas:
-{n new ideas}
-Project Description: {project_description}
-Goal: Brainstorm a {need}.
-The following ideas are examples of low
+
+Ly, The following ideas are examples of low
+
 quality, please avoid these common pitfalls:
 {previous ideas}
 List of {n} new {need} ideas: {n new ideas}
-Iterative Process
+
+~)
+
+,
+
+LS)
+
+a)
+
 Project description: {project_description}.
 Given the following list of candidate
 {need} ideas, rank the best {n} ideas.
 Idea list: {idea_list}
+
 Top {n} ideas: {top n new ideas}
+
 Find
+
 Fix
-Verify
-B
+
+Verify (B) ( Find-Fix-Verify |
+
 Bernstein et al. (2010): Find segments for shortening, Fix by shortening them, Verify by identifying rewrites with errors.
+
 Identify at least one area that can be
 shortened without changing the meaning of
 the paragraph.
+
 Edit the highlighted section to shorten its
-length without changing the meaning of the
+
+> length without changing the meaning of the
+
 paragraph.
-Find-Fix-Verify
+
 Choose at least one rewrite that has
-significant style errors in it. Choose at
+
+> Significant style errors in it. Choose at
 least one rewrite that significantly
 changes the meaning of the sentence.
+
 P14: Find segments with any types of errors, Fix these phrases by correcting them, Verify by ranking the fixes by correctness.
+
 Input is text. Output is errors in the
 text in the following format where the key
 is the type of error (spelling, grammar,
 wordiness, vocabulary) and the value is a
 list of those errors. For example:
+
 Find: I lvie in Charlotte I pley golf.
-Output "spelling": ['lvie', 'pley'],
+Output = {"spelling": ['lvie', ‘pley'],
 "punctuation": ['period missing after
 Charlotte'], "wordiness": ['I live in
-Charlotte and golf. ']}. Use this Find in
+Charlotte and golf.']}. Use this Find in
 the following text: {input text}
+
 {output dict}
+
+P7: Find segments to shorten, Fix these phrases by shortening them, Verify by fixing grammatical errors.
+
 Input is the dictionary from find and the
 paragraph. Output is the errors in the text
 in the following format where the key is the
 type of error and the value is a list of the
 span where the characters of the error,
 those errors, and correction. For example:
-Input {"spelling": ['lvie']}, I lvie in
+Input = {"spelling": [‘lvie'l}, I lvie in
 Charlotte. Fix: Output = {"spelling":
-[{'span' (2,5), 'value': 'lvie', 'correction': '1
-ive' Use this Fix in the following
+[{'span'(2,5),‘value': 'lvie', ‘correction’: '1
+ive'l} Use this Fix in the following
 dictionary and then text: {dict and text}
 {output dict}
+
 The input is a dictionary mapping the
 previous sentence to the corrected
 sentence. The output is a dictionary where
@@ -810,35 +1025,49 @@ value is the a list of the corrected
 sentence and the sentence similarity
 between the original and corrected
 sentence where the sentence similarity.
-For example, {'I lvie in Charlotte': ['I
-live in Charlotte', 4.5/5], I pley golf:
+For example, {'I Wie in Charlotte’: [‘I
+live in Charlotte’, 4.5/5], I pley golf:
 ['I play golf', 4.5/5]}.
+
 {input sentences} {output ranks}
-P7: Find segments to shorten, Fix these phrases by shortening them, Verify by fixing grammatical errors.
+
 Find three segments that can be shortened
 from the following text. These segments
 need to be present in the text.
+
 Text: {input text}
+
 Segments: 1. {output segment}
+
 Shorten the following text without changing
 its meaning.
+
 Text: {segment}
+
 Shortened text: {shortened segment}
-P10: Find segments to shorten, Fix these phrases by shortening them, (no Verify)
-The following parts of the given sentence
-are unnecessary: {text}
-{unnecessary segments}
-Given a sentence and what to shorten,
-shorten this sentence
-sentence: {segment}
-shorten: {shortened segment}
+
 Correct the grammar of the following text.
 Text: {fixed text}
 Corrected text: {grammatical text}
+
+P10: Find segments to shorten, Fix these phrases by shortening them, (no Verify)
+
+The following parts of the given sentence
+are unnecessary: {text}
+{unnecessary segments}
+
+Given a sentence and what to shorten,
+shorten this sentence
+
+sentence: {segment}
+
+shorten: {shortened segment}
+
 Figure 2: The original pipeline and the LLM replications for (A) Iterative Process (Little et al., 2010) and (B)
 Find-Fix-Verify (Bernstein et al., 2010). While only P11 diverged from the original Iterative Process pipeline by
 adding a condition about how previous results should be ranked and used in subsequent steps, students replicating
 Find-Fix-Verify all had different Verify steps (marked in red box). The chains are slightly simplified for readability.
+
 like human noise, the non-deterministic nature of
 LLMs can also lead to varying results if the same
 prompt is executed multiple times (similar to multi-
@@ -851,6 +1080,7 @@ ing the exact same issue: to remove problematic
 rewrites (now generated with LLMs). P10 simi-
 larly removed the Verify step, possibly because of
 similar reasoning.
+
 Reflection: Establish task-specific and pipeline-
 specific best practices for using LLMs. The dif-
 ferent implementations of crowdsourcing pipelines
@@ -859,16 +1089,18 @@ dents hold regarding the performance of these mod-
 els in completing certain tasks and the amount of
 instruction needed. Indeed, with the rapid advance-
 ment of LLMs and prompting techniques, it is chal-
-lenging to keep up with LLMs' capabilities and
+lenging to keep up with LLMs’ capabilities and
 limitations, as well as how they can be applied to
 specific use cases. Instead of trying to form general
 mental models about constantly evolving LLMs, it
 may be more beneficial for practitioners to dynami-
+
+--- Page 8 ---
 cally adjust their understanding of LLM usefulness
 based on the context of their specific use cases.
 To achieve this, practitioners can adopt a mindset
-that views LLMs as "Jack of all trades, master of
-none/few" (Kocoń et al., 2023), and employ a sys-
+that views LLMs as “‘Jack of all trades, master of
+none/few” (Kocon et al., 2023), and employ a sys-
 tematic approach to specifying instructions, gradu-
 ally moving from sparse to granular. Practitioners
 can start by establishing a baseline using a general
@@ -877,14 +1109,15 @@ that LLMs possess sufficient world knowledge to
 interpret ambiguous requests. In the context of
 Find-Fix-Verify, it might be sufficient to implement
 the Find step with a high-level command like “out-
-put any errors in the text," without specifying error
+put any errors in the text,” without specifying error
 types. Then, if dedicated prompt testing (Ribeiro,
 2023) reveals instances where the general prompt
 falls short, practitioners can adjust their prompts to
 incorporate more specific instructions, such as tex-
 tual instructions on corner cases, or employ prompt
 ensembling techniques (Pitis et al., 2023).
-On the other hand, appears that students have
+
+On the other hand, it appears that students have
 overlooked the fact that LLM performs probabilis-
 tic generation during their replication practice, de-
 spite being aware of this through their own expe-
@@ -894,33 +1127,37 @@ LLM tends to be disregarded, particularly when
 used in a chaining context. This oversight may
 stem from a trade-off between creating prototype
 chain structures and fine-tuning individual prompts
-for each sub-task (Wu et al., 2022a): LLM's non-
+for each sub-task (Wu et al., 2022a): LLM’s non-
 determinism is typically presented using model
 confidence or the probability associated with the
 generated output, which may become a secondary
 consideration when students can only pass on a
 single output to the next sub-task. To address this,
 introducing LLM non-determinism as “noises ex-
-posed through voting of multiple LLM workers"
+posed through voting of multiple LLM workers”
 could allow for integration of disagreement mitiga-
 tion techniques like adaptive decision-making on
 the number of votes/annotations needed (Lin et al.,
 2014; Nie et al., 2020).
+
 4.3 Replication Effectiveness: Affected by
 LLM vs. Human Strengths
+
 So, what are the actual strengths and weaknesses
 of LLMs, and how do they affect replicated LLM
-chains? We delve into students' reflections on the
+chains? We delve into students’ reflections on the
 implementation effectiveness and their ideas for
 improvements. We find that, not too surprisingly,
 crowdsourcing pipelines proven effective might
+
 require some redesigning to accommodate the
 unique capabilities of LLMs, which still differ from
-humans'. This observation aligns with discussions
+humans’. This observation aligns with discussions
 in prior work (Wu et al., 2022b; Webson et al.,
 2023); however, with the comprehensive explo-
 ration of the task space through replications, two
 significant patterns now become more apparent:
+
 LLMs need explicit information foraging Mul-
 tiple crowdsourcing pipelines require implicit infor-
 mation selection and integration. For example, in
@@ -940,7 +1177,8 @@ information foraging, and tend to constantly accu-
 mulate context and produce outputs with mixed
 quality. Students observed these deficiencies at
 three levels and proposed possible changes:
-• Fail to mitigate low-quality intermediate results.
+
+e Fail to mitigate low-quality intermediate results.
 For example, when writing paragraphs with
 Price-Divide-Solve, P4 found that even conflict-
 ing information from different sub-tasks would
@@ -948,75 +1186,83 @@ get integrated into the final writeup, resulting in
 incoherence (e.g., claiming the university mas-
 cot to be both a Scot and an owl). Several stu-
 dents stressed the need for intermediate quality
-control, for "reducing the unpredictability of the
-model." (P13, Iterative Process).
-• Fail to selectively perform a subset of sub-tasks.
+control, for “reducing the unpredictability of the
+model.” (P13, Iterative Process).
+
+e Fail to selectively perform a subset of sub-tasks.
 This is most visible in HumorTool, which, in its
 original design, required workers to self-select
 and sort a subset of sub-tasks (eight in total)
 into an effective flow. Among the four students
 replicating it, only P17 noticed that the sub-tasks
-have "no clear structure in the execution order
-of these micro tasks", and successfully imple-
+have “no clear structure in the execution order
+of these micro tasks”, and successfully imple-
 mented a chain of four sub-tasks. Other students
 agreed that eight sub-tasks aggregated too much
-information, and P18 later reflected that "the
-steps should not be in such a strict order."
-• Fail to balance multiple requirements in one
+information, and P18 later reflected that “the
+steps should not be in such a strict order.”
+
+e Fail to balance multiple requirements in one
 sub-task. Excessive requirements in one LLM
 prompt can also cause conflicts. In the aforemen-
-tioned Humor Tool case, integrating results from
+
+--- Page 9 ---
+tioned HumorTool case, integrating results from
 too many sub-tasks may lead to certain options
-dominating others, e.g., the LLM can "focus on
+dominating others, e.g., the LLM can “focus on
 turning the joke into being sarcastic, which can
-take away the humor from the joke" (P5). Simi-
+take away the humor from the joke” (P5). Simi-
 larly, P14 (in Find-Fix-Verify) implemented their
 Find Step (Figure 2) to simultaneous searching
 for multiple issues, which led the LLM to priori-
 tize spelling errors and miss wordiness problems.
 Overall, explicitly stating the top criteria seem
 important for LLMs.
+
 LLMs are more sensitive to comparison-based
 than humans. As prior work has observed,
 LLMs are still sensitive to minor paraphrases (e.g.,
 P7 in Find-Fix-Verify prototyped different wordings
-among "fragment”, “clauses”, “substrings" etc. in
+among “fragment”, “clauses”, “substrings” etc. in
 their prompt). However, on the flip side, LLMs are
 quite responsive to comparison-based instructions.
 We will use Iterative Process for illustration. In its
 original design, Little et al. (2010) reported anchor-
 ing bias to be an inherent limitation of the pipeline:
-"perhaps owing to the fact that crowdworkers will it-
+“perhaps owing to the fact that crowdworkers will it-
 erate & improve upon existing ideas, the variance is
-lower." All three students replicating this pipeline
+lower.” All three students replicating this pipeline
 made similar observations but also found that such
 bias could be mitigated just with straightforward
 instructions. For example, P11 initially observed
-that the pipeline "tends to converge on a specific
-theme", but was able to redirect the model with a
-simple prompt: "The following ideas are examples
-of low quality, please avoid these common pitfalls."
+that the pipeline “tends to converge on a specific
+” but was able to redirect the model with a
+simple prompt: “The following ideas are examples
+of low quality, please avoid these common pitfalls.”
 Similarly, P3 was pleasantly surprised by how ef-
-fective it is to simply "ask for outputs that differ
-from the initial set"- "I was originally concerned
-that providing examples would 'prime' the model
+fective it is to simply “ask for outputs that differ
+from the initial set” — “I was originally concerned
+that providing examples would ‘prime’ the model
 to generate only examples in the same format, but
-it seems that this is not an issue in practice." Note
+it seems that this is not an issue in practice.” Note
 that such simple instructions are unlikely to work
 for crowdworkers who are trapped by their personal
 biases (Wu et al., 2021).
-—
-This sensitivity to adjectives such as “different"
-and "diverse" warrants further exploration. One
-peer grader highlighted this by suggesting, "If
-we're allowed to make suggestions, we could ask
+
+This sensitivity to adjectives such as “different”
+and “diverse” warrants further exploration. One
+peer grader highlighted this by suggesting, “/f
+we’re allowed to make suggestions, we could ask
 for titles that are happier, more obtuse, and fun-
 nier, which goes beyond traditional crowdsourc-
-ing methods." This suggestion aligns with exist-
+ing methods.” This suggestion aligns with exist-
 ing prompting techniques like Self-Refine (Madaan
 et al., 2023), where LLMs critique their own out-
 puts to generate improved versions focusing on
 specific dimensions.
+
+theme
+
 Reflection: Examine effects of instruction tun-
 ing, and train humans for complementarity.
 While differences between humans and LLMs are
@@ -1025,7 +1271,7 @@ ities arise from the goal of training LLMs to mimic
 human behavior. For example, methods like Rein-
 forcement Learning from Human Feedback (RLHF
 Ouyang et al., 2022) use human preferences to en-
-hance LLMs' ability to follow instructions. This
+hance LLMs’ ability to follow instructions. This
 might have simultaneously enabled LLMs to iter-
 ate on content based on abstract comparison com-
 mands more effectively than humans, who often get
@@ -1036,13 +1282,14 @@ are always better in these cases, as these models
 are also biased by their training and can have po-
 larized stands (Jiang et al., 2022; Santurkar et al.,
 2023).
+
 Branching out from this observation, it would be
 interesting to explore potential “side-effects” of the
 LLM training schema. Prior work has highlighted
 the trade-off between few-shot vs. zero-shot ca-
 pabilities and the need to train LLMs with multi-
 faceted human feedback (Wu et al., 2023). Consid-
-ering LLMs' need for explicit information foraging,
+ering LLMs’ need for explicit information foraging,
 another worthy line of investigation would be the
 completeness and clarity of instructions. As most
 existing instruction tuning datasets prioritize high-
@@ -1055,53 +1302,59 @@ of-instruction-clarification” approach, similar to
 the back-and-forth dialogues employed by humans
 to elicit design requirements. For instance, incor-
 porating a sub-task that involves humans clarifying
-the top criteria could potentially enhance LLMs'
+the top criteria could potentially enhance LLMs’
 ability to handle multiple requirements effectively.
+
 The split of strengths also calls for human-LLM
 complementarity. Instead of humans or LLMs com-
 pleting all sub-tasks, an effective task delegation
 among a mixture of different “workers” might be
 useful. For example, P15 in HumorTool noticed the
 partial effectiveness of their LLM chain: It excelled
-at "extracting relevant attributes of a news head-
-line and brainstorming associated concepts" but
+at “extracting relevant attributes of a news head-
+line and brainstorming associated concepts” but
 failed at translating them into actual jokes. As such,
 explicitly training humans to identify and develop
 skills complementary to LLM strengths could be an
+
+--- Page 10 ---
 interesting direction to pursue (Bansal et al., 2021;
 Ma et al., 2023; Liu et al., 2023). Note that this
 complementarity can occur between humans and
 a variety of LLMs. For example, P3 in Iterative
 Process found that while using a weaker model
 either alone or in a pipeline resulted in poor perfor-
-mance, "when I provided examples from a stronger
+mance, “when I provided examples from a stronger
 model as the previous examples [for the weaker
 model to iterate on], the performance dramatically
-improved." This observation reflects that even less-
+improved.” This observation reflects that even less-
 state-of-the-art models can be effective teammates
-if given the appropriate task "All models are
-wrong, but some are useful." (Box, 1976).
+if given the appropriate task — “All models are
+wrong, but some are useful.” (Box, 1976).
+
 4.4 Replication Challenge: Multi-Modal
 Regulations vs. Textual Instructions
+
 When reflecting on challenges in LLM replication,
 four students mentioned the difficulty of creating
 structured input/output formats. For example, P7
 (replicating Find-Fix-Verify) described including a
 constraint in their prompt: “These segments need
 to be present in the text.” They stressed its impor-
-tance in the reflection: "Without this prompt, the
+tance in the reflection: “Without this prompt, the
 returned segments are often sentences dramatically
 restructured based on the original text, making it
 difficult to insert them back into the original text
-after the fix step." Similarly, P6 in Task Paraphrase
-said "the major weakness of these prompts was the
+after the fix step.” Similarly, P6 in Task Paraphrase
+said “the major weakness of these prompts was the
 challenge of extracting structured information out,
-especially for the pipeline models."
+especially for the pipeline models.”
+
 It is worth considering why human workers,
-who are as (if not more) “generative" as LLMs, are
+who are as (if not more) “generative” as LLMs, are
 capable of producing structured inputs and outputs.
 Essentially, all of the LLM replications of crowd-
-sourcing pipelines are partial the assignment
+sourcing pipelines are partial — the assignment
 focuses only on replicating the instructions of the
 crowdsourcing pipeline, while other components of
 crowdsourcing are disregarded. Specifically, nearly
@@ -1118,16 +1371,19 @@ length and predetermined question options. These
 ensure that all the answers can be short phrases
 to predictable questions. Meanwhile, since LLM
 modules/workers are solely driven by textual
+
 instructions, they need additional regulation to
 compensate for the absence of UI restrictions.
+
 Some students offered textual versions of syn-
 tactic constraints, e.g., “a prompting system that
 allows for much stricter templates (such as the use
 of a [MASK] token) would make crowdwork-style
-pipelines much easier." (P11, Iterative Process).
+pipelines much easier.” (P11, Iterative Process).
 Other ways might also be possible, e.g., transform-
 ing generative tasks into multiple-choice tasks so
 the LLM only outputs a single selection.
+
 Reflection: Alignment in instruction modal-
 ity, and its role in human simulation. With
 the emergence of multi-modal foundation mod-
@@ -1140,35 +1396,37 @@ tuition. For example, while LLMs have automated
 some interactions with visualization, prior work
 has found that users need mouse events to resolve
 vague references in their natural language com-
-mands ("make this bar blue" (Wang et al., 2022c;
+mands (“make this bar blue” (Wang et al., 2022c;
 Kumar et al., 2017)). Instead of converting such
 actions into textual instructions, it would be more
 advantageous to shift towards utilizing visual anno-
 tations.
+
 Such challenges also have an impact on the prac-
 tical applications of LLMs. In the ongoing dis-
 cussions regarding whether LLMs can faithfully
 simulate humans, researchers have begun investi-
 gating the feasibility of using LLMs as pilot study
 users for efficiently refining study instructions and
-designs (Hämäläinen et al., 2023). Indeed, this di-
-rection is valuable Just like in Figure 2, both
-humans and LLMs need "prompting" to complete
+rection is valuable — Just like in Figure 2, both
+humans and LLMs need “prompting” to complete
 tasks. Nevertheless, our findings indicate that such
 a transition may not be straightforward: On the one
 hand, since LLMs only respond to textual instruc-
 tions, an important post-processing step might be
 required to map LLM instructions into multi-modal
 constraints for humans. For example, instruction
-"extract exact sentences” might need to be mapped
+“extract exact sentences” might need to be mapped
 to an interface design that involves selecting spe-
-cific phrases, and "paraphrase the main idea" would
+cific phrases, and “paraphrase the main idea” would
 require disabling copy-pasting from the text to dis-
 courage direct repetition and encourage users to
 provide their own input. On one other hand, as
 mentioned in Section 4.3, LLMs and humans may
 respond differently to the same instructions. This
 discrepancy makes LLMs unreliable even for sim-
+
+--- Page 11 ---
 ulating human responses to tasks based solely on
 instructions. We suspect LLMs can be useful for
 helping study designers reflect on their high-level
@@ -1177,18 +1435,21 @@ man responses to collect), but the literal instruction
 has to be redesigned. Exploring which parts of the
 user study design can be prototyped using LLMs
 seems to be an interesting future direction.
+
 5 Discussion and Conclusion
+
 In this work, we study whether LLMs can be
 used to replicate crowdsourcing pipelines through
 a course assignment. We show that the modern
 models can indeed be used to simulate human anno-
-tation in these advanced "human computation algo-
-rithms," but the success and effectiveness of repli-
+tation in these advanced “human computation algo-
+rithms,” but the success and effectiveness of repli-
 cation varies widely depending on the nature of
-subtasks. Further, LLMs' performance and modes
+subtasks. Further, LLMs’ performance and modes
 of failure can be unintuitive, and they lack the abil-
 ity to take advantage of multimodal cues that enable
 human workers to reliably annotate data.
+
 Our qualitative findings indicate two important
 points: First, examining LLMs within established
 pipelines or workflows allows for a more straight-
@@ -1204,7 +1465,7 @@ misinterpretation of instructions by humans, noise
 in human responses, and the need to incorporate
 multi-modal constraints for humans. Still, due to
 the setup of the course assignment, the LLM chain
-qualities varied greatly by students' efforts and ex-
+qualities varied greatly by students’ efforts and ex-
 pertise. In addition, given the restricted sample
 size, quantitative analyses would have yielded lim-
 ited significance. Future work can look into more
@@ -1212,47 +1473,60 @@ systematic investigations on what components of
 crowdsourcing pipelines could benefit from the use
 of LLM annotation, and which should continue to
 be annotated by humans.
+
 From an education perspective, we found having
 students interact with LLMs actually helped cal-
-ibrate their confidence in these models - Many
+ibrate their confidence in these models — Many
 students conveyed their frustration when LLMs
 did not perform as effectively or reliably as they
 had anticipated. We hope the work can inspire
 future exploration on allowing students to inter-
+
 act with LLMs and gain awareness of these mod-
-els' mistakes, thereby facilitating a constructive
+els’ mistakes, thereby facilitating a constructive
 learning process and preventing excessive reliance
 on LLMs. We open-source the assignment de-
-sign and student responses at https://github.com/
+sign and student responses at https: //github.com/
 tongshuangwu/11m-crowdsourcing-pipeline.
+
 References
-PromptChainer: Create complex AI-driven flows
-with ease using visual flow builder. https://
+
+PromptChainer:
+with ease using visual flow builder.
 promptchainer.io/. Accessed: 2023-7-2.
+
+Create complex Al-driven flows
+https://
+
 Lisa P Argyle, Ethan C Busby, Nancy Fulda, Joshua
 Gubler, Christopher Rytting, and David Wingate.
 2022. Out of one, many: Using language mod-
 els to simulate human samples. ArXiv preprint,
 abs/2209.06899.
+
 Gagan Bansal, Tongshuang Wu, Joyce Zhou, Ray-
 mond Fok, Besmira Nushi, Ece Kamar, Marco Tulio
 Ribeiro, and Daniel Weld. 2021. Does the whole
 exceed its parts? the effect of ai explanations on
 complementary team performance. In Proceedings
 of the 2021 CHI Conference on Human Factors in
-Computing Systems, CHI '21, New York, NY, USA.
+Computing Systems, CHI ’21, New York, NY, USA.
 Association for Computing Machinery.
+
 Michael S Bernstein. 2013. Crowd-powered systems.
-KI-Künstliche Intelligenz, 27:69–73.
+KI-Kiinstliche Intelligenz, 27:69-73.
+
 Michael S Bernstein, Greg Little, Robert C Miller,
-Björn Hartmann, Mark S Ackerman, David R Karger,
+Bjérn Hartmann, Mark S Ackerman, David R Karger,
 David Crowell, and Katrina Panovich. 2010. Soylent:
 a word processor with a crowd inside. In Proceed-
 ings of the 23nd annual ACM symposium on User
-interface software and technology, pages 313–322.
+interface software and technology, pages 313-322.
+
 George EP Box. 1976. Science and statistics. Journal
-of the American Statistical Association, 71(356):791–
+of the American Statistical Association, 71(356):791-
 799.
+
 Tom B. Brown, Benjamin Mann, Nick Ryder, Melanie
 Subbiah, Jared Kaplan, Prafulla Dhariwal, Arvind
 Neelakantan, Pranav Shyam, Girish Sastry, Amanda
@@ -1268,45 +1542,56 @@ vances in Neural Information Processing Systems 33:
 Annual Conference on Neural Information Process-
 ing Systems 2020, NeurIPS 2020, December 6-12,
 2020, virtual.
+
 Sébastien Bubeck, Varun Chandrasekaran, Ronen El-
 dan, Johannes Gehrke, Eric Horvitz, Ece Kamar,
 Peter Lee, Yin Tat Lee, Yuanzhi Li, Scott Lund-
 berg, et al. 2023. Sparks of artificial general intelli-
 gence: Early experiments with gpt-4. ArXiv preprint,
 abs/2303.12712.
+
+--- Page 12 ---
 Harrison Chase. langchain: Building applications with
 LLMs through composability.
+
 Justin Cheng, Jaime Teevan, Shamsi T. Iqbal, and
 Michael S. Bernstein. 2015. Break it down: A com-
 parison of macro- and microtasks. In Proceedings of
 the 33rd Annual ACM Conference on Human Factors
 in Computing Systems, CHI 2015, Seoul, Republic of
 Korea, April 18-23, 2015, pages 4061-4064. ACM.
+
 Lydia B Chilton, James A Landay, and Daniel S Weld.
 2016. Humortools: A microtask workflow for writ-
 ing news satire. El Paso, Texas: ACM.
+
 Lydia B. Chilton, Greg Little, Darren Edge, Daniel S.
 Weld, and James A. Landay. 2013. Cascade: crowd-
 sourcing taxonomy creation. In 2013 ACM SIGCHI
 Conference on Human Factors in Computing Systems,
-CHI '13, Paris, France, April 27-May 2, 2013, pages
+CHI ’13, Paris, France, April 27 - May 2, 2013, pages
 1999-2008. ACM.
+
 Tyna Eloundou, Sam Manning, Pamela Mishkin, and
 Daniel Rock. 2023. Gpts are gpts: An early look at
 the labor market impact potential of large language
 models. ArXiv preprint, abs/2303.10130.
+
 Samuel J Gershman, Eric J Horvitz, and Joshua B Tenen-
 baum. 2015. Computational rationality: A converg-
 ing paradigm for intelligence in brains, minds, and
-machines. Science, 349(6245):273–278.
-Fabrizio Gilardi, Meysam Alizadeh, and Maël Kubli.
+machines. Science, 349(6245):273-278.
+
+Fabrizio Gilardi, Meysam Alizadeh, and Maél Kubli.
 2023. Chatgpt outperforms crowd-workers for text-
 annotation tasks. ArXiv preprint, abs/2303.15056.
-Perttu Hämäläinen, Mikke Tavast, and Anton Kunnari.
+
+Perttu Himdladinen, Mikke Tavast, and Anton Kunnari.
 2023. Evaluating large language models in gener-
 ating synthetic hci research data: a case study. In
 Proceedings of the 2023 CHI Conference on Human
-Factors in Computing Systems, pages 1–19.
+Factors in Computing Systems, pages 1-19.
+
 Luheng He, Mike Lewis, and Luke Zettlemoyer. 2015.
 Question-answer driven semantic role labeling: Us-
 ing natural language to annotate natural language.
@@ -1314,43 +1599,55 @@ In Proceedings of the 2015 Conference on Empiri-
 cal Methods in Natural Language Processing, pages
 643-653, Lisbon, Portugal. Association for Compu-
 tational Linguistics.
+
 Jeff Howe et al. 2006. The rise of crowdsourcing. Wired
-magazine, 14(6):176–183.
+magazine, 14(6):176-183.
+
 Guangyuan Jiang, Manjie Xu, Song-Chun Zhu, Wen-
 juan Han, Chi Zhang, and Yixin Zhu. 2022. Evaluat-
 ing and inducing personality in pre-trained language
 models.
+
 Tushar Khot, Harsh Trivedi, Matthew Finlayson, Yao
 Fu, Kyle Richardson, Peter Clark, and Ashish Sab-
 harwal. 2022. Decomposed prompting: A modular
 approach for solving complex tasks. ArXiv preprint,
 abs/2210.02406.
+
 Joy Kim, Sarah Sterman, Allegra Argent Beal Cohen,
 and Michael S Bernstein. 2017. Mechanical novel:
+
 Crowdsourcing complex work through reflection and
 revision. In Proceedings of the 2017 acm conference
+
 on computer supported cooperative work and social
-computing, pages 233–245.
+computing, pages 233-245.
+
 Aniket Kittur, Boris Smus, Susheel Khamkar, and
 Robert E Kraut. 2011. Crowdforge: Crowdsourc-
 ing complex work. In Proceedings of the 24th an-
 nual ACM symposium on User interface software and
-technology, pages 43–52.
-Jan Kocoń, Igor Cichecki, Oliwier Kaszyca, Mateusz
-Kochanek, Dominika Szydło, Joanna Baran, Julita
+technology, pages 43-52.
+
+Jan Koconi, Igor Cichecki, Oliwier Kaszyca, Mateusz
+Kochanek, Dominika Szydto, Joanna Baran, Julita
 Bielaniewicz, Marcin Gruza, Arkadiusz Janz, Kamil
 Kanclerz, et al. 2023. Chatgpt: Jack of all trades,
-master of none. Information Fusion, page 101861.
+master of none. Jnformation Fusion, page 101861.
+
 Takeshi Kojima, Shixiang Shane Gu, Machel Reid, Yu-
 taka Matsuo, and Yusuke Iwasawa. 2022. Large lan-
 guage models are zero-shot reasoners. Advances in
+
 neural information processing systems, 35:22199-
 22213.
-Anand Kulkarni, Matthew Can, and Björn Hartmann.
+
+Anand Kulkarni, Matthew Can, and Bjérn Hartmann.
 2012. Collaboratively crowdsourcing workflows
 with turkomatic. In Proceedings of the acm 2012
 conference on computer supported cooperative work,
 pages 1003-1012.
+
 Abhinav Kumar, Barbara Di Eugenio, Jillian Aurisano,
 Andrew Johnson, Abeer Alsaiari, Nigel Flowers, Al-
 berto Gonzalez, and Jason Leigh. 2017. Towards
@@ -1359,89 +1656,111 @@ data visualization dialogue: Context-based annota-
 tion and gesture identification. In The 21st Workshop
 on the Semantics and Pragmatics of Dialogue (Sem-
 Dial 2017-SaarDial)(August 2017), volume 48.
-Edith Law and Haoqi Zhang. 2011. Towards large-scale
+
+Edith Law and Haogqi Zhang. 2011. Towards large-scale
 collaborative planning: Answering high-level search
 queries using human computation. In Proceedings
 of the Twenty-Fifth AAAI Conference on Artificial
 Intelligence, AAAI 2011, San Francisco, California,
 USA, August 7-11, 2011. AAAI Press.
+
 Christopher Lin, Daniel Weld, et al. 2014. To re (label),
 or not to re (label). In Proceedings of the AAAI Con-
 ference on Human Computation and Crowdsourcing,
-volume 2, pages 151–158.
+volume 2, pages 151-158.
+
 Greg Little, Lydia B Chilton, Max Goldman, and
 Robert C Miller. 2010. Exploring iterative and paral-
 lel human computation processes. In Proceedings of
 the ACM SIGKDD workshop on human computation,
 pages 68-76.
+
 Michael Xieyang Liu, Advait Sarkar, Carina Negreanu,
 Benjamin Zorn, Jack Williams, Neil Toronto, and
-Andrew D Gordon. 2023. "what it wants me to say":
+Andrew D Gordon. 2023. “what it wants me to say”:
 Bridging the abstraction gap between end-user pro-
 grammers and code-generating large language mod-
 els. In Proceedings of the 2023 CHI Conference on
-Human Factors in Computing Systems, pages 1–31.
+Human Factors in Computing Systems, pages 1-31.
+
+--- Page 13 ---
 Shayne Longpre, Le Hou, Tu Vu, Albert Webson,
 Hyung Won Chung, Yi Tay, Denny Zhou, Quoc V
 Le, Barret Zoph, Jason Wei, et al. 2023. The flan
 collection: Designing data and methods for effective
 instruction tuning. ArXiv preprint, abs/2301.13688.
+
 Qianou Ma, Tongshuang Wu, and Kenneth Koedinger.
 2023. Is ai the better programming partner? human-
 human pair programming vs. human-ai pair program-
 ming.
+
 Aman Madaan, Niket Tandon, Prakhar Gupta, Skyler
 Hallinan, Luyu Gao, Sarah Wiegreffe, Uri Alon,
 Nouha Dziri, Shrimai Prabhumoye, Yiming Yang,
 et al. 2023. Self-refine: Iterative refinement with
 self-feedback. ArXiv preprint, abs/2303.17651.
+
 Gary Marchionini. 1995. Information seeking in elec-
 tronic environments. 9. Cambridge university press.
+
 Yixin Nie, Xiang Zhou, and Mohit Bansal. 2020. What
 can we learn from collective human opinions on nat-
 ural language inference data? In Proceedings of the
 2020 Conference on Empirical Methods in Natural
-Language Processing (EMNLP), pages 9131–9143,
+Language Processing (EMNLP), pages 9131-9143,
 Online. Association for Computational Linguistics.
+
 OpenAI. 2023. Gpt-4 technical report.
+
 Long Ouyang, Jeffrey Wu, Xu Jiang, Diogo Almeida,
 Carroll Wainwright, Pamela Mishkin, Chong Zhang,
 Sandhini Agarwal, Katarina Slama, Alex Ray, et al.
 2022. Training language models to follow instruc-
 tions with human feedback. Advances in Neural
 Information Processing Systems, 35:27730-27744.
+
 Peter Pirolli and Stuart Card. 1999. Information forag-
 ing. Psychological review, 106(4):643.
+
 Silviu Pitis, Michael R Zhang, Andrew Wang, and
 Jimmy Ba. 2023. Boosted prompt ensembles
 for large language models. ArXiv preprint,
 abs/2304.05970.
+
 Ofir Press, Muru Zhang, Sewon Min, Ludwig Schmidt,
 Noah A Smith, and Mike Lewis. 2022. Measuring
 and narrowing the compositionality gap in language
 models. ArXiv preprint, abs/2210.03350.
+
 Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey
 Chu, and Mark Chen. 2022. Hierarchical text-
 conditional image generation with clip latents. ArXiv
 preprint, abs/2204.06125.
+
 Daniela Retelny, Michael S Bernstein, and Melissa A
 Valentine. 2017. No workflow can ever be enough:
 How crowdsourcing workflows constrain complex
 work. Proceedings of the ACM on Human-Computer
-Interaction, 1(CSCW):1–23.
+Interaction, 1(CSCW):1-23.
+
 Marco Tulio Ribeiro. 2023. Testing language models
 (and prompts) like we test software. Medium.
+
 Shibani Santurkar, Esin Durmus, Faisal Ladhak, Cinoo
 Lee, Percy Liang, and Tatsunori Hashimoto. 2023.
 Whose opinions do language models reflect? ArXiv
 preprint, abs/2303.17548.
+
 Noah Shinn, Federico Cassano, Beck Labash, Ashwin
 Gopinath, Karthik Narasimhan, and Shunyu Yao.
 2023. Reflexion: Language agents with verbal rein-
 forcement learning.
+
 Dan Sperber and Deirdre Wilson. 1986. Relevance:
 Communication and cognition, volume 142. Cite-
 seer.
+
 Nisan Stiennon, Long Ouyang, Jeffrey Wu, Daniel M.
 Ziegler, Ryan Lowe, Chelsea Voss, Alec Radford,
 Dario Amodei, and Paul F. Christiano. 2020. Learn-
@@ -1450,19 +1769,23 @@ in Neural Information Processing Systems 33: An-
 nual Conference on Neural Information Processing
 Systems 2020, NeurIPS 2020, December 6-12, 2020,
 virtual.
-Petter Törnberg. 2023. Chatgpt-4 outperforms experts
+
+Petter Térnberg. 2023. Chatgpt-4 outperforms experts
 and crowd workers in annotating political twitter
 messages with zero-shot learning. ArXiv preprint,
 abs/2304.06588.
+
 Vasilis Verroios and Michael S Bernstein. 2014. Con-
 text trees: Crowdsourcing global understanding from
 local views. In Second AAAI Conference on Human
 Computation and Crowdsourcing.
+
 Veniamin Veselovsky, Manoel Horta Ribeiro, and
 Robert West. 2023. Artificial artificial artificial intel-
 ligence: Crowd workers widely use large language
 models for text production tasks. ArXiv preprint,
 abs/2306.07899.
+
 Xuezhi Wang, Haohan Wang, and Diyi Yang. 2022a.
 Measure and improve robustness in NLP models: A
 survey. In Proceedings of the 2022 Conference of
@@ -1470,31 +1793,38 @@ the North American Chapter of the Association for
 Computational Linguistics: Human Language Tech-
 nologies, pages 4569-4586, Seattle, United States.
 Association for Computational Linguistics.
+
 Xuezhi Wang, Jason Wei, Dale Schuurmans, Quoc
 Le, Ed Chi, Sharan Narang, Aakanksha Chowdh-
 ery, and Denny Zhou. 2022b. Self-consistency im-
 proves chain of thought reasoning in language mod-
 els. ArXiv preprint, abs/2203.11171.
+
 Yun Wang, Zhitao Hou, Leixian Shen, Tongshuang Wu,
 Jiaqi Wang, He Huang, Haidong Zhang, and Dong-
 mei Zhang. 2022c. Towards natural language-based
-visualization authoring. IEEE Transactions on Visu-
-alization and Computer Graphics, 29(1):1222–1232.
+visualization authoring. JEEE Transactions on Visu-
+alization and Computer Graphics, 29(1):1222-1232.
+
 Albert Webson, Alyssa Marie Loo, Qinan Yu, and Ellie
 Pavlick. 2023. Are language models worse than hu-
-mans at following prompts? it's complicated. ArXiv
+mans at following prompts? it’s complicated. ArXiv
 preprint, abs/2301.07085.
+
 Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
 Bosma, Fei Xia, Ed Chi, Quoc V Le, Denny Zhou,
 et al. 2022. Chain-of-thought prompting elicits rea-
 soning in large language models. Advances in Neural
-Information Processing Systems, 35:24824-24837.
+Information Processing Systems, 35:24824—24837.
+
+--- Page 14 ---
 Tongshuang Wu, Ellen Jiang, Aaron Donsbach, Jeff
 Gray, Alejandra Molina, Michael Terry, and Carrie J
 Cai. 2022a. Promptchainer: Chaining large language
 model prompts through visual programming. In CHI
 Conference on Human Factors in Computing Systems
 Extended Abstracts, pages 1-10.
+
 Tongshuang Wu, Marco Tulio Ribeiro, Jeffrey Heer, and
 Daniel Weld. 2021. Polyjuice: Generating counter-
 factuals for explaining, evaluating, and improving
@@ -1504,25 +1834,31 @@ and the 11th International Joint Conference on Natu-
 ral Language Processing (Volume 1: Long Papers),
 pages 6707-6723, Online. Association for Computa-
 tional Linguistics.
+
 Tongshuang Wu, Michael Terry, and Carrie Jun Cai.
 2022b. Ai chains: Transparent and controllable
 human-ai interaction by chaining large language
 model prompts. In Proceedings of the 2022 CHI
+
 conference on human factors in computing systems,
 pages 1-22.
+
 Zeqiu Wu, Yushi Hu, Weijia Shi, Nouha Dziri, Alane
 Suhr, Prithviraj Ammanabrolu, Noah A Smith,
 Mari Ostendorf, and Hannaneh Hajishirzi. 2023.
 Fine-grained human feedback gives better rewards
 for language model training. ArXiv preprint,
 abs/2306.01693.
+
 Shunyu Yao, Dian Yu, Jeffrey Zhao, Izhak Shafran,
 Thomas L Griffiths, Yuan Cao, and Karthik
 Narasimhan. 2023. Tree of thoughts: Deliberate
 problem solving with large language models. ArXiv
 preprint, abs/2305.10601.
+
 Daniel M Ziegler, Nisan Stiennon, Jeffrey Wu, Tom B
 Brown, Alec Radford, Dario Amodei, Paul Chris-
 tiano, and Geoffrey Irving. 2019. Fine-tuning lan-
 guage models from human preferences. ArXiv
 preprint, abs/1909.08593.
+

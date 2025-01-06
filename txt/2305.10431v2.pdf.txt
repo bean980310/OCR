@@ -1,11 +1,16 @@
+--- Page 1 ---
 arXiv:2305.10431v2 [cs.CV] 21 May 2023
+
 FastComposer: Tuning-Free Multi-Subject Image
+
 Generation with Localized Attention
+
 Guangxuan Xiao* Tianwei Yin* William T. Freeman Frédo Durand Song Han
 Massachusetts Institute of Technology
 https://fastcomposer.mit.edu
-1
+
 Abstract
+
 Diffusion models excel at text-to-image generation, especially in subject-driven
 generation for personalized images. However, existing methods are inefficient due
 to the subject-specific fine-tuning, which is computationally intensive and hampers
@@ -22,89 +27,116 @@ regions in the target images. Naively conditioning on subject embeddings results
 in subject overfitting. FastComposer proposes delayed subject conditioning in the
 denoising step to maintain both identity and editability in subject-driven image
 generation. FastComposer generates images of multiple unseen individuals with
-different styles, actions, and contexts. It achieves 300×-2500× speedup compared
+different styles, actions, and contexts. It achieves 300-2500 speedup compared
 to fine-tuning-based methods and requires zero extra storage for new subjects. Fast-
 Composer paves the way for efficient, personalized, and high-quality multi-subject
 image creation. Code, model, and datasets will be released for reproduction.
-Introduction
-Recent advancements in text-to-image generation [4, 8, 17, 28], particularly diffusion models [13, 27,
+
+1 Introduction
+
+Recent advancements in text-to-image generation [4, 8, 17, 28
+
+, particularly diffusion models [13, 27,
+
 31, 36, 37], have opened new frontiers in content creation. Subject-driven text-to-image generation
 permits the personalization to new individuals given a few sample images [3, 9, 20, 25, 32], allowing
-the generation of images featuring specific subjects in novel scenes, styles, and actions. However,
-current subject-driven text-to-image generation methods suffer from two key limitations: cost of
+
+the generation of images featuring specific subjects in novel
+current subject-driven text-to-image generation methods su:
+
+scenes, styles, and actions. However,
+fer from two key limitations: cost of
+
 personalization and identity blending for multiple subjects. Personalization is costly because they
-often need model fine-tuning for each new subject for best fidelity. The computational overhead and
+
+often need model fine-tuning for each new subject for best fi
+
+lelity. The computational overhead and
+
 high hardware demands introduced by model tuning, largely due to the memory consumption[6] and
-computations of backpropagation, constrain the applicability of these models across various platforms.
-Furthermore, existing techniques struggle with multi-subject generation (Figure 1) because of the
+
+computations of backpropagation, constrain the applicability o:
+Furthermore, existing techniques struggle with multi-subjec'
+
+these models across various platforms.
+t generation (Figure 1) because of the
+
 “identity blending” issue (Figure 2 left), in which the model combines the distinct characteristics of
 different subjects (subject A looks like subject B and vice versa).
+
 We propose FastComposer, a tuning-free, personalized multi-subject text-to-image generation method.
 Our key idea is to replace the generic word tokens, such as "person", by an embedding that captures
+
 * Equal Contribution.
-Correspondence to: Guangxuan Xiao <xgx@mit.edu>, Tianwei Yin <tianweiy@mit.edu>.
+
+Correspondence to: Guangxuan Xiao <xgx @mit.edu>, Tianwei Yin <tianweiy @mit.edu>.
+
 Preprint. Under review.
+
+--- Page 2 ---
+StableDiffusion Midjourney Textual Inversion CustomDiffusion _ FastComposer
+(Text only) (Text only) (Fine-tuning) (Fine-tuning) __ (Inference only)
+
 References
-and a man on the A man and a man sitting in
+
+« park together
+
+‘Avomanandamoman AJspanese woodblock print of Aman and aman on the Aman anda mansiting in
 beach
-a park together
-and a woman A Japanese woodblock print of A man and a m
-of a woman and a man
-เจริ
-A woman a
-StableDiffusion
-(Text only)
-Midjourney
-(Text only)
-Textual Inversion CustomDiffusion
-(Fine-tuning) (Fine-tuning)
-FastComposer
-(Inference only)
-Figure 1: Comparison with baselines for multi-subject image generation. We use scientists' names in the text
+
+ofa woman anda man
+
+‘cooking together
+
+Figure 1: Comparison with baselines for multi-subject image generation. We use scientists’ names in the text
 prompt for text-only methods (SD, MJ). Text-only methods only perform well when subjects are present in the
 training dataset but struggle to maintain the identity otherwise. Fine-tuning-based methods blend the identity of
-different persons (TI rows 1 and 2, CD rows 1, 2, 4), deviate from the text instruction and only generate a single
+different persons (TI rows | and 2, CD rows 1, 2, 4), deviate from the text instruction and only generate a single
 subject (TI row 4), or generate images that do not resemble any specific reference (CD row 3).
-Problem 1: Identity Blending
-"A man and a man sitting in a park"
-Problem 2: Subject Overfitting
-"A woman riding a horse"
-Inputs
-w/o cross-attention w/ cross-attention
-localization localization (ours)
-Input
-w/o delayed subject w/ delayed subject
-conditioning conditioning (ours)
+
+Problem 1: Identity Blending Problem 2: Subject Overfitting
+“A man and a man sitting in a park” “A woman riding a horse”
+
+w/o cross-attention w/ cross-attention Input w/o delayed subject w/ delayed subject
+localization localization (ours) } conditioning conditioning (ours)
+
 Figure 2: Two challenges faced by existing subject-driven image generation methods. Firstly, current methods
 blend the distinct characteristics of different subjects (identity blending), shown by the right figure where
 Newton resembles Einstein. Cross-attention localization (Sec 4.2) solves this problem. Secondly, they suffer
 from subject overfitting, where they overfit the input image and ignore the text instruction. Delayed subject
 conditioning (Sec 4.3) addresses this issue.
-an individual's unique identity in the text conditioning. We use a vision encoder to derive this identity
+
+an individual’s unique identity in the text conditioning. We use a vision encoder to derive this identity
 embedding from a referenced image, and then augment the generic text tokens with features from this
 identity embedding. This enables image generation based on subject-augmented conditioning. Our
 design allows the generation of images featuring specified subjects with only forward passes and can
-be further integrated with model compression techniques [2, 11, 40] to boost deployment efficiency.
+be further integrated with model compression techniques [2, | 1, 40] to boost deployment efficiency.
+
 To tackle the multi-subject identity blending issue, we identify unregulated cross-attention as the
-primary reason (Figure 4). When the text includes two "person" tokens, each token's attention map
+primary reason (Figure 4). When the text includes two "person" tokens, each token’s attention map
 attends to both person in the image rather than linking each token to a distinct person in the image. To
 address this, we propose supervising cross-attention maps of subjects with segmentation masks during
 training (i.e., cross-attention localization), using standard segmentation tools [7]. This supervision
 explicitly guides the model to map subject features to distinct and non-overlapping regions of the
 image, thereby facilitating the generation of high-quality multi-subject images (Figure 2 left). We
 note that segmentation and cross-attention localization is only required during the training phase.
+
 Naively applying subject-augmented conditioning leads to subject overfitting (Figure 2 right), re-
-stricting the user's ability to edit subjects based on textual directives. To address this, we introduce
-2
-delayed subject conditioning, preserving the subject's identity while following text instructions. It
+stricting the user’s ability to edit subjects based on textual directives. To address this, we introduce
+
+--- Page 3 ---
+delayed subject conditioning, preserving the subject’s identity while following text instructions. It
 employs text-only conditioning in the early denoising stage to generate the image layout, followed by
 subject-augmented conditioning in the remaining denoising steps to refine the subject appearance.
 This simple technique effectively preserves subject identity without sacrificing editability (Figure 5).
+
 For the first time, FastComposer enables inference-only generation of multiple-subject images
-across diverse scenarios (Figure 1). FastComposer achieves 300×-2500× speedup and 2.8×-6.7×
+across diverse scenarios (Figure |). FastComposer achieves 300-2500 speedup and 2.8 x-6.7x
 memory saving compared to fine-tuning-based methods, requiring zero extra storage for new subjects.
 FastComposer paves the way for low-cost, personalized, and versatile text-to-image generation.
+
 2 Related Work
+
 Subject-Driven Image Generation aims to render a particular subject unseen at the initial training
 stage. Given a limited number of example images of the subject, it seeks to synthesize novel
 renditions in diverse contexts. DreamBooth [32], textual-inversion [9], and custom-diffusion [20]
@@ -118,7 +150,8 @@ of fine-tuning the model, which is neither feasible on edge devices such as smar
 for cloud-based applications. In contrast, our new FastComposer amortizes the costly subject tuning
 during the training phase, enabling instantaneous personalization of multiple subjects using simple
 feedforward methods at test time.
-A number of concurrent works have explored tuning-free methods. X&Fuse [19] concatenates the
+
+A number of concurrent works have explored tuning-free methods. X&Fuse [1!9] concatenates the
 reference image with the noisy latent for image conditioning. ELITE [39] and InstantBooth [35] use
 global and local mapping networks to project reference images into word embeddings and inject
 reference image patch features into cross-attention layers to enhance local details. Despite impressive
@@ -127,6 +160,7 @@ subject settings, as they rely on global interactions between the generated imag
 input image. UMM-Diffusion [24] shares a similar architecture to ours. However, it faces identity
 blending challenges when extended to multiple subjects [24]. In comparison, our method supports
 multi-subject composition via a cross-attention localization supervision mechanism (Sec 4.2).
+
 Multi-Subject Image Generation. Custom-Diffusion [20] enables multi-concepts composition by
 jointly fine-tuning the diffusion model for multiple concepts. However, it typically handles concepts
 with clear semantic distinctions, such as animals and their related accessories or backgrounds. The
@@ -139,162 +173,133 @@ generic objects without customization [1] or demand the costly textual-inversion
 instance-specific details [33]. Furthermore, these techniques require a user-provided segmentation
 map. In contrast, FastComposer generates personalized, multi-subject images in an inference-only
 manner and automatically derives plausible layouts from text prompts.
+
 3 Preliminaries
+
 Stable Diffusion. We use the state-of-the-art StableDiffusion (SD) model as our backbone network.
 The SD model consists of three components: the variational autoencoder (VAE), U-Net, and a
-text encoder. The VAE encoder & compresses the image x to a smaller latent representation z,
-which is subsequently perturbed by Gaussian noise ɛ in the forward diffusion process. The U-Net,
-parameterized by 0, denoises the noisy latent representation by predicting the noise. This denoising
+text encoder. The VAE encoder € compresses the image x to a smaller latent representation z,
+which is subsequently perturbed by Gaussian noise ¢ in the forward diffusion process. The U-Net,
+parameterized by 6, denoises the noisy latent representation by predicting the noise. This denoising
 process can be conditioned on text prompts through the cross-attention mechanism, while the text
-encoder maps the text prompts P to conditional embeddings (P). During training, the network is
-3
-Training
-Text-Image Pair
-Text
-Embeddings
-"A woman and a man
-standing together"
-Text
-Encoder
-woman concat
-and
-Բ
-MLP
-..............
-Inference
-Subject
-Embeddings Embeddings
-Conditional
-Text Prompt
-"A man and a man
-sitting in a park"
-Text
-Encoder
+encoder ~ maps the text prompts P to conditional embeddings 7)(P). During training, the network is
+
+--- Page 4 ---
+Text Subject Conditional Inference
+
+Text-Image Pair Embeddings Embeddings Embeddings
+
+‘A woman and a man
+standing together” ha ‘Aman anda man |
+6 sitting in a park”
 Reference Subjects
-Image
-Encoder
-a
-man
-concat
-standing
-together
+
+Noisy Image Denoised Image | =a
+
+Text Prompt
+
 Subject Segments
-Image
-Encoder
-Noisy Image
-Denoised Image
-Noise
-Segmentation Masks
-U-Net
-Cross-Attention Maps
-woman
-and
-man
-standing together
--11-17--1
-concat
-MLP
-concat
-Delayed Subject
-Conditioning (Sec. 4.3)
-t≤aT
-t> aT
-U-Net
-+
-Generated Image
-Cross-Attention Localization (Sec. 4.2)
-XT
-хо
+
+Ge ited Ir
+Delayed Subject ar ian
+tioning (Sec. 4.3)
+
+‘Cross-Attention Localization (Sec. 4.2)
+
 Figure 3: Training and inference pipeline of FastComposer. Given a text description and images of multiple sub-
 jects, FastComposer uses an image encoder to extract the features of the subjects and augments the corresponding
 text tokens. The diffusion model is trained to generate multi-subject images with augmented conditioning.
 We use cross-attention localization (Sec. 4.2) to boost multi-subject generation quality, and delayed subject
 conditioning to avoid subject overfitting (Sec. 4.3).
+
 optimized to minimize the loss function given by the equation below:
-Lnoise = Ez~ε(x), P, E~N(0,1),t [||E — Eo (Zt, t, v(P))||{}],
-(1)
-where zt is the latent code at time step t. At inference time, a random noise z is sampled from
-N(0, 1) and iteratively denoised by the U-Net to the initial latent representation zo. Finally, the VAE
-decoder D generates the final image by mapping the latent codes back to pixel space î = D(zo).
-=
+Lnoise = Ezve(2),P.ex.N(0,1).t [lle — €0(24,4, Y(P)II5] , dd)
+
+where 2; is the latent code at time step t. At inference time, a random noise zr is sampled from
+N (0, 1) and iteratively denoised by the U-Net to the initial latent representation zo. Finally, the VAE
+decoder D generates the final image by mapping the latent codes back to pixel space ¢ = D(zo).
+
 Text-Conditioning via Cross-Attention Mechanism. In the SD model, the U-Net employs a
 cross-attention mechanism to denoise the latent code conditioned on text prompts. For simplicity, we
-use the single-head attention mechanism in our discussion. Let P represent the text prompts and
+use the single-head attention mechanism in our discussion. Let P represent the text prompts and w
 denote the text encoder, which is typically a pre-trained CLIP text encoder. The encoder converts P
-into a list of d-dimensional embeddings, &(P) = c = Rnd. The cross-attention layer accepts the
-spatial latent code z ЄR (hxw)×f and the text embeddings c as inputs. It then projects the latent code
-and text embeddings into Query, Key, and Value matrices: Q = W₁z, K Wkc, and V = Wc.
-Here, WЄ Rfxd', Wk, W₁ = Rdxd' represent the weight matrices of the three linear layers, and
-d' is the dimension of Query, Key, and Value embeddings. The cross-attention layer then computes
-the attention scores A
-QKT
-Softmax(· -) Є [0, 1](h×w)×n, and takes a weighted sum over the Value
-matrix to obtain the cross-attention output Zattn = AVER(hxwxd'. Intuitively, the cross-attention
-mechanism "scatters" textual information to the 2D latent code space, and A[i, j, k] represents the
-amount of information flow from the k-th text token to the (i, j) latent pixel. Our method is based on
+into a list of d-dimensional embeddings, w(P) = c € R"*¢. The cross-attention layer accepts the
+spatial latent code z € R("*)*S and the text embeddings c as inputs. It then projects the latent code
+and text embeddings into Query, Key, and Value matrices: Q = W%z, K = W*c, and V = Wc.
+Here, W4 € RIX", W*, WY € ROX“ represent the weight matrices of the three linear layers, and
+d’ is the dimension of Query, Key, and Value embeddings. The cross-attention layer then computes
+
+the attention scores A = Softmax( ae ) € (0, 1)*)*", and takes a weighted sum over the Value
+
+matrix to obtain the cross-attention output Zu, = AV € Rx”) xd Intuitively, the cross-attention
+mechanism “scatters” textual information to the 2D latent code space, and A[i, j, k| represents the
+amount of information flow from the k-th text token to the (7, j) latent pixel. Our method is based on
 this semantic interpretation of the cross-attention map, and we will discuss it in detail in Section 4.2.
+
 4 FastComposer
-=
-√d'
+
 4.1 Tuning-Free Subject-Driven Image Generation with an Image Encoder
-=
+
 Augmenting Text Representation with Subject Embedding. To achieve tuning-free subject-
 driven image generation, we propose to augment text prompts with visual features extracted from
-reference subject images. Given a text prompt P
-{w1, W2,... Wn}, a list of reference subject
-images S = {81, 82, . . . Sm}, and an index list indicating which subject corresponds to which word in
-the text prompt I = {i1, 12, ... im}, ij Є 1, 2, . . ., n, we first encode the text prompt P and reference
-subjects S into embeddings using the pre-trained CLIP text and image encoders & and 6, respectively.
+reference subject images. Given a text prompt P = {wy, wo,... wn}, a list of reference subject
+images S = {51, 82,... Sm}, and an index list indicating which subject corresponds to which word in
+the text prompt Z = {i1,i2,...im},i; € 1,2,...,n, we first encode the text prompt P and reference
+subjects S into embeddings using the pre-trained CLIP text and image encoders 1 and ¢, respectively.
 Next, we employ a multilayer perceptron (MLP) to augment the text embeddings with visual features
 extracted from the reference subjects. We concatenate the word embeddings with the visual features
 and feed the resulting augmented embeddings into the MLP. This process yields the final conditioning
-4
-a
-man
-and
-a
-man
-sitting
-in
-a
-park
+
+
+--- Page 5 ---
+sitting in
+
+Z a man and a man : a park
+a de a
+
 Without Cross-Attention Localization
-Generated Images
-With Cross-Attention Localization (ours)
-Figure 4: In the absence of cross-attention regularization (top), the diffusion model attends to multiple subjects'
+
+Generated Images With Cross-Attention Localization (ours)
+
+Figure 4: In the absence of cross-attention regularization (top), the diffusion model attends to multiple subjects’
 input tokens and merge their identity. By applying cross-attention regularization (bottom), the diffusion model
 learns to focus on only one reference token while generating a subject. This ensures that the features of multiple
 subjects in the generated image are more separated.
-embeddings c' E Rnxd, defined as follows:
-c'i
-=
-Sv (P)i,
-i & I
-[MLP(v(P)i||0(s;)), i = i; ЄI
+
+embeddings c’ € R"*¢, defined as follows:
+
+, {uur i¢t
+
+el 2
+‘= AMLPCW(P)illols))). i= 4) €Z ”
+
 Figure 3 gives a concrete example of our augmentation approach.
-(2)
+
 Subject-Driven Image Generation Training. To enable inference-only subject-driven image gen-
 eration, we train the image encoder, the MLP module, and the U-Net with the denoising loss (Figure 3).
 We create a subject-augmented image-text paired dataset to train our model, where noun phrases
 from image captions are paired with subject segments appearing in the target images. We initially
-use a dependency parsing model to chunk all noun phrases (e.g., “a woman”) in image captions and
+use a dependency parsing model to chunk all noun phrases (e.g., “a woman’) in image captions and
 a panoptic segmentation model to segment all subjects present in the image. We then pair these
 subject segments with corresponding noun phrases in the captions with a greedy matching algorithm
 based on text and image similarity [26, 29]. The process of constructing the subject-augmented
 image-text dataset is detailed in Sec. 5.1. In the training phase, we employ subject-augmented
 conditioning, as outlined in Equation 2, to denoise the perturbed target image. We also mask the
-subjects' backgrounds with random noise before encoding, preventing the overfitting of the subjects'
+subjects’ backgrounds with random noise before encoding, preventing the overfitting of the subjects’
 backgrounds. Consequently, FastComposer can directly use natural subject images during inference
 without explicit background segmentation.
+
 4.2 Localizing Cross-Attention Maps with Subject Segmentation Masks
+
 We observe that traditional cross-attention maps tend to attend to all subjects at the same time, which
 leads to identity blending in multi-subject image generation (Figure 4 top). We propose to localize
 cross-attention maps with subject segmentation masks during training to solve this issue.
+
 Understanding the Identity Blending in Diffusion Models. Prior research [12] shows that the
 cross-attention mechanism within diffusion models governs the layout of generated images. The
 scores in cross-attention maps represent “the amount of information flows from a text token to a latent
-pixel." We hypothesize that identity blending arises from the unrestricted cross-attention mechanism,
-as a single latent pixel can attend to all text tokens. If one subject's region attends to multiple reference
+pixel.” We hypothesize that identity blending arises from the unrestricted cross-attention mechanism,
+as a single latent pixel can attend to all text tokens. If one subject’s region attends to multiple reference
 subjects, identity blending will occur. In Figure 4, we confirm our hypothesis by visualizing the
 average cross-attention map within the U-Net of the diffusion model. The unregularized model often
 has two reference subject tokens influencing the same generated person at the same time, causing a
@@ -303,67 +308,54 @@ instance segmentation of the target image, clearly separating the features relat
 To achieve this, we add a regularization term to the subject cross-attention maps during training to
 encourage focusing on specific instance areas. Segmentation maps and cross-attention regularization
 are only used during training, not at test time.
-5
-Prompt Consistency
-● Editability ✰ Identity
-"A painting of a man and a man in the style of Vincent van Gogh"
-28%
+
+--- Page 6 ---
+‘© Editability Identity
 64%
-°
-21%
-48%
-14%
-Our Choice
-32%
-7% More
-Editing
-More
-16%
-Similar
-Identity Preservation
-"A woman riding a horse"
-0%
-0%
-0 0.2 0.4 0.6 0.8 1
-α = 0
-a = 0.2
-α = 0.4
-a = 0.6
-a = 0.8
-a = 1.0
-Subject Conditioning Ratio a
-Subject Conditioning Ratio a
+
+“A painting of a man and a man in the style of Vincent van Gogh”
+
+28%
+z &
+& 21% 48% 8
+& 14% 32% 2
+=e T% 16% 2
+S 5
+am Kj
+0% 0% Ma.) . :
+0 0.20.40.60.8 1 a=0 @=02 a=04 a=06 a=08 a= 10
+Subject Conditioning Ratio a Subject Conditioning Ratio a
+
 Figure 5: Effects of using different ratios of timesteps for subject conditioning. A ratio between 0.6 to 0.8 yields
 good results and achieve a balance between prompt consistency and identity preservation.
+
 Localizing Cross-Attention with Segmentation Masks. As discussed in Section 3, a cross-
-attention map A Є [0,1] (hxw)×n connects latent pixels to conditional embeddings at each layer,
-where A[i, j, k] denotes the information flow from the k-th conditional token to the (i, j) latent
-pixel. Ideally, the subject token's attention map should focus solely on the subject region rather
+attention map A € [0, 1]‘"*”)*" connects latent pixels to conditional embeddings at each layer,
+where Ali, j,k] denotes the information flow from the k-th conditional token to the (i,j) latent
+pixel. Ideally, the subject token’s attention map should focus solely on the subject region rather
 than spreading throughout the entire image, preventing identity blending among subjects. To ac-
-complish this, we propose localizing the cross-attention map using the reference subject's segmen-
-tation mask. Let M = {M1, M2,... Mm} represent the reference subjects' segmentation masks,
-I = {i1, i2, . . . im} be the index list indicating which subject corresponds to each word in the text
-prompt, and Ai : A[:, :, i] = [0, 1](h×w) be the cross-attention map of the i-th subject token. We su-
-pervise the cross-attention map Ai, to be close to the segmentation mask m; of the j-th subject token,
-i.e., Ai, mj. We employ a balanced L1 loss to minimize the distance between the cross-attention
+complish this, we propose localizing the cross-attention map using the reference subject’s segmen-
+tation mask. Let M = {M,, Mo,...M,,} represent the reference subjects’ segmentation masks,
+T = {i1,i2,...%m} be the index list indicating which subject corresponds to each word in the text
+prompt, and A; = A[:,:, é] € [0, 1]‘"*™) be the cross-attention map of the i-th subject token. We su-
+pervise the cross-attention map A;, to be close to the segmentation mask m, of the j-th subject token,
+ive., Aj, & mj. We employ a balanced L1 loss to minimize the distance between the cross-attention
 map and the segmentation mask:
-=
-m
-1
-Lloc
-(mean(A¿, [m;]) – mean(A¿, [m;])).
-m
-j=1
-(3)
+
+Lioc = ~S-(mean( Ai, [77]) — mean(A;,[m,])). (3)
+
+j=l
 The final training objective of FastComposer is given by:
-L = Lnoise Lloc,
-(4)
-using a localization loss ratio controlled by hyperparameter > = 0.001. Motivated by [5, 12], we
+L = Lryoise + AL toc; (4)
+
+using a localization loss ratio controlled by hyperparameter \ = 0.001. Motivated by [5, 12], we
 apply the localization loss to the downsampled cross-attention maps, i.e., the middle 5 blocks of
 the U-Net, which are known to contain more semantic information. As illustrated in Figure 4, our
 localization technique enables the model to precisely allocate attention to reference subjects at test
 time, which prevents identity blending between subjects.
+
 4.3 Delayed Subject Conditioning in Iterative Denoising
+
 During inference, using the augmented text representation directly often leads to images that closely
 resemble the subjects while ignoring the textual directives. This occurs because the image layout
 forms at the early phases of the denoising process, and premature augmentation from the reference
@@ -372,105 +364,97 @@ this issue by generating an initial latent code and refining it through iterativ
 However, this process is resource-intensive and needs high-end devices for model fine-tuning. Inspired
 by Style Mixing [18], we propose a simple delayed subject conditioning, which allows for inference-
 only subject conditioning while striking a balance between identity preservation and editability.
+
 Specifically, we perform image augmentation only after the layout has been created using a text-only
 prompt. In this framework, our time-dependent noise prediction model can be represented as:
-Єt =
-Jo(zt, t, c) if t> aT,
-[co (zt, t, c') otherwise
+
+eg(a,t,c) ift>aT,
+@=
+t €9(%,t,c) otherwise
+
 (5)
-Here, c denotes the original text embedding and c' denotes text embedding augmented with the input
+
+Here, c denotes the original text embedding and c’ denotes text embedding augmented with the input
 image embedding. a is a hyperparameter indicating the ratio of subject conditioning. We ablate the
-effect of using different a in Figure 5. Empirically, a = [0.6, 0.8] yields good results that balance
+effect of using different a in Figure 5. Empirically, a € [0.6,0.8] yields good results that balance
 prompt consistency and identity preservation, though it can be easily tuned for specific instances.
-6
-A man in a purple
-wizard outfit
-A Pointillism painting A painting of a man in
-of a woman
+
+--- Page 7 ---
+StableDiffusion Midjourney Textual Inversion DreamBooth —CustomDiffusion _ FastComposer
+
+References (Text only) (Text only) (Fine-tuning) (Fine-tuning) (Fine-tuning) (Inference only)
+
+holding a glass
+
+Aman inthe snow ridinga A
+horse of wine
+
+on the beach
+
+A
+
+in
+
 the style of Van Gogh
-A man on the beach
-A man in the snow
-A woman wearing a
-Santa hat
+
+Apainting of a
+
+‘APointillism painting
+ofa
+
+wearing a
+
+‘Santa hat
+a
+
+A
+
+ina purple
+
+wizard outfit
+
 Figure 6: Comparison of different methods on single subject image generation. For text-only methods (i.e.,
-StableDiffusion and Midjourney), we use scientists' names in the text prompt.
+StableDiffusion and Midjourney), we use scientists’ names in the text prompt.
+
 5 Experiments
+
 5.1 Setup
+
 Dataset Construction. We built a subject-augmented image-text paired dataset based on
 the FFHQ-wild [18] dataset to train our models. First, we use the BLIP-2 model [21]
-blip2-opt-6.7b-coco to generate captions for all images. Next, we employ the Mask2Former
-model [7] mask2former-swin-large-coco-panoptic to generate panoptic segmentation
+blip2-opt-—6.7b-coco to generate captions for all images. Next, we employ the Mask2Former
+model [7] mask2 former—swin-large-coco-panoptic to generate panoptic segmentation
 masks for each image. We then leverage the spaCy [15] library to chunk all noun phrases in the image
 captions and expand numbered plural phrases (e.g., "two women") into singular phrases connected by
-"and" (e.g., "a woman and a woman"). Finally, we use a greedy matching algorithm to match noun
+“and” (e.g., "a woman and a woman"). Finally, we use a greedy matching algorithm to match noun
 phrases with image segments. We do this by considering the product of the image-text similarity
-score by the OpenCLIP model [16] CLIP-ViT-H-14-laion2B-s32B-b79K and the label-text
+score by the OpenCLIP model [16] CLIP-ViT-H-14-laion2B-s32B-b7 9K and the label-text
 similarity score by the Sentence-Transformer [29] model st sb-mpnet-base-v2. We reserve
 1000 images for validation and testing purposes.
-References
-A woman riding a
-horse
-A man holding a glass
-of wine
-Stable Diffusion
-(Text only)
-Midjourney
-(Text only)
-Textual Inversion
-(Fine-tuning)
-DreamBooth
-(Fine-tuning)
-CustomDiffusion
-(Fine-tuning)
-FastComposer
-(Inference only)
+
+--- Page 8 ---
 Table 1: Comparison between our method and baseline approaches on single-subject image generation. StableD-
 iffusion served as the text-only baseline without any subject conditioning.
-Method
-StableDiffusion
-Images
-0
-Identity Preservation ↑ Prompt Consistency ↑ Total Time ↓ Peak Memory↓↓
-3.85%
-26.79%
-2s
-6 GB
-Textual-Inversion
-DreamBooth
-55
-5
-29.26%
-21.91%
-2500 s
-17 GB
-27.27%
-23.91%
-1084 s
-40 GB
-Custom Diffusion
-5
-43.37%
-FastComposer
-1
-51.41%
-23.29%
-24.30%
-789 s
-29 GB
-2 s
-6 GB
-Training Details.
-We start training from the StableDiffusion v1-5 [31] model. To encode the visual
-inputs, we use OpenAI's clip-vit-large-patch14 vision model, which serves as the partner
+
+Method Images | Identity Preservation + Prompt Consistency + Total Time | Peak Memory |
+StableDiffusion 0 3.85% 26.79% 2s 6 GB
+Textual-Inversion 5 29.26% 21.91% 2500 s 17 GB
+DreamBooth 5 27.27% 23.91% 1084s 40 GB
+Custom Diffusion 5 43.37% 23.29% 789 s 29 GB
+FastComposer 1 51.41% 24.30% 2s 6 GB
+
+Training Details. We start training from the StableDiffusion v1-5 [31] model. To encode the visual
+inputs, we use OpenAI’s clip-vit-—large-patch14 vision model, which serves as the partner
 model of the text encoder in SDv1-5. During training, we freeze the text encoder and only train the
 U-Net, the MLP module, and the last two transformer blocks of the vision encoder. We train our
-models for 150k steps on 8 NVIDIA A6000 GPUs, with a constant learning rate of 1e-5 and a batch
+models for 150k steps on 8 NVIDIA A6000 GPUs, with a constant learning rate of le-5 and a batch
 size of 128. We only augment segments whose COCO [22] label is “person” and set a maximum of 4
 reference subjects during training, with each subject having a 10% chance of being dropped. We train
-the model solely on text conditioning with 10% of the samples to maintain the model's capability for
+the model solely on text conditioning with 10% of the samples to maintain the model’s capability for
 text-only generation. To facilitate classifier-free guidance sampling [14], we train the model without
 any conditions on 10% of the instances. During training, we apply the loss only in the subject region
 to half of the training samples to enhance the generation quality in the subject area.
+
 Evaluation Metric We evaluate image generation quality on identity preservation and prompt
 consistency. Identity preservation is determined by detecting faces in the reference and generated
 images using MTCNN [41], and then calculating a pairwise identity similarity using FaceNet [34].
@@ -480,7 +464,9 @@ value among all subjects measures overall identity preservation. We evaluate the
 using the average CLIP-L/14 image-text similarity following textual-inversion [9]. For efficiency
 evaluation, we consider the total time for customization, including fine-tuning (for tuning-based
 methods) and inference. We also measure peak memory usage during the entire procedure.
+
 5.2 Single-Subject Image Generation
+
 Our first evaluation targets the performance of single-subject image generation. Given the lack of
 published baselines in our tuning-free environment, we compare with leading optimization-based
 approaches, including DreamBooth [32], Textual-Inversion [9], and Custom Diffusion [20]. We use
@@ -494,44 +480,28 @@ in the appendix. We utilized five images per subject to fine-tune the optimizati
 given our observation that these methods overfit and simply reproduce the reference image when a
 single reference image is used. In contrast, our model employs a single randomly selected image for
 each subject. Shown in Table 1, FastComposer surpasses all baselines, delivering superior identity
-preservation and prompt consistency. Remarkably, it achieves 300×-1200× speedup and 2.8×
+preservation and prompt consistency. Remarkably, it achieves 300-1200 speedup and 2.8
 reduction in memory usage. Figure 6 shows the qualitative results of single-subject personalization
 comparisons, employing different approaches across an array of prompts. Significantly, our model
 matches the text consistency of text-only methods and exceeds all baseline strategies in terms of
 identity preservation, with only single input and forward passes used.
+
 5.3 Multi-Subject Image Generation
+
 We then consider a more complex setting: multi-object, subject-driven image generation. We examine
 the quality of multi-subject generation by using all possible combinations (105 pairs in total) formed
 from 15 subjects described in Sec. 5.2, allocating 21 prompts to each pair for assessment. Table 2
-8
+
+--- Page 9 ---
 Table 2: Comparison between our method and baseline approaches on multiple-subject Image generation.
 StableDiffusion served as the text-only baseline without any subject conditioning.
-Method
-StableDiffusion
-Images
-0
-Identity Preservation ↑ Prompt Consistency ↑ Total Time ↓ Peak Memory↓↓
-1.88%
-Textual-Inversion
-5
-13.52%
-28.44%
-21.08%
-2 s
-6 GB
-4998 s
-17 GB
-Custom Diffusion 5
-5.37%
-25.84%
-789 s
-29 GB
-FastComposer
-1
-43.11%
-24.25%
-2 s
-6 GB
+
+Method Images | Identity Preservation + Prompt Consistency + Total Time | Peak Memory |
+StableDiffusion 0 1.88% 28.44% 2s 6 GB
+Textual-Inversion 5 13.52% 21.08% 4998 s 17 GB
+Custom Diffusion 5 5.37% 25.84% 789 s 29 GB
+FastComposer 1 43.11% 24.25% 2s 6 GB
+
 shows a quantitative analysis contrasting FastComposer with the baseline methods. Optimization-
 based methods [9, 20, 32] frequently falter in maintaining identity preservation, often generating
 generic images or images that blend identities among different reference subjects. FastComposer, on
@@ -539,40 +509,42 @@ the other hand, preserves the unique features of different subjects, yielding a 
 identity preservation score. Furthermore, our prompt consistency is on par with tuning-based
 approaches [9, 20]. Qualitative comparisons are shown in Figure 1. More visual examples for
 three-subject images are shown in Figure 7.
-"A woman and a woman and a
-woman having dinner together"
-"A man and a man and a man
-having dinner together"
+
 Table 3: Ablation studies on the cross-attention localization
 supervision. We compare with the model trained in the same
 setting without cross-attention localization.
-Method
-Identity Pres. ↑ Prompt Cons. ↑
+
+“Awoman anda woman anda “A man and aman anda man
+woman having dinner together” having dinner together”
+
+Method Identity Pres. ¢ Prompt Cons. ¢
+w/o Loc. 37.66% 25.03 %
+w/ Loc. (Ours) 43.11% 24.25%
+
 Figure 7: Generating images with three subjects.
-5.4
-Ablation Study
-w/o Loc.
-w/Loc. (Ours)
-37.66%
-43.11%
-25.03%
-24.25%
+
+5.4 Ablation Study
+
 Delayed Subject Conditioning. Figure 5 shows the impact of varying the ratio of timesteps devoted
 to subject conditioning, a hyperparameter in our delayed subject conditioning approach. As this ratio
 increases, the model improves in identity preservation but loses editability. A ratio between 0.6 to 0.8
 achieves a favorable balance on the tradeoff curve.
+
 Cross-Attention Localization Loss. Table 3 presents the ablation studies on our proposed cross-
 attention localization loss. The baseline is trained in the same setting but excludes the localization
 loss. Our method demonstrates a substantial enhancement of the identity preservation score. Figure 4
 shows the qualitative comparisons. Incorporating the localization loss allows the model to focus on
 particular reference subjects, thereby avoiding identity blending.
+
 6 Discussion and Conclusion
+
 We propose FastComposer, a tuning-free method for personalized, multi-subject text-to-image
 generation. We achieve tuning-free subject-driven image generation by using a pre-trained vision
 encoder, making this process efficient and accessible across various platforms. FastComposer
 effectively tackles the identity blending issue in multi-subject generation by supervising cross-
 attention maps with segmentation masks during training. We also propose a novel delayed subject
 conditioning technique to balance the identity preservation and the flexibility of image editability.
+
 Limitations. First, the current training set is FFHQ [18] which is small and primarily contains
 headshots of human faces. It also has a long-tailed distribution for the number of people, thus
 limiting our ability to generate images with more than three subjects. Utilizing a more diverse dataset
@@ -580,116 +552,210 @@ will enable FastComposer to generate a broader range of actions and scenarios, t
 its versatility and applicability. Second, our work is primarily human-centric due to a scarcity of
 large-scale, multi-subject datasets featuring other subjects like animals. We believe that broadening
 our dataset to incorporate multi-subject imagery of other categories will significantly enrich our
-9
-model's capabilities. Finally, our model, built on the foundation of Stable Diffusion and FFHQ, also
+
+--- Page 10 ---
+model’s capabilities. Finally, our model, built on the foundation of Stable Diffusion and FFHQ, also
 inherits their biases.
+
 Acknowledgements
+
 This work is supported by MIT AI Hardware Program, NVIDIA Academic Partnership Award,
 MIT-IBM Watson AI Lab, Amazon and MIT Science Hub, Microsoft Turing Academic Program,
-Singapore DSTA under DST000ECI20300823 (New Representations for Vision), NSF grant 2105819
+Singapore DSTA under DSTOOOECI20300823 (New Representations for Vision), NSF grant 2105819
 and NSF CAREER Award 1943349.
+
 10
-10
+
+--- Page 11 ---
 References
-[1] Omri Avrahami, Thomas Hayes, Oran Gafni, Sonal Gupta, Yaniv Taigman, Devi Parikh, Dani Lischinski,
+
+20
+
+Omri Avrahami, Thomas Hayes, Oran Gafni, Sonal Gupta, Yaniv Taigman, Devi Parikh, Dani Lischinski,
 Ohad Fried, and Xi Yin. Spatext: Spatio-textual representation for controllable image generation. CVPR,
 2023. 3
-[2] Daniel Bolya, Cheng-Yang Fu, Xiaoliang Dai, Peizhao Zhang, Christoph Feichtenhofer, and Judy Hoffman.
+
+Daniel Bolya, Cheng- Yang Fu, Xiaoliang Dai, Peizhao Zhang, Christoph Feichtenhofer, and Judy Hoffman.
 Token merging: Your ViT but faster. In International Conference on Learning Representations, 2023. 2
-[3] Arantxa Casanova, Marlene Careil, Jakob Verbeek, Michal Drozdzal, and Adriana Romero Soriano.
+
+Arantxa Casanova, Marlene Careil, Jakob Verbeek, Michal Drozdzal, and Adriana Romero Soriano.
 Instance-conditioned gan. Advances in Neural Information Processing Systems, 34:27517-27529, 2021. 1
-[4] Huiwen Chang, Han Zhang, Jarred Barber, AJ Maschinot, Jose Lezama, Lu Jiang, Ming-Hsuan Yang,
+
+Huiwen Chang, Han Zhang, Jarred Barber, AJ Maschinot, Jose Lezama, Lu Jiang, Ming-Hsuan Yang,
 Kevin Murphy, William T Freeman, Michael Rubinstein, et al. Muse: Text-to-image generation via masked
-generative transformers. arXiv preprint arXiv:2301.00704, 2023. 1
-[5] Hila Chefer, Yuval Alaluf, Yael Vinker, Lior Wolf, and Daniel Cohen-Or. Attend-and-excite: Attention-
+generative transformers. arXiv preprint arXiv:2301.00704, 2023. |
+
+Hila Chefer, Yuval Alaluf, Yael Vinker, Lior Wolf, and Daniel Cohen-Or. Attend-and-excite: Attention-
 based semantic guidance for text-to-image diffusion models. Siggraph, 2023. 6
-[6] Tianqi Chen, Bing Xu, Chiyuan Zhang, and Carlos Guestrin. Training deep nets with sublinear memory
+
+Tianqi Chen, Bing Xu, Chiyuan Zhang, and Carlos Guestrin. Training deep nets with sublinear memory
 cost, 2016. 1
-[7] Bowen Cheng, Ishan Misra, Alexander G Schwing, Alexander Kirillov, and Rohit Girdhar. Masked-
+
+Bowen Cheng, Ishan Misra, Alexander G Schwing, Alexander Kirillov, and Rohit Girdhar. Masked-
 attention mask transformer for universal image segmentation. In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 1290–1299, 2022. 2, 7
-[8] Ming Ding, Zhuoyi Yang, Wenyi Hong, Wendi Zheng, Chang Zhou, Da Yin, Junyang Lin, Xu Zou, Zhou
+on Computer Vision and Pattern Recognition, pages 1290-1299, 2022. 2, 7
+
+Ming Ding, Zhuoyi Yang, Wenyi Hong, Wendi Zheng, Chang Zhou, Da Yin, Junyang Lin, Xu Zou, Zhou
 Shao, Hongxia Yang, et al. Cogview: Mastering text-to-image generation via transformers. Advances in
-Neural Information Processing Systems, 34:19822–19835, 2021. 1
-[9] Rinon Gal, Yuval Alaluf, Yuval Atzmon, Or Patashnik, Amit H Bermano, Gal Chechik, and Daniel
+Neural Information Processing Systems, 34:19822-19835, 2021. 1
+
+Rinon Gal, Yuval Alaluf, Yuval Atzmon, Or Patashnik, Amit H Bermano, Gal Chechik, and Daniel
 Cohen-Or. An image is worth one word: Personalizing text-to-image generation using textual inversion.
 ICLR, 2023. 1, 3, 8, 9
-[10] Rinon Gal, Moab Arar, Yuval Atzmon, Amit H Bermano, Gal Chechik, and Daniel Cohen-Or. Designing
+
+Rinon Gal, Moab Arar, Yuval Atzmon, Amit H Bermano, Gal Chechik, and Daniel Cohen-Or. Designing
 an encoder for fast personalization of text-to-image models. Siggraph, 2023. 3, 6
-[11] Song Han, Huizi Mao, and William J Dally. Deep compression: Compressing deep neural networks with
-pruning, trained quantization and huffman coding. ICLR, 2016. 2
-[12] Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman, Yael Pritch, and Daniel Cohen-Or. Prompt-to-
-prompt image editing with cross attention control. ICLR, 2023. 5,6
-[13] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. Advances in Neural
-Information Processing Systems, 33:6840-6851, 2020. 1
-[14] Jonathan Ho and Tim Salimans. Classifier-free diffusion guidance. arXiv preprint arXiv:2207.12598, 2022.
+
+Song Han, Huizi Mao, and William J Dally. Deep compression: Compressing deep neural networks with
+pruning, trained quantization and huffman coding. JCLR, 2016. 2
+
+Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman, Yael Pritch, and Daniel Cohen-Or. Prompt-to-
+prompt image editing with cross attention control. JCLR, 2023. 5, 6
+
+Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. Advances in Neural
+Information Processing Systems, 33:6840-685 1, 2020. 1
+
+Jonathan Ho and Tim Salimans. Classifier-free diffusion guidance. arXiv preprint arXiv:2207.12598, 2022.
 8
-[15] Matthew Honnibal and Ines Montani. spaCy 2: Natural language understanding with Bloom embeddings,
+
+Matthew Honnibal and Ines Montani. spaCy 2: Natural language understanding with Bloom embeddings,
 convolutional neural networks and incremental parsing. To appear, 2017. 7
-[16] Gabriel Ilharco, Mitchell Wortsman, Ross Wightman, Cade Gordon, Nicholas Carlini, Rohan Taori, Achal
+
+Gabriel Ilharco, Mitchell Wortsman, Ross Wightman, Cade Gordon, Nicholas Carlini, Rohan Taori, Achal
 Dave, Vaishaal Shankar, Hongseok Namkoong, John Miller, Hannaneh Hajishirzi, Ali Farhadi, and Ludwig
 Schmidt. Openclip, July 2021. 7
-[17] Minguk Kang, Jun-Yan Zhu, Richard Zhang, Jaesik Park, Eli Shechtman, Sylvain Paris, and Taesung Park.
+
+Minguk Kang, Jun-Yan Zhu, Richard Zhang, Jaesik Park, Eli Shechtman, Sylvain Paris, and Taesung Park.
 Scaling up gans for text-to-image synthesis. CVPR, 2023. 1
-[18] Tero Karras, Samuli Laine, and Timo Aila. A style-based generator architecture for generative adversarial
+
+Tero Karras, Samuli Laine, and Timo Aila. A style-based generator architecture for generative adversarial
 networks. In Proceedings of the IEEE/CVF conference on computer vision and pattern recognition, pages
-4401-4410, 2019. 6, 7, 9
-[19] Yuval Kirstain, Omer Levy, and Adam Polyak. X&fuse: Fusing visual information in text-to-image
+4401-4410, 2019. 6, 7,9
+
+Yuval Kirstain, Omer Levy, and Adam Polyak. X&fuse: Fusing visual information in text-to-image
 generation. arXiv preprint arXiv:2303.01000, 2023. 3
-[20] Nupur Kumari, Bingliang Zhang, Richard Zhang, Eli Shechtman, and Jun-Yan Zhu. Multi-concept
-customization of text-to-image diffusion. CVPR, 2023. 1, 3, 8, 9
+
+Nupur Kumari, Bingliang Zhang, Richard Zhang, Eli Shechtman, and Jun-Yan Zhu. Multi-concept
+customization of text-to-image diffusion. CVPR, 2023. 1, 3, 8,9
+
 11
-[21] Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-2: Bootstrapping language-image pre-training
+
+--- Page 12 ---
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+41
+
+Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-2: Bootstrapping language-image pre-training
 with frozen image encoders and large language models. arXiv preprint arXiv:2301.12597, 2023. 7
-[22] Tsung-Yi Lin, Michael Maire, Serge Belongie, Lubomir Bourdev, Ross Girshick, James Hays, Pietro
-Perona, Deva Ramanan, C. Lawrence Zitnick, and Piotr Dollár. Microsoft coco: Common objects in
+
+Tsung-Yi Lin, Michael Maire, Serge Belongie, Lubomir Bourdev, Ross Girshick, James Hays, Pietro
+Perona, Deva Ramanan, C. Lawrence Zitnick, and Piotr Dollar. Microsoft coco: Common objects in
 context, 2014. 8
-[23] Ziwei Liu, Ping Luo, Xiaogang Wang, and Xiaoou Tang. Deep learning face attributes in the wild. In
+
+Ziwei Liu, Ping Luo, Xiaogang Wang, and Xiaoou Tang. Deep learning face attributes in the wild. In
 Proceedings of the IEEE international conference on computer vision, pages 3730-3738, 2015. 8
-[24] Yiyang Ma, Huan Yang, Wenjing Wang, Jianlong Fu, and Jiaying Liu. Unified multi-modal latent diffusion
+
+Yiyang Ma, Huan Yang, Wenjing Wang, Jianlong Fu, and Jiaying Liu. Unified multi-modal latent diffusion
 for joint subject and text conditional image generation. arXiv preprint arXiv:2303.09319, 2023. 3
-[25] Yotam Nitzan, Kfir Aberman, Qiurui He, Orly Liba, Michal Yarom, Yossi Gandelsman, Inbar Mosseri, Yael
+
+Yotam Nitzan, Kfir Aberman, Qiurui He, Orly Liba, Michal Yarom, Yossi Gandelsman, Inbar Mosseri, Yael
 Pritch, and Daniel Cohen-Or. Mystyle: A personalized generative prior. ACM Transactions on Graphics
 (TOG), 41(6):1-10, 2022. 1
-[26] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish
+
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish
 Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learning transferable visual models from
-natural language supervision. In International conference on machine learning, pages 8748-8763. PMLR,
+natural language supervision. In /nternational conference on machine learning, pages 8748-8763. PMLR,
 2021. 5
-[27] Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and Mark Chen. Hierarchical text-conditional
-image generation with clip latents. arXiv preprint arXiv:2204.06125, 2022. 1
-[28] Aditya Ramesh, Mikhail Pavlov, Gabriel Goh, Scott Gray, Chelsea Voss, Alec Radford, Mark Chen, and
+
+Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and Mark Chen. Hierarchical text-conditional
+image generation with clip latents. arXiv preprint arXiv:2204.06125, 2022. |
+
+Aditya Ramesh, Mikhail Pavlov, Gabriel Goh, Scott Gray, Chelsea Voss, Alec Radford, Mark Chen, and
 Ilya Sutskever. Zero-shot text-to-image generation. In International Conference on Machine Learning,
 pages 8821-8831. PMLR, 2021. 1
-[29] Nils Reimers and Iryna Gurevych. Sentence-bert: Sentence embeddings using siamese bert-networks.
+
+Nils Reimers and Iryna Gurevych. Sentence-bert: Sentence embeddings using siamese bert-networks.
 EMNLP, 2019. 5,7
-[30] Daniel Roich, Ron Mokady, Amit H Bermano, and Daniel Cohen-Or. Pivotal tuning for latent-based
-editing of real images. ACM Transactions on Graphics (TOG), 42(1):1–13, 2022. 3, 6
-[31] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. High-resolution
+
+Daniel Roich, Ron Mokady, Amit H Bermano, and Daniel Cohen-Or. Pivotal tuning for latent-based
+editing of real images. ACM Transactions on Graphics (TOG), 42(1):1-13, 2022. 3, 6
+
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bj6rm Ommer. High-resolution
 image synthesis with latent diffusion models. In Proceedings of the IEEE/CVF Conference on Computer
-Vision and Pattern Recognition, pages 10684–10695, 2022. 1, 8
-[32] Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch, Michael Rubinstein, and Kfir Aberman. Dream-
-booth: Fine tuning text-to-image diffusion models for subject-driven generation. CVPR, 2023. 1, 3, 8,
+Vision and Pattern Recognition, pages 10684-10695, 2022. 1, 8
+
+Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch, Michael Rubinstein, and Kfir Aberman. Dream-
+ooth: Fine tuning text-to-image diffusion models for subject-driven generation. CVPR, 2023. 1, 3, 8,
 9
-[33] Vishnu Sarukkai, Linden Li, Arden Ma, Christopher Ré, and Kayvon Fatahalian. Collage diffusion. arXiv
+
+Vishnu Sarukkai, Linden Li, Arden Ma, Christopher Ré, and Kayvon Fatahalian. Collage diffusion. arXiv
 preprint arXiv:2303.00262, 2023. 3
-[34] Florian Schroff, Dmitry Kalenichenko, and James Philbin. Facenet: A unified embedding for face
+
+Florian Schroff, Dmitry Kalenichenko, and James Philbin. Facenet: A unified embedding for face
 recognition and clustering. In Proceedings of the IEEE conference on computer vision and pattern
 recognition, pages 815-823, 2015. 8
-[35] Jing Shi, Wei Xiong, Zhe Lin, and Hyun Joon Jung. Instantbooth: Personalized text-to-image generation
+
+ing Shi, Wei Xiong, Zhe Lin, and Hyun Joon Jung. Instantbooth: Personalized text-to-image generation
 without test-time finetuning. arXiv preprint arXiv:2304.03411, 2023. 3
-[36] Jascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan, and Surya Ganguli. Deep unsupervised
-learning using nonequilibrium thermodynamics. In International Conference on Machine Learning, pages
-2256-2265. PMLR, 2015. 1
-[37] Yang Song, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole.
-Score-based generative modeling through stochastic differential equations. ICLR, 2021. 1
-[38] Patrick von Platen, Suraj Patil, Anton Lozhkov, Pedro Cuenca, Nathan Lambert, Kashif Rasul, Mishig
-Davaadorj, and Thomas Wolf. Diffusers: State-of-the-art diffusion models. https://github.com/
-hugging face/diffusers, 2022. 8
-[39] Yuxiang Wei, Yabo Zhang, Zhilong Ji, Jinfeng Bai, Lei Zhang, and Wangmeng Zuo. Elite: Encod-
+
+ascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan, and Surya Ganguli. Deep unsupervised
+earning using nonequilibrium thermodynamics. In International Conference on Machine Learning, pages
+2256-2265. PMLR, 2015. |
+
+Yang Song, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and Ben Poole.
+Score-based generative modeling through stochastic differential equations. JCLR, 2021. 1
+
+Patrick von Platen, Suraj Patil, Anton Lozhkov, Pedro Cuenca, Nathan Lambert, Kashif Rasul, Mishig
+Davaadorj, and Thomas Wolf. Diffusers: State-of-the-art diffusion models. https: //github.com/
+huggingface/diffusers, 2022. 8
+
+Yuxiang Wei, Yabo Zhang, Zhilong Ji, Jinfeng Bai, Lei Zhang, and Wangmeng Zuo. Elite: Encod-
 ing visual concepts into textual embeddings for customized text-to-image generation. arXiv preprint
 arXiv:2302.13848, 2023. 3
-[40] Guangxuan Xiao, Ji Lin, Mickael Seznec, Julien Demouth, and Song Han. Smoothquant: Accurate and
+
+Guangxuan Xiao, Ji Lin, Mickael Seznec, Julien Demouth, and Song Han. Smoothquant: Accurate and
 efficient post-training quantization for large language models. arXiv preprint arXiv:2211.10438, 2022. 2
-[41] Kaipeng Zhang, Zhanpeng Zhang, Zhifeng Li, and Yu Qiao. Joint face detection and alignment using
-multitask cascaded convolutional networks. IEEE signal processing letters, 23(10):1499–1503, 2016. 8
+
+Kaipeng Zhang, Zhanpeng Zhang, Zhifeng Li, and Yu Qiao. Joint face detection and alignment using
+multitask cascaded convolutional networks. JEEE signal processing letters, 23(10):1499-1503, 2016. 8
+
 12
+

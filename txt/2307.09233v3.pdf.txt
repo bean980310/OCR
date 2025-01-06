@@ -1,11 +1,17 @@
-arXiv:2307.09233v3 [cs.CV] 1 Jul 2024
+--- Page 1 ---
+arX1v:2307.09233v3 [cs.CV] 1 Jul 2024
+
 Distilling Knowledge from Text-to-Image Generative Models
 Improves Visio-Linguistic Reasoning in CLIP
-Samyadeep Basu¹, *, Shell Xu Hu², Maziar Sanjabi³, Daniela Massiceti+,
-Soheil Feizi¹
-¹University of Maryland, College Park, 2Samsung AI, ³Meta AI, 4 Microsoft Research
+
+Samyadeep Basu! “, Shell Xu Hu”, Maziar Sanjabi*, Daniela Massiceti*,
+Soheil Feizi'
+‘University of Maryland, College Park, "Samsung AI, *Meta AI, + Microsoft Research
+
 Correspondence: sbasu12@umd.edu
+
 Abstract
+
 Image-text contrastive models like CLIP have
 wide applications in zero-shot classification,
 image-text retrieval, and transfer learning.
@@ -15,7 +21,7 @@ object-relationships) where their performance
 is no better than random chance. To address
 this, we introduce SDS-CLIP, a lightweight
 and sample-efficient distillation method to en-
-hance CLIP's compositional visio-linguistic
+hance CLIP’s compositional visio-linguistic
 reasoning. Our approach fine-tunes CLIP us-
 ing a distillation objective borrowed from large
 text-to-image generative models like Stable-
@@ -30,7 +36,9 @@ well-designed distillation objectives from gen-
 erative models to enhance contrastive image-
 text models with improved visio-linguistic rea-
 soning capabilities.
+
 1 Introduction
+
 In recent years, multimodal models like CLIP (Rad-
 ford et al., 2021a) have excelled in tasks such as
 zero-shot classification, image-text retrieval, and
@@ -38,21 +46,23 @@ image-captioning (Mu et al., 2021; Yu et al., 2022;
 Li et al., 2022; Mokady et al., 2021). These mod-
 els are also crucial components in various state-of-
 the-art pipelines for tasks like segmentation and
-object detection (Wang et al., 2021; Lüddecke
+object detection (Wang et al., 2021; Liiddecke
 and Ecker, 2021; Minderer et al., 2022; Zhong
 et al., 2021). However, they struggle with visio-
 linguistic reasoning tasks, such as determining
 the spatial relationships between objects in an
 image (Yuksekgonul et al., 2023; Huang et al.,
-2023). Notably, CLIP's performance on the chal-
+2023). Notably, CLIP’s performance on the chal-
 lenging Winoground (Thrush et al., 2022; Diwan
 et al., 2022), a benchmark designed to assess visio-
 linguistic reasoning, is close to random chance.
-This shortcoming is attributed to CLIP's contrastive
+
+This shortcoming is attributed to CLIP’s contrastive
 objective which prioritizes shortcuts for retrieval,
 and thus impacts its ability to understand fine-
 grained object details and their positions (Diwan
 et al., 2022; Thrush et al., 2022).
+
 In contrast, text-to-image models like Stable
 Diffusion (Rombach et al., 2021) excel in visio-
 linguistic tasks, likely due to their text condition-
@@ -66,6 +76,7 @@ Similar results have been shown for other text-to-
 image models, including Imagen (Clark and Jaini,
 2023), with almost all of these methods outperform-
 ing CLIP variants on the same tasks.
+
 While these works have shown the potential of
 using generative text-to-image models for visio-
 linguistic tasks, it remains computationally inten-
@@ -83,34 +94,81 @@ coders. A promising research direction, therefore,
 lies in finding methods that combine the strong
 visio-linguistic capabilities of text-to-image mod-
 els with the rapid inference of CLIP.
+
 To this end, we introduce SDS-CLIP, a
 lightweight and sample-efficient fine-tuning ap-
 proach for CLIP which distills knowledge from Sta-
-ble Diffusion, and enhances CLIP's visio-reasoning
+ble Diffusion, and enhances CLIP’s visio-reasoning
 capabilities. Specifically, we add a regularization
-term to CLIP's standard contrastive loss based
-Time (Log Minutes)
+term to CLIP’s standard contrastive loss based
+
+--- Page 2 ---
 6.0-
 Diffusion Score
-5.5-
-5.0
-4.5
-4.0
-3.5-
-VIT-L-336 VIT-L/14
-RN-50
-VIT-B/32
-VIT-B/16
-3.0 X
-RN-50 (Gelu)
-0.24
-0.26
-0.28
-Figure 1:
-0.30
+
+w
+w
+
+w
+°
+
+Time (Log Minutes)
+nes
+ne
+
+35-
+ViT-L-336 ViT-L/14
+
+vire/32
+pres BD) LTO) [et
+3.0- 50 (Gelu)
+0.24 0.26 0.28 0.30 0.32 0.34
+
 Winoground Scores
-caption c* from a set of captions C
-=
+
+Figure 1: CLIP variants underperform on
+Winoground, a visio-linguistic reasoning benchmark,
+compared to Diffusion Score from Stable Diffusion.
+The diffusion score is computed from Stable Diffusion’s
+loss function. Note that Diffusion Score takes 18x
+more time than CLIP variants for inference (using 50
+samplings during diffusion score computation).
+
+on score-distillation sampling (SDS) (Poole et al.,
+2022). This regularization encourages CLIP’s em-
+beddings to be aligned with the denoising diffusion
+loss from a text-to-image model. By fine-tuning
+CLIP with this regularized objective on a small
+paired image-text dataset, specifically 118k image-
+text pairs from MS-COCO, we demonstrate an 1.5-
+7% performance gain compared to vanilla CLIP
+on Winoground and ARO, two highly challenging
+visio-linguistic reasoning benchmarks. Notably,
+this is achieved by only updating CLIP’s Layer-
+Norm parameters. Furthermore, we show that SDS-
+CLIP’s zero-shot performance is not impacted on a
+wide range of downstream datasets.
+In summary, our contributions are as follows:
+
+¢ We introduce SDS-CLIP, a novel sample-
+efficient and parameter-efficient fine-tuning
+method that integrates a distillation-based reg-
+ularization term from text-to-image models.
+
+¢ We empirically validate our approach on chal-
+lenging benchmarks and demonstrate an im-
+provement in CLIP’s visio-linguistic reason-
+ing, without harming its zero-shot capabilities.
+
+2 Denoising Diffusion Score for
+Visio-Linguistic Reasoning
+
+The Winoground benchmark establishes a challeng-
+ing image-text matching task to measure a model’s
+visio-linugistic reasoning abilities: given an im-
+age x, the model must match it with the correct
+
+caption c* from a set of captions C = {cj}"),
 where all caption contains the same words but each
 describes a different spatial arrangement of the
 objects, with only one being correct. Concurrent
@@ -121,59 +179,21 @@ text-to-image generative models to perform such
 an image-matching task. This can be formalized as
 follows: for an image x and caption c, the denois-
 ing diffusion score, denoted by d(x, c), is defined
-0.32
-0.34
 as:
-CLIP variants underperform on
-Winoground, a visio-linguistic reasoning benchmark,
-compared to Diffusion Score from Stable Diffusion.
-The diffusion score is computed from Stable Diffusion's
-loss function. Note that Diffusion Score takes 18×
-more time than CLIP variants for inference (using 50
-samplings during diffusion score computation).
-on score-distillation sampling (SDS) (Poole et al.,
-2022). This regularization encourages CLIP's em-
-beddings to be aligned with the denoising diffusion
-loss from a text-to-image model. By fine-tuning
-CLIP with this regularized objective on a small
-paired image-text dataset, specifically 118k image-
-text pairs from MS-COCO, we demonstrate an 1.5-
-7% performance gain compared to vanilla CLIP
-on Winoground and ARO, two highly challenging
-visio-linguistic reasoning benchmarks. Notably,
-this is achieved by only updating CLIP's Layer-
-Norm parameters. Furthermore, we show that SDS-
-CLIP's zero-shot performance is not impacted on a
-wide
-range of downstream datasets.
-In summary, our contributions are as follows:
-• We introduce SDS-CLIP, a novel sample-
-efficient and parameter-efficient fine-tuning
-method that integrates a distillation-based reg-
-ularization term from text-to-image models.
-• We empirically validate our approach on chal-
-lenging benchmarks and demonstrate an im-
-provement in CLIP's visio-linguistic reason-
-ing, without harming its zero-shot capabilities.
-2 Denoising Diffusion Score for
-Visio-Linguistic Reasoning
-The Winoground benchmark establishes a challeng-
-ing image-text matching task to measure a model's
-visio-linugistic reasoning abilities: given an im-
-age x, the model must match it with the correct
-d(x, c) = Et~T,e~N(0,1)|[||€0(va(x), t, c) — e||²]
--
-(1)
+
+A(x, 0) = Epvrenw(o,nllleo(va(e), t, 6) ~ €ll?]
+q)
 This denoising diffusion score can then be used to
 select a correct caption c* from C as:
-C*
-=
-arg min Et~T,ε~N(0,1)|||€0 (va(x), t, c)—e||²]
-CEC
+
+c* = argmin
+
+mn tr~TenN(0,D lI€o(Va(2), t, c)—e||"]
+
 (2)
-where t is the sampled time-step, ε is the noise
-prediction UNet, va is an encoder (e.g., VQ-VAE)
-which maps the image x to a latent code and € is the
+where t is the sampled time-step, eg is the noise
+prediction UNet, vq is an encoder (e.g., VQ-VAE)
+which maps the image ~ to a latent code and ¢ is the
 sampled Gaussian noise. Previous works (Krojer
 et al., 2023) have demonstrated that by adopting
 this approach, text-to-image models performing
@@ -182,13 +202,15 @@ like Winoground, outperforming contrastive mod-
 els like CLIP by a significant margin (see Fig 1).
 For ARO, we obtain an accuracy of 0.63 with the
 diffusion score which is better than CLIP models.
+
 3 SDS-CLIP: Our Method
+
 The core idea of our approach is to regularize the
 contrastive objective in CLIP with the denoising
 diffusion score from Stable Diffusion (see Eq.(1)).
 Our method builds on the recent work of (Poole
 et al., 2022) which maps the output of a 3D NeRF
-model into the input space of Stable Diffusion's
+model into the input space of Stable Diffusion’s
 UNet and optimizes its parameteres with the de-
 noising diffusion loss, also known as the score-
 distillation sampling (SDS). In a similar vein, we
@@ -199,294 +221,155 @@ to-image model and the student is CLIP. As a re-
 sult, in inference, CLIP can benefit from the visio-
 linguistic reasoning capabilities that are already
 learned by text-to-image diffusion models.
-Formally, we map the output of CLIP's image en-
-coder to the input space of Stable Diffusion's UNet.
+Formally, we map the output of CLIP’s image en-
+coder to the input space of Stable Diffusion’s UNet.
 Specifically, we pass a given image x through
-Model
-VIT-B/16(CLIP)
-Wino-Overall Object Relation
-Both
-1 Main Pred
-2 Main Preds
-ARO-Overall
-ARO-Relation ARO-Attribution
-0.24
-0.28
-0.18
-0.57
-0.29
-0.11
-0.57
-0.52
-0.62
-FT with LCLIP
-0.23
-0.27
-0.19
-0.56
-0.30
-0.11
-0.56
-0.51
-0.62
-FT with LCLIP + LSDS
-0.31
-0.35
-0.25
-0.69
-0.36
-0.16
-0.58
-0.535
-0.63
-ViT-B/32(CLIP)
-0.30
-0.35
-0.22
-0.80
-0.34
-0.18
-0.55
-0.50
-0.61
-FT with LCLIP
-0.28
-0.31
-0.20
-0.76
-0.31
-0.16
-0.55
-0.50
-0.60
-FT with LCLIP + LSDS
-0.32
-0.38
-0.23
-0.69
-0.36
-0.20
-0.575
-0.53
-0.62
-ViT-L/14(CLIP)
-0.28
-0.27
-0.25
-0.57
-0.29
-0.24
-0.57
-0.53
-0.61
-FT with LCLIP
-0.26
-0.27
-0.25
-0.56
-0.30
-0.23
-0.57
-0.53
-0.61
-FT with LCLIP + LSDS
-0.295
-0.32
-0.25
-0.53
-0.32
-0.18
-0.595
-0.55
-0.64
-VIT-L/14-336(CLIP)
-0.27
-0.32
-0.21
-0.57
-0.30
-0.19
-0.57
-0.53
-0.61
-FT with LCLIP
-0.23
-0.28
-0.19
-0.53
-0.26
-0.17
-0.57
-0.53
-0.61
-FT with LCLIP + LSDS
-0.285
-0.34
-0.23
-0.56
-0.31
-0.21
-0.585
-0.54
-0.63
-ResNet-50(CLIP)
-0.25
-0.29
-0.19
-0.5
-0.27
-0.18
-0.58
-0.53
-0.63
-FT with LCLIP
-0.24
-0.27
-0.20
-0.49
-0.27
-0.16
-0.575
-0.52
-0.63
-FT with LCLIP + LSDS
-0.265
-0.30
-0.21
-0.42
-0.29
-0.19
-0.60
-0.55
-0.66
-where O, Y, w are the learnable parameters of
-CLIP's image encoder, text encoder and the linear
-map
-between CLIP and Stable Diffusion's UNet.
+
+--- Page 3 ---
+Model Wino-Overall Object Relation Both 1 Main Pred 2 Main Preds | ARO-Overall ARO-Relation ARO-Attribution
+ViT-B/16(CLIP) 0.24 0.28 018 0.57 0.29 Ou 0.57 0.52 0.62
+FT with Lerrp 0.23 0.27 «0.19 0.56 0.30 Ou 0.56 0.51 0.62
+FT with Lerrp + Lsps 0.31 035 0.25 = (0.69 0.36 0.16 0.58 0.535 0.63
+ViT-B/32(CLIP) 0.30 0.35 0.22 0.80 0.34 0.18 0.55 0.50 0.61
+FT with Lorre 0.28 0.31 0.20 0.76 0.31 0.16 0.55 0.50 0.60
+FT with Lexrp + Lsps 0.32 0.38 = 0.23 0.69 0.36 0.20 0.575 0.53 0.62
+ViT-L/14(CLIP) 0.28 0.27 0.25 0.57 0.29 0.24 0.57 0.53 0.61
+FT with Lori 0.26 0.27 «0.25 0.56 0.30 0.23 0.57 0.53 0.61
+FT with Loxrp + Lsps 0.295 0.32 0.25 0.53 0.32 0.18 0.595 0.55 0.64
+ViT-L/14-336(CLIP) 0.27 0.32 0.21 © 0.57 0.30 0.19 0.57 0.53 0.61
+FT with Lerrp 0.23 0.28 019 0.53 0.26 0.17 0.57 0.53 0.61
+FT with Loxrp + Lsps 0.285 034 © 0.23 0.56 0.31 0.21 0.585 0.54 0.63
+ResNet-50(CLIP) 0.25 0.29 «019 (05 0.27 0.18 0.58 0.53 0.63
+FT with Lorre 0.24 0.27 «0.20049 0.27 0.16 0.575 0.52 0.63
+FT with Lexrp + Lsps 0.265 030 © 0.21 © 0.42 0.29 0.19 0.60 0.55 0.66
+
 Table 1: Our fine-tuning method SDS-CLIP improves CLIP performance on the Winoground benchmark by
 1.5% to 7% and upto 3% for the ARO-Relation and Attribution tasks across various CLIP variants. Specifically,
 we find that our method improves on the sub-categories involving object-swap and relational understanding which
-comprise of the majority of the tasks in Winoground. Note that only fine-tuning with image-text pairs from MS-
+comprise of the majority of the tasks in Winoground. Note that on/y fine-tuning with image-text pairs from MS-
 COCO without the distillation loss does not lead to any improvements. OpenCLIP results in Appendix I.
-CLIP's image encoder fo and map its <CLS> em-
-bedding through a linear map hw Є Rdx4×64x64
-into the input space of Stable Diffusion's UNet
-Єg. This can be formalized as ε0 (hw(fø(x)),t,c)
+
+CLIP’s image encoder f, and map its <CLS> em-
+bedding through a linear map h,, € RY4*64%64
+into the input space of Stable Diffusion’s UNet
+eg. This can be formalized as €9(hw(f(x)), t, c)
 where t is the time step and c is the corresponding
 text caption for the given image. We then use this
-term in place of ε0 (va(x), t, c) in Eq. (2) to arrive
-as a denoising diffusion loss LSDS which encour-
+term in place of €9(vq(x), t, c) in Eq. (2) to arrive
+as a denoising diffusion loss Lgps which encour-
 ages image-text binding with feedback from the
 diffusion loss:
-LSDS = Et~T,E~N(0,1) [|| 0 (hw(f(x)), t, c) — e||²
-(3)
-We practically implement this by adding this LSDS
+
+Lsps =
+
+t-TerN(0,1 lIl€o(hw(Fo(@)),#,¢)— ell?
+
+G3)
+We practically implement this by adding this Lg ps
 loss to the original contrastive objective of CLIP
 such that it acts as a regularizer:
-Ltotal = LCLIP+\Lsds
-(4)
-where LCLIP is defined in Appendix C.1 and X is
+
+Liotat = Lorie + ALsps (4)
+where Loyrp is defined in Appendix C.1 and is
 a hyper-parameter that can be set with a grid search.
 We note that there are multiple ways to incorporate
-a diffusion loss into CLIP's objective. We found
+a diffusion loss into CLIP’s objective. We found
 that as an additional loss term led to the best results,
 however, we include the full set of design choices
 we considered in the Appendix.
+
 Similar to differentiable image parameteriza-
 tions (Mordvintsev et al., 2018) where a given func-
 tion is optimized by backpropogation through the
-image generation process, the UNet parameters
+image generation process, the UNet parameters 0
 are kept frozen during the optimization process.
-Specifically, given Ltotal (O, Y, w, 0):
-*, √*, w* = min Ltotal (O, Y, w, 0)
-φ,γ,ω
+Specifically, given Liotai(d, Y, w, 9):
+
 (5)
+
+ox, yx, we = min Liota(d, 7, W, )
+’ Ww
+
+where ¢, y, w are the learnable parameters of
+CLIP’s image encoder, text encoder and the linear
+map between CLIP and Stable Diffusion’s UNet.
+
 4 Experiments
+
 In this section, we empirically validate our pro-
 posed method SDS-CLIP on two types of tasks:
 i) visio-linguistic reasoning using two challenging
 benchmarks (Winoground, ARO) and ii) zero-shot
 image classification using a suite of downstream
 datasets (ImageNet, CIFAR-100, and others). Over-
-all, we show that our method improves CLIP's per-
+all, we show that our method improves CLIP’s per-
 formance significantly on Winoground and some
 key tasks in ARO, while also marginally improving
 downstream zero-shot classification performance.
-4.1
-Experimental Setup
+
+4.1 Experimental Setup
+
 CLIP Models. We consider the following CLIP
 variants in our experiments: (i) CLIP ViT-B/16; (ii)
-CLIP VIT-B/32; (iii) CLIP-ViT-L-14; (iv) CLIP-
+CLIP ViT-B/32; (iii) CLIP-ViT-L-14; (iv) CLIP-
 ViT-L-14 336px; (v) CLIP-ResNet-50.
 Implementation Details. Due to computational
 limit, we fine-tune CLIP from a publicly avail-
 able checkpoint instead of training from scratch.
-Notably, we only fine-tune CLIP's LayerNorm
+Notably, we only fine-tune CLIP’s LayerNorm
 parameters following (Basu et al., 2023) along
-with the linear transformation hw - accounting
-for only ≈ 8M trainable parameters. We fine-
+with the linear transformation h,, — accounting
+for only = 8M trainable parameters. We fine-
 tune these parameters using image-text pairs from
 MSCOCO (Lin et al., 2014). In particular, we
 choose MSCOCO as it is relatively small and less
 noisy than other image-text datasets such as CC-
 12M (Sharma et al., 2018). Both these factors
 make our fine-tuning method extremely sample-
-ImageNet
-STL-10
-CIFAR-100
-MNIST
+
+--- Page 4 ---
 Zero-Shot Results
-CIFAR-10
-Food101
-(a)
-ViT-B/16
-VIT-B/16(CLIP)
-Ours
-PETS
-Flowers
-DTD
-ImageNet
-Aircraft
-STL-10
+
+ciFaR-10
+
+— virejte(cur)
+— bur
+
+unis
+
+(a) ViT-B/16 (6)
+
 Zero-Shot Results
-CIFAR-10
-10
-CIFAR-100
-MNIST
-Food101
-(b)
+
+caFAR-10
+
+Foosio1
+
 ViT-B/32
+
 Zero-Shot Results
-VIT-B/32(CLIP)
-CIFAR-10
-Ours
-PETS
-CIFAR-100
-Flowers
-DTD
-ImageNet
-STL-16
-Aircraft
-VIT-L/14(CLIP)
-Ours
-PETS
-MNIST
-Flowers
-Food101
-(၁)
-ViT-L/14
-DTD
-Aircraft
+
+— vreaacur) = vtnaccury
+= ours = burs!
+
+oa101
+
+(oc) ViT-L/14
+
 Figure 2: Our fine-tuning method does not harm the zero-shot abilities of CLIP. In fact for certain downstream
-datasets (e.g., ImageNet, CIFAR-10, MNIST, Aircraft) – we observe an improvement in the zero-shot performance
-between 1%-8% for ViT-B/16. For other CLIP models, we find no drop in zero-shot performance.
+datasets (e.g., ImageNet, CIFAR-10, MNIST, Aircraft) — we observe an improvement in the zero-shot performance
+between 1% — 8% for ViT-B/16. For other CLIP models, we find no drop in zero-shot performance.
+
 and parameter-efficient.
+
 Baselines. We compare our method with two
 different baselines: (i) pre-trained (vanilla) CLIP
 checkpoints; and (ii) CLIP fine-tuned on MS-
 COCO with the standard contrastive loss without
 the regularization term.
+
 4.2 Results
+
 Winoground. We evaluate SDS-CLIP on the
 challenging visio-linguistic reasoning benchmark,
 Winoground (Thrush et al., 2022). In Table (1),
@@ -501,29 +384,32 @@ for CLIP variants pre-trained on public data, where
 similar improvements are observed. On further in-
 spection of the Winoground sub-categories, we find
 that SDS-CLIP shows consistent improvements
-in "object-swap" and "relation". It is worth not-
-ing that the "both" sub-category, which combines
-both "object-swap" and "relation" tags, makes up
+n “object-swap" and “relation". It is worth not-
+ing that the “both” sub-category, which combines
+both “object-swap" and “relation" tags, makes up
 only 5% of all tasks, thus are potentially not fully
 representative of all scenarios involving both ob-
 ject swaps and relational understanding. We also
-analyse SDS-CLIP's robustness to the number of
+analyse SDS-CLIP’s robustness to the number of
 predicates in captions and find that overall, it en-
 hances performance in tasks where there are both
 one and two predicates.
+
 ARO. The ARO dataset (Yuksekgonul
 et al., 2023) comprises tasks for (i) attribute-
 understanding and (ii) relational-understanding.
 In Table 1, we find that SDS-CLIP enhances
 performance by 1%-3% in the "attribute-binding"
 and "relational understanding" tasks.
-Impact on CLIP's zero-shot performance.
-From Fig 2, we find that SDS-CLIP's zero-shot
+
+Impact on CLIP’s zero-shot performance.
+From Fig 2, we find that SDS-CLIP’s zero-shot
 classification capbilities are not impacted, relative
-to vanilla CLIP. In fact, we find that ViT-B/16's
+to vanilla CLIP. In fact, we find that ViT-B/16’s
 zero-shot performance improves across a range of
 downstream datasets (with up to 8% improvement
 for MNIST).
+
 While Stable-Diffusion is pre-trained on a much
 larger set of image-text pairs than CLIP, in Ap-
 pendix K, we show that the CLIP variants pre-
@@ -532,7 +418,9 @@ In fact, we show that using SDS-CLIP can im-
 prove compositional reasoning of such CLIP vari-
 ants. In Appendix H, we show results with fine-
 tuning on the larger CC-3M (Sharma et al., 2018).
+
 5 Related Works
+
 While CLIP models (Radford et al., 2021a) are
 renowned for their robust zero-shot classifica-
 tion, recent research (Thrush et al., 2022; Di-
@@ -547,16 +435,21 @@ We note that while (Poole et al., 2022) use score-
 distillation sampling for text to 3D generation, ours
 is the first work to adapt the formulation as a regu-
 larizer and improve compositional abilities in CLIP.
+
 6 Conclusion
+
 Our paper introduces SDS-CLIP, a novel data
 and parameter-efficient method that effectively en-
-hances CLIP's visio-linguistic reasoning abilities
+hances CLIP’s visio-linguistic reasoning abilities
 by distilling knowledge from text-to-image models,
 without compromising its zero-shot abilities.
+
+--- Page 5 ---
 7 Limitations
+
 The primary limitation of our method is the inabil-
 ity to use large batch-sizes on moderate size GPUs.
-This is due to the fact that the regularizer LSDS
+This is due to the fact that the regularizer Lg pgs
 requires a full backward pass through the UNet,
 even though its parameters are frozen. We also find
 that while the original diffusion score is good at
@@ -564,11 +457,13 @@ object-understanding, attribute-understanding and
 relational-understanding tasks, it does not perform
 well on ordering tasks from the ARO dataset. For
 this reason, distillation from Stable-Diffusion po-
-tentially may not be effective in improving CLIP's
+tentially may not be effective in improving CLIP’s
 performance on ordering tasks. Similar results are
 also observed in concurrent works such as (Krojer
 et al., 2023).
+
 8 Ethical Considerations
+
 Vision-language models such as CLIP have been
 known for inheriting biases (Agarwal et al., 2021)
 due to their training data. Our work uses a well-
@@ -578,53 +473,67 @@ troduce any additional bias. In fact, our distilla-
 tion method mitigates some of the inherited bias in
 CLIP which earlier did not lead to good reasoning
 capabilities.
+
 References
+
 Sandhini Agarwal, Gretchen Krueger, Jack Clark, Alec
 Radford, Jong Wook Kim, and Miles Brundage. 2021.
 Evaluating CLIP: towards characterization of broader
 capabilities and downstream implications. CoRR,
 abs/2108.02818.
+
 Samyadeep Basu, Daniela Massiceti, Shell Xu Hu, and
 Soheil Feizi. 2023. Strong baselines for parameter
 efficient few-shot fine-tuning.
+
 Huanran Chen, Yinpeng Dong, Zhengyi Wang, X. Yang,
 Chen-Dong Duan, Hang Su, and Jun Zhu. 2023.
 Robust classification via a single diffusion model.
 ArXiv, abs/2305.15241.
+
 Kevin Clark and Priyank Jaini. 2023. Text-to-image
 diffusion models are zero-shot classifiers.
+
 Anuj Diwan, Layne Berry, Eunsol Choi, David Harwath,
 and Kyle Mahowald. 2022. Why is winoground
 hard? investigating failures in visuolinguistic compo-
 sitionality.
+
 Yufeng Huang, Jiji Tang, Zhuo Chen, Rongsheng Zhang,
 Xinfeng Zhang, Weijie Chen, Zeng Zhao, Tangjie Lv,
 Zhipeng Hu, and Wen Zhang. 2023. Structure-clip:
 Enhance multi-modal language representations with
 structure knowledge.
+
 Justin Johnson, Bharath Hariharan, Laurens van der
 Maaten, Li Fei-Fei, C. Lawrence Zitnick, and Ross B.
 Girshick. 2016. CLEVR: A diagnostic dataset for
 compositional language and elementary visual rea-
 soning. CoRR, abs/1612.06890.
+
 Benno Krojer, Elinor Poole-Dayan, Vikram Voleti,
 Christopher Pal, and Siva Reddy. 2023. Are diffusion
 models vision-and-language reasoners?
+
 Alexander C. Li, Mihir Prabhudesai, Shivam Duggal, El-
 lis Brown, and Deepak Pathak. 2023. Your diffusion
 model is secretly a zero-shot classifier.
+
 Junnan Li, Dongxu Li, Caiming Xiong, and Steven C. H.
 Hoi. 2022. BLIP: bootstrapping language-image pre-
 training for unified vision-language understanding
-and generation. CORR, abs/2201.12086.
+and generation. CoRR, abs/2201.12086.
+
 Tsung-Yi Lin, Michael Maire, Serge J. Belongie,
 Lubomir D. Bourdev, Ross B. Girshick, James Hays,
-Pietro Perona, Deva Ramanan, Piotr Dollár, and
+Pietro Perona, Deva Ramanan, Piotr Dollar, and
 C. Lawrence Zitnick. 2014. Microsoft COCO: com-
 mon objects in context. CoRR, abs/1405.0312.
-Timo Lüddecke and Alexander S. Ecker. 2021. Prompt-
-based multi-modal image segmentation. CORR,
+
+Timo Liiddecke and Alexander S. Ecker. 2021. Prompt-
+based multi-modal image segmentation. CoRR,
 abs/2112.10003.
+
 Matthias Minderer, Alexey Gritsenko, Austin Stone,
 Maxim Neumann, Dirk Weissenborn, Alexey Doso-
 vitskiy, Aravindh Mahendran, Anurag Arnab,
@@ -632,75 +541,92 @@ Mostafa Dehghani, Zhuoran Shen, Xiao Wang, Xi-
 aohua Zhai, Thomas Kipf, and Neil Houlsby. 2022.
 Simple open-vocabulary object detection with vision
 transformers.
+
 Ron Mokady, Amir Hertz, and Amit H. Bermano. 2021.
 Clipcap: Clip prefix for image captioning.
+
 Alexander Mordvintsev, Nicola Pezzotti, Lud-
 wig Schubert, and Chris Olah. 2018. Dif-
-ferentiable image parameterizations.
-Https://distill.pub/2018/differentiable-
-till.
+ferentiable image parameterizations. Dis-
+till. Https://distill. pub/2018/differentiable-
 parameterizations.
-ner,
-Dis-
+
 Norman Mu, Alexander Kirillov, David A. Wag-
-and Saining Xie. 2021. SLIP: self-
+ner, and Saining Xie. 2021. SLIP: | self-
 supervision meets language-image pre-training.
-CORR, abs/2112.12750.
+CoRR, abs/2112.12750.
+
 Ben Poole, Ajay Jain, Jonathan T. Barron, and Ben
 Mildenhall. 2022. Dreamfusion: Text-to-3d using 2d
 diffusion.
+
 Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
 Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sas-
 try, Amanda Askell, Pamela Mishkin, Jack Clark,
 Gretchen Krueger, and Ilya Sutskever. 2021a. Learn-
 ing transferable visual models from natural language
 supervision.
+
 Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
 Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sas-
 try, Amanda Askell, Pamela Mishkin, Jack Clark,
+
+--- Page 6 ---
 Gretchen Krueger, and Ilya Sutskever. 2021b. Learn-
 ing transferable visual models from natural language
-supervision. CORR, abs/2103.00020.
+supervision. CoRR, abs/2103.00020.
+
 Robin Rombach, Andreas Blattmann, Dominik Lorenz,
-Patrick Esser, and Björn Ommer. 2021. High-
+Patrick Esser, and Bj6rm Ommer. 2021. High-
 resolution image synthesis with latent diffusion mod-
-els. CORR, abs/2112.10752.
+els. CoRR, abs/2112.10752.
+
 Piyush Sharma, Nan Ding, Sebastian Goodman, and
 Radu Soricut. 2018. Conceptual captions: A cleaned,
 hypernymed, image alt-text dataset for automatic im-
 age captioning. In Proceedings of the 56th Annual
 Meeting of the Association for Computational Lin-
-guistics (Volume 1: Long Papers), pages 1 2556-2565,
+guistics (Volume 1: Long Papers), pages 2556-2565,
 Melbourne, Australia. Association for Computational
 Linguistics.
+
 Tristan Thrush, Ryan Jiang, Max Bartolo, Amanpreet
 Singh, Adina Williams, Douwe Kiela, and Candace
 Ross. 2022. Winoground: Probing vision and lan-
 guage models for visio-linguistic compositionality.
+
 Zhaoqing Wang, Yu Lu, Qiang Li, Xunqiang Tao, Yan-
 dong Guo, Mingming Gong, and Tongliang Liu.
 2021. CRIS: clip-driven referring image segmen-
 tation. CoRR, abs/2111.15174.
+
 Jiarui Xu, Sifei Liu, Arash Vahdat, Wonmin Byeon,
 Xiaolong Wang, and Shalini De Mello. 2023. Open-
 vocabulary panoptic segmentation with text-to-image
 diffusion models.
+
 Jiahui Yu, Zirui Wang, Vijay Vasudevan, Legg Ye-
 ung, Mojtaba Seyedhosseini, and Yonghui Wu. 2022.
 Coca: Contrastive captioners are image-text founda-
 tion models.
+
 Mert Yuksekgonul, Federico Bianchi, Pratyusha Kalluri,
 Dan Jurafsky, and James Zou. 2023. When and why
 vision-language models behave like bags-of-words,
 and what to do about it? In The Eleventh Interna-
 tional Conference on Learning Representations.
+
 Yiwu Zhong, Jianwei Yang, Pengchuan Zhang, Chun-
 yuan Li, Noel Codella, Liunian Harold Li, Luowei
 Zhou, Xiyang Dai, Lu Yuan, Yin Li, and Jianfeng
 Gao. 2021. Regionclip: Region-based language-
 image pretraining. CoRR, abs/2112.09106.
+
+--- Page 7 ---
 A Benchmark Datasets
+
 A.1 Benchmark datasets
+
 Winoground (Thrush et al., 2022; Diwan et al.,
 2022) is a challenging vision-language dataset
 for evaluating the visio-linguistic characteristics
@@ -715,6 +641,7 @@ both. The tasks in Winoground are challenging
 as the images differ in fine-grained ways and as-
 signing the correct text captions requires inherent
 compositional visual reasoning.
+
 ARO (Yuksekgonul et al., 2023) similarly tests
 visio-linguistic reasoning and consists of three
 types of tasks: (i) Visual Genome Attribution to test
@@ -727,98 +654,114 @@ matching. We highlight that Winoground though
 slightly smaller in size than ARO is more challeng-
 ing as it requires reasoning beyond visio-linguistic
 compositional knowledge (Diwan et al., 2022).
+
 A.2 Does distilling features directly from
 UNet help?
-=
-tion through the UNet is critical to distill knowl-
-edge from diffusion models to other discriminative
-models.
-B SDS-CLIP: Algorithm
-Algorithm 1 Algorithm to fine-tune CLIP with dis-
-tillation from Stable-Diffusion for improved visio-
-linguistic reasoning
-Require: D: image-text pairs, fo: CLIP's image-
-encoder, gy: CLIP's text-encoder, ε: UNet; N:
-Number of Epochs; X: Hyper-parameter for the
-regularizer; |B|: Batch-size.
-while i + N do
-{xj, Yj } } ==
-Sample a batch from D
-tSample time-steps using DDPM
-€ Sample Gaussian noise ε ~ N(0, 1)
-Lclip Compute contrastive loss as in eq. (7)
-LSDS Compute SDS loss as in eq. (3)
-Ltotal ← Lclip +\LSDS
-Ltotal.backward()
-i + i + 1
-end while
-▷ Backprop
-Update the relevant parameters
-C Preliminaries
-C.1 CLIP
-=
-CLIP (Radford et al., 2021b) is a image-text model
-which is pre-trained using a contrastive objective,
-Previous works such as (Xu et al., 2023) find that typically on internet-scale data. The core intu-
-the frozen features of the UNet contain structural ition of the training objective is to align the text
+
+Previous works such as (Xu et al., 2023) find that
+the frozen features of the UNet contain structural
 information about the image. Motivated by this,
-and image embeddings of image-text pairs in a
 we also investigate if distilling knowledge directly
-shared embedding space. To do this, CLIP con-
 from the frozen UNet features is beneficial, Given
-sists of two components: (i) an image encoder
-an image x and its caption c, the frozen features fo which transforms a raw image x¿ into an im-
-f from the UNet (where I (x, c)
-age embedding Cimg(xi)
-€ (vα(x), t, c),
-fo(xi) Rd, also
+an image x and its caption c, the frozen features
+f from the UNet (where I(a,c) = €9(va(x),t,c),
 similar to (Xu et al., 2023)) can be extracted. We
-denoted by the <CLS> token; and (ii) a text en-
 then use these frozen internal representations from
-coder g, which transforms a raw text caption ci
 the UNet to regularize features of the image en-
-into a text embedding text (Ci)
-gy(ci) € Rd
 coder in CLIP. In particular:
-also denoted by <EOS> token, both of which
-map to an embedding dimensionality d. Given
-a dataset D = {(xi, c)} of image-text pairs,
-where (xi, yi) is the ith image-text pair, CLIP uses
-a contrastive objective to pull the image and text
-embeddings of matched pairs together, while push-
-ing those of unmatched pairs apart. Formally, the
-contrastive objective can be defined as:
-Ltotal = LCLIP +\||hw(fø(x) — I(x, c))||½ (6)
+
+Leotat = Lourp + Allhw(fa(x) — L(x, e))|5 ©
+
 However, we find that distillation in this way
 does not lead to improved performances for visio-
 linguistic reasoning. In fact, for ViT-B/16 (CLIP)
 we find the Winoground score to decrease from
 0.24 to 0.23. This result shows that using score-
 distillation sampling which involves backpropoga-
-=
-LCLIP = Limage-text + Ltext-image (7)
+
+tion through the UNet is critical to distill knowl-
+edge from diffusion models to other discriminative
+models.
+
+B_ SDS-CLIP: Algorithm
+
+Algorithm 1 Algorithm to fine-tune CLIP with dis-
+tillation from Stable-Diffusion for improved visio-
+linguistic reasoning
+
+Require: D: image-text pairs, f: CLIP’s image-
+encoder, gy: CLIP’s text-encoder, ¢9: UNet; N:
+Number of Epochs; A: Hyper-parameter for the
+regularizer; |B|: Batch-size.
+while i 4 N do
+
+{xj,y; yet + Sample a batch from D
+
+t < Sample time-steps using DDPM
+
+¢ + Sample Gaussian noise « ~ N(0, I)
+Lctipe Compute contrastive loss as in eq. (7)
+Lgps <- Compute SDS loss as in eq. (3)
+Litotat — Letip + ALsvs
+
+Ltotat-backward() > Backprop
+o, 7, w < Update the relevant parameters
+ititl
+
+end while
+
+C_ Preliminaries
+
+C.1 CLIP
+
+CLIP (Radford et al., 2021b) is a image-text model
+which is pre-trained using a contrastive objective,
+typically on internet-scale data. The core intu-
+ition of the training objective is to align the text
+and image embeddings of image-text pairs in a
+shared embedding space. To do this, CLIP con-
+sists of two components: (i) an image encoder
+f which transforms a raw image x; into an im-
+age embedding ejmg(xi) = fe(ti) € R4, also
+denoted by the <CLS> token; and (ii) a text en-
+coder gy which transforms a raw text caption c;
+into a text embedding ejeat(Ci) = gy(ci) € R?¢
+also denoted by <EOS> token, both of which
+map to an embedding dimensionality d. Given
+a dataset D = {(a;,¢;)}_, of image-text pairs,
+where (;, yi) is the 7*” image-text pair, CLIP uses
+a contrastive objective to pull the image and text
+embeddings of matched pairs together, while push-
+ing those of unmatched pairs apart. Formally, the
+contrastive objective can be defined as:
+
+Lorie = Limage—teat + Litext—image (7)
+
+--- Page 8 ---
 where:
-Limage text = −
-2N
-1
-Ltext-image = -
-2N
-IM² M²
-log{
-log{
-exp(eimg(xj)etext (Cj)/T)
-Σ= exp((eimg(xj) Tetext (Ck)/T))
-exp(Cimg(xj) etext (C;)/T)
-Σ1 exp((eimg(xk) Tetext (C;)/T))
+
+exp(€img (@j)" eteat (ej)/T)
+2N £4 Thy xP((eimg (wj)T etext (ck)/T))
 (8)
-}
-(9)
+
+L
+
+image—text = —
+
+exp(Cimg(@j)" eteat (¢j)/T)
+SRL exP((Cimag (eu)? etext (€j)/7))
+9)
+
+Ltext—image = —
+
 where 7 is a trainable temperature parameter. Usu-
 ally D is an internet-scale dataset consisting of
 millions of image-text pairs. Furthermore, during
-pre-training, the embeddings Cimg (xi) and Etext (Ci)
+pre-training, the embeddings eimg(ai) and etext (ci)
 are normalized to have a unit-norm.
-D When does distillation not help CLIP?
+
+D_ When does distillation not help CLIP?
+
 While we find that distilling knowledge from
 Stable-Diffusion to CLIP helps in object-swap,
 relational-understanding and attribution-binding
@@ -837,54 +780,40 @@ encoders cannot effectively model. Another reason
 could be that the denoising diffusion score is not
 affected by word ordering as the image semantics
 are not changed as a result.
-E
-Notes on Fine-tuning Dataset
+
+E_ Notes on Fine-tuning Dataset
+
 We use MS-COCO (Lin et al., 2014) which is
 widely used for multimodal learning. This dataset
 does not contain any names or uniquely identifies
 individual people or offensive content.
+
 F More Experimental Details
+
 Hyper-parameters. We perform a hyperparameter
 sweep for the learning rate and the regularization
 hyperparameter \ for ViT-B/16. We use these same
 hyperparameters for different CLIP variants in-
 cluding ViT-B/32, ViT-B/14, ViT-L/14-336px and
-ResNet-50. In particular, we set > = 0.001 and set
-the learning rate as 5 × 10-5. We use a batch-size
+ResNet-50. In particular, we set \ = 0.001 and set
+the learning rate as 5 x 10~°. We use a batch-size
 of 32 for all the different CLIP models. We use
 Stable-Diffusion v1-4 as the teacher model in our
 experiments.
+
 Note on Full Fine-tuning. All our experiments
 were primarily done by fine-tuning only the Layer-
-Model
-Overall
-Object Relation Both
-1 Main Pred
-2 Main Preds
-VIT-B/16(LAION 400M)
-0.24
-0.29
-0.17
-0.59
-0.28
-0.11
-COCO FT with LCLIP
-COCO FT with LCLIP + LSDS
-0.24
-0.26
-0.21
-0.54
-0.31
-0.10
-0.30
-0.34
-0.23
-0.55
-0.33
-0.14
+
+Model Overall Object Relation Both 1 Main Pred 2 Main Preds
+
+ViT-B/16(LAION 400M) 024 0.29 0.17 0.59 0.28 O41
+COCO FT with Lezip 0.24 0.26 © 0.21 0.54 0.31 0.10
+COCO FT with Lexie +Lsps 030 034 0.23 0.55 0.33 0.14
+
 Table 2: Additional results on Winoground with
-VIT-B/16 CLIP pre-trained on public data (LAION-
+ViT-B/16 CLIP pre-trained on public data (LAION-
 400M).
+
 Norm parameters. In the initial phase of the project,
 we also fine-tune all the parameters of the text and
 image encoder in CLIP, however it results in worse
@@ -893,14 +822,16 @@ tentially, this can be due to overfitting issues when
 used in conjunction with the new regularizer. We
 therefore run all the experiments with LayerNorm
 tuning as it leads to the best results.
+
 Total GPU Hours. For all our experiments we
 use NVIDIA-A6000 and each fine-tuning experi-
-ment takes 6 hours.
-G Additional Results with
+ment takes ~6 hours.
+
+G_ Additional Results with
 Stable-Diffusion-v2-1
+
 In particular, with our distillation strategy with
-Stable-Diffusion v-2.1 as a teacher
-we obtain
+Stable-Diffusion v-2.1 as a teacher — we obtain
 the following results on Winoground: (i) ViT-B/16:
 0.35; (ii) ViT-B/32: 0.33; (iii) ViT-L/14: 0.31; (iv)
 ViT-L/14-336px: 0.31; (iv) ResNet-50: 0.28; All
@@ -909,11 +840,13 @@ with Stable-Diffusion-v1-4 as the teacher, there-
 fore highlighting that a teacher with better com-
 positional generation capabilities will be a better
 choice.
-H_Fine-tuning with Conceptual Captions
-We primarily use MS-COCO as: (i) It's a rela-
+
+H_ Fine-tuning with Conceptual Captions
+
+We primarily use MS-COCO as : (i) It’s a rela-
 tively small dataset which can keep the fine-tuning
 steps relatively smaller and scaling the fine-tuning
-dataset will increase fine-tuning time; (ii) It's a
+dataset will increase fine-tuning time; (ii) It’s a
 well-established, relatively diverse and well anno-
 tated image-text dataset which is used by the com-
 munity. We also fine-tuned with CC-3M (Sharma
@@ -922,29 +855,17 @@ similar in lines to that using MS-COCO. For e.g.,
 On Winoground with CC-3M, we find the fol-
 lowing performance after distillation with Stable-
 Diffusion-v1-4: (i) ViT-B/16: 0.32; (ii) ViT-B/32:
-0.32; (iii) ViT-L/14: 0.30; (iv) ViT-L/14-336px:
+0.32; (iii) VIT-L/14: 0.30; (iv) ViT-L/14-336px:
 0.28; (iv) ResNet-50: 0.27. These scores are
 only marginally better than using MS-COCO, al-
-though the dataset size is more than 30 times
+though the dataset size is more than 30 times —
 which shows that a high-quality dataset such as
-Model
-Overall Object Relation Both
-1 Main Pred
-2 Main Preds
-VIT-B/16(LAION 2B)
-COCO FT with LCLIP + LSDS
-0.27
-0.31
-0.32
-0.36
-0.19
-0.24
-0.61
-0.53
-0.29
-0.36
-0.12
-0.17
+
+--- Page 9 ---
+‘Model Overall Object Relation Both 1 Main Pred 2 Main Preds
+ViT-B/16(LAION 2B) 027 0320.19 0.61 0.29 0.12
+COCOFT with Lexip+Lsps 031036 0.240.538 036 0.17
+
 Table 3: CLIP (Pre-trained with 2B images) still un-
 derperforms on Winoground. We show the CLIP even
 when trained with LAION-2B (similar scale of training
@@ -952,35 +873,33 @@ data as Stable-Diffusion) still underperforms the diffu-
 sion score from Stable-Diffusion. This shows that scale
 of data alone cannot be useful in mitigating reasoning
 capabilities in CLIP.
+
 MS-COCO is sufficient for improving composi-
 tional abilities in CLIP.
-L Beyond CLIP
-We find that Open-CoCa (Yu et al., 2022) pre-
-trained on 2B image-text pairs obtains a score of
-0.30 on Winoground. With our distillation strategy,
-we find that the score improves to 0.33 highlighting
-that our distillation strategy can be used for models
-beyond CLIP. A full investigation of the impact of
-our distillation method on various vision-language
-models is deferred towards future work.
+
 I Results with OpenCLIP
+
 In Table 2, we show that our method is compatible
 with OpenCLIP. In particular, we find that distil-
 lation to OpenCLIP improves its visio-linguistic
 score from 0.24 to 0.30. These results highlight the
 generalizability of our distillation method.
+
 J Additional Results on CLEVR
+
 We apply our fine-tuned model on the CLEVR
-task (Johnson et al., 2016) – which consists of im-
+task (Johnson et al., 2016) — which consists of im-
 ages of 3D shapes isolating phenomena such as
 spatial reasoning or attribute binding. We find that
 the diffusion-score leads to a score of 0.67, whereas
-the best CLIP variant in our test-bed (CLIP VIT-
+the best CLIP variant in our test-bed (CLIP ViT-
 L/14) scored 0.63. With our distillation loss during
-fine-tuning - this score improved to 0.65 with a 2%
+fine-tuning — this score improved to 0.65 with a 2%
 gain.
+
 K Is it the Scale of Pre-Training Data
 Which Helps?
+
 In Table 3, we show that CLIP models even
 when trained at the same scale of pre-training data
 as Stable-Diffusion (LAION-2B) struggle on the
@@ -995,3 +914,15 @@ than CLIP like models. Our distillation method
 from Stable-Diffusion improves the Winoground
 score from 0.27 to 0.31 on CLIP(pre-trained on 2B
 image-text pairs).
+
+L_ Beyond CLIP
+
+We find that Open-CoCa (Yu et al., 2022) pre-
+trained on 2B image-text pairs obtains a score of
+0.30 on Winoground. With our distillation strategy,
+we find that the score improves to 0.33 highlighting
+that our distillation strategy can be used for models
+beyond CLIP. A full investigation of the impact of
+our distillation method on various vision-language
+models is deferred towards future work.
+

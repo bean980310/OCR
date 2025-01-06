@@ -1,0 +1,1772 @@
+arXiv:2309.04827v1 [cs.CL] 9 Sep 2023
+Neurons in Large Language Models: Dead, N-gram, Positional
+Elena Voita¹ Javier Ferrando²*
+Christoforos Nalmpantis¹
+1 Meta AI
+2TALP Research Center, Universitat Politècnica de Catalunya
+{lenavoita, christoforos}@meta.com, javier.ferrando. monsonis@upc.edu
+Abstract
+We analyze a family of large language models
+in such a lightweight manner that can be done
+on a single GPU. Specifically, we focus on the
+OPT family of models ranging from 125m to
+66b parameters and rely only on whether an
+FFN neuron is activated or not. First, we find
+that the early part of the network is sparse and
+represents many discrete features. Here, many
+neurons (more than 70% in some layers of the
+66b model) are “dead”, i.e. they never acti-
+vate on a large collection of diverse data. At
+the same time, many of the alive neurons are
+reserved for discrete features and act as token
+and n-gram detectors. Interestingly, their corre-
+sponding FFN updates not only promote next
+token candidates as could be expected, but also
+explicitly focus on removing the information
+about triggering them tokens, i.e., current in-
+put. To the best of our knowledge, this is the
+first example of mechanisms specialized at re-
+moving (rather than adding) information from
+the residual stream. With scale, models become
+more sparse in a sense that they have more dead
+neurons and token detectors. Finally, some neu-
+rons are positional: them being activated or not
+depends largely (or solely) on position and less
+so (or not at all) on textual data. We find that
+smaller models have sets of neurons acting as
+position range indicators while larger models
+operate in a less explicit manner.
+1 Introduction
+The range of capabilities of language models ex-
+pands with scale and at larger scales models be-
+come so strong and versatile that a single model can
+be integrated into various applications and decision-
+making processes (Brown et al., 2020; Kaplan et al.,
+2020; Wei et al., 2022; Ouyang et al., 2022; Ope-
+nAI, 2023; Anil et al., 2023). This increases inter-
+est and importance of understanding the internal
+*Work done as part of internship at Meta AI.
+workings of these large language models (LLMs)
+and, specifically, their evolution with scale. Unfor-
+tunately, scaling also increases the entry threshold
+for interpretability researchers since dealing with
+large models requires a lot of computational re-
+sources. In this work, we analyze a family of OPT
+models up to 66b parameters and deliberately keep
+our analysis very lightweight so that it could be
+done using a single GPU.
+We focus on neurons inside FFNs, i.e. individual
+activations in the representation between the two
+linear layers of the Transformer feedforward blocks
+(FFNs). Differently from e.g. neurons in the resid-
+ual stream, FFN neurons are more likely to repre-
+sent meaningful features: the elementwise nonlin-
+earity breaks the rotational invariance of this repre-
+sentation and encourages features to align with the
+basis dimensions (Elhage et al., 2021). When such
+a neuron is activated, it updates the residual stream
+by pulling out the corresponding row of the second
+FFN layer; when it is not activated, it does not up-
+date the residual stream (Figure 6).¹ Therefore, we
+can interpret functions of these FFN neurons in two
+ways: (i) by understanding when they are activated,
+and (ii) by interpreting the corresponding updates
+coming to the residual stream.
+First, we find that in the first half of the network,
+many neurons are “dead”, i.e. they never activate
+on a large collection of diverse data. Larger models
+are more sparse in this sense: for example, in the
+66b model more that 70% of the neurons in some
+layers are dead. At the same time, many of the
+alive neurons in this early part of the network are
+reserved for discrete features and act as indicator
+functions for tokens and n-grams: they activate if
+and only if the input is a certain token or an n-gram.
+The function of the updates coming from these to-
+ken detectors to the residual stream is also very
+¹Since OPT models have the ReLU activation function, the
+notion of "activated" or "not activated" is trivial and means
+non-zero vs zero.
+surprising: at the same time as they promote con-
+cepts related to the potential next token candidate
+(which is to be expected according to Geva et al.
+(2021, 2022)), they are explicitly targeted at remov-
+ing information about current input, i.e. their trig-
+gers. This means that in the bottom-up processing
+where a representation of the current input token
+gets gradually transformed into a representation for
+the next token, current token identity is removed by
+the model explicitly (rather than ends up implicitly
+"buried" as a result of additive updates useful for
+the next token). To the best of our knowledge, this
+is the first example of mechanisms specialized at
+removing (rather than adding) information from
+the residual stream.
+Finally, we find that some neurons are responsi-
+ble for encoding positional information regardless
+of textual patterns. Similarly to token and n-gram
+detectors, many of these neurons act as indicator
+functions of position ranges, i.e. activate for po-
+sitions within certain ranges and do not activate
+otherwise. Interestingly, these neurons often collab-
+orate. For example, the second layer of the 125m
+model has 10 positional neurons whose indicated
+positional ranges are in agreement: together, they
+efficiently cover all possible positions and no neu-
+ron is redundant. In a broader picture, positional
+neurons question the key-value memory view of
+the FFN layers stating that “each key correlates
+with textual patterns in the training data and each
+value induces a distribution over the output vocab-
+ulary" (Geva et al., 2021, 2022). Neurons that rely
+on position regardless of textual pattern indicate
+that FFN layers can be used by the model in ways
+that do not fit the key-value memory view. Overall,
+we argue that the roles played by these layers are
+still poorly understood.
+Overall, we find neurons that:
+• are “dead”, i.e. never activate on a large di-
+verse collection of data;
+• act as token- and n-gram detectors that, in
+addition to promoting next token candidates,
+explicitly remove current token information;
+• encode position regardless of textual content
+which indicates that the role of FFN layers
+extends beyond the key-value memory view.
+With scale, models have more dead neurons and
+token detectors and are less focused on absolute
+position.
+2 Data and Setting
+Models. We use OPT (Zhang et al., 2022), a suite
+of decoder-only pre-trained transformers that are
+publicly available. We use model sizes ranging
+from 125M to 66B parameters and take model
+weights from the HuggingFace model hub.2
+Data. We use data from diverse sources con-
+taining development splits of the datasets used in
+OPT training as well as several additional datasets.
+Overall, we used (i) subsets of the validation and
+test part of the Pile (Gao et al., 2020) includ-
+ing Wikipedia, DM Mathematics, HackerNews,
+(ii) Reddit³ (Baumgartner et al., 2020; Roller et al.,
+2021), (iii) code data from Codeparrot*.
+For the experiments in Section 3 when talking
+about dead neurons, we use several times more data.
+Specifically, we add more data from Wikipedia,
+DM Mathematics and Codeparrot, as well as add
+new domains from the Pile5: EuroParl, FreeLaw,
+PubMed abstracts, Stackexchange.
+Overall, the data used in Section 3 has over 20M
+tokens, in the rest of the paper - over 5M tokens.
+Single-GPU processing. We use only sets of neu-
+ron values for some data, i.e. we run only forward
+passes of the full model or its several first layers.
+Since large models do not fit in a single GPU, we
+load one layer at a time keeping the rest of the
+layers on CPU. This allows us to record neuron ac-
+tivations for large models: all the main experiments
+in this paper were done on a single GPU.
+3 Dead Neurons
+Let us start from simple statistics such as neuron
+activation frequency (Figure 1).
+Many neurons are "dead". First, we find that
+many neurons never activate on our diverse data, i.e.
+they can be seen as “dead”. Figure 1a shows that
+the proportion of dead neurons is very substantial:
+e.g., for the 66b model, the proportion of dead
+neurons in some layers is above 70%. We also see
+that larger models are more sparse because (i) they
+2https://huggingface.co/models
+3 Pushshift.io Reddit dataset is a previously existing dataset
+extracted and obtained by a third party that contains prepro-
+cessed comments posted on the social network Reddit and
+hosted by pushshift.io.
+https://huggingface.co/datasets/codeparrot/
+codeparrot-clean
+Shttps://huggingface.co/datasets/EleutherAI/
+pile
+Percentage of dead neurons
+Average activation frequency
+(avg. over non-dead neurons)
+70
+265322
+Model
+Layers
+0.10
+60
+• 125m 12
+0.08
+⚫ 1.3b
+24
+50
+• 2.7b
+32
+40
+0.06
+• 6.7b
+32
+30
+⚫ 13b
+40
+0.04
+20
+• 30b
+48
+• 66b
+64
+0.02
+10
+0
+0.00
+0.0 0.25
+0.5
+0.75
+1
+0
+0.25
+0.5
+Layer (relative to network depth)
+(a)
+0.75
+1
+Layer (relative to network depth)
+(b)
+Neurons
+Neurons
+Neurons
+10k
+20k
+10k
+30k
+20k
+Model: 66b
+16
+24
+32
+Model: 30b
+10
+15
+20
+24
+Model: 13b
+2k
+1k
+वै लै लै लै ०
+Model: 2.7b
+10k
+5k
+16
+Model: 1.3b
+8k
+4k
+Model: 350m
+12
+Figure 1: (a) Percentage of “dead” neurons; (b) average
+neuron activation frequency among non-dead neurons.
+have more dead neurons and (ii) the ones that are
+alive activate less frequently (Figure 1b).
+Only first half of the model is sparse. Next, we
+notice that this kind of sparsity is specific only to
+early layers. This leads to a clear distinction be-
+tween the first and the second halves of the network:
+while the first half contains a solid proportion of
+dead neurons, the second half is fully “alive”. Ad-
+ditionally, layers with most dead neurons are the
+ones where alive neurons activate most rarely.
+Packing concepts into neurons.
+This difference
+in sparsity across layers might be explained by
+"concept-to-neuron" ratio being much smaller in the
+early layers than in the higher layers. Intuitively,
+the model has to represent sets of encoded in a
+layer concepts by "spreading” them across avail-
+able neurons. In the early layers, encoded concepts
+are largely shallow and are likely to be discrete
+(e.g., lexical) while at the higher layers, networks
+learn high-level semantics and reasoning (Peters
+et al., 2018; Liu et al., 2019; Jawahar et al., 2019;
+Tenney et al., 2019; Geva et al., 2021). Since the
+number of possible shallow patterns is not large
+and, potentially, enumerable, in the early layers the
+model can (and, as we will see later, does) assign
+dedicated neurons to some features. The more neu-
+rons are available to the model, the easier it is to do
+this agrees with the results in Figure 1 show-
+ing that larger models are more sparse. Differently,
+the space of fine-grained semantic concepts is too
+large compared to the number of available neurons
+which makes it hard to reserve many dedicated
+neuron-concept pairs.6
+SO
+-
+Are dead neurons completely dead? Note that
+the results in Figure 1a can mean one of the two
+"There can, however, be a few specialized neurons in the
+higher layers. For example, BERT has neurons responsible
+for relational facts (Dai et al., 2022).
+Neurons
+ནྡྲ ཎྜཾ ཨོཾ
+0
+5
+10
+15
+20
+Model: 6.7b
+Number of unigrams
+12
+16
+Layers
+2k
+1k
+6
+9
+12
+Model: 125m
+Layers
+triggering a neuron 1-5 6-10 11-20 21-50 51-200 201-1k 1k-2k 2k-50k
+Figure 2: Neurons categorized by the number of uni-
+grams (i.e., tokens) able to trigger them. First half of
+the network, alive neurons only.
+things: (i) these neurons can never be activated (i.e.
+they are "completely dead") or (ii) they correspond
+to patterns so rare that we never encountered them
+in our large diverse collection of data. While the
+latter is possible, note that this does not change
+the above discussion about sparsity and types of
+encoded concepts. On the contrary: it further sup-
+ports the hypothesis of models assigning dedicated
+neurons to specific concepts.
+4 N-gram-Detecting Neurons
+Now, let us look more closely into the patterns en-
+coded in the lower half of the models and try to un-
+derstand the nature of the observed above sparsity.
+Specifically, we analyze how neuron activations de-
+pend on an input n-gram. For each input text with
+tokens x1, x2, ..., xs, we record neuron activations
+at each position and if a neuron is activated (i.e.,
+non-zero) at position k, we say that the n-gram
+(k_n+1,. ,xk) triggered this neuron.
+In Sections 4.1-4.4 we talk about unigrams (i.e.,
+tokens) and come to larger n-grams in Section 4.5.
+4.1 Number of N-grams Triggering a Neuron
+First, let us see how many n-grams are able to
+trigger each neuron. For each neuron we evaluate
+the number of n-grams that cover at least 95% of
+the neuron's activations. For the bottom half of
+the network, Figure 2 shows how neurons in each
+layer are categorized by the number of covering
+them n-grams (we show unigrams here and larger
+Number of neurons
+Token detectors
+Number of covered tokens
+Number of covered tokens
+Number of covered tokens
+Model
+10k
+1500
+600
+Model
+cumulative
+400
+1.3b
+8k
+500
+•
+13b
+1250
+Model
+• 66b
+2.7b
+300
+400
+1000
+6.7b
+6k
+13b
+300
+750
+200
+4k
+30b
+200
+500
+100
+66b
+2k
+100
+250
+0
+0.0
+0.0
+0.1 0.2 0.3 0.4 0.5
+0.0 0.1
+0
+0
+0.2 0.3 0.4 0.5
+Layer (relative to network depth)
+0.0
+0.1
+0.3 0.4 0.5
+0.0
+0.1 0.2 0.3 0.4
+0.5
+Layer (relative to network depth)
+(a)
+(b)
+Figure 3: (a) Number of token-detecting neurons;
+(b) number of tokens that have a detecting them neuron:
+solid line - per layer, dashed – cumulative over layers.
+n-grams in Appendix A).
+We see that, as anticipated, neurons in larger
+models are covered by less n-grams. Also, the
+largest models have a substantial proportion of neu-
+rons that are covered by as few as 1 to 5 tokens.
+This agrees with our hypothesis in the previous sec-
+tion: the model spreads discreet shallow patterns
+across specifically dedicated neurons.
+4.2 Token-Detecting Neurons
+Presence of neurons that can be triggered by only
+a few (e.g., 1-5) tokens point to the possibility that
+some neurons act as token detectors, i.e. activate
+if and only if the input is one of the corresponding
+tokens, regardless of the previous context. To find
+such neurons, we (1) pick neurons that can be trig-
+gered by only 1-5 tokens, (2) gather tokens that are
+covered by this neuron (if the neuron activates at
+least 95% of the time the token is present), (3) if
+altogether, these covered tokens are responsible for
+at least 95% of neuron activations.8
+Figure 3a shows that there are indeed a lot of
+token-detecting neurons. As expected, larger mod-
+els have more such neurons and the 66b model has
+overall 5351 token detectors. Note that each token
+detector is responsible for a group of several to-
+kens that, in most of the cases, are variants of the
+same word (e.g., with differences only in capital-
+ization, presence of the space-before-word special
+symbol, morphological form, etc.). Figure 5 (top)
+shows examples of groups of tokens detected by
+token-detecting neurons.
+Interestingly, the behavior of the largest models
+(starting from 13b of parameters) differs from that
+7 Note that the 350m model does not follow the same pat-
+tern as all the rest: we will discuss this model in Section 6.
+We exclude the begin-of-sentence token from these com-
+putations because for many neurons, this token is responsible
+for the majority of the activations.
+0.2
+Layer (relative to network depth)
+Layer (relative to network depth)
+New overall tokens ☐ New compared to the previous layer tokens
+Figure 4: Number of tokens covered in each layer with
+indicated (i) new overall, and (ii) new compared to the
+previous layer tokens.
+of the rest. While for smaller models the number
+of token detectors increases then goes down, larger
+models operate in three monotonic stages and start
+having many token-detecting neurons from the very
+first layer (Figures 3). This already shows quali-
+tative differences between the models: with more
+capacity, larger models perform more complicated
+reasoning with more distinct stages.
+4.3 Ensemble-Like Behaviour of the Layers
+Now, let us look at “detected” tokens, i.e. tokens
+that have a specialized detecting them neuron. Fig-
+ure 3b shows the number of detected tokens in
+each layer as well as cumulative over layers num-
+ber of detected tokens. We see that, e.g., the 66b
+model focuses on no more than 1.5k tokens in each
+layer but over 10k tokens overall. This means that
+across layers, token-detecting neurons are respon-
+sible for largely differing tokens. Indeed, Figure 4
+shows that in each following layer, detected tokens
+mostly differ from all the tokens covered by the
+layers below. All in all, this points to an ensemble-
+like (as opposed to sequential) behavior of the lay-
+ers: layers collaborate so that token-detecting neu-
+rons cover largely different tokens in different lay-
+ers. This divide-and-conquer-style strategy allows
+larger models to cover many tokens overall and use
+their capacity more effectively.
+Originally, such an ensemble-like behavior of
+deep residual networks was observed in computer
+vision models (Veit et al., 2016). For transform-
+ers, previous evidence includes simple experiments
+showing that e.g. dropping or reordering layers
+does not influence performance much (Fan et al.,
+2020; Zhao et al., 2021).
+4.4 Token Detectors Suppress Their Triggers
+Now let us try to understand the role of token-
+detecting neurons in the model by interpreting how
+Token-detecting
+L=1,n=13416
+neurons (66b)
+Detected
+tokens
+Ġtitle, title,
+Ġtitles, Title
+L=5, n=34220
+Gweather, GWeather,
+weather, Weather
+L=10, n=35511
+Ghe, GHe, Ghim,
+He, GHim, him,
+Ghimself, ĠHimself
+L=10, n=23921
+Gschool, GSchool,
+Gschools, School, chool,
+GSchools, Gschooling
+Top
+promoted
+0.08
+0.07
+0.07 ĠShot
+0.06 Ġsponsor
+holder
+0.11 Gpatterns
+0.09 Ġself
+0.10
+girl
+holders
+0.10 Ġconditions
+0.08
+aps
+0.09
+boy
+0.10 Ġpattern
+0.08 Ġcondition
+⠀
+0.09
+:
+House
+0.09
+Ġdistrict
+The effect of
+0.07
+proof
+-0.12
+Ghe
+⠀
+triggering the
+:
+⠀
+-0.12 Ghim
+neuron on the
+residual
+⠀
+-0.06
+category
+-0.13
+He
+-0.12
+school
+-0.06
+-0.07 Gweather
+Title
+-0.13
+him
+-0.13
+GĠschools
+-0.06 Ġtitle
+-0.07 GWeather
+-0.13
+Ġhis
+-0.13 Ġschool
+Top
+suppressed
+-0.07 Ġtitles
+-0.08 title
+-0.09 Ġtitle
+-0.07 Weather
+-0.14
+GHIS
+-0.14 School
+-0.08
+bart
+-0.15 Ġhis
+-0.14
+Ġschools
+-0.08
+antry
+-0.16
+His
+-0.15
+ĠSCHOOL
+-0.17
+his
+-0.15
+ĠSchool
+Figure 5: Examples of the top promoted and suppressed tokens for token-detecting neurons (Ġ is a special symbol
+denoting the space before word – in the OPT tokenizers, it is part of a word); OPT-66b model.
+0.12 smith
+0.10 mine
+Top
+promoted
+Project on
+vocabulary
+-0.06 Gold
+-0.07 gold
+OOOO + ● ● ● ●
+0000
+gold
+ReLU (xW) x W₂
+Activated
+neuron
+X
+FFN block
+O O O O
+H
+Top
+suppressed
+Figure 6: Intuition behind concept suppression: we look
+not only at the top projections of an FFN update on
+vocabulary but also at the bottom. The concepts that are
+added with a negative value are suppressed.
+they update the residual stream. Throughout the
+layers, token representation in the residual stream
+gets transformed from the token embedding for
+the current input token to the representation that
+encodes a distribution for the next token. This
+transformation happens via additive updates com-
+ing from attention and FFN blocks in each layer.
+Whenever an FFN neuron is activated, the corre-
+sponding row of the second FFN layer (multiplied
+by this neuron's value) is added to the residual
+stream (see illustration in Figure 6). By project-
+ing this FFN row onto vocabulary, we can get an
+interpretation of this update (and, thus, the role of
+this neuron) in terms of its influence on the output
+distribution encoded in the residual stream.
+'For OPT models, along with an absolute positional em-
+bedding.
+Current token suppression: implicit or explicit?
+Previously, this influence was understood only in
+terms of the top projections, i.e. tokens that are
+promoted (Geva et al., 2021, 2022). This reflects
+an existing view supporting implicit rather than
+explicit loss of the current token identity over the
+course of layers. Namely, the view that the current
+identity gets "buried" as a result of updates useful
+for the next token as opposed to being removed
+by the model explicitly. In contrast, we look not
+only at the top projections but also at the bottom:
+if these projections are negative, the corresponding
+tokens are suppressed by the model (Figure 6).
+Explicit token suppression in the model. We
+find that often token-detecting neurons deliberately
+suppress the tokens they detect. Figure 5 shows
+several examples of token-detecting neurons along
+with the top promoted and suppressed concepts.
+While the top promoted concepts are in line with
+previous work (they are potential next token candi-
+dates which agrees with Geva et al. (2021, 2022)),
+the top suppressed concepts are rather unexpected:
+they are exactly the tokens triggering this neuron.
+This means that vector updates corresponding to
+these neurons point in the direction of the next to-
+ken candidates at the same time as they point away
+from the tokens triggering the neuron. Note that
+this is not trivial since these updates play two very
+different roles at the same time. Overall, for over
+80% of token-detecting neurons their correspond-
+ing updates point in the negative direction from
+the triggering them tokens (although, the triggering
+tokens are not always at the very top suppressed
+concepts as in the examples in Figure 6).
+Overall, we argue that models can have mech-
+frequency
+Activation
+Oscillatory
+Both areas with O and
+1 activation frequency
+One of the two: either with
+O activation frequency or 1
+Other strong
+dependency on position
+1.00
+1.00
+1.00
+0.75
+0.75
+0.50
+0.50
+0.50
+0.25
+0.25
+0.25
+1.00
+0.75
+0.50
+0.25
+1.00
+1.00
+0.75
+0.75
+0.50
+0.50
+0.25
+0.25
+0.00
+0.00-
+0.00
+0.00-
+0.00
+0.00
+0
+2k
+1k
+2k
+0
+1k
+2k
+0
+1k
+2k
+0
+1k
+2k
+1.00
+1.00
+1.00
+1.00
+1.00
+1.00
+0.75
+0.75
+0.50
+0.25
+0.75
+0.75
+0.75
+0.50
+0.75
+0.50
+0.50
+0.50
+0.50
+0.25
+0.25
+0.25
+0.25
+0.25
+0.00
+0.00
+0.00
+0.00
+0.00
+0.00
+0
+0
+1k
+2k
+0
+1k
+2k
+0
+1k
+2k
+1k
+1k
+2k
+0
+1k
+2k
+position
+position
+position
+position
+position
+position
+Figure 7: Types of positional neurons. Top row – “strong” pattern, bottom row - "weak" pattern.
+anisms that are targeted at removing information
+from the residual stream which can be explored
+further in future work.
+4.5 Beyond Unigrams
+In Appendix A, we show results for bigrams and
+trigrams that mirror our observations for unigrams:
+(i) larger models have more specialized neurons,
+(ii) in each layer, models cover mostly new n-grams.
+Interestingly, for larger n-grams we see a more
+drastic gap between larger and smaller models.
+5 Positional Neurons
+When analyzing dead neurons (Section 3), we also
+noticed some neurons that, consistently across di-
+verse data, never activate except for a few first to-
+ken positions. This motivates us to look further into
+how position is encoded in the model and, specif-
+ically, whether some neurons are responsible for
+encoding positional information.
+5.1 Identifying Positional Neurons
+Intuitively, we want to find neurons whose activa-
+tion patterns are defined by or, at least, strongly
+depend on token position. Formally, we identify
+neurons whose activations have high mutual infor-
+mation with position. For each neuron, we evaluate
+mutual information between two random variables:
+• act
+– neuron is activated or not ({Y, N}),
+‚ . . .‚T}).
+⚫ pos – token position ({1, 2, ...,
+=
+Formal setting. We gather neuron activations
+for full-length data (i.e., T 2048 tokens) for
+Wikipedia, DM Mathematics and Codeparrot. Let
+(pos)
+frn be activation frequency of neuron n at posi-
+tion pos and frn be the total activation frequency
+of this neuron. Then the desired mutual informa-
+tion is as follows: 10
+1
+T
+I(act, pos) ==Σfr (pos). log
+pos=1
+(1 - fr (pos)) · log
+fr. (Pos)
++
+1- frn
+frn
+(pos).
+1 – frn
+-
+Choosing the neurons. We pick neurons with
+I(act, pos) > 0.05, i.e. high mutual information
+with position - this gives neurons whose activation
+frequency depends on position rather than content.
+Indeed, if e.g. a neuron is always activated within
+certain position range regardless of data domain,
+we can treat this neuron as responsible for position;
+at least, to a certain extent.
+5.2 Types of Positional Neurons
+After selecting positional neurons, we categorize
+them according to their activation pattern, i.e. acti-
+vation frequency depending on position (Figure 7).
+Oscillatory. These neurons are shown in purple
+in Figure 7. When such a pattern is strong (top
+row), the activation pattern is an indicator function
+of position ranges. In other words, such a neuron
+is activated if and only if the position falls into a
+certain set. Note that since the activation pattern
+does not change across data domains, it is defined
+solely by position and not the presence of some
+lexical or semantic information.
+Both types of activation extremes. These are the
+neurons whose activation pattern is not oscillatory
+but still has intervals where activation frequency
+reaches both "activation extremes”: 0 (never acti-
+vated) and 1 (always activated). Most frequently,
+such a neuron is activated only for positions less
+than or greater than some value and not activated
+otherwise. Similarly to oscillatory neurons, when
+10For more details, see appendix B.1.
+12
+8
+4
+0
+24
+16
+8
+125m
+1.3b
+32
+2.7b
+ထာ
+880000
+6.7b
+40
+13b
+48
+30b
+64
+56
+48
+40
+2000000
+32
+24
+16
+2 N WATA
+64
+oooooo
+66b
+8
+0
+Layers
+Figure 8: Positional neurons in each of the models. Each circle corresponds to a single neuron, colors and their
+intensity correspond to the types of patterns shown in Figure 7.
+such a pattern is strong (Figure 7, top row), it is
+also (almost) an indicator function.
+Differ-
+Only one type of activation extremes.
+ently from the previous two types, activation pat-
+terns for these neurons can reach only one of the
+extreme values 0 or 1 (Figure 7, green). While this
+means that they never behave as indicator functions,
+there are position ranges where a neuron being ac-
+tivated or not depends solely on token position.
+Other. Finally, these are the neurons whose ac-
+tivation patterns strongly depend on position but
+do not have intervals where activation frequency
+stays 0 or 1 (Figure 7, yellow). Typically, these
+activation patterns have lower mutual information
+with position than the previous three types.
+Strong vs weak pattern. We also distinguish
+"strong" and "weak” versions of each type which
+we will further denote with color intensity (Fig-
+ure 7, top vs bottom rows). For the first three
+types of positional neurons, the difference between
+strong and weak patterns lies in whether on the
+corresponding position ranges activation frequency
+equals 0 (or 1) or close, but not equals, to 0 (or 1).
+For the last type, this difference lies in how well
+we can predict activation frequency on a certain
+position knowing this value for the neighboring
+positions (informally, “thin” vs “thick” graph).
+5.3 Positional Neurons Across the Models
+For each of the models, Figure 8 illustrates the
+positional neurons across layers.
+Small models encode position more explicitly.
+First, we notice that smaller models rely substan-
+tially on oscillatory neurons: this is the most fre-
+quent type of positional neurons for models smaller
+than 6.7b of parameters. In combination with many
+"red" neurons acting as indicator functions for wider
+position ranges, the model is able to derive token's
+absolute position rather accurately. Interestingly,
+larger models do not have oscillatory neurons and
+rely on more generic patterns shown with red- and
+green-colored circles. We can also see that from
+13b to 66b, the model loses two-sided red neu-
+rons and uses the one-sided green ones more. This
+hints at one of the qualitative differences between
+smaller and larger models: while the former en-
+code absolute position more accurately, the latter
+ones are likely to rely on something more meaning-
+ful than absolute position. This complements re-
+cent work showing that absolute position encoding
+is harmful for length generalization in reasoning
+tasks (Kazemnejad et al., 2023). Differently from
+their experiments with same model size but vari-
+ous positional encodings, we track changes with
+scale. We see that, despite all models being trained
+with absolute positional encodings, stronger mod-
+els tend to abstract away from absolute position.
+Positional neurons work in teams. Interestingly,
+positional neurons seem to collaborate to cover the
+full set of positions together. For example, let us
+look more closely at the 10 strongly oscillatory neu-
+rons in the second layer of the 125m model (shown
+with dark purple circles in Figure 8). Since they act
+as indicator functions, we can plot position ranges
+0
+125m, layer 2 strong oscillatory neurons:
+1114 422 850 1693 167 213 968 1948 1900 2669
+Position ranges detected by each neuron
+250 500 750 1000 1250 1500 1750 2000
+Figure 9: Position ranges indicated by strong oscillatory
+neurons in the second layer of the 125m model.
+indicated by each of these neurons. Figure 9 shows
+that (i) indicated position ranges for these neurons
+are similar up to a shift, (ii) the shifts are organized
+in a "perfect" order in a sense that altogether, these
+ten neurons efficiently cover all positions such that
+none of these neurons is redundant.
+The two stages within the model. Finally, Fig-
+ure 8 reveals two stages of up-and-downs of posi-
+tional information within the model: roughly, the
+first third of the model and the rest. Interestingly,
+preferences in positional patterns also change be-
+tween the stages: e.g., preference for "red" neurons
+changes to oscillatory purple patterns for the 1.3b
+and 2.7b models, and “red” patterns become less
+important in the upper stage for the 13b and 30b
+models. Note that the first third of the model cor-
+responds to the sparse stage with the dead neurons
+and n-gram detectors (Sections 3, 4). Therefore, we
+can hypothesize that in these two stages, positional
+information is first used locally to detect shallow
+patterns, and then more globally to use longer con-
+texts and help encode semantic information.
+Previously, the distinct bottom-up stages of pro-
+cessing inside language models were observed in
+Voita et al. (2019a). The authors explained that
+the way representations gain and lose information
+throughout the layers is defined by the training ob-
+jective and why, among other things, positional
+information should (and does) get lost. This agrees
+with our results in this work: we can see that while
+there are many positional patterns in the second
+stage, they are weaker than in the first stage.
+5.4 Positional Neurons are Learned Even
+Without Positional Encoding
+Recently, it turned out that even without positional
+encoding, autoregressive language models still
+learn positional information (Haviv et al., 2022).
+We hypothesize that the mechanism these "NoPos"
+models use to encode position is positional neurons.
+To confirm this, we train two versions of the 125m
+model, with and without positional encodings, and
+compare the types of their positional neurons.
+Setup. We trained 125m models with the stan-
+dard OPT setup but smaller training dataset: we
+used OpenWebText corpus (Gokaslan and Co-
+hen, 2019), an open clone of the GPT-2 training
+data (Radford et al., 2019). This dataset contains
+3B tokens (compared 180B for OPT).
+Positional neurons without positional encoding.
+Figure 10 shows positional neurons in two 125m
+models: trained with and without positional encod-
+ing. We see that, indeed, the model without po-
+sitional encoding also has many strong positional
+patterns. Note, however, that the NoPos model does
+not have oscillatory neurons which, in combination
+with other positional neurons, allow encoding ab-
+solute position rather accurately. This means that
+the NoPos model relies on more generic patterns,
+e.g. "red" neurons encoding whether a position is
+greater/less than some value.
+Oscillatory neurons require longer training.
+Finally, we found that oscillatory patterns appear
+only with long training. Figure 11 shows posi-
+tional patterns learned by the baseline 125m model
+trained for 50k, 150k and 300k training batches.
+We see that all models have very strong positional
+patterns, but only the last of them has oscillatory
+neurons. Apparently, learning absolute position
+requires longer training time.
+5.5 Doubting FFNs as Key-Value Memories
+Current widely held belief is that feed-forward lay-
+ers in transformer-based language models operate
+as key-value memories. Specifically, “each key
+correlates with textual patterns in the training ex-
+amples, and each value induces a distribution over
+the output vocabulary" (Geva et al. (2021, 2022);
+Dai et al. (2022); Meng et al. (2022); Ferrando et al.
+(2023), among others). While in Section 4.4 we
+confirmed that this is true for some of the neurons,
+results in this section reveal that FFN layers can
+be used by the model in ways that do not fit the
+key-value memory view. In particular, activations
+of strong positional neurons are defined by position
+regardless of textual content, and the corresponding
+values do not seem to encode meaningful distribu-
+tions over vocabulary. This means that the role of
+these neurons is different from matching textual
+patterns to sets of the next token candidates. In a
+broader context, this means that the roles played
+121
+00 000
+Baseline
+6
+0
+0000000000000000000000000
+8800800080
+Layers
+NoPos: No positional encoding
+88888888888888888888........
+ooooooooooooo000000
+Layers
+Figure 10: Positional neurons in 125m models: baseline vs model without positional encoding. Both models were
+trained for 300k batches.
+12
+6
+50k training batches
+၁ဝဝဝဝဝ
+00000000000000
+0
+12
+88880080000000000000
+6
+150k training batches
+800000
+0
+12
+6
+0
+Layers
+300k training batches
+00000000000
+Figure 11: Positional neurons in the base 125m model
+trained with 50k, 150k and 300k batches.
+by Transformer feed-forward layers are still poorly
+understood.
+6 The 350m Model: The Odd One Out
+As we already mentioned above, the 350m model
+does not follow the same pattern as the rest of the
+models. Specifically, it does not have dead neurons
+(Section 3) and its neuron activations do not seem
+to be sparse with respect to triggering them n-grams
+as we saw for all the other models in Figure 2.
+12
+-
+11
+Modeling bits affect interpretability. This be-
+comes less surprizing when noticing that the 350m
+model is implemented differently from all the
+rest: it applies LayerNorm after attention and feed-
+forward blocks, while all the other models be-
+fore. Apparently, such seemingly minor im-
+plementation details can affect interpretability of
+model components rather significantly. Indeed, pre-
+vious work also tried choosing certain modeling
+aspects to encourage interpretability. Examples of
+such work include choosing an activation function
+to increase the number of interpretable neurons (El-
+hage et al., 2022), large body of work on sparse
+softmax variants to make output distributions or
+attention more interpretable (Martins and Astudillo
+(2016); Niculae and Blondel (2017); Peters et al.
+11There are, however, positional neurons; see Figure 16 in
+Appendix B.2).
+12https://github.com/huggingface/transformers/
+blob/main/src/transformers/models/opt/modeling_
+opt.py
+(2019); Correia et al. (2019); Martins et al. (2020),
+among others), or more extreme approaches with
+explicit modular structure that is aimed to be in-
+terpretable by construction (Andreas et al. (2016);
+Hu et al. (2018); Kirsch et al. (2018); Khot et al.
+(2021), to name a few). Intuitively, choosing ReLU
+activation function as done in the OPT models can
+be seen as having the same motivation as devel-
+oping sparse softmax variants: exact zeros in the
+model are inherently interpretable.
+7 Additional Related Work
+Historically, neurons have been a basic unit of anal-
+ysis. Early works started from convolutional net-
+works first for images (Krizhevsky et al., 2012)
+and later for convolutional text classifiers (Jacovi
+et al., 2018). Similar to our work, Jacovi et al.
+(2018) also find n-gram detectors; although, for
+small convolutional text classifiers this is an almost
+trivial observation compared to large Transformer-
+based language models as in our work. For re-
+current networks, interpretable neurons include
+simple patterns such as line lengths, brackets and
+quotes (Karpathy et al., 2015), sentiment neu-
+ron (Radford et al., 2017) and various neurons
+in machine translation models, such as tracking
+brackets, quotes, etc, as well as neurons correlated
+with higher-level concepts e.g. verb tense (Bau
+et al., 2019). For Transformer-based BERT, Dai
+et al. (2022) find that some neurons inside feed-
+forward blocks are responsible for storing factual
+knowledge. Larger units of analysis include at-
+tention blocks (Voita et al. (2018, 2019b); Clark
+et al. (2019); Kovaleva et al. (2019); Baan et al.
+(2019); Correia et al. (2019), etc), feed-forward
+layers (Geva et al., 2021, 2022) and circuits respon-
+sible for certain tasks (Wang et al., 2022; Geva
+et al., 2023; Hanna et al., 2023).
+Acknowledgements
+The authors thank Nicola Cancedda, Yihong Chen,
+Igor Tufanov and FAIR London team for fruitful
+discussions and helpful feedback.
+References
+Jacob Andreas, Marcus Rohrbach, Trevor Darrell, and
+Dan Klein. 2016. Neural module networks. In Pro-
+ceedings of the IEEE Conference on Computer Vision
+and Pattern Recognition (CVPR).
+Rohan Anil, Andrew M. Dai, Orhan Firat, Melvin John-
+son, Dmitry Lepikhin, Alexandre Passos, Siamak
+Shakeri, Emanuel Taropa, Paige Bailey, Zhifeng
+Chen, Eric Chu, Jonathan H. Clark, Laurent El
+Shafey, Yanping Huang, Kathy Meier-Hellstern, Gau-
+rav Mishra, Erica Moreira, Mark Omernick, Kevin
+Robinson, Sebastian Ruder, Yi Tay, Kefan Xiao,
+Yuanzhong Xu, Yujing Zhang, Gustavo Hernandez
+Abrego, Junwhan Ahn, Jacob Austin, Paul Barham,
+Jan Botha, James Bradbury, Siddhartha Brahma,
+Kevin Brooks, Michele Catasta, Yong Cheng, Colin
+Cherry, Christopher A. Choquette-Choo, Aakanksha
+Chowdhery, Clément Crepy, Shachi Dave, Mostafa
+Dehghani, Sunipa Dev, Jacob Devlin, Mark Díaz,
+Nan Du, Ethan Dyer, Vlad Feinberg, Fangxiaoyu
+Feng, Vlad Fienber, Markus Freitag, Xavier Gar-
+cia, Sebastian Gehrmann, Lucas Gonzalez, Guy Gur-
+Ari, Steven Hand, Hadi Hashemi, Le Hou, Joshua
+Howland, Andrea Hu, Jeffrey Hui, Jeremy Hur-
+witz, Michael Isard, Abe Ittycheriah, Matthew Jagiel-
+ski, Wenhao Jia, Kathleen Kenealy, Maxim Krikun,
+Sneha Kudugunta, Chang Lan, Katherine Lee, Ben-
+jamin Lee, Eric Li, Music Li, Wei Li, YaGuang Li,
+Jian Li, Hyeontaek Lim, Hanzhao Lin, Zhongtao Liu,
+Frederick Liu, Marcello Maggioni, Aroma Mahendru,
+Joshua Maynez, Vedant Misra, Maysam Moussalem,
+Zachary Nado, John Nham, Eric Ni, Andrew Nys-
+trom, Alicia Parrish, Marie Pellat, Martin Polacek,
+Alex Polozov, Reiner Pope, Siyuan Qiao, Emily Reif,
+Bryan Richter, Parker Riley, Alex Castro Ros, Au-
+rko Roy, Brennan Saeta, Rajkumar Samuel, Renee
+Shelby, Ambrose Slone, Daniel Smilkov, David R.
+So, Daniel Sohn, Simon Tokumine, Dasha Valter,
+Vijay Vasudevan, Kiran Vodrahalli, Xuezhi Wang,
+Pidong Wang, Zirui Wang, Tao Wang, John Wiet-
+ing, Yuhuai Wu, Kelvin Xu, Yunhan Xu, Linting
+Xue, Pengcheng Yin, Jiahui Yu, Qiao Zhang, Steven
+Zheng, Ce Zheng, Weikang Zhou, Denny Zhou, Slav
+Petrov, and Yonghui Wu. 2023. Palm 2 technical
+report.
+Joris Baan, Maartje ter Hoeve, Marlies van der Wees,
+Anne Schuth, and Maarten de Rijke. 2019. Under-
+standing multi-head attention in abstractive summa-
+rization.
+Anthony Bau, Yonatan Belinkov, Hassan Sajjad, Nadir
+Durrani, Fahim Dalvi, and James Glass. 2019. Iden-
+tifying and controlling important neurons in neural
+machine translation. In International Conference on
+Learning Representations, New Orleans.
+Jason Baumgartner, Savvas Zannettou, Brian Keegan,
+Megan Squire, and Jeremy Blackburn. 2020. The
+pushshift reddit dataset.
+Tom Brown, Benjamin Mann, Nick Ryder, Melanie
+Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind
+Neelakantan, Pranav Shyam, Girish Sastry, Amanda
+Askell, Sandhini Agarwal, Ariel Herbert-Voss,
+Gretchen Krueger, Tom Henighan, Rewon Child,
+Aditya Ramesh, Daniel Ziegler, Jeffrey Wu, Clemens
+Winter, Chris Hesse, Mark Chen, Eric Sigler, Ma-
+teusz Litwin, Scott Gray, Benjamin Chess, Jack
+Clark, Christopher Berner, Sam McCandlish, Alec
+Radford, Ilya Sutskever, and Dario Amodei. 2020.
+Language models are few-shot learners. In Ad-
+vances in Neural Information Processing Systems,
+volume 33, pages 1877-1901. Curran Associates,
+Inc.
+Kevin Clark, Urvashi Khandelwal, Omer Levy, and
+Christopher D. Manning. 2019. What does BERT
+look at? an analysis of BERT's attention. In Pro-
+ceedings of the 2019 ACL Workshop BlackboxNLP:
+Analyzing and Interpreting Neural Networks for NLP,
+pages 276-286, Florence, Italy. Association for Com-
+putational Linguistics.
+Gonçalo M. Correia, Vlad Niculae, and André F. T.
+Martins. 2019. Adaptively sparse transformers. In
+Proceedings of the 2019 Conference on Empirical
+Methods in Natural Language Processing and the
+9th International Joint Conference on Natural Lan-
+guage Processing (EMNLP-IJCNLP), pages 2174-
+2184, Hong Kong, China. Association for Computa-
+tional Linguistics.
+Damai Dai, Li Dong, Yaru Hao, Zhifang Sui, Baobao
+Chang, and Furu Wei. 2022. Knowledge neurons in
+pretrained transformers. In Proceedings of the 60th
+Annual Meeting of the Association for Computational
+Linguistics (Volume 1: Long Papers), pages 8493-
+8502, Dublin, Ireland. Association for Computational
+Linguistics.
+Nelson Elhage, Tristan Hume, Catherine Olsson,
+Neel Nanda, Tom Henighan, Scott Johnston,
+Sheer ElShowk, Nicholas Joseph, Nova DasSarma,
+Ben Mann, Danny Hernandez, Amanda Askell,
+Kamal Ndousse, Jones, Dawn Drain, Anna
+Chen, Yuntao Bai, Deep Ganguli, Liane Lovitt,
+Zac Hatfield-Dodds, Jackson Kernion, Tom Con-
+erly, Shauna Kravec, Stanislav Fort, Saurav Ka-
+davath, Josh Jacobson, Eli Tran-Johnson, Jared
+Kaplan, Jack Clark, Tom Brown, Sam Mc-
+Candlish, Dario Amodei, and Christopher Olah.
+2022. Softmax linear units. Https://transformer-
+circuits.pub/2022/solu/index.html.
+Nelson Elhage, Neel Nanda, Catherine Olsson, Tom
+Henighan, Nicholas Joseph, Ben Mann, Amanda
+Askell, Yuntao Bai, Anna Chen, Tom Conerly,
+Nova DasSarma, Dawn Drain, Deep Ganguli, Zac
+Hatfield-Dodds, Danny Hernandez, Andy Jones,
+Jackson Kernion, Liane Lovitt, Kamal Ndousse,
+Dario Amodei, Tom Brown, Jack Clark, Jared Ka-
+plan, Sam McCandlish, and Chris Olah. 2021. A
+mathematical framework for transformer circuits.
+Transformer Circuits Thread.
+Angela Fan, Edouard Grave, and Armand Joulin. 2020.
+Reducing transformer depth on demand with struc-
+tured dropout. In International Conference on Learn-
+ing Representations.
+Javier Ferrando, Gerard I. Gállego, Ioannis Tsiamas,
+and Marta R. Costa-jussà. 2023. Explaining how
+transformers use context to build predictions. In
+Proceedings of the 61st Annual Meeting of the As-
+sociation for Computational Linguistics (Volume 1:
+Long Papers), pages 5486-5513, Toronto, Canada.
+Association for Computational Linguistics.
+Leo Gao, Stella Biderman, Sid Black, Laurence Gold-
+ing, Travis Hoppe, Charles Foster, Jason Phang,
+Horace He, Anish Thite, Noa Nabeshima, Shawn
+Presser, and Connor Leahy. 2020. The pile: An
+800gb dataset of diverse text for language modeling.
+Mor Geva, Jasmijn Bastings, Katja Filippova, and Amir
+Globerson. 2023. Dissecting recall of factual associ-
+ations in auto-regressive language models.
+Mor Geva, Avi Caciularu, Kevin Wang, and Yoav Gold-
+berg. 2022. Transformer feed-forward layers build
+predictions by promoting concepts in the vocabulary
+space. In Proceedings of the 2022 Conference on
+Empirical Methods in Natural Language Process-
+ing, pages 30-45, Abu Dhabi, United Arab Emirates.
+Association for Computational Linguistics.
+Mor Geva, Roei Schuster, Jonathan Berant, and Omer
+Levy. 2021. Transformer feed-forward layers are key-
+value memories. In Proceedings of the 2021 Confer-
+ence on Empirical Methods in Natural Language Pro-
+cessing, pages 5484-5495, Online and Punta Cana,
+Dominican Republic. Association for Computational
+Linguistics.
+Aaron Gokaslan and Vanya Cohen. 2019. Openwebtext
+corpus.
+Michael Hanna, Ollie Liu, and Alexandre Variengien.
+2023. How does gpt-2 compute greater-than?: In-
+terpreting mathematical abilities in a pre-trained lan-
+guage model.
+Adi Haviv, Ori Ram, Ofir Press, Peter Izsak, and Omer
+Levy. 2022. Transformer language models without
+positional encodings still learn positional informa-
+tion. In Findings of the Association for Computa-
+tional Linguistics: EMNLP 2022, pages 1382–1390,
+Abu Dhabi, United Arab Emirates. Association for
+Computational Linguistics.
+Ronghang Hu, Jacob Andreas, Trevor Darrell, and Kate
+Saenko. 2018. Explainable neural computation via
+stack neural module networks. In Proceedings of the
+European conference on computer vision (ECCV).
+Alon Jacovi, Oren Sar Shalom, and Yoav Goldberg.
+2018. Understanding convolutional neural networks
+for text classification. In Proceedings of the 2018
+EMNLP Workshop BlackboxNLP: Analyzing and In-
+terpreting Neural Networks for NLP, pages 56–65,
+Brussels, Belgium. Association for Computational
+Linguistics.
+Ganesh Jawahar, Benoît Sagot, and Djamé Seddah.
+2019. What does BERT learn about the structure of
+language? In Proceedings of the 57th Annual Meet-
+ing of the Association for Computational Linguistics,
+pages 3651-3657, Florence, Italy. Association for
+Computational Linguistics.
+Jared Kaplan, Sam McCandlish, Tom Henighan, Tom B.
+Brown, Benjamin Chess, Rewon Child, Scott Gray,
+Alec Radford, Jeffrey Wu, and Dario Amodei. 2020.
+Scaling laws for neural language models.
+Andrej Karpathy, Justin Johnson, and Li Fei-Fei. 2015.
+Visualizing and understanding recurrent networks.
+Amirhossein Kazemnejad, Inkit Padhi,
+Karthikeyan Natesan Ramamurthy, Payel Das,
+and Siva Reddy. 2023. The impact of positional
+encoding on length generalization in transformers.
+Tushar Khot, Daniel Khashabi, Kyle Richardson, Peter
+Clark, and Ashish Sabharwal. 2021. Text modular
+networks: Learning to decompose tasks in the lan-
+guage of existing models. In Proceedings of the 2021
+Conference of the North American Chapter of the
+Association for Computational Linguistics: Human
+Language Technologies, pages 1264–1279, Online.
+Association for Computational Linguistics.
+Louis Kirsch, Julius Kunze, and David Barber. 2018.
+Modular networks: Learning to decompose neural
+computation. In Advances in Neural Information
+Processing Systems, volume 31. Curran Associates,
+Inc.
+Olga Kovaleva, Alexey Romanov, Anna Rogers, and
+Anna Rumshisky. 2019. Revealing the dark secrets
+of BERT. In Proceedings of the 2019 Conference on
+Empirical Methods in Natural Language Processing
+and the 9th International Joint Conference on Natu-
+ral Language Processing (EMNLP-IJCNLP), pages
+4365-4374, Hong Kong, China. Association for Com-
+putational Linguistics.
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey E Hin-
+ton. 2012. Imagenet classification with deep con-
+volutional neural networks. In Advances in Neural
+Information Processing Systems, volume 25. Curran
+Associates, Inc.
+Nelson F. Liu, Matt Gardner, Yonatan Belinkov,
+Matthew E. Peters, and Noah A. Smith. 2019. Lin-
+guistic knowledge and transferability of contextual
+representations. In Proceedings of the 2019 Confer-
+ence of the North American Chapter of the Associ-
+ation for Computational Linguistics: Human Lan-
+guage Technologies, Volume 1 (Long and Short Pa-
+pers), pages 1073-1094, Minneapolis, Minnesota.
+Association for Computational Linguistics.
+André F. T. Martins and Ramón F. Astudillo. 2016.
+From softmax to sparsemax: A sparse model of at-
+tention and multi-label classification. In Proceed-
+ings of the 33rd International Conference on Interna-
+tional Conference on Machine Learning - Volume 48,
+ICML'16, page 1614–1623. JMLR.org.
+Pedro Henrique Martins, Zita Marinho, and André F. T.
+Martins. 2020. Sparse text generation. In Proceed-
+ings of the 2020 Conference on Empirical Methods
+in Natural Language Processing (EMNLP), pages
+4252-4273, Online. Association for Computational
+Linguistics.
+Kevin Meng, David Bau, Alex J Andonian, and Yonatan
+Belinkov. 2022. Locating and editing factual associ-
+ations in GPT. In Advances in Neural Information
+Processing Systems.
+Vlad Niculae and Mathieu Blondel. 2017. A regularized
+framework for sparse and structured neural attention.
+In Advances in Neural Information Processing Sys-
+tems, volume 30. Curran Associates, Inc.
+OpenAI. 2023. Gpt-4 technical report.
+Long Ouyang, Jeff Wu, Xu Jiang, Diogo Almeida, Car-
+roll L. Wainwright, Pamela Mishkin, Chong Zhang,
+Sandhini Agarwal, Katarina Slama, Alex Ray, John
+Schulman, Jacob Hilton, Fraser Kelton, Luke Miller,
+Maddie Simens, Amanda Askell, Peter Welinder,
+Paul Christiano, Jan Leike, and Ryan Lowe. 2022.
+Training language models to follow instructions with
+human feedback.
+Ben Peters, Vlad Niculae, and André F. T. Martins. 2019.
+Sparse sequence-to-sequence models. In Proceed-
+ings of the 57th Annual Meeting of the Association for
+Computational Linguistics, pages 1504-1519, Flo-
+rence, Italy. Association for Computational Linguis-
+tics.
+Matthew E. Peters, Mark Neumann, Mohit Iyyer, Matt
+Gardner, Christopher Clark, Kenton Lee, and Luke
+Zettlemoyer. 2018. Deep contextualized word repre-
+sentations. In Proceedings of the 2018 Conference of
+the North American Chapter of the Association for
+Computational Linguistics: Human Language Tech-
+nologies, Volume 1 (Long Papers), pages 2227-2237,
+New Orleans, Louisiana. Association for Computa-
+tional Linguistics.
+Alec Radford, Rafal Jozefowicz, and Ilya Sutskever.
+2017. Learning to generate reviews and discovering
+sentiment.
+Alec Radford, Jeffrey Wu, Rewon Child, David Luan,
+Dario Amodei, and Ilya Sutskever. 2019. Language
+models are unsupervised multitask learners. OpenAI
+Blog, 1(8):9.
+Stephen Roller, Emily Dinan, Naman Goyal, Da Ju,
+Mary Williamson, Yinhan Liu, Jing Xu, Myle Ott,
+Eric Michael Smith, Y-Lan Boureau, and Jason We-
+ston. 2021. Recipes for building an open-domain
+chatbot. In Proceedings of the 16th Conference of
+the European Chapter of the Association for Compu-
+tational Linguistics: Main Volume, pages 300–325,
+Online. Association for Computational Linguistics.
+Ian Tenney, Dipanjan Das, and Ellie Pavlick. 2019.
+BERT rediscovers the classical NLP pipeline. In
+Proceedings of the 57th Annual Meeting of the Asso-
+ciation for Computational Linguistics, pages 4593-
+4601, Florence, Italy. Association for Computational
+Linguistics.
+Andreas Veit, Michael J Wilber, and Serge Belongie.
+2016. Residual networks behave like ensembles of
+relatively shallow networks. In Advances in Neural
+Information Processing Systems, volume 29. Curran
+Associates, Inc.
+Elena Voita, Rico Sennrich, and Ivan Titov. 2019a. The
+bottom-up evolution of representations in the trans-
+former: A study with machine translation and lan-
+guage modeling objectives. In Proceedings of the
+2019 Conference on Empirical Methods in Natu-
+ral Language Processing and the 9th International
+Joint Conference on Natural Language Processing
+(EMNLP-IJCNLP), pages 4396–4406, Hong Kong,
+China. Association for Computational Linguistics.
+Elena Voita, Pavel Serdyukov, Rico Sennrich, and Ivan
+Titov. 2018. Context-aware neural machine trans-
+lation learns anaphora resolution. In Proceedings
+of the 56th Annual Meeting of the Association for
+Computational Linguistics (Volume 1: Long Papers),
+pages 1264-1274, Melbourne, Australia. Association
+for Computational Linguistics.
+Elena Voita, David Talbot, Fedor Moiseev, Rico Sen-
+nrich, and Ivan Titov. 2019b. Analyzing multi-head
+self-attention: Specialized heads do the heavy lift-
+ing, the rest can be pruned. In Proceedings of the
+57th Annual Meeting of the Association for Computa-
+tional Linguistics, pages 5797-5808, Florence, Italy.
+Association for Computational Linguistics.
+Kevin Wang, Alexandre Variengien, Arthur Conmy,
+Buck Shlegeris, and Jacob Steinhardt. 2022. Inter-
+pretability in the wild: a circuit for indirect object
+identification in gpt-2 small.
+Jason Wei, Yi Tay, Rishi Bommasani, Colin Raffel,
+Barret Zoph, Sebastian Borgeaud, Dani Yogatama,
+Maarten Bosma, Denny Zhou, Donald Metzler, Ed H.
+Chi, Tatsunori Hashimoto, Oriol Vinyals, Percy
+Liang, Jeff Dean, and William Fedus. 2022. Emer-
+gent abilities of large language models. Transactions
+on Machine Learning Research. Survey Certifica-
+tion.
+Susan Zhang, Stephen Roller, Naman Goyal, Mikel
+Artetxe, Moya Chen, Shuohui Chen, Christopher De-
+wan, Mona Diab, Xian Li, Xi Victoria Lin, Todor Mi-
+haylov, Myle Ott, Sam Shleifer, Kurt Shuster, Daniel
+Simig, Punit Singh Koura, Anjali Sridhar, Tianlu
+Wang, and Luke Zettlemoyer. 2022. Opt: Open pre-
+trained transformer language models.
+Sumu Zhao, Damian Pascual, Gino Brunner, and Roger
+Wattenhofer. 2021. Of non-linearity and commutativ-
+ity in bert.
+Neurons
+Neurons
+Neurons
+20k
+30k
+20k
+10k
+Model: 66b
+15k
+10k
+Model: 6.7b
+24
+32
+16
+Model: 30b
+10
+15
+20
+24
+Model: 13b
+4k
+10k
+5k
+5k
+16
+Model: 2.7b
+Model: 1.3b
+12
+16
+0
+10
+15
+20
+1
+9
+Layers
+Layers
+Number of
+bigrams triggering
+a neuron
+51-100
+1-50
+201-500
+☐
+☐
+☐
+1k-2k
+☐
+5k-1M
+101-200
+501-1k
+2k-5k
+Figure 12: Neurons categorized by the number of bi-
+grams able to trigger them. First half of the network,
+alive neurons only.
+Neurons
+Neurons
+Neurons
+10k
+20k
+10k
+30k
+༈༙ཎྜ ཎྜ ॰
+Model: 66b
+Model: 6.7b
+15k
+10k
+5k
+24
+Model: 30b
+10
+15
+20
+24
+Model: 13b
+Model: 2.7b
+10k F
+16
+Model: 1.3b
+8k
+4k
+Number of neurons
+400
+3-gram detectors
+300
+200
+100
+Number of covered 3-grams
+Model
+1.3b
+60k
+2.7b
+6.7b
+40k
+13b
+20k
+30b
+cumulative
+0
+0.0
+0.1 0.2
+0.0
+0.3 0.4 0.5
+0.0
+0.1
+0.2 0.3 0.4
+0.5
+Layer (relative to network depth
+Layer (relative to network depth)
+(a)
+(b)
+Figure 14: (a) Number of trigram-detecting neurons;
+(b) number of trigrams that have a detecting them neu-
+ron: solid line
+per layer, dashed - cumulative over
+-
+layers.
+Number of covered 3-grams Number of covered 3-grams
+10k
+2500
+2000
+1500
+1000
+500
+0
+Model
+13b
+8k
+6k-
+4k
+2k
+0.0-
+Model
+• 30b
+0.0 0.1 0.2 0.3 0.4 0.5
+0.0 0.1 0.2 0.3 0.4 0.5
+Layer (relative to network depth) Layer (relative to network depth)
+New overall tokens ☐ New compared to the previous layer tokens
+Figure 15: Number of trigrams covered in each layer
+with indicated (i) new overall, and (ii) new compared to
+the previous layer tokens.
+Number of
+trigrams triggering
+a neuron
+12
+Layers
+1k-5k
+☐
+5k-20k
+10
+20
+Layers
+51-100
+201-500
+1-50
+П
+101-200
+☐
+501-1k
+ப
+20k-3M
+Figure 13: Neurons categorized by the number of tri-
+grams able to trigger them. First half of the network,
+alive neurons only.
+A N-gram-Detecting Neurons
+-
+A.1 Number of N-grams Triggering a Neuron
+Figure 12 shows how neurons in each layer are
+categorized by the number of covering them bi-
+grams, Figure 13 – trigrams. As expected, neurons
+in larger models are covered by less n-grams.
+A.2 Trigram-Detecting Neurons
+Similarly to token-detecting neurons in Section 4.2,
+we also find neurons that are specialized on 3-
+grams. Specifically, we (1) pick neurons that are
+covered by only 1-50 trigrams, (2) gather trigrams
+that are covered by this neuron (if the neuron ac-
+tivated at least 95% of the time the trigram is
+present), (3) if altogether, these covered trigrams
+are responsible for at least 95% of neuron activa-
+tions.
+Figure 14 shows the results. Overall, the results
+further support our main observations: larger mod-
+els have more neurons responsible for n-grams. In-
+terestingly, when looking at trigrams rather than to-
+kens, at 30b of parameters we see a drastic jump in
+the number of covered n-grams. This indicates that
+one of the qualitative differences between larger
+and smaller models lies in the expansion of the
+families of features they are able to represent.
+A.3 Ensemble-Like Layer Behavior
+Figure 15 shows the number of covered trigrams in
+each layer. We see that in each layer, models cover
+largely new trigrams.
+B
+Positional Neurons
+B.1 Mutual Information
+For each neuron, we evaluate mutual information
+between two random variables:
+• act
+– neuron is activated or not ({Y, N}),
+T}).
+• pos – token position ({1, 2,
+Formal setting. We gather neuron activations
+for full-length data (i.e., T
+=
+2048 tokens) for
+Wikipedia, DM Mathematics and Codeparrot. Let
+fr (pos)
+be activation frequency of neuron n at posi-
+tion pos and frm be the total activation frequency
+of this neuron.
+Then the desired mutual information is as fol-
+lows:
+I (act, pos) =
+T
+1
+=
+-ΣΣ
+p(act|pos) · log
+p(pos)
+p(act|pos)
+p(act)
+act pos=1
+Since we only feed full-length texts, all positions
+appear with the same frequency: p(pos) = 1/T.
+1
+ΕΣ
+T
+Σp(act pos).log
+act {Y,N} pos=1
+p(act|pos)
+p(act)
+=
+24
+T
+1
+Σ p(act=Ypos)-log
+p(act = Y|pos)
++
+16
+p(act = Y)
+pos=1
+T
+pos=1
+1-p(act=Y|pos)
+(1-p(act = Y\pos))-log
+T
+1
+=
+Σ fr (pos).log.
+pos=1
+(1 - fr (pos)). log
+1 - p(act = Y)
+fr. (Pos)
+frn
+(pos)
+1
+frn
+1 – frn
++
+B.2 Positional Neurons for the 350m Model
+The results are shown in Figure 16.
+=
+Layers
+350m
+Figure 16: Positional neurons in the 350m model. Each
+circle corresponds to a single neuron, colors and their
+intensity correspond to the types of patterns shown in
+Figure 7.

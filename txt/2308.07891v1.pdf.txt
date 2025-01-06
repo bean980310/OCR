@@ -1,26 +1,46 @@
-arXiv:2308.07891v1 [cs.CV] 15 Aug 2023
-USER
+--- Page 1 ---
+2308.07891v1 [cs.CV] 15 Aug 2023
+
+arXiv
+
 Link-Context Learning for Multimodal LLMs
-Yan Tai¹, 2*, Weichen Fan¹**, Zhao Zhang¹, Feng Zhu¹, Rui Zhao¹, Ziwei Liu³
-1Sense Time Research
-2 Institute of Automation, CAS
-3S-Lab, Nanyang Technological University
+
+Yan Tai':**, Weichen Fan'*', Zhao Zhang', Feng Zhu!, Rui Zhao', Ziwei Liu’
+
+'SenseTime Research
+2Institute of Automation, CAS
+3§-Lab, Nanyang Technological University
+
 Here are two images: The first one
-is a RockFlock, and the second
-one is a Sheep. Could you tell me
-what animal is in these two
-pictures?
-The first image is a RockFlock,
-while the second one is a Sheep.
-LCL-MLLM
-The first image is a sheep wearing"
+
+isa , and the second
+oneisa . Could you retin me
+
+what animal isin Ro
+
+pictures”
+
+4
+
+USER
+
+The first image is a ——| 7 —_¢
+
+while the second one is a Sheep. LOL- MLLM
+
+The first image is a Sheep wearing >
+
 sunglasses, while the second one
-is a sheep.
-ICL-MLLM
+
+is a sheep. iCL-MLLM
+
 Figure 1: The demo dialogue of our proposed link-context learning. After presenting the model with a pair of unseen images
 and novel concepts, our improved model gains the ability to learn and retain the acquired knowledge throughout the conversation
+
 while the vanilla MLLMs fail to provide accurate answers.
+
 Abstract
+
 The ability to learn from context with novel concepts, and
 deliver appropriate responses are essential in human conver-
 sations. Despite current Multimodal Large Language Models
@@ -40,51 +60,74 @@ discern not only the analogy but also the underlying causal
 associations between data points, which empowers MLLMs to
 recognize unseen images and understand novel concepts more
 effectively. To facilitate the evaluation of this novel approach,
+
 *Equal Technical Contribution.
-*Project Lead.
-we introduce the ISEKAI dataset, comprising exclusively of
+‘Project Lead.
+
+we introduce the ISEKAT dataset, comprising exclusively of
 unseen generated image-label pairs designed for link-context
 learning. Extensive experiments show that our LCL-MLLM
 exhibits strong link-context learning capabilities to novel con-
 cepts over vanilla MLLMs. Code and data will be released at
 https://github.com/isekai-portal/Link-Context-Learning.
+
 1 Introduction
+
 (In the near future, mankind finally be able to travel
 interstellar and come to the centaur constellation.)
+
 Human and MLLM walk off the spaceship.
-Human: "We made it! Look! The locals are here."
-Locals: Greetings, you can call us 'RockFlock'.
-MLLM: "Hi, sheep!"
+
+Human: “We made it! Look! The locals are here.”
+
+Locals: Greetings, you can call us ’RockFlock’.
+
+MLLM: “Hi, sheep!”
+
 Human:
+
 The above conversation between humans and MLLMs
 serves as a humorous representation of how MLLMs struggle
 to learn from demonstration during the conversation for real.
-'RockFlock' is our hand-made species, which possesses both
-Demonstration
-Inference
+’RockFlock’ is our hand-made species, which possesses both
+
+--- Page 2 ---
 In-context Learning
-Q: What is this?
-Q: What is this?
-A: Cat.
-A: Pandal
+
+y1o)
+
+Q:Whatis this? @: Whatis this ?
+Ag. AQ
+
 Link-context Learning
-Q: What is this?
-A: Okapi.
-Q: What is this?
-A: Panda, not okapi.
-Irrelevant
-Relevant
-Q: What is this?
-A: Tiger.
-Q: What is this? 1
-A: Okapi
-Demonstration
-Inference
+
+®
+
+QWhatieihs? — QWhatis tis?
+ES 0\a0}
+
+EePanda, not okapy
+~ — 7
+
+~ ~ >= Xinelevand (Retovani)= & <-7F
+ra are
+! @ Whats this ? Q: Whats this ?
+14 BWriced AOE.
+Sle Soe
+
 Figure 2: The difference between our link-context learn-
 ing with in-context learning. In-context learning involves
 providing irrelevant tasks for demonstration, whereas there
 is a direct causal relationship between the demonstration and
 inference phases of link-context learning.
+
+Demonstration
+uoneasuowog
+
+souasojuy
+
+Inference
+
 a human-like body and a sheep-like head, as shown in Figure
 1. Current MLLMs fail to link the unseen image-label pairs to
 recognize novel objects in a single conversation. To address
@@ -98,10 +141,10 @@ show remarkable improvement on downstream tasks after
 being exposed to a few input-label pairs. However, current
 MLLMs have very limited benefits from in-context learn-
 ing, since the emphasis is primarily on guiding the model
-to acquire the ability to process novel tasks after "learning"
-from meta tasks. However, the model's performance is not
+to acquire the ability to process novel tasks after “learning”
+from meta tasks. However, the model’s performance is not
 affected even if the answers provided in the meta-tasks are all
-wrong. [1] Thus, what MLLMs have "learned" from demon-
+wrong. [1] Thus, what MLLMs have “learned” from demon-
 stration remains on answering questions in a specific format
 rather than understanding the causal relationship between the
 image-label pairs. To enable MLLMs to concentrate more
@@ -112,14 +155,15 @@ counter entirely novel scenarios where both the image and
 the label are unseen. In such instances, the task of extracting
 the underlying cause and effect from the demonstration and
 making accurate predictions based on this newfound knowl-
-edge remains an unsolved puzzle. The 'RockFlock' (unseen
+edge remains an unsolved puzzle. The ’RockFlock’ (unseen
 images and novel concepts), shown in Figure 1, would be
 misrecognized by the previous methods, while our model
-learns the concept of 'RockFlock' from the demonstration
+learns the concept of ’RockFlock’ from the demonstration
 and makes responses accurately. Moreover, the acquisition
 of novel concepts does not impede the existing knowledge,
 enabling the model to effectively distinguish between the
 original and newly learned images.
+
 Inspired by in-context learning (hereinafter called ICL),
 we propose link-context learning (hereinafter called LCL),
 which requires the MLLMs to acquire knowledge about
@@ -127,48 +171,43 @@ new concepts from the conversation and retain their existing
 knowledge for accurate question-answering. As shown in
 Figure 2, current in-context learning in MLLMs emphasizes
 benefiting from the causal-irrelevant demonstration. How-
-Accuracy
-1.0
-0.8
-0.6
-0.4
-0.2
-0.0
-Our Method (7B)
-OpenFlamingo (98)
-Otter (98)
-AVE
+
+‘Accuracy
+
 wingeda
-stripehopper
-hornedephant-
-thornbrawlers-
-aquarover-
+aquarover
 brawnger
-mushroomhaven
-shellfortress-
-lavasnake-
-pineapplepalace-
-rockflock-
-gildedfloatship-
+lavasnake
+rockflock
 cactihog
-airstone-
-blazefrost-
-skyquill-
+airstone
+blazefrost.
+skyquill
+
+stripehopper:
+hornedephant
+thornbrawlers.
+mushroomhaven
+pineapplepalace
+gildedfloatship.
+
 Figure 3: Overview of results on several categories of
 ISEKAI dataset: Our model outperforms OpenFlamingo
 (9B) [6] and Otter (9B) [5] across almost all the categories,
 showcasing superior performance in scenarios involving en-
 tirely unseen images.
+
 ever, for link-context learning, the demonstration and the
-final task are linked causally. (e.g. If the 'apple' is renamed
-as 'orange' in the demonstration, the model should call ap-
-ple an 'orange' during the inference.) With this ability, the
+final task are linked causally. (e.g. If the ’apple’ is renamed
+as orange’ in the demonstration, the model should call ap-
+ple an ’orange’ during the inference.) With this ability, the
 MLLMs could support few-shot learning in a flexible way.
-In the era of Large Language Models, evaluating models'
+
+In the era of Large Language Models, evaluating models’
 performance on few-shot learning becomes a challenge, as
 these models are extensively trained on vast amounts of real-
 life data. To address this issue and provide a comprehensive
-assessment of link-context learning, we introduce the ISEKAI
+assessment of link-context learning, we introduce the [SEKAI
 dataset. This dataset comprises unseen images and concepts,
 entirely novel to MLLMs, as they transcend the boundaries
 of realism. All the images in the dataset are generated by
@@ -176,6 +215,7 @@ Stable Diffusion [3] and Midjourney [4], while all the labels
 or concepts are fabricated as well. Figure 3 shows the com-
 parisons between our model and Otter [5], OpenFlamingo [6]
 on ISEKAI dataset.
+
 In this paper, we present link-context learning (LCL), a
 setting that bestows MLLMs with the capability to under-
 stand the potential causal relationship in the conversation
@@ -185,24 +225,28 @@ tasks, LCL goes a step further by empowering the model to
 establish a mapping between the source and target, thereby
 enhancing its overall performance. The contributions of this
 work can be summarized as follows:
-•
-•
-Link-Context Learning: We introduce a novel causal-
+
+¢ Link-Context Learning: We introduce a novel causal-
 relevant few-shot learning setting, where MLLMs are
 challenged to assimilate new concepts from the ongo-
 ing conversation and retain this knowledge for accurate
 question-answering. Under link-context learning, we em-
 power the MLLMs to grasp the causal relationship be-
 tween the source and target from the demonstration.
-ISEKAI Dataset: Since most real-world data is not com-
+
+* ISEKAI Dataset: Since most real-world data is not com-
 pletely unseen to MLLMs, we release a challenging fab-
 ricated dataset to the public, where novel image-concept
-pairs are introduced, for evaluation of MLLMs' perfor-
+pairs are introduced, for evaluation of MLLMs’ perfor-
+
+--- Page 3 ---
 mance.
+
 2 Related Works
+
 Multimodal Large Language Models [7-11] have demon-
 strated significant capabilities in universal generation or
-recognition tasks. Following the new paradigm of MLLMS,
+recognition tasks. Following the new paradigm of MLLMs,
 various visual tasks can be achieved in a training-free zero-
 shot manner [12, 13], escaping from the heavy pretrain-
 and-finetune process. However, recognize arbitrary content
@@ -210,10 +254,11 @@ through a single model is generally considered extremely dif-
 ficult. How to enhancing recognition capability of MLLMs
 in the wild at a low cost has emerged as a recent research
 focus.
+
 Multimodal Prompt Tuning Multimodal Prompt Tuning
 (M-PT) is commonly used in contrastive learning-based mul-
 timodal large models, such as CLIP [12]. In the training
-process, prompt tuning usually freezes most of the model's
+process, prompt tuning usually freezes most of the model’s
 parameters and only updates a small number of parameters
 to achieve results similar to fine-tuning [14-17]. PT [14] add
 tunable prompt embeddings to each layer of the encoder and
@@ -226,13 +271,14 @@ MaPLe [21] extend prompt tuning to open-vocabulary visual
 recognition tasks. However, traditional prompt tuning meth-
 ods are not suitable for the powerful generative multimodal
 large language models.
+
 Multimodal Instruction Tuning Multimodal Instruction
 Tuning (M-IT) enhances the zero-shot capability of MLLMs
 in unseen tasks by fine-tuning them on an instruction
-descriptions-based dataset [7,8, 11, 22, 23]. MiniGPT-4 [24]
-and LLAVA [11] keep the visual encoder frozen and tune the
+descriptions-based dataset [7,8, 1 1,22,23]. MiniGPT-4 [24]
+and LLaVA [11] keep the visual encoder frozen and tune the
 language model, extending instruction tuning to multimodal-
-ity. mPLUG-Owl [25] tuned visual and text encoder sepa-
+ity. MPLUG-Owl [25] tuned visual and text encoder sepa-
 rately in two stages, and proposed an evaluation dataset for
 assessing vision-related instruction tuning. InstructBLIP [26]
 enhances zero-shot capability by performing instruction tun-
@@ -242,6 +288,7 @@ with bounding box coordinates. Even though these studies
 demonstrate outstanding zero-shot capability, they still can-
 not recognize classes that were not seen during the model
 training process.
+
 Multimodal In-Context Learning Large Language Mod-
 els (LLMs) have shown outstanding capability in learning
 from context samples. In the Multimodal In-Context Learn-
@@ -253,70 +300,80 @@ lowing the model to possess the ability to support in-context
 learning. Otter [5] follows Flamingo and proposed a new in-
 context learning dataset, proceeding with the ICL capability
 in the instruction tuning stage.
+
 Different from previous methods, our proposed link-
 context learning can establish a causal link between the sup-
 port and query set. Specifically, using few-shot class-specific
 images and textual prompts, LCL can link the prompt and
 inference samples, and even associate previously unseen im-
 ages with new concepts.
+
 3 Link-Context Learning
+
 In this section, we first give a brief introduction to in-context
 learning and unveil its main restrictions and difference to our
 link-context learning in Preliminary; next, we bring the power
 of link-context learning into MLLMs in Bring Link-Context
 Learning to MLLMs.
+
 3.1 Preliminary
-=
+
 In-Context Learning Formally, in-context learning [34]
 refers to: the model should choose the answer with the
 highest prediction score from a set candidate answers
-Y
-{Y1, Y2,, Yn}, given a query input x, condition-
+Y = {y1,y2,--,Yn}, given a query input x, condition-
 ing on a support set S, which consists of multiple input-
-label pairs from a wide variety of tasks, where S
-{(x1, Y1), (x2, Y2), ..., (xn, Yn)}. (The query and the sample
+label pairs from a wide variety of tasks, where S =
+{(221,41), (2, Yo); +s (ns Yn)}- (The query and the sample
 of S should belong to different tasks.)
+
 From another perspective, in-context learning could be
+
 denoted as training-free few-shot learning, as it transforms
 the training stage of few-shot learning into the demonstration
 input for Large Language Models. Noted that the ICL [34]
 is consistent with FSL, where the tasks in the demonstra-
 tion (training) stage and in the inference (query) stage are
 different.
-=
 Link-Context Learning Essentially, link-context learning
 (LCL) represents a form of training-free and causal-linked
-few-shot learning. In this approach, a support set S
-(x1,y1), (x2, y2), ..., (xn, Yn) is provided, along with a query
+few-shot learning. In this approach, a support set S =
+(x1, y1), (%2, y2), ++; (Zn; Yn) is provided, along with a query
 sample x from the query set Q, where the data pairs from the
 support set are causally linked to the query set. The model is
 tasked with predicting the answer based on the causal-linked
 relationship between the query and support set.
+
 To provide further clarity, link-context learning signifi-
 cantly strengthens the causal relationship between the sup-
 port set and the query set. For instance: 1). New arithmetic
-rules: In this scenario, the support set consists of arith-
-metic expressions such as (1 <op> 2 = 3), (2 <op> 3 = 5),
+tules: In this scenario, the support set consists of arith-
+metic expressions such as (1 <op> 2 = 3), (2 <op>3 = 5),
 with the query sample being 4 <op> 5 =?. Here,
 "<op>" represents a new arithmetic rule that we aim
 to teach the model through the demonstration; 2).
 Novel image classification: In this case, the support
 set contains pairs like (<unseen image> : <novel cls A>),
-(<unseen image> <novel cls B>), while the query sample is
+(<unseen image> : <novel cls B>), while the query sample is
 (<unseen image> belongs to?). This example demonstrates
 how we expect the model to correctly classify the unseen
 image into one of the specified novel classes based on the
 demonstration.
-In essence, link-context learning enhances the model's
+
+In essence, link-context learning enhances the model’s
 capacity to grasp new concepts and relationships by effec-
 tively establishing a causal link between the support set and
+
+--- Page 4 ---
 the query set. While this setting is applicable to both LLMs
 and MLLMs, our primary focus in this paper is on the appli-
 cation of link-context learning specifically in MLLMs. By
 concentrating on MLLMs, we aim to showcase the potential
 of this approach in multimodal models and its implications
 for advancing their learning capabilities.
-3.2 Bring Link-Context Learning to MLLMs
+
+3.2. Bring Link-Context Learning to MLLMs
+
 In this section, our main objective is to introduce Link-
 Context Learning (LCL) to the realm of MLLMs. Recog-
 nizing that the current MLLMs trained in the ICL manner
@@ -335,13 +392,16 @@ of contrast learning in our training strategy, as discussed in
 Training Strategy. This helps guide the model to understand
 the shared characteristics among samples of the same kind
 and the distinctions between samples of different kinds.
+
 3.2.1 Training Dataset
+
 Unlike traditional tasks that require extensive training data,
 LCL concentrates on acquiring the ability to find the link
 between the source-target pairs in demonstration and gener-
 alize to the query samples. Thus, adequate representation of
 diverse image categories is essential to enable MLLMs to
-grasp o causal relationships effectively and efficiently.
+grasp causal relationships effectively and efficiently.
+
 ImageNetlk [35] is commonly employed for image clas-
 sification tasks, and it is customary to train models on the
 entire dataset to enhance their recognition ability across all
@@ -360,112 +420,128 @@ compassing image-to-image, image-to-text, and text-to-text
 correlations. For a specific category, we sort all other cate-
 gories based on similarity and divide them into N intervals.
 Then, within each interval, we randomly select categories to
-construct a set of "neighbors" with a total quantity of N.
-3.2.2 Training Strategy
+construct a set of "neighbors" with a total quantity of NV.
+
+3.2.2. Training Strategy
+
 In order to make MLLMs understand the causal link be-
 tween the support set and query sample, as well as the causal
 relationship between the input-label pairs in the support
 set, we build positive-negative pairs to urge the model to
 learn from comparisons. Let the support set be denoted as
-S = {S1, S2, ..., Sn}. Based on the correlation among its sam-
-ples, we can redefine the support set as C = {C1, C2, ..., Cm},
-where each cm serves as a prototype representing a cluster
+S' = {81, 82, ..., 8, }. Based on the correlation among its sam-
+ples, we can redefine the support set as C = {c1, C2, ...,Cm},
+where each c,,, serves as a prototype representing a cluster
 of samples from S. These prototypes capture the essential
 relationships and similarities among samples within S. Given
-the query x, we train 0 to maximize the likelihood:
-log pe(y|x) = log pe(yı|x, C, Y1, Y2, Yl-1), (1)
-where denotes the parameters of the language model. The
+the query x, we train to maximize the likelihood:
+
+log po(ylz) = S7 log po(yila, Cy, ya, y-1),
+L
+
+where 6 denotes the parameters of the language model. The
 parameters of the visual encoder are frozen during the train-
 ing.
-=
-=
-=
+
 [2-way] strategy: In this strategy, we train the MLLMs
-for binary image classification, where the C {C1, C2}.
-To be more specific, C₁ and c₂ here represent the proto-
+for binary image classification, where the C = {c1,c2}.
+To be more specific, c; and cz here represent the proto-
 type of two classes. We denote the training class set as
-T {t1, t2,..., t100}, we randomly sample a class ti as
-the positive class, where its neighbor class set Nti
-{nti, n,..., no} (nt is the most similar class to t;, while
-the n100 is the least). Then we apply a hard-negative mining
-strategy, where we sample the negative class nt from Nti
-with a probability pj
-Noted that this setting is
+T = {ti,te,...,t100}, we randomly sample a class t; as
+the positive class, where its neighbor class set N’ =
+{nti ni, ..., ntio} (nii is the most similar class to ¢;, while
+the nig is the least). Then we apply a hard-negative mining
+strategy, where we sample the negative class nj from N%
+
+with a probability p; = sro Noted that this setting is
+
+m=1"™
+
 fixed to train on 16 shots.
-ti
-=
-101-j
-100
-m=1
-m
+
 [2-way-random] strategy: In this strategy, we first train the
 MLLMs on fixed-16 shots following the [2-way] strategy,
 then further train the model with shots averaged sampled
 from 2-16 shots for 10 epochs.
+
 [2-way-weight] strategy: Within this strategy, we initially
+
 train the MLLMs using a fixed-16 shot regimen, adhering
+
 to the [2-way] approach. Subsequently, we refine the model
+
 by additional training with shots sampled from the range of
-2-16, with each shot's probability denoted as p; =
-e³
-16
-m=2
-em
-[mix] strategy: To enhance the model's generalizability, we
+e
+
+2-16, with each shot’s probability denoted as p; = 51 ow
+Tee
+
+[mix] strategy: To enhance the model’s generalizability, we
 undertake a fine-tuning process that involves both [2-way]
-tasks and Shikra's [27] original tasks. During each iteration,
+tasks and Shikra’s [27] original tasks. During each iteration,
 the training samples are evenly sampled from both the [2-
 way] tasks and the original tasks. This balanced approach
 ensures that the model gains proficiency in both the newly
 introduced link-context learning tasks and the pre-existing
 tasks from Shikra [27].
+
 4 ISEKAI Dataset
-To objectively evaluate MLLM's ability to learn new con-
+
+To objectively evaluate MLLM’s ability to learn new con-
 cepts through LCL, we created an ISEKAI dataset, shown
 in Figure 4. The concepts involved are unreal, rarely seen in
-legends, myths, or fictional media. Thus, MLLM's exposure
+legends, myths, or fictional media. Thus, MLLM’s exposure
 to these concepts is minimal. The term "Isekai" originates
-Cactihog
-AirStone
-CrystalStag
-OctoVac
-Pineapple Palace Shellfortress
+
+--- Page 5 ---
 ISEKAI World
-Real World
-ISEKIT
+
+AirStone CrystalStag OctoVac PineapplePalace Shellfortress
+
+Cactihog
+
 Figure 4: Overview of the ISEKAI Dataset: This dataset comprises entirely generated images, where the images from “ISEKAI
-World" are non-existent in real life, while the images from "Real World" are sourced from reality.
+World” are non-existent in real life, while the images from “Real World” are sourced from reality.
+
 from a fantasy subgenre in anime. Plots usually involve char-
 acters transported to a different world, like a fantasy realm or
 virtual universe. Audiences understand the new world gradu-
-ally through the protagonist's exploration, akin to MLLM's
+ally through the protagonist’s exploration, akin to MLLM’s
 journey into a new realm of knowledge.
-The dataset's images are generated by Midjourney's [4]
+
+The dataset’s images are generated by Midjourney’s [4]
 text-to-image model using well-crafted instructions. Images
 were manually selected to ensure core concept consistency.
 The dataset currently comprises 20 groups, and 40 categories
 in total (continues to grow). Each group pairs a new concept
 with a related real-world concept, like "octopus vacuum" and
-"octopus." These can serve as challenging negative samples
+“octopus.” These can serve as challenging negative samples
 for each other. Each concept has no less than 32 images, sup-
 porting multi-shot examples. These features enable ISEKAI
-to comprehensively assess the model's LCL capability. We
-also provide text descriptions of each concept's appearance
+to comprehensively assess the model’s LCL capability. We
+also provide text descriptions of each concept’s appearance
 and name, contributing to evaluations beyond LCL.
-In this paper, we evaluated different models' performance
-on ISEKAI. For details, refer to Results on ISEKAI.
+
+In this paper, we evaluated different models’ performance
+on ISEKALI. For details, refer to Results on ISEKAI.
+
 5 Experiments
+
 In this section, we present the results of our experiments
 to showcase the effectiveness of our proposed method. We
+
 conduct comprehensive comparisons between our approach
 (link-context learning-based) and other in-context learning-
 based MLLMs.
+
 5.1 Results on ISEKAI
+
 To quantitatively evaluate the performance of link-context
 learning, we compare our methods in different strategies with
 our baseline (Shikra [27]) as well as ICL methods (Otter and
 OpenFlamingo) in two challenge datasets: ISEKAI-10 and
 ISEKAI-pair.
+
 ISEKAI-10 Evaluation: Comprising 10 classes of challeng-
 ing positive-negative image pairs, ISEKAI-10 presents a
 scenario where the positive class is entirely nonexistent in
@@ -476,217 +552,86 @@ comes on the ISEKAI-10 dataset, where vanilla-shikra [27]
 encountered difficulty. Our model demonstrates competitive
 performance compared with OpenFlamingo [6] and Otter [5]
 across all shot numbers.
+
 ISEKAI-pair Evaluation: In the ISEKAI-pair evaluation,
 positive and negative pairs are constructed using all image
-Setting
-Method
-2-shot 4-shot 6-shot 8-shot 10-shot 12-shot 14-shot 16-shot
-OpenFlamingo [6]
-0.46
-0.44
-0.46
-0.48
-0.50
-0.50
-0.48
-0.46
-Otter [5]
-0.23
-0.23
-0.19
-0.15
-0.14
-0.12
-0.10
-0.07
-ISEKAI-10
-Vanilla-Shikra [27]
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-Ours-[2-way-random]
-0.64
-0.63
-0.65
-0.62
-0.61
-0.57
-0.56
-0.56
-Ours-[mix]
-0.68
-0.70
-0.73
-0.69
-0.63
-0.62
-0.65
-0.62
-OpenFlamingo [6]
-0.19
-0.34
-0.38
-0.39
-0.41
-0.40
-0.40
-0.40
-Otter [5]
-0.01
-0.04
-0.04
-0.03
-0.03
-0.02
-0.02
-0.01
-ISEKAI-pair
-Vanilla-Shikra [27]
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-0.00
-Ours-[mix]
-0.39
-0.38
-0.38
-0.40
-0.40
-0.39
-0.37
-0.35
-Ours-[2-way-random]
-0.43 0.46
-0.47
-0.48
-0.48
-0.49
-0.49
-0.49
+
+--- Page 6 ---
+Setting Method 2-shot | 4-shot | 6-shot | 8-shot | 10-shot | 12-shot | 14-shot | 16-shot
+OpenFlamingo [6] 0.46 0.44 0.46 0.48 0.50 0.50 0.48 0.46
+Otter [5] 0.23 0.23 0.19 0.15 0.14 0.12 0.10 0.07
+ISEKAI-10 Vanilla-Shikra [27] 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+Ours-[2-way-random] | 0.64 0.63 0.65 0.62 0.61 0.57 0.56 0.56
+Ours-[mix] 0.68 0.70 0.73 0.69 0.63 0.62 0.65 0.62
+OpenFlamingo [6] 0.19 0.34 0.38 0.39 0.41 0.40 0.40 0.40
+Otter [5] 0.01 0.04 0.04 0.03 0.03 0.02 0.02 0.01
+ISEKAI-pair | Vanilla-Shikra [27] 0.00 0.00 0.00 0.00 0.00 0.00 0.00 0.00
+Ours-[mix] 0.39 0.38 0.38 0.40 0.40 0.39 0.37 0.35
+Ours-[2-way-random] | 0.43 0.46 0.47 0.48 0.48 0.49 0.49 0.49
+
 Table 1: Quantitative evaluation on ISEKAI from zero-shot to 16-shot, measured by accuracy. We achieve the best results
+
 compared with Otter [5] and OpenFlamingo [6].
-Method
-zero-shot 2-shot
-4-shot 6-shot 8-shot 10-shot 12-shot 14-shot 16-shot
-OpenFlamingo [6]
-0.00
-0.41
-0.62
-0.72
-0.75
-0.77
-0.78
-0.73
-0.72
-Otter [5]
-0.13
-0.18
-0.21
-0.24
-0.25
-0.26
-0.24
-0.23
-0.23
-Vanilla-Shikra [27]
-0.05
-0.0
-0.0
-0.0
-0.0
-0.0
-0.0
-0.0
-0.0
-Ours-[mix]
-0.16
-0.73
-0.78
-0.83
-0.73
-0.71
-0.72
-0.65
-0.57
-Ours-[2-way]
-0.02
-0.51
-0.61
-0.68
-0.73
-0.77
-0.78
-0.78
-0.79
-Ours-[2-way-random]
-0.0
-0.77
-0.78
-0.77
-0.79
-0.77
-0.77
-0.77
-0.75
-Ours-[2-way-weight]
-0.0
-0.69
-0.71
-0.72
-0.76
-0.77
-0.78
-0.78
-0.79
+
+Method | zero-shot | 2-shot | 4-shot | 6-shot | 8-shot | 10-shot | 12-shot | 14-shot | 16-shot
+OpenFlamingo [6] 0.00 0.41 0.62 0.72 0.75 0.77 0.78 0.73 0.72
+Otter [5] 0.13 0.18 0.21 0.24 0.25 0.26 0.24 0.23 0.23
+Vanilla-Shikra [27] 0.05 0.0 0.0 0.0 0.0 0.0 0.0 0.0 0.0
+Ours-[mix] 0.16 0.73 0.78 0.83 0.73 0.71 0.72 0.65 0.57
+Ours-[2-way] 0.02 0.51 0.61 0.68 0.73 0.77 0.78 0.78 0.79
+Ours-[2-way-random] 0.0 0.77 0.78 0.77 0.79 0.77 0.77 0.77 0.75
+Ours-[2-way-weight] 0.0 0.69 0.71 0.72 0.76 0.77 0.78 0.78 0.79
+
 Table 2: Quantitative evaluation on ImageNet-100 from zero-shot to 16-shot, measured by accuracy. We achieve the best
+
 results compared with Otter [5] and OpenFlamingo [6].
+
 categories that do not exist in the real world. Each individual
 image is paired with all images from other categories, facili-
 tating a comprehensive assessment. This evaluation provides
-a realistic gauge of the model's capability to handle complete
+a realistic gauge of the model’s capability to handle complete
 unknowns through various combinations. The lower section
-of Table 1 underscores our model's superiority over Open-
+of Table 1 underscores our model’s superiority over Open-
 Flamingo [6] and Otter [5] in this context.
-Qualitative Results: Figure 1 provides a visual compari-
+
+Qualitative Results: Figure | provides a visual compari-
 son between our model and OpenFlamingo [6], as well as
 Otter [5]. Notably, our model demonstrates its proficiency
 in accurately comprehending novel concepts and effectively
 discerning unfamiliar objects from those with close resem-
-blance. This observation underscores our model's capacity to
+blance. This observation underscores our model’s capacity to
 capture the causal relationship between the source and target
 domains from the demonstration.
+
 5.2 Results on ImageNet-100
-We proceed to assess our model's performance on ImageNet-
+
+We proceed to assess our model’s performance on ImageNet-
 100, encompassing 100 classes that were entirely absent from
 the training phase. The outcomes underscore the efficacy
 of our mix strategy, which attains the highest accuracy of
 83% at 6-shot. In contrast, Otter achieves a peak accuracy
-of 25%, and OpenFlamingo's performance reaches 78%.
+of 25%, and OpenFlamingo’s performance reaches 78%.
 Unlike the ISEKAI dataset, the images from ImageNet-100
 do correspond to real-world entities.
+
 5.3 Ablation Study
+
 Does the ground-truth input-label mapping exists?
+
 We conduct an ablation analysis on the correctness of labels
 within the demonstration (support set). Given a set of im-
-age domains Xc ERH×W×3 and label domains C E R³, a
-mapping ƒ : Xc → C exists to associate each image with
+age domains 4c € R43 and label domains C € RY, a
+mapping f : X% — C exists to associate each image with
 its corresponding label. We use several image-label pairs
-{(x²₁, C₁), (x²₁, C₁), ..., (x², c₁)}, where x₁₂ = Xc₂, as the
+{(a},,c1), (w2,,¢1),.-., (e?,,¢1)}, where a2, € X,,, as the
 support set. The model is going to predict the correct answer
 from a candidate set Y:
-ŷ
-= arg max P(yi|x, f),
-YiЄY
-where the prediction is conditioned on the mapping ƒ.
+
+g = arg max P(yi|x, f), (2)
+
+yieY
+
+where the prediction is conditioned on the mapping f.
 Consequently, intentionally breaking the mapping rela-
 tionship within the support set would lead the model to
 provide incorrect answers, as it heavily relies on the accurate
@@ -698,55 +643,71 @@ into the support set, and the accuracy falls from 0.78 to
 0%. These results clearly show that maintaining accurate
 associations between image-label pairs within the support
 set plays a crucial role in link-context learning.
+
 Would the model benefit from using a larger shot?
-Query set
+
+--- Page 7 ---
 Support set
+
 User: What is in the image? User: What is in the image?
-Answer: Cactihog.
-Answer: Hedgehog.
-User: What is in the image? User: What is in the image?
-Answer: Mushroomhaven. Answer: Mushroom.
+
+Answer: Cactihog. Answer: Hedgehog.
+
+Query set
+
 User: What is in the image?
+
+User: What is in the image?
+
+User: What is in the image? User: What is in the image?
+
+Answer: Mushroomhaven. Answer: Mushroom.
+
+User: What is in the image?
+
+User: What is in the image?
+
 Otter: This image is of a
 small, green, and cute animal.
-OpenFlamingo: An image of
-cactus.
-Ours: Cactihog.
-User: What is in the image?
+
 Otter: A hedgehog in a field of
 flowers.
-OpenFlamingo: An image of
-hedgehog.
-Ours: Hedgehog.
-User: What is in the image?
-User: What is in the image?
-Otter: A mushroom with a
-blue roof and a door.
-Open Flamingo: An image of
-mushroom house.
-Ours: Mushroomhaven.
+: An image of : An image of
+cactus. hedgehog.
+
+Ours: Cactihog. Ours: Hedgehog.
+
 Otter: A mushroom with water
 droplets on it.
-OpenFlamingo: An image of
-mushrooms.
-Ours: Mushroom.
+
+Otter: A mushroom with a
+blue roof and a door.
+: An image of : An image of
+
+mushroom house. mushrooms.
+
+Ours: Mushroomhaven. Ours: Mushroom.
+
 Figure 5: Qualitative comparisons of novel images understanding results between ours and OpenFlamingo [6], Otter [5].
-The name "Cactihog" is a fusion of "cactus” and “hedgehog", combining the key features of these two creatures. The name
-"MushroomHaven" suggests a dwelling place characterized by giant mushrooms
-Much like supervised learning, the model's accuracy experi-
+The name “Cactihog” is a fusion of “cactus” and “hedgehog”, combining the key features of these two creatures. The name
+“MushroomHaven” suggests a dwelling place characterized by giant mushrooms
+
+Much like supervised learning, the model’s accuracy experi-
 ences rapid initial growth with an increasing amount of train-
 ing data, eventually reaching a plateau. During this phase,
 the selection of more representative samples becomes crucial.
 Figure 6 presents two outcomes: one depicts model accuracy
 from separate training at a fixed shot (gray bar in the figure),
-while the other showcases the model's performance through
+while the other showcases the model’s performance through
 sampling across various shots (red line in the figure). The
 results reveal slight gains from lower fixed-shot training and
 consistent performance from random-shot training. Notably,
 in both random and fixed settings, accuracy plateaus or expe-
 riences gradual growth after the 8-shot threshold.
-What does the model's decision-making in the case of
+
+What does the model’s decision-making in the case of
 multi-shot depend on?
+
 As shown in Fig 8, when disturbing the label of different
 positions, the accuracy of the model with 16-shot drops dif-
 ferently, which reflects the extent to which the model prefers
@@ -754,12 +715,15 @@ different locations. We observe that the model heavily relies
 on the beginning and the middle positions. From another
 aspect, it provides an explanation of why the model encoun-
 ters a plateau in a higher number of shots. Similarly, this
+
 phenomenon also exists in LLMs [36], where the language
-model tends to be "lost in the middle" when processing long
-contexts. They also reveal that the model's performance keeps
+model tends to be “lost in the middle” when processing long
+contexts. They also reveal that the model’s performance keeps
 decreasing when the contexts grow longer.
+
 What is the difference between different training strate-
 gies?
+
 Table 2 presents a comprehensive view of the outcomes
 achieved through our four distinct training strategies. The
 mix strategy stands out by elevating the zero-shot accuracy
@@ -768,127 +732,110 @@ at 6-shot; however, its performance diminishes to 57% at
 16-shot. In contrast, the 2-way strategy, anchored at 16-shot
 training, initiates with a 51% accuracy at 2-shot and progres-
 sively ascends to 79% at 16-shot. Interestingly, we observe
-that the accuracy trend of the 2-way strategy isn't solely at-
+that the accuracy trend of the 2-way strategy isn’t solely at-
 tributable to an increase in shots, but rather stems from a
 closer alignment with the trained pattern. To validate this,
 we introduce two additional settings: 2-way-random and 2-
 way-weight. These settings undergo fixed-shot training for
 initialization, followed by finetuning across 2-16 shots with
 random and weighted approaches, respectively. Both exhibit
-Accuracy
-Sampled
-Fixed
-Ours
-OpenFlamingo
-Otter
---- Origin
-Ours
-0.80
-0.78
-0.79
-0.78
-0.800
+
+--- Page 8 ---
+— Sampled Fixed
+
 0.76
-0.8-
-0.775
-0.75-
-0.7-
-0.71
-0.70 0.69
-0.6-
-0.65-
-0.60-
-Accuracy
-0.5
-0.4-
-Q.64
-0.48
-0.38
-0.35
-0.750-
-Accuracy
-0.725
-0.69
-0.7
-0.68
-0.700
-0.675
-0.3-
-0.55-
-0.50
-40
-0.650-
-0.63
-0.63
-0.2
-0.2
-0.625-
-0.1
-0.600
-1st
-4th
-8th
-12th
-16th
-0.45-
-0.40-
-0.0
-Modified Position
-0.0
-0%
-25%
-2-shot 4-shot
-8-shot
-12-shot
+
+0.40 - ‘
 16-shot
-50%
-False Rate
-75%
-100%
+
+2shot4-shot @-shot_ —-12-shot
 Figure 6: The ablation study on shot
-number. The grey bars illustrate the high
+number. The grey bars illustrate the high-
 est accuracy achieved for each shot num-
 ber, denoting specific shot-based train-
 ing. The red line illustrates the perfor-
 mance of the model trained using a sam-
 pled strategy. Notably, both scenarios ex-
 hibit plateaus in accuracy after reaching
-the 8-shot mark.
+
+— ours
+_0.78
+
+— penFlamingo — Otter
+
+og
+
+0.7 ~ 64
+0.6 ~
+0.48
+> 0.5 -
+8
+$o4- 0.35, 238
+= 03-
+0.2
+0.2-
+o1-
+0
+0.0 ~
+0% 25% 50% 75% 100%
+
+False Rate
+
 Figure 7: The ablation study on false
 rate. In contrast to OpenFlamingo [6],
 which sustains a 38% accuracy at a 100%
 false rate, our model attains 0% accuracy
 under the same conditions. This outcome
-underscores our model's ability to pre-
+underscores our model’s ability to pre-
 serve precise linkages between the sup-
 port set and the query.
+
+0.800 -
+ons-
+o7s0-
+ons- 07
+2 0168
+5 0.700 ~ 0.68
+< 0.675 -
+oso 0-63 0.83
+0.85 -
+0.600,
+ib en ain na
+Modified Position.
+
 Figure 8: The effect of label modifica-
 tions at distinct positions. The dashed
 blue line serves as a reference for the
-original accuracy, while the red line
-por-
+original accuracy, while the red line por-
 trays the accuracy of our model subse-
 quent to the label modified at specific
 positions. Significant accuracy drop re-
 flects position dependency, while minor
 change indicates position insignificance
-in the model's decision-making.
+in the model’s decision-making.
+
+the 8-shot mark.
+
 considerable accuracy improvements in lower shots. Notably,
 while the accuracy of higher shots, finetuned with a random
-strategy, drops-an observation mirroring the behavior of the
+strategy, drops—an observation mirroring the behavior of the
 mix strategy. These results underscore the efficacy of an even,
 sustained, and generalized training approach in harnessing
 the potential of large language models, revealing the emer-
 gence of a "lost-in-the-middle" phenomenon, in coherence
 with our earlier observations.
+
 Does the training harm the zero-shot performance?
 Table 3 shows the comparison between our-7B model with
 shikra-13B [27] and some previous SOTA methods on
 Imagenet-100 and VQAv2. From the results, we conclude
-that our mix training strategy would not harm the model's
+that our mix training strategy would not harm the model’s
 zero-shot performance.
+
 6 Discussion
+
 6.1 Limitations
+
 We believe that this work introduces a challenging and
 promising setting for both MLLMs and LLMs. However,
 the primary focus in this paper lies on link-context learn-
@@ -896,6 +843,7 @@ ing within the context of MLLMs, specifically validating
 the basic tasks such as image classification. Consequently,
 this work should be regarded as a foundational baseline for
 exploring the potential of link-context learning.
+
 Looking ahead, future research directions encompass a
 deeper theoretical analysis that delves into the intricacies of
 the causal relationship between the support samples and, cru-
@@ -905,35 +853,29 @@ sent meaningful avenues of inquiry that could lead to signifi-
 cant advancements in the capabilities of models in reasoning,
 learning, and adapting to novel scenarios. As the field pro-
 gresses, we anticipate further investigations and refinements
-ImageNet-100 VQAV2dev VQAV2std
-Method
-OpenFlamingo [6]
-Flamingo-80B [33]
-Flamingo-9B [33]
-BLIP2 [9]
-0.00
-56.3
-51.8
-65.0
-Otter [5]
-0.13
-Shikra-13B [27]
-Ours-7B-[mix]
-0.05
-77.3
-77.5
-0.16
-75.1
-75.3
+
+Method | ImageNet-100 | VQAv2"" | VQAv2"¢
+OpenFlamingo [6] 0.00 - -
+Flamingo-80B [33] - 56.3 -
+Flamingo-9B [33] - 51.8 -
+
+BLIP2 [9] - 65.0 -
+Otter [5] 0.13 - -
+Shikra-13B [27] 0.05 71.3 715
+Ours-7B-[mix] 0.16 75.1 15.3
+
 Table 3: Quantitative evaluation was conducted on both
-ImageNet-100 and VQAv2 datasets employing a zero-shot
+ImageNet-100 and VQAv?2 datasets employing a zero-shot
 approach. The outcomes substantiate that our training strat-
 egy exhibits no detrimental impact on the zero-shot perfor-
 mance.
+
 that will not only enrich our understanding of link-context
 learning but also implement in-context learning for MLLMs
 and LLMs in a unified way.
+
 6.2 Conclusion
+
 In conclusion, this paper introduces a groundbreaking
 paradigm of causal-relevant few-shot learning, significantly
 expanding the capabilities of Multimodal Large Language
@@ -946,149 +888,218 @@ this capacity to previously unencountered images and novel
 concepts. This pivotal advancement propels MLLMs into un-
 charted territories, enabling them to not only acquire but also
 apply knowledge in a manner more akin to human cognition.
+
+--- Page 9 ---
 References
-[1] Sewon Min, Xinxi Lyu, Ari Holtzman, Mikel Artetxe, Mike
+
+1
+
+Sewon Min, Xinxi Lyu, Ari Holtzman, Mikel Artetxe, Mike
 Lewis, Hannaneh Hajishirzi, and Luke Zettlemoyer. Rethink-
 ing the role of demonstrations: What makes in-context learning
 work? arXiv preprint arXiv:2202.12837, 2022.
-[2] Maria Tsimpoukelli, Jacob L Menick, Serkan Cabi, SM Es-
+
+Maria Tsimpoukelli, Jacob L Menick, Serkan Cabi, SM Es-
 lami, Oriol Vinyals, and Felix Hill. Multimodal few-shot
 learning with frozen language models. Advances in Neural
 Information Processing Systems, 34:200-212, 2021.
-[3] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick
-Esser, and Björn Ommer. High-resolution image synthesis
+
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick
+Esser, and Bjérn Ommer. High-resolution image synthesis
 with latent diffusion models. In Proceedings of the IEEE/CVF
 conference on computer vision and pattern recognition, pages
 10684-10695, 2022.
-[4] Midjourney. Midjourney. https://www.midjourney.com, 2023.
-[5] Bo Li, Yuanhan Zhang, Liangyu Chen, Jinghao Wang,
+
+Midjourney. Midjourney. https://www.midjourney.com, 2023.
+
+Bo Li, Yuanhan Zhang, Liangyu Chen, Jinghao Wang,
 Jingkang Yang, and Ziwei Liu. Otter: A multi-modal model
 with in-context instruction tuning. CoRR, abs/2305.03726,
 2023.
-[6] Anas Awadalla, Irena Gao, Joshua Gardner, Jack Hessel, Yusuf
+
+Anas Awadalla, Irena Gao, Joshua Gardner, Jack Hessel, Yusuf
 Hanafy, Wanrong Zhu, Kalyani Marathe, Yonatan Bitton,
 Samir Gadre, Jenia Jitsev, Simon Kornblith, Pang Wei Koh,
 Gabriel Ilharco, Mitchell Wortsman, and Ludwig Schmidt.
 Openflamingo, March 2023.
-[7] OpenAI. Gpt-4 technical report, 2023.
-[8] Junnan Li, Dongxu Li, Caiming Xiong, and Steven Hoi. Blip:
+
+OpenAI. Gpt-4 technical report, 2023.
+
+Junnan Li, Dongxu Li, Caiming Xiong, and Steven Hoi. Blip:
 Bootstrapping language-image pre-training for unified vision-
 language understanding and generation. In International Con-
 ference on Machine Learning, pages 12888-12900. PMLR,
 2022.
-[9] Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-
+
+Junnan Li, Dongxu Li, Silvio Savarese, and Steven Hoi. Blip-
 2: Bootstrapping language-image pre-training with frozen
 image encoders and large language models. arXiv preprint
 arXiv:2301.12597, 2023.
-[10] Baolin Peng, Chunyuan Li, Pengcheng He, Michel Galley, and
+
+Baolin Peng, Chunyuan Li, Pengcheng He, Michel Galley, and
 Jianfeng Gao. Instruction tuning with gpt-4. arXiv preprint
 arXiv:2304.03277, 2023.
-[11] Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee.
+
+Haotian Liu, Chunyuan Li, Qingyang Wu, and Yong Jae Lee.
 Visual instruction tuning. arXiv preprint arXiv:2304.08485,
 2023.
-[12] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh,
+
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh,
 Gabriel Goh, Sandhini Agarwal, Girish Sastry, Amanda Askell,
 Pamela Mishkin, Jack Clark, et al. Learning transferable visual
 models from natural language supervision. In International
 conference on machine learning, pages 8748-8763. PMLR,
 2021.
-[13] Liunian Harold Li, Pengchuan Zhang, Haotian Zhang, Jianwei
+
+Liunian Harold Li, Pengchuan Zhang, Haotian Zhang, Jianwei
 Yang, Chunyuan Li, Yiwu Zhong, Lijuan Wang, Lu Yuan, Lei
 Zhang, Jenq-Neng Hwang, et al. Grounded language-image
 pre-training. In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 10965-
+on Computer Vision and Pattern Recognition, pages 10965—
 10975, 2022.
-[14] Hao Yang, Junyang Lin, An Yang, Peng Wang, Chang Zhou,
+
+Hao Yang, Junyang Lin, An Yang, Peng Wang, Chang Zhou,
 and Hongxia Yang. Prompt tuning for generative multimodal
 pretrained models. arXiv preprint arXiv:2208.02532, 2022.
-[15] Kaiyang Zhou, Jingkang Yang, Chen Change Loy, and Ziwei
-Liu. Learning to prompt for vision-language models. In-
+Kaiyang Zhou, Jingkang Yang, Chen Change Loy, and Ziwei
+Liu. Learning to prompt for vision-language models. Jn-
 ternational Journal of Computer Vision, 130(9):2337-2348,
 2022.
-[16] Kaiyang Zhou, Jingkang Yang, Chen Change Loy, and Ziwei
+
+20
+
+21
+
+22.
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+Kaiyang Zhou, Jingkang Yang, Chen Change Loy, and Ziwei
 Liu. Conditional prompt learning for vision-language models.
 In Proceedings of the IEEE/CVF Conference on Computer
-Vision and Pattern Recognition, pages 16816–16825, 2022.
-[17] Xuejing Liu, Wei Tang, Jinghui Lu, Rui Zhao, Zhaojun Guo,
+Vision and Pattern Recognition, pages 16816-16825, 2022.
+Xuejing Liu, Wei Tang, Jinghui Lu, Rui Zhao, Zhaojun Guo,
 and Fei Tan. Deeply coupled cross-modal prompt learning.
 arXiv preprint arXiv:2305.17903, 2023.
-[18] Menglin Jia, Luming Tang, Bor-Chun Chen, Claire Cardie,
+
+Menglin Jia, Luming Tang, Bor-Chun Chen, Claire Cardie,
 Serge Belongie, Bharath Hariharan, and Ser-Nam Lim. Visual
 prompt tuning. In European Conference on Computer Vision,
 pages 709-727. Springer, 2022.
-[19] Yuhang Zang, Wei Li, Kaiyang Zhou, Chen Huang, and
+
+Yuhang Zang, Wei Li, Kaiyang Zhou, Chen Huang, and
 Chen Change Loy. Unified vision and language prompt learn-
 ing, 2022.
-[20] Shuhuai Ren, Aston Zhang, Yi Zhu, Shuai Zhang, Shuai
+
+Shuhuai Ren, Aston Zhang, Yi Zhu, Shuai Zhang, Shuai
 Zheng, Mu Li, Alex Smola, and Xu Sun. Prompt pre-
 training with twenty-thousand classes for open-vocabulary
 visual recognition, 2023.
-[21] Muhammad Uzair Khattak, Hanoona Rasheed, Muhammad
+
+Muhammad Uzair Khattak, Hanoona Rasheed, Muhammad
 Maaz, Salman Khan, and Fahad Shahbaz Khan. Maple: Multi-
 modal prompt learning, 2023.
-[22] Jason Wei, Maarten Bosma, Vincent Zhao, Kelvin Guu,
+
+Jason Wei, Maarten Bosma, Vincent Zhao, Kelvin Guu,
 Adams Wei Yu, Brian Lester, Nan Du, Andrew M. Dai, and
 Quoc V Le. Finetuned language models are zero-shot learn-
+
 ers. In International Conference on Learning Representations,
 2022.
-[23] OpenAI. Introducing ChatGPT. https://openai.com/blog/
+
+OpenAlL. Introducing ChatGPT. https://openai.com/blog/
 chatgpt, 2023.
-[24] Deyao Zhu, Jun Chen, Xiaoqian Shen, Xiang Li, and Mo-
+
+Deyao Zhu, Jun Chen, Xiaogian Shen, Xiang Li, and Mo-
 hamed Elhoseiny. Minigpt-4: Enhancing vision-language un-
 derstanding with advanced large language models, 2023.
-[25] Qinghao Ye, Haiyang Xu, Guohai Xu, Jiabo Ye, Ming Yan,
+Qinghao Ye, Haiyang Xu, Guohai Xu, Jiabo Ye, Ming Yan,
 Yiyang Zhou, Junyang Wang, Anwen Hu, Pengcheng Shi,
 Yaya Shi, Chenliang Li, Yuanhong Xu, Hehong Chen, Junfeng
 Tian, Qian Qi, Ji Zhang, and Fei Huang. mplug-owl: Modular-
 ization empowers large language models with multimodality,
 2023.
-[26] Wenliang Dai, Junnan Li, Dongxu Li, Anthony Meng Huat
+
+Wenliang Dai, Junnan Li, Dongxu Li, Anthony Meng Huat
 Tiong, Junqi Zhao, Weisheng Wang, Boyang Li, Pascale Fung,
 and Steven Hoi. Instructblip: Towards general-purpose vision-
 language models with instruction tuning, 2023.
-[27] Keqin Chen, Zhao Zhang, Weili Zeng, Richong Zhang, Feng
-Zhu, and Rui Zhao. Shikra: Unleashing multimodal llm's
+
+Keqin Chen, Zhao Zhang, Weili Zeng, Richong Zhang, Feng
+Zhu, and Rui Zhao. Shikra: Unleashing multimodal Ilm’s
 referential dialogue magic, 2023.
-[28] Zhiliang Peng, Wenhui Wang, Li Dong, Yaru Hao, Shaohan
+
+Zhiliang Peng, Wenhui Wang, Li Dong, Yaru Hao, Shaohan
 Huang, Shuming Ma, and Furu Wei. Kosmos-2: Grounding
 multimodal large language models to the world, 2023.
-[29] Qingxiu Dong, Lei Li, Damai Dai, Ce Zheng, Zhiyong Wu,
+Qingxiu Dong, Lei Li, Damai Dai, Ce Zheng, Zhiyong Wu,
 Baobao Chang, Xu Sun, Jingjing Xu, Lei Li, and Zhifang Sui.
 A survey on in-context learning, 2023.
-[30] Zhengyuan Yang, Linjie Li, Jianfeng Wang, Kevin Lin, Ehsan
+
+Zhengyuan Yang, Linjie Li, Jianfeng Wang, Kevin Lin, Ehsan
 Azarnasab, Faisal Ahmed, Zicheng Liu, Ce Liu, Michael Zeng,
 and Lijuan Wang. Mm-react: Prompting chatgpt for multi-
 modal reasoning and action, 2023.
-[31] Pan Lu, Baolin Peng, Hao Cheng, Michel Galley, Kai-Wei
+
+Pan Lu, Baolin Peng, Hao Cheng, Michel Galley, Kai-Wei
 Chang, Ying Nian Wu, Song-Chun Zhu, and Jianfeng Gao.
 Chameleon: Plug-and-play compositional reasoning with large
 language models, 2023.
-[32] Tanmay Gupta and Aniruddha Kembhavi. Visual program-
+
+Tanmay Gupta and Aniruddha Kembhavi. Visual program-
 ming: Compositional visual reasoning without training, 2022.
+
+--- Page 10 ---
 [33] Jean-Baptiste Alayrac, Jeff Donahue, Pauline Luc, Antoine
+
+[35]
+
+[36]
+
 Miech, Iain Barr, Yana Hasson, Karel Lenc, Arthur Mensch,
 Katherine Millican, Malcolm Reynolds, Roman Ring, Eliza
 Rutherford, Serkan Cabi, Tengda Han, Zhitao Gong, Sina
 Samangooei, Marianne Monteiro, Jacob L Menick, Sebas-
 tian Borgeaud, Andy Brock, Aida Nematzadeh, Sahand Shar-
-ifzadeh, Mikołaj Bińkowski, Ricardo Barreira, Oriol Vinyals,
+ifzadeh, Mikot aj Birikowski, Ricardo Barreira, Oriol Vinyals,
 Andrew Zisserman, and Karén Simonyan. Flamingo: a visual
 language model for few-shot learning. In S. Koyejo, S. Mo-
 hamed, A. Agarwal, D. Belgrave, K. Cho, and A. Oh, edi-
 tors, Advances in Neural Information Processing Systems, vol-
 ume 35, pages 23716-23736. Curran Associates, Inc., 2022.
-[34] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Sub-
+Tom Brown, Benjamin Mann, Nick Ryder, Melanie Sub-
 biah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakantan,
 Pranav Shyam, Girish Sastry, Amanda Askell, et al. Language
 models are few-shot learners. Advances in neural information
 processing systems, 33:1877-1901, 2020.
-[35] Olga Russakovsky, Jia Deng, Hao Su, Jonathan Krause, San-
+
+Olga Russakovsky, Jia Deng, Hao Su, Jonathan Krause, San-
 jeev Satheesh, Sean Ma, Zhiheng Huang, Andrej Karpathy,
 Aditya Khosla, Michael Bernstein, Alexander C. Berg, and
 Li Fei-Fei. ImageNet Large Scale Visual Recognition Chal-
 lenge. International Journal of Computer Vision (IJCV),
 115(3):211-252, 2015.
-[36] Nelson F Liu, Kevin Lin, John Hewitt, Ashwin Paranjape,
+
+Nelson F Liu, Kevin Lin, John Hewitt, Ashwin Paranjape,
 Michele Bevilacqua, Fabio Petroni, and Percy Liang. Lost in
 the middle: How language models use long contexts. arXiv
 preprint arXiv:2307.03172, 2023.
+

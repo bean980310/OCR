@@ -1,44 +1,60 @@
+--- Page 1 ---
 arXiv:2306.08205v2 [cs.RO] 19 Oct 2023
-Proceedings of Machine Learning Research vol 211:1-13, 2023
-5th Annual Conference on Learning for Dynamics and Control
+
+Proceedings of Machine Learning Research vol 211:1-13, 2023 5th Annual Conference on Learning for Dynamics and Control
+
 Agile Catching with Whole-Body MPC and Blackbox Policy Learning
-Saminda Abeyruwan, Alex Bewley, Nicholas M. Boffi, Krzysztof Choromanski, David D'Ambrosio,
+
+Saminda Abeyruwan, Alex Bewley, Nicholas M. Boffi, Krzysztof Choromanski, David D’ Ambrosio,
 Deepali Jain, Pannag Sanketi, Anish Shankar, Vikas Sindhwani, Sumeet Singh, Jean-Jacques
 Slotine, and Stephen Tu*
-CORRESPONDING AUTHOR: SSUMEET@GOOGLE.COM
-Robotics at Google, *Alphabetical order
+
+CORRESPONDING AUTHOR: SSUMEET @ GOOGLE.COM
+
+Robotics at Google, “Alphabetical order
+
 Editors: N. Matni, M. Morari, G. J. Pappas
+
 Abstract
+
 We address a benchmark task in agile robotics: catching objects thrown at high-speed. This is a
 challenging task that involves tracking, intercepting, and cradling a thrown object with access only
 to visual observations of the object and the proprioceptive state of the robot, all within a fraction of a
-second. We present the relative merits of two fundamentally different solution strategies: (i) Model
+second. We present the relative merits of two fundamentally different solution strategies: (1) Model
 Predictive Control using accelerated constrained trajectory optimization, and (ii) Reinforcement
 Learning using zeroth-order optimization. We provide insights into various performance trade-
 offs including sample efficiency, sim-to-real transfer, robustness to distribution shifts, and whole-
 body multimodality via extensive on-hardware experiments. We conclude with proposals on fusing
-"classical" and "learning-based” techniques for agile robot control. Videos of our experiments may
-be found here: https://sites.google.com/view/agile-catching.
+“classical” and “learning-based” techniques for agile robot control. Videos of our experiments may
+be found here: https: //sites.google.com/view/agile-catching.
+
 Figure 1: Mobile Manipulator with Lacrosse Head catching a ball within a second. (right) Auto-
 matic ball thrower with controllable yaw angles and speed of around 5m/s.
+
 1. Introduction
+
 Chasing a ball in flight and completing a dramatic diving catch is a memorable moment of athleti-
 cism - a benchmark of human agility - in several popular sports. In this paper, we consider the task
 of tracking, intercepting and catching balls moving at high speeds on a mobile manipulator platform
 (see Figure 1), whose end-effector is equipped with a Lacrosse head. Within a fraction of a second,
 the robot must start continuously translating visual observations of the ball into feasible whole body
 motions, controlling both the base and the arm in a coordinated fashion. In the final milliseconds,
-© 2023 S.A.A.B.N.M.B.K.C.D.D.D.J.P.S.A.S.V.S.S.S.J.-J.S.a.S. Tu*.
+
+© 2023 S.A.A.B.N.M.B.K.C.D.D.D.J.P.S.A.S.V.S.S.S.J.-L.S.a.S. Tu*.
+
+--- Page 2 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
+
 the control system must be robust to perceptual occlusions while also executing a cradling maneuver
 to stabilize the catch and prevent bounce-out. The physics of this task can be surprisingly complex:
 despite its geometric simplicity, a ball in flight can swing and curve in unpredictable ways due
 to drag and Magnus effects (Mehta, 1985); furthermore, the contact interaction between the ball
 and the deformable end-effector involves complex soft-body physics which is challenging to model
 accurately.
+
 In this paper, we study the relative merits of synthesizing high speed visual feedback con-
 trollers for this task from two ends of a design spectrum: Model Predictive Control (MPC) (Borrelli
-et al., 2017; Rawlings, 2000) representing a "pure control” strategy, and Blackbox policy optimiza-
+et al., 2017; Rawlings, 2000) representing a “pure control” strategy, and Blackbox policy optimiza-
 tion (Choromanski et al., 2018a) representing a “pure learning” approach. MPC optimizes robot
 trajectories in real time in response to state uncertainty - it is nearly “zero-shot” in terms of data
 requirements and gracefully handles kinematics, dynamics and task-specific constraints, but can be
@@ -48,245 +64,259 @@ but can adapt, in principle, to complex and unknown real world dynamics. Our pri
 tion is to provide insights into subtle trade-offs in reaction time, sample efficiency, robustness to
 distribution shift, and versatility in terms of whole-body multimodal behaviors in a unified exper-
 imental evaluation of robot agility. We conclude the paper with proposals to combine the “best of
-both worlds" in future work.
+both worlds” in future work.
+
 1.1. Related work
+
 Both classes of techniques have been previously applied to the robotic catching task. Examples
 of optimization-based control for ball catching include Hove and Slotine (1991); Hong and Slotine
-(1995); Yu et al. (2021); Frese et al. (2001); Kober et al. (2012). Bäuml et al. (2010a) and Lam-
+(1995); Yu et al. (2021); Frese et al. (2001); Kober et al. (2012). Bauml et al. (2010a) and Lam-
 pariello et al. (2011) present an unified approach subsuming catch point selection, catch configu-
-ration computation and path generation in a single, nonlinear optimization problem (also see, Koç
+ration computation and path generation in a single, nonlinear optimization problem (also see, Ko¢
 et al. (2018), Jia et al. (2019)). Several papers utilize human demonstration and machine learning
 for parts of the control stack. Kim et al. (2014) probabilistically predict various feasible catching
-configurations and develop controllers to guide hand-arm motion, which is learned from human
+configurations and develop controllers to guide hand—arm motion, which is learned from human
 demonstration. Riley and Atkeson (2002) also learn motion primitives from human demonstration
 and generate new movements. Dong et al. (2020) use bi-level motion planning plus a learning based
 tracking controller. Some papers aim for soft catching explicitly. Salehian et al. (2016) extend Kim
 et al. (2014) further, offering a soft catching procedure that is more resilient to imprecisions in con-
-trolling the arm and desired time of catch. Bäuml et al. (2011) extend Bäuml et al. (2010a) further
+trolling the arm and desired time of catch. Bauml et al. (2011) extend Bauml et al. (2010a) further
 for enabling soft landing. Hong and Slotine (1995); Lippiello and Ruggiero (2012) add heuristics
 for soft catching, moving the hand along the predicted path of the ball, while decreasing its velocity
 to allow the dissipation of the impact energy.
+
 2. Problem formulation and proposed solution
-We describe the trajectory of the object to be caught by a function Fo, which maps a query time
-t = R20 to the object's position and velocity at time t, i.e., (p。(t), vo(t)) Є R³ × R³. Depending on
-the aerodynamic and inertial properties of the object, Fo may be highly non-trivial. Our knowledge
-of Fo is encoded via a known Fo which maps a query time t = R20 and a set of parameters
-0. Є Rd to a prediction for the object position and velocity at time t, i.e., (po(t; 0。), î。(t; 0。)). For
-2
+
+We describe the trajectory of the object to be caught by a function F, which maps a query time
+t € Ryo to the object’s position and velocity at time t, i-e., (p(t), vo(t)) € R® x R. Depending on
+the aerodynamic and inertial properties of the object, F, may be highly non-trivial. Our knowledge
+of F, is encoded via a known F', which maps a query time t € Rso and a set of parameters
+6. € R¢ to a prediction for the object position and velocity at time t, i-e., (fo(t; 00), Go(t; A). For
+
+--- Page 3 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
-this work, we limit our scope to spherical, rigid balls and implement Fo via classical Newtonian
+
+this work, we limit our scope to spherical, rigid balls and implement F’, via classical Newtonian
 physics; catching objects with non-trivial aerodynamics and non-uniform shapes is left to future
 work. However, we only observe the ball position and velocity indirectly via two fixed cameras,
-and use to encode our vision system's current position and velocity estimate.
-For the robot, we let q = R7 denote the joint configuration vector, where q₁ = R corresponds
-to the translational base joint, and 92:7 R6 represent the arm joint angles. We also let FK : q Є
-R7 ↔ FK(q) = (Ph(9), Rh(9)) = R³ × SO(3) denote the forward-kinematics transform that maps
-the joint configuration vector q to the SE(3) pose of the robot's end-effector, i.e., a lacrosse head.
+and use @, to encode our vision system’s current position and velocity estimate.
+
+For the robot, we let g € R’ denote the joint configuration vector, where gq; € R corresponds
+to the translational base joint, and q2.7 € R® represent the arm joint angles. We also let FK : ¢ €
+R’ + FK(q) = (pn(q), Ra(q)) € R? x SO(3) denote the forward-kinematics transform that maps
+the joint configuration vector q to the S'E(3) pose of the robot’s end-effector, i-e., a lacrosse head.
+
 2.1. Catching via optimal control
+
 We assume that there exists a lower-level position and/or velocity controller that compensates for the
-arm's nonlinear manipulator dynamics. Abstracting away the closed-loop behavior of this lower-
+arm’s nonlinear manipulator dynamics. Abstracting away the closed-loop behavior of this lower-
 level control system, we plan for the motion of the arm by assuming second-order integrator dy-
-namics¹ for q, i.e., ä(t) = ua(t) € R7.
+namics! for q, i-e., G(t) = ua(t) € R™.
+
 With this assumption, the optimal catching problem (OCP) can be formalized as a free-end-time
-constrained optimal control problem over the function ua (•) and catching time tƒ:
-minimize Jua, tƒ) :=
-ua (·),tf
-ƒª' (\ + ||ua(r)||²) dr + ¥ (q(tƒ),ġ(ts),ts),
-(1)
-where λ = R>0 is a weighting constant and ¥ : R7 × R7 × R≥0 → 0 is a terminal cost; subject to
-the second-order integrator dynamics ä(t) = ua(t), and the following constraints:
-VT € [0,tƒ], Ua(T) E [Ua, Ua], q(7) E [¶‚¶], ġ(7) € ġ‚¶], c(q(tƒ), tƒ) ≥ 0. (2)
+constrained optimal control problem over the function uq(-) and catching time t :
+
+t
+minimize J(Uua,ts) =" (\ + ||ua(r) ||?) dr + U(q(tp), a(ty), ty), (1)
+0
+
+ua(-).ty
+
+where A € Ryo is a weighting constant and W : R’ x R? x Ryo + 0 isa terminal cost; subject to
+the second-order integrator dynamics G(t) = ua(t), and the following constraints:
+
+Wr € [0,tj], walr) € [ues al, a(r) € (aa), ar) € (G4), clalts).ty) 20.
+
 The first three constraints capture limits on the control effort and the joint configurations and ve-
-locities. The terminal cost and endpoint constraint function c capture two desirable properties
-for catching: (i) SE(3) pose alignment of the lacrosse head with the ball's position and velocity
-direction at the catching time tƒ, and (ii) minimizing any residual velocity of the lacrosse head
-perpendicular to the ball's velocity vector. We capture both these properties via both hard and soft
+locities. The terminal cost Y and endpoint constraint function c capture two desirable properties
+for catching: (i) SE(3) pose alignment of the lacrosse head with the ball’s position and velocity
+direction at the catching time t¢/, and (ii) minimizing any residual velocity of the lacrosse head
+perpendicular to the ball’s velocity vector. We capture both these properties via both hard and soft
 constraints.
+
 Hard endpoint constraint c. The endpoint catching constraints capture the requirement that the
 lacrosse head must be positioned and oriented correctly to accept the incoming projectile. In partic-
-ular, let (po(tƒ), vo(tƒ)) be the true 3D position and velocity of the object at the catching time tƒ.
+ular, let (po(ty), Vo(ty)) be the true 3D position and velocity of the object at the catching time ty.
 Then, we require:
-vo(ts)
-Ph(q(t)) Po(t)||≤p, and (Rh(q(tƒ))e2)T:
--
-||vo(tƒ)||
-> COS Єr,
-(3)
-where Єp, Єr Є R>0 are prescribed tolerances on the position and angular errors, respectively, and
-e2 = (0, 1, 0). The second constraint enforces alignment of the local ŷ-axis on the lacrosse head,
-which is orthogonal to the net's catching plane, and the ball's velocity vector at tƒ.
+
+Volt
+Innlatts))~ pole Sem and (Rylaltp))ea)” AEE > cose, @)
+o\e)
+where €»,€, € Rso are prescribed tolerances on the position and angular errors, respectively, and
+e€2 = (0, 1,0)". The second constraint enforces alignment of the local j—axis on the lacrosse head,
+which is orthogonal to the net’s catching plane, and the ball’s velocity vector at t;.
+
 1. Note that the lower-level control system may have some non-trivial closed-loop response characteristics, including
 delays. However, these can be pre-compensated for by adjusting the commanded (q, q) trajectory from the planned
 (q, q) trajectory.
-3
+
+--- Page 4 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
-The constraint above is written assuming access to the ball's true 3D position and velocity.
+
+The constraint above is written assuming access to the ball’s true 3D position and velocity.
 However, since we only have access to a prediction of these quantities via the parametric predic-
-tor Fo(300), we enforce the above constraints w.r.t. the predicted quantities po(tƒ;00),ûo(tƒ;00),
-making the endpoint catching constraint function c(q(tƒ), tƒ; 0。) parametric in 0.
-Soft terminal cost V. In conjunction with the hard constraints above, the terminal cost & takes
+tor Fy(-; 6,), we enforce the above constraints w.r.t. the predicted quantities po(t £390); bo(t £3 90)s
+making the endpoint catching constraint function c(q(ty),t; 65) parametric in 6,.
+
+Soft terminal cost Y. In conjunction with the hard constraints above, the terminal cost V takes
 the following form:
-¥(q(tƒ),ġ(tƒ), tƒ;00) := Wpp(q(tƒ), tƒ;00) + wvvv (q(tƒ), ġ(tƒ))
-p(q(tƒ), tƒ;00) = ||Ph(q(tƒ)) - Po(tƒ;00) ||² + (1 – (R
-= | (1)
-¥v(q(tƒ), ġ(tƒ)) := || Rh(q(tf))vn(q(tf), ġ(tƒ)) —
--
-(4)
-1- (Rr(q(tƒ))e2)T
-vo(tf;00)
-||vo(tƒ;00)||,
-(5)
-2
+
+W(a(ty), a(t), tf; 0) = Wp (ats), tr; 90) + Wry (a(tf), q(tf)) (4)
+vylalts)oty Be) = hnlalts)) ~ Bolts: 80) + (1 (Halas )ea! Tet ge) 5)
+0 2
+wo(a(tr), (tp) = ||Rn (alts) vn (al(tp), d(tp)) — | ve} |]. (6)
 0
-(6)
-0
-where wp, w₁ Є R≥0 are constant weights, and v (q(tƒ), ġ(tƒ)) € R³ is the lacrosse head's trans-
+
+where wy, Wy € Ryo are constant weights, and v,(q(tr), ¢(ty)) € IR? is the lacrosse head’s trans-
 lational velocity expressed in the inertial frame, and computed via the Jacobian-vector product
-qph (9)q. The constant ve ER is a desired catching speed. Thus, the terminal cost ↳ penal-
+Ogpn(q)g. The constant ve € R is a desired catching speed. Thus, the terminal cost  penal-
 izes the catching-time pose errors, as defined within (3), as well as the motion of the lacrosse head
-perpendicular to the ball's velocity vector at the catching instant.
-The overall OCP is thus parametric in 00, the parameters of the ball's 3D predictor function Fo,
-and problem parameters {Єp, Er, Vc, Wp, Wv, \}.
+perpendicular to the ball’s velocity vector at the catching instant.
+
+The overall OCP is thus parametric in 6, the parameters of the ball’s 3D predictor function F,,
+and problem parameters {€), €r, Uc, Wp, Wy, A}.
+
 3. Reduction to Sequential Quadratic Programming
+
 The OCP (1) is a non-trivial problem which could be solved by leveraging the necessary conditions
 of optimality for free end-time problems and using boundary-value-problems solvers. However,
 this would entail optimizing over control, state, and co-state trajectories using dense discretization
 of the dynamics and inequality constraints (e.g., via collocation). Instead, we simplify the compu-
-tational burden by optimizing over a restricted class of solutions a sequence of acceleration and
+tational burden by optimizing over a restricted class of solutions — a sequence of acceleration and
 coasting phases, and in the process, convert the problem into a multi-stage discrete-time trajectory
 optimization problem that is subsequently solved using a state of the art shooting-based Sequential
 Quadratic Programming (SQP) solver (Singh et al., 2022).
+
 3.1. Conversion to Multi-Stage Trajectory Optimization
--
--
-We assume that the acceleration limits are given by symmetric intervals [—ïa, ïa], where ïa Є Ro
+
+We assume that the acceleration limits are given by symmetric intervals [—Ga, Ga], where Ga € Roo
 is a fixed vector. Then, we can define an N-stage discrete-time trajectory optimization problem,
-where each "stage" is composed of a constant acceleration phase followed by constant cruise phase.
-Formally, stage-k for k € {0, ………, N − 1} lasts for St[k] seconds, where St[k] € R≥0. Then, within
-the acceleration phase of stage-k, joint i = {1,…,7} accelerates at ±ga, starting at (9i, ġi) [k] to
-achieve a net velocity change of dġ¿[k]. In the cruise phase, the joint moves at a constant rate of
-ġi[k] + Sġi[k] for St[k] — (|Sġi[k]\/ġa;) seconds. We can summarize the stage transition above by
-—
+where each “stage” is composed of a constant acceleration phase followed by constant cruise phase.
+Formally, stage-k for k € {0,...,.N — 1} lasts for 5t[k] seconds, where dt[k] € Ryo. Then, within
+the acceleration phase of stage-k, joint i € {1,...,7} accelerates at +, starting at (qi, qi)[k] to
+achieve a net velocity change of 5q;[k]. In the cruise phase, the joint moves at a constant rate of
+Gi[k] + Oq:[k] for 5t[k] — (|6q.[K]|/Ga,) seconds. We can summarize the stage transition above by
 defining a composite state x and control u:
-x[k] := (q[k],ġ[k],t[k]) € R15, u[k] := (8q[k], 8t[k]) € R8
-4
+
+x(k] = (alk), dlht(h]) € R™,  u[k] s= (6g{A),4¢{k]) € RS
+
+--- Page 5 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
-Then, the stage-“dynamics" are written as:
-x[k + 1] =
-[q[k + 1]¯
-ġ[k + 1]
-_t[k + 1]
-=
-о
-[q[k] + (ġ[k] +8ġ[k])6t[k] — (1/2)▲µ³ (8ġ[k] ○ |§ġ[k]|)]
-ġ[k] +8ġ[k]
-t[k] + St[k]
-(7)
+
+Then, the stage-“dynamics” are written as:
+
+alk +1] fale] + Cale) + dal) oe{al — (1/2)j" (6alh] © [6A
+afk +1) = ]afk+1)| = abl + 54(4 (7)
+t{k + 1] t[k] + dt[k]
 where o denotes the Hadamard product, and A, is the diagonal matrix form of the vector v. Let
-u = (u[0],..., u[N - 1]). The stage-equivalent discrete-time objective is given as:
+u := (ul0],...,u[N — 1]). The stage-equivalent discrete-time objective is given as:
 N-1
-J(u) = Σ (A&t[k] + ||8ġ[k]||²) + ¥(x[N]).
+J(u) = S> (Ade[k] + ||641]||?) + Y(@[N]). (8)
 k=0
-(8)
+
 Remark 1 Note that the exact conversion of the integral objective in (1) to the stage-wise discrete-
-time objective would result in a stage-cost of the form \St[k] +qz|8ġ[k]]. However, this was found
-to be numerically less robust than the C² smooth objective used above.
-=
-N-1
-k=0
+time objective would result in a stage-cost of the form dét{k] + G2 |dq[k]|. However, this was found
+to be numerically less robust than the C? smooth objective used above.
+
 The terminal cost and endpoint catching inequality constraints from (3) carry over directly,
-and are applied to x[N] = (q(tƒ),ġ(tƒ), tƒ), where tƒ
-St[k]. We now tackle the limit
-constraints on (q, q, q). For acceleration, we require:
-|§ġ[k]| ≤ ġa&t[k], k = 0,...,N - 1.
-Since ġ(t) linearly interpolates between the stage-values ġ[k], the velocity limit constraints need
+and are applied to x[N] = (q(ty),d(tr), ty), where tp = ne dt{k]. We now tackle the limit
+constraints on (q, q, ¢). For acceleration, we require:
+
+|Sqlkl| < Gadt{h], k=0,...,N—1. ©)
+
+Since q(t) linearly interpolates between the stage-values q[k], the velocity limit constraints need
 only be enforced at the stage values:
-ġ≤ġ[k]≤q‚_k=0,..., N.
-(10)
-Finally, to handle the limit constraints on q(7) for all 7 Є [0, tƒ], we must account for both the
+
+qk <q, k=0,...,N. (10)
+
+Finally, to handle the limit constraints on q(7) for all + € [0,t/], we must account for both the
 parabolic (constant acceleration) and linear (cruise) profiles within each stage:
-• Case 1: ġi [k](ġi[k] +8ġi[k]) ≥ 0. In this case qi (7) interpolates in-between {qi[k], qi[k+1]}
-for all □ Є [t[k], t[k + 1]]. Thus, we need only apply the limit constraints on the endpoints
-qi [k], gik + 1].
-• Case 2: ġi[k](ġi[k] + Sġi[k]) < 0. In this case, there is a local max/min for q₁(7) within
-[t[k], t[k+1]] where ġ¿ (7) = 0. Denote this max/min as ĝ¿[k]. Then, in addition to enforcing
-the limit constraints at qi[k], qi[k + 1], we must also enforce the constraint on ĝi [k]. The
-expression for i [k] is given by:
-ĝi [k] = qi [k] +
-ġi [k] 2
-2äai
-ġi [k]2
-if ġi [k] > 0
-2äai
-if ġi [k] < 0°
+
+* Case 1: qi[k](qi[k] + Oqi[k]) > 0. In this case q;(7) interpolates in-between {qi[k], gi[k + 1]}
+for all r € [é[k],t[k + 1]]. Thus, we need only apply the limit constraints on the endpoints
+alk], gi[k + 1).
+
+* Case 2: gi[k](qi[k] + 5q:[k]) < 0. In this case, there is a local max/min for q;(7) within
+[tk], t{k + 1]] where ¢;(7) = 0. Denote this max/min as q;[k]. Then, in addition to enforcing
+the limit constraints at q;[k],qi[k + 1], we must also enforce the constraint on q;[k]. The
+expression for g;[k] is given by:
+
+alk}? if glk
+, Bia alk] > 0
+Gilk] = alk] + 4 Ringe _ .
+— oR if gi[k] <0
 Given the discrete-time “stage”-dynamics, optimization objective, and constraints, we can use
 any off-the-shelf constrained discrete-time trajectory optimization solver. In this work, we leverage
 Dynamic Shooting SQP, introduced in Singh et al. (2022).
-5
+
+--- Page 6 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
+
 Remark 2 Note that the combination of max/min acceleration and cruise phases within each stage
 reflects the nature of mixed control-effort/minimum-time optimal control solutions, colloquially
-characterized as the "bang-off-bang" strategy. Recent work (Sarkar et al., 2021) has shown that for
+characterized as the “bang-off-bang” strategy. Recent work (Sarkar et al., 2021) has shown that for
 LTI systems with a single control input, the optimal solution to a mixed control-effort/minimum-time
-problem with an endpoint reachability constraint is a sequence of "bang-off" stages. This justifies
+problem with an endpoint reachability constraint is a sequence of “bang-off” stages. This justifies
 our use of such a stage-wise reduction of the original continuous-time OCP, and is similar in spirit
-to previous works on catching using trapezoidal velocity profiles (Bäuml et al., 2010b).
+to previous works on catching using trapezoidal velocity profiles (Bduml et al., 2010b).
+
 3.2. Further implementation details
 We now describe further implementation details of our SQP implementation.
+
 Asynchronous Implementation: Running concurrently to the catching controller is an estimator
-that generates updates of the predictor parameters 00, necessitating online re-planning. We achieve
+that generates updates of the predictor parameters 6,, necessitating online re-planning. We achieve
 this via an asynchronous implementation where the optimization problem is continually re-solved in
-a separate thread, using the latest estimate for 0, and the current robot state (q, q). The commanded
-(q, q) for the robot's lower-level PD controllers are computed by decoding the most recent stage-
+a separate thread, using the latest estimate for 9, and the current robot state (q, 7). The commanded
+(q, @) for the robot’s lower-level PD controllers are computed by decoding the most recent stage-
 wise solution to a continuous-time trajectory, thereby guaranteeing a consistent control rate. We
 note that since there is no receding horizon, re-planning is more akin to fine-tuning of the plan in
-response to the updating estimate of the ball's trajectory, as opposed to traditional model-predictive-
-control. Thus, in the absence of errors in the ball's trajectory's prediction, the problem remains
+response to the updating estimate of the ball’s trajectory, as opposed to traditional model-predictive-
+control. Thus, in the absence of errors in the ball’s trajectory’s prediction, the problem remains
 recursively feasible.
+
 Cradling: Following the intercept of the ball, we use an open-loop cradling motion primitive,
-modeled as a 2nd-order ODE in q, to slow the lacrosse head and simultaneously rotate the net to
-point upwards. In particular, for t ≥ tƒ, we let ä(t) := uc(t, q(t), ġ(t)), where u is an acceleration
-controller, detailed below. Define ŷħ(q) := Rh(q)e2, i.e., the end-effector frame's ŷ-axis. Then,
-for t > tf, let v(t) min{(t − tƒ)/ts, 1}, where ts Є R>0 is a user-set constant, denoted as the
-"slow-down" time. Then, we define the desired translational vd and rotational wd velocity for the
+modeled as a 2nd-order ODE in gq, to slow the lacrosse head and simultaneously rotate the net to
+point upwards. In particular, for t > ty, we let g(t) := uc(t, q(t), g(t)), where ue is an acceleration
+controller, detailed below. Define j,(q) := Rp(q)ea, i-e., the end-effector frame’s j—axis. Then,
+fort > ty, let v(t) := min{(t — tr)/ts, 1}, where t, € Ryo is a user-set constant, denoted as the
+“slow-down” time. Then, we define the desired translational vg and rotational wg velocity for the
 lacrosse head as follows:
-===
--
-va(q(t),t) := vc(1 − v(t)) cos(πv(t))ŷh(q(t))
--
-wa(q(t)) = −1
-—π
-(ŷh(q(t)) × €3),
-where e3 :=
-(0, 0, 1), and ve ER is the desired catching speed defined in (6). Thus, the desired
-translational velocity vd is aligned with the end-effector's ŷ-axis, and slows the head down from
-vc to 0. Meanwhile, the desired rotational velocity tries to align the net to point upwards. The
-combination of these velocities results in a "scooping-like” motion, intended to cradle the ball. The
+
+va(q(t), t) = ve(1 — v(t) cos(rv(t)) Gn (a(d))
+wa(q(t)) = —m(Gn(q(t)) es),
+
+where e3 := (0,0, 1)", and vu. € R is the desired catching speed defined in (6). Thus, the desired
+translational velocity vg is aligned with the end-effector’s j—axis, and slows the head down from
+Ue to 0. Meanwhile, the desired rotational velocity tries to align the net to point upwards. The
+combination of these velocities results in a “scooping-like” motion, intended to cradle the ball. The
 desired acceleration is then given by simple proportional feedback:
-vh = kv(vd − vn(9,ġ)), wn = kw (wd – wh (9, ġ)),
--
-(11)
-where wh(q, q) is the lacrosse head's rotational velocity expressed in the inertial frame, and kv, kw
-R>0 are user-set constant gains. To convert these accelerations into the joint accelerations uc at each
-sampled control step, we integrate (11) from the current (un (9, 9), wh(q, q)) using Euler integration
+
+On =ky(va-0n(GD), Gn = kuowa — wna, @); e8))
+where w;,(q, 7) is the lacrosse head’s rotational velocity expressed in the inertial frame, and ky, ki, €
+Ryo are user-set constant gains. To convert these accelerations into the joint accelerations u, at each
+sampled control step, we integrate (11) from the current (vp,(q, g), wn(q, @)) using Euler integration
 for one controller time-step, and invert the Jacobian of the FK transform at q to compute an updated
-set of desired joint velocities ġ+. The resulting desired change in velocity, ġ+ − ġ is then clipped
-according to the acceleration constraints, yielding the final joint acceleration uc. Finally, we perform
-one controller time-step integration of q = uc assuming a zero-order-hold on uc, to update (q, ġ).
--
-6
+set of desired joint velocities g*. The resulting desired change in velocity, g* — q is then clipped
+according to the acceleration constraints, yielding the final joint acceleration u,. Finally, we perform
+one controller time-step integration of @ = ue assuming a zero-order-hold on te, to update (q, q).
+
+--- Page 7 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
+
 4. Blackbox Gradient Sensing Optimization
+
 The catching problem (1) can also be formulated as a Partially-Observable Markov Decision Process
-(POMDP), defined by the tuple (S, O, A, R, P) where S is the state space partially observed by O,
-the observation space, A is the action space, R: S×A → R is the reward function and P: S× A ⇒
-S' is the dynamics function. The optimization objective is to learn a parameterized policy To : 0
-A that maximizes the expected total episode return, J(0) = Er=(0,0,...,ST) Σt=0 (St, Te(t)).
+(POMDP), defined by the tuple (S,O, A, R, P) where S is the state space partially observed by O,
+the observation space, A is the action space, R : Sx A ++ Ris the reward function and P: Sx At
+S is the dynamics function. The optimization objective is to learn a parameterized policy 79 : O +>
+A that maximizes the expected total episode return, J(@) = E,=(so,a0,....s7) 0 (st, 79(O¢)).
 The state space consists of the ball position, velocity, and a predicted trajectory, which are approx-
 imated from the raw observations generated by the perception system and an imperfect dynamics
 model, thereby justifying the POMDP categorization. In this work, we optimize a neural network
 policy via Blackbox policy optimization (Choromanski et al., 2018b, 2019; Mania et al., 2018).
+
 4.1. Reward design
+
 Careful reward design is necessary to ensure the success of blackbox policy optimization. The
 reward function is different for training in sim vs. real due to differences in quality of data from
 each. In both cases we reward the net getting close to the ball during the episode. In sim, we
@@ -294,38 +324,41 @@ additionally reward orientation alignment before the catch + a stability reward 
 in the net; in real, we use a flat reward for successful catches (detected by a sensor). Finally, we
 discourage excessive motion via penalizing position/velocity/acceleration/jerk in sim, and hardware
 limit violation in real. All terms are summed together to yield the net reward. In more detail:
-•
-•
-•
-•
-Object Position Reward (sim/real): We compute the closest distance the end-effector comes
+
+* Object Position Reward (sim/real): We compute the closest distance the end-effector comes
 to the object during the episode. The closest distance is scaled on an exponential curve with
 a cutoff at 20cm, scoring 1.0 for any episodes below this threshold.
+
 Object Orientation Reward (sim): We compute the orientation of the net right when the
 ball is within 20cm of the net. The score is computed as a dot product of the velocity vector
 of the object and the axis of the net, scaled between 0 to 1.
-• Object Stability Reward (sim): This reward computes how stable the object remains after
+
+Object Stability Reward (sim): This reward computes how stable the object remains after
 it is close to the net (within 20cm of the net). Entering the close criteria and staying there
 through the end of the episode provides a flat 0.2 reward. The remaining 0.8 part of the
-stability reward given by measuring the speed of the ball while it's close for 0.25s. Each
+stability reward is given by measuring the speed of the ball while it’s close for 0.25s. Each
 time-step during this duration contributes equally and is scored on an exponential curve based
 on object speed, capping out at speeds less than 0.2m/s scoring full for that timestep. A full
 score keeps the speed less than 0.2m/s for the full 0.25s. This reward is only used in sim as
 the precision of ball tracking in real is difficult when the ball is in the net or obscured.
+
 Object Catch Reward (real): We use a proximity sensor attached close to the net that can
 reliably detect whether a ball is in the net or not. The ball is declared as caught if the sensor
 detects a ball continuously in the net for greater than 0.25s. This provides a flat 0 or 1 reward.
-• Penalties for exceeding dynamic constraints (sim): We use multiple penalty rewards used to
+
+Penalties for exceeding dynamic constraints (sim): We use multiple penalty rewards used to
 ensure the policy learns to operate within the robot constraints such as joint position, velocity,
 acceleration and jerk limits. The penalty rewards are implemented as a flat 1.0 if the agent
 actions stay within constraints and reduces to 0 depending on how much it violates them. The
 reward is reduced depending on how many timesteps and by how much it exceeds them.
-7
+
+--- Page 8 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
-•
-Penalties for exceeding dynamic constraints (real): The hardware produces a fault error
+
+¢ Penalties for exceeding dynamic constraints (real): The hardware produces a fault error
 code and freezes when movements exceed constraints. Thus, we assign a binary penalty
 whether the hardware encounters the fault code or not.
+
 While the Object Catch Reward is a direct measure of catch success, it is a sparse metric for
 optimization, particularly during early stages of training. Consequently, the Object Position and
 Object Orientation reward terms provide more dense guidance, encouraging the policy to align the
@@ -333,23 +366,29 @@ net correctly with the catching pose and start learning. The Object Stability re
 to penalize interactions where the ball simply bounced off the net. Finally, the Dynamic constraint
 penalties were necessary for successful transfer to the real robot in order to respect physical con-
 straints.
+
 4.2. Further implementation details
+
 We now describe further implementation details of our blackbox policy optimization.
+
 Policy Network: We use a two-tower CNN neural network. The first tower process the histor-
-ical joint positions represented as an image of size (nhist, 7), where hist is the number of past
+ical joint positions represented as an image of size (npist, 7), Where mpist is the number of past
 timesteps. The second CNN tower process the predicted ball trajectory represented as an image of
-size (npred, 6), where pred is the number of predicted timesteps. The output of the two towers is
+size (Nprea, 6), Where Npreq is the number of predicted timesteps. The output of the two towers is
 concatenated into a single tensor, which is fed into two fully-connected layers. The final output is
 then taken as the commanded joint velocities. In total, our policy network has 3255 parameters.
+
 Blackbox Gradient Sensing and Sim-to-Real Finetuning: We apply Blackbox Gradient Sens-
 ing (BGS) for optimizing the policy neural network parameters 0, due in part to both the simplicity
 of the method and recent successes in a variety of robotic domains (Abeyruwan et al., 2022). The
-algorithm optimizes a smoothened version Jo (0) of the original total-reward objective J(0), given
-as: Jo(0) = Es~N(0,1a) [J(0 + 08)], where σ > 0 controls the precision of the smoothing, and
+algorithm optimizes a smoothened version J,(@) of the original total-reward objective J(@), given
+as: Jo(9) = Es.n(ot,)|J(9 + 75)], where o > 0 controls the precision of the smoothing, and 6
 is an isotropic random Gaussian vector. We first train in a simulation environment implemented in
-PyBullet (Coumans and Bai, 2016–2021). Once the policy performs well in simulation, we transfer
+PyBullet (Coumans and Bai, 2016-2021). Once the policy performs well in simulation, we transfer
 the policy to the real robot and run further BGS finetuning steps using the mechanical thrower.
+
 5. Experiments
+
 We evaluate both our SQP and blackbox (BB) agents in simulation, on the real robot, and also
 explore performance under various distribution shifts of the thrower. Our SQP agent uses a state of
 the art SQP solver (Singh et al., 2022) built on top of trajax (Frostig et al., 2021), a JAX library for
@@ -360,75 +399,47 @@ BGS library (Choromanski et al., 2018a) with policy networks implemented in Tens
 The robot used is a combination of an ABB IRB 120T 6-DOF arm mounted on a one-dimensional
 Festo linear actuator, creating a 7-DOF system. The ball location is determined using a stereo pair
 of Ximea MQ013CG-ON cameras running with a trained recurrent tracker model.
+
 Error bars: We show catch success for the real robot with error bars which give at least 95%
-coverage, by using the Clopper-Pearson method to compute binomial confidence intervals.
-8
+coverage, by using the Clopper—Pearson method to compute binomial confidence intervals.
+
+--- Page 9 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
+
 Inference speed and Reaction time: The BB agent computes a single policy action in time 7.253
 ms (std. 0.160 ms), whereas SQP takes 43.046 ms to solve (std. 21.255 ms). Recall that the SQP
 runs asynchronously, so this solve time does not block the agent; the synchronous part runs in 2.139
 ms (std. 0.212 ms). Vision/hardware joint data processing takes about 5 ms. Overall agents are set to
 synchronously run at 75Hz. The mechanical thrower is 3.9 meters away from the robot and imparts
-4.5 m/s horizontal velocity alone; including the z-component the speed is 5.5 m/s at catch time.
-~
+4.5 m/s horizontal velocity alone; including the z-component the speed is ~ 5.5 m/s at catch time.
+
 Simulation to Reality Transfer: Figure 2 highlights the real robot catch performance of both
 SQP and BB agents. First, we see that while BB performance in sim is mostly monotonically in-
 creasing (Figure 2, left), this does not necessary translate to monotonic improvement on the real
 hardware (Figure 2, middle). Secondly, we see that SQP suffers less performance degradation com-
 pared to BB when transferring to real. Finally, we see that it takes 40 iterations of fine-tuning on
-real (30 ball throws per iteration) in order for the fine-tuned BB agent to match SQP's real perfor-
+real (30 ball throws per iteration) in order for the fine-tuned BB agent to match SQP’s real perfor-
 mance (and eventually exceed it). Both methods achieve about 80 to 85% success on mechanical
 ball throws.
+
+Sim Performance ‘Sim2Real Across Checkpoints Fine-tuning Performance
+
+8 5000 10000 15000 20000 25000 30000 35000 5000 10000 15000 20000 25000 30000 0 lo 20 3 60
+Sim Iterations Sim Iterations Fine-tuning Iterations
+
 Sim Catch Success
-0.8-
-0.6-
-0.4
-0.2
-Sim Performance
-Sim2Real Across Checkpoints
-Fine-tuning Performance
-0.9
-0.90
 Real Catch Success
-0.8
-0.7
-0.6
-0.5
-Real Catch Success
-0.85
-BB
----SQP
-0.80
-0.75
-בקו רקרכש
-0.70
-0.65
-0.4
-BB
---- SQP
-BB
----SOP
-0.60
-0.3
-0 5000 10000 15000 20000 25000 30000 35000
-Sim Iterations
-5000
-10000
-15000 20000
-Sim Iterations
-25000
-30000
-0
-10 20 30 40 50 60
-Fine-tuning Iterations
-70
-80
+
+— eB
+<= SQP
+
 Figure 2: (Left) Performance of agents in sim. (Middle) Performance of agents on real without
 fine-tuning. (Right) Performance of sim2real transfer after fine-tuning the BB agent
 starting from the 30k iteration sim checkpoint. Note that each iteration corresponds to
 30 mechanical ball throws. The higher variance of the BB fine-tuned policy is a conse-
 quence of using a significantly smaller number of throws per BGS gradient step on real
 (30) as compared to simulation (100).
+
 Robustness to Distribution Shifts: Next, we look at the robustness of both agents to out-of-
 distribution throws. For BB, this is the post-fine-tuned on real policy. We consider three different
 distribution shifts: (i) varying the speed of the thrower, (ii) varying the yaw angle of the thrower, and
@@ -439,183 +450,224 @@ which moderately degrades in performance for faster throws (most likely due to c
 bottlenecks), but is quite robust to slower throws. In Figure 3 (middle), we see that both agents have
 similar performance across the in-distribution yaw angles, but for out-of-distribution angles SQP
 maintains its performance better relative to BB.
+
 Our last distribution shift involves hand throws (lobs) to the thrower instead of using the me-
 chanical thrower. Using hand throws, the SQP agent has a 68.9% catch success (over 196 throws),
 whereas the BB agent catch performance degrades to 2.0% (over 150 throws). While the BB policy
-9
-Catch Success
-0.8-
-0.6-
-0.4
+
+--- Page 10 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
-BB vs SQP at Modified Thrower Speeds
-Catch Success by Yaw Angle
-1.0
-BB
-SQP
+
+BB vs SQP at Modified Thrower Speeds Catch Success by Yaw Angle SQP Modality of Catches
+
+mm BB 10 10 Left Config
+mmm SOP i mm Right Config
+8 oe
+6 06
+06
+4 4
+4
+02
+
 Catch Success
-0.8-
-0.6-
-0.4
-SQP Modality of Catches.
-1.0-
-Left Config
-Right Config
-0.8
-0.6
+
+Catch Success
 Fraction of SQP Catches
-0.4
-0.2
-0.2
-BB
-SQP
-0.2
-0.0-
+
+02 — BB
+
+-100 -75 -50 -25 00 25 50 75 00
+‘Thrower Yaw (degrees) Ball Thrower Hand Throws.
+
 0.0
 Faster (~4.7m/s) Train (~4.5m/s) Slower (~4.1m/s)
--10.0 -7.5 -5.0 -2.5 0.0 2.5
-Thrower Yaw (degrees)
-5.0
-7.5
-0.0
-Ball Thrower
-Hand Throws
+
 Figure 3: (Left) Catch performance as thrower speed varies between faster (~ 4.7 m/s), training
 (~ 4.5 m/s), and slower (~ 4.1 m/s) throws. (Middle) Catch performance as the thrower
-yaw angle varies from −9.5° to 8°. Note that the training distribution varies between -6°
+yaw angle varies from —9.5° to 8°. Note that the training distribution varies between —6°
 and 6.3° (marked by the dashed vertical black line). (Right) Distribution of left and right
 catches by the SQP agent on both mechanical ball throws and hand throws. Note that the
 BB agent catches to the right 100% of the time, likely due to the learning bias from the
 ball throw distribution.
+
 can be further fine-tuned on the hand-thrower distribution, the number of throws required would be
 prohibitively time-consuming.
+
 Multimodality: In Figure 3 (right), we demonstrate that the SQP agent is able to catch balls in
 both a left and right pose configuration at fairly even rates matching the bias of the thrower. On
 the other hand, the BB agent is only able to catch to the right, since the ball thrower distribution is
 biased (60/40%) towards throwing to the right. We intuit that during the early phase of training the
 policy exploits the split in throw distribution to learn a right hand side catching behavior which is
 locally optimal and later fine-tunes this strategy to catch the left hand side balls by moving the base.
+
 6. Conclusion and future work
+
 While the fine-tuned blackbox agent has the highest catching success performance, the SQP agent
-is much more robust to distribution shifts in the thrower. To obtain the “best of both", we plan to
+is much more robust to distribution shifts in the thrower. To obtain the “best of both’, we plan to
 investigate the following strategies combining blackbox optimization and SQP:
-• Use blackbox optimization (via CMA, BGS, etc.) to optimize the set of tuneable SQP and
+
+¢ Use blackbox optimization (via CMA, BGS, etc.) to optimize the set of tuneable SQP and
 cradling parameters 0.
-•
-•
-Optimize a (smaller) BB policy to output SQP and cradling parameters 0 for each episode,
+
+¢ Optimize a (smaller) BB policy to output SQP and cradling parameters @ for each episode,
 conditioned on ball history and current proprioception.
-• Study a "switch-over” policy, where SQP is followed until a switch-over point where control
+
+¢ Study a “switch-over” policy, where SQP is followed until a switch-over point where control
 is handed over to the BB policy right before intercept and cradling. The BB policy addition-
 ally outputs a binary variable indicating when to switch. This limits the complexity of the BB
-policy to just capturing the correct “cradling" behavior.
+policy to just capturing the correct “cradling” behavior.
+
 Future extensions also include introducing tools from adaptive nonlinear dynamics prediction, for
 applications such as catching of light balls with significant aerodynamics (e.g., quadratic drag and
 Magnus effects), as well as catching of larger non-spherical objects.
-10
+
+--- Page 11 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
+
 References
-Saminda Abeyruwan, Laura Graesser, David B D'Ambrosio, Avi Singh, Anish Shankar, Alex
+
+Saminda Abeyruwan, Laura Graesser, David B D’Ambrosio, Avi Singh, Anish Shankar, Alex
 Bewley, Deepali Jain, Krzysztof Choromanski, and Pannag R Sanketi. i-sim2real: Rein-
 forcement learning of robotic policies in tight human-robot interaction loops. arXiv preprint
 arXiv:2207.06572, 2022.
-B. Bäuml, T. Wimböck, and G. Hirzinger. Kinematically optimal catching a flying ball with a hand-
-arm-system. 2010 IEEE/RSJ International Conference on Intelligent Robots and Systems, pages
+
+B. Bauml, T. Wimbéck, and G. Hirzinger. Kinematically optimal catching a flying ball with a hand-
+arm-system. 20/0 IEEE/RSJ International Conference on Intelligent Robots and Systems, pages
 2592-2599, 2010a.
-B. Bäuml, Oliver Birbach, T. Wimböck, U. Frese, Alexander Dietrich, and G. Hirzinger. Catching
-flying balls with a mobile humanoid: System overview and design considerations. 2011 11th
-IEEE-RAS International Conference on Humanoid Robots, pages 513–520, 2011.
-Berthold Bäuml, Thomas Wimböck, and Gerd Hirzinger. Kinematically optimal catching a flying
-ball with a hand-arm-system. In 2010 IEEE/RSJ International Conference on Intelligent Robots
-and Systems. IEEE, 2010b.
+
+B. Bauml, Oliver Birbach, T. Wimbéck, U. Frese, Alexander Dietrich, and G. Hirzinger. Catching
+flying balls with a mobile humanoid: System overview and design considerations. 2011 JJth
+IEEE-RAS International Conference on Humanoid Robots, pages 513-520, 2011.
+
+Berthold Baéuml, Thomas Wimbock, and Gerd Hirzinger. Kinematically optimal catching a flying
+ball with a hand-arm-system. In 20/0 IEEE/RSJ International Conference on Intelligent Robots
+and Systems. TEEE, 2010b.
+
 Francesco Borrelli, Alberto Bemporad, and Manfred Morari. Predictive control for linear and
 hybrid systems. Cambridge University Press, 2017.
+
 Krzysztof Choromanski, Mark Rowland, Vikas Sindhwani, Richard Turner, and Adrian Weller.
 Structured evolution with compact architectures for scalable policy optimization. In International
-Conference on Machine Learning, pages 970–978. PMLR, 2018a.
+Conference on Machine Learning, pages 970-978. PMLR, 2018a.
+
 Krzysztof Choromanski, Mark Rowland, Vikas Sindhwani, Richard E. Turner, and Adrian Weller.
 Structured Evolution with Compact Architectures for Scalable Policy Optimization. In Proceed-
-ings of the 35th International Conference on Machine Learning, pages 969–977. PMLR, 2018b.
+ings of the 35th International Conference on Machine Learning, pages 969-977. PMLR, 2018b.
+
 Krzysztof Choromanski, Aldo Pacchiano, Jack Parker-Holder, Yunhao Tang, Deepali Jain, Yuxi-
 ang Yang, Atil Iscen, Jasmine Hsu, and Vikas Sindhwani. Provably robust blackbox optimiza-
 tion for reinforcement learning. In Leslie Pack Kaelbling, Danica Kragic, and Komei Sug-
 iura, editors, 3rd Annual Conference on Robot Learning, CoRL 2019, Osaka, Japan, October
 30 - November 1, 2019, Proceedings, volume 100 of Proceedings of Machine Learning Re-
-search, pages 683–696. PMLR, 2019. URL http://proceedings.mlr.press/v100/
+search, pages 683-696. PMLR, 2019. URL http: //proceedings.mlr.press/v100/
 choromanski20a.html.
+
 Erwin Coumans and Yunfei Bai. Pybullet, a python module for physics simulation for games,
-robotics and machine learning. http://pybullet.org, 2016-2021.
+robotics and machine learning. http: //pybullet.org, 2016-2021.
+
 K. Dong, Karime Pereida, F. Shkurti, and Angela P. Schoellig. Catch the ball: Accurate high-speed
 motions for mobile manipulators via inverse dynamics learning. 2020 IEEE/RSJ International
-Conference on Intelligent Robots and Systems (IROS), pages 6718–6725, 2020.
-U. Frese, B. Bäuml, S. Haidacher, G. Schreiber, Ingo Schäfer, M. Hähnle, and G. Hirzinger. Off-
+Conference on Intelligent Robots and Systems (IROS), pages 6718-6725, 2020.
+
+U. Frese, B. Bauml, S. Haidacher, G. Schreiber, Ingo Schafer, M. Hahnle, and G. Hirzinger. Off-
 the-shelf vision for a robotic ball catcher. Proceedings 2001 IEEE/RSJ International Conference
 on Intelligent Robots and Systems. Expanding the Societal Role of Robotics in the the Next Mil-
-lennium (Cat. No.01 CH37180), 3:1623–1629 vol.3, 2001.
+lennium (Cat. No.01CH37180), 3:1623-1629 vol.3, 2001.
+
 11
+
+--- Page 12 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
+
 Roy Frostig, Vikas Sindhwani, Sumeet Singh, and Stephen Tu. trajax: differentiable optimal control
-on accelerators, 2021. URL http://github.com/google/trajax.
+on accelerators, 2021. URL http: //github.com/google/trajax.
+
 Won Hong and J. Slotine. Experiments in hand-eye coordination using active vision. In ISER, 1995.
-Barbara Hove and J. Slotine. Experiments in robotic catching. 1991 American Control Conference,
+
+Barbara Hove and J. Slotine. Experiments in robotic catching. 199] American Control Conference,
 pages 380-386, 1991.
-Y. Jia, M. Gardner, and Xiaoqian Mu. Batting an in-flight object to the target. The International
-Journal of Robotics Research, 38:451 - 485, 2019.
-Seungsu Kim, A. Shukla, and A. Billard. Catching objects in flight. IEEE Transactions on Robotics,
+
+Y. Jia, M. Gardner, and Xiaogian Mu. Batting an in-flight object to the target. The International
+Journal of Robotics Research, 38:451 — 485, 2019.
+
+Seungsu Kim, A. Shukla, and A. Billard. Catching objects in flight. JEEE Transactions on Robotics,
 30:1049-1065, 2014.
-J. Kober, M. Glisson, and M. Mistry. Playing catch and juggling with a humanoid robot. 2012 12th
-IEEE-RAS International Conference on Humanoid Robots (Humanoids 2012), pages 875–881,
+
+J. Kober, M. Glisson, and M. Mistry. Playing catch and juggling with a humanoid robot. 20/2 12th
+IEEE-RAS International Conference on Humanoid Robots (Humanoids 2012), pages 875-881,
 2012.
-Okan Koç, Guilherme J. Maeda, and Jan Peters. Online optimal trajectory generation for robot table
-tennis. Robotics Auton. Syst., 105:121–137, 2018.
+
+Okan Kog, Guilherme J. Maeda, and Jan Peters. Online optimal trajectory generation for robot table
+tennis. Robotics Auton. Syst., 105:121-137, 2018.
+
 R. Lampariello, D. Nguyen-Tuong, Claudio Castellini, G. Hirzinger, and Jan Peters. Trajec-
-tory planning for optimal robot catching in real-time. 2011 IEEE International Conference on
+tory planning for optimal robot catching in real-time. 20/] IEEE International Conference on
 Robotics and Automation, pages 3719-3726, 2011.
+
 V. Lippiello and F. Ruggiero. 3d monocular robotic ball catching with an iterative trajectory es-
-timation refinement. 2012 IEEE International Conference on Robotics and Automation, pages
+timation refinement. 20/2 IEEE International Conference on Robotics and Automation, pages
 3950-3955, 2012.
+
 Horia Mania, Aurelia Guy, and Benjamin Recht. Simple random search provides a competitive
 approach to reinforcement learning. NeurIPS, 2018.
-R. Mehta. Aerodynamics of sports balls. Annual Review of Fluid Mechanics, 17(1):151–189, 1985.
+
+R. Mehta. Aerodynamics of sports balls. Annual Review of Fluid Mechanics, 17(1):151-189, 1985.
+
 James B Rawlings. Tutorial overview of model predictive control. IEEE control systems magazine,
 20(3):38-52, 2000.
+
 Marcia Riley and C. Atkeson. Robot catching: Towards engaging human-humanoid interaction.
-Autonomous Robots, 12:119–128, 2002.
+Autonomous Robots, 12:119-128, 2002.
+
 Seyed Sina Mirrazavi Salehian, Mahdi Khoramshahi, and A. Billard. A dynamical system approach
-for softly catching a flying object: Theory and experiment. IEEE Transactions on Robotics, 32:
+for softly catching a flying object: Theory and experiment. JEEE Transactions on Robotics, 32:
 462-471, 2016.
+
 Rajasree Sarkar, Deepak U Patil, and Indra Narayan Kar. Characterization of minimum time-fuel
-optimal control for lti systems. arXiv preprint arXiv:2102.10831, 2021.
+optimal control for Iti systems. arXiv preprint arXiv:2102.10831, 2021.
+
 Sumeet Singh, Jean-Jacques Slotine, and Vikas Sindhwani. Optimizing trajectories with closed-
 loop dynamic SQP. In 2022 International Conference on Robotics and Automation (ICRA).
 IEEE, 2022.
+
 H. Yu, Dashun Guo, H. Yin, Anzhe Chen, Kechun Xu, Yue Wang, and R. Xiong. Neural motion
 prediction for in-flight uneven object catching. ArXiv, abs/2103.08368, 2021.
+
 12
+
+--- Page 13 ---
 AGILE CATCHING WITH WHOLE-BODY MPC AND BLACKBOX POLICY LEARNING
+
 Appendix A. Author contributions
-Saminda Abeyruwan, Alex Bewley, David D'Ambrosio: Implemented the vision system and
+
+Saminda Abeyruwan, Alex Bewley, David D’Ambrosio: Implemented the vision system and
 Kalman filtering.
+
 Krzysztof Choromanski: Designed (with Deepali) the Blackbox Gradient Sensing algorithm ap-
 plied in all Blackbox training runs. Wrote the Blackbox optimization section of the paper.
+
 Deepali Jain: Designed the two-tower CNN policy architecture for the BB agent; Integrated BB
 policy with adaptive predictor for ball trajectory observations and ran sim experiments to reach 90%
 catch success.
+
 Anish Shankar: Designing & running experiments, analyzing results for insights into hardware,
 environment, agent improvements; Collaborating with the rest of the team on iterating the research
 loop for better agent directions; Designed & Developed the catching environment along with hard-
 ware integration & designing suitable agent observations/rewards.
+
 Sumeet Singh: Designed, debugged, and polished (in sim) the optimal control formulation and
 SQP reduction; Wrote the code for the synchronous SQP agent, and paired (with Stephen Tu) for
 the asynchronous adaptation; Iterated upon real experiments with Anish; Wrote the problem formu-
 lation, optimal control, SQP theory, and cradling sections of the paper, along with overall editing.
 Pannag Sanketi: Co-founded and managed the project. Advised on the research direction, experi-
 ments and the paper story. Wrote parts of the paper.
+
 Vikas Sindhwani: Wrote the differentiable kinematics and iLQR routines used within the SQP
 solver; Contributed to the implementation of simulation environment; Conducted early BlackBox
 experiments; Contributed to paper writing and provided overall project guidance and direction.
 Jean-Jacques Slotine: Advised on research direction and provided project guidance.
+
 Stephen Tu: Wrote asynchronous catching SQP implementation, and debugged performance is-
 sues in the SQP agent to make it practical for real time use; Wrote the experimental section of paper
 along with Anish.
-13
+

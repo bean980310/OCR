@@ -1,21 +1,24 @@
+--- Page 1 ---
 arXiv:2306.15091v1 [cs.CL] 26 Jun 2023
+
 Understanding In-Context Learning via Supportive Pretraining Data
-Xiaochuang Han'
-Yulia Tsvetkov
-{xhan77, yuliats}@cs.washington.edu
-Dániel Simig
-go.
-Asli Celikyilmaz❤
-*Meta AI
+
+Xiaochuang Han*** Dé&niel Simig*
+Asli Celikyilmaz* Tianlu Wang*
+
+Yulia Tsvetkov®
+
 Todor Mihaylov*
-*University of Washington
-simigd@gmail.com
-Tianlu Wang❤
-{tbmihaylov, aslic, tianluwang}@meta.com
-1
+
+*Meta Al
+“University of Washington
+
+{xhan77, yuliats}@cs.washington. edu
+
 Abstract
+
 In-context learning (ICL) improves language
-models' performance on a variety of NLP tasks
+models’ performance on a variety of NLP tasks
 by simply demonstrating a handful of examples
 at inference time. It is not well understood why
 ICL ability emerges, as the model has never
@@ -27,7 +30,7 @@ we first adapt an iterative, gradient-based ap-
 proach to find a small subset of pretraining data
 that supports ICL. We observe that a continued
 pretraining on this small subset significantly im-
-proves the model's ICL ability, by up to 18%.
+proves the model’s ICL ability, by up to 18%.
 We then compare the supportive subset con-
 strastively with random subsets of pretraining
 data and discover: (1) The supportive pretrain-
@@ -45,7 +48,9 @@ pretraining data. Our insights have a potential
 to enhance the ICL ability of language models
 by actively guiding the construction of pretrain-
 ing data in the future.
-Introduction
+
+1 Introduction
+
 In-context learning in NLP has drawn tremendous
 attention recently (Dong et al., 2022). Unlike tra-
 ditional learning paradigms that rely on training
@@ -55,29 +60,40 @@ guage models as a prefix to the test input, without
 any parameter updates. In-context learning has
 shown superior performance on a range of NLP
 tasks (Brown et al., 2020; Zhang et al., 2022b;
-* Work done during an internship at Meta AI.
-Pretraining
-data
-In-context
-learning data
-I can't think of any scenario where the Chiefs don't win that game if
+
+*Work done during an internship at Meta AI.
+
+simigd@gmail.com
+
+{tbmihaylov, aslic, tianluwang}@meta.com
+
+| can't think of any scenario where the Chiefs don’t win that game if
 Charles doesn't go down. What's that? Need to chew clock with the
-run game? How convenient that we have an All Pro running back!
-While I agree that Charles going down definitely affected the
-outcome of the game, it's not like their back-up crapped the bed.
+ini run game? How convenient that we have an All Pro running back!
+Pretraining | (Wile 1 agree that Charles going down definitely affected the
+data outcome of the game, it's not like their back-up crapped the bed
 either. Knile Davis did end up with 2 TDs, so while he's not going
-to be mistaken for Charles, he played a great game...
-Input: Microsoft may invest OpenAl if ...
-Category: Tech.
-Input: On Thursday, the White House said...
+
+to be mistaken for Charles, he played a great game
+
+Input: Microsoft may invest OpenA if ...
+Category: Tech:
+
+Input: On Thursday, the White House said ...
 Category: Politics.
+
 Input: On Friday, Apple will introduce a new ...
 Category: [MASK]
+
+In-context
+learning data
+
 Figure 1: An example from the pretraining data of OPT
 (Zhang et al., 2022b) and an illustrative in-context learn-
 ing example of topic classification. The in-context learn-
 ing task data can be drastically different from pretraining
 instances, both in content and format.
+
 Chowdhery et al., 2022; Hoffmann et al., 2022),
 but the origin and reason of this emergent ability
 remain under-investigated. In-context learning is
@@ -88,6 +104,7 @@ trative scenario in Figure 1, a typical pretraining
 data instance is highly different from an in-context
 learning example for downstream tasks, in both
 content and format.
+
 Prior work have attempted to answer what in-
 context learning is, through empirically investigat-
 ing useful and irrelevant attributes of the demon-
@@ -99,11 +116,15 @@ more, recent work have drawn connections between
 the mechanism of in-context learning and standard
 learning algorithms, such as regression, nearest
 neighbor, and gradient descent (Olsson et al., 2022;
-Akyürek et al., 2022; Dai et al., 2022; von Oswald
+Akyiirek et al., 2022; Dai et al., 2022; von Oswald
 et al., 2022).
+
 Differently, in this work we are interested in
+
 understanding from where the in-context learning
 ability is acquired, through a perspective of pre-
+
+--- Page 2 ---
 training data. Although not many, some recent
 work have investigated this direction. For instance,
 Shin et al. (2022) pretrain a variety of language
@@ -116,14 +137,15 @@ cover that some distributional properties of the data
 drive the emergence of in-context learning. How-
 ever, their experiment is limited to synthetic data
 of image-label pairs.
+
 In this work, we investigate a large language
 model OPT (Zhang et al., 2022b) and its pretrain-
 ing data. We first hypothesize that there exists some
 specific pretraining data instances that are partic-
-ularly helpful to the model's in-context learning
+ularly helpful to the model’s in-context learning
 ability. As an attempt to find such instances, we
 adapt an iterative, gradient-based method ORCA
-(Han and Tsvetkov, 2022) to search within OPT's
+(Han and Tsvetkov, 2022) to search within OPT’s
 pretraining corpus. The process is guided by the
 gradients of the in-context learning data from down-
 stream tasks, and we refer to the identified subset
@@ -131,9 +153,10 @@ as supportive pretraining data to in-context learn-
 ing following Han and Tsvetkov (2022). Further-
 more, we quantitatively verify through a pertur-
 bative continued pretraining, that the supportive
-subset does improve the model's in-context learn-
+subset does improve the model’s in-context learn-
 ing performance on downstream tasks, while not
 affecting a spurious zero-shot performance (§2).
+
 We then analyze the identified supportive data
 in contrast to the general pretraining data, to ob-
 tain data features particularly relevant to in-context
@@ -149,16 +172,20 @@ contain a relatively higher amount of rarely occur-
 ring, long-tail tokens. (3) The supportive pretrain-
 ing data are challenging examples in incorporating
 long-range context for language modeling (§3).
+
 Our work offers a first step towards interpret-
 ing in-context learning in NLP tasks via analyzing
 instance-level pretraining data. We believe it can
 help improve the transparency and interpretability
-of language models' in-context learning behavior.
+of language models’ in-context learning behavior.
 Our analysis can also pave the way to improved
+
 in-context learning in the future by informing pre-
 training data construction.
+
 2 Finding supportive pretraining data for
 in-context learning
+
 Han and Tsvetkov (2022) propose an iterative,
 gradient-based method ORCA to find supportive
 pretraining data of BERT (Devlin et al., 2019) un-
@@ -167,36 +194,42 @@ section, we provide some background and adapt
 ORCA for large language models in a setting of in-
 context learning (ICL), finding supportive pretrain-
 ing data for downstream tasks with demonstration
-examples.¹
+examples.!
+
 2.1 Methodology
+
 Assume we have a pretrained language model (LM)
-¤ and data pairs (x, y) representing the inputs and
-ground truth outputs of task Dtask. Both x and y
+6 and data pairs (a, y) representing the inputs and
+ground truth outputs of task Diask. Both a and y
 are in natural language. For classification tasks, the
 target labels can be converted to natural language
-via verbalizers (Schick and Schütze, 2021).
+via verbalizers (Schick and Schiitze, 2021).
+
 Zero-shot prompting A pretrained language
 model can be applied to perform downstream
 tasks via zero-shot prompting (e.g., Petroni
 et al., 2019). For classification tasks, the lan-
-guage model outputs a candidate answer with
-top probability, argmaxy' Po(y' | x)
-argmax po(yt | x, y' <+), where y
-contains all candidate answers y'. For generation
+guage model 6 outputs a candidate answer with
+top probability, argmaxycype(y’ | «#) =
+
+argmaxyey Ws" poly, | x, y&,), where Y
+contains all candidate answers y’. For generation
 tasks, outputs can be obtained by sampling autore-
-gressively from conditioned on x (e.g., Holtzman
+gressively from 6 conditioned on a (e.g., Holtzman
 et al., 2019). This is a zero-shot scenario with no
+
 demonstration examples.
-=
-In-context learning Instead of modeling på (y |
-x), ICL estimates po(y | {(xdemo, Ydemo)}, x),
+
+In-context learning Instead of modeling po(y |
+x), ICL estimates po(y | { (demos Ysemo)}s)>
 prepending the original model input with sev-
-eral demonstration examples (x demo, y demo) sam-
+eral demonstration examples (ademo; Ydemo) SAM-
 pled from the target task Dtask. The language
-model is never trained on the task data with
+model @ is never trained on the task data with
 demonstrations. However, we can form a loss
-on the in-context data as a surrogate for O's
-'Identifying important training data for an inference time
+on the in-context data as a surrogate for 6’s
+
+‘Identifying important training data for an inference time
 model output is an estabilished topic in model interpretability,
 with various prior work measuring data importance via vari-
 ants of gradient similarity (Koh and Liang, 2017; Pruthi et al.,
@@ -206,95 +239,101 @@ our work, Guu et al. (2023) propose an interesting method
 to model the importance of individual training examples by
 simulating training runs, but it is also on a scale of finetuning
 instead of pretraining.
+
+--- Page 3 ---
 ICL performance, which will be used for a
-later guidance step, LICL (x, y)
-=
-= -
-– log pe (y |
-t=0
-{(x demo, y demo)}, x) - logo (
-{(x demo, y demo)}, x, Y<t).
-Pretraining The pretraining data of 0 often con-
+later guidance step, LI (x,y) = —logpe(y |
+
+{ (demo; Yaemo) ts x) = log Ths <I g( po Ut |
+{(Xdemo; Yaemo)} x, Yet):
+
+Pretraining The pretraining data of 6 often con-
 sists of texts w from large, general-domain cor-
-pora. During pretraining, the LM 0 is updated
+pora. During pretraining, the LM @ is updated
 via stochastic gradient descent with a loss to re-
-construct w given a prefixing context, LPT (w) =
--log
-Po(wt | w<t).
-РТ
+construct " v given a prefixing context, LE™(w) =
+
+log TT Sh"! po(we | wer).
+
 Supportive pretraining data Our goal is to lo-
 cate what pretraining data w if upweighted would
-be most helpful to the LM 0's ICL ability. Fol-
+be most helpful to the LM @’s ICL ability. Fol-
 lowing ORCA (Han and Tsvetkov, 2022), we use
-the similarity between gradients V0LPT (w) and
-VLICL (x, y) iteratively to find such supportive
+the similarity between gradients VaL5"(w) and
+VoLi" (x, y) iteratively to find such supportive
 pretraining data. We show details of our adapted al-
 gorithm ORCA-ICL in Figure 2. The algorithm
-finds pretraining data that exert a gradient to
+finds pretraining data that exert a gradient to 0
 similarly as a group of guidance ICL task data
-would. V LICL (x, y) provides a guidance for the
+would. Vo LIC! (a, y) provides a guidance for the
 direction the model parameters should be updated
-towards to be better at ICL, while VoLT (w) ap-
+towards to be better at ICL, while VgL5"(w) ap-
 proximates how the direction the model parameters
 would be updated based on individual pretraining
 instances. We conduct a multi-iteration process
 (a total of M iterations each selecting k support-
-ive instances) to mitigate noise. 2 SGD denotes an
+ive instances) to mitigate noise.* SGD denotes an
 one-pass stochastic gradient descent to mimick an
 incremental upweight to the selected data, with a
 minimum number of steps to prevent overfitting.
 The resulting supportive set S has a very small size
-(under 2000 in this work).³
+(under 2000 in this work).?
+
 Verifying supportiveness To quantitatively eval-
 uate the supportiveness of the selected set of pre-
 training data, we perform an one-pass gradient de-
 scent on the original LM with the selected set S,
 which mimics a perturbative continued pretrain-
-ing with a minimum number of updates: 0м ←
-SGD (00). We then benchmark this perturbed
-S
-model (M) with the original model (00) and a
+ing with a minimum number of updates: 6), <—
+SGD(60). We then benchmark this perturbed
+
+model (6) with the original model (69) and a
 model perturbed with a random set of pretraining
 data. We expect the perturbed model using our
 selected supportive pretraining data to achieve a
 better ICL performance.
-2 Additionaly according to Han and Tsvetkov (2022), this
+
+? Additionaly according to Han and Tsvetkov (2022), this
 may prevent selecting examples associated with only one class
 of the task, a case of poor calibration.
-3 More details of the ORCA algorithm can be found in Han
+
+More details of the ORCA algorithm can be found in Han
 and Tsvetkov (2022).
+
 Algorithm 1 ORCA-ICL
-1: Load a pretrained language model as o
-2: for i1, M do
-3:
-4:
-5:
-if=1 then
-S₁ ← argtop-k[cos(VėĽ (w), V₁ ΣLICL (x, y))]
-WEDPT
-01 ← SGD (00)
+
+1: Load a pretrained language model as 69
+
+2: fori — 1, M do
+
+3: ifi =1 then
+
+4: $1 € argtop-k[cos(VaLb!(w), Vo Xo Li! (@,y))]
+weDpr Daask
+
+5: Oe SGD (60)
+31
+
 6: else
-7:
-8:
-S1
-PT
-Dtask
-S₁ ← argtop-k[cos(VeĽ (w), Ve Σ LLC (x, y))]
-Oi
+
+7: S$; — argtop-k[cos(VoLh,(w), Vo > Lye (@,y))]
+we Dpr Daask
+8: 6; — SGD (0)
+Vjn1 85
 9: end if
 10: end for
-wЄDPT
-SGD (00)
-U₁₁ =1 Sj
-11: Return supportive pretraining data S ←
-Dtask
-U₁₁Si
+
+11: Return supportive pretraining data S ~— UM, S;
+
 Figure 2: ORCA-ICL, an iterative gradient-based selec-
 tion of supportive pretraining data for ICL.
+
 2.2 Setup
+
 Language model Throughout the work, we use a
 pretrained, autoregressive OPT-6.7B (Zhang et al.,
-2022b) as our LM 0.
+2022b) as our LM 6.
+
 Tasks In this work, we focus on classification
 problems and first retrieve 48 classification-based
 tasks from Natural Instructions v2 (NI-v2, Wang
@@ -304,6 +343,7 @@ extract tasks that achieve at least 10% better perfor-
 mance with in-context demonstrations. We group
 17 tasks that satisfies the constraint and further se-
 lect 6 typical tasks among them:
+
 SST-2: Movie review sentiment classification
 (Socher et al., 2013). AG News: News topic clas-
 sification (Zhang et al., 2015). Story Cloze Test:
@@ -312,41 +352,47 @@ Story coherence classification (Mostafazadeh et al.,
 (Almeida et al., 2011). Sentiment 140: Tweet sen-
 timent classification (Go et al., 2009). TweetQA:
 Answer verification (Xiong et al., 2019).
+
 For each task, we randomly sample 500 exam-
-ples with a balanced class distribution as Dtask,
+ples with a balanced class distribution as Diask,
 guiding the ORCA-ICL algorithm. The quanti-
 tative evaluation is performed on the full dataset.
 For ICL, for each instance in the task data, we
 randomly sample 4 demonstration examples under
-each candidate class defined in the task. 4 The or-
+each candidate class defined in the task.+ The or-
 der of demonstration examples in the context is
 randomly shuffled. The template and verbalizer
 of each task follows the original NI-v2 dataset,
 though we did not include the task instructions, as
-*The sampling of demonstration examples is independent
+
+4The sampling of demonstration examples is independent
 across test instances to mitigate potential spurious correlations.
+
+--- Page 4 ---
 the focus of this work is in-context learning with
 demonstration examples.
+
 Pretraining Considering the size of pretraining
-data DPT, we include an as large portion of OPT's
+data Dpr, we include an as large portion of OPT’s
 pretraining data as possible under a reasonable bud-
 get. Specifically, in this work we use a total of
 2.5M pretraining instances each consists of 2048
-tokens. For computing efficiency, we use intra-
+tokens.> For computing efficiency, we use intra-
 layer model parallelism (Shoeybi et al., 2019) and
-fully sharded data parallel (Ott et al., 2021).6
-=
-=
+fully sharded data parallel (Ott et al., 2021).°
+
 Implementation Details We run ORCA-ICL
-with a maximum of M 5 iterations. In each
-iteration we extract k 400 pretraining instances
+with a maximum of M = 5 iterations. In each
+iteration we extract k = 400 pretraining instances
 with top gradient similarity with the ICL task data.
 We use a batch size of 16 and learning rate of 2e-5
 for the one-pass gradient descent with an Adam
 optimizer (Kingma and Ba, 2014). This results in
-a total of 125 updates to the original LM after all
+a total of 125 updates’ to the original LM after all
 iterations as the perturbative continued pretraining.
+
 2.3 Results
+
 Perturbative continued pretraining As the
 main evaluation of the supportive pretraining data
 obtained by ORCA-ICL, we perform perturbative
@@ -354,17 +400,18 @@ continued pretraining on both the selected support-
 ive data and random pretraining data as a con-
 trol. Table 1 shows the main results of task ac-
 curacy. The leftmost column shows a source task
-Dtask guiding the selection of supportive pretrain-
+Daask guiding the selection of supportive pretrain-
 ing data. At each row, we evaluate the perturbed
-model (SGD (00)) on all 6 tasks. The ICL perfor-
-S
+model (SGD (6o)) on all 6 tasks. The ICL perfor-
+
 mance of the original LM is reported in the headers
 of the table.
+
 In each cell of the table, the top number shows
 the continued pretraining result with the support-
-ive data we identified. We consider M = [1,5]
+ive data we identified. We consider M € [1,5]
 iterations as a hyperparameter and report result
-with a best M. We want to know at a same size
+with a best MZ. We want to know at a same size
 of selection, how our identified subset performs
 compared to random pretraining data. We there-
 fore run random selection with 5 seeds, and the
@@ -372,31 +419,35 @@ bottom number of the cell shows the continued pre-
 training result with random data at a same size of
 our selection, accompanied by a standard deviation.
 The performance of our selection is bolded when
-5The total 5B tokens are about 3% of OPT's 180B full
+
+*The total 5B tokens are about 3% of OPT’s 180B full
 pretraining data.
-"This groups 4 input data for each backward pass in our
+
+°This groups 4 input data for each backward pass in our
 setup. The 4 instances receive a same gradient similarity score,
 equivalent to an aggregated instance 4 times of the length.
-7The one-pass descent has
-batch size steps.
-M*k
+
+7The one-pass descent has aes steps.
+atch size
+
 the performance difference with random selection
 exceeds one standard deviation.
+
 The diagonal cells show the performance of per-
 turbed models on the same task used for selecting
 supportive data. We observe on 4 of the 6 source
 tasks, our selection of supportive pretraining data
 is effective. For the cross-task performance, we
 observe on 5 of the 6 source tasks, our selection
-is effective for at least three tasks. We conclude
+is effective for at least three tasks.’ We conclude
 that our identified supportive pretraining data
 is overall effective for ICL, though the cross-task
 results show a portion of the ICL behavior can be
 task-specific and not universal across tasks.
-8
+
 Control evaluation on zero-shot data Being ef-
 fective on the ICL data does not necessarily mean
-a direct support for a model's ICL ability, which
+a direct support for a model’s ICL ability, which
 is to learn from the demonstration examples. The
 test input can be a confounding factor: if our se-
 lection is effective as well on zero-shot test input
@@ -415,8 +466,10 @@ tively. We do not observe performance gain for
 most tasks, indicating our selection is specific to
 the ICL ability without benefiting the zero-shot,
 no-demonstration task performance.
+
 3 Analyzing supportive pretraining data
 for in-context learning
+
 In the previous section, we identify a small sub-
 set of pretraining data that supports the ICL abil-
 ity of language models. In this section, we an-
@@ -426,131 +479,46 @@ ically, we compare the supportive pretraining data
 contrastively with randomly sampled pretraining
 instances, investigating three aspects of the pre-
 training data: the domain relevance to downstream
-8 Negative result is observed with TweetQA, on which
+
+’Negative result is observed with TweetQA, on which
 we conjecture the patterns in the demonstration examples
 are more difficult to transfer to the test input (e.g., factual
 knowledge instead of sentiment indicators).
-Eval SST-2
-AG News Story
-SMS
-Sentiment TweetQA
-Source
-Cloze
-Spam
-140
-75.47
-74.12
-66.09
-45.07
-67.23
-62.36
-SST-2
-83.15
-74.91
-67.76
-52.48
-69.03
-62.20
-75.87±1.64
-73.24± 1.24
-66.24±1.25
-49.82±4.50
-66.23±1.24
-61.75±0.26
-AG News
-79.04
-75.40
-68.34
-59.24
-68.96
-74.99±
-0.77
-73.77±0
-±0.41
-66.38±0.69
-46.55±4.2
-66.23± 1.24
-61.86
-62.02±0.55
-Story Cloze
-75.33
-74.12
-67.47
-51.36
-72.50+2
-73.77±0.41
-65.25±1.52
-47.15±4
-+4.90
-69.92
-66.23±1.24
-SMS Spam
-73.88
-72.78
-67.25
-64.69
-63.70
-75.87±1.64
-73.77±0.4
-65.25±1.52
-46.55±4.24
-66.33±1.34
-62.33
-62.02±0.55
-62.13
-61.75±0.26
-Sentiment 140
-77.56
-72.78
-66.78
-51.64
-66.66
-62.93
-73.49±2.33
-73.77±0.41
-66.38±0.69
-44.52±2.45
-66.00± 1.41
-61.64±0.21
-TweetQA
-75.22
-72.50±2.53
-71.52
-73.01±1.42
-66.27
-64.91±2.01
-43.09
-44.52±2.45
-66.76
-66.33±1.34
-61.31
-61.33±0.80
+
+--- Page 5 ---
+Eval | SST-2 AG News | Story SMS Sentiment | TweetQA
+Source Cloze Spam 140
+75.47 74.12 66.09 45.07 67.23 62.36
+SST-2 83.15 74.91 67.76 52.48 69.03 62.20
+75.874 1.64 73.244 1.24 66.244 1.25 49.824 4.50 66.234 1.24 61.75 +026
+AG News 79.04 75.40 68.34 59.24 68.96 61.86
+74.99 0.27 73.774 0.41 66.38 + 0.9 46.5544.24 66.234 1.24 62.02+ 055
+Story Cloze 75.33 74.12 67.47 51.36 69.92 62.33
+72.50+ 233 73.774 0.41 65.25+ 1.52 47.154 4.90 66.234 1.24 62.02+ 055
+SMS Spam 73.88 72.78 67.25 64.69 63.70 62.13
+75.874 1.64 73.77 4041 65.25+ 1.52 46.55 44.24 66.334 1.34 61.75 +026
+Sentiment 140 77.56 72.78 66.78 51.64 66.66 62.93
+73.494 2.33 73.774 0.41 66.38 + 0.9 44.524 245 66.00+ 141 61.644 0.21
+TweetQA 75.22 71.52 66.27 43.09 66.76 61.31
+72.50+ 233 73.014 1.42 64.91 +201 44.524 245 66.334 1.34 61.33+ 0.80
 Table 1: Evaluation of supportive pretraining data to ICL. We obtain supportive pretraining data using the guidance
 of a source task and evaluate ICL on all tasks. In the headers, we show the ICL performance of the original LM.
+
 We perform perturbative continued pretraining with both our selected supportive data (top number in cells) and an
 equal number of randomly sampled pretraining data (bottom number in cells). Diagonal cells indicate same-task
 evaluation and are marked purple. Our performance is bolded when the difference exceeds one standard deviation.
 On 4 of 6 tasks, the same-task ICL performance gain is observed (diagonal). On 5 of 6 tasks, the corresponding
+
 supportive pretraining data improves ICL on at least three tasks (rows).
-Zero-shot Eval Original
-+ICL-supportive
-SST-2
-46.82
-46.83
-AG News
-46.14
-44.05
-Story Cloze
-50.43
-51.39
-SMS Spam
-44.41
-43.84
-Sentiment 140 55.84
-TweetQA
-54.90
-50.44
-50.32
+
+Zero-shot Eval | Original +ICL-supportive
+SST-2 46.82 46.83
+AG News 46.14 44.05
+Story Cloze 50.43 51.39
+SMS Spam 44.41 43.84
+Sentiment 140 | 55.84 54.90
+TweetQA 50.44 50.32
+
 Table 2: Control evaluation. We report the zero-shot
 prompting performance of the original LM and the per-
 turbed LM after trained on our selected supportive pre-
@@ -558,13 +526,17 @@ training data. No significant performance gain is ob-
 served for most tasks, showing our selected supportive
 pretraining data is specific to ICL without improving
 the zero-shot, no-demonstration task performance.
+
 tasks, the token frequency distribution, and the in-
 formation gain of incorporating long-range context.
+
 3.1 Domain relevance
+
 Xie et al. (2022) and Min et al. (2022) imply that
 in-context demonstration is useful since it helps
 locate a particular domain or concept of the test in-
 put the LM already learned through the pretraining
+
 data. On the other hand, Olsson et al. (2022) imply
 that in-context demonstration is useful because the
 decision over the test input may be done through a
@@ -579,63 +551,46 @@ downstream task. (2) Inferred from Olsson et al.
 (2022), the supportive pretraining data should be
 beneficial to the soft-copy mechanism, providing
 meta support for the abstract ability, unconstrained
-with the concrete data domain. We aim to measure
+with the concrete data domain.? We aim to measure
 the domain relevance between supportive pretrain-
 ing data and downstream tasks.
+
 Method To quantify domain relevance, we use
 MAUVE score (Pillutla et al., 2021) to measure an
 information divergence between two text distribu-
 tions. We compute two MAUVE scores, between
 the target task data and our selected supportive
 pretraining data, and between the task data and ran-
-"This view of supportive data will be revisited in §3.3.
-MAUVE supportive"
-MAUVE random
-0.004
-0.002
-0.000
--0.002
--0.004
--0.006 -
-Zipf supportive Zipfrandom
-0.000
--0.002
--0.004
--0.006-
--0.008
--0.010
--0.012
--0.014
-SST-2
-AG
-Story
-News
-Cloze
-SMS
-Spam
+
+°This view of supportive data will be revisited in §3.3.
+
+--- Page 6 ---
+A
+3
+=
+=
+'
+
+SsT-2 AG Story sms
+News  Cloze Spam
+
 Sentiment TweetQA
-140
-SST-2
-AG
-News
-Story
-Cloze
-SMS
-Spam
-Sentiment TweetQA
-140
+0
+
 Figure 3: The MAUVE score between the supportive
 pretraining data and target task data, subtracted by the
 MAUVE score between random data and target task
 data. The error bars indicate the 95% confidence inter-
 val. No tasks show the supportive data has a significant
 higher domain relevance compared to random data.
+
 dom pretraining data. We then compute and report
 their difference. A positive MAUVE difference in-
 dicates a higher domain relevance of our supportive
-pretraining data. 10 We use ROBERTa (Liu et al.,
-2019) as MAUVE's embedding model following
+pretraining data.!° We use RoBERTa (Liu et al.,
+2019) as MAUVE’s embedding model following
 He et al. (2022).
+
 Results We show the difference of MAUVE
 scores in Figure 3. The error bar shows the 95%
 confidence interval using 32 random seeds. We
@@ -653,23 +608,50 @@ plies the improved ICL behavior of our models
 may be a meta ability, aided by pretraining data
 unrelated to the specific domain knowledge for
 solving the task, but related to a domain-invariant
-mechanism to learn from a data's context. §3.3
+mechanism to learn from a data’s context. §3.3
 continues this discussion.
+
 3.2 Token frequency distribution
+
 Providing demonstrations to a task input under an
 ICL setup creates repetitions (e.g., of label tokens),
 which changes the token frequency distribution of
 the ICL task data. Therefore, we are interested in
-10 Pillutla et al. (2021) also shows higher MAUVE indicates
+
+‘Pillutla et al. (2021) also shows higher MAUVE indicates
 higher generation quality, but we skip that aspect since all of
 our data are naturally occuring text.
-Figure 4: The difference in average Zipf's coefficients
+
+0.000 | -----------------------------------------
+
+-0.002
+
+= -0.004
+‘B
+N
+)
+
+-0.006
+
+=0.008
+
+-0.010
+
+-0.012
+
+-0.014
+
+SST-2 AG Story SMS Sentiment TweetQA
+News Cloze Spam 140
+
+Figure 4: The difference in average Zipf’s coefficients
 of the token frequency distribution of supportive pre-
 training instances and random examples. The error bars
 indicate the 95% confidence interval. We find a lower
-Zipf's coefficient for supportive pretraining data, indi-
+Zipf’s coefficient for supportive pretraining data, indi-
 cating a flatter frequency distribution, with a relatively
 higher mass on the rare, long-tail tokens.
+
 whether the supportive pretraining data possess a
 different token frequency distribution from general
 pretraining data. Experimented with sequences of
@@ -681,35 +663,41 @@ els (Vaswani et al., 2017). However, it is unknown
 whether the findings on the synthetic image-label
 data can transfer to the natural language pretraining
 data, a gap we address in this subsection.
+
 Method We fit a Zipfian distribution over each
 supportive and random pretraining instance that
-consists of 2048 tokens. The Zipf's coefficient
+consists of 2048 tokens. The Zipf’s coefficient
 is the negative slope of a linear regression over
-the tokens' log-rank v.s. log-frequency. A higher
-Zipf's coeffcient indicates a higher mass on the
+the tokens’ log-rank v.s. log-frequency. A higher
+Zipf’s coeffcient indicates a higher mass on the
 frequent tokens (i.e., more skewed distribution). A
-lower Zipf's coefficient indicates a higher mass on
+lower Zipf’s coefficient indicates a higher mass on
 the rare, long-tail tokens (i.e., flatter distribution).
+
 Results In Figure 4, we show the difference in
-average Zipf's coefficients between supportive and
+average Zipf’s coefficients between supportive and
 random pretraining data, each with a group size
 of 2000. The error bar shows the 95% confidence
 interval with 32 random seeds. We find that for
-all tasks, the Zipf's coefficient of the supportive
-pretraining data is significantly lower than that of
+all tasks, the Zipf’s coefficient of the supportive
+pretraining data is significantly Jower than that of
 the random pretraining data. This indicates a flatter
 Zipfian distribution with a relatively higher mass
 over the long-tail tokens. In other words, though
 the overall burstiness of data is lower, there is a rel-
 atively higher amount of rarely occurring, long-
+
+--- Page 7 ---
 tail tokens in the supportive pretraining data
 for ICL. Flatter frequency distribution also indi-
 cates higher entropy over the tokens, presumably
 making the supportive pretraining data challenging
 examples to fit by the model, a concept we explore
 further in the next subsection.
-3.3 Information gain from long-range context
-In §3.1, we find that the domain relevance of the
+
+3.3. Information gain from long-range context
+
+In $3.1, we find that the domain relevance of the
 supportive pretraining data to downstream tasks
 is not higher than that of random pretraining data.
 This is comprehendible if we follow the aforemen-
@@ -727,39 +715,40 @@ demonstration examples in the ICL setup is a form
 of long-range context. We propose a novel infor-
 mation gain measure to quantify this feature of
 incorporating long-range context.
+
 Method Recall that the canonical definition of in-
-formation gain (IG) is IG(T, a) = H(T) − H(T |
+formation gain (IG) is IG(T,a) = H(T) — H(T |
 a), where T is a target variable, a is an attribute
-conditioned on by T, and H(·) computes entropy.
+conditioned on by T, and H(-) computes entropy.
 It measures the decrease of entropy (thus the gain
 of information) in T if conditioned on a. We adapt
 the canonical IG to measure the decrease of cross
-entropy for each token (w¿) in a pretraining dataset
-when conditioned on a long (1) context over a short
+entropy for each token (w;) in a pretraining dataset
+when conditioned on a long (/) context over a short
 (s) context:
-IG(l, s) = CE(wi | ctxs) – CE(wi | ctx1)
+
+IG(I, s) = CE(u; | ctxs) — CE(w; | ctx;)
+
 Ideally the length of long or short context should
-remain constant across different tokens wi, but it
+remain constant across different tokens w;, but it
 would be a very expensive computation due to a
 lack of parallelism. We approximate the compu-
 tation by splitting a full sequence of pretraining
 tokens (e.g., 2048 tokens) to smaller blocks and cal-
 culate cross entropy with the boundary of blocks:
-IG(l, s)
-– log po(wi | Wi–(i mod 2s)
-==
-+ log po(wi | Wi-(i mod 21) :
-:
-i)
-i)
+
+IG(I, s) = — log pe(wi | Wis mod 2s) : é)
++ log po(wi | Wi—(i mod 2) : i)
+
 With the above definition, the average length of
-context for all w₁ is s and l, respectively. In the
-experiments below, we keep s =
-128 for the length
+context for all w, is s and I, respectively. In the
+
+experiments below, we keep s = 128 for the length
 of short context and increase the length of long
-context at = {256, 512, 1024}.
+context at 1] = {256, 512, 1024}.
+
 We report the difference in the average informa-
-tion gain (across wi) of incorporating long-range
+tion gain (across w,) of incorporating long-range
 context for a language modeling objective, in sup-
 portive pretraining data over random pretraining
 data. Additionally, we want to use the defined in-
@@ -768,15 +757,16 @@ data, so we use a different LM to compute the cross
 entropy than the LM on which we perform ICL.
 Below we report results using OPT-1.3B, while ex-
 periments using OPT-350M shows a similar trend.
+
 Results In Figure 5, we see for all of the exper-
 imented tasks, there is a significant trend that in-
-creasing the length 1 for the long-range context
+creasing the length / for the long-range context
 for supportive pretraining data has a lower rela-
 tive information gain compared to random pretrain-
 ing data. Though seeming counterintuitive at first
 glance, this suggests that the supportive pretrain-
 ing data are more challenging examples in incor-
-porating the long-range context information.11
+porating the long-range context information.!!
 A possible explanation for this is that such chal-
 lenging examples contain confounding spans that
 harms the information gain measure. The language
@@ -785,13 +775,15 @@ range context is truly relevant to the prediction of
 next tokens. This would resemble more and thus
 helpful to the ICL task scenario where there are
 multiple demonstrations from different classes.
+
 3.4 Future work
+
 Despite our aforementioned findings, we mainly
 conduct correlational analyses throughout the work.
 Despite the potential confounding factors, future
 work can try converting the correlational findings to
 causal ones. For example, to actively refine or con-
-struct pretraining data to improve existing models'
+struct pretraining data to improve existing models’
 ICL performance, with a metric of token frequency
 distribution (i.e., find data with a higher mass of
 long-tail tokens) or context information gain (i.e.,
@@ -801,83 +793,44 @@ cation tasks in this work. However, the ORCA-ICL
 method can be applicable to generation tasks as
 well in the future, if the ICL loss is defined over a
 sequence probability of the generation.
-11 Note that a reverse of the statement may not hold nec-
-essarily, since an example's long-range context can also be
+
+''Note that a reverse of the statement may not hold nec-
+essarily, since an example’s long-range context can also be
 irrelevant by nature and challenging in a useless way.
-0.000
--0.002 -
--0.004
--0.006 -
-0.000
--0.001
--0.002 -
--0.003-
--0.004
-0.0005
-0.0000
--0.0005
--0.0010-
--0.0015
--0.0020
--0.008
-SST-2
-AG News
--0.0025
-Story Cloze
-128
-256
-512
-1024
-128
-256
-512
-1024
-128
-256
-512
-1024
-0.000
-0.0000
-0.000
--0.0025
--0.005
--0.005
--0.0050
--0.010-
--0.0075
--0.010-
--0.0100
--0.015-
--0.0125
--0.015
--0.0150
--0.020-
-SMS Spam
-128
-512
--0.0175
-1024
-128
-512
-1024
-128
-TweetQA
-512
-1024
-256
+
+--- Page 8 ---
+—— SST-2
+
+—— AG News
+
+— Story Cloze
+
+128 256 512 1024
+
+— SMS Spam
+
+— Sentiment 140
+
+—— TweetQA
+
+128 256 512 1024 128
 Avg. context length
-Sentiment 140
-256
+
 Avg. context length
-256
+
+512 1024 128 256 512 1024
 Avg. context length
+
 Figure 5: The difference between supportive pretraining instances and random examples in information gain of
 incorporating long-range context for next-token prediction. We fix the average short context length (s) at 128
 tokens and iterate through long context lengths (1) of {256, 512, 1024}. The shaded area shows the 95% confidence
 interval. The results show that the long-range context in supportive pretraining data leads to a lower information
 gain than random pretraining examples. Supportive pretraining data are challenging examples in incorporating their
+
 long-range context.
+
 4 Related Work
+
 Demonstration examples Min et al. (2022) un-
 derstand ICL through analyzing which aspects of
 the demonstration examples contribute or are ir-
@@ -886,10 +839,11 @@ ground truth demonstration labels with random la-
 bels would not hurt task performance, while ICL
 still benefits from knowing the label space, distri-
 bution of inputs, and sequence format specified in
-demonstration examples.12 Zhang et al. (2022a)
+demonstration examples.!? Zhang et al. (2022a)
 further show on sequence labeling tasks, the length
 of demonstrations and the relevance of their tokens
 are important for ICL.
+
 Learning mechanism Xie et al. (2022) explain
 ICL as implicit Bayesian inference, occurring when
 language models infer a shared latent concept from
@@ -901,19 +855,22 @@ a controlled distribution of concepts. Garg et al.
 can be trained to learn unseen linear functions from
 in-context demonstration examples. Olsson et al.
 (2022) present evidence that multi-layer attention-
-12 Recent work like Wei et al. (2023) and Pan et al. (2023)
+
+Recent work like Wei et al. (2023) and Pan et al. (2023)
 show the related findings would depend on model scales as
 well.
+
 based models form an induction head and perform
 ICL by a pattern copying behavior from the pre-
-fixing context. More recent work like Akyürek
+fixing context. More recent work like Akyiirek
 et al. (2022), Dai et al. (2022), and von Oswald
 et al. (2022) explain ICL in Transformer models
 as a kind of standard learning algorithms over the
 demonstration examples, such as gradient descent
 and regression.
+
 Pretraining data Razeghi et al. (2022) find on
-numerical reasoning tasks, a language model's ICL
+numerical reasoning tasks, a language model’s ICL
 performance is highly correlated with the term fre-
 quency of the input data in the pretraining corpus.
 Shin et al. (2022) investigate how ICL can be af-
@@ -932,10 +889,14 @@ a first step towards understanding ICL in realistic
 NLP tasks through analyzing instance-level pre-
 training data. Additionally, concurrent to our work,
 Gu et al. (2023) propose a method that groups pre-
+
+--- Page 9 ---
 training data by their instrinsic tasks, enhancing
-instead of interpreting existing language models'
+instead of interpreting existing language models’
 ICL ability.
+
 5 Conclusion
+
 In-context learning has shown superior perfor-
 mance on a range of NLP tasks, yet it remained
 unclear from where language models acquired this
@@ -953,8 +914,10 @@ more challenging instances in incorporating long-
 range context in language modeling. Our findings
 may be beneficial to future work that refine or con-
 struct pretraining data, in order to actively improve
-existing models' in-context learning performance.
+existing models’ in-context learning performance.
+
 Limitations
+
 It is worth noting that the supportive pretraining
 data we investigated throughout the work is w.r.t.
 the current LM, such that a perturbative continued
@@ -967,6 +930,7 @@ computing resources, future work may investigate
 the trend of supportive patterns across multiple
 checkpoints of a LM throughout the pretraining
 process.
+
 Additionally, another significant limitation of
 our work is the amount of involved computing re-
 source. The ORCA-ICL method is gradient-based
@@ -981,11 +945,14 @@ would take about a week. One mitigating aspect of
 such computation is that the gradient calculation
 can be done asynchronously, therefore enabling the
 use of idle, leftover GPUs scattered across a cluster
+
 of nodes. We plan to explore efficient computation
 of gradient similarity or move from a paradigm of
 extracting supportive data to generating supportive
 data in future work.
+
 Acknowledgements
+
 We thank Naman Goyal, Anjali Sridhar, Zeyu Liu,
 Victoria Lin, Mengzhou Xia, Weijia Shi, Jiacheng
 Liu, Hao Zhu, and Tianxing He for helpful dis-
@@ -994,7 +961,7 @@ viewers and all members of TsvetShop for the valu-
 able feedback. This research is supported in part
 by the Office of the Director of National Intelli-
 gence (ODNI), Intelligence Advanced Research
-Projects Activity (IARPA), via the HIATUS Pro-
+Projects Activity TARPA), via the HIATUS Pro-
 gram contract #2022-22072200004. The views and
 conclusions contained herein are those of the au-
 thors and should not be interpreted as necessarily
@@ -1004,16 +971,20 @@ ernment. The U.S. Government is authorized to
 reproduce and distribute reprints for governmental
 purposes notwithstanding any copyright annotation
 therein.
+
 References
-Ekin Akyürek, Dale Schuurmans, Jacob Andreas,
+
+Ekin Akyiirek, Dale Schuurmans, Jacob Andreas,
 Tengyu Ma, and Denny Zhou. 2022. What learning
 algorithm is in-context learning? investigations with
 linear models. arXiv preprint arXiv:2211.15661.
-Tiago A Almeida, José María G Hidalgo, and Akebo
+
+Tiago A Almeida, José Maria G Hidalgo, and Akebo
 Yamakami. 2011. Contributions to the study of sms
 spam filtering: new collection and results. In Pro-
 ceedings of the 11th ACM symposium on Document
-engineering, pages 259–262.
+engineering, pages 259-262.
+
 Tom Brown, Benjamin Mann, Nick Ryder, Melanie
 Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind
 Neelakantan, Pranav Shyam, Girish Sastry, Amanda
@@ -1028,128 +999,159 @@ Language models are few-shot learners. In Ad-
 vances in Neural Information Processing Systems,
 volume 33, pages 1877-1901. Curran Associates,
 Inc.
+
 Stephanie CY Chan, Adam Santoro, Andrew Kyle
 Lampinen, Jane X Wang, Aaditya K Singh,
 Pierre Harvey Richemond, James McClelland, and
 Felix Hill. 2022. Data distributional properties drive
+
+--- Page 10 ---
 emergent in-context learning in transformers. In Ad-
 vances in Neural Information Processing Systems.
+
 Aakanksha Chowdhery, Sharan Narang, Jacob Devlin,
 Maarten Bosma, Gaurav Mishra, Adam Roberts,
 Paul Barham, Hyung Won Chung, Charles Sutton,
 Sebastian Gehrmann, et al. 2022. Palm: Scaling
 language modeling with pathways. arXiv preprint
 arXiv:2204.02311.
+
 Damai Dai, Yutao Sun, Li Dong, Yaru Hao, Zhifang Sui,
 and Furu Wei. 2022. Why can gpt learn in-context?
 language models secretly perform gradient descent as
 meta optimizers. arXiv preprint arXiv:2212.10559.
+
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
 Kristina Toutanova. 2019. BERT: Pre-training of
 deep bidirectional transformers for language under-
 standing. In Proc. NAACL-HLT.
+
 Qingxiu Dong, Lei Li, Damai Dai, Ce Zheng, Zhiy-
 ong Wu, Baobao Chang, Xu Sun, Jingjing Xu, and
 Zhifang Sui. 2022. A survey for in-context learning.
 arXiv preprint arXiv:2301.00234.
+
 Shivam Garg, Dimitris Tsipras, Percy Liang, and Gre-
 gory Valiant. 2022. What can transformers learn
 in-context? a case study of simple function classes.
 arXiv preprint arXiv:2208.01066.
+
 Alec Go, Richa Bhayani, and Lei Huang. 2009. Twit-
 ter sentiment classification using distant supervision.
 CS224N project report, Stanford, 1(12):2009.
+
 Yuxian Gu, Li Dong, Furu Wei, and Minlie Huang. 2023.
 Pre-training to learn in context.
+
 Kelvin Guu, Albert Webson, Elizabeth-Jane Pavlick,
 Lucas Dixon, Ian Tenney, and Tolga Bolukbasi. 2023.
 Simfluence: Modeling the influence of individual
 training examples by simulating training runs. ArXiv,
 abs/2303.08114.
+
 Xiaochuang Han and Yulia Tsvetkov. 2022. Orca: In-
 terpreting prompted language models via locating
 supporting data evidence in the ocean of pretraining
 data. arXiv preprint arXiv:2205.12600.
+
 Tianxing He, Jingyu Zhang, Tianle Wang, Sachin
 Kumar, Kyunghyun Cho, James Glass, and Yulia
 Tsvetkov. 2022. On the blind spots of model-based
 evaluation metrics for text generation. arXiv preprint
 arXiv:2212.10020.
+
 Jordan Hoffmann, Sebastian Borgeaud, Arthur Men-
 sch, Elena Buchatskaya, Trevor Cai, Eliza Ruther-
 ford, Diego de Las Casas, Lisa Anne Hendricks,
 Johannes Welbl, Aidan Clark, et al. 2022. Train-
 ing compute-optimal large language models. arXiv
 preprint arXiv:2203.15556.
+
 Ari Holtzman, Jan Buys, Li Du, Maxwell Forbes, and
 Yejin Choi. 2019. The curious case of neural text de-
 generation. In International Conference on Learning
 Representations.
+
 Diederik P Kingma and Jimmy Ba. 2014. Adam: A
 method for stochastic optimization. arXiv preprint
-arXiv:1412.6980.
+arXiv: 1412.6980.
+
 Pang Wei Koh and Percy Liang. 2017. Understanding
 black-box predictions via influence functions. In
 Proc. ICML.
+
 Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Man-
-dar Joshi, Danqi Chen, Omer Levy, Mike Lewis,
+dar Joshi, Dangi Chen, Omer Levy, Mike Lewis,
 Luke Zettlemoyer, and Veselin Stoyanov. 2019.
 Roberta: A robustly optimized bert pretraining ap-
-proach. arXiv preprint arXiv:1907.11692.
+proach. arXiv preprint arXiv: 1907.11692.
+
 Sewon Min, Xinxi Lyu, Ari Holtzman, Mikel Artetxe,
 Mike Lewis, Hannaneh Hajishirzi, and Luke Zettle-
 moyer. 2022. Rethinking the role of demonstrations:
 What makes in-context learning work? In EMNLP.
+
 Nasrin Mostafazadeh, Michael Roth, Annie Louis,
 Nathanael Chambers, and James Allen. 2017. Ls-
 dsem 2017 shared task: The story cloze test. In
 Proceedings of the 2nd Workshop on Linking Models
 of Lexical, Sentential and Discourse-level Semantics,
-pages 46–51.
+pages 46-51.
+
 Catherine Olsson, Nelson Elhage, Neel Nanda, Nicholas
 Joseph, Nova DasSarma, Tom Henighan, Ben Mann,
 Amanda Askell, Yuntao Bai, Anna Chen, et al. 2022.
 In-context learning and induction heads. arXiv
 preprint arXiv:2209.11895.
+
 Myle Ott, Sam Shleifer, Min Xu, Priya Goyal,
 Quentin Duval, and Vittorio Caggiano. 2021. Fully
 sharded data parallel: faster ai training with fewer
-gpus.
-https://engineering.fb.com/2021/07/
+gpus. https: //engineering.fb.com/2021/07/
 15/open-source/fsdp/.
+
 Jane Pan, Tianyu Gao, Howard Chen, and Danqi Chen.
 2023. What in-context learning"learns"in-context:
 Disentangling task recognition and task learning.
-Fabio Petroni, Tim Rocktäschel, Patrick Lewis, An-
+
+Fabio Petroni, Tim Rocktiischel, Patrick Lewis, An-
 ton Bakhtin, Yuxiang Wu, Alexander H. Miller, and
 Sebastian Riedel. 2019. Language models as knowl-
 edge bases? In Proc. EMNLP.
+
 Krishna Pillutla, Swabha Swayamdipta, Rowan Zellers,
-John Thickstun, Sean Welleck, Yejin Choi, and Zaïd
+John Thickstun, Sean Welleck, Yejin Choi, and Zaid
 Harchaoui. 2021. Mauve: Measuring the gap be-
 tween neural text and human text using divergence
 frontiers. In Proc. NeurIPS.
+
 Garima Pruthi, Frederick Liu, Mukund Sundararajan,
 and Satyen Kale. 2020. Estimating training data influ-
 ence by tracking gradient descent. In Proc. NeurIPS.
+
 Yasaman Razeghi, Robert L Logan IV, Matt Gard-
 ner, and Sameer Singh. 2022. Impact of pretrain-
-ing term frequencies on few-shot reasoning. Arxiv,
+ing term frequencies on few-shot reasoning. ArXiv,
 abs/2202.07206.
-Timo Schick and Hinrich Schütze. 2021. Exploiting
+
+Timo Schick and Hinrich Schiitze. 2021. Exploiting
 cloze-questions for few-shot text classification and
 natural language inference. In Proc. EACL.
+
+--- Page 11 ---
 Seongjin Shin, Sang-Woo Lee, Hwijeen Ahn, Sungdong
 Kim, HyoungSeok Kim, Boseop Kim, Kyunghyun
 Cho, Gichang Lee, Woomyoung Park, Jung-Woo Ha,
 et al. 2022. On the effect of pretraining corpora on
 in-context learning by a large-scale language model.
 arXiv preprint arXiv:2204.13509.
+
 Mohammad Shoeybi, Mostofa Patwary, Raul Puri,
 Patrick LeGresley, Jared Casper, and Bryan Catan-
-zaro. 2019. Megatron-lm: Training multi-billion
+zaro. 2019. Megatron-Im: Training multi-billion
 parameter language models using model parallelism.
 arXiv preprint arXiv:1909.08053.
+
 Richard Socher, Alex Perelygin, Jean Wu, Jason
 Chuang, Christopher D Manning, Andrew Y Ng, and
 Christopher Potts. 2013. Recursive deep models for
@@ -1157,16 +1159,19 @@ semantic compositionality over a sentiment treebank.
 In Proceedings of the 2013 conference on empiri-
 cal methods in natural language processing, pages
 1631-1642.
+
 Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob
-Uszkoreit, Llion Jones, Aidan N Gomez, Łukasz
+Uszkoreit, Llion Jones, Aidan N Gomez, Lukasz
 Kaiser, and Illia Polosukhin. 2017. Attention is all
 you need. Advances in neural information processing
 systems, 30.
+
 Johannes von Oswald, Eyvind Niklasson, Ettore Ran-
-dazzo, João Sacramento, Alexander Mordvintsev, An-
+dazzo, Joao Sacramento, Alexander Mordvintsev, An-
 drey Zhmoginov, and Max Vladymyrov. 2022. Trans-
 formers learn in-context by gradient descent. arXiv
 preprint arXiv:2212.07677.
+
 Yizhong Wang, Swaroop Mishra, Pegah Alipoor-
 molabashi, Yeganeh Kordi, Amirreza Mirzaei,
 Anjana Arunkumar, Arjun Ashok, Arut Selvan
@@ -1174,33 +1179,42 @@ Dhanasekaran, Atharva Naik, David Stap, et al. 2022.
 Benchmarking generalization via in-context instruc-
 tions on 1,600+ language tasks. arXiv preprint
 arXiv:2204.07705.
+
 Jerry W. Wei, Jason Wei, Yi Tay, Dustin Tran, Al-
 bert Webson, Yifeng Lu, Xinyun Chen, Hanxiao
 Liu, Da Huang, Denny Zhou, and Tengyu Ma. 2023.
 Larger language models do in-context learning dif-
 ferently. ArXiv, abs/2303.03846.
+
 Sang Michael Xie, Aditi Raghunathan, Percy Liang,
 and Tengyu Ma. 2022. An explanation of in-context
 learning as implicit bayesian inference. In Interna-
 tional Conference on Learning Representations.
+
 Wenhan Xiong, Jiawei Wu, Hong Wang, Vivek Kulka-
-rni, Mo Yu, Shiyu Chang, Xiaoxiao Guo, and
+mi, Mo Yu, Shiyu Chang, Xiaoxiao Guo, and
 William Yang Wang. 2019. Tweetqa: A social media
 focused question answering dataset. arXiv preprint
-arXiv:1907.06292.
+arXiv: 1907.06292.
+
 Hongxin Zhang, Yanzhe Zhang, Ruiyi Zhang, and Diyi
 Yang. 2022a. Robustness of demonstration-based
 learning under limited data scenario. arXiv preprint
 arXiv:2210.10693.
+
 Susan Zhang, Stephen Roller, Naman Goyal, Mikel
 Artetxe, Moya Chen, Shuohui Chen, Christopher De-
 wan, Mona Diab, Xian Li, Xi Victoria Lin, et al.
+
 2022b. Opt: Open pre-trained transformer language
 models. arXiv preprint arXiv:2205.01068.
+
 Xiang Zhang, Junbo Jake Zhao, and Yann LeCun. 2015.
 Character-level convolutional networks for text clas-
 sification. In Proc. NeurIPS.
+
 A Qualitative examples
+
 In Table 3, we show some qualitative examples of
 the supportive pretraining data to ICL and random
 pretraining data. Note that these are illustrative
@@ -1210,9 +1224,13 @@ ter understandability of our findings. A manual
 examination of such data is difficult, and we thus
 propose the quantitative analyses described in the
 main paper.
+
+--- Page 12 ---
 Supportive pretraining data to ICL
-Samsung's new Odyssey+ headset could fix its
+
+Samsung's new Odysseyt+ headset could fix its
 muddled VR vision
+
 As one of the world's most technologically
 innovative companies, Samsung should be
 leading the pack in VR - one of the decade's
@@ -1220,6 +1238,7 @@ top transformative technologies. Instead, it
 has largely let Microsoft and Facebook
 determine its role in the VR space, leading to
 its current situation as an also-ran.
+
 If I was betting on whether that will change
 anytime soon, an FCC leak of the company's new
 Odyssey+ VR headset (discovered by RoadtoVR)
@@ -1232,8 +1251,10 @@ of view, and AMOLED technology will be used to
 guarantee dark blacks and rich colors.
 There's one mystery in the new specs, namely a
 reference to the AMOLED screens now including
-something called "SFS."
+something called "SFS.”
+
 Random pretraining data
+
 Bangladesh authorities and intelligence
 officials have long been saying that many of
 the refugees are involved in illicit drug
@@ -1242,6 +1263,7 @@ Earlier Tuesday, the elite security agency
 Rapid Action Battalion arrested nine refugees
 suspected of being involved in various
 criminal activities.
+
 They had firearms, bullets and sharp weapons,
 Islam said. Local media reported that Tuesday'
 s chaos began after the arrest of the suspects
@@ -1250,6 +1272,7 @@ security agency in detaining them. Human
 rights groups that are involved in the camps
 acknowledge there are criminal elements among
 the Rohingya refugees.
+
 Table 3: Qualitative examples of the supportive pretrain-
 ing data to ICL in the task of SMS spam detection. We
 also show an example of random pretraining data for
@@ -1265,3 +1288,4 @@ ICL (e.g., copying behaviors from the context) based on
 them. However, such patterns are sparse, noisy, and hard
 to analyze through manual inspections. We therefore
 present the quantitative analyses in the main paper.
+

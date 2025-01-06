@@ -1,11 +1,21 @@
+--- Page 1 ---
 arXiv:2307.13974v1 [cs.CV] 26 Jul 2023
+
 Tracking Anything in High Quality
-Jiawen Zhu¹, Zhenyu Chen¹, Zeqi Hao¹, Shijie Chang¹, Lu Zhang¹, Dong Wang¹, Huchuan Lu¹,
-Bin Luo², Jun-Yan He², Jin-Peng Lan², Hanyuan Chen², Chenyang Li²
-¹Dalian University of Technology, China 2DAMO Academy, Alibaba Group
-{jiawen,dlutczy, hzq, csj}@mail.dlut.edu.cn, {luzhangdut, junyanhe 1989, lanjinpeng1015}@gmail.com
-{wdice, lhchuan}@dlut.edu.cn, {luwu.lb, hanyuan.chy, lee.lcy}@alibaba-inc.com
+
+Jiawen Zhu', Zhenyu Chen!, Zeqi Hao!, Shijie Chang!, Lu Zhang', Dong Wang!, Huchuan Lu!,
+Bin Luo’, Jun-Yan He?, Jin-Peng Lan’, Hanyuan Chen”, Chenyang Li?
+
+‘Dalian University of Technology, China
+
+2DAMO Academy, Alibaba Group
+
+{jiawen, dlutczy,hzq,csj}@mail.dlut.edu.cn, {luzhangdut, junyanhe1989, lanjinpengl015}@gmail.com
+
+{wdice, lnchuan}@dlut.edu.cn, {luwu.lb,hanyuan.chy, lee. lcy}@alibaba-inc.com
+
 Abstract
+
 Visual object tracking is a fundamental video task in
 computer vision. Recently, the notably increasing power of
 perception algorithms allows the unification of single/multi-
@@ -25,10 +35,12 @@ trained MR model is employed to refine the tracking re-
 sults. As a compelling testament to the effectiveness of our
 paradigm, without employing any tricks such as test-time
 data augmentations and model ensemble, HQTrack ranks
-the 2nd place in the Visual Object Tracking and Segmenta-
+the 2"4 place in the Visual Object Tracking and Segmenta-
 tion (VOTS2023) challenge. Code and models are available
 at https://github.com/jiawen-zhu/HQTrack.
+
 1. Introduction
+
 As a fundamental video task in computer vision, visual
 object tracking has become the cornerstone of many re-
 lated areas, such as robot vision and autonomous driving.
@@ -38,8 +50,10 @@ lenges in the tracking field, Visual Object Tracking (VOT)
 challenge [16, 18] attracted a lot of attention, and many
 SOTA algorithms participate to show their cutting-edge per-
 formance. The Visual Object Tracking and Segmentation
-challenge (VOTS2023¹) relaxes the constraints enforced in
-https://www.votchallenge.net/vots2023
+challenge (VOTS2023') relaxes the constraints enforced in
+
+'https://www.votchallenge.net/vots2023
+
 past VOT challenges for considering general object tracking
 in a broader context. Therefore, VOTS2023 merges short-
 term and long-term, single-target and multiple-target track-
@@ -47,31 +61,33 @@ ing with segmentation as the only target location specifica-
 tion. This poses more challenges, e.g., inter-object relation-
 ship understanding, multi-target trajectory tracking, accu-
 rate mask estimation, etc.
+
 Visual object tracking has made great strides with deep
 learning techniques [10, 13, 19]. Previous methods can
 be grouped into either online-update trackers [3,9] and
 Siamese trackers [2,31]. Recently, Transformer [29] sweeps
 in computer vision, the dominant tracking methods are
-Transformer-based trackers [5, 8, 35, 39]. TransT [5] pro-
+Transformer-based trackers [5, 8,35, 39]. TransT [5] pro-
 poses transformer-based ECA and CFA modules to re-
 place the long-used correlation calculation. Benefiting
-from Transformer's superior long-range modeling capabil-
+from Transformer’s superior long-range modeling capabil-
 ity, TransT outperforms the previous correlation modules
 which are a capable class of linear modeling. More recently,
-some trackers [8, 39] introduce pure transformer architec-
+some trackers [8,39] introduce pure transformer architec-
 ture, and the feature extracting and template-search region
 interaction is completed in a single backbone, tracking per-
 formance is pushed to new records. These trackers mainly
 focus on single object tracking and output the bounding box
 for performance evaluation. Hence, merely employing SOT
 trackers is not well-suited to the VOTS2023 challenge.
+
 Video object segmentation aims to segment out the spe-
 cific objects of interest in a video sequence. Similar to VOT,
 semi-supervised video object segmentation also manually
 provides the annotated in the first frame. The main differ-
 ence is that the VOS task provides a more fine-grained mask
 annotation. Early VOS methods propagate object masks
-over video frames via motion clues [6,28] or adopt online
+over video frames via motion clues [6, 28] or adopt online
 learning strategies [4,20]. Recently, Space-Temporal Mem-
 ory (STM) network [24, 32] extracts the spatio-temporal
 context from a memory bank to handle the appearance
@@ -79,13 +95,15 @@ changes and occlusions, offering a promising solution for
 semi-supervised video object segmentation. For multi-
 object segmentation, these methods segment the objects one
 by one, the final results are merged masks by post ensemble.
-1
+
+--- Page 2 ---
 AOT [37] proposes an identification mechanism that can en-
 code, match, and segment multiple objects at the same time.
 Based on AOT [37], DeAOT [38] decouples the hierarchi-
 cal propagation of object-agnostic and object-specific em-
 beddings from previous frames to the current frame, further
 improving the VOS accuracy.
+
 Although the above VOS methods can handle track-
 ing task with multi-object and mask output, challenges in
 VOTS2023 benchmark remain. (i) VOTS videos contain a
@@ -100,6 +118,7 @@ Trackers require additional design to accommodate the dis-
 appearance and appearance of targets. (iii) A series of chal-
 lenges such as fast motion, frequent occlusion, distractors,
 and tiny objects also make this task more difficult.
+
 In this work, we propose Tracking Anything in High
 Quality (termed HQTrack), which mainly consists of a
 video multi-object segmenter (VMOS) and a mask refiner
@@ -121,17 +140,22 @@ late the outer enclosing boxes of the predicted masks from
 VMOS as box prompts and feed them into HQ-SAM to-
 gether with the original images to gain the refined masks,
 the final tracking results are selected from VMOS and MR.
+
 Finally, HQTrack obtains an impressive 0.615 quality
 score on the VOTS2023 test set, achieving runner-up at the
 VOTS2023 challenge.
+
 2. Method
+
 In this section, we present our HQTrack in detail. We
 first showcase the pipeline of our method. Subsequently,
 we introduce each component in our framework. Finally,
 we describe the training and inference details.
+
 2.1. Pipeline
+
 The pipeline of the proposed HQTrack is depicted in Fig-
-ure 1. Given a video and the first frame reference (mask
+ure |. Given a video and the first frame reference (mask
 annotated), HQTrack first segments the target objects for
 each frame via VMOS. The segmentation results of the cur-
 rent frame are from the propagation of the first frame along
@@ -147,11 +171,14 @@ perform bounding box extraction on the target masks pre-
 dicted by VMOS, and they are fed into the HQ-SAM model
 as box prompts. Last, we design a mask selector to select
 the final results from VMOS and MR.
+
 2.2. Video Multi-object Segmenter (VMOS))
+
 VMOS is a variant of DeAOT [38], thereby in this sub-
 section, we first provide a brief revisiting of DeAOT which
 is the baseline of our VMOS, then we delve into the design
 of our VMOS.
+
 DeAOT. AOT [37] proposes to incorporate an identification
 mechanism to associate multiple objects in a unified em-
 bedding space which enables it to handle multiple objects
@@ -163,65 +190,47 @@ propagation of visual and identification embeddings into a
 dual-branch gated propagation module (GPM). GPM is an
 efficient module with single-head attention for constructing
 hierarchical propagation.
+
 VMOS. The video multiple object segmenter (VMOS) in
-HQTrack is a variant of DeAOT. As shown in the left of
+HQtTrack is a variant of DeAOT. As shown in the left of
 Figure 1, to improve the segmentation performance, espe-
-cially perceiving tiny objects, we cascade a GPM with 8×
+cially perceiving tiny objects, we cascade a GPM with 8x
 scale and expand the propagation process to multiple scales.
 The original DeAOT only performs propagating operation
-on the visual and identification features of 16× scale. At
+on the visual and identification features of 16x scale. At
 this scale, lots of detailed object clues are lost, especially
-for tiny objects, 16× scale features are insufficient for accu-
+for tiny objects, 16x scale features are insufficient for accu-
 rate video object segmentation. In our VMOS, considering
 the memory usage and model efficiency, we only use up-
 sampling and linear projection to upscale the propagation
-features to 4× scale. Multi-scale propagation features will
+features to 4x scale. Multi-scale propagation features will
 be fed into the decoder along with multi-scale encoder fea-
 tures for mask prediction. Decoder is a simple FPN [21].
 In addition, as a new large-scale CNN-based foundation
 model, Internimage [33] employs deformable convolution
 as the core operator, showing impressive performance on
-2
-Frame 1
-Frame t-1
-Frame t
-Refined t
-Encoder
-Encoder
-Encoder
-Select T
-Propagation
-hmem
-→
-Propagation
-Reference
-GPM
-HQ-SAM
-GPM
-Up & Proj
-J
+
+--- Page 3 ---
+|
+
+oneuee
 ID Emb
-Decoder
+
+onneee
 ID Emb
-hmem
-VMOS
-GPM
-Up & Proj
-h_s8
-h_s4 h_s16
-Decoder
-Box Prompt
-MR
-Predt - 1
-Pred t
+
 Figure 1. Overview of HQTrack. It mainly consists of a video multi-object segmenter (VMOS) and a mask refiner (MR).
+
 various representative tasks e.g., object detection and seg-
 mentation. In VMOS, Intern-T is employed as our encoder
 to enhance object discrimination capabilities.
+
 2.3. Mask Refiner (MR)
+
 MR is a pre-trained HQ-SAM [14], in this section, we
 first revisit the HQ-SAM method which is a variant of
 SAM [15], then we provide the usage of HQ-SAM.
+
 SAM and HQ-SAM. Segment anything model (SAM) has
 recently attracted high-heat attention in the field of image
 segmentation, and researchers have utilized SAM to sec-
@@ -233,17 +242,19 @@ erful zero-shot capabilities brought by large-scale training,
 SAM also involves flexible human interaction mechanisms
 achieved by different prompt formats. However, when the
 processed image contains objects with intricate structures,
-SAM's prediction masks tend to fall short. To tackle such
-an issue as well as maintain SAM's original promptable de-
+SAM’s prediction masks tend to fall short. To tackle such
+an issue as well as maintain SAM’s original promptable de-
 sign, efficiency, and zero-shot generalizability, Ke et al. pro-
 pose HQ-SAM [14]. HQ-SAM introduces a few additional
 parameters to the pre-trained SAM model. High-quality
 mask is obtained by injecting a learning output token into
-SAM's mask decoder.
+SAMs mask decoder.
+
 MR. HQTrack employs the above HQ-SAM as our mask re-
 finer. As shown in the right of Figure 1, we take the predic-
 tion mask from VMOS as the input of MR. Since the VMOS
 model is trained on scale-limited close-set datasets, the first
+
 stage mask from VMOS probably with insufficient qual-
 ity especially handling some complex scenarios. Hence,
 employing a large-scale trained segmentation algorithm to
@@ -260,81 +271,59 @@ sometimes completely different from the predicted mask of
 VMOS (very low IoU score) which instead harms the seg-
 mentation performance. This may be a result of the different
 understanding and definition of object between HQ-SAM
-and reference annotation. Hence, we set an IoU threshold 7
+and reference annotation. Hence, we set an IoU threshold r
 (between masks from VMOS and HQ-SAM) to determine
 which mask will be used as the final output. In our case,
 when the IoU score is higher than 7, we choose the refined
 mask. This process constrains HQ-SAM to focus on refin-
 ing the current object mask rather than re-predicting another
 target object.
+
 3. Implementation Details
+
 In VMOS of HQTrack, InternImage-T [33] is employed
 as the backbone for the image encoder for the trade-off be-
 tween accuracy and efficiency. The layers number of the
-GMP for 16× and 8× scale is set to 3 and 1. The 4× scale
-3
-0.566 0.645 0.782 0.097 0.121 0.561
-Method
-AUC A
-MS AOT (Separate)
-MS AOT (Joint)
-R NRE↓ DRE↓ ADQ
+GMP for 16x and 8x scale is set to 3 and 1. The 4x scale
+
+--- Page 4 ---
+Method AUC A R  NRE| DRE| ADQ
+
+G= AUC A R NRE| DRE! ADQ
+
+MS_AOT (Separate)
+MS_AOT (Joint)
+
 0.552 0.625 0.831 0.063 0.106 0.417
-G =
-AUC
-A
-10
-0.610
-R NRE↓
-0.668 0.807 0.110
-DRE↓ ADQ
-0.083 0.694
-20
-0.607 0.65 0.806 0.12
-0.074 0.697
-30
-0.626 0.689
-0.813 0.127
-0.060 0.715
-40
-0.650 0.681 0.886 0.059
-0.055
-0.648
-50
-0.669 0.692
-0.885 0.057
-0.058
-0.682
-60
-0.653 0.669
-0.889 0.059
-0.052
-0.685
-70
+0.566 0.645 0.782 0.097 0.121 0.561
+
 Table 1. Ablation study of separate tracking v.s. joint tracking
 paradigm on VOTS2023 validation set. The metrics marked with
-↓indicate that smaller is better and vice versa. NRE: Not-Reported
+{ indicate that smaller is better and vice versa. NRE: Not-Reported
 Error. DRE: Drift-Rate Error. ADQ: Absence-Detection Quality.
 We refer readers to [17] for more details about evaluation metrics.
-# Method
-1 Baseline
-AUC A R NRE DRE↓ ADQ
-0.576 0.675 0.77 0.122 0.108 0.581
-2 w/InternImage-T 0.611 0.656 0.809 0.137 0.054 0.788
-3 VMOS
-0.650 0.681 0.886 0.059 0.055 0.648
+
+# |Method AUC A R NRE! DRE| ADQ
+1 |Baseline 0.576 0.675 0.77 0.122 0.108 0.581
+2 |w/ InternImage-T 0.611 0.656 0.809 0.137 0.054 0.788
+3
+
+VMOS 0.650 0.681 0.886 0.059 0.055 0.648
+
 Table 2. Ablation study of components of VMOS on VOTS2023
 validation set. We train a DeAOT [38] as the baseline method.
+
 propagation features are up-sampled and projection features
-from 8× scale. The long and short-term memory is used in
+from 8x scale. The long and short-term memory is used in
 our segmenter to deal with object appearance changes in
 long-term video sequences. To save memory usage, we use
 a fixed length of long-term memory of 8, excluding the ini-
 tial frame, the early memory will be discarded.
+
 Model Training. The training process comprises two
-stages, following previous methods [37, 38]. In the first
+stages, following previous methods [37,38]. In the first
 phase, we pre-train VMOS on synthetic video sequences
-generated from static image datasets [7, 11, 12, 22, 27]. In
+generated from static image datasets [7, 11, 12, 22,27]. In
 the second stage, VMOS uses multi-object segmentation
 datasets for training for a better understanding of the re-
 lationship between multiple objects. The training splits of
@@ -344,23 +333,35 @@ VMOS, in which OVIS is employed to improve the robust-
 ness of the tracker in handling occluded objects. We use 2
 NVIDIA Tesla A100 GPUs with a global batch size of 16
 to train our VMOS. The pre-training stage uses an initial
-learning rate of 4 × 10-4 for 100,000 steps. The second
-stage uses an initial learning rate of 2 × 10-4 for 150,000
-steps. Learning rates gradually decay to 1 × 10-5 in a poly-
+learning rate of 4 x 10~4 for 100,000 steps. The second
+stage uses an initial learning rate of 2 x 10~4 for 150,000
+steps. Learning rates gradually decay to 1 x 10~° ina poly-
 nomial manner [36].
+
 Inference. The inference process is as described in our
 pipeline. We do not use any test time augmentation (TTA)
 such as flipping, multi-scale testing, and model ensemble.
+
 4. Experiment
 4.1. Ablation Study
+
 Separate tracking v.s. Joint tracking. We conduct ab-
 lation studies on different tracking paradigms. Separate
 tracking means initializing a separate tracker for each target
 object, and running multiple times of inference for multiple
 object tracking. Joint tracking means joint tracking all tar-
-0.656 0.688 0.865 0.052 0.082 0.666
+
+10 0.610 0.668 0.807 0.110 0.083 0.694
+20 0.607 0.65 0.806 0.12 0.074 0.697
+30 0.626 0.689 0.813 0.127 0.060 0.715
+40 0.650 0.681 0.886 0.059 0.055 0.648
+50 0.669 0.692 0.885 0.057 0.058 0.682
+60 0.653 0.669 0.889 0.059 0.052 0.685
+70 0.656 0.688 0.865 0.052 0.082 0.666
+
 Table 3. Ablation study of long-term memory gap (G) on
 VOTS2023 validation set.
+
 get objects with a single tracker. We choose MS_AOT [16]
 (removing Mixformer [8]) as the baseline. The results on
 VOTS2023 validation set are shown in Tabled 1. We can
@@ -369,6 +370,7 @@ rate tracking. It may be that when joint tracking, the tracker
 will have a better understanding of the relationship between
 the target objects which makes the tracker obtain better ro-
 bustness to distractor interference.
+
 Component-Wise Analysis on VMOS. Table 2 shows the
 component-wise study results on VMOS. #1 is a trained
 baseline method DeAOT [38]. In #2, we replace the origi-
@@ -378,6 +380,7 @@ we add the multi-scale propagation mechanism as described
 in Section 2.2, the performance boosts to 0.650 in terms of
 AUC score, with a remarkable improvement of 3.9%, which
 demonstrates the effectiveness.
+
 Long-term Memory Gap. Since the VOTS video se-
 quences tend to be long (the longest exceeds 10,000
 frames), the original long-term memory gap parameter on
@@ -385,6 +388,7 @@ test time for the VOS benchmark is less suitable. Therefore,
 we do an ablution study on long-term memory gap (G) pa-
 rameter as shown in Table 3. We find that a memory gap of
 50 shows the best performance.
+
 Analysis on Mask Refiner (MR). As we discuss in Sec-
 tion 2.3, directly refining all the segmentation masks is not
 optimal. We provide a comparison between VMOS and
@@ -394,61 +398,45 @@ VMOS. We can see that refining by SAM can bring sig-
 nificant improvement. However, for these masks with low
 quality (with low IoU score on ground truth), SAM harms
 the performance instead. Therefore, we propose to select
-mask results from VMOS and SAM. We calculate the IoU
+mask results from VMOS and SAM. We calculate the IloU
 score between the masks from VMOS and SAM. When the
 IoU score is higher than 7, we choose the refined mask as
 the final output. We evaluate the influence of threshold 7 in
 MR on the VOTS2023 validation set, the results are shown
-in Table 4. 7 = 0.1 yields the most promising results and
+in Table 4. t = 0.1 yields the most promising results and
 we choose this setting in HQTrack.
-4
-Frame 1
-TOYOTA TOYOTA
-TOYOTA
-TDK
-TDK
-Frame T
-TOYOTA TOYOTA
-TOYOTA
-WM09
-THIPS BE
-WM09
-100m Men
-37.6 kph
-9.69
-CR
-WR
-9.99 CR
-9.80
-7.3
-SEIKO
-WR
-9.58
+
+--- Page 5 ---
 Figure 2. Qualitative results of HQTrack on videos from VOTS2023 test set.
-T = AUC A
-R NRE↓ DRE↓ ADQ
+
+t= AUC A R NREL DRE| ADQ
+
 0 0.702 0.756 0.866 0.072 0.062 0.769
 0.1 0.708 0.753 0.878 0.072 0.050 0.769
-0.2 0.707 0.753 0.878 0.072 0.050 0.768
+0.2 0.707 0.753. 0.878 = 0.072 Ss «0.050 ~—(0.768
 0.3 0.704 0.750 0.878 0.072 0.050 0.764
-0.4 0.701 0.745 0.878 0.072 0.050 0.763
+04 0.701 0.745 0.878 0.072 0.050 0.763
 0.5 0.695 0.739 0.878 0.072 0.050 0.758
+
 Table 4. Tracking performance with different threshold 7 on
 VOTS2023 validation set. Mask refiner (MR) is a SAM_H model.
+
 4.2. Challenge Results
-The results on VOTS2023 test set are shown in Table 5.
+
+The results on VOTS2023 test set are shown in Table
 After replacing the VMOS encoder from ResNet50 [13]
 to InternImage-T [33], the AUC score increased by 3.2%.
 When using SAM_H to refine the masks of VMOS, the
-Method
-VMOS (Res50)
-VMOS
-AUC A R NRE DRE↓ ADQ
-0.564 0.693 0.759 0.155 0.086 0.691
-0.596 0.724 0.765 0.159 0.075 0.711
-VMOS + SAM_H 0.610 0.751 0.757 0.159 0.084 0.706
+
+Method AUC A R- NRE| DRE| ADQ
+VMOS (Res50) 0.564 0.693 0.759 0.155 0.086 0.691
+VMOS 0.596 0.724 0.765 0.159 0.075 0.711
+
+VMOS +SAM_H_ 0.610 0.751 0.757 0.159 0.084 0.706
 HQTrack 0.615 0.752 0.766 0.155 0.079 0.694
+
 Table 5. Performance on VOTS2023 test set.
+
 performance in terms of AUC increased by 1.4%. Af-
 ter employing HQ-SAM_H as our mask refine module, the
 AUC score boosts to 0.615, which outperforms VMOS by
@@ -456,48 +444,27 @@ AUC score boosts to 0.615, which outperforms VMOS by
 tween VMOS and HQtrack. As we can see and compare
 with Figure 3, selectively taking the processed results of
 the MR can effectively avoid performance degradation from
-low IoU objects. Finally, HQTrack ranks 2nd place² in the
-2 https://eu.aihub.ml/competitions/201 # results,
-VOTS2023 benchmark is open for allowing post-challenge submissions.
-5
-Success
+low IoU objects. Finally, HQTrack ranks 2nd place~ in the
+
+2
+‘VOTS2023 benchmark is open for allowing post-challenge submissions.
+
+--- Page 6 ---
 Quality plot - Plot
-1.0
-0.8
-VMOS+SAM, T=0
-0.6
-0.4
-0.2-
-VMOS
-0.0
-0.0
-0.2
-0.4
-0.6
-0.8
-1.0
+
+VMOS+SAM, 7=0
+
+00
+
+0.0 oz os 06 08 10
 Threshold
-Success
-0.2
-Quality plot - Plot
-1.0
-0.8-
-0.6
-HQTrack
-0.4-
-VMOS
-0.0
-0.0
-0.2
-0,4
-0.6
-0.8
-1.0
-Threshold
+
 Figure 3. VMOS v.s. VMOS + SAM on VOST2023 validation
 set. SAM is employed to refine all the masks from VMOS.
+
 Visual Object Tracking and Segmentation Challenge.
 4.3. Visualization
+
 Figure 2 provides some representative visual results on
 challenging video sequences. As shown, HQTrack demon-
 strates strong tracking capabilities. It can stably handle
@@ -507,7 +474,9 @@ rately even if there are a lot of distractors. With the help
 of HQ-SAM, accurate masks can also be segmented when
 facing challenges such as object appearance changes, fast
 motion, and scale changes.
+
 5. Conclusion
+
 In this report, we propose Tracking Anything in High
 Quality (HQTrack). HQTrack mainly consists of a video
 multi-object segmenter (VMOS) and a mask refiner (MR).
@@ -518,166 +487,273 @@ masks. HQTrack demonstrates powerful object tracking
 and segmentation capabilities. Finally, HQTrack achieves
 the 2nd place in the Visual Object Tracking and Segmenta-
 tion (VOTS2023) challenge.
+
 References
+
 [1] Ali Athar, Jonathon Luiten, Paul Voigtlaender, Tarasha Khu-
 rana, Achal Dave, Bastian Leibe, and Deva Ramanan. Burst:
 A benchmark for unifying object recognition, segmentation
 and tracking in video. In Proceedings of the IEEE/CVF Win-
 ter Conference on Applications of Computer Vision, pages
 1674-1683, 2023. 4
-[2] Luca Bertinetto, Jack Valmadre, João F Henriques, Andrea
-Vedaldi, and Philip HS Torr. Fully-convolutional siamese
-networks for object tracking. In ECCVW, 2016. 1
+
+[2] Luca Bertinetto, Jack Valmadre, Joao F Henriques, Andrea
+Vedaldi, and Philip H S Torr. Fully-convolutional siamese
+networks for object tracking. In ECCVW, 2016. |
+
 [3] Goutam Bhat, Martin Danelljan, Luc Van Gool, and Radu
 Timofte. Learning discriminative model prediction for track-
-ing. In ICCV, 2019. 1
+ing. In JCCV, 2019. 1
+
+[10
+
+11
+
+12
+
+13
+
+14
+
+Quality plot - Plot
+
+Lo
+
+Success
+
+00 02 oa 06 os 10
+Threshold
+
 Figure 4. VMOS v.s. HQTrack on VOST2023 test set.
-[4] Sergi Caelles, Kevis-Kokitsi Maninis, Jordi Pont-Tuset,
+
+Sergi Caelles, Kevis-Kokitsi Maninis, Jordi Pont-Tuset,
 Laura Leal-Taixé, Daniel Cremers, and Luc Van Gool. One-
 shot video object segmentation. In Proceedings of the
 IEEE conference on computer vision and pattern recogni-
 tion, pages 221-230, 2017. 1
-[5] Xin Chen, Bin Yan, Jiawen Zhu, Dong Wang, Xiaoyun Yang,
+
+Xin Chen, Bin Yan, Jiawen Zhu, Dong Wang, Xiaoyun Yang,
 and Huchuan Lu. Transformer tracking. In CVPR, 2021. 1
-[6] Jingchun Cheng, Yi-Hsuan Tsai, Shengjin Wang, and Ming-
+Jingchun Cheng, Yi-Hsuan Tsai, Shengjin Wang, and Ming-
 Hsuan Yang. Segflow: Joint learning for video object seg-
 mentation and optical flow. In Proceedings of the IEEE in-
-ternational conference on computer vision, pages 686–695,
+ternational conference on computer vision, pages 686-695,
 2017. 1
-[7] Ming-Ming Cheng, Niloy J Mitra, Xiaolei Huang, Philip HS
+Ming-Ming Cheng, Niloy J Mitra, Xiaolei Huang, Philip HS
 Torr, and Shi-Min Hu. Global contrast based salient region
 detection. IEEE transactions on pattern analysis and ma-
 chine intelligence, 37(3):569-582, 2014. 4
-[8] Yutao Cui, Cheng Jiang, Limin Wang, and Gangshan Wu.
+
+Yutao Cui, Cheng Jiang, Limin Wang, and Gangshan Wu.
 Mixformer: End-to-end tracking with iterative mixed atten-
 tion. In CVPR, pages 13608-13618, 2022. 1,4
-[9] Martin Danelljan, Goutam Bhat, Fahad Shahbaz Khan, and
+
+Martin Danelljan, Goutam Bhat, Fahad Shahbaz Khan, and
 Michael Felsberg. ECO: Efficient convolution operators for
 tracking. In CVPR, 2017. 1
-[10] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
+
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
 Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,
 Mostafa Dehghani, Matthias Minderer, Georg Heigold, Syl-
 vain Gelly, Jakob Uszkoreit, and Neil Houlsby. An image is
 worth 16x16 words: Transformers for image recognition at
 scale. ICLR, 2021. 1
-[11] Mark Everingham, Luc Van Gool, Christopher KI Williams,
+
+Mark Everingham, Luc Van Gool, Christopher KI Williams,
 John Winn, and Andrew Zisserman. The pascal visual object
 classes (voc) challenge. International journal of computer
 vision, 88:303-338, 2010. 4
-[12] Bharath Hariharan, Pablo Arbeláez, Lubomir Bourdev,
+
+Bharath Hariharan, Pablo Arbeléez, Lubomir Bourdev,
 Subhransu Maji, and Jitendra Malik. Semantic contours from
 inverse detectors. In 2011 international conference on com-
 puter vision, pages 991-998. IEEE, 2011. 4
-[13] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
 Deep residual learning for image recognition. In CVPR,
-2016. 1, 4, 5
-[14] Lei Ke, Mingqiao Ye, Martin Danelljan, Yifan Liu, Yu-Wing
+2016. 1,4,5
+
+Lei Ke, Mingqiao Ye, Martin Danelljan, Yifan Liu, Yu-Wing
 Tai, Chi-Keung Tang, and Fisher Yu. Segment anything in
 high quality. arXiv preprint arXiv:2306.01567, 2023. 2, 3
-6
-[15] Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao,
+
+
+--- Page 7 ---
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao,
 Chloe Rolland, Laura Gustafson, Tete Xiao, Spencer White-
 head, Alexander C Berg, Wan-Yen Lo, et al. Segment any-
-thing. arXiv preprint arXiv:2304.02643, 2023. 2, 3, 4
-[16] Matej Kristan, Aleš Leonardis, Jiří Matas, Michael Felsberg,
-Roman Pflugfelder, Joni-Kristian Kämäräinen, Hyung Jin
-Chang, Martin Danelljan, Luka Čehovin Zajc, Alan Lukežič,
+thing. arXiv preprint arXiv:2304.02643, 2023. 2, 3,4
+
+Matej Kristan, Ales Leonardis, Jifi Matas, Michael Felsberg,
+Roman Pflugfelder, Joni-Kristian Kamirainen, Hyung Jin
+Chang, Martin Danelljan, Luka Cehovin Zajc, Alan LukeZié,
 Ondrej Drbohlav, et al. The tenth visual object tracking
-vot2022 challenge results, 2022. 1,4
-[17] Matej Kristan, Jiri Matas, Martin Danelljan, Luka
-Čehovin Zajc, and Alan Lukezic. The vots2023 challenge
+vot2022 challenge results, 2022. 1, 4
+Matej Kristan, Jir1 Matas, Martin Danelljan, Luka
+Cehovin Zajc, and Alan Lukezic. The vots2023 challenge
 performance measures. 4
-[18] Matej Kristan, Jiří Matas, Aleš Leonardis, Michael Felsberg,
-Roman Pflugfelder, Joni-Kristian Kämäräinen, Hyung Jin
-Chang, Martin Danelljan, Luka Cehovin, Alan Lukežič, et al.
+Matej Kristan, Jiff Matas, Ale’ Leonardis, Michael Felsberg,
+Roman Pflugfelder, Joni-Kristian Kamirainen, Hyung Jin
+Chang, Martin Danelljan, Luka Cehovin, Alan LukeZié, et al.
 The ninth visual object tracking vot2021 challenge results. In
 ICCVW, pages 2711-2738, 2021. 1
-[19] Alex Krizhevsky, Ilya Sutskever, and Geoffrey E Hinton.
+Alex Krizhevsky, Ilya Sutskever, and Geoffrey E Hinton.
 Imagenet classification with deep convolutional neural net-
 works. In NIPS, 2012. 1
-[20] Xiaoxiao Li and Chen Change Loy. Video object segmen-
+
+Xiaoxiao Li and Chen Change Loy. Video object segmen-
 tation with joint re-identification and attention-aware mask
 propagation. In Proceedings of the European conference on
 computer vision (ECCV), pages 90-105, 2018. 1
-[21] Tsung-Yi Lin, Piotr Dollár, Ross Girshick, Kaiming He,
+
+Tsung-Yi Lin, Piotr Dollar, Ross Girshick, Kaiming He,
 Bharath Hariharan, and Serge Belongie. Feature pyramid
 networks for object detection. In CVPR, pages 2117-2125,
 2017. 2
-[22] Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
-Pietro Perona, Deva Ramanan, Piotr Dollár, and C Lawrence
+
+Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
+Pietro Perona, Deva Ramanan, Piotr Dollar, and C Lawrence
 Zitnick. Microsoft coco: Common objects in context. In
-Computer Vision-ECCV 2014: 13th European Conference,
+Computer Vision—ECCV 2014: 13th European Conference,
 Zurich, Switzerland, September 6-12, 2014, Proceedings,
 Part V 13, pages 740-755. Springer, 2014. 4
-[23] Jiaxu Miao, Xiaohan Wang, Yu Wu, Wei Li, Xu Zhang, Yun-
+
+Jiaxu Miao, Xiaohan Wang, Yu Wu, Wei Li, Xu Zhang, Yun-
 chao Wei, and Yi Yang. Large-scale video panoptic seg-
 mentation in the wild: A benchmark. In Proceedings of
 the IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 21033-21043, 2022. 4
-[24] Seoung Wug Oh, Joon-Young Lee, Ning Xu, and Seon Joo
+
+Seoung Wug Oh, Joon-Young Lee, Ning Xu, and Seon Joo
 Kim. Video object segmentation using space-time memory
 networks. In Proceedings of the IEEE/CVF International
 Conference on Computer Vision, pages 9226-9235, 2019. 1
-[25] Jordi Pont-Tuset, Federico Perazzi, Sergi Caelles, Pablo Ar-
-beláez, Alex Sorkine-Hornung, and Luc Van Gool. The 2017
+
+Jordi Pont-Tuset, Federico Perazzi, Sergi Caelles, Pablo Ar-
+beldez, Alex Sorkine-Hornung, and Luc Van Gool. The 2017
 davis challenge on video object segmentation. arXiv preprint
 arXiv:1704.00675, 2017. 4
-[26] Jiyang Qi, Yan Gao, Yao Hu, Xinggang Wang, Xiaoyu
+
+Jiyang Qi, Yan Gao, Yao Hu, Xinggang Wang, Xiaoyu
 Liu, Xiang Bai, Serge Belongie, Alan Yuille, Philip HS
 Torr, and Song Bai. Occluded video instance segmentation:
 A benchmark. International Journal of Computer Vision,
 130(8):2022-2039, 2022. 4
-[27] Jianping Shi, Qiong Yan, Li Xu, and Jiaya Jia. Hierar-
+
+Jianping Shi, Qiong Yan, Li Xu, and Jiaya Jia.
 chical image saliency detection on extended cssd. TPAMI,
 38(4):717-729, 2015. 4
-[28] Yi-Hsuan Tsai, Ming-Hsuan Yang, and Michael J Black.
+
+Yi-Hsuan Tsai, Ming-Hsuan Yang, and Michael J Black.
 Video segmentation via object flow. In Proceedings of the
+
+Hierar-
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
 IEEE conference on computer vision and pattern recogni-
 tion, pages 3899-3908, 2016. 1
-[29] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
+
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
 reit, Llion Jones, Aidan N Gomez, Lukasz Kaiser, and Illia
-Polosukhin. Attention is all you need. In NIPS, 2017. 1
-[30] Paul Voigtlaender, Michael Krause, Aljosa Osep, Jonathon
+Polosukhin. Attention is all you need. In NJPS, 2017. 1
+Paul Voigtlaender, Michael Krause, Aljosa Osep, Jonathon
 Luiten, Berin Balachandar Gnana Sekar, Andreas Geiger,
 and Bastian Leibe. Mots: Multi-object tracking and segmen-
 tation. In Proceedings of the ieee/cvf conference on computer
 vision and pattern recognition, pages 7942-7951, 2019. 4
-[31] Paul Voigtlaender, Jonathon Luiten, Philip H. S. Torr, and
+Paul Voigtlaender, Jonathon Luiten, Philip H. S. Torr, and
 Bastian Leibe. Siam R-CNN: Visual tracking by re-
 detection. In CVPR, 2020. 1
-[32] Lijun Wang, Huchuan Lu, Yifan Wang, Mengyang Feng,
+
+Lijun Wang, Huchuan Lu, Yifan Wang, Mengyang Feng,
 Dong Wang, Baocai Yin, and Xiang Ruan. Learning to de-
 tect salient objects with image-level supervision. In CVPR,
 pages 136-145, 2017. 1
-[33] Wenhai Wang, Jifeng Dai, Zhe Chen, Zhenhang Huang,
+
+Wenhai Wang, Jifeng Dai, Zhe Chen, Zhenhang Huang,
 Zhiqi Li, Xizhou Zhu, Xiaowei Hu, Tong Lu, Lewei Lu,
 Hongsheng Li, et al. Internimage: Exploring large-scale vi-
 sion foundation models with deformable convolutions. In
 Proceedings of the IEEE/CVF Conference on Computer Vi-
 sion and Pattern Recognition, pages 14408-14419, 2023. 2,
 3,4,5
-[34] Ning Xu, Linjie Yang, Yuchen Fan, Dingcheng Yue, Yuchen
+
+Ning Xu, Linjie Yang, Yuchen Fan, Dingcheng Yue, Yuchen
 Liang, Jianchao Yang, and Thomas Huang. Youtube-vos:
 A large-scale video object segmentation benchmark. arXiv
-preprint arXiv:1809.03327, 2018. 4
-[35] Bin Yan, Houwen Peng, Jianlong Fu, Dong Wang, and
+preprint arXiv: 1809.03327, 2018. 4
+
+Bin Yan, Houwen Peng, Jianlong Fu, Dong Wang, and
 Huchuan Lu. Learning spatio-temporal transformer for vi-
-sual tracking. In ICCV, 2021. 1
-[36] Zongxin Yang, Yunchao Wei, and Yi Yang. Collaborative
+sual tracking. In JCCV, 2021. 1
+
+Zongxin Yang, Yunchao Wei, and Yi Yang. Collaborative
 video object segmentation by foreground-background inte-
 gration. In Computer Vision-ECCV 2020: 16th European
 Conference, Glasgow, UK, August 23-28, 2020, Proceed-
-ings, Part V, pages 332–348. Springer, 2020. 4
-[37] Zongxin Yang, Yunchao Wei, and Yi Yang. Associating ob-
+ings, Part V, pages 332-348. Springer, 2020. 4
+
+Zongxin Yang, Yunchao Wei, and Yi Yang. Associating ob-
 jects with transformers for video object segmentation. Ad-
-vances in Neural Information Processing Systems, 34:2491-
+vances in Neural Information Processing Systems, 34:2491—
 2502, 2021. 2,4
-[38] Zongxin Yang and Yi Yang. Decoupling features in hierar-
+
+Zongxin Yang and Yi Yang. Decoupling features in hierar-
 chical propagation for video object segmentation. Advances
-in Neural Information Processing Systems, 35:36324–36336,
+in Neural Information Processing Systems, 35:36324—36336,
 2022. 2,4
-[39] Botao Ye, Hong Chang, Bingpeng Ma, Shiguang Shan, and
+
+Botao Ye, Hong Chang, Bingpeng Ma, Shiguang Shan, and
 Xilin Chen. Joint feature learning and relation modeling for
 tracking: A one-stream framework. In ECCV, pages 341-
 357. Springer, 2022. 1
-7
+

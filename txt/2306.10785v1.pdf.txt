@@ -1,9 +1,18 @@
-arXiv:2306.10785v1 [cs.SD] 19 Jun 2023
+--- Page 1 ---
+2306.10785v1 [cs.SD] 19 Jun 2023
+
+arXiv
+
 MULTITRACK MUSIC TRANSCRIPTION WITH A TIME-FREQUENCY PERCEIVER
+
 Wei-Tsung Lu, Ju-Chiang Wang, and Yun-Ning Hung
+
 SAMI, ByteDance, Mountain View, CA, USA
+
 {weitsung.lu, ju-chiang.wang, yunning.hung}@tiktok.com
+
 ABSTRACT
+
 Multitrack music transcription aims to transcribe a music audio
 input into the musical notes of multiple instruments simultaneously.
 It is a very challenging task that typically requires a more complex
@@ -22,9 +31,12 @@ train a Perceiver TF to model 12 instrument classes as well as vo-
 cal in a multi-task learning manner. Our result demonstrates that the
 proposed system outperforms the state-of-the-art counterparts (e.g.,
 MT3 and SpecTNT) on various public datasets.
-Index Terms Time-frequency, Perceiver, automatic music
+
+Index Terms— Time-frequency, Perceiver, automatic music
 transcription, multi-task learning, random-mixing augmentation.
+
 1. INTRODUCTION
+
 Automatic music transcription (AMT) is a Music Information Re-
 trieval (MIR) task that aims to transcribe a music audio input into a
 sequence of musical notes where each note contains attributes of on-
@@ -36,7 +48,7 @@ ally speaking, using the identified instrument for each corresponding
 channel, the synthesized audio mixture from the output MIDI should
 resemble the original input audio in a musically plausible way.
 Although recent years have seen significant progress using deep
-learning techniques [1, 2], our analysis and review indicate that two
+learning techniques , our analysis and review indicate that two
 major challenges have not yet been addressed effectively: model
 scalability and instrument discrimination. Multitrack AMT is gener-
 ally regarded as a very challenging task. The number of commonly
@@ -45,21 +57,23 @@ regular instruments like guitar, violin, and synthesizers are difficult
 to characterize due to their tremendous variations in timbre, expres-
 sivity, and playing techniques. Other than that, vocals, which usually
 are the most predominant instrument if present, vary their timbre and
-pitch to convey lyrics and expressions. To handle all instruments si-
+pitch to convey lyrics and expressions. To handle all instruments
 multaneously, it requires better model scalability. Our observations
 on existing multitack AMT systems reveal that they oftentimes re-
 sult in many false positive notes for popular pitched instruments like
+
 piano and guitar. For instance, notes of string ensemble are mas-
 sively captured by piano. This might be because the system does not
 provide clear timbre-dependent features or it is not robust to timbral
 variations across different instruments. We believe this problem can
 be mitigated if the system can discriminate each instrument source
 from the mixture while making inference.
+
 To address model scalability, we propose Perceiver TF, which
 is an augmented variant of the Perceiver [3]. Perceiver has been
 well-known for its better scalability in the Transformer family to
 tackle high-dimensional data input. In this work, we adopt spec-
-trogram for audio input, with T and F representing the lengths of
+trogram for audio input, with T and F' representing the lengths of
 the time- and frequency-axes, respectively. For multitrack AMT, ca-
 pability to model the timbre-dependent pitches of multiple instru-
 ments is crucial, so more comprehensive operations are needed to
@@ -70,83 +84,75 @@ tion (a sub-task of AMT). SpecTNT consists of two Transformers
 in a hierarchical structure, where the lower-level Transformer per-
 forms self-attention directly on the spectrum of a frame. However,
 such design leads to a cubic complexity of attention computation,
-i.e., O(TF² + T²), limiting its expandability for more complex
+ie, O(TF? + T?), limiting its expandability for more complex
 tasks. To this end, we conceive a non-trivial combination of Per-
 ceiver and SpecTNT: expanding Perceiver to be hierarchical. The
 resulting Perceiver TF takes advantage of the cross-attention to ex-
-tract spectral features into a latent bottleneck for each frame, and
+tre ectral features into a latent bottleneck for each frame, and
 adds an additional Transformer for self-attention along the time axis,
-overall resulting in a quadratic complexity of O(TF+T²). Since F
+overall resulting in a quadratic complexity of O(TF + T°). Since F
 is typically large, this complexity reduction is significant, allowing
 the model to handle more instruments simultaneously.
+
 To address instrument discrimination, we adopt the random-
 mixing augmentation technique learned from music source separa-
-tion (MSS) [5, 6], which aims to separate each instrument stem from
+tion (MSS) {5]|6, which aims to separate each instrument stem from
 the input audio mixture [7]. Moreover, we train our AMT model in
 a multi-task learning fashion, with each sub-task modeling the tran-
 scription of an instrument. This multi-task design along with the
 random-mixing technique allows more flexibility to train with enor-
 mous amount of augmented training samples. Our strategy differs
 from previous works that jointly train the AMT task with instrument
-recognition [8] or MSS [9] to help inform the model of instrument-
+recognition [8] or MSS to help inform the model of instrument-
 dependent features. To our knowledge, little work has been done
 using random-mixing technique to improve multitrack AMT.
+
 2. RELATED WORK
+
 Multi-instrument AMT has been explored in several previous works.
-Wu et al. [10] and Hung et al. [8] trained a transcription model
-with related tasks in a multi-task learning fashion. Tanaka et al.
-used clustering approaches to separate transcribed instruments [11],
+Wu et al. and Hung et al. (8) trained a transcription model
+with related tasks in a multi- learning fashion. Tanaka et al.
+used clustering approaches to separate transcribed instruments
 while Cheuk et al. used unsupervised learning techniques to im-
+
+
+--- Page 2 ---
 Positional embedding
-Spectral
-Cross-Attention
-Spectral
-Cross-Attention
-Ex N
-Ex N
-Latent
-Transformer
-Latent
-Transformer
-Temporal Transformer
-ST-1
-OT-1
-Spectral
-Cross-Attention
-0-1
-Ex N
-Latent
-Transformer
-x M
-x L
+
+‘Temporal Transformer
+
 Fig. 1. The block diagram of the Perceiver TF module. Positional
-embedding is first added to the latent arrays, denoted as Oo. The
-Spectral Cross-Attention module projects the spectral input St into
-et, followed by the Latent Transformer module. The Temporal
-Transformer processes 0/4 of all time steps to model the temporal
-coherence. The details are explained in Section 3.2.
-prove transcription on low-resource datasets [1, 12]. These prior
+embedding is first added to the latent arrays, denoted as Of. The
+Spectral Cross-Attention module projects the spectral input S; into
+@!, followed by the Latent Transformer module. The Temporal
+Transformer processes Q/ of all time steps to model the temporal
+coherence. The details are explained in SectionB.2|
+
+prove transcription on low-resource datasets [I] [12]. These prior
 examples demonstrated that models based on the pianoroll repre-
 sentation are able to capture instrument-dependent onset, pitch, and
 duration of notes. Different from the pianoroll approach, Gardner et
-al. [2] created a new paradigm that proposes a sequence-to-sequence
+al. created a new paradigm that proposes a sequence-to-sequence
 model, called MT3, to tackle multitrack AMT. They trained a stan-
 dard encoder-decoder Transformer to model multitrack MIDI tokens
 from audio, and demonstrated state-of-the-art performance on sev-
 eral public datasets.
+
 By contrast, vocal transcription is usually treated as an indepen-
 dent task in the literature, even though it shares the same goal of
 AMT. Due to the lack of training data, few works focused on tran-
 scribing note-level outputs from polyphonic music audio. Recently,
 Wang et al. released a human annotated dataset including 500 Chi-
-nese songs [13]. They provide a CNN based model (EFN) for a
+nese songs They provide a CNN based model (EFN) for a
 baseline of the task. In [14], a teacher-student training scheme is
-proposed to utilize pseudo labels derived from F0 estimations of vo-
-cal. Lately, [15] proposed a vocal transcription system that requires
+proposed to utilize pseudo labels derived from FO estimations of vo-
+cal. Lately, proposed a vocal transcription system that requires
 an MSS as front-end. In this work, we propose a unified framework
 that combines vocal and multi-instrument transcriptions, and it does
 not rely on pre-trained modules such as an MSS front-end.
+
 3. METHODOLOGY
+
 In this work, we adopt the pianoroll approach instead of the
 sequence-to-sequence (seq-to-seq) approach for two major rea-
 sons. First, it is easier to manipulate the loss computation to learn
@@ -157,10 +163,12 @@ inference time complexity of seq-to-seq depends on the number of
 notes (tokens) due to the auto-regressive nature. If the audio input
 contains many instruments with complex, dense polyphonic notes,
 the inference will be very slow. Although our proposed model is
+
 also a Transformer-oriented architecture, we focus on the encoder
 part to predict the pianoroll directly.
+
 The following sections explain the proposed model architecture
-(Sections 3.1 - 3.3) and the random-mixing augmentation technique
+(Sections 3.1 — 3.3) and the random-mixing augmentation technique
 (Section 3.4). Our model consists of three sub-modules: convolu-
 tional module, Perceiver TF module, and output module. The input
 spectrogram is first passed through the convolution module for local
@@ -169,298 +177,294 @@ multiple Perceiver TF blocks, extracts the features and outputs the
 temporal embeddings at each time step. Lastly, the output module
 projects the temporal embeddings into desired dimensions for pi-
 anoroll outputs.
+
 3.1. Convolutional Module
+
 Using convolutional neural network (CNN) as the front-end of
 Transformer-based models has became a common design choice
 in speech recognition pipeline [16]. Previous works have also
 found that the CNN front-end plays an crucial role in SpecTNT
-and MIRTransformer for many MIR tasks [4, 17, 18, 19]. Fol-
-lowing this practice, we stack multiple residual units [20] with
+and MIRTransformer for many MIR tasks
+lowing this practice, we stack multiple residual uni
 average pooling to reduce the dimensionality of the frequency
 axis. We denote the resulting time-frequency representation as
-S = [So, S₁,..., ST-1] Є RTXFXC, where T, F, and C represent
+S = [S0,$1,...,Sr—1] € RT*XFXC where T, F, and C represent
 the dimensions of time, frequency, and channel, respectively.
+
 3.2. Perceiver TF Module
+
 A conventional Perceiver architecture contains two major compo-
-nents [3]: (i) a cross-attention module that maps the input data and a
+nents (i) a cross-attention module that maps the input data and a
 latent array into a latent array; (ii) a Transformer tower that maps a
 latent array into a latent array. Upon this structure, our design prin-
-ciple to expand Perceiver is twofold. (1) We consider the spectral
-representation of a time step, St, is pivotal to carry the pitch and tim-
+ciple to expand Perceiver is twofold. (1) We consider the spectra
+representation of a time step, Sz, is pivotal to carry the pitch and tim-
 bral information, so it serves as the input data for the cross-attention
 module to project the spectral information into a latent array for the
-time step t. Each latent array is responsible for extracting the local
+time step t. Each latent array is responsible for extracting the loca
 spectral features. (2) Having a sequence of latent arrays of differ-
-ent time steps, we need a Transformer to exchange the local spectral
+ent time steps, we need a Transformer to exchange the local spectra
 information along the time axis to learn their temporal coherence.
-The Perceiver TF architecture is illustrated in Fig. 1. A Perceiver
+
+The Perceiver TF architecture is illustrated in Fig. i} A Perceiver
 TF block contains three Transformer-style modules: spectral cross-
 attention, latent Transformer, and temporal Transformer, which are
-responsible for modeling the spectral, channel-wise, and temporal
+responsible for modeling the spectral, channel-wise, and tempora
 information, respectively. Each of them includes the attention mech-
 anism and a position-wise feed-forward network.
+
 The spectral cross-attention (SCA) module operates directly
-on an input spectral representation St and projects it into the Key
+on an input spectral representation S; and projects it into the Key
 (K) and Value (V) matrices. Unlike the traditional Transformer,
 the cross-attention module in Perceiver maps a latent array into
 the Query (Q) matrix and then performs the QKV self-attention
 accordingly. We follow the Perceiver design to initialize a set of
-K learnable latent arrays 0º € RKXD, where K is the index di-
-mension, and D is the channel dimension. Then, we repeat 0° for
+EK learnable latent arrays ©° © R**?, where K is the index di-
+mension, and D is the channel dimension. Then, we repeat ©° for
 T times and associate each to a time step t, which is then denoted
-as, such that 0 = ... 1, meaning that all latent
-arrays are from the same initialization across the time axis. This Ot
+as OP, such that 03 = Of = ...O%_,, meaning that all latent
+arrays are from the same initialization across the time axis. This er
 plays an important role of carrying the spectral information from the
 first Perceiver TF block throughout the entire stack of blocks. The
-query-key-value (QKV) attention of our SCA of the h-th iteration
--
-can be written as: fscA : {}, St} → 0 (h+1), and this process will
+query-key-value (QV) attention of our SCA of the h-th iteration
+can be written as: fsca : {0!, Se} > Of", and this process will
 be repeated as the Perceiver TF block repeats in order to maintain
-the connection between ½) and the input St. The design of the
+
+
+--- Page 3 ---
+the connection between ©! and the input S;. The design of the
 cross-attention module is the key that significantly improves the
 computational scalability of Perceiver. For instance, our SCA re-
-sults in O(FK), which is much cheaper than O(F²) of the spectral
-Transformer in SpecTNT [4], given that K (dimension of the latent
-array) is typically small (i.e., K < F).
+sults in O(F'K), which is much cheaper than O(F”) of the spectral
+Transformer in SpecTNT [4], given that A (dimension of the latent
+array) is typically small (ie., K < F).
+
 The latent Transformer module takes place after the SCA mod-
 ule. It contains a stack of N Transformers to perform standard
-self-attention on the latent arrays of O½. The resulting complex-
-ity O(NK²) is efficient as well. In the context of AMT, this process
+self-attention on the latent arrays of o}. The resulting complex-
+ity O(N K”) is efficient as well. In the context of AMT, this process
 means the interactions among the onsets, pitches, and instruments
 are explicitly modeled. To perform multitrack AMT, we initialize
-Klatent arrays and train each latent array to handle one specific
-task. Following [21], for an instrument, we arrange two latent arrays
+K latent arrays and train each latent array to handle one specific
+task. Following , for an instrument, we arrange two latent arrays
 to model the onset and frame-wise (pitch) activations, respectively.
 This leads to K = 2J, where J is the number of target instruments.
+
 The temporal Transformer module is placed to enable the com-
-munication between any pairs of ½ of different time steps. To
+munication between any pairs of ©! of different time steps. To
 make the temporal Transformer understand the time positions of
 each latent array, we add a trainable positional embedding to each
-O during the initialization. Let ½³ (k), k = 0, ……., K−1, denote
-each latent array in O½, we arrange K parallel standard Transform-
+e? during the initialization. Let Or (k), k=0,..., K-1, denote
+each latent array in ©, we arrange K parallel standard Transform-
 ers in which each serves the corresponding input sequence of latent
-arrays: [0 (k), 0 (k),..., 01(k)]. The module is repeated M
-times, yielding a complexity of O(MT²).
+arrays: [62 (k), 0 (k),...,0_4(k)]. The module is repeated M
+times, yielding a complexity of O(MT7).
+
 Finally, we repeat L times the Perceiver TF block to form the
 overall module. Note that, different from the original Perceiver, the
 weights of spectral cross-attention and latent Transformer are not
 shared across the repeated blocks.
+
 3.3. Output Module
-We utilize two GRU modules [22] with sigmoid activation function
+
+We utilize two GRU modules with sigmoid activation function
 for the onset and frame-wise latent array outputs, respectively. We
-follow prior work [21] that uses the onset outputs to condition the
+follow prior work that uses the onset outputs to condition the
 frame-wise activation.
+
 3.4. Multi-task Training Loss
+
 We formulate the loss function for training the proposed model:
-J-1
-L = Σ(lonset + 1 frame)
+
+Jal
+
+£= Wer + Bane) a)
+
 j=0
-(1)
-where l is the binary cross-entropy loss between the ground-truth and
-prediction, onset and lo frame are respectively the onset and frame acti-
+
+where | is the binary cross-entropy loss between the ground-truth and
+prediction, /%..., and /7.,,,,. are respectively the onset and frame acti-
 vation losses for instrument j. Note that the losses for all J instru-
 ments should be computed, regardless of whether the corresponding
 instruments are active or not in a training sample. Therefore, a zero
 output is expected for instruments that are not present in the sample.
+
+4, EXPERIMENTS
+
 4.1. Datasets
-4. EXPERIMENTS
-We use four public datasets for evaluation. Slakh2100 [23] contains
+
+We use four public datasets for evaluation. Slakh2100 contains
 2100 pieces of multitrack MIDI and the corresponding synthesized
 audio. The MIDI files are a subset of Lakh dataset [24], and the
 audio samples were synthesized by professional-grade software. In-
 struments were grouped into 12 MIDI classes defined in the Slakh
-dataset. We used the official train/validation/test splits in our exper-
-There is no "Sound Effects", "Percussive" and "Ethnic" instruments. We
-grouped "Strings" and "Ensemble" into one instrument class.
-iments. MAESTROv3 [25] contains about 200 hours of piano solo
+dataset] We used the official train/validation/test splits in our exper-
+
+! There is no Sound Effects”, ’Percussive” and ”Ethnic” instruments. We
+grouped ”’Strings” and Ensemble” into one instrument class.
+
+iments. MAESTROv3 contains about 200 hours of piano solo
 recordings with the aligned note annotations acquired by the MIDI
 capturing device on piano. We follow the official train/validation/test
-splits. Guitarset [26] contains 360 high-quality guitar recordings
+splits. GuitarSet contains 360 high-quality guitar recordings
 and their synchronized note annotations. Since there is no official
 splits for this dataset, we follow the setting in [2]. The first two pro-
-gressions of each style are used for training, and the last one is for
+ions of each style are used for training, and the last one is for
 testing. MIR-ST500 [13] contains 500 Chinese-pop songs with note
 annotations for the lead vocal melody. We used the official train-test
 split. Although around 10% of the training set is missing due to fail-
 ure links, we ensure the testing set is complete for fair comparison.
+
 4.2. Data Augmentations
+
 Annotating data for multitrack AMT is labor intensive. To better ex-
 ploit the data at hand, we apply two data augmentation techniques
-during training. Following previous works [4, 27], pitch-shifting
+during training. Following previous works [4] [27], pitch-shifting
 is randomly performed to all the non-percussive instruments dur-
 ing training. We introduce the cross-dataset random-mixing (RM)
 technique. Let us first define three types of datasets:
-• Multi-track: each sample contains multi-tracks of instrument-
+
+* Multi-track: each sample contains multi-tracks of instrument-
 wise audio stems with polyphonic notes (e.g., Slakh), and no
 vocal signals are present.
-•Single-track: each sample contains only a single non-vocal stem
+
+* Single-track: each sample contains only a single non-vocal stem
 with polyphonic notes (e.g., MAESTRO and GuitarSet).
-• Vocal-mixture: each sample is a full mixture of music with mono-
+
+* Vocal-mixture: each sample is a full mixture of music with mono-
 phonic notes only for lead vocal (e.g., MIR-ST500). We employ
-a MSS tool [28] to separate each sample into vocal and accompa-
+a MSS tool to separate each sample into vocal and accompa-
 niment stems.
+
 Each training sample is excerpted from a random moment of its orig-
 inal song with a duration depending on the model input length (e.g.,
 6 seconds). Suppose we want to transcribe J classes of instruments,
-and the corresponding instrument set is denoted as = {w; } } =
+and the corresponding instrument set is denoted as Q = {w,}/ =.
 Then, we apply three treatments to the three mentioned types of
 datasets respectively as follows.
-J-1
-First, for a training sample s¿ from a multi-track dataset, we
-denote its instrumentation template as μi C, indicating the in-
-struments present in sr. Then, for each instrument Wj in fli, it has
-a p% chance to be replaced by a w; in μu, where i u (i.e., a dif-
-ferent sample). Second, for a sample s¿ from a single-track dataset,
-we randomly pick an existing instrumentation template μu (i u)
-as its background. If the instrument of s; is present in μu, that stem
-will be removed from μu. For instance, if s¿ is a piano solo, then we
-will remove the piano stem from plu. From our preliminary experi-
+
+First, for a training sample s; from a multi-track dataset, we
+denote its instrumentation template as wi C QQ, indicating the in-
+struments present in s;. Then, for each instrument w; in pi, it has
+a p% chance to be replaced by aw; in fru, where i # u (ie., a dif-
+ferent sample). Second, for a sample s; from a single-track dataset,
+we randomly pick an existing instrumentation template jr. (i # wu)
+as its background. If the instrument of s; is present in jz,,, that stem
+will be removed from j,,. For instance, if s; is a piano solo, then we
+will remove the piano stem from jz. From our preliminary experi-
 ment, presenting the solo example to model training without mixing
 it with a background can degrade the performance. Lastly, for a sam-
-ple si from a vocal-mixture dataset, it has a q% chance to replace its
+ple s; from a vocal-mixture dataset, it has a g% chance to replace its
 background by two methods: (i) like the single-track treatment, we
-randomly pick an existing μu (i + u) as its background; or (ii) we
-randomly pick an accompaniment stem separated from sv, where
-iv. For the second method, since the selected accompaniment
+randomly pick an existing p42. (i 4 u) as its background; or (ii) we
+randomly pick an accompaniment stem separated from s,, where
+i # v. For the second method, since the selected accompaniment
 stem does not have the ground-truth notes, we mask the instrument
-outputs and only count the loss for the vocal output (see Eq. 1).
+outputs and only count the loss for the vocal output (see Eq. [Ip.
+
 4.3. Implementation Details
+
 We implemented our system using PyTorch [29]. The audio wave-
 form is re-sampled to 16kHz sampling rate. We set the model input
 length to be 6 seconds. The log-magnitude spectrogram is then com-
 puted using 2048 samples of Hann window and a hop size of 320
 samples (i.e., 20 ms). The convolutional module contains 3 residual
-Slakh
-All
-Piano Bass
-Drums
-Guitar
-MT3
-.743
-.780
-.906
-.773
-.732
-.551
-Ours (No-RM)
-.763
-.809
-.921
-.759
-.727
-.699
-Ours
-.798
-.854
-.930
-.785
-.777
-.744
-Strings Brass Organ Pipe Reed
-.433 .363 .282 .440
-.632 .562 .578 .649
-.732 .694 .666 .725 .769
-S.lead S.pad C.perc.
-.409
-.234
-.353
-.677
-.358
-.458
-.474
-.575
-Table 2. The results of different models trained on (Mix) datasets and tested on Slakh2100. MT3* is our replication, as the instrument-wise
-results are not reported in [2]. “All” presents the Multi-instrument Onset F1 scores. The following columns show the Onset F1 scores for
-individual instrument. “S.lead”, “S.pad", and "C.perc." stand for Synth Lead, Synth Pad, and Chromatic Percussion, respectively.
-Dataset
-Slakh MAESTRO GuitarSet
-SpecTNT (Single)
-.969
-.907
-MIR-
+
+--- Page 4 ---
+| Slakh All | Piano Bass Drums Guitar Strings Brass Organ Pipe Reed S.lead S.pad  C.perc. |
+
+| MT3" 743 | .780 906 773 .732 433 363.282 ~—«.440 409 .234 353
+Ours (No-RM) |} .763 ] .809 .921 759 727 632 562 =.578 = .649 677 358 458
+Ours .798 | 854 930 .785 777 +732 694 666  .725 -769 474 575
+
+Table 2. The results of different models trained on (Mix) datasets and tested on Slakh2100. MT3" is our replication, as the instrument-wise
+results are not reported in [2]. “All” presents the Multi-instrument Onset FI scores. The following columns show the Onset F1 scores for
+
+individual instrument. “S.lead”, “S.pad”, and “C.perc.”
+
+Dataset Slakh MAESTRO GuitarSet MIR-
 ST500
-.778
-MT3 (Single)
-.760
-.960
-.830
-MT3 (Mix)
-.760
-.950
-.900
-MT3+ (Mix)
-.763
-.958
-.891
-Ours (Single)
-.808
-.967
-.903
-.777
-Ours (Mix+Vocal)
-.819
-.968
-.911
-.785
-EFN
-JDCnote (L+U)
-.666
-.697
-Table 1. The results of Onset F1 scores. MT3* is our replication.
+
+SpecTNT (Single) - 969 907 778
+MT3 (Single) .760 960 830 -
+
+MT3 (Mix) .760 950 -900 -
+MT3! (Mix) -763 958 891 -
+
+Ours (Single) .808 967 903 777
+Ours (Mix+Vocal) | .819 968 911 -785
+EFN - - - 666
+JDCnote(L+U) - - - 697
+
+Table 1. The results of Onset Fl scores. MT3! is our replication.
 Models with (Mix) or (Mix+Vocal) are trained on the mixture of
 datasets, while models with (Single) are trained on a single dataset.
+
 blocks, each of them has 128 channels and is followed by an average
 pooling layer with a time-frequency filter of (1, 2).
+
 For the Perceiver TF module, we use the following parameters
-(referring to Fig. 1): (i) depending on different experiment configu-
-rations, initialize 2J latent arrays, each uses a dimension of 128; (ii)
-stack L = 3 Perceiver TF blocks; (iii) for each Perceiver TF block,
-use 1 spectral cross-attention layer, N = 2 latent Transformer lay-
-ers, and M = 2 temporal Transformer layers. All the Transformer
+(referring to Fig. [I): (i) depending on different experiment configu-
+rations, initialize 2.J latent arrays, each uses a dimension of 128; (ii)
+stack LZ = 3 Perceiver TF blocks; (iii) for each Perceiver TF block,
+use | spectral cross-attention layer, N = 2 latent Transformer lay-
+ers, and MZ = 2 temporal Transformer layers. All the Transformer
 layers has an hidden size of 128 with 8 heads for the multi-head at-
 tention. Finally, the output module is a 2-layer Bi-directional GRU
 with 128 hidden units. All of the Transformer module in the Per-
 ceiver TF include dropout with a rate of 0.15. The output dimension
 for onset and frame activations are 128 and 129, respectively, where
 128 corresponds to the MIDI pitches, and the additional 1 dimension
-in the frame activation is for the silence. We use AdamW [30] as the
+in the frame activation is for the silence. We use AdamW s
 learning optimizer. The initial learning rate and weight decay rate
-are set to 103 and 5 × 10¯³, respectively.
+are set to 10~° and 5 x 107%, respectively.
+
 For final output, we take a threshold of 0.25 for both the onset
 and frame probability outputs to get the binary representations, so
 the frame-wise activations can be merged to generate each note in a
 piano-roll representation. No further post-processing is applied.
+
 For data augmentation, all of the non-percussive instruments of
 a training example have a 100% probability to be pith-shift up or
-down by at most 3 semi-tones. For random-mixing, we use p = 25%
-and q = 50% for data from multi-track and vocal-mixture datasets,
+down by at most 3 semi-tones. For random-mixing, we use p = 257
+and g = 50% for data from multi-track and vocal-mixture datasets,
 respectively. To generate an input sample, all the instrument stems
 in each training example are linearly summed up.
+
 4.4. Baselines
+
 Two state-of-the-art models, MT3 [2] and SpecTNT [4], are selected
-as the baselines. For MT3, we replicated the model following [2],²
+as the baselines. For MT3, we replicated the model following
 which includes the official model checkpoint and inference pipeline
-2https://github.com/magenta/mt3/blob/main/mt3/colab/
+
+?https://github.com/magenta/mt3/blob/main/mt3/colab/
 music_transcription_with_transformers.ipynb
+
+stand for Synth Lead, Synth Pad, and Chromatic Percussion, respectively.
+
 on the test set. For SpecTNT, we adopted the configuration used
-for vocal melody extraction reported in [4]. In the preliminary ex-
+for vocal melody extraction reported in In the preliminary ex-
 periments, we found it non-trivial to successfully train the original
 SpecTNT on Slakh2100 under the multi-instrument setting, so we
 skip this experiment. For vocal transcription, the best results of EFN
-[13] and JDCnote (L+U) [14] are reported.
+[13] and JDC;ote(L+U) [14] are reported.
+
 4.5. Evaluation Metrics
-We use "Onset F1" score, which indicates the correctness of both
+
+We use “Onset F1” score, which indicates the correctness of both
 pitches and onset timestamps, as the evaluation metric for compar-
-ison with previous work [2]. To further evaluate the performance
-of multi-instrument transcription, we report the ”Multi-instrument
-Onset F1" score for the Slakh dataset. The outputs from our repli-
-cated MT3 model are grouped into 12 instrument classes based on
+ison with previous work To further evaluate the performance
+of multi-instrument transcription, we report the ’Multi-instrument
+Onset F1” score for the Slakh dataset. The outputs from our repli-
+cated MT3 model are grouped into 12 instrument cla ased on
 their program numbers. The Multi-instrument Onset F1 score we
-used only counts Onset F1, which is similar to the MV2H metric
-[31]. It could be slightly different from the one used in [2], since the
-"Drums" outputs do not contain clear offset information.
+used only counts Onset Fl, which is similar to the MV2H metric
+. It could be slightly different from the one used in 2], since the
+“Drums” outputs do not contain clear offset information.
+
 4.6. Result and Discussion
-Table 1 shows the comparison in terms of Onset F1 between the
+
+Table [I] shows the comparison in terms of Onset Fl between the
 proposed model and baselines. The proposed model and SpecTNT
 which directly model the spectral inputs with the attention mecha-
 nism shows higher performance for cases even trained on low re-
@@ -469,19 +473,22 @@ proposed model significantly outperforms the baselines. Although
 SpecTNT (Single) performs slightly better than our model on MAE-
 STRO, we still consider Perceiver TF to be more advantageous to
 practical use for its better inference efficiency.
-Table 2 presents the Multi-instrument Onset F1 (instrument-
+
+Table 2] presents the Multi-instrument Onset F1 (instrument-
 weighted average) and the Onset F1 scores of individual instrument
 classes on Slakh2100 to reveal instrument-wise performance. Com-
-pared to MT3*, our model without the random-mixing augmentation
+pared to MT3", our model without the random-mixing augmentation
 (No-RM) performs significantly better on less-common instruments
-such as "Pipe" (the Onset F1 score is upper by over 100%). Apply-
+such as “Pipe” (the Onset Fl score is upper by over 100%). Apply-
 ing random-mixing in training can further boost the performance in
 all cases, indicating the technique indeed improves the model ro-
 bustness to discriminate between different instruments. Finally, we
 observe that combining multi-instrument and vocal transcriptions
 can improve the vocal transcription alone, as the combined model is
 trained with more randomly mixed vocal-accompaniment samples.
+
 5. CONCLUSION
+
 We have presented Perceiver TF, a novel architecture that adequately
 addresses the model scalability problem for multitrack AMT. To
 address the instrument discrimination issue, we have proposed the
@@ -489,117 +496,184 @@ random-mixing augmentation technique, which significantly facili-
 tates the data usability across datasets. Our system has demonstrated
 state-of-the-art performance on different public datasets. We believe
 Perceiver TF is generic and can be applied to other analogous tasks.
+
+
+--- Page 5 ---
+10
+
+11
+
+12
+
+13
+
+14
+
 6. REFERENCES
-[1] Kin Wai Cheuk, Dorien Herremans, and Li Su, “Reconvat:
+
+Kin Wai Cheuk, Dorien Herremans, and Li Su, “Reconvat:
 A semi-supervised automatic music transcription framework
 for low-resource real-world data,” in Proc. ACM Multimedia,
 2021, pp. 3918-3926.
-[2] Josh Gardner, Ian Simon, Ethan Manilow, Curtis Hawthorne,
+
+Josh Gardner, Ian Simon, Ethan Manilow, Curtis Hawthorne,
 and Jesse Engel, “MT3: Multi-task multitrack music transcrip-
-tion," in Proc. ICLR, 2021.
-[3] Andrew Jaegle, Felix Gimeno, Andy Brock, Oriol Vinyals,
+tion,” in Proc. ICLR, 2021.
+
+Andrew Jaegle, Felix Gimeno, Andy Brock, Oriol Vinyals,
 Andrew Zisserman, and Joao Carreira, “Perceiver: General
 perception with iterative attention,” in Proc. ICML, 2021, pp.
 4651-4664.
-[4] Wei-Tsung Lu, Ju-Chiang Wang, Minz Won, Keunwoo Choi,
+
+Wei-Tsung Lu, Ju-Chiang Wang, Minz Won, Keunwoo Choi,
 and Xuchen Song, “SpecTNT: A time-frequency transformer
 for music audio,” in Proc. ISMIR, 2021.
-[5] Stefan Uhlich, Marcello Porcu, Franck Giron, Michael Enenkl,
-Thomas Kemp, Naoya Takahashi, and Yuki Mitsufuji, "Im-
+
+Stefan Uhlich, Marcello Porcu, Franck Giron, Michael Enenkl,
+Thomas Kemp, Naoya Takahashi, and Yuki Mitsufuji, “Im-
 proving music source separation based on deep neural net-
 works through data augmentation and network blending,” in
-Proc. ICASSP, 2017, pp. 261–265.
-[6] Xuchen Song, Qiuqiang Kong, Xingjian Du, and Yuxuan
-Wang, "Catnet: Music source separation system with mix-
-audio augmentation," arXiv preprint arXiv:2102.09966, 2021.
-[7] Zafar Rafii, Antoine Liutkus, Fabian-Robert Stöter,
+Proc. ICASSP, 2017, pp. 261-265.
+
+Xuchen Song, Qiugiang Kong, Xingjian Du, and Yuxuan
+Wang, “Catnet: Music source separation system with mix-
+audio augmentation,” arXiv preprint arXiv:2102.09966, 2021.
+
+Zafar Rafii, Antoine Liutkus, Fabian-Robert  Stdter,
 Stylianos Ioannis Mimilakis, Derry FitzGerald, and Bryan
-Pardo, "An overview of lead and accompaniment separation
-in music,” IEEE/ACM Transactions on Audio, Speech, and
+Pardo, “An overview of lead and accompaniment separation
+in music,’ IEEE/ACM Transactions on Audio, Speech, and
 Language Processing, vol. 26, no. 8, pp. 1307-1335, 2018.
-[8] Yun-Ning Hung, Yi-An Chen, and Yi-Hsuan Yang, "Multi-
+
+Yun-Ning Hung, Yi-An Chen, and Yi-Hsuan Yang, “Multi-
 task learning for frame-level instrument recognition,” in Proc.
 ICASSP, 2019, pp. 381-385.
-[9] Andreas Jansson, Rachel M Bittner, Sebastian Ewert, and Till-
-man Weyde, "Joint singing voice separation and fo estimation
+
+Andreas Jansson, Rachel M Bittner, Sebastian Ewert, and Till-
+man Weyde, “Joint singing voice separation and f0 estimation
 with deep u-net architectures,” in Proc. EUSIPCO, 2019, pp.
 1-5.
-[10] Yu-Te Wu, Berlin Chen, and Li Su, "Multi-instrument au-
+
+Yu-Te Wu, Berlin Chen, and Li Su, “Multi-instrument au-
 tomatic music transcription with self-attention-based instance
-segmentation," IEEE/ACM Transactions on Audio, Speech,
-and Language Processing, vol. 28, pp. 2796–2809, 2020.
-[11] Keitaro Tanaka, Takayuki Nakatsuka, Ryo Nishikimi,
+segmentation,’ IEEE/ACM Transactions on Audio, Speech,
+and Language Processing, vol. 28, pp. 2796-2809, 2020.
+
+Keitaro Tanaka, Takayuki Nakatsuka, Ryo Nishikimi,
 Kazuyoshi Yoshii, and Shigeo Morishima, “Multi-instrument
 music transcription based on deep spherical clustering of spec-
 trograms and pitchgrams,” in Proc. ISMIR, 2020.
-[12] Kin Wai Cheuk, Keunwoo Choi, Qiuqiang Kong, Bochen Li,
+
+Kin Wai Cheuk, Keunwoo Choi, Qiugiang Kong, Bochen Li,
 Minz Won, Amy Hung, Ju-Chiang Wang, and Dorien Herre-
 mans, “Jointist: Joint learning for multi-instrument transcrip-
-tion and its applications," arXiv preprint arXiv:2206.10805,
+tion and its applications,” arXiv preprint arXiv:2206.10805,
 2022.
-[13] Jun-You Wang and Jyh-Shing Roger Jang, “On the preparation
-and validation of a large-scale dataset of singing transcription,"
+
+Jun-You Wang and Jyh-Shing Roger Jang, “On the preparation
+and validation of a large-scale dataset of singing transcription,”
 in Proc. ICASSP, 2021, pp. 276-280.
-[14] Sangeun Kum, Jongpil Lee, Keunhyoung Luke Kim, Taehy-
-oung Kim, and Juhan Nam, "Pseudo-label transfer from frame-
+
+Sangeun Kum, Jongpil Lee, Keunhyoung Luke Kim, Taehy-
+oung Kim, and Juhan Nam, “Pseudo-label transfer from frame-
 level to note-level in a teacher-student framework for singing
-transcription from polyphonic music," in Proc. ICASSP, 2022.
-[15] Jui-Yang Hsu and Li Su, "Vocano: A note transcription frame-
+transcription from polyphonic music,” in Proc. ICASSP, 2022.
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+Jui- Yang Hsu and Li Su, “Vocano: A note transcription frame-
 work for singing voice in polyphonic music.,” in Proc. ISMIR,
-2021, pp. 293–300.
-[16] Anmol Gulati, James Qin, Chung-Cheng Chiu, Niki Par-
+2021, pp. 293-300.
+
+Anmol Gulati, James Qin, Chung-Cheng Chiu, Niki Par-
 mar, Yu Zhang, Jiahui Yu, Wei Han, Shibo Wang, Zheng-
-dong Zhang, Yonghui Wu, et al., "Conformer: Convolution-
+dong Zhang, Yonghui Wu, et al., “Conformer: Convolution-
 augmented transformer for speech recognition,” in Proc. IN-
 TERSPEECH, 2020.
-[17] M. Won, K. Choi, and X. Serra, "Semi-supervised music tag-
-ging transformer,” in Proc. ISMIR, 2021, pp. 769–776.
-[18] Yun-Ning Hung, Ju-Chiang Wang, Xuchen Song, Wei-Tsung
+
+M. Won, K. Choi, and X. Serra, “Semi-supervised music tag-
+ging transformer,” in Proc. ISMIR, 2021, pp. 769-776.
+Yun-Ning Hung, Ju-Chiang Wang, Xuchen Song, Wei-Tsung
 Lu, and Minz Won, “Modeling beats and downbeats with a
-time-frequency transformer,” in Proc. ICASSP, 2022, pp. 401-
+time-frequency transformer,” in Proc. ICASSP, 2022, pp. 401—
 405.
-[19] Ju-Chiang Wang, Yun-Ning Hung, and Jordan B. L. Smith, "To
+
+Ju-Chiang Wang, Yun-Ning Hung, and Jordan B. L. Smith, “To
 catch a chorus, verse, intro, or anything else: Analyzing a song
 with structural functions,” in Proc. ICASSP, 2022, pp. 416-
 420.
-[20] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun,
-"Identity mappings in deep residual networks," in European
+
+Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun,
+“Identity mappings in deep residual networks,” in European
 conference on computer vision. Springer, 2016, pp. 630-645.
-[21] Curtis Hawthorne, Erich Elsen, Jialin Song, Adam Roberts, Ian
+Curtis Hawthorne, Erich Elsen, Jialin Song, Adam Roberts, Ian
 Simon, Colin Raffel, Jesse Engel, Sageev Oore, and Douglas
-Eck, "Onsets and frames: Dual-objective piano transcription,"
+Eck, “Onsets and frames: Dual-objective piano transcription,”
 in Proc. ISMIR, 2018, pp. 50-57.
-[22] Junyoung Chung, Caglar Gulcehre, KyungHyun Cho, and
+
+Junyoung Chung, Caglar Gulcehre, KyungHyun Cho, and
 Yoshua Bengio, “Empirical evaluation of gated recurrent neu-
 ral networks on sequence modeling,” in Proc. NeurIPS, 2014.
-[23] Ethan Manilow, Gordon Wichern, Prem Seetharaman, and
-Jonathan Le Roux, "Cutting music source separation some
+Ethan Manilow, Gordon Wichern, Prem Seetharaman, and
+Jonathan Le Roux, “Cutting music source separation some
 Slakh: A dataset to study the impact of training data quality
-and quantity," in Proc. WASPAA. IEEE, 2019.
-[24] Colin Raffel, “Learning-based methods for comparing se-
+and quantity,” in Proc. WASPAA. IEEE, 2019.
+
+Colin Raffel, “Learning-based methods for comparing se-
 quences, with applications to audio-to-midi alignment and
-matching," 2016, Columbia University.
-[25] Curtis Hawthorne, Andriy Stasyuk, Adam Roberts, Ian Simon,
+matching,” 2016, Columbia University.
+
+Curtis Hawthorne, Andriy Stasyuk, Adam Roberts, Ian Simon,
 Cheng-Zhi Anna Huang, Sander Dieleman, Erich Elsen, Jesse
 Engel, and Douglas Eck, “Enabling factorized piano music
 modeling and generation with the maestro dataset,” in Proc.
 ICLR, 2019.
-[26] Qingyang Xi, Rachel M Bittner, Johan Pauwels, Xuzhou Ye,
+
+Qingyang Xi, Rachel M Bittner, Johan Pauwels, Xuzhou Ye,
 and Juan Pablo Bello, “Guitarset: A dataset for guitar tran-
-scription.,” in Proc. ISMIR, 2018, pp. 453–460.
-[27] Sangeun Kum and Juhan Nam, "Joint detection and classifi-
+scription.,” in Proc. ISMIR, 2018, pp. 453-460.
+
+Sangeun Kum and Juhan Nam, “Joint detection and classifi-
 cation of singing voice melody using convolutional recurrent
 neural networks,” Applied Sciences, vol. 9, no. 7, pp. 1324,
 2019.
-[28] Qiuqiang Kong, Yin Cao, Haohe Liu, Keunwoo Choi, and Yux-
+
+Qiuqiang Kong, Yin Cao, Haohe Liu, Keunwoo Choi, and Yux-
 uan Wang, “Decoupling magnitude and phase estimation with
 deep resunet for music source separation.,” in Proc. ISMIR,
 2021.
-[29] Paszke et al., “Pytorch: An imperative style, high-performance
-deep learning library," in Neural Information Processing Sys-
+
+Paszke et al., ““Pytorch: An imperative style, high-performance
+deep learning library,” in Neural Information Processing Sys-
 tems, 2019, vol. 32.
-[30] Ilya Loshchilov and Frank Hutter, “Decoupled weight decay
-regularization," in Proc. ICLR, 2017.
-[31] Andrew McLeod and Mark Steedman, “Evaluating automatic
+
+Ilya Loshchilov and Frank Hutter, “Decoupled weight decay
+regularization,” in Proc. ICLR, 2017.
+
+Andrew McLeod and Mark Steedman, “Evaluating automatic
 polyphonic music transcription.,” in Proc. ISMIR, 2018, pp.
 42-49.
+
+

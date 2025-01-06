@@ -1,12 +1,17 @@
-arXiv:2309.08827v1 [cs.CL] 16 Sep 2023
+--- Page 1 ---
+arX1v:2309.08827v1 [cs.CL] 16 Sep 2023
+
 S3-DST: Structured Open-Domain Dialogue Segmentation
 and State Tracking in the Era of LLMs
-Sarkar Snigdha Sarathi Das¹‚†,‡, Chirag Shah²,4, Mengting Wan³, Jennifer Neville³,
-Longqi Yang³, Reid Andersen³, Georg Buscher³, Tara Safavi³,†
-¹Pennsylvania State University, 2University of Washington, ³Microsoft
-*Corresponding authors: sfd5525@psu.edu, tarasafavi@microsoft.com
-#Work done at Microsoft, USA
+
+Sarkar Snigdha Sarathi Das!'+, Chirag Shah”, Mengting Wan®, Jennifer Neville*,
+Longqi Yang’, Reid Andersen*, Georg Buscher*, Tara Safavi>*
+Pennsylvania State University, ?University of Washington, *Microsoft
+‘Corresponding authors: sfd5525@psu. edu, tarasafavi@microsoft.com
+tWork done at Microsoft, USA
+
 Abstract
+
 The traditional Dialogue State Tracking (DST)
 problem aims to track user preferences and in-
 tents in user-agent conversations. While suffi-
@@ -38,7 +43,9 @@ Across all datasets and settings, S3-DST consis-
 tently outperforms the state-of-the-art, demon-
 strating its potency and robustness the next gen-
 eration of LLM-based chat systems.
+
 1 Introduction
+
 The advent of open-domain Large Language Model
 (LLM)-based chat systems like ChatGPT and Bing
 Chat has ushered in a new age of dialogue systems.
@@ -49,24 +56,32 @@ or social chitchat (Gao et al., 2018). By contrast,
 LLM-based chat systems are remarkable because
 they can converse fluidly with users over a seem-
 ingly infinite range of topics, and can accomplish
+
 User: Please make an annotated bibliography...
 AI: Here are a few examples of annotated...
 User: Can you explain these citation styles?
+
 AI: Of course. Citation styles are sets of...
-...
+
 User: Thank you! How's your day going?
+
 AI: I'm having a good day so far, thank you...
+
 User: What's the weather forecast next week?
+
 AI: According to the results from my search...
+
 Figure 1: A single intent may span several turns in open-
 domain conversation, and a single conversation may con-
 tain multiple intents: A synthetic dialogue inspired by
 anonymized Bing Chat logs. Different user intents (cre-
 ating an annotated bibliography, social chitchat, check-
 ing the weather) are highlighted by different colors.
+
 many user tasks out-of-the-box that previously re-
 quired specialized systems, like code generation,
 question answering, and more.
+
 In this paper, we argue that because LLM-based
 chat systems have significantly changed the land-
 scape of human-AI dialogue, understanding user
@@ -74,55 +89,60 @@ intent in such dialogues calls for new analysis and
 tagging frameworks. We focus in particular on
 the task of dialogue state tracking (DST). Tradi-
 tional DST consists of extracting and matching
-users' intents in task-oriented dialogue systems to
+users’ intents in task-oriented dialogue systems to
 a structured backend schema (Williams et al., 2016;
 Budzianowski et al., 2018). However, DST in open-
 domain conversation is yet undefined; as such, in
 this paper we make a first attempt at identifying the
 state values of interest in LLM-based chat systems.
+
 As exemplified by Figure 1, we make the key
 observation that real open-domain dialogue often
 exhibits extensive back-and-forth between parties
 (e.g., clarification, negotiation, etc) in order to pur-
 sue a single intent or topic, and contexts may shift
 multiple times within a single dialogue among un-
+
+--- Page 2 ---
 related intents and/or topics. Based on this obser-
 vation, we propose to track both segments and
 states in open-domain dialogue: Segmentation
 helps us identify boundaries that mark the start and
-end of contextually cohesive conversation “units,"
+end of contextually cohesive conversation “units,”
 whereas states are the intent variables of interest
 we wish to track, applied per segment.
+
 Beyond bringing DST into the era of open-
 domain conversation and LLMs, we introduce
 LLM-based solutions for open-domain DST. As-
 suming a zero-shot setting for dialogue tagging,
 which is realistic due to the cost of labeling, we in-
-troduce S3-DST, a structured prompting approach
+troduce $3-DST, a structured prompting approach
 for open-domain DST. Within S3-DST we propose
 a novel Pre-Analytical Recollection (PAR) prompt-
 ing strategy that grounds each output state predic-
 tion on the content of the corresponding dialogue
 turn, thereby helping the LLM track long dialogue
 context without forgetting or hallucination.
+
 We evaluate S3-DST on a fully anonymized
 open-domain dialogue dataset collected from Mi-
-crosoft's Bing Chat system, alongside public DST
-and segmentation benchmarks.¹ S3-DST achieves
+crosoft’s Bing Chat system, alongside public DST
+and segmentation benchmarks.! $3-DST achieves
 large gains over comparable baselines across all
 benchmarks, suggesting its suitability as a starting
 point for further research in open-domain dialogue
 modeling. In summary, our contributions are:
-•
-Open-domain DST problem definition: We
+
+¢ Open-domain DST problem definition: We
 bring dialogue state tracking into the era of
 open-domain LLM chat. We cast the prob-
 lem as a joint segmentation and state tracking
 task, motivated by our observations of how
 real open-domain human-AI conversation is
 conducted on anonymized Bing Chat log data.
-• Zero-shot S3-DST approach:
-We pro-
+
+¢ Zero-shot S3-DST approach: We pro-
 pose S3-DST, a structured zero-shot joint
 segmentation and state tracking approach for
 open-domain, multi-intent dialogue. S3-DST
@@ -131,25 +151,31 @@ prompt templating and dialogue tag genera-
 tion, as well as Pre-Analytical Recollection
 (PAR), a grounding technique that improves
 long context tracking.
-• Extensive experiments and analysis: We
+
+¢ Extensive experiments and analysis: We
 conduct extensive experiments on both pro-
 prietary and public datasets, achieving large
 gains over comparable zero-shot prompts. S3-
 DST achieves state-of-the-art zero-shot per-
+
 'The use of Bing Chat logs is in compliance with the terms
+
 formance on the MWOZ 2.1 and 2.4 DST
 benchmarks, alongside the DialSeg711 dia-
 logue topic segmentation benchmark.
+
 2 Problem Definition
+
 Informally, the goal of traditional DST is to predict
-the dialogue state yt given a sequence of user and
-agent utterance turns C₁ = [U₁, A1, ..., Ut, At].²
-The state yt consists of a set of slot-value pairs,
+the dialogue state y, given a sequence of user and
+agent utterance turns C; = [U1, A1,...,Ut, Ajj?
+The state y, consists of a set of slot-value pairs,
 where slots correspond to intent attributes in a
-particular application domain (e.g., "restaurant-
-name", "hotel-address") and values correspond to
+particular application domain (e.g., “restaurant-
+name”, “hotel-address’”’) and values correspond to
 predefined categorical options or unconstrained
 text (Budzianowski et al., 2018).
+
 However, as we have previously discussed, a sin-
 gle open-domain conversation will often consist of
 multiple potentially unrelated intents across a va-
@@ -160,7 +186,7 @@ display multiple user intents and over 90% of con-
 versations contain discussion of multiple topics.
 Therefore, we propose to merge dialogue segmen-
 tation, which aims to find contextually cohesive
-"units" of dialogue within a larger conversation,
+“units” of dialogue within a larger conversation,
 with dialogue state tracking. In particular, we per-
 form state tracking at the segment level, where
 the goal is to label each segment with the slots
@@ -168,30 +194,37 @@ and values of interest, such that multiple segments
 within a conversation may have diverging or con-
 flicting state values, reflecting the true variety of
 open-domain chat.
+
 In the rest of this section, we define segmentation
 and state, and finally formalize the joint task.
+
 2.1 Segment
+
 Following previous work in dialogue topic segmen-
 tation (Xing and Carenini, 2021; Xia et al., 2022;
 Gao et al., 2023), we define dialogue segments as
-contiguous subsequences of Ct in which all user
+contiguous subsequences of C; in which all user
 and agent utterances are topically related. Formally,
-let B₁ = [b₁,……., bt−1
-[b₁, … …. …, bt−1
-] indicate the boundary in-
+let By = [b1,...,b:—-1] indicate the boundary in-
 dices between adjacent user-agent utterance pairs
-in Ct. The output of segmentation is a set of bound-
-ary indices Bk C BŁ, where k represents the num-
+in C;. The output of segmentation is a set of bound-
+ary indices By, C B;, where k represents the num-
 ber of boundaries determined by the segmentation
-algorithm and the span [Um, Am, . . . Un, An] repre-
+algorithm and the span [Um, Am, ... Un, An] repre-
 of use of Bing Chat.
-2Note that in current LLM-based chat systems, users may
+
+?Note that in current LLM-based chat systems, users may
 issue multiple utterances before a single agent response is is-
+
 sued. In these (infrequent) cases, we group all user utterances
 prior to the agent response into a single utterance.
+
+--- Page 3 ---
 sents the contiguous segment between boundaries
-bm and bn, where m = [1, t − 1] and n ≤ [m, t − 1].
+bm and b,,, where m € [1,t—1] andn € [m,t—1].
+
 2.2 Segment state
+
 Typically, dialogue state tracking methods extract
 new elements of state at each turn (Hu et al., 2022).
 However, this is because DST evaluation bench-
@@ -204,44 +237,51 @@ have previously discussed, open-domain dialogue
 exhibits far more varied characteristics, and multi-
 intent and/or multi-domain conversations are rela-
 tively common.
-=
+
 We therefore propose to extract state at the
 segment rather than turn level. We define the
-segment-level state as {Sm:n = (smin, vmn), i
-1... Nm:n}, where son refers to the i-th slot ap-
-plied to the segment from boundaries bm to bn,
-, (i)
-vm:n refers to the slot's corresponding value, and
-Nm:n refers to the total number of slots to applied
+segment-level state as {Sinin = (s@n, wen), i =
+1...Nm:n}, where 3), refers to the i-th slot ap-
+plied to the segment from boundaries by, to bn,
+vn refers to the slot’s corresponding value, and
+Nm:n tefers to the total number of slots to applied
 to this segment. Any schema of slot-value pairs is
 valid here; we describe our particular state schema
 for Bing Chat in § 4.1 and Appendix B.
+
 2.3 Problem statement
+
 Having defined segments and per-segment state,
-we are equipped to state our full definition of
-open-
+we are equipped to state our full definition of open-
 domain DST. Given a sequence of user-agent ut-
-terance pairs C₁ = [U₁, A1, ..., Ut, At], we define
+terance pairs C; = [U), Aj,...,U;, Ar], we define
 the goal of open-domain dialogue state tracking as
 jointly predicting
-Yt = Bk U {Sm:n; V(bm, bn) Є Bk}, (1)
-where Bk C Bt refers to the segment boundary
-indices described earlier and Sm:n refers to the
-segment state between boundaries bm and bn, con-
+
+yt = Be U {Simin V(b, bn) € Bu}, (1)
+
+where B;, C B; refers to the segment boundary
+indices described earlier and Sip:, refers to the
+segment state between boundaries b,, and b,,, con-
 sisting of N arbitrary slot-value pairs:
-Sm:n = {(s):n, v(n), i = 1 . . . Nm:n}. (2)
+
+Sinn = {(8 On Ven), b= 1..-Nmin} (2)
+
 3 Prompting Strategies
+
 As discussed previously, real-world dialogues of-
 ten exhibit extensive discourse that extends over
 multiple conversational turns in order to discuss
 diverse topics. This prolonged conversational na-
 ture makes it highly challenging to track contex-
 tual coherence. Previous studies (Hu et al., 2022)
+
 aimed at disassociating individual dialogue turns
 and processing them one by one for tracking dia-
 logue state changes, which worked reasonably well
 in task-oriented dialogues confined within prede-
 fined narrow domains.
+
 However, real-world dialogues commonly re-
 quire multiple turns to adequately comprehend the
 contextual nuances, which is a challenge because
@@ -252,13 +292,14 @@ novel turn-by-turn prompting technique that gives
 structure to inputs and outputs while accurately pre-
 serving the context in the process. We discuss these
 design aspects of our prompts below:
-3.1
-Structured Outputs and Inputs
+
+3.1 Structured Outputs and Inputs
+
 Structured Output Our goal is a set of labels per
 dialogue turn representing the segment boundaries
 (binary labels) and state values (categorical labels
 or open text). To provide a flexible yet structured
-format to the LLM's output, we propose to instruct
+format to the LLM’s output, we propose to instruct
 it to generate outputs in a hierarchical XML format.
 We see XML as advantageous because it provides
 code-like structure to the DST task, which has been
@@ -266,90 +307,111 @@ shown to greatly improve performance compared
 to plain-text outputs, while still being extensible
 and flexible compared to more rigid output formats
 like SQL (Hu et al., 2022).
+
 Our approach uses an XML format in
-which each turn from 1 to t comprises an
+which each turn from 1 to ¢ comprises an
 XML tree <T{id}>...</T{id}> and several
 nested XML tags within it. The labels of
 these nested tags (e.g. <preceding_topi-
 cal_relation>...</preceding_topical_-
 relation>, <intent>...</intent>, and
-<domain>...</domain> in Figure 2(iii)) represent
+<domain>. . .</domain> in Figure 2(iii)) represent
 the segment boundaries and slots of interest, and
 each value between opening and closing tags
-represent the model's inferred value.
+represent the model’s inferred value.
+
 This strategy is beneficial from two fronts: (i)
 Due to bounded well-defined structured formatting,
 generated outputs are more likely to be aligned with
 labeling instructions than free-form texts, and (ii)
 Well-formed structured output formats are easier to
 parse, thus reducing postprocessing requirements.
+
 Structured Input For prompting LLMs, al-
 though it is trivial to channel plain conversation
 history in a flat format for analysis and inference,
 the unstructured nature inherent to this linear con-
 figuration makes it difficult to refer back and lever-
-Raw conversation
-User: Please provide
-an annotated
-bibliography of The...
-AI: Here are a couple
-of different
-bibliographies of...
-User:
+
+--- Page 4 ---
 (i) Insert conversation and instructions
 into structured prompt template
-<valid preceding_topical_relation>
+
+<valid_preceding_topical_relation>
 <item>
 <name>YES</name>
 <description>...</description>
 </item>
-</valid_preceding_topical_relation>
-<valid intents>
+
+Raw conversation
+
+User: Please provide
+an annotated
+<valid_intents>
 <item>...</item>
 </valid_intents>
-## CONVERSATION
-(iii) Generate structured turn-by-turn dialogue
-tags via chain of thought
-<T1>
-<summary>The user requests an annotated...</summary>
-<preceding_topical_relation>NO</preceding_topical_relation>
-<intent>CREATION</intent>
-<domain>WRITING JOURNALISM AND PUBLISHING</domain>
-LLM
-</T1>
-<T2>
-AI:
-<T1>
-<User>Please provide an...</User>
-<AI>Here are a couple of...</AI>
-</T1>
-<T2>
-<summary>...</summary>
-<preceding_topical_relation>...</preceding_topical_relation>
-<intent>...</intent>'
-<domain>...</domain>
-</T2>
+
+bibliography of The...
+AI: Here are a couple
+of different
+bibliographies of...
+
+User: ... ### CONVERSATION
+AI: ... Ge
+a <User>Please provide an...</User>
+<Al>Here are a couple of...</AI>
+
+</TL>
+
 Structured
 Turn
+
 <User>...</User>
 <AI>...</AI>
 </T2>
+
+</valid_preceding_topical_relation> =»
+
+wt] <T2> —_E_”__ ll
 (ii) Pre-Analytical Recollection (PAR)
+
 Preserve context by grounding output in each turn
+
+(iii) Generate structured turn-by-turn dialogue
+tags via chain of thought
+
+<T1>
+<summary>The user requests an annotated. ..</summary>
+<preceding_topical_relation>N0</preceding_topical_relation>
+<intent>CREATION</intent>
+<domain>WRITING JOURNALISM AND PUBLISHING</domain>
+
+</T1>
+
+<T2>
+<summary>. ..</summary>
+<preceding_topical_relation>...</preceding_topical_relation>
+<intent>...</intent>
+<domain>. . -</domain> |
+
+</T2> |
+
 Figure 2: Prompt flow of S3-DST. Given a raw conversation, (i) we convert it into a hierarchical XML-structured
 representation and insert it into a similarly structured prompt template. We pass the prompt through the LLM and
 (ii) obtain a hierarchical XML-structured output, where each turn contains (iii) a PAR grounding reference to the
 conversation alongside the desired segmentation and state label predictions.
+
 age different information across multiple conversa-
 tional turns. To handle this challenge, consistent
 with the output format, we propose a structured in-
 putting format, where each conversational history
 is formed into a hierarchical XML format where
 conversational turns are marked with turn id num-
-ber <T{id}>...</T{id}> numbered from 1 to t
+ber <T{id}>. ..</T{id}> numbered from 1 to t
 and each conversational turn consists of nested user
 and agent turns marked with appropriate XML tags
 (<user>...</user> and <agent>...</agent>).
+
 Since we propose instructing the LLM to infer
 per-turn labels during our output, this input scheme
 helps us accurately refer back to the input turn and
@@ -358,7 +420,7 @@ contexts. Consistent with this XML-tagged input
 format, we also format all the valid segment and
 state categories in an XML-formatted list using
 the following structure: <valid_category_name>
-<item>{label name}</item> <description>{de-
+<item>{label name}</item><description> {de-
 scription of label, if available} </description>
 <valid_category_name> Empirically, this struc-
 tured input and prompt formatting help constrain
@@ -368,8 +430,9 @@ valid segment boundary and state category are first
 staged in an XML-formatted list and subsequently
 input dialogue is shown in a hierarchical configura-
 tion.
-3.2
-Pre-Analytical Recollection (PAR)
+
+3.2 Pre-Analytical Recollection (PAR)
+
 As previously discussed, open-domain dialogues
 may be long and highly variable in conversation
 flow. Therefore, it is crucial to ensure that the LLM
@@ -378,19 +441,21 @@ text without forgetting or hallucination. To this end,
 we propose Pre-Analytical Recollection (PAR), a
 grounding strategy for turn-by-turn prompting that
 instructs the LLM to first summarize the turn using
-<summary>...</summary> tags in 3 sentences or
+<summary>. ..</summary> tags in 3 sentences or
 fewer before providing the segment and state val-
 ues. PAR is inspired by chain-of-thought prompt-
 ing (Wei et al., 2022), as it is a technique for
 generating relevant intermediary outputs in order
 to improve reasoning accuracy. However, unlike
 chain-of-thought, PAR is also a grounding tech-
-nique that provides references from the model's
+nique that provides references from the model’s
 output directly to the conversation. Figure 2(ii)
 demonstrates how PAR refers back to the content
 of each conversational turn before analyzing it to
 infer the conversational states.
+
 3.3 Final Prompt Configuration
+
 The final prompt flow of S3-DST is provided in
 Figure 2. Given a raw conversation and a prede-
 fined set of segment and state labels, we insert the
@@ -398,28 +463,25 @@ labels into a structured prompt template and format
 the conversation in a hierarchical XML-structured
 representation. We pass the prompt through the
 LLM, instructing it to follow PAR before jointly
+
+--- Page 5 ---
 Table 1: Evaluation test set statistics.
-# Convs
-# Turns # segments/conv
-Bing Chat
-334
-2308
-MWOZ 2.1
-1,000
-7368
-MWOZ 2.4
-DialSeg711
-1,000
-7368
-711
-19350
+
+#Convs #Turns #segments/conv
+
 (avg.)
-1.51
-3.87
+
+Bing Chat 334 2308 1.51
+MWOZ 2.1 1,000 7368 -
+MWOZ 2.4 1,000 7368 -
+DialSeg711 711 19350 3.87
+
 generating the hierarchical turn-by-turn segmenta-
 tion and state labels applied per segment. The full
 text of our prompt is provided in Appendix A.1.
+
 4 Experiments
+
 We conduct comprehensive evaluations across mul-
 tiple datasets. We primarily evaluate our approach
 on fully anonymized Bing Chat logs annotated by
@@ -430,13 +492,15 @@ WOZ (Budzianowski et al., 2018) and DialSeg711
 (Xu et al., 2021) respectively. A detailed descrip-
 tion of these datasets is provided below, alongside
 dataset statistics in Table 1:
-4.1
-Internal Human-LLM Dialogue Dataset
+
+4.1 Internal Human-LLM Dialogue Dataset
+
 In order to evaluate the efficacy of our approach
 on real-world open-domain human-LLM conversa-
 tions, we collected anonymized chat log data from
-Microsoft's Bing Chat system, an LLM chat inter-
+Microsoft’s Bing Chat system, an LLM chat inter-
 face backed by the Bing search engine.
+
 Benchmark construction We sample 484 En-
 glish conversations conducted on Bing Chat be-
 tween April 5, 2023 to April 30, 2023 via two
@@ -446,16 +510,19 @@ two approaches 50/50. Since we operate under a
 zero-shot assumption, we do not need any training
 data. Therefore, we hold out 150 conversations for
 development and the remaining 334 for testing.
+
 Annotation To obtain ground-truth labels for
 evaluation, we gathered human annotations for seg-
 ment and state. We recruited three in-house anno-
 tators with a high degree of technical expertise and
 familiarity with the Bing Chat system.
+
 For each turn, we instructed annotators to pro-
 vide binary IsSegmentBoundary labels, categor-
 ical SegmentIntent labels, and categorical Seg-
 mentDomain labels. We instructed annotators to
 mark a segment boundary when no topical relation
+
 between a turn and its preceding context could be
 identified. For intent and domain, we used tax-
 onomies developed in-house for the Bing Chat sys-
@@ -464,24 +531,27 @@ Analysis, Creation, and Open-Ended Discovery)
 and 49 domains (see Appendix B.1 for the full
 list). Because of the large number of domains,
 per turn we provided annotators four candidate do-
-main values and an "Other" option. Appendix B
+main values and an “Other” option. Appendix B
 provides further details on the annotation scheme
 and domain sampling procedure. To ensure inter-
 annotator agreement before labeling the full dataset,
 we first gathered annotations on a set of 10 ran-
 domly selected conversations (68 turns total) and
-computed Fleiss' kappa (Fleiss, 1971) per label
-type. We observed a Fleiss kappa of k = 0.83 for
-IsSegmentBoundary, k = 0.74 for SegmentIn-
-tent, and K = 0.88 for SegmentDomain, all of
+computed Fleiss’ kappa (Fleiss, 1971) per label
+type. We observed a Fleiss kappa of & = 0.83 for
+IsSegmentBoundary, « = 0.74 for SegmentIn-
+tent, and « = 0.88 for SegmentDomain, all of
 which are considered high agreement on the Fleiss
 kappa scale.
+
 4.2 Public Benchmarks
+
 We are not aware of any existing public dialogue
 benchmarks reflective of the broadly open-domain
 Bing Chat data. Therefore, we resort to separate
 DST and segmentation evaluations on public bench-
 marks using three datasets.
+
 MultiWOZ The MultiWOZ (MWOZ) multi-
 domain dialogue dataset (Budzianowski et al.,
 2018) is currently the most common DST bench-
@@ -489,58 +559,47 @@ mark. MWOZ is a task-oriented dataset consisting
 of 1K test dialogues. We use two updated versions
 of the original: MWOZ 2.1 (Eric et al., 2019) and
 2.4 (Ye et al., 2021). The latter is considered the
-"cleanest" version of MWOZ, while the former has
+“cleanest” version of MWOZ, while the former has
 been used more frequently in the literature.
+
 DialSeg711 The DialSeg711 benchmark was in-
 troduced by (Xu et al., 2021) and has been used fre-
 quently in recent dialogue segmentation research.
 It is an English dataset in which 711 multi-segment
 dialogues are constructed by joining dialogues
 from existing task-oriented dialogue corpora.
+
 4.3 Baselines
+
 As baselines we consider zero-shot LLM prompts
-only, for a fair comparison to S3-DST. We discuss
+only, for a fair comparison to S$3-DST. We discuss
 the baselines and their considerations below for dif-
 ferent datasets. All original prompts are provided
 in Appendix A. We set a maximum of 1500 output
 tokens per LLM call with a temperature of zero.
+
+--- Page 6 ---
 Table 2: S3-DST achieves state-of-the-art performance on state tracking over our internal Bing Chat benchmark.
+
 All prompts are run with GPT4.
-Individual accuracy
-JGA
-Segment
-Intent
-Domain
-I/D
-S/I/D
-TBT-DST
-0.6707
-0.6221
-0.4169
-IC-DST
-0.8567
-0.7123
-0.6049
-0.4610 0.4387
-S3-DST (No PAR)
-0.8859
-0.7173 0.6251
-0.4377 0.4078
-S3-DST (Unstructured input)
-S3-DST
-0.8810
-0.7163 0.6307
-0.4640 0.4331
-0.8992
-0.7366 0.6429
-0.4752 0.4504
-Bing Chat In this dataset, we consider IC-DST
-as our primary baseline, which is a zero-shot ver-
-sion of the prompting strategy introduced by (Hu
-et al., 2022), heavily adapted for open-domain dia-
-logue setting to jointly track segment and dialogue
-states. The TBT-DST baseline is a version of S3-
-DST that does not include segmentation instruc-
+
+Individual accuracy JGA
+Segment Intent Domain YD S//D
+TBT-DST - 0.6707 0.6221 0.4169 -
+IC-DST 0.8567 0.7123 0.6049 0.4610 0.4387
+S3-DST (No PAR) 0.8859 0.7173 —:0.6251 0.4377 0.4078
+S3-DST (Unstructured input) 0.8810 0.7163 0.6307 0.4640 0.4331
+S3-DST 0.8992 0.7366 0.6429 0.4752 0.4504
+Bing Chat In this dataset, we consider IC-DST 0.60
+. : . : —* S3-DST
+as our primary baseline, which is a zero-shot ver- fa) += S3-DST (No PAR)
+sion of the prompting strategy introduced by (Hu =
+et al., 2022), heavily adapted for open-domain dia- 2
+logue setting to jointly track segment and dialogue a
+states. The TBT-DST baseline is a version of S3- é
+DST that does not include segmentation instruc- 0.40 +, 7 x *
+(0, 3] (3, 5] (5, 10] (10, 20]
+
 tions and obtains intent and domain labels on a
 turn-by-turn basis using our S3-DST prompt con-
 figuration. Moreover, to analyze the importance
@@ -552,6 +611,7 @@ tured input refers to a S3-DST prompt that formats
 all instructions and dialogue using plain text rather
 than XML. We use GPT4 as the backbone LLM
 for all prompts.
+
 MWOZ For MWOZ task-oriented dialogue state
 tracking dataset, we compare against IC-DST us-
 ing Codex-175B as reported by Hu et al. (2022).
@@ -560,6 +620,7 @@ to account for the backbone model improvement in
 baseline performance. Finally, we compare against
 the zero-shot ChatGPT performance on MWOZ
 2.1 as reported by (Heck et al., 2023).
+
 DialSeg711 We consider the unsupervised Text-
 Tiling (Hearst, 1997), CSM (Xing and Carenini,
 2021), and DialStart (Gao et al., 2023) methods.
@@ -567,48 +628,34 @@ We reprint all numbers from (Gao et al., 2023). Fi-
 nally, we use our IC-DST baseline prompted to
 elicit segmentation labels in the same SQL output
 format as the original IC-DST (Hu et al., 2022).
+
 4.4 Metrics
+
 For state tracking, we consider Joint Goal Accu-
 racy (JGA), which measures the proportion of
 turns for which all state values are correctly in-
 ferred. For Bing Chat, we report JGA with just
-Binned JGA (I/D)
-0.60
-0.55
-0.50-
-0.45
-0.40
-(0,3]
-S3-DST
-.-X. S3-DST (NO PAR)
-IC-DST
-(3,5]
-(5,10]
+
 Dialogue Length (# turns)
-(10,20]
+
 Figure 3: S3-DST outperforms baselines for dialogues
 of all lengths by emphasizing context tracking. We bin
 Bing Chat dialogues by length and plot JGA per bin.
 The large performance degradation of both baselines as
 the dialogue length increases confirms the importance
 of our PAR grounding strategy.
+
 Table 3: S3-DST achieves state-of-the-art JGA com-
 pared to zero-shot LLM baselines on the public dialogue
-state tracking benchmarks MWOZ 2.1 + 2.4.
+state tracking benchmarks MWoZ 2.1 + 2.4.
+
 JGA
-MWOZ 2.1
-MWOZ 2.4
-IC-DST (Codex)
-IC-DST (GPT4)
-0.3534
-0.3530
-0.4045
-0.4625
-ChatGPT
-0.3150
-S3-DST
-0.4513
-0.5327
+MWOZ 2.1 MWOZ 2.4
+IC-DST (Codex) 0.3534 0.3530
+IC-DST (GPT4) 0.4045 0.4625
+ChatGPT 0.3150 -
+S3-DST 0.4513 0.5327
+
 intent and domain (I/D) as these are the true state
 values of interest, as well as JGA with segment, in-
 tent, and domain accuracy (S/I/D) for completeness.
@@ -616,45 +663,32 @@ We also report segmentation, intent, and domain ac-
 curacy separately on Bing Chat to provide a sense
 of the current capabilities and limitations of LLMs
 on open-domain conversational data. For segmen-
-tation, we consider PK and WindowDiff (Pevzner
+tation, we consider Px and WindowDiff (Pevzner
 and Hearst, 2002), which are both error metrics
 (i.e., lower is better) that quantify the difference be-
 tween predicted and ground-truth segment bound-
 aries using an adjustable sliding window.
+
+--- Page 7 ---
 Table 4: Zero-shot per-domain comparison (JGA) on
 MWOZ 2.1.
-Table 5: S3-DST achieves state-of-the-art performance
-on the public segmentation benchmark DialSeg711.
-attr.
-hotel
+
 Per-domain JGA
-rest.
-Pk(↓)
-WindowDiff (↓)
-taxi
-train
-TextTiling 0.4044
-0.4463
-IC-DST (Codex)
-IC-DST (GPT4)
-ChatGPT
-S3-DST
+attr. hotel rest. taxi train
 0.5997 0.4669 0.5728 0.7135 0.4937
 0.7177 0.4872 0.6526 0.7781 0.5710
 0.5270 0.4200 0.5580 0.7090 0.6080
+
 0.6781 0.5215 0.6713 0.8258 0.7027
-CSM
-0.2430
-0.2635
-DialSTART 0.1786
-0.1980
-IC-DST
-0.2889
-0.2419
+
+IC-DST (Codex)
+IC-DST (GPT4)
+ChatGPT
+
 S3-DST
-0.0091
-0.0081
+
 4.5 Results
+
 Bing Chat As shown in Table 2, our S3-DST
 prompt achieves the highest performance across
 intent, domain, and JGA across turns. We make
@@ -667,6 +701,7 @@ overindex on the content of the turn without con-
 sidering the fuller preceding context. This leads to
 conflicting intent and domain labels between turns
 within a coherent single-topic dialogue.
+
 Second, our adapted version of IC-DST is a very
 strong baseline. However, while IC-DST makes
 use of structured outputs, it does not have a corre-
@@ -674,33 +709,47 @@ sponding structured input representation. We find
 that this hurts its performance in some cases, as hal-
 lucination of nonexistent turns is relatively more
 common compared to S3-DST.
+
 Finally, the two ablations of S3-DST both un-
-derperform compared to S3-DST, confirming the
+derperform compared to $3-DST, confirming the
 importance of PAR and structured inputs that the
 LLM can refer back to during generation. Indeed,
 Figure 3, which plots the relationship between dia-
-logue length and performance, shows that S3-DST
+ogue length and performance, shows that S3-DST
 avoids the steep degradation in performance of the
 no-PAR ablation as the dialogues get longer. For
 example, the no-PAR ablation performs compara-
 bly to S3-DST on conversations of 3 turns or fewer,
 but drops over 10 points JGA for conversations of 4
-turns or more. These results in particular highlight
+urns or more. These results in particular highlight
 the necessity of PAR for long dialogues.
+
 MWOZ Tables 3 and 4 provide MWOZ numbers
 in total and per-domain. S3-DST achieves state-of-
-the-art zero-shot JGA compared to strong LLMs by
+he-art zero-shot JGA compared to strong LLMs by
 a large margin. Even our strongest zero-shot base-
-line, IC-DST (GPT4), has an absolute performance
+ine, IC-DST (GPT4), has an absolute performance
 gap of nearly 5 points JGA on MWOZ 2.1 and 7
 points on MWOZ 2.4. In nearly all individual do-
 mains, S3-DST outperforms IC-DST (GPT4), and
+
+Table 5: S3-DST achieves state-of-the-art performance
+on the public segmentation benchmark DialSeg711.
+
+P,(1)  WindowDiff (|)
+TextTiling 0.4044 0.4463
+CSM 0.2430 0.2635
+DialSTART 0.1786 0.1980
+IC-DST 0.2889 0.2419
+S3-DST 0.0091 0.0081
+
 some by a large margin, for example over 13 points
 JGA improvement on the train domain.
-DialSeg711 Finally, Table 5 shows performance
+
+DialSeg711_ Finally, Table 5 shows performance
 on DialSeg711. S3-DST achieves nearly zero error
 on this dataset, which we find unsurprising given
-that the dataset's construction. Specifically, Di-
+that the dataset’s construction. Specifically, Di-
 alSeg711 is constructed by joining dialogues about
 very different topics, which leads to very artificial
 and abrupt context shifts between segments. How-
@@ -711,14 +760,16 @@ the dialogue context for several conversations in
 the dataset, leading to forgetting of the original
 conversation context. These results highlight the
 importance of PAR and dialogue context tracking
-for successful segmentation. S3-DST's strong per-
+for successful segmentation. S3-DST’s strong per-
 formance also suggests that DialSeg711 may not
 be a difficult enough task in future for LLMs, and
 further motivates the need for joint segmentation
 and state tracking, as the goal of segmentation is
 ultimately to improve state tracking performance.
+
 5 Related Work
 5.1 Dialogue State Tracking
+
 To accurately track the passage of Human-AI con-
 versation, robust state tracking is crucial toward
 inferring user intentions and goals. Since the in-
@@ -735,6 +786,8 @@ through several annotation revisions (Eric et al.,
 2019; Ye et al., 2021; Zang et al., 2020; Han et al.,
 2020). While other techniques (Peng et al., 2021;
 Lin et al., 2020; Zhao et al., 2022; Yu et al., 2020;
+
+--- Page 8 ---
 Platanios et al., 2021) have also been proposed,
 the resource-intensive and laborious nature of data
 labeling has gradually redirected attention toward
@@ -749,7 +802,9 @@ sions. Furthermore, none of the aforementioned
 previous work accounts for topic coherence and
 context switches prevalent in flexible open-domain
 LLM-based chat systems.
-5.2 Dialogue Topic Segmentation
+
+5.2. Dialogue Topic Segmentation
+
 Segmenting a dialogue into topically coherent units
 is foundational to successful downstream dialogue
 modeling. While the paucity of annotated data
@@ -768,7 +823,9 @@ for the complete contextual essence of a conver-
 sation (i.e., explicitly modeling intent and other
 important state variables), which can lead to sub-
 optimal results.
+
 5.3 Intent Classification
+
 Related to dialogue state tracking, another funda-
 mental problem in task-oriented dialogue systems
 is intent classification (IC). Often paired with an-
@@ -785,9 +842,12 @@ lated to DST, IC/SF primarily deals with individ-
 ual utterances in isolation, which makes it less apt
 for real-world human-AI dialogue which often re-
 quires modeling intricate contextual connections
+
 spanning multiple utterances within a conversa-
 tional session.
+
 6 Discussion and Conclusion
+
 LLM-based chat systems have broadened the hori-
 zons of human-AI conversation, warranting new
 methods for tracking user intentions. Therefore,
@@ -814,39 +874,48 @@ In this respect, we aim to further study and develop
 techniques for extended context preservation, to im-
 prove grounding in DST alongside other important
 dialogue modeling tasks.
+
 References
+
 Hemanthage S Bhathiya and Uthayasanker Thayasivam.
 2020. Meta learning for few-shot joint intent de-
 tection and slot-filling. In Proceedings of the 2020
-5th International Conference on Machine Learning
-Technologies, pages 86–92.
-Paweł Budzianowski, Tsung-Hsien Wen, Bo-Hsiang
-Tseng, Iñigo Casanueva, Stefan Ultes, Osman Ra-
+Sth International Conference on Machine Learning
+Technologies, pages 86-92.
+
+Pawet Budzianowski, Tsung-Hsien Wen, Bo-Hsiang
+Tseng, Ifigo Casanueva, Stefan Ultes, Osman Ra-
 madan, and Milica Gasic. 2018. Multiwoz-a large-
 scale multi-domain wizard-of-oz dataset for task-
 oriented dialogue modelling. In Proceedings of the
 2018 Conference on Empirical Methods in Natural
 Language Processing, pages 5016-5026.
+
 Mihail Eric, Rahul Goel, Shachi Paul, Adarsh Kumar,
 Abhishek Sethi, Peter Ku, Anuj Kumar Goyal, San-
 chit Agarwal, Shuyang Gao, and Dilek Hakkani-Tur.
 2019. Multiwoz 2.1: A consolidated multi-domain
 dialogue dataset with state corrections and state track-
-ing baselines. arXiv preprint arXiv:1907.01669.
+ing baselines. arXiv preprint arXiv: 1907.01669.
+
 Joseph L Fleiss. 1971. Measuring nominal scale agree-
 ment among many raters. Psychological bulletin,
 76(5):378.
+
+--- Page 9 ---
 Haoyu Gao, Rui Wang, Ting-En Lin, Yuchuan Wu, Min
 Yang, Fei Huang, and Yongbin Li. 2023. Unsuper-
 vised dialogue topic segmentation with topic-aware
 utterance representation. In Proceedings of the 46th
 Annual International ACM SIGIR Conference on Re-
 search and Development in Information Retrieval.
+
 Jianfeng Gao, Michel Galley, and Lihong Li. 2018. Neu-
 ral approaches to conversational ai. In The 41st in-
 ternational ACM SIGIR conference on research &
 development in information retrieval, pages 1371-
 1374.
+
 Chih-Wen Goo, Guang Gao, Yun-Kai Hsu, Chih-Li Huo,
 Tsung-Chieh Chen, Keng-Wei Hsu, and Yun-Nung
 Chen. 2018. Slot-gated modeling for joint slot filling
@@ -855,15 +924,18 @@ Conference of the North American Chapter of the
 Association for Computational Linguistics: Human
 Language Technologies, Volume 2 (Short Papers),
 pages 753-757.
+
 Ting Han, Ximing Liu, Ryuichi Takanobu, Yixin
 Lian, Chongxuan Huang, Wei Peng, and Minlie
 Huang. 2020. Multiwoz 2.3: A multi-domain task-
 oriented dataset enhanced with annotation correc-
 tions and co-reference annotation. arXiv preprint
 arXiv:2010.05594.
+
 Marti A Hearst. 1997. Text tiling: Segmenting text into
 multi-paragraph subtopic passages. Computational
-linguistics, 23(1):33–64.
+linguistics, 23(1):33-64.
+
 Michael Heck, Nurul Lubis, Benjamin Ruppik, Renato
 Vukovic, Shutong Feng, Christian Geishauser, Hsien-
 chin Lin, Carel van Niekerk, and Milica Gasic. 2023.
@@ -873,6 +945,7 @@ solution or an opportunity? In Proceedings of the
 tational Linguistics (Volume 2: Short Papers), pages
 936-950, Toronto, Canada. Association for Compu-
 tational Linguistics.
+
 Yushi Hu, Chia-Hsuan Lee, Tianbao Xie, Tao Yu,
 Noah A. Smith, and Mari Ostendorf. 2022. In-
 context learning for few-shot dialogue state tracking.
@@ -880,42 +953,52 @@ In Findings of the Association for Computational
 Linguistics: EMNLP 2022, pages 2627-2643, Abu
 Dhabi, United Arab Emirates. Association for Com-
 putational Linguistics.
+
 Jason Krone, Yi Zhang, and Mona Diab. 2020. Learning
 to classify intents and slot labels given a handful of
 examples. arXiv preprint arXiv:2004.10793.
-Wenqiang Lei, Xisen Jin, Min-Yen Kan, Zhaochun Ren,
+
+Wengiang Lei, Xisen Jin, Min-Yen Kan, Zhaochun Ren,
 Xiangnan He, and Dawei Yin. 2018. Sequicity: Sim-
 plifying task-oriented dialogue systems with single
 sequence-to-sequence architectures. In Proceedings
 of the 56th Annual Meeting of the Association for
 Computational Linguistics (Volume 1: Long Papers),
 pages 1437-1447.
+
 Zhaojiang Lin, Andrea Madotto, Genta Indra Winata,
 and Pascale Fung. 2020. Mintl: Minimalist transfer
+
 learning for task-oriented dialogue systems. arXiv
 preprint arXiv:2009.12005.
-Bing Liu and Ian Lane. 2016. Attention-based recurrent
+
+Bing Liu and Jan Lane. 2016. Attention-based recurrent
 neural network models for joint intent detection and
-slot filling. arXiv preprint arXiv:1609.01454.
+slot filling. arXiv preprint arXiv: 1609.01454.
+
 Han Liu, Feng Zhang, Xiaotong Zhang, Siyang Zhao,
 and Xianchao Zhang. 2021. An explicit-joint and
 supervised-contrastive learning framework for few-
 shot intent classification and slot filling. arXiv
 preprint arXiv:2110.13691.
+
 Nelson F Liu, Kevin Lin, John Hewitt, Ashwin Paran-
 jape, Michele Bevilacqua, Fabio Petroni, and Percy
 Liang. 2023. Lost in the middle: How lan-
 guage models use long contexts. arXiv preprint
 arXiv:2307.03172.
+
 Baolin Peng, Chunyuan Li, Jinchao Li, Shahin Shayan-
 deh, Lars Liden, and Jianfeng Gao. 2021. Soloist:
 Building task bots at scale with transfer learning and
 machine teaching. Transactions of the Association
-for Computational Linguistics, 9:807–824.
+for Computational Linguistics, 9:807-824.
+
 Lev Pevzner and Marti A Hearst. 2002. A critique
 and improvement of an evaluation metric for text
-segmentation. Computational Linguistics, 28(1):19–
+segmentation. Computational Linguistics, 28(1):19-
 36.
+
 Emmanouil Antonios Platanios, Adam Pauls, Subhro
 Roy, Yuchen Zhang, Alexander Kyte, Alan Guo, Sam
 Thomson, Jayant Krishnamurthy, Jason Wolfe, Jacob
@@ -926,16 +1009,19 @@ tational Linguistics and the 11th International Joint
 Conference on Natural Language Processing (Vol-
 ume 1: Long Papers), pages 3666-3681, Online. As-
 sociation for Computational Linguistics.
+
 Libo Qin, Wanxiang Che, Yangming Li, Haoyang Wen,
 and Ting Liu. 2019. A stack-propagation framework
 with token-level intent detection for spoken language
-understanding. arXiv preprint arXiv:1909.02188.
+understanding. arXiv preprint arXiv: 1909.02188.
+
 Libo Qin, Tailu Liu, Wanxiang Che, Bingbing Kang,
 Sendong Zhao, and Ting Liu. 2021. A co-interactive
 transformer for joint slot filling and intent detection.
 In ICASSP 2021-2021 IEEE International Confer-
 ence on Acoustics, Speech and Signal Processing
 (ICASSP), pages 8193-8197. IEEE.
+
 Jamin Shin, Hangyeol Yu, Hyeongdon Moon, Andrea
 Madotto, and Juneyoung Park. 2022. Dialogue sum-
 maries as dialogue states (DS2), template-guided
@@ -943,18 +1029,23 @@ summarization for few-shot dialogue state tracking.
 In Findings of the Association for Computational
 Linguistics: ACL 2022, pages 3824-3846, Dublin,
 Ireland. Association for Computational Linguistics.
+
 Yiping Song, Lili Mou, Rui Yan, Li Yi, Zinan Zhu,
 Xiaohua Hu, and Ming Zhang. 2016. Dialogue ses-
 sion segmentation by embedding-enhanced texttiling.
 arXiv preprint arXiv:1610.03955.
+
+--- Page 10 ---
 Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
 Bosma, Fei Xia, Ed Chi, Quoc V Le, Denny Zhou,
 et al. 2022. Chain-of-thought prompting elicits rea-
 soning in large language models. Advances in Neural
-Information Processing Systems, 35:24824-24837.
+Information Processing Systems, 35:24824—24837.
+
 Jason D Williams, Antoine Raux, and Matthew Hender-
 son. 2016. The dialog state tracking challenge series:
-A review. Dialogue & Discourse, 7(3):4–33.
+A review. Dialogue & Discourse, 7(3):4-33.
+
 Chien-Sheng Wu, Steven C.H. Hoi, Richard Socher,
 and Caiming Xiong. 2020. TOD-BERT: Pre-trained
 natural language understanding for task-oriented di-
@@ -962,264 +1053,373 @@ alogue. In Proceedings of the 2020 Conference on
 Empirical Methods in Natural Language Processing
 (EMNLP), pages 917-929, Online. Association for
 Computational Linguistics.
+
 Chien-Sheng Wu, Andrea Madotto, Ehsan Hosseini-Asl,
 Caiming Xiong, Richard Socher, and Pascale Fung.
 2019. Transferable multi-domain state generator for
 task-oriented dialogue systems. In Proceedings of the
 57th Annual Meeting of the Association for Compu-
-tational Linguistics, pages 808–819, Florence, Italy.
+tational Linguistics, pages 808-819, Florence, Italy.
 Association for Computational Linguistics.
+
 Jinxiong Xia, Cao Liu, Jiansong Chen, Yuchen Li, Fan
 Yang, Xunliang Cai, Guanglu Wan, and Houfeng
 Wang. 2022. Dialogue topic segmentation via paral-
 lel extraction network with neighbor smoothing. In
 Proceedings of the 45th International ACM SIGIR
 Conference on Research and Development in Infor-
-mation Retrieval, pages 2126–2131.
+mation Retrieval, pages 2126-2131.
+
 Linzi Xing and Giuseppe Carenini. 2021. Improv-
 ing unsupervised dialogue topic segmentation with
 utterance-pair coherence scoring. In Proceedings
 of the 22nd Annual Meeting of the Special Inter-
-est Group on Discourse and Dialogue, pages 167–
+est Group on Discourse and Dialogue, pages 167—
 177, Singapore and Online. Association for Compu-
 tational Linguistics.
+
 Yi Xu, Hai Zhao, and Zhuosheng Zhang. 2021. Topic-
 aware multi-turn dialogue modeling. In Proceedings
 of the AAAI Conference on Artificial Intelligence,
 volume 35, pages 14176-14184.
+
 Fanghua Ye, Jarana Manotumruksa, and Emine Yilmaz.
 2021. Multiwoz 2.4: A multi-domain task-oriented
 dialogue dataset with essential annotation corrections
 to improve state tracking evaluation. arXiv preprint
 arXiv:2104.00773.
+
 Tao Yu, Rui Zhang, Alex Polozov, Christopher Meek,
 and Ahmed Hassan Awadallah. 2020. Score: Pre-
 training for context representation in conversational
 semantic parsing. In International Conference on
 Learning Representations.
+
 Xiaoxue Zang, Abhinav Rastogi, Srinivas Sunkara,
 Raghav Gupta, Jianguo Zhang, and Jindong Chen.
 2020. Multiwoz 2.2: A dialogue dataset with addi-
 tional annotation corrections and state tracking base-
 lines. arXiv preprint arXiv:2007.12720.
+
 Xiaodong Zhang and Houfeng Wang. 2016. A joint
 model of intent determination and slot filling for spo-
-ken language understanding. In IJCAI, volume 16,
+ken language understanding. In JJCAIJ, volume 16,
 pages 2993-2999.
+
 Yichi Zhang, Zhijian Ou, and Zhou Yu. 2020. Task-
 oriented dialog systems that consider multiple appro-
 priate responses under the same context. In Proceed-
 ings of the AAAI Conference on Artificial Intelligence,
 volume 34, pages 9604-9611.
+
 Jeffrey Zhao, Raghav Gupta, Yuan Cao, Dian Yu,
 Mingqiu Wang, Harrison Lee, Abhinav Rastogi,
 Izhak Shafran, and Yonghui Wu. 2022. Description-
 driven task-oriented dialog modeling. arXiv preprint
 arXiv:2201.08904.
-A
-Prompts
-<preceding_topical_relation>{valid
-preceding
-A.1 S3-DST prompts
+
+--- Page 11 ---
+A Prompts
+
+A.1 §3-DST prompts
+
 Bing Chat Below is the full prompt for S3-DST,
 with templated values to be replaced by e.g., in-
 tent label names or descriptions in curly braces.
 Appendix B provides the full list of state values.
 <valid_domains>
+
 <item>{valid domain label name}</item>
-topical relation label}</preceding_topical_-
-relation>
-<intent>{valid intent label}</intent>
-<domain>{valid domain label}</domain>
-</T{turn number}>
-## INPUT ##
-{XML-structured dialogue}
-## OUTPUT ##
+
 </valid_domains>
+
 <valid_preceding_topical_relation>
+
 <item>
+
 <name>YES</name>
-<desc>The current turn has **some
-topical/subtopical relation to the
-conversation context.</desc> </item>
-<item>
-<name>NO</name>
-or any**
-preceding
-<desc>The current turn has **absolutely no**
+
+<desc>The current turn has **some or anyx*
 topical/subtopical relation to the preceding
+conversation context.</desc> </item>
+
+<item>
+
+<name>NO</name>
+
+<desc>The current turn has xxabsolutely nox*
+topical/subtopical relation to the preceding
+
 conversation context OR is the first turn in
 the conversation, marking the beginning of a new
 dialogue segment. </desc>
+
 </item>
+
 </valid_preceding_topical_relation>
 <valid_intents>
+
 <item>
-<name>{valid intent label name}</name>
+
+<name>{ valid intent label name}</name>
+
 <desc>{intent description}</desc>
+
 </item>
-For the "No PAR" baseline, we remove the turn
+
+</valid_intents>
+
+HH TASK ##
+
+You are given a dialogue between a user and an
+agent comprised of turns starting with T. For each
+turn you have to answer the following questions
+- Summarize the turn in <=3 sentences
+
+- Output the
+label
+relation>...</valid_preceding_topical_relation>
+list
+
+- Output the intent label from the <valid_-
+intents>...</valid_intents> list
+
+- Output label from the <valid_-
+domains>...</valid_domains> list
+
+preceding_topical_relation
+
+using the <valid_preceding_topical_-
+
+the domain
+
+- When preceding_topical_relation is YES, you must
+use the exact same intent and domain label for
+all turns in the segment.
+
+## OUTPUT FORMAT ##
+
+<T{turn number }>
+
+<summary>{turn summary in <=3 sentences}</summary>
+
+<preceding_topical_relation>{valid preceding
+
+topical relation label}</preceding_topical_-
+relation>
+
+<intent>{valid intent label}</intent>
+<domain>{valid domain label}</domain>
+
+</T{turn number }>
+
+## INPUT ##
+
+{XML-structured dialogue}
+
+## OUTPUT ##
+
+For the “No PAR” baseline, we remove the turn
 summarization instruction and summary tag from
-the prompt. For the "Unstructured input" baseline,
+the prompt. For the “Unstructured input” baseline,
 we input the conversation as a list of plain-text
 turns numbered from T1 to T{t}. For the TBT-DST
 baseline, we remove all segmentation instructions
 and labels from the prompt, and simply have the
 model output a valid intent and domain per turn.
+
 For the DialSeg711 dataset, we remove all in-
 structions and values related to intent and domain,
 and have the model output turn-level summaries
 and segment labels only.
-MWOZ
-Below is the S3-DST prompt for the
+
+MWOZ Below is the S3-DST prompt for the
 MWOZ dataset. Note that all descriptions for slots
 were generated by GPT4.
+
 <slots>
+
 <item>
+
 <name>taxi-leave at</name>
+
 <description>the time when the user wants to get
 the taxi</description>
+
 </item>
+
 <item>
-</valid_intents>
-## TASK ##
-You are given a dialogue between a user and an
-agent comprised of turns starting with T. For each
-turn you have to answer the following questions.
-- Summarize the turn in <=3 sentences
-Output
-the
-preceding_topical_relation
-label using the <valid_preceding_topical_-
-relation>...</valid_preceding_topical_relation>
-list
-Output the intent label from the <valid_-
-intents>...</valid_intents> list
-Output the domain label from the <valid_-
-domains>...</valid_domains> list
-- When preceding_topical_relation is YES, you must
-use the exact same intent and domain label for
-all turns in the segment.
-## OUTPUT FORMAT ##
-<T{turn number}>
-<summary>{turn summary in <=3 sentences}</summary>
+
 <name>{domain}-{intent}</name>
 <description{description of slot}</description>
 <valid_values>{valid categorical values for slot if applica-
 ble, otherwise this tag does not appear}</valid_values>
 </item>
-...
+
 </slots>
-## TASK ##
+## TASK HH
 You are given a dialogue between a user and an
 agent comprised of turns starting with T. For each
 turn you have to answer the following questions.
-Output the user utterance verbatim.
+- Output the user utterance verbatim.
+
 - Based on that utterance, extract the relevant
 information about user preferences for relevant
 slots from <slots>...</slots> and represent
 them as a list of tags that follow the format
-['{SLOT}-{value}'], where value is the specific
+[’{SLOT}-{value}’],
+
 information for that SLOT.
+
+where value is the specific
+
 - Remove any duplicates or conflicting pairs from
+
+--- Page 12 ---
 the list. If the same SLOT appears more than
+
 once in the list, keep only the most recent or
 relevant value originated from a user utterance.
 - If the values for the same SLOT contradict each
 other, resolve the conflict by keeping the **most
-recent** user provided value. Output the final
+recent*x*x user provided value. Output the final
 list as the task result.
-Example output for ['{SLOT}-{value}'].
-For example, the output may look like
-['hotel-book day-monday', 'hotel-book number_-
-of people-3', 'hotel-book number_of_days-4',
-'hotel-name-wartworth',
-'hotel-parking-yes',
-'hotel-area-east',
-'hotel-stars-4',
-'hotel-internet-yes', 'train-book number_of_-
-people-1', 'train-destination-bishops stortford',
-'train-day-friday', 'train-arrive_by_time-19:45',
-'train-departure-cambridge']
-Make sure selected slots are only from
-predefined <slots>...</slots> list. If <valid_-
+
+- Example output for [’ {SLOT}-{value}’].
+look like
+
+*hotel-book number_-
+
+For example, the output may
+[’hotel-book day-monday’ ,
+*hotel-book
+
+’hotel-name-wartworth’ ,
+
+of_people-3’ , number_of_days-4’ ,
+’hotel-area-east’,
+*hotel-parking-yes’, *hotel-stars-4’,
+
+’hotel-internet-yes’ , ’train-book number_of_-
+
+people-1’, ’train-destination-bishops stortford’,
+’train-day-friday’, ’train-arrive_by_time-19:45’,
+’train-departure-cambridge’ ]
+- Make
+
+predefined <slots>...</slots> list.
+
+sure selected slots are only from
+
+If <valid_-
 values>...</valid_values> are mentioned for the
 slot, you must use one of the valid values for
+
 that slot.
+
 - Use dontcare values only if user explicitly
 mentions it.
-Now for **every turn**, answer the following
+
+Now for **every turn*x*, answer the following
 questions:
-<T{turn number}>
+
+<T{turn number }>
+
 <agent_context> {verbatim last agent utterance}
 </agent_context>
+
 <user_utterance> {verbatim user utterance of the
+
 turn} </user_utterance>
-)
-/*
-## DESCRIPTION OF SELECTED COLUMN-VALUE PAIRS:
-preceding_topical_relation-NO: The current turn
-has **absolutely no** topical/subtopical relation
-to the preceding conversation context OR is the
-first turn in the conversation, marking the
-beginning of a new dialogue segment.
-- preceding_topical_relation-YES: The current turn
-has **some or any** topical/subtopical relation
-to the preceding conversation context.
-intent-INFORMATION SEEKING: The user wants to
-find factual information or answers to specific
-questions.
-{remaining intents and descriptions here}
-*/
-## TASK ##
-Using valid SQLite, answer the following
-multi-turn conversational questions for the table
-provided above. Use the following steps:
-- For each user-agent turn starting with T, output
-the answer SQL query.
-- When preceding_topical_relation is YES, you must
-use the exact same intent and domain label for
-all turns in the segment.
-Output your answer as a list, with one SQL query
-per turn starting with T.
-## OUTPUT FORMAT ##
-T{turn number}. SELECT * from states WHERE
-preceding_topical_relation = {your answer} AND
-intent = {your_answer} AND domain = {your answer};
-## INPUT ##
-<updated_slot_value>
-['{SLOT}-{value}']
-<slots>...</slots>
-values>...</valid_values>
-updated
-taking
-list
-of
-slots
-and
-using
-for
-from
-<valid_-
-appropriate
-{input dialogue}
-## OUTPUT ##
-slots </updated_slot_value> </T{turn number}>
-##INPUT##
+
+<updated_slot_value> updated list of
+[’ {SLOT}-{value}’] taking slots from
+<slots>...</slots> and using <valid_-
+values>. ..</valid_values> for appropriate
+
+slots </updated_slot_value> </T{turn number }>
+H#HINPUTHH
+
 {XML-structured dialogue}
-##OUTPUT##
+
+#HOUTPUTHH
+
 A.2 IC-DST prompt
+
 Below is the IC-DST prompt adapted to the Bing
 Chat dataset. Note that for the DialSeg711 dataset,
 we simply remove the domain and intent columns
 and instructions.
+
 CREATE TABLE states(
-domain text CHECK (domain IN ({valid domain names)),
+
+domain text CHECK (domain IN ({valid domain names)) ,
+
 preceding_topical_relation text CHECK (preceding_-
 topical_relation IN (YES, NO)),
+
 intent text CHECK (intent IN ({valid intent names)),
-B Annotation Details
-B.1 Labels provided to annotators
+
+)
+
+/*
+
+## DESCRIPTION OF SELECTED COLUMN-VALUE PAIRS:
+
+- preceding_topical_relation-NO: The current turn
+has xxabsolutely nox* topical/subtopical relation
+to the preceding conversation context OR is the
+first turn in the conversation, marking the
+beginning of a new dialogue segment.
+
+- preceding_topical_relation-YES: The current turn
+has x*some or anyx* topical/subtopical relation
+to the preceding conversation context.
+
+- intent-INFORMATION SEEKING: The user wants to
+find factual information or answers to specific
+questions.
+
+{remaining intents and descriptions here}
+
+*/
+## TASK HH
+Using valid SQLite, answer the following
+
+multi-turn conversational questions for the table
+provided above. Use the following steps:
+
+- For each user-agent turn starting with T, output
+the answer SQL query.
+
+- When preceding_topical_relation is YES, you must
+use the exact same intent and domain label for
+all turns in the segment.
+
+- Output your answer as a list, with one SQL query
+per turn starting with T.
+
+## OUTPUT FORMAT ##
+
+T{turn SELECT *
+preceding_topical_relation =
+
+from states WHERE
+{your answer} AND
+
+number}.
+
+intent = {your_answer} AND domain = {your answer};
+## INPUT ##
+
+{input dialogue}
+
+## OUTPUT ##
+
+B_ Annotation Details
+
+B.1_ Labels provided to annotators
+
 Below, we provide the labels and descriptions, if
 available, that were given to the Bing Chat dataset
 annotators. For intent and domain, we developed
@@ -1229,98 +1429,135 @@ GPT4 to summarize a sample of conversation logs,
 extract the key themes, and compare these themes
 to identify the main differences among different
 types of intents and domains.
+
 IsSegmentBoundary
-• NO: The current turn has no syntactic, seman-
+
+¢ NO: The current turn has no syntactic, seman-
 tic, or topical relation to the preceding con-
+
+--- Page 13 ---
 versation context OR is the first turn in the
 conversation.
-• YES: The current turn has any syntactic, se-
+
+¢ YES: The current turn has any syntactic, se-
 mantic, or topical relation to the preceding
 conversation context.
+
 SegmentIntent
-• INFORMATION SEEKING: The user wants
+
+INFORMATION SEEKING: The user wants
 to find factual information or answers to spe-
 cific questions.
-• ANALYSIS: The user asks analytical or con-
+
+ANALYSIS: The user asks analytical or con-
 ceptual questions about a complex topic or
-problem. The user's questions require some
+problem. The user’s questions require some
 degree of reasoning, interpretation, argumen-
 tation, comparison, and/or data processing.
-• CREATION: The user asks the agent to either
+
+CREATION: The user asks the agent to either
 generate original content or translate existing
 content into new content based on specified
 criteria or constraints.
-• OPEN-ENDED DISCOVERY: The user
+
+OPEN-ENDED DISCOVERY: The user
 wants to casually chat or play with the agent
 out of curiosity, boredom, or humor, OR the
-user's intent is so unclear/underspecified that
-it's impossible to categorize in any of the other
+user’s intent is so unclear/underspecified that
+it’s impossible to categorize in any of the other
 intent classes. The user mainly treats the agent
 as a conversation or chitchat partner, and none
 of the other intent categories can be assigned.
+
 SegmentDomain
-• AI MACHINE LEARNING AND DATA SCI-
+
+« AI MACHINE LEARNING AND DATA SCI-
 ENCE
-• ASTROLOGY
-• BIOLOGY AND LIFE SCIENCE
-• BUSINESS AND MARKETING
-• CAREER AND JOB APPLICATION
-• CLOTHING AND FASHION
-• COOKING FOOD AND DRINKS
-• CRAFTS
-•
+
+ASTROLOGY
+
+BIOLOGY AND LIFE SCIENCE
+BUSINESS AND MARKETING
+CAREER AND JOB APPLICATION
+CLOTHING AND FASHION
+COOKING FOOD AND DRINKS
+CRAFTS
+
 CULTURE AND HISTORY
-• CYBERSECURITY
-• DATING FRIENDSHIPS AND RELATION-
+CYBERSECURITY
+
+DATING FRIENDSHIPS AND RELATION-
 SHIPS
-⚫ DESIGN
-• EDUCATION
-• ENTERTAINMENT
-•
+
+DESIGN
+EDUCATION
+ENTERTAINMENT
+
 ENVIRONMENT AGRICULTURE AND
 ENERGY
-• FAMILY PARENTING AND WEDDINGS
-• FINANCE AND ECONOMICS
-• GAMES
-• GEOGRAPHY AND GEOLOGY
-•
+
+FAMILY PARENTING AND WEDDINGS
+FINANCE AND ECONOMICS
+
+GAMES
+
+GEOGRAPHY AND GEOLOGY
 HEALTH AND MEDICINE
-• HOUSING AND HOMES
-• HUMOR AND SARCASM
-• LANGUAGE
-• LAW AND POLITICS
-• LITERATURE AND POETRY
-• MANUFACTURING AND MATERIALS
-•
+
+HOUSING AND HOMES
+
+HUMOR AND SARCASM
+
+LANGUAGE
+
+LAW AND POLITICS
+
+LITERATURE AND POETRY
+MANUFACTURING AND MATERIALS
 MATH LOGIC AND STATISTICS
-• MUSIC AND AUDIO
-• NEWS
-•
+MUSIC AND AUDIO
+
+NEWS
+
 PETS AND ANIMALS
-⚫ PHILOSOPHY
-• PHYSICS CHEMISTRY AND ASTRON-
+
+PHILOSOPHY
+
+PHYSICS CHEMISTRY AND ASTRON-
 OMY
-• PRODUCTIVITY
-• PSYCHOLOGY AND EMOTIONS
-•
+
+PRODUCTIVITY
+
+PSYCHOLOGY AND EMOTIONS
 RELIGION AND MYTHOLOGY
-• SHIPPING AND DELIVERY
-• SHOPPING AND GIFTS
-• SMALL TALK
-• SOCIAL MEDIA
-• SOFTWARE AND WEB DEVELOPMENT
-• SPORTS AND FITNESS
-• TAXATION
-• TECHNOLOGY
-• TIME AND DATES
-• TRANSPORTATION AUTOMOTIVE AND
+SHIPPING AND DELIVERY
+SHOPPING AND GIFTS
+
+SMALL TALK
+
+SOCIAL MEDIA
+
+SOFTWARE AND WEB DEVELOPMENT
+SPORTS AND FITNESS
+TAXATION
+
+TECHNOLOGY
+
+TIME AND DATES
+
+TRANSPORTATION AUTOMOTIVE AND
 AEROSPACE
-• TRAVEL
-• VISUAL ARTS AND PHOTOGRAPHY
-• WEATHER
-• WRITING JOURNALISM AND PUBLISH-
+
+TRAVEL
+VISUAL ARTS AND PHOTOGRAPHY
+WEATHER
+
+WRITING JOURNALISM AND PUBLISH-
 ING
-B.2 Domain labeling procedure
+
+--- Page 14 ---
+B.2. Domain labeling procedure
+
 Due to the large number of domain values and the
 potential for high disagreement and cognitive over-
 load, we did not ask annotators to choose from the
@@ -1328,16 +1565,17 @@ full list of domains per turn. Rather, we provided a
 dropdown list of five options per turn. One option
 was manually selected by the authors as being cor-
 rect or near-correct. Two options were chosen at
-random using Python. One option was “OTHER,"
+random using Python. One option was “OTHER,”
 in which case the annotator was required to choose
 the correct domain from the full list of 49 domains
 and explain their choice.
-Finally, the last option was a “hard negative" cho-
+
+Finally, the last option was a “hard negative” cho-
 sen using the following procedure. First, we man-
 ually grouped our domains into eight high-level
 clusters: STEM, arts, social sciences, health, com-
 merce, professional, personal, and leisure. Then,
-given the aforementioned “ground-truth” domain
+given the aforementioned “‘ground-truth” domain
 chosen by the authors, we randomly sampled an-
 other domain from the same high-level cluster as
 the ground-truth label. For example, if the ground-
@@ -1345,3 +1583,4 @@ truth domain was chosen to be “BIOLOGY AND
 LIFE SCIENCE”, we sampled another domain
 from the STEM cluster as our final domain can-
 didate.
+

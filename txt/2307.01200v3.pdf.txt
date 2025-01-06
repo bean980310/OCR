@@ -1,15 +1,20 @@
+--- Page 1 ---
 arXiv:2307.01200v3 [cs.CV] 25 Dec 2023
-4
+
 ProxyCap: Real-time Monocular Full-body Capture in World Space
-1
 via Human-Centric Proxy-to-Motion Learning
-Yuxiang Zhang¹, Hongwen Zhang, Liangxiao Hu³, Jiajun Zhang, Hongwei Yi³,
-Shengping Zhang³, Yebin Liu¹
-Tsinghua University 2 Beijing Normal University 3 Harbin Institute of Technology
-Beijing University of Posts and Telecommunications 5 Max Planck Institute for Intelligent Systems
+
+Yuxiang Zhang!, Hongwen Zhang”, Liangxiao Hu’, Jiajun Zhang*, Hongwei Yi°,
+Shengping Zhang’, Yebin Liu?
+! Tsinghua University 2 Beijing Normal University ? Harbin Institute of Technology
+4 Beijing University of Posts and Telecommunications ° Max Planck Institute for Intelligent Systems
+
 Figure 1. The proposed method, ProxyCap, is a real-time monocular full-body capture solution to produce accurate human motions with
+
 plausible foot-ground contact in world space.
+
 Abstract
+
 Learning-based approaches to monocular motion cap-
 ture have recently shown promising results by learning to
 regress in a data-driven manner. However, due to the chal-
@@ -33,9 +38,12 @@ proxy observations. With the proposed learning-based so-
 lution, we demonstrate the first real-time monocular full-
 body capture system with plausible foot-ground contact in
 world space even using hand-held moving cameras. Our
-project page is https://zhangyux15.github.io/
-ProxyCapv2.
+Project page is https: //zhangyux15.github.io/
+
+ProxyCapV2.
+
 1. Introduction
+
 Motion capture from monocular videos is an essential tech-
 nology for various applications such as gaming, VR/AR,
 sports analysis, etc. One ultimate goal is to achieve real-
@@ -57,7 +65,8 @@ these requirements. On the one hand, datasets with sequen-
 tial ground truth 3D pose annotations [11, 13, 30, 51] are
 mostly captured by marker-based or multi-view systems,
 which makes it hard to scale up to a satisfactory level of
-1
+
+--- Page 2 ---
 diversity in human appearances and backgrounds. On the
 other hand, numerous in-the-wild datasets [1, 23] excel in
 the richness of human and scenario diversity but they lack
@@ -67,9 +76,10 @@ tried to create synthetic data [2, 3, 38] by rendering human
 avatars with controllable cameras, but it remains difficult to
 bridge domain gaps between the real-world images and the
 rendered ones, and is too expensive to scale up.
+
 In this paper, we follow the spirit of creating synthetic
 data, but turn to render 2D proxy representations instead of
-person images. By using proxy representations (i.e., silhou-
+person images. By using proxy representations (i.¢., silhou-
 ettes [39, 60], segmentations [16, 16, 37, 47], IUV [62, 71]
 and 2D skeletons [21, 28, 31, 32, 39, 52, 54, 58]), the
 whole motion capture pipeline can be divided into two
@@ -85,6 +95,7 @@ motion. Meanwhile, we combine random virtual camera
 trajectories upon the existing large-scale motion sequence
 database, i.e., AMASS [29], to synthesize nearly infinite
 data for learning proxy-to-motion lifting.
+
 Though the proposed proxy dataset can be generated at
 large scales, there remain two challenges for regression-
 based networks to learn physically plausible motions from
@@ -105,12 +116,14 @@ due to expensive computational costs. Besides, these previ-
 ous solutions learn human motion in a camera-centric per-
 spective like [17], which is actually ambiguous for the re-
 gression network.
+
 In this paper, we would point out that one of the main
 challenges arises from the camera-centric settings in pre-
 vious solutions. In such a setting, the same motion se-
 quence captured under different cameras will be represented
 as multiple human motion trajectories, making it difficult
 for the network to understand the inherent motion prior. In
+
 contrast, we propose to learn human-centric motions to en-
 sure consistent human motion outputs under different cam-
 era trajectories in synthetic data. Specifically, our network
@@ -124,6 +137,7 @@ tories upon the same motion sequence to learn the human
 motion consistency. In this way, our network can disentan-
 gle the human poses from the moving camera more easily
 via the strong motion prior without SfM.
+
 On top of human-centric motion regression, we further
 enhance the physical plausibility by introducing a contact-
 aware neural motion descent module. Specifically, our net-
@@ -136,21 +150,27 @@ and step instead of explicit gradient back-propagation. We
 demonstrate that our method, termed ProxyCap, is more
 robust and significantly faster to support real-time applica-
 tions. To sum up, our contributions can be listed as follows:
-• To tackle the data scarcity issue, we adopt 2D skeleton se-
+* To tackle the data scarcity issue, we adopt 2D skeleton se-
+
 quences as proxy representations and generate proxy data
 in world space with random virtual camera trajectories.
-• We design a network to learn motions from a human-
+
+* We design a network to learn motions from a human-
 centric perceptive, which enables our regressor to under-
 stand the consistency of human motions under different
 camera trajectories.
-• We further propose a contact-aware neural descent mod-
+
+¢ We further propose a contact-aware neural descent mod-
 ule for more accurate and physically plausible predic-
 tions. Our network can be aware of foot-ground contact
 and motion misalignment with the proxy observations.
-• We demonstrate a real-time full-body capture system with
+
+* We demonstrate a real-time full-body capture system with
 plausible body-ground contact in world space under mov-
 ing cameras.
+
 2. Related Work
+
 Monocular motion capture has been an active research field
 recently. We give a brief review of the works related to ours
 and refer readers to [57] for a more comprehensive survey.
@@ -163,12 +183,14 @@ datasets. To enrich the motion datasets, numerous ef-
 forts [14, 19, 34, 36, 49] have been dedicated to generating
 pseudo-ground truth labels with better alignment in the im-
 age space but do not consider the motion in world space.
-2
+
+--- Page 3 ---
 On the other hand, researchers have also resorted to using
 synthetic data [38, 53, 59] by rendering human models with
 controllable viewpoints and backgrounds. However, such
 synthetic datasets are either too expensive to create or have
 large domain gaps with real-world images.
+
 Proxy Representations for Human Mesh Recovery. Due
 to the lack of annotated data and the diversity of human ap-
 pearances and backgrounds, learning accurate 3D motions
@@ -176,7 +198,7 @@ from raw RGB images is challenging even for deep neural
 networks. To alleviate this issue, previous approaches have
 exploited the different proxy representations, including sil-
 houettes [39, 60], 2D/3D landmarks [21, 28, 31, 32, 39, 52,
-54,58], segmentation [16, 16, 37, 47], and IUV [62, 71].
+54, 58], segmentation [16, 16, 37, 47], and IUV [62, 71].
 These proxy representations can provide guidance for the
 neural network and hence make the learning process eas-
 ier. However, the proxy representations simplify the ob-
@@ -186,6 +208,7 @@ gle frame [52, 62, 71]. In this work, we alleviate this issue
 by adopting 2D skeleton sequences as proxy representations
 and propose to generate proxy data with accurate motions in
 world space.
+
 Full-body Motion Capture. Recent state-of-the-art ap-
 proaches [16, 70] have achieved promising results for the
 estimation of body-only [16, 70], hand-only [22], and
@@ -203,7 +226,8 @@ tions to run at real-time while being accurate in world space.
 In this work, we achieve real-time full-body capture with
 plausible foot-ground contact by introducing new data gen-
 eration strategies and novel network architectures.
-Neural Decent for Motion Capture.
+
+Neural Decent for Motion Capture. Traditional
 optimization-based approaches [4] typically fit 3D paramet-
 ric models to the 2D evidence but suffer from initialization
 sensitivity and the failure to handle challenging poses. To
@@ -214,12 +238,12 @@ a learning-to-learn approach based on recurrent networks
 to regress the updates of the model parameters. Song et
 al. [52] propose the learned gradient descent to refine the
 poses of the predicted body model. Similar refinement
-strategies are also exploited in PyMAF [70] and LVD [6]
+strategies are also exploited in PyYMAF [70] and LVD [6]
 by leveraging image features as inputs. In our work, we
 propose a contact-aware neural decent module and exploit
-Traditional
-the
-usage for more effective motion updates.
+
+the usage for more effective motion updates.
+
 Plausible Motion Capture in World Space. Though
 existing monocular motion capture methods can produce
 well-aligned results, they may still suffer from artifacts
@@ -250,13 +274,16 @@ time or produce physically plausible in world space. In
 our work, we achieve real-time capture with plausible foot-
 ground contact in world space by designing novel networks
 to learn human-centric motion.
+
 3. Proxy Data Generation
+
 To tackle the data issue, we synthesize sequential proxy-to-
 motion data based on 2D skeletons and their corresponding
 3D rotational motions in world space. In the following, we
 describe the synthesis and integration of different types of
 labels in our proxy data, including body motions, hand ges-
 tures, and contact labels.
+
 Body proxy data. We adopt the motion sequences from the
 AMASS dataset [29] to generate proxy-to-motion pairs for
 the body part. The AMASS dataset is a large-scale body
@@ -264,6 +291,7 @@ motion sequence dataset that comprises 3,772 minutes of
 motion sequence data, featuring diverse and complex body
 poses. We downsample the motion data to 60 frames per
 second, resulting in 9407K frames.
+
 Integration with hand gestures. Since the hand poses in
 the AMASS dataset are predominantly static, we augment
 the proxy data with hand poses from the InterHand [33]
@@ -271,93 +299,121 @@ dataset, which contains 1361K frames of gesture data cap-
 tured at 30 frames per second. We employ Spherical Linear
 Interpolation (Slerp) to upsample the hand pose data to 40,
 50, and 60 fps and randomly integrate them with the body
-3
-2D Pose Estimator
+
+--- Page 4 ---
+Body
+Decoder
+
 Human-Centric Proxy-to-Motion Recovery
-Fbody
-Bº,0w, tw
-RW, TW
+
 Initial Motion
-Initial Camera
-Pose RH, TH
-Body
-Decoder
-Human
-Space
-Coordinate
+B09, th
+
+»}| {nitial Camera
+Pose R}y, TH
+
+B°, Ow, ty
+—% RY, TO,
+
+Coordinate | ‘5 thoes
+space
 Transform
-World
-Space
-Body
-Encoder
-F'
-body
-Cross
-Attention
-Hand
-Encoder
-Fhand
-Xt-1
-Scontact
-Contact
-Indicator ind
-|
-RW, TW
-Projection
-ind, XI-1
-Fhand
-Contact
-Predictor
-Ground
-Constrain
-SMPL
-I
-Sproj
-e
-Scontact
-Fbody, Fhand
-9
-Cross Attention
-Bi+1
-Finger
-Gesture g
-Αβ', Δθμ. Δεμ
-AR, AT
-Human 4
-Space
-| Coordinate Transform
-Hand
-Decoder
-Αβ', Αθήν. Δεν
-ARI, AT
-World
-Space
-N=3C
-Update
-Neural Motion Descent Loop
-Figure 2. Illustration of the proposed method ProxyCap. Our method takes the estimated 2D skeletons from a sliding window as inputs
+
+pte
+
+Figure 2. Illustration of the proposed method ProxyCap. Our method takes the es
+
+=
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+=
+
+Moin
+
+s aay
+
+mis] -
+
+Hs I y pcctcccccc
+
+&
+
+HS Attention® Indicator ind) | Ground =
+
+=a = rojection Cl 4
+
+BH 8 P| tact I ‘onstrain
+
+mis) Me redictor ; Vv
+
+s| A A 1 | Sproy (Scontace } [Fhody»Fhana WP (B',0hy th, Rh, Th
+s ! 8 is]
+
+| = 4 1 Cross Attention
+
+s \
+
+s o ly o{ Finger \ ci =
+
+4 \_Gesture gay 1 Tah me art eee
+
+5 « i, AB',A0y, Ath | | ARW ATH | space f=
+
+= \ a” | Coordinate Transform q ie
+s ¥ 1 7 n=3C
+S| y Decoder Ap! a6i,, ati i ati, | World ’
+
+: B j p,A0ly, Athy] ( ARWy,ATiy_} ‘Space > ras
+
+( Neural Motion Descent Loop
+
+imated 2D skeletons from a sliding window as inputs
+
 and estimates the relative 3D motions in the human coordinate space. These local movements are accumulated frame by frame to recover
 the global 3D motions. For more accurate and physically plausible results, a contact-aware neural motion descent module is proposed to
+
 refine the initial motion predictions.
+
 poses in the AMASS motion sequences.
 Integration with contact labels. We calculate the continu-
 ous contact indicators ind for 3D skeletons as follows:
-(Umax - Vi). Sigmoid(
-indi Sigmoid(-
-=
-kv
-Zmax
-Zi
-(1)
-where v¿ and z¿ denote the velocity and the height to the
-xz-plane of the given joint. Vmax and Zmax is set to 0.2m/s
-and 0.08m, and k₁ and k₂ is set to 0.04 and 0.008.
+
+ind; = Sigmoid( #2 —") . Sigmoid( M22 —") (1)
+ky kz
+where v; and z; denote the velocity and the height to the
+xz-plane of the given joint. Umax and Zmaz is set to 0.2m/s
+and 0.08m, and k,, and k, is set to 0.04 and 0.008.
 Camera setting. For each 3D motion sequence, we gen-
 erate 2D proxy data under different virtual camera trajecto-
 ries (four cameras in practice). Such proxy data enhances
 the learning of the inherent relationship between 2D proxy
 and 3D motions and the consistency across different camera
 viewpoints.
+
 Specifically, we uniformly sample the field of view
 (FOV) from 30° to 90° for the intrinsic parameters of cam-
 eras. When setting the extrinsic parameters for camera tra-
@@ -367,36 +423,38 @@ ing from 0.5 meters to 2 meters to the ground. Finally, we
 generate pseudo 2D skeleton annotations by projecting 3D
 joints into the 2D pixel-plane using these virtual cameras.
 Moreover, to simulate the jitter of 2D detectors, we add
-Gaussian noise AX ~ N(0, 0.01) to 3D joints before pro-
+Gaussian noise AX ~ N(0,0.01) to 3D joints before pro-
 jections.
+
 4. Method
+
 As illustrated in Fig. 2, we first detect the 2D skeletons from
 images and input them into our proxy-to-motion network to
+
 recover 3D local motions in human space. These relative lo-
 cal motions are transformed into a world coordinate system
 and accumulated along the sliding window. Additionally,
 we leverage a neural descent module to refine the accuracy
 and physical plausibility. In this section, we start with intro-
 ducing the human-centric setting of our motion prediction.
+
 4.1. Human-Centric Motion Modeling
+
 For more accurate camera modeling, we adopt the classical
 pinhole camera model instead of using the simplified or-
 thogonal or weak perspective projection [9, 15, 19, 41, 70,
-77]. As shown in Fig. 3, we transform the global human
+77). As shown in Fig. 3, we transform the global human
 motion and the camera trajectories into local human space
-from two adjacent frames, where we adopt {ẞ Є R¹º,0 €
-R22×3, tЄ R³t to denote the parameters of shape, pose,
-and translation at frame t, and {R = R³×³‚T Є R³}+ to
+from two adjacent frames, where we adopt {8 € R1°,0 €
+R?2x3 ¢ € R3}, to denote the parameters of shape, pose,
+and translation at frame ¢, and {R € R3*3,T € R3}, to
 denote the camera extrinsic parameters. Given the pose and
 shape parameters, the joints and vertices can be obtained
-within the SMPL Layer: {J,V}
-{J,V} 
-= X (B,t,0,g).
-X (B,t, 0, g). 
-In the
+within the SMPL Layer: {J,V} = ¥(6,t,6,g). In the
 following, we use the subscript H and W to distinguish
 between the human coordinate system and the world coor-
 dinate system.
+
 During the learning of human-centric motions, we adopt
 a similar setting used in previous works on temporal human
 motion priors [24, 45, 67]. Specifically, each motion se-
@@ -405,93 +463,97 @@ move the initial translation in x-z plane and rotate itself with
 the root orientation heading to the z-axis direction. With
 this setting, our network can learn the relative movements of
 humans, which are independent of observation viewpoints.
-4
-{RH, TH}t
-{0u,thời
+
+--- Page 5 ---
+Yu
+
 yw
-Frame t
-xw
-ZH
-World Space
-Zw
-ΧΗ
-Ун
-{0u,th}t_1
-Frame t-1
-Human Space
-xz Plane
+
+/ _ Framet-1
+xw —~ Huinan Space
+World Space Zw ear xz Plane
+
+XH
+
 Figure 3. Illustration of decoupling the world-space motion into
 the human-centric coordinates and relative camera poses.
+
 The detailed implementation of the human-to-world coordi-
 nate transformation and the global motion accumulation in
 world space can be found in our supplementary material.
+
 4.2. Sequential Full-body Motion Initialization
+
 As shown in Fig. 2, at the first stage of our method, the
 skeleton sequences are processed by temporal encoders and
 then fed into decoders for the predictions of the initial mo-
-tion {3º, 6º, tº}, initial camera {RT}, the contact in-
+tion {8°, 6°, t°}, initial camera {R},, TP, }, the contact in-
 dicator ind, and the hand poses g. Following previous
 baseline [41], we build these encoders upon temporal di-
 lated convolution networks.
+
 For better body-hand compatibility, we exploit the cross-
 attention mechanism to facilitate the motion context sharing
 during the body and hand recovery. Specifically, we first ob-
-tain the initial body features Fbody and hand features Fhand
+tain the initial body features Fj,,.a, and hand features Fhand
 from the temporal encoders and map them as Query, Key,
-Value matrices in forms of Qbody/hand, Kbody/hand, and
-Vbody/hand, respectively. Then we update the body features
-Fbody and hand features Fa as follows:
-hand
-Fbody = Vbody + Softmax(-
-Qhand Kody
-body 
-Vbody,
-√dk
-Qbody Kand
-√dk
-Fhand = Vhand + Softmax(-
-hand)Vhand.
-The updated features {Fbody, Fhand} can be further uti-
+Value matrices in forms of Qbody/hand> Kbody/hand, and
+Voody/hand, tespectively. Then we update the body features
+Fyoay and hand features F7,,,,q a8 follows:
+
++
+QhanaKyoay
+
+Feoay Voody t Softmax( Voody:
+Vdk
+0 Kr (2)
+Frand = Vnand + Softmax( Ie Vana:
+
+The updated features {F}.4,; Fyana} can be further uti-
 lized in the contact indicators ind and serve as the temporal
 context in the Neural Descent module, as will be described
 shortly. In our experiments, we demonstrate that the feature
 fusion in Eq. 2 can make two tasks benefit each other to pro-
+
 duce more comparable wrist poses in the full-body model.
+
 4.3. Contact-aware Neural Motion Descent
+
 At the second stage of our method, the initial motion pre-
 dictions will be refined to be more accurate and physically
 plausible with the proposed contact-aware neural motion
 descent module. As shown in Fig. 2, this module takes the
+
 2D misalignment and body-ground contact status as input
 and updates motion parameters during iterations.
+
 Misalignment and Contact Calculation. At the iteration
-of i Є {0, 1, ..., N}, we calculate the 2D misalignment sta-
+of i € {0,1,..., N}, we calculate the 2D misalignment sta-
 tus by projecting the 3D joints on the image plane and calcu-
 late the differences between the re-projected 2D joints and
-the proxy observations: Sproj II(J¿, {K, R¼µ‚Â¼}) −
-Ĵ2D. Here, II(·) denotes the perspective projection func-
-tion, and K denotes the intrinsic parameter.
-=
+the proxy observations: S,,; = I(Ji,{K, Riz,Ti,}) -—
+Jop. Here, II(-) denotes the perspective projection func-
+tion, and ix denotes the intrinsic parameter.
+
 For the contact status, we calculate the velocity of 3D
-joints vin xz-plane and the distance to the ground as dry.
+joints v!,, in xz-plane and the distance to the ground as di.
 Moreover, we also leverage the temporal features from in-
 puts 2D skeletons to predict the contact labels ind, which
 will be used as an indicator to mask the body-ground con-
 tact. Then, the contact status of the current predictions can
-be obtained as Scontact ind(vz, d), where ● denotes
+be obtained as Scontact = ind (vi, d‘), where © denotes
 the Hadamard product operation.
-=
+
 Motion Update. After obtaining the contact and mis-
 alignment status, we feed them into the neural motion de-
 scent module for motion updates. As shown in Fig. 4, the
 descent module takes the two groups of tensors as input: i)
 the state group includes the current SMPL parameters in the
-human coordinate system ẞ², t¹,0²¼, camera pose R, TH
-and the sequential motion context Fseq {Fbody, Fhand};
+human coordinate system 3°, t', , 04,, camera pose Rt, , Ti,
+and the sequential motion context Fseq = {Fyody> Fhanat:
 ii) the deviation group includes the current misalignment
-status Sproj and contact status Scontact.
-H,
--
+status Sp;o; and contact status Scontact-
+
 A straightforward solution would be using an MLP to
 process these two groups of tensors. However, the val-
 ues of these two groups exhibit significant differences. For
@@ -509,6 +571,7 @@ erwise, the refiner should output larger update values for
 motion adjustments. To leverage such a correlation prop-
 erty, we exploit a cross-attention module to build a more
 effective architecture.
+
 As shown in Fig. 4, two fully connected layers are
 leveraged to process the tensors of the state and deviation
 groups and produce the Query, Key, and Value for the cross-
@@ -516,86 +579,69 @@ attention module. In this way, our contact-aware neural mo-
 tion descent module can effectively learn the relationship
 between the state and deviation groups and hence produce
 more accurate motion updates. Moreover, the sequential
-motion context Fseq is also leveraged in our neural descent
-5
+motion context Fe, is also leveraged in our neural descent
+
+--- Page 6 ---
 Cross-attention for
 Neural Motion Descent
-Table 1. Quantitative comparison on EgoBody [74] and
-RICH [11]. The symbol † denotes the methods relying on SLAM.
-I
-|
+
 State Group
-Human Motion ẞi,
-FC Q
-Camera Pose R, TH
-Seq Feature Fbody, Fhand
-|
-I
+
+Human Motion B', 84, thy,
+
+Camera Pose Ry, Tt, J
+
 Deviation Group
-K
-2D Misalignment Sproj
-FC
-Contact Constraint Scontact
-V
-Soft
-max
-Methods
-EgoBody dataset
-W-MPJPE↓
-WA-MPJPE↓↓
-PA-MPJPE↓
-ACCEL↓
-† SLAHMR [63]
-141.1
-101.2
-79.13
-25.78
-† PACE [18]
-147.9
-101.0
-66.5
-6.7
-Δβί,
-GLAMR [67]
-416.1
-239.0
-114.3
-173.5
-Αθ
-Ours
-385.5
-131.3
-73.5
-49.6
+
 MLP
-Δεμ
-RICH dataset
-ARH
-ΔΤΗ
-+SLAHMR [63]
-571.6
-323.7
-52.5
-9.4
-+PACE [18]
-380.0
-197.2
-49.3
-8.8
-CN
-GLAMR [67]
-Ours
-653.7
-365.1
-79.9
-107.7
-629.8
-343.6
-56.0
-25.3
-Figure 4. Implementations of the neural descent module.
+
+Table 1. Quantitative comparison on EgoBody [74] and
+RICH [11]. The symbol + denotes the methods relying on SLAM.
+
+2D Misalignment Sproj )
+
+Contact Constraint Sma)
+
+i]
+1
+
+i]
+1
+
+I
+1
+
+i]
+1
+
+I
+I ~ 4
+1 Seq Feature Fiyoay, Fhand 4
+1
+
+i]
+a
+
+1
+1
+
+i]
+1
+
+I
+1
+
+i]
+1
+
+i]
+i
+
+Figure 4. Implementations of the neural descent mo
+
 module to mitigate the depth uncertainty and improve the
 motion predictions.
+
 Compared with previous work [45, 52, 68, 73], the pro-
 posed contact-aware neural motion descent module offers
 the advantage of freeing us from the heavy cost of ex-
@@ -605,38 +651,58 @@ pable of learning human motion priors with contact infor-
 mation from our synthetic dataset, which provides a more
 suitable descent direction and steps to escape the local min-
 ima and achieve faster convergence.
+
 4.4. Loss Function
+
 In our solution, the full-body motion recovery module and
 the contact-aware neural motion descent module are trained
 sequentially. Benefiting from the proxy-to-motion learn-
-ing, the ground-truth full-body pose 0, g, and human body
-shape ẞ can be obtained for supervision from our synthetic
+ing, the ground-truth full-body pose 6, g, and human body
+shape (3, can be obtained for supervision from our synthetic
 dataset. Overall, the objective function of motion recovery
 can be written as follows:
-Lrec = L3D + L 2D + Lo + LB + Lcam + £ consist+Lsmooth
+
+Lrec = L3p+Loap+LlotLle+Leam+Leonsist +Lsmooth
 (3)
-Specifically, 3D involves 3D MPJPE loss and 3D tra-
-jectory L1 loss while L2D is the projected 2D MPJPE loss.
-Le, LB, Leam represents L1 loss between the estimated hu-
+Specifically, £3p involves 3D MPJPE loss and 3D tra-
+jectory L1 loss while Ly p is the projected 2D MPJPE loss.
+Lo,£8,£cam represents L1 loss between the estimated hu-
 man pose, shape and camera pose to our synthetic ground
-truth. consist is a L1 loss to restrict the consistency of
-the local motion outputs OH, tH of the same 3D motion
+truth. Leonsist is a L1 loss to restrict the consistency of
+the local motion outputs 07;,tq of the same 3D motion
 sequence via different observations from virtual cameras.
 Lsmooth is adopted from [69] by penalizing the veloc-
 ity and acceleration between the estimation and the ground
 truth. For the neural descent module, the objective loss can
 be written as:
-Ldesc = Σk UN-k (Lrec + Lcontact)
--
-contact = indgt ○ (||Vxz||2 + ||dy||2)
-LindΣ Entropy (indgt, indest)
-(4)
-where k = 1, 2, ..., N is the iteration time and u is the decay
-ratio to emphasize the last iteration. We set K = 3, u = 0.8
-in practice. Lcontact involves the error of trajectory drifting,
-foot floating, or ground penetration. Lind refers to the loss
+
+Laese = ox, UN-¥(Lyee + Leontact)
+Leontact = Yo; ind® © (||vxz\|2 + ||dyll2) (4)
+Lina = >.; Entropy(ind%, ind®*')
+
+where k = 1, 2,..., N is the iteration time and w is the decay
+ratio to emphasize the last iteration. We set K = 3,u = 0.8
+in practice. Leontact involves the error of trajectory drifting,
+
+Methods W-MPIPE | _WA-MPJPE| _PA-MPJPE| ACCEL |
+EgoBody dataset
+
++ SLAHMR [63] 141.1 101.2 79.13 25.78
++ PACE [18] 147.9 101.0 66.5 67
+GLAMR [67] 416.1 239.0 114.3, 173.5
+Ours 385.5 1313 B35 49.6
+RICH dataset
+
+{SLAHMR [63] 571.6 323.7 52.5 94
+{PACE [18] 380.0 197.2 49.3 8.8
+GLAMR [67] 653.7 365.1 79.9 107.7
+Ours 629.8 343.6 56.0 25.3
+
+foot floating, or ground penetration. Linq refers to the loss
 between the predicted contact label to the ground truth.
+
 5. Experiments
+
 In this Section, we validate the efficacy of our method and
 demonstrate accurate human motion capture results with
 physically plausible foot-ground contact in world space.
@@ -649,6 +715,7 @@ the social interactions in 3D scenes. Dynamic Human3.6M
 is a benchmark proposed in [67] to simulate the moving
 cameras on Human3.6M [13] by randomly cropping with a
 small view window around the person.
+
 Metrics. In our experiments, we follow previous work [67]
 to report various metrics, primarily focusing on the evalua-
 tion of the world coordinate system. The WA-MPJPE met-
@@ -659,7 +726,9 @@ first frame of sequences. The PA-MPJPE metric reports the
 MPJPE error after applying the ground truth trajectories to
 each frame. The ACCEL metric is used to evaluate the joint
 acceleration.
+
 5.1. Comparison with the State of the Art
+
 We compare our approach with the state-of-the-art ap-
 proaches to human motion recovery under dynamic
 cameras, including GLAMR [67], SLAMHR [63] and
@@ -673,49 +742,70 @@ with GLAMR, as it also runs without SLAM. We also con-
 duct comparison experiments on the RICH and EgoBody
 datasets, as shown in Tab. 1. As shown in the table, our
 method achieves significant improvements over previous
-6
-(a
-(b
-(c)
-(d)
-(e)
-(f)
+
+--- Page 7 ---
 Figure 5. Results across different cases in the (a,g) 3DPW [61], (b) EHF [40], and (c) Human3.6M [13] datasets and (d,e,f) internet videos.
 We demonstrate that our method can recover the accurate and plausible human motions in moving cameras at a real-time performance.
 Specifically, (g) demonstrates the robustness and the temporal coherence of our method even under the occlusion inputs.
-7
+
+--- Page 8 ---
 solutions in all metrics.
+
 Visual comparisons with previous different solutions are
 also depicted in Fig. 6 and the video in our supplementary
 materials, where our method again shows superior results in
 terms of model-image alignment and foot-ground contact in
 world space.
-(a)
+
+Figure 6. Qualitative comparison with previous state-of-the-art
+methods: (a) PYMAF-X [72], (c) GLAMR [67], (b)(d) Ours.
+
+5.2. Ablation Studies
+
+We conduct ablation studies to validate the effectiveness of
+the proposed neural descent method on the Dynamic Hu-
+man3.6M dataset following the setup of [67]. As shown in
+Tab 2, the Neural Descent module can significantly reduce
+the motion errors in world space.
+
+Table 2. Ablation study of the Neural Descent module on the Dy-
+namic Huaman3.6M dataset.
+
+Neural Descent W-MPJPE| PA-MPJPE |
+w/o 644.8 48.4
+w/ 605.4 45.9
+
+We also report the metric of ground penetration [66]
+(GP) and foot floating (FF) in the Human3.6M [13] dataset.
+The GP is defined as the percentage of the frames that pen-
+etrate to the ground. The FF is defined as the percentage of
+
 frames with foot-ground distances far from the given thresh-
 old. We report the curves of GP and FF with respect to the
 distance to ground in Fig. 7 with a logarithmic scale, where
 we can conclude that the neural descent algorithm can sig-
 nificantly improve the ground contact plausibility.
-10%
-(b)
-1%
-0.1%
---- FF w/o desc
----GP w/o desc
----FF w/ desc
----GP w/ desc
-0.010
-0.015
-0.020
+
+10%4 ~~~ ST>-~
+
+1% y =. ---FF w/o desc
+a. --- GP w/o desc
+
+a --- FF w/ desc
+
+~~ ---GP w/ desc
+
+0.1%q
+
+0.010 0.015 0.020 0.025 0.030
 Distence to Ground/m
-0.025
-0.030
-(c)
-(d)
+
 Figure 7. The ablation study on the percentage of foot floating (FF)
 and ground penetration (GP). We vary the threshold from 1cm to
 3cm to calculate the corresponding FF and GP metrics.
+
 5.3. Runtime
+
 It is also worth noting that the proposed method has im-
 proved the speed by an order of magnitude compared to the
 previous methods. The speeds of different methods are re-
@@ -723,39 +813,14 @@ ported in Tab. 4. Our method can reach real-time perfor-
 mance at 30 FPS in a laptop with RTX4060, which is very
 promising to enable various applications related to virtual
 humans.
+
 Table 3. Runtime comparison with the state-of-the-art methods.
-Method
-FPS
-SLAMHR PACE GLAMR
-0.04
-2.1
-2.4
-Ours
-30
-Figure 6. Qualitative comparison with previous state-of-the-art
-methods: (a) PyMAF-X [72], (c) GLAMR [67], (b)(d) Ours.
-5.2. Ablation Studies
-We conduct ablation studies to validate the effectiveness of
-the proposed neural descent method on the Dynamic Hu-
-man3.6M dataset following the setup of [67]. As shown in
-Tab 2, the Neural Descent module can significantly reduce
-the motion errors in world space.
-Table 2. Ablation study of the Neural Descent module on the Dy-
-namic Huaman3.6M dataset.
-Neural Descent
-w/o
-w/
-W-MPJPE↓
-644.8
-605.4
-PA-MPJPE↓
-48.4
-45.9
-We also report the metric of ground penetration [66]
-(GP) and foot floating (FF) in the Human3.6M [13] dataset.
-The GP is defined as the percentage of the frames that pen-
-etrate to the ground. The FF is defined as the percentage of
+
+Method SLAMHR PACE GLAMR_ Ours
+FPS 0.04 2.1 24 30
+
 6. Conclusion
+
 In this paper, we present ProxyCap, a real-time monocular
 full-body motion capture approach with physically plausi-
 ble foot-ground contact in world space. We leverage a proxy
@@ -770,44 +835,49 @@ that our network can be aware of foot-ground contact and
 motion misalignment. Based on the proposed solution, we
 demonstrate a real-time monocular full-body capture sys-
 tem under moving cameras.
+
 Limitations. As our method recovers 3D motion from 2D
 joint observations, the depth ambiguity issue remains espe-
 cially when the person is captured in nearly static poses.
-8
+
+--- Page 9 ---
 (a) original dilated conv
+
 (b) partial dilated conv
+
 Figure 8. Illustration of human recovery. The left part (a) depicts the original dilated convolution backbone of [41], while the right part
 (b) illustrates our proposed partial dilated convolution architecture. Our approach selectively excludes corrupted data from input signals,
 allowing us to extract motion features more accurately and effectively. Specifically, detection failure (denoted as green mosaic squares)
 may occur during extremely fast motion or severe occlusion situations, while our architecture will cut off the connection from corrupted
+
 data to prevent disturbance transfer during network forward processing.
+
 Supplementary Material
+
 7. Implementation Details
 7.1. Human-to-World Coordinate Transformation
+
 We estimate the local human pose of each frame in our
 proxy-to-motion network, then we transform it into the
 global world space. In the first frame, the accumulated
-translation of human in x-z plane txz is set to zero. For
+translation of human in x-z plane t,, is set to zero. For
 the later human-space estimations, we firstly rotate the front
 axis of camera in human space to align the y-z plane by
-Rfront. Denote the target parameters of camera in world
-space as Rw, Tw and the predicted parameters in human
-space as RH, TH. We have Rw RH Rfront, Tw
--Rw (RFront (-R · TH) + txz). And the human
-.
-.
-=
-=
+Rfront- Denote the target parameters of camera in world
+space as Ry, Tw and the predicted parameters in human
+space as Ry,Ty. We have Rw = Ruy - Reront, Tw =
+—Rw + (Repont * (—Rip Ta) + tee). And the human
 orientation should also be rotate in the same time to main-
-tain relative stillness: Ow (root) = R Front OH (root). The
-world translation can be calculated by tw = R Front (t+
-Jroot) – Jroot + txz. Here Jroot is the root joint of SMPL
+tain relative stillness: Oy (root) = RF,on. 9 (root). The
+world translation can be calculated by ty = Ri ont “(ty +
+Jroot) — Jroot + tez- Here Jpooe is the root joint of SMPL
 model in T-pose to eliminate the error resulted from the
 root-misalignment with the original point of SMPL model.
 Finally, the accumulated translation of human in x-z plane
-txz is updated by t+1 = t/xz + R front tH.
+tee is updated by t45! = th. + Ri pont: tu.
+
 7.2. Partial Dilated Convolution
-.
+
 It should be noted that the hand area, being an extremity, is
 more prone to being affected by heavy motion blur and se-
 vere occlusions, resulting in missing detections. Simply set-
@@ -816,57 +886,68 @@ original convolution kernel is unable to distinguish between
 normal data and corrupted data, leading to a significant re-
 duction in performance as noise is propagated through the
 network layers.
+
 To overcome this challenge, we employ partial convo-
 lution [25] to enhance our 1D dilated convolution frame-
 work. As illustrated in Fig. 8, rather than indiscriminately
+
 processing the input signals as in the original convolution
 operator, we utilize a mask-weighted partial convolution to
 selectively exclude corrupted data from the inputs. This en-
 hances the robustness of hand recovery in scenarios involv-
 ing fast movement and heavy occlusion. Specifically, the la-
-tent code Xo is initially set as the concatenation of the (x, y)
-coordinates of the J joints for each frame ƒ = 1, 2, ..., L,
-while the mask Mo is initialized as a binary variable with
+tent code Xp is initially set as the concatenation of the (x, y)
+coordinates of the J joints for each frame f € 1,2,..., L,
+while the mask Mp is initialized as a binary variable with
 values of 0 or 1, corresponding to the detection confidence.
 Then we integrated the 2D partial convolution operation and
 mask update function from [25] into our 1D dilated convo-
 lution framework:
-[ Mk+1
-=
-I (sum(Mk) > 0)
-Xk+1 = Mk+1 (W} (Xk © Mk)
-size(Mk)
-sum(Mk)
-+
-bk
+
+Mr41 = I (sum(Mx) > 0)
+Xia = Meat (wr (X, © My) Seed + 7)
+
+sum(My
+
 (5)
 where W and b denotes the convolution filter weights and
-bias at layer k, and ○ denotes the element-wise multipli-
+bias at layer k, and © denotes the element-wise multipli-
 cation. Furthermore, in the training procedure, half of the
 sequential inputs are randomly masked to simulate detec-
 tion failures that may occur in a deployment environment.
+
 7.3. Training
+
 We train our network using the Adam optimizer with
-a learning rate of 1e-4 and a batch size of 1024 in
+a learning rate of le-4 and a batch size of 1024 in
 NVIDIA RTX 4090. We adopt a two-stage training scheme.
 Firstly, we train our proxy-to-motion initialization network
 (Sec. 4.2) for 50 epochs. Subsequently, we fix the weights
 of the motion recovery network and train the neural descent
 network (Sec. 4.3) for another 50 epochs.
+
 7.4. Proxy Dataset
+
 We conduct the training process on our synthetic proxy
 dataset. The 3D body rotational motions of the train-
 ing set are sampled from AMASS [29]: [ACCAD, BML-
 movi, BMLrub, CMU, CNRS, DFaust, EKUT, Eyes
 Japan Dataset, GRAB, HDM05, HumanEva, KIT, MoSh,
-9
+
+--- Page 10 ---
 PosePrior, SFU, SOMA, TCDHands, TotalCapture, WEIZ-
 MANN] and [SSM, Transitions] are for testing. Otherwise,
-for the generation of hand motions, we adopt the same
+
+for
+
+the generation of hand motions, we adopt the same
+
 dataset division of InterHand [33]. Then We animate the
 SMPL-X mesh and generate virtual cameras to obtain the
 pseudo 2D labels.
+
 8. Computational Complexity
+
 In this section, we compare the inference speed of our
 method. Our real-time monocular full-body capture sys-
 tem can be implemented on a single Laptop (NVIDIA RTX
@@ -874,333 +955,558 @@ tem can be implemented on a single Laptop (NVIDIA RTX
 leverage the off-the-shelf Mediapipe [26] and MMPose and
 re-implement it on the NVIDIA TensorRT platform. We re-
 port the inference time of each module in Table. 4.
+
 Table 4. Time costs of each module in our pipeline.
-Network
-Input
-Speed
-Body Crop Net
-Body Landmark Net
-224 x 224 x 3
+
+Network Input Speed
+
+Pose Initialization Net
+
+224 x 224x 3
+384 x 288 x 3
+2 x 256 x 256 x 3
+256 x 256 x 3
+81 x 67 x 2
+Neural Descent Net \
+
 2ms
-384 × 288 × 3
 5ms
-2 × 256 × 256 × 3
 1.5ms
-256 × 256 × 3
-81 × 67 × 2
 2ms
 3ms
 10ms
+
+Body Crop Net
+Body Landmark Net
 Hand Crop Net
 Hand Landmark Net
-Pose Initialization Net
-Neural Descent Net
+
 References
-[1] Mykhaylo Andriluka, Leonid Pishchulin, Peter Gehler, and
+
+1
+
+Mykhaylo Andriluka, Leonid Pishchulin, Peter Gehler, and
 Bernt Schiele. 2d human pose estimation: New benchmark
 and state of the art analysis. In CVPR, pages 3686-3693,
 2014. 2
-[2] Eduard Gabriel Bazavan, Andrei Zanfir, Mihai Zanfir,
+
+Eduard Gabriel Bazavan, Andrei Zanfir, Mihai Zanfir,
 William T Freeman, Rahul Sukthankar, and Cristian Smin-
 chisescu. Hspace: Synthetic parametric humans animated
 in complex environments. arXiv preprint arXiv:2112.12867,
 2021. 2
-[3] Michael J. Black, Priyanka Patel, Joachim Tesch, and Jin-
+
+Michael J. Black, Priyanka Patel, Joachim Tesch, and Jin-
 long Yang. BEDLAM: A synthetic dataset of bodies exhibit-
-ing detailed lifelike animated motion. In CVPR, pages 8726–
+ing detailed lifelike animated motion. In CVPR, pages 8726-
 8737, 2023. 2
-[4] Federica Bogo, Angjoo Kanazawa, Christoph Lassner, Peter
+
+Federica Bogo, Angjoo Kanazawa, Christoph Lassner, Peter
 Gehler, Javier Romero, and Michael J Black. Keep it SMPL:
 Automatic estimation of 3D human pose and shape from a
-single image. In ECCV, pages 561–578. Springer, 2016. 1, 3
-[5] Vasileios Choutas, Georgios Pavlakos, Timo Bolkart, Dim-
+single image. In ECCV, pages 561-578. Springer, 2016. 1, 3
+Vasileios Choutas, Georgios Pavlakos, Timo Bolkart, Dim-
 itrios Tzionas, and Michael J Black. Monocular expressive
 body regression through body-driven attention. In ECCV,
 pages 20-40. Springer, 2020. 3
-[6] Enric Corona, Gerard Pons-Moll, Guillem Alenyà, and
+
+Enric Corona, Gerard Pons-Moll, Guillem Alenya, and
 Francesc Moreno-Noguer. Learned vertex descent: A new
-direction for 3D human model fitting. In ECCV, pages 146–
+direction for 3D human model fitting. In ECCV, pages 146-
 165, 2022. 3
-[7] Yao Feng, Vasileios Choutas, Timo Bolkart, Dimitrios
+
+Yao Feng, Vasileios Choutas, Timo Bolkart, Dimitrios
 Tzionas, and Michael J Black. Collaborative regression of
-expressive bodies using moderation. In 13DV, pages 792-
+
+10
+
+[8
+
+[9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+expressive bodies using moderation. In /3DV, pages 792—
 804, 2021. 3
-[8] Yao Feng, Haiwen Feng, Michael J. Black, and Timo
+
+Yao Feng, Haiwen Feng, Michael J. Black, and Timo
 Bolkart. Learning an animatable detailed 3D face model
 from in-the-wild images. TOG, 40(4):88:1-88:13, 2021. 3
-[9] Kehong Gong, Bingbing Li, Jianfeng Zhang, Tao Wang, Jing
+Kehong Gong, Bingbing Li, Jianfeng Zhang, Tao Wang, Jing
 Huang, Michael Bi Mi, Jiashi Feng, and Xinchao Wang.
 Posetriplet: co-evolving 3d human pose estimation, imita-
 tion, and hallucination under self-supervision. In CVPR,
 pages 11017-11027, 2022. 4
-[10] Peng Guan, Alexander Weiss, Alexandru O Balan, and
+
+Peng Guan, Alexander Weiss, Alexandru O Balan, and
 Michael J Black. Estimating human shape and pose from
-a single image. In ICCV, pages 1381–1388. IEEE, 2009. 1
-[11] Chun-Hao P Huang, Hongwei Yi, Markus Höschle, Matvey
+a single image. In JCCV, pages 1381-1388. IEEE, 2009. 1
+Chun-Hao P Huang, Hongwei Yi, Markus Héschle, Matvey
 Safroshkin, Tsvetelina Alexiadis, Senya Polikovsky, Daniel
 Scharstein, and Michael J Black. Capturing and infer-
 ring dense full-body human-scene contact. In CVPR, pages
 13274-13285, 2022. 1, 6
-[12] Yinghao Huang, Federica Bogo, Christoph Lassner, Angjoo
+
+Yinghao Huang, Federica Bogo, Christoph Lassner, Angjoo
 Kanazawa, Peter V Gehler, Javier Romero, Ijaz Akhter, and
 Michael J Black. Towards accurate marker-less human shape
-and pose estimation over time. In 13DV, pages 421-430.
+In I3DV, pages 421-430.
+
+and pose estimation over time.
 IEEE, 2017. 1
-[13] Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian
+
+Catalin Ionescu, Dragos Papava, Vlad Olaru, and Cristian
 Sminchisescu. Human3.6M: Large scale datasets and predic-
 tive methods for 3D human sensing in natural environments.
-TPAMI, 36(7):1325-1339, 2014. 1, 2, 6, 7, 8
-[14] Hanbyul Joo, Natalia Neverova, and Andrea Vedaldi. Ex-
+TPAMI, 36(7):1325-1339, 2014. 1, 2, 6,7, 8
+
+Hanbyul Joo, Natalia Neverova, and Andrea Vedaldi. Ex-
 emplar fine-tuning for 3D human pose fitting towards in-
-the-wild 3D human pose estimation. In 13DV, pages 42–52,
+the-wild 3D human pose estimation. In J3DV, pages 42-52,
 2021. 2
-[15] Angjoo Kanazawa, Michael J Black, David W Jacobs, and
+
+Angjoo Kanazawa, Michael J Black, David W Jacobs, and
 Jitendra Malik. End-to-end recovery of human shape and
-pose. In CVPR, pages 7122-7131, 2018. 1, 4
-[16] Muhammed Kocabas, Chun-Hao P Huang, Otmar Hilliges,
+pose. In CVPR, pages 7122-7131, 2018. 1,4
+
+Muhammed Kocabas, Chun-Hao P Huang, Otmar Hilliges,
 and Michael J Black. PARE: Part attention regressor for
-3D human body estimation. In ICCV, pages 11127–11137,
-2021. 2, 3
-[17] Muhammed Kocabas, Chun-Hao P Huang, Joachim Tesch,
+3D human body estimation. In JCCV, pages 11127-11137,
+2021. 2,3
+Muhammed Kocabas, Chun-Hao P Huang, Joachim Tesch,
 Lea Muller, Otmar Hilliges, and Michael J Black. SPEC:
 Seeing people in the wild with an estimated camera. In
-ICCV. pages 11035-11045, 2021. 2,3
-[18] Muhammed Kocabas, Ye Yuan, Pavlo Molchanov, Yunrong
+ICCYV, pages 11035-11045, 2021. 2, 3
+
+Muhammed Kocabas, Ye Yuan, Pavlo Molchanov, Yunrong
 Guo, Michael J. Black, Otmar Hilliges, Jan Kautz, and Umar
 Iqbal. PACE: Human and motion estimation from in-the-
 wild videos. In 3DV, 2024. 2, 3, 6
-[19] Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and
+Nikos Kolotouros, Georgios Pavlakos, Michael J Black, and
 Kostas Daniilidis. Learning to reconstruct 3D human pose
-and shape via model-fitting in the loop. In ICCV, pages
+and shape via model-fitting in the loop. In JCCV, pages
 2252-2261, 2019. 1, 2, 4
-[20] Christoph Lassner, Javier Romero, Martin Kiefel, Federica
+
+Christoph Lassner, Javier Romero, Martin Kiefel, Federica
 Bogo, Michael J Black, and Peter V Gehler. Unite the peo-
 ple: Closing the loop between 3D and 2D human representa-
-tions. In CVPR, pages 6050-6059, 2017. 1
-[21] Jiefeng Li, Chao Xu, Zhicun Chen, Siyuan Bian, Lixin Yang,
+tions. In CVPR, pages 6050-6059, 2017. |
+
+Jiefeng Li, Chao Xu, Zhicun Chen, Siyuan Bian, Lixin Yang,
 and Cewu Lu. HybrIK: A hybrid analytical-neural inverse
 kinematics solution for 3D human pose and shape estima-
-tion. In CVPR, pages 3383-3393, 2021. 2, 3
-10
-10
-[22] Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu,
+tion. In CVPR, pages 3383-3393, 2021. 2,3
+
+
+--- Page 11 ---
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+Mengcheng Li, Liang An, Hongwen Zhang, Lianpeng Wu,
 Feng Chen, Tao Yu, and Yebin Liu. Interacting attention
 graph for single image two-hand reconstruction. In CVPR,
 pages 2761-2770, 2022. 3
-[23] Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
-Pietro Perona, Deva Ramanan, Piotr Dollár, and C Lawrence
+
+Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
+Pietro Perona, Deva Ramanan, Piotr Dollar, and C Lawrence
 Zitnick. Microsoft coco: Common objects in context. In
-ECCV, pages 740-755. Springer, 2014. 2
-[24] Hung Yu Ling, Fabio Zinno, George Cheng, and Michiel
+ECCYV, pages 740-755. Springer, 2014. 2
+
+Hung Yu Ling, Fabio Zinno, George Cheng, and Michiel
 van de Panne. Character controllers using motion vaes. ACM
 Trans. Graph., 39(4), 2020. 4
-[25] Guilin Liu, Fitsum A. Reda, Kevin J. Shih, Ting-Chun Wang,
+
+Guilin Liu, Fitsum A. Reda, Kevin J. Shih, Ting-Chun Wang,
 Andrew Tao, and Bryan Catanzaro. Image inpainting for
 irregular holes using partial convolutions. In Proceedings
 of the European Conference on Computer Vision (ECCV),
 2018. 9
-[26] Camillo Lugaresi, Jiuqiang Tang, Hadon Nash, Chris Mc-
+
+Camillo Lugaresi, Jiuqiang Tang, Hadon Nash, Chris Mc-
 Clanahan, Esha Uboweja, Michael Hays, Fan Zhang, Chuo-
 Ling Chang, Ming Guang Yong, Juhyun Lee, et al. Medi-
 apipe: A framework for building perception pipelines. arXiv
 preprint arXiv:1906.08172, 2019. 10
-[27] Zhengyi Luo, Shun Iwase, Ye Yuan, and Kris Kitani. Embod-
+
+Zhengyi Luo, Shun Iwase, Ye Yuan, and Kris Kitani. Embod-
 ied scene-aware human pose estimation. In NeurIPS, 2022.
 3
-[28] Xiaoxuan Ma, Jiajun Su, Chunyu Wang, Wentao Zhu, and
+
+Xiaoxuan Ma, Jiajun Su, Chunyu Wang, Wentao Zhu, and
 Yizhou Wang. 3d human mesh estimation from virtual mark-
-ers. In CVPR, pages 534–543, 2023. 2, 3
-[29] Naureen Mahmood, Nima Ghorbani, Nikolaus F Troje, Ger-
+ers. In CVPR, pages 534-543, 2023. 2, 3
+
+Naureen Mahmood, Nima Ghorbani, Nikolaus F Troje, Ger-
 ard Pons-Moll, and Michael J Black. AMASS: Archive of
 motion capture as surface shapes. In ICCV, pages 5442-
 5451, 2019. 2, 3,9
-[30] Dushyant Mehta, Helge Rhodin, Dan Casas, Pascal
+
+Dushyant Mehta, Helge Rhodin, Dan Casas, Pascal
 Fua, Oleksandr Sotnychenko, Weipeng Xu, and Christian
 Theobalt. Monocular 3D human pose estimation in the wild
-using improved CNN supervision. In 13DV, pages 506–516,
+using improved CNN supervision. In /3DV, pages 506-516,
 2017. 1
-[31] Gyeongsik Moon and Kyoung Mu Lee. I2L-MeshNet:
+
+Gyeongsik Moon and Kyoung Mu Lee. 1I2L-MeshNet:
 Image-to-lixel prediction network for accurate 3D human
 pose and mesh estimation from a single RGB image. In
-ECCV, pages 752-768. Springer, 2020. 2, 3
-[32] Gyeongsik Moon and Kyoung Mu Lee. Pose2Pose: 3D posi-
+ECCYV, pages 752-768. Springer, 2020. 2, 3
+
+Gyeongsik Moon and Kyoung Mu Lee. Pose2Pose: 3D posi-
 tional pose-guided 3D rotational pose prediction for expres-
 sive 3D human pose and mesh estimation. arXiv preprint
 arXiv:2011.11534, 2020. 2, 3
-[33] Gyeongsik Moon, Shoou-I Yu, He Wen, Takaaki Shiratori,
+
+Gyeongsik Moon, Shoou-I Yu, He Wen, Takaaki Shiratori,
 and Kyoung Mu Lee. InterHand2.6M: A dataset and baseline
 for 3D interacting hand pose estimation from a single RGB
-image. In ECCV, pages 548–564. Springer, 2020. 3, 10
-[34] Gyeongsik Moon, Hongsuk Choi, and Kyoung Mu Lee.
+image. In ECCV, pages 548-564. Springer, 2020. 3, 10
+Gyeongsik Moon, Hongsuk Choi, and Kyoung Mu Lee.
 NeuralAnnot: Neural annotator for 3D human mesh training
 sets. In CVPRW, pages 2299-2307, 2022. 2
-[35] Gyeongsik Moon, Hongsuk Choi, and Kyoung Mu Lee. Ac-
+
+Gyeongsik Moon, Hongsuk Choi, and Kyoung Mu Lee. Ac-
 curate 3D hand pose estimation for whole-body 3D human
 mesh estimation. In CVPRW, 2022. 3
-[36] Lea Müller, Ahmed AA Osman, Siyu Tang, Chun-Hao P
+
+Lea Miiller, Anmed AA Osman, Siyu Tang, Chun-Hao P
 Huang, and Michael J Black. On self-contact and human
 pose. In CVPR, pages 9990-9999, 2021. 2
-[37] Mohamed Omran, Christoph Lassner, Gerard Pons-Moll, Pe-
+
+11
+
+37
+
+38
+
+39
+
+40
+
+4l
+
+42
+
+43
+
+44
+
+45
+
+46
+
+47
+
+48
+
+49
+
+50
+
+51
+
+Mohamed Omran, Christoph Lassner, Gerard Pons-Moll, Pe-
 ter Gehler, and Bernt Schiele. Neural body fitting: Unifying
 deep learning and model-based human pose and shape esti-
-mation. In 13DV, pages 484–494. IEEE, 2018. 2, 3
-[38] Priyanka Patel, Chun-Hao P Huang, Joachim Tesch,
+mation. In /3DV, pages 484-494. IEEE, 2018. 2, 3
+Priyanka Patel, Chun-Hao P Huang, Joachim Tesch,
 David T Hoffmann, Shashank Tripathi, and Michael J Black.
 AGORA: Avatars in geography optimized for regression
 analysis. In CVPR, pages 13468-13478, 2021. 2, 3
-[39] Georgios Pavlakos, Luyang Zhu, Xiaowei Zhou, and Kostas
+Georgios Pavlakos, Luyang Zhu, Xiaowei Zhou, and Kostas
 Daniilidis. Learning to estimate 3D human pose and shape
-from a single color image. In CVPR, pages 459–468, 2018.
+from a single color image. In CVPR, pages 459-468, 2018.
 2,3
-[40] Georgios Pavlakos, Vasileios Choutas, Nima Ghorbani,
+Georgios Pavlakos, Vasileios Choutas, Nima Ghorbani,
 Timo Bolkart, Ahmed A. A. Osman, Dimitrios Tzionas, and
 Michael J. Black. Expressive body capture: 3d hands, face,
-and body from a single image. In CVPR, 2019. 1, 7
-[41] Dario Pavllo, Christoph Feichtenhofer, David Grangier, and
+and body from a single image. In CVPR, 2019. 1,7
+
+Dario Pavllo, Christoph Feichtenhofer, David Grangier, and
 Michael Auli. 3D human pose estimation in video with
 temporal convolutions and semi-supervised training. pages
-7753-7762, 2019. 4, 5, 9
-[42] Sida Peng, Yuanqing Zhang, Yinghao Xu, Qianqian Wang,
+7753-7762, 2019. 4, 5,9
+
+Sida Peng, Yuanging Zhang, Yinghao Xu, Qiangian Wang,
 Qing Shuai, Hujun Bao, and Xiaowei Zhou. Neural body:
 Implicit neural representations with structured latent codes
+
 for novel view synthesis of dynamic humans. In CVPR,
 pages 9054-9063, 2021. 2
-[43] Jathushan Rajasegaran, Georgios Pavlakos, Angjoo
+Jathushan Rajasegaran, Georgios Pavlakos, Angjoo
+
 Kanazawa, and Jitendra Malik. Tracking people by pre-
 dicting 3D appearance, location and pose. In CVPR, pages
 2740-2749, 2022. 3
-[44] Davis Rempe, Leonidas J Guibas, Aaron Hertzmann, Bryan
+
+Davis Rempe, Leonidas J Guibas, Aaron Hertzmann, Bryan
 Russell, Ruben Villegas, and Jimei Yang. Contact and human
 dynamics from monocular video. In ECCV, pages 71-87.
 Springer, 2020. 3
-[45] Davis Rempe, Tolga Birdal, Aaron Hertzmann, Jimei Yang,
-Srinath Sridhar, and Leonidas J. Guibas. HUMOR: 3D human
-motion model for robust pose estimation. In ICCV, 2021. 3,
+
+Davis Rempe, Tolga Birdal, Aaron Hertzmann, Jimei Yang,
+Srinath Sridhar, and Leonidas J. Guibas. HuMoR: 3D human
+motion model for robust pose estimation. In JCCV, 2021. 3,
 4,6
-[46] Yu Rong, Takaaki Shiratori, and Hanbyul Joo. FrankMocap:
+
+Yu Rong, Takaaki Shiratori, and Hanbyul Joo. FrankMocap:
 A monocular 3D whole-body pose estimation system via re-
-gression and integration. In ICCV, 2021. 3
-[47] Nadine Rueegg, Christoph Lassner, Michael Black, and
+gression and integration. In JCCV, 2021. 3
+
+Nadine Rueegg, Christoph Lassner, Michael Black, and
 Konrad Schindler. Chained representation cycling: Learning
 to estimate 3D human pose and shape by cycling between
 representations. In AAAI, pages 5561-5569, 2020. 2, 3
-[48] Johannes Lutz Schönberger and Jan-Michael Frahm.
+Johannes Lutz Schénberger and Jan-Michael Frahm.
 Structure-from-motion revisited. In Conference on Com-
 puter Vision and Pattern Recognition (CVPR), 2016. 2
-[49] Akash Sengupta, Ignas Budvytis, and Roberto Cipolla. Syn-
+Akash Sengupta, Ignas Budvytis, and Roberto Cipolla. Syn-
 thetic training for accurate 3D human pose and shape esti-
 mation in the wild. In BMVC, 2020. 2
-[50] Leonid Sigal, Alexandru Balan, and Michael J Black. Com-
+
+Leonid Sigal, Alexandru Balan, and Michael J Black. Com-
 bined discriminative and generative articulated pose and
-non-rigid shape estimation. In NeurIPS, pages 1337–1344,
+non-rigid shape estimation. In NeurIPS, pages 1337-1344,
 2008. 1
-[51] Leonid Sigal, Alexandru O Balan, and Michael J Black. Hu-
+
+Leonid Sigal, Alexandru O Balan, and Michael J Black. Hu-
 manEva: Synchronized video and motion capture dataset and
 baseline algorithm for evaluation of articulated human mo-
-tion. IJCV, 87(1-2):4, 2010. 1,2
-11
-[52] Jie Song, Xu Chen, and Otmar Hilliges. Human body model
-fitting by learned gradient descent. In ECCV, pages 744–760.
+tion. LJCV, 87(1-2):4, 2010. 1, 2
+
+--- Page 12 ---
+52
+
+53
+
+54
+
+55
+
+56
+
+57
+
+58
+
+59
+
+60
+
+61
+
+62
+
+63
+
+64
+
+65
+
+66
+
+67
+
+Jie Song, Xu Chen, and Otmar Hilliges. Human body model
+fitting by learned gradient descent. In ECCV, pages 744-760.
 Springer, 2020. 2, 3, 6
-[53] Jiajun Su, Chunyu Wang, Xiaoxuan Ma, Wenjun Zeng, and
+
+Jiajun Su, Chunyu Wang, Xiaoxuan Ma, Wenjun Zeng, and
 Yizhou Wang. Virtualpose: Learning generalizable 3d hu-
 man pose models from virtual data. In ECCV, pages 55-71.
 Springer, 2022. 3
-[54] Yu Sun, Yun Ye, Wu Liu, Wenpeng Gao, Yili Fu, and Tao
+
+Yu Sun, Yun Ye, Wu Liu, Wenpeng Gao, Yili Fu, and Tao
 Mei. Human mesh recovery from monocular images via a
-skeleton-disentangled representation. In ICCV, pages 5349-
+skeleton-disentangled representation. In JCCV, pages 5349—
 5358, 2019. 2, 3
-[55] Yu Sun, Qian Bao, Wu Liu, Tao Mei, and Michael J Black.
+
+Yu Sun, Qian Bao, Wu Liu, Tao Mei, and Michael J Black.
 TRACE: 5D temporal regression of avatars with dynamic
 cameras in 3D environments. In CVPR, pages 8856-8866,
 2023. 3
-[56] Zachary Teed and Jia Deng. DROID-SLAM: Deep Visual
+
+Zachary Teed and Jia Deng. DROID-SLAM: Deep Visual
 SLAM for Monocular, Stereo, and RGB-D Cameras. Ad-
 vances in neural information processing systems, 2021. 2
-[57] Yating Tian, Hongwen Zhang, Yebin Liu, and Limin Wang.
+Yating Tian, Hongwen Zhang, Yebin Liu, and Limin Wang.
 Recovering 3D human mesh from monocular images: A sur-
 vey. TPAMI, 2023. 2
-[58] Hsiao-Yu Fish Tung, Hsiao-Wei Tung, Ersin Yumer, and Ka-
+
+Hsiao-Yu Fish Tung, Hsiao-Wei Tung, Ersin Yumer, and Ka-
 terina Fragkiadaki. Self-supervised learning of motion cap-
-ture. NeurIPS, pages 5236-5246, 2017. 2, 3
-[59] Gul Varol, Javier Romero, Xavier Martin, Naureen Mah-
+ture. NeurIPS, pages 5236-5246, 2017. 2,3
+
+Gul Varol, Javier Romero, Xavier Martin, Naureen Mah-
 mood, Michael J Black, Ivan Laptev, and Cordelia Schmid.
-Learning from synthetic humans. In CVPR, pages 109–117,
+Learning from synthetic humans. In CVPR, pages 109-117,
 2017. 3
-[60] Gul Varol, Duygu Ceylan, Bryan Russell, Jimei Yang, Ersin
+
+Gul Varol, Duygu Ceylan, Bryan Russell, Jimei Yang, Ersin
 Yumer, Ivan Laptev, and Cordelia Schmid. BodyNet: Volu-
 metric inference of 3D human body shapes. In ECCV, pages
 20-36, 2018. 2, 3
-[61] Timo von Marcard, Roberto Henschel, Michael Black, Bodo
+
+Timo von Marcard, Roberto Henschel, Michael Black, Bodo
 Rosenhahn, and Gerard Pons-Moll. Recovering accurate 3d
 human pose in the wild using imus and a moving camera. In
 European Conference on Computer Vision (ECCV), 2018. 7
-[62] Yuanlu Xu, Song-Chun Zhu, and Tony Tung. DenseRaC:
+Yuanlu Xu, Song-Chun Zhu, and Tony Tung. DenseRaC:
 Joint 3D pose and shape estimation by dense render-and-
-compare. In ICCV, pages 7760-7770, 2019. 2, 3
-[63] Vickie Ye, Georgios Pavlakos, Jitendra Malik, and Angjoo
+compare. In ICCV, pages 7760-7770, 2019. 2,3
+
+Vickie Ye, Georgios Pavlakos, Jitendra Malik, and Angjoo
 Kanazawa. Decoupling human and camera motion from
 videos in the wild. In IEEE Conference on Computer Vision
 and Pattern Recognition (CVPR), 2023. 2, 3, 6
-[64] Hongwei Yi, Chun-Hao P. Huang, Dimitrios Tzionas,
+
+Hongwei Yi, Chun-Hao P. Huang, Dimitrios Tzionas,
 Muhammed Kocabas, Mohamed Hassan, Siyu Tang, Justus
 Thies, and Michael J. Black. Human-aware object place-
 ment for visual environment reconstruction. In CVPR, pages
 3959-3970, 2022. 1
-[65] Zhixuan Yu, Jae Shin Yoon, In Kyu Lee, Prashanth
+
+Zhixuan Yu, Jae Shin Yoon, In Kyu Lee, Prashanth
 Venkatesh, Jaesik Park, Jihun Yu, and Hyun Soo Park.
-HUMBI: A large multiview dataset of human body expres-
-sions. In CVPR, pages 2990–3000, 2020. 2
-[66] Ye Yuan, Shih-En Wei, Tomas Simon, Kris Kitani, and Jason
+HUMBEI A large multiview dataset of human body expres-
+sions. In CVPR, pages 2990-3000, 2020. 2
+
+Ye Yuan, Shih-En Wei, Tomas Simon, Kris Kitani, and Jason
 Saragih. SimPoE: Simulated character control for 3D human
-pose estimation. In CVPR, pages 7159-7169, 2021. 3, 8
-[67] Ye Yuan, Umar Iqbal, Pavlo Molchanov, Kris Kitani, and
+pose estimation. In CVPR, pages 7159-7169, 2021. 3,8
+
+Ye Yuan, Umar Iqbal, Pavlo Molchanov, Kris Kitani, and
 Jan Kautz. GLAMR: Global occlusion-aware human mesh
+
+12
+
+68
+
+69
+
+70
+
+71
+
+72
+
+73
+
+74
+
+75
+
+76
+
+77
+
+78
+
 recovery with dynamic cameras. In CVPR, pages 11038-
 11049, 2022. 2, 3, 4, 6, 8
-[68] Andrei Zanfir, Eduard Gabriel Bazavan, Mihai Zanfir,
+
+Andrei Zanfir, Eduard Gabriel Bazavan, Mihai Zanfir,
 William T Freeman, Rahul Sukthankar, and Cristian Smin-
 chisescu. Neural descent for visual 3D human pose and
 shape. In CVPR, pages 14484-14493, 2021. 3, 6
-[69] Ailing Zeng, Lei Yang, Xuan Ju, Jiefeng Li, Jianyi Wang,
+
+Ailing Zeng, Lei Yang, Xuan Ju, Jiefeng Li, Jianyi Wang,
 and Qiang Xu. SmoothNet: a plug-and-play network for
-refining human poses in videos. In ECCV, pages 625–642.
+refining human poses in videos. In ECCV, pages 625-642.
 Springer, 2022. 6
-[70] Hongwen Zhang, Yating Tian, Xinchi Zhou, Wanli Ouyang,
+
+Hongwen Zhang, Yating Tian, Xinchi Zhou, Wanli Ouyang,
 Yebin Liu, Limin Wang, and Zhenan Sun. PyMAF: 3D hu-
 man pose and shape regression with pyramidal mesh align-
-ment feedback loop. In ICCV, pages 11446–11456, 2021. 1,
+ment feedback loop. In JCCV, pages 11446-11456, 2021. 1,
 3,4
-[71] Hongwen Zhang, Jie Cao, Guo Lu, Wanli Ouyang, and
+
+Hongwen Zhang, Jie Cao, Guo Lu, Wanli Ouyang, and
 Zhenan Sun. Learning 3D human shape and pose from dense
-body parts. TPAMI, 2022. 2, 3
-[72] Hongwen Zhang, Yating Tian, Yuxiang Zhang, Mengcheng
+body parts. TPAMI, 2022. 2,3
+
+Hongwen Zhang, Yating Tian, Yuxiang Zhang, Mengcheng
 Li, Liang An, Zhenan Sun, and Yebin Liu. PyMAF-X: To-
 wards well-aligned full-body model regression from monoc-
 ular images. TPAMI, 2023. 1, 3, 8
-[73] Siwei Zhang, Yan Zhang, Federica Bogo, Marc Pollefeys,
+
+Siwei Zhang, Yan Zhang, Federica Bogo, Marc Pollefeys,
 and Siyu Tang. Learning motion priors for 4D human body
-capture in 3D scenes. In ICCV, pages 11343-11353, 2021.
+capture in 3D scenes. In JCCV, pages 11343-11353, 2021.
 3,6
-[74] Siwei Zhang, Qianli Ma, Yan Zhang, Zhiyin Qian, Taein
+
+Siwei Zhang, Qianli Ma, Yan Zhang, Zhiyin Qian, Taein
 Kwon, Marc Pollefeys, Federica Bogo, and Siyu Tang. Ego-
 body: Human body shape and motion of interacting peo-
 ple from head-mounted devices. In European conference on
 computer vision (ECCV), 2022. 6
-[75] Yuxiang Zhang, Liang An, Tao Yu, Xiu Li, Kun Li, and
+
+Yuxiang Zhang, Liang An, Tao Yu, Xiu Li, Kun Li, and
 Yebin Liu. 4d association graph for realtime multi-person
 motion capture using multiple video cameras. In CVPR,
 pages 1324-1333, 2020. 2
-[76] Yuxiang Zhang, Zhe Li, Liang An, Mengcheng Li, Tao Yu,
+
+Yuxiang Zhang, Zhe Li, Liang An, Mengcheng Li, Tao Yu,
 and Yebin Liu. Lightweight multi-person total motion cap-
-ture using sparse multi-view cameras. In ICCV, pages 5560-
+ture using sparse multi-view cameras. In JCCV, pages 5560-
 5569, 2021. 2
-[77] Ce Zheng, Sijie Zhu, Matias Mendieta, Taojiannan Yang,
+
+Ce Zheng, Sijie Zhu, Matias Mendieta, Taojiannan Yang,
 Chen Chen, and Zhengming Ding. 3D human pose estima-
-tion with spatial and temporal transformers. In ICCV, pages
+tion with spatial and temporal transformers. In JCCV, pages
 11656-11665, 2021. 4
-[78] Yuxiao Zhou, Marc Habermann, Ikhsanul Habibie, Ayush
+
+Yuxiao Zhou, Marc Habermann, Ikhsanul Habibie, Ayush
 Tewari, Christian Theobalt, and Feng Xu. Monocular real-
 time full body capture with inter-part correlations. In CVPR,
 pages 4811-4822, 2021. 3
-12
+

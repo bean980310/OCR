@@ -1,20 +1,36 @@
-Diffusion time-axis
-arXiv:2307.15042v2 [cs.CV] 29 Jul 2023
-TEDI: Temporally-Entangled Diffusion for Long-Term Motion Synthesis
+--- Page 1 ---
+2307.15042v2 [cs.CV] 29 Jul 2023
+
+arXiv
+
+TEDi: Temporally-Entangled Diffusion for Long-Term Motion Synthesis
+
 ZIHAN ZHANG, University of Chicago
 RICHARD LIU, University of Chicago
 KFIR ABERMAN, Google Research
 RANA HANOCKA, University of Chicago
+
 Typical DDPM
 Fixed-length motion
+
+Motion temporal-axis
+—
+
+Diffusion time-axis
+
+LW.
+
 TEDi
 Arbitrarily-long motion
-Motion temporal-axis
-採餐
+
 Diffusion time-axis
+
 Motion temporal-axis
+‘oman
+
 Fig. 1. Inspired by the gradual nature of the diffusion process along a diffusion time-axis (left), our approach (right) entangles the temporal-axis of motion
 with the time-axis of the diffusion process (right), enabling a new mechanism for synthesizing arbitrarily long motion sequences.
+
 The gradual nature of a diffusion process that synthesizes samples in small
 increments constitutes a key ingredient of Denoising Diffusion Probabilistic
 Models (DDPM), which have presented unprecedented quality in image
@@ -31,23 +47,28 @@ clean frame which is removed from the beginning of the buffer, followed
 by a newly drawn noise vector that is appended to it. This new mechanism
 paves the way towards a new framework for long-term motion synthesis
 with applications to character animation and other domains. Our code and
-project are publicly available. 1
-1
-INTRODUCTION
+project are publicly available. !
+
+1 INTRODUCTION
+
 Long-term generation of a motion sequence is a difficult and long
 standing problem in character animation with myriad applications
 in computer animation, motion control, human-computer interac-
 tion, and more. Generating long-term motion entails producing
 realistic, non-repetitive sequences which avoids degenerate outputs
-(i.e., frozen motion).
+(ie., frozen motion).
+
 A promising avenue for generating high-quality motion is through
 Denoising Diffusion Probabilistic Models (DDPM), which have pro-
 duced unprecedented quality in image synthesis [Ho et al. 2020] and
-¹Project page: https://threedle.github.io/TEDi/
+
+| Project page: https://threedle.github.io/TEDi/
+
 have been recently adapted to motion synthesis [Tevet et al. 2022;
 Zhang et al. 2022; Kim et al. 2022]. A typical adaptation of DDPM
 to motion synthesis generates a fixed-length motion sequence (i.e.,
 a “motion image”) from randomly sampled Gaussian noise.
+
 A fixed-length output is limiting in the context of long-term mo-
 tion synthesis for a couple of reasons. First, there is no satisfactory
 approach for creating long-sequences from short-sequences out-
@@ -56,6 +77,7 @@ create stitching artifacts. Second, a typical diffusion process has
 limited interactive controllability. Diffusion requires several hun-
 dred denoising iterations before producing a short sequence of clean
 motions.
+
 We are inspired by the time-dependent nature of the diffusion
 process, where samples are synthesized from pure noise gradually
 in small time increments along the diffusion time-axis. In this work,
@@ -68,12 +90,16 @@ By entangling the temporal-axis of the motion sequence with the
 time-axis of the diffusion process, we enable the production of a
 continuous stream of clean motion frames during each step of the
 diffusion process.
+
 At the core of our framework lies a motion buffer, which encodes
 noisy future motion frames with varied noise levels. During the
 training phase, we add temporally varied noise to clean motion se-
 quences, such that each frame has a random level. However, during
-2
-Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+
+
+--- Page 2 ---
+2 + Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+
 inference the motion buffer is initialized with a motion primer - a se-
 quence of clean motion frames that are being noised with increasing
 noise levels, such that adjacent frames contains consecutive noise
@@ -82,9 +108,11 @@ frames. In order to constantly maintain the progressively-noised
 motion buffer structure during each denoising step, we insert a noisy
 frame at the end of the motion buffer and remove a single clean
 frame at the beginning.
+
 This recursive mechanism enables motion sequence frames to
 be continuously generated, and avoids stitching problems which
 current motion diffusion models suffer from (see 4.5.1).
+
 During inference, we can guide the generation with specific mo-
 tions by intervening in the process and persistently injecting clean
 frames, called guiding motions. This injection enables us to control
@@ -92,6 +120,7 @@ and influence the current set of generated frames to prepare and
 plan for the upcoming motion guides. This strategy causes a pre-
 meditated and calculated transition between the current frames and
 the future guiding motions.
+
 Our network continues to denoise an ever-evolving motion buffer,
 which contains vague information about the future trajectory of the
 motion sequence. This formulation opens the door to more direct
@@ -102,10 +131,10 @@ due to its random nature, can provide diverse results even for the
 same initialization. In addition, we evaluate the model against other
 long-term generation models. Our experiments show that TEDi is a
 natural framework for generating long-term motion sequences.
-2
-2.1
-RELATED WORK
-Diffusion Models
+
+2 RELATED WORK
+2.1 Diffusion Models
+
 Denoising diffusion probalistic models (DDPMs) and its variants
 [Ho et al. 2020; Dhariwal and Nichol 2021; Ho et al. 2022] have
 achieved unprecedented quality on conditional and unconditional
@@ -130,9 +159,12 @@ image and denoising all frames in parallel. This adaptation can only
 generate fixed-length motion sequences which makes long-term
 generation and interactive control infeasible. In contrast, our frame-
 work combines the diffusion framework with an auto-regressive
+
 generation scheme, thus enabling generation of arbitrary length
 sequences by design.
+
 2.2 Deep Motion Synthesis
+
 Before the advent of modern deep learning architectures, earlier
 works attempted to model motion and styles of motion with tech-
 niques such as restricted Boltzmann machines Taylor and Hinton
@@ -146,11 +178,11 @@ also succeeded in short-term motion prediction [Fragkiadaki et al.
 2015; Pavllo et al. 2018], interactive motion generation [Lee et al.
 2018], and music-driven motion synthesis [Aristidou et al. 2021].
 Holden et al. [2017] propose phase-functioned neural networks
-(PFNN) for locomotion generation and introduce phase to neural
-networks for motion synthesis. Similar ideas are used in quadruped
+(PFNN) for locomotion generation and introduce phase to neural!
+networks for motion synthesis. Similar ideas are used in quadrupe
 motion generation by Zhang et al. [2018]. Starke et al. [2020] ex-
 tended phase to local joints to cope with more complex motion
-generation. Henter et al. [2020] proposed another generative model
+generation. Henter et al. [2020] proposed another generative mode!
 for motion based on normalizing flow. Additionally, deep neural
 networks have succeeded in a variety of other motion synthesis
 tasks such as motion retargeting [Villegas et al. 2018; Aberman et al.
@@ -159,8 +191,9 @@ et al. 2022], key-frame based motion generation [Harvey et al. 2020],
 motion matching [Holden et al. 2020], animation layering [Starke
 et al. 2021] and motion synthesis from a single sequence [Li et al.
 2022].
-2.3
-Long-Term Motion Synthesis
+
+2.3. Long-Term Motion Synthesis
+
 Deep learning models for long term motion synthesis are mostly
 based on RNNs as they naturally enable auto-regressive genera-
 tion and capture the time dependencies between animation frames.
@@ -177,34 +210,47 @@ tional LSTMs with pairwise memory cells to capture both long-term
 dependencies and short-term variations to improve the prediction
 quality [Wang et al. 2017]. Zhou et al. tackled the problem of error
 accumulation in long-term random generation by alternating the
-network's output and ground truth as the input of RNN during
+network’s output and ground truth as the input of RNN during
 training [Zhou et al. 2018]. This method, called acRNN, is able to
 generate long and stable motion similar to the training set. However,
 despite the modified training procedure, acRNN still fails to produce
 very long motions. One speculation is that acRNN, and RNNs in
 general, rely on a memory component that is being eroded with
 time. In contrast, our framework explicitly utilizes frames within our
-וייוו
+
+
+--- Page 3 ---
+TEDi: Temporally-Entangled Diffusion for Long-Term Motion Synthesis + 3
+
+hah ¥
+
+i Z= in -< Training input
+
+|
+-=
+USA
+
 Time-Varying Noise
+
+USA
+
 Clean Training Sequence
-TEDI: Temporally-Entangled Diffusion for Long-Term Motion Synthesis
-ווייווו
-Temporally-Noised Training Input
-Denoised Output Sequence
+
 Fig. 2. TEDi Training. We train our diffusion-based model to remove
 temporally-varying noise that is applied to clean sequences during training.
-In each iteration we fetch a motion sequence of K frames [ƒ1, ƒ2, … … …, ƒK]
+In each iteration we fetch a motion sequence of K frames [ fi, f2,..., fk]
 from the dataset, apply noise to it according to a noise level schedule
-[ßt₁› ßt₂› · · · ‚ þt¸ ], and train our network to predict the clean motion se-
+[Bry Br» +++» Brg |, and train our network to predict the clean motion se-
 quence in a supervised fashion as described in (1).
+
 context window which only needs to be the same size temporally
 as the diffusion time-axis, producing the motion autoregressively
 in small increments that complies with the successful mechanism
 of the diffusion process.
-3
-METHOD
-sequences
-We propose a new approach to synthesize long motion
+
+3 METHOD
+
+We propose a new approach to synthesize long motion sequences
 using diffusion models. Our approach extends the classic DDPM
 framework to support injection of temporally-varying noise levels
 during the diffusion process. This extension enables entangling
@@ -221,24 +267,28 @@ process during inference results in a new mechanism for long term
 motion synthesis. We describe below the motion representation
 (3.1), novel diffusion framework (3.2), training (3.3) and inference
 procedure (3.4).
+
 3.1 Motion representation
+
 We represent a motion sequence by a temporal set of K poses that
 consists of root joint displacements with respect to the xz-plane
-[b]
-3
-Oxz = Rx², root joint height Oy € RK, and joint rotations R €
-RKXJQ, where J is the number of joints and Q is the number of
+
+Denoised Output Sequence {b]
+
+Ox, € RX*?, root joint height Oy € RK, and joint rotations R €
+RE*JQ, where J is the number of joints and Q is the number of
 rotation features. The rotations are defined in the coordinate frame
 of their parent in the kinematic chain, and represented by the 6D
 rotation features (Q = 6) proposed by Zhou et al. [2019]. To mitigate
-foot sliding artifacts, we incorporate foot contact labels as a C · K
-binary values L = {0, 1} KXC, which correspond to the contact labels
+foot sliding artifacts, we incorporate foot contact labels as a C - K
+binary values L € {0, 1pxe, which correspond to the contact labels
 of the foot joints. In our work, we let C = 4, where the joints
 are the left(right) heels and toes. All the features are concatenated
 along the channel axis and we denote the full representation by
-M = [Oxz, O, R, L] = RKx(JQ+C+3)
-3.2
-Diffusion Models
+M = [Oxz, Oy, RL] € REX UO+C+) |
+
+3.2 Diffusion Models
+
 Diffusion Denoising Probabilistic Models (DDPM) [Sohl-Dickstein
 et al. 2015; Ho et al. 2020] are generative models that aim to ap-
 proximate a given data distribution q(mo) with an easy and intu-
@@ -248,86 +298,89 @@ consists of fixed-length motion sequences. During training, the
 process starts by sampling a clean motion sequence mo from the
 dataset, then an IID Gaussian noise is added gradually to form a se-
 quence of noisy motions which constitute the latent variables of the
-process {m1,..., mT}. The latent sequence follows q(m1, . . ., mt |
-mo) = [I¦±1 q(mi | mi-1), where a sampling step in the forward
+process {mj,..., my}. The latent sequence follows q(m,...,m¢ |
+mo) = Tie q(mj | mj-1), where a sampling step in the forward
 process (clean data to noise) is defined as a Gaussian transition
-q(mt | mt−1) = N(√1 – ßtmt−1, ßtl) parameterized by a schedule
-Bo, BT Є (0, 1). When the total diffusion time step T is large
-enough, the last noise vector mÃ nearly follows an isotropic Gauss-
+q(me | mr-1) = N(V1— Brme-1, Br) parameterized by a schedule
+fo; --.,Br € (0,1). When the total diffusion time step T is large
+enough, the last noise vector my nearly follows an isotropic Gauss-
 ian distribution.
+
 In order to sample from the distribution q(mo), we define the dual
-“reverse process” p(mt-1 | mt) from isotropic Gaussian noise my to
-data by sampling the posteriors q(mt-1 | mt). Since the intractable
-reverse process q(mt-1 | mt) depends on the unknown data distribu-
+“reverse process” p(m;-1 | mz) from isotropic Gaussian noise mr to
+data by sampling the posteriors q(m;—1 | mr). Since the intractable
+reverse process q(m;~—1 | mr) depends on the unknown data distribu-
 tion q(mo), we approximate it with a parameterized Gaussian tran-
-sition network po(mt−1 | mt) := N(mt−1 | µµ(mt, t), Σø (mt, t)).
+sition network pg(mr-1 | mr) == N(me-1 | fo (mt, t), Zo (me, t)).
+
 As suggested by [Tevet et al. 2022], instead of predicting the noise
 as formulated by [Ho et al. 2020], we follow [Ramesh et al. 2022] and
 the network predicts the signal itself while solving the following
 optimization problem:
-min L(0) := min Emo~q(mo), w~N(0,1),t ||mo – µg (mt, t)||₁₂, (1)
-Ꮎ
-Ꮎ
+
+min L(@) = min Erno~q(mo),w~N (O,D)st Imo - Ho (ms, HI, (A)
+
 which maximizes a variational lower bound. In addition, we find
 that it is best to fix the variance schedule on the reverse process,
-namely setting Σ₁ = ßțI for all time steps, so our model only needs
-to learn to predict the clean motion. For more details about DDPMS
+namely setting Xg = f;I for all time steps, so our model only needs
+to learn to predict the clean motion. For more details about DDPMs
 please refer to [Sohl-Dickstein et al. 2015; Ho et al. 2020].
-3.3 Teporally-Entangled Diffusion
+
+3.3. Teporally-Entangled Diffusion
+
 Next, we extend the DDPM framework to support injection of
 temporally-varying noise levels during the diffusion process. The
 noise level becomes a function of the frame index and we discard
 the notion of the diffusion time-axis during training. Effectively,
 we are setting T = K and identifying the diffusion time-axis and
-4
-•
-Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+
+--- Page 4 ---
+4 + Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+
 the motion temporal-axis. We propose two schemes for noise injec-
 tion: 1) random schedule, and 2) monotonic schedule (we avoid the
 term linear schedule as it is commonly used to indicate a type of
 variance schedule [Nichol and Dhariwal 2021]). Note that these are
 not variance schedules. Concretely, given a fixed variance sched-
-ule ßti Є (0, 1), t¡ € {0, 1, . . ., T}, at each training step the random
+ule B;, € (0,1), tj € {0,1,...,T}, at each training step the random
 schedule is given by
-[Bt₁, Bt2,
+
+[Bry> Bry» +++ Bx], ti ~U(0,T). (2)
 On the other hand, the monotonic schedule is given by
-‚ßtk], ti ~ U(0,T).
-[ßt₁, Bt₂, ‚ẞtk], ti = i.
-Diffusion time-axis
-Motion temporal-axis
-Motion Buffer
-(2)
-(3)
+[Bey Bra» Bix], ti =i (3)
+
 The former gives a temporally-varying noise level while the latter
 gives a monotonically increasing noise level.
+
 In practice, we use a mix of these two noise injection schemes
 during training, so the model learns to completely denoise a motion
 sequence with varying noise levels across frames. This enables us to
 create explicit entanglement between the time axis of the diffusion
 process and the temporal-axis of the motion - a unique property
 which will be exploited during inference.
+
 For each iteration during training, we sample from the dataset
-a motion sequence of length K, [f₁, f2, ..., fk]. The model is given
-the noise injected motion [ƒ₁, ƒ2, ……, ƒk] as input where
-...
-fi ~ N(√ä(ti) fi, (1 – ā(ti)I),
-_
-| j=1
-for ā (t¡) = ПÏ³½¾¹₁(1 − þt;), and is tasked to predict the clean mo-
-tion [fi, f2, fk] directly. To give the network a mixture of the
-two types of noise injection, we assign [ßt, using the random
-schedule or monotonic schedule with fixed probabilities p and 1 - p.
-We set p = ½ in practice. In particular, the training objective with
-the random schedule is similar to those of a pose-oriented diffusion
+a motion sequence of length K, [fi f2;..-, fx]. The model is given
+the noise injected motion [fj, fa, ..., fx] as input where
+
+fi ~ N(V@(ti) fi, 1 - @(ti)D),
+for @(ti) = mia — fr;), and is tasked to predict the clean mo-
+tion [fi. f2.-.., fx] directly. To give the network a mixture of the
+two types of noise injection, we assign [f;, ie , using the random
+schedule or monotonic schedule with fixed probabilities pand1—p.
+We set p = = in practice. In particular, the training objective with
+the random schedule i is similar to those of a pose-oriented diffusion
 model, where we view the entire motion sequence as a batch of
 poses with batch size K. And at each frame index, the model tries
 to learn a posterior
-q* (ft−1 | ft)
+Tf)
+
 where the superscript indicates time in the diffusion time-axis, and
-q* (fo) is the data distribution of individual poses. Then, the objec-
+q* (f°) is the data distribution of individual poses. Then, the objec-
 tive with monotonic noise schedule serves to provide additional
 supervision to ensure smooth transitions across frames during in-
 ference.
+
 3.3.1 Loss functions. As previously mentioned, the benefit of pre-
 dicting the clean motions directly is that it gives access to regu-
 larizations that otherwise would be ill-defined for the mollified
@@ -337,67 +390,77 @@ nature of the human model, errors accumulate along the kinematic
 chains, thus errors on joint rotations should be weighted appropri-
 ately with respect to their positions in the hierarchy. Therefore, we
 add a positional loss loss defined as follows:
+
 K
-1
-Lpos
-=
-KJ
+1 aA 2
+Loos = >| IIFKs (Br. Or) - FKs (Rr, On)|f, (4)
 t=1
-Σ ||FKs (Ŕt, Ôt) - FKs (Rt, Ot)||2,
-(4)
-where FKS: RJQxR³ → R³ is a forward kinematics operator for
-a fixed skeleton S, and Ŕ, Ô are the model predicted joint rotation
+where FKs : RJ2 xR? — R¥ is a forward kinematics operator for
+
+a fixed skeleton S, and R O are the model predicted joint rotation
 and displacements and R, O are the corresponding ground truth. In
-↑
-2. Pop
-clean
-frame
-Motion Buffer
-Motion Buffer
-4. Repeat steps 1-3
-Height x
+
+eusentine time-axis
+
+Motion ine mencale axis
+& Height «
 Noise level
+
+Motion Buffer
+
 1. Denoise
-3. Push
-noise
+
+Motion Buffer
+
+4. Repeat steps 1-3
+
 Fig. 3. TEDi Recursive Generation. TEDi is capable of generating an
 arbitrarily long motion sequence. First, we initialize our motion buffer with
-a a set of increasingly-noised motion frames. Then (step 1) we denoise the
+aa set of increasingly-noised motion frames. Then (step 1) we denoise the
 entire motion buffer, (step 2) pop the new, clean frame in the beginning of
 the motion buffer, and then (step 3) push noise into the end of the motion
 buffer. This process is repeated recursively.
+
 addition, since foot contact is vital to generating natural motions
 and enables using inverse kinematics as post-process, we further
 penalize errors accumulated at the foot joint with the following foot
 contact loss:
-Lcontact
+
+K-1
+1
+Leontact = eG oy » I|FKs (Ret, Or41)) — FKs (Rr, O7),|3 -s(Le)),
+
+(5)
 where
 1
-=
-KC
-K-1
-K||FKs
--
-Σ Σ ||FKs (Rt+1, Ot+1); – FKs (Rt, Ot);|| ·s (Ltj),
-j t=1
-1
-S =
-1+e-12(x-0.5)
-(5)
+
+1 + e—12(x-0.5) *
 This penalizes high foot velocity while having true contact labels,
 thus ensuring self-consistency of the generated motions.
+
+s=
+
 3.3.2 Training. In summary, our full training loss is
-L= diffLdiff +Apos Lpos + λcontact Lcontact
-where diff corresponds to the diffusion loss specified by equation
-(1), and the parameters determine the weights of the losses.
+
+L = Naitt Laist + AposLpos + AcontactLcontact (6)
+
+where Laie corresponds to the diffusion loss specified by equation
+(1), and the A parameters determine the weights of the losses.
+
 Our diffusion network is inspired by the typical U-Net model
 used in the 2D image diffusion domain [Rombach et al. 2022]. In
 order for the network to process 1D signals, we use 1D convolutions
 striding over the temporal axis. We also use 1D attention blocks
 and skip connections so long term frame correlations are captured
 within the motion data.
-TEDI: Temporally-Entangled Diffusion for Long-Term Motion Synthesis 5
+
+--- Page 5 ---
+TEDi: Temporally-Entangled Diffusion for Long-Term Motion Synthesis + 5
+
+a gy Sy
+
 3.4 Inference
+
 During inference, we take advantage of the monotonic noise sched-
 ule that our model trained on. We use a typewriting-like system,
 as depicted in Fig. 3. Our model maintains a buffer of frames with
@@ -415,15 +478,21 @@ sequence at the end of the buffer. The model can then iteratively
 perform this denoising mechanism. This mode of generation can be
 continued indefinitely as desired, and the resulting motion frames
 are collected frame by frame from the model output.
-Concretely, let me be our model and let I = [ƒ₁, ……, ƒk] be the
+
+Concretely, let Mg be our model and let I = [fj,..., fx] be the
 initialization (clean motion that is noised with increasing variance)
-and let Fout denote the (initially empty) set of output frames. At
-time step t, t = {1, 2, ... }, we have the update
-Fout = [Fout, Me (I)1],
-fi−1 = M₁(I)i, i = {2, ……. K},
-= X ~ N(0, 1),
-1 = [ƒ‚…‚ ƒk],
-where Me (I); denotes the i-th frame in the output of our model.
+and let Foyt denote the (initially empty) set of output frames. At
+time step t, t € {1,2,...}, we have the update
+
+Fout = [Fout, Mg (J)1].
+
+fi-1 = Mo(Di, i € {2,...K},
+fx =X ~N(OD,
+
+T= [fi-- fk
+
+where Mo(I); denotes the i-th frame in the output of our model.
+
 We highlight the distinction from a typical inference pass in the
 standard diffusion process, which samples Gaussian noise using
 the full motion length and repeatedly denoises the entire motion.
@@ -436,34 +505,39 @@ T iterations, going through all diffusion time steps before getting
 added to the output. In short, our inference method enables faster
 autoregressive generation yet ensures that each frame of motion
 goes through the full diffusion process.
-4
-EXPERIMENTS
+
+4 EXPERIMENTS
+
 In this section, we demonstrate the effectiveness of TEDi on several
 long-term generation tasks. We show several unique applications of
 our method, including the ability to plan for upcoming motion using
 guided generation. We also evaluate our method through various
 comparisons and ablations. For additional qualitative results, please
 refer to the supplemental video.
-4.1
-Implementation details
+
+4.1 Implementation details
+
 Our TEDi framework is implemented with PyTorch, and the training
 and inference are done on the NVIDIA A40 GPU. We use Adam
 as our optimizer. For the training data, we use motions from the
 CMU motion dataset and downsample them from 120fps to 30fps.
+
 Fig. 4. Long-term Generation. Our method synthesizes arbitrarily long
 motion sequences. In the above figure, we summarize 33 seconds of motion
 by visualizing the pose every 100-frames (~3 seconds). Our model is able to
 generate plausible motions throughout the entire motion sequence.
+
 We then sample windows of 500 frames with a stride of 100 frames.
 The CMU dataset contains frames that are shorter than 500 frames
 after downsampling, and those are not used for training. Training
 takes approximately three days for 500k iterations.
-4.2
-Long-term Generation
+
+4.2 Long-term Generation
+
 Our TEDi framework is able to generate long-term motions condi-
 tioned on a clean primer motion which is used to populate the initial
 motion buffer. The model is given as input a primer of K frames
-{ƒ₁, ƒ2, … … …, ƒk} which are progressively noised with a monotonic
+ffi. fs ee fic} which are progressively noised with a monotonic
 noise schedule. Our iterative inference strategy can then produce
 an arbitrarily long sequence of new frames. We highlight some of
 the frames from a long-term sequence generated by our method in
@@ -474,8 +548,9 @@ iterative denoising process ensures framewise consistency across
 the motion. In addition, we show in Fig. 5 and 6 that our method is
 capable of generating diverse motion sequences. Full video results
 can be found in the supplementary video.
-4.3
-Guided generation
+
+4.3. Guided generation
+
 For a character in motion, it is often desired for the character to
 perform a set of predefined motions which will occur at a point and
 time in the future. We refer to these frames are motion guides. Our
@@ -486,88 +561,104 @@ buffer using the motion guide. Specifically, we remove the current
 set of frames and replace them with a noised version of the motion
 guide. Then, we discard the predicted denoised frames and replace
 them with the noised version of the motion guide at the appropriate
-diffusion time.
-Suppose we have a motion buffer of K frames I = [ƒ‚…‚ƒk]
-and a set of motion guides Q1, Q2, ... each with length l₁, l2, ...
-frames that we wish to perform starting at frame number n₁, n2, ...,
-6
-•
-Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+diffusion time. . .
+Suppose we have a motion buffer of K frames I = [f,,..., fx]
+and a set of motion guides Qi, Q2,... each with length |), l2,...
+frames that we wish to perform starting at frame number nj, nz, ...,
+
+--- Page 6 ---
+6 + Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+
 Fig. 5. Diverse Motions. Our method is capable of producing a wide variety of long motion sequences. From left to right: Boxing, shuffling, and hand-gestures.
+
+setise tis te:
+
 Fig. 6. Motion Variations. Due to the stochastic nature of diffusion models, our method is able to generate variations using the same motion primer as input.
 We show four motions generated from a single primer, from left to right, we can see that the motions begins to differ significantly as time goes on.
-Fig. 7. Guided Generation. Given a set of motion guides Qi (shown in yellow), we are able to perform them in sequence at desired points while generating
+
+Fig. 7. Guided Generation. Given a set of motion guides Q; (shown in yellow), we are able to perform them in sequence at desired points while generating
 plausible motion in the interactively generated frames (blue). From top-left to bottom-right, our method generates an entire motion sequence that contains
 the desired motion guides and the interactively synthesized motion. The interactively generated motions will “prepare and plan” for the upcoming motion
+
 guides. See the supplementary video.
+
 Fig. 8. Trajectory Control. Similar to guided generation, given the desired trajectory information P (shown in yellow), our method can generate natural
+
 motions that adhere to the given trajectory.
-0.030-
-0.025-
-0.020-
-0.015-
+
+--- Page 7 ---
+TEDi: Temporally-Entangled Diffusion for Long-Term Motion Synthesis + 7
+
+— Monotonic schdl.
+— Monotonic + random schdl.
+
+0.030
+
+0.025
+
+0.020
+
+0.015
+
 0.010
-0.005-
-Monotonic schdl.
-Monotonic + random schdl.
-0
-100
-200
-300
-400
-500
-TEDI: Temporally-Entangled Diffusion for Long-Term Motion Synthesis 7
+
+0.005
+
 Fig. 9. Ablations: Here we show the average motion variance over 500
 frames for our method with and without the random schedule. It can be
 seen that our random schedule helps avoid motion-collapse.
-....
-n; ≥ K. Assuming we start with the frame number n = 1 (e.g. the
+
+nj > K. Assuming we start with the frame number n = 1 (e.g. the
 end of the current motion buffer would be frame number K), for
-each predefined motion Qi, if any of its frames Qi,, where j e
-{1, 2, … … …, l; } and n¡ ≤ Qi; ≤ n¡ +l¡ is such that n+5 ≤ n¡ + j ≤ n+K,
+each predefined motion Qj, if any of its frames Q;,, where j €
+{1,2,...,li} and ni < Qi; < ni+lj is such that n+5 < nj+j <n+K,
 then we recursively replace it into the motion buffer. Note that
 there are five frames right before the start of the motion buffer
-where we don't recursively replace. This enables the network to
+where we don’t recursively replace. This enables the network to
 smooth out the transitions between the generated frames and the
 motion guide. We have detailed the procedure for guided generation
 through recursive replacement in Algorithm 1. We demonstrate
 guided generation in Fig. 7 and the supplementary material.
+
 Algorithm 1 Guided generation
+
 Require:
-Me: Denoising model
-I = [fi,..., fk]: motion buffer
-{Q1, Q2,...}: motion guides
-{1, 2,...}: motion guide lengths
-{n₁, n2, … . .}: starting frame numbers for guidance
-Fout
-0: ouput frames
-for n in 1, 2, ... do
-Evaluate Me (I)
-for all frames Qi, do
-if n + 5 ≤ ni + j ≤ n + K then
-Mo(I)n;+j-n← Qij
+Mo: Denoising model
+I= Lf. . fic: motion buffer
+{Q1, Q2, ...}: motion guides
+{l,, lg, ...}: motion guide lengths
+{nj,ng,...}: starting frame numbers for guidance
+Fout = @: ouput frames
+for nin 1,2,...do
+Evaluate Mg (I)
+for all frames Q;, do
+ifn+5 <nj+j<n+K then
+Mo(Dn;+j-n _— Qi,
 end if
 end for
-Fout
-← - [Fout, Mo(I)1]
-←
-fi-1 Mo(I); Vi Є {2,…..K}
-fKX~N(0, 1)
-I←
+Fout — [Fout: Mg (1)1]
+fi-1 — Mo(Di Vi € {2,...K}
+tk —X ~ N(0,D)
+Te [fines fel
+
 end for
+
 4.4 Trajectory Control
+
 Our work can be applied to perform trajectory control during infer-
 ence without additional training. Similar to the mechanism of guided
 generation in the previous section, trajectory control also utilizes
 the inpainting strategy by modifying the motion buffer. Specifically,
-let I = [ƒi, ………, ƒk] be a motion buffer of K frames, and let P € R³×N
+letI = LA. ee fx] be a motion buffer of K frames, and let P € R3*N
 be the trajectory information (root displacements with respect to
 the xz-plane and root height), where N is the desired number of
 frames to be generated. During inference, we recursively overwrite
 the trjactory information in the motion buffer with frames in P. The
 detailed procedure is similar to the one presented in Algorithm 1.
 We demonstrate trajectory control generation in Fig. 8.
+
 4.5 Comparison and Ablation
+
 We next evaluate our approach against alternative baselines, and
 assess our framework through an ablation study. We refer the reader
 to the supplementary video attached to this work to assess the re-
@@ -576,12 +667,13 @@ to avoid collapses in the motion sequence by measuring the variance
 across all generated frames. In order to measure how non-stationary
 generated motions are, and to detect the time-point where they col-
 lapse, we measure the average variance of poses in a local window.
+
 4.5.1 Comparison. In this experiment, we focus on comparing our
 framework to other works on the task of long-term generation. We
 compare our method with ACRNN [Zhou et al. 2018] and the Human
 Motion Diffusion Model (MDM) [Tevet et al. 2022]. In particular,
 the ACRNN work [Zhou et al. 2018] is an RNN-based work that
-receives part of the model's output frames during training, to imitate
+receives part of the model’s output frames during training, to imitate
 the inference setting and mitigate motion collapse. MDM is an
 adaptation of the classic DDPM network for motion generation.
 While ACRNN is designed to be trained on a subset of samples
@@ -590,7 +682,7 @@ inference, MDM does not have a default implementation for long
 term generation. Thus we use a pretrained checkpoint for MDM
 and implement an inpainting-based scheme to enable long-term
 generation for MDM. This implementation is the same as the popular
-"outpainting" technique used in 2D image generation, where we take
+"outpainting” technique used in 2D image generation, where we take
 the latter part of the generated motion and in-paint it to the first part
 of the generated motion on the next iteration. As in Fig. 10, it can be
 seen that ACRNN is not able to perform well on a large and diverse
@@ -599,7 +691,9 @@ In contrast, TEDi can produce infinitely long sequences that is
 robust to collapses. On the other hand, MDM produces significant
 stitching artifacts along the in-painting boundary. Please refer to
 the supplemental video for more details.
+
 4.6 Perceptual Study
+
 We conduct a perceptual study to evaluate the perceived diver-
 sity and quality of the generated motions. In addition to MDM
 and ACRNN, we also add Motion VAE [Ling et al. 2020], a recent
@@ -608,34 +702,33 @@ comparison. Following the setup of DALLE-2 [Ramesh et al. 2022],
 we show users 3x3 grids of randomly sampled motions from our
 model, MDM, Motion VAE, and ACRNN, and ask them to choose 1)
 the set with the most diverse motions and 2) the set with the highest
-8
-•
-Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+
+--- Page 8 ---
+8 + Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+
 quality motions (only from ours, MDM, or ACRNN). Visual exam-
 ples of the generated motions in the perceptual study is provided in
 Appendix A
+
 We had 55 respondents for our study, and we report the results
 in Tab. 1. We conclude from our perceptual study that our method
 produces motion of equivalent or better quality compared to MDM
 while significantly outperforming in terms of diversity.
-Diversity 34
-Quality 33
-Ours MDM ACRNN
-12
-17
-MVAE
-8
-5
-1
-N/A
+
+Ours MDM ACRNN- MVAE
+Diversity | 34 12 8 1
+Quality 33 17 5 N/A
+
 Table 1. Perceptual study results for our method and baselines.
-4.6.1 Ablation. In Fig. 9, we demonstrate the advantage of our
+
+4.6.1. Ablation. In Fig. 9, we demonstrate the advantage of our
 training scheme, by training a version of our model with temporally-
 invariant noise levels. Without temporally varying noise, the net-
 work diminishes in both diversity and stability of long-range motion
 generation.
-5
-CONCLUSION
+
+5 CONCLUSION
+
 In this paper, we proposed TEDi, an adaptation of diffusion models
 for motion synthesis which entangles the motion temporal-axis
 with the diffusion time-axis. This mechanism enables synthesizing
@@ -651,188 +744,243 @@ in such an autoregressive fashion may have implications for other
 types of sequential data beyond motion, such as audio and video,
 or modalities where a sequential order can be defined, such as a
 patch-by-patch order for images.
+
 Our system enables partially-clean-frame to be immediately (or
 near immediately) popped-off the motion buffer stack. However, a
 current limitation of our system is that computing a clean from from
 pure noise requires going through the chain of denoising diffusion.
 In the future we are interested in leveraging ideas from DDIM [Song
 et al. 2020] to skip ahead during the denoising process to achieve
-even lower latency. In addition, our framework enable future
+even lower latency. In addition, our framework may enable future
 research in long-term text-conditioned motion generation. We are
 interested in exploring how high-level control may be coupled with
 low-level user-guidance for the task of long-term generation.
+
 ACKNOLWEDGEMENTS
-may
+
 We thank the 3DL lab for their invaluable feedback and support.
-This work was supported in part through Uchicago's AI Cluster
+This work was supported in part through Uchicago’s AI Cluster
 resources, services, and staff expertise. This work was also partially
 supported by the NSF under Grant No. 2241303, and a gift from
 Google Research.
+
 REFERENCES
+
 Kfir Aberman, Peizhuo Li, Dani Lischinski, Olga Sorkine-Hornung, Daniel Cohen-Or,
 and Baoquan Chen. 2020a. Skeleton-aware networks for deep motion retargeting.
 ACM Transactions on Graphics (TOG) 39, 4 (2020), 62-1.
+
 Kfir Aberman, Yijia Weng, Dani Lischinski, Daniel Cohen-Or, and Baoquan Chen.
 2020b. Unpaired motion style transfer from video to animation. ACM Transactions
 on Graphics (TOG) 39, 4 (2020), 64-1.
+
 Kfir Aberman, Rundi Wu, Dani Lischinski, Baoquan Chen, and Daniel Cohen-Or.
 2019. Learning Character-Agnostic Motion for Motion Retargeting in 2D. ACM
 Trans. Graph. 38, 4 (2019), 75.
+
 Andreas Aristidou, Anastasios Yiannakidis, Kfir Aberman, Daniel Cohen-Or, Ariel
-Shamir, and Yiorgos Chrysanthou. 2021. Rhythm is a Dancer: Music-Driven Motion
+Shamir, and Yiorgos Chrysanthou. 2021. Rhythm is a Dancer: Music-Driven Motion.
 Synthesis with Global Structure. arXiv preprint arXiv:2111.12159 (2021).
+
 Prafulla Dhariwal and Alexander Nichol. 2021. Diffusion models beat gans on image
 synthesis. Advances in Neural Information Processing Systems 34 (2021), 8780-8794.
+
 Katerina Fragkiadaki, Sergey Levine, Panna Felsen, and Jitendra Malik. 2015. Recur-
 rent network models for human dynamics. In Proceedings of the IEEE International
 Conference on Computer Vision. 4346-4354.
+
 Karol Gregor, Ivo Danihelka, Alex Graves, Danilo Rezende, and Daan Wierstra. 2015.
 Draw: A recurrent neural network for image generation. In International conference
 on machine learning. PMLR, 1462-1471.
+
 Félix G Harvey, Mike Yurick, Derek Nowrouzezahrai, and Christopher Pal. 2020. Robust
 motion in-betweening. ACM Transactions on Graphics (TOG) 39, 4 (2020), 60-1.
 Gustav Eje Henter, Simon Alexanderson, and Jonas Beskow. 2020. Moglow: Probabilistic
 and controllable motion synthesis using normalising flows. ACM Transactions on
+
 Graphics (TOG) 39, 6 (2020), 1-14.
+
 Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman, Yael Pritch, and Daniel
 Cohen-Or. 2022. Prompt-to-prompt image editing with cross attention control.
 arXiv preprint arXiv:2208.01626 (2022).
+
 Jonathan Ho, Ajay Jain, and Pieter Abbeel. 2020. Denoising diffusion probabilistic
 models. Advances in Neural Information Processing Systems 33 (2020), 6840-6851.
+
 Jonathan Ho, Chitwan Saharia, William Chan, David J Fleet, Mohammad Norouzi, and
 Tim Salimans. 2022. Cascaded Diffusion Models for High Fidelity Image Generation.
 J. Mach. Learn. Res. 23 (2022), 47-1.
+
 Daniel Holden, Oussama Kanoun, Maksym Perepichka, and Tiberiu Popa. 2020. Learned
 motion matching. ACM Transactions on Graphics (TOG) 39, 4 (2020), 53-1.
+
 Daniel Holden, Taku Komura, and Jun Saito. 2017. Phase-functioned neural networks
 for character control. ACM Transactions on Graphics (TOG) 36, 4 (2017), 1-13.
+
 Daniel Holden, Jun Saito, and Taku Komura. 2016. A deep learning framework for
 character motion synthesis and editing. ACM Transactions on Graphics (TOG) 35, 4
 (2016), 1-11.
+
 Daniel Holden, Jun Saito, Taku Komura, and Thomas Joyce. 2015. Learning motion
 manifolds with convolutional autoencoders. In SIGGRAPH Asia 2015 Technical Briefs.
-1-4.
+1-4,
+
 Jihoon Kim, Jiseob Kim, and Sungjoon Choi. 2022. Flame: Free-form language-based
 motion synthesis & editing. arXiv preprint arXiv:2209.00349 (2022).
+
 Kyungho Lee, Seyoung Lee, and Jehee Lee. 2018. Interactive character animation by
 learning multi-objective control. ACM Transactions on Graphics (TOG) 37, 6 (2018),
 1-10.
+
 Peizhuo Li, Kfir Aberman, Zihan Zhang, Rana Hanocka, and Olga Sorkine-Hornung.
 2022. Ganimator: Neural motion synthesis from a single sequence. ACM Transactions
 on Graphics (TOG) 41, 4 (2022), 1-12.
+
 Hung Yu Ling, Fabio Zinno, George Cheng, and Michiel Van De Panne. 2020. Character
-controllers using motion VAES. ACM Transactions on Graphics (2020).
+controllers using motion VAEs. ACM Transactions on Graphics (2020).
+
 Ian Mason, Sebastian Starke, and Taku Komura. 2022. Real-Time Style Modelling of
 Human Locomotion via Feature-Wise Transformations and Local Motion Phases.
 arXiv preprint arXiv:2201.04439 (2022).
+
 Alex Nichol and Prafulla Dhariwal. 2021. Improved Denoising Diffusion Probabilistic
 Models. (2021). arXiv:cs.LG/2102.09672
+
 Dario Pavllo, David Grangier, and Michael Auli. 2018. Quaternet: A quaternion-based
 recurrent model for human motion. arXiv preprint arXiv:1805.06485 (2018).
+
 Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and Mark Chen. 2022.
 Hierarchical text-conditional image generation with clip latents. arXiv preprint
-arXiv:2204.06125 (2022).
-Marc Aurelio Ranzato, Arthur Szlam, Joan Bruna, Michael Mathieu, Ronan Collobert,
+arXiv:2204,06125 (2022).
+
+MarcAurelio Ranzato, Arthur Szlam, Joan Bruna, Michael Mathieu, Ronan Collobert,
 and Sumit Chopra. 2014. Video (language) modeling: a baseline for generative
 models of natural videos. arXiv preprint arXiv:1412.6604 (2014).
-Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn
+
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bjérn
 Ommer. 2021. High-Resolution Image Synthesis with Latent Diffusion Models.
 arXiv:cs.CV/2112.10752
-Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer.
+
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bjérn Ommer.
 2022. High-resolution image synthesis with latent diffusion models. In Proceedings of
 the IEEE/CVF Conference on Computer Vision and Pattern Recognition. 10684-10695.
+
 Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch, Michael Rubinstein, and Kfir
 Aberman. 2022. Dreambooth: Fine tuning text-to-image diffusion models for subject-
 driven generation. arXiv preprint arXiv:2208.12242 (2022).
+
+--- Page 9 ---
 TEDi: Temporally-Entangled Diffusion for Long-Term Motion Synthesis
-9
+
 Chitwan Saharia, William Chan, Huiwen Chang, Chris Lee, Jonathan Ho, Tim Salimans,
 David Fleet, and Mohammad Norouzi. 2022a. Palette: Image-to-image diffusion
 models. In ACM SIGGRAPH 2022 Conference Proceedings. 1-10.
+
 Chitwan Saharia, William Chan, Saurabh Saxena, Lala Li, Jay Whang, Emily Denton,
 Seyed Kamyar Seyed Ghasemipour, Burcu Karagol Ayan, S Sara Mahdavi, Rapha Gon-
 tijo Lopes, Tim Salimans, Tim Salimans, Jonathan Ho, David J Fleet, and Mohammad
 Norouzi. 2022b. Photorealistic Text-to-Image Diffusion Models with Deep Language
 Understanding. arXiv preprint arXiv:2205.11487 (2022).
+
 Yonatan Shafir, Guy Tevet, Roy Kapon, and Amit H. Bermano. 2023. Human Motion
 Diffusion as a Generative Prior. arXiv:cs.CV/2303.01418
+
 Jascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan, and Surya Ganguli. 2015.
 Deep unsupervised learning using nonequilibrium thermodynamics. In International
 Conference on Machine Learning. PMLR, 2256-2265.
+
 Jiaming Song, Chenlin Meng, and Stefano Ermon. 2020. Denoising Diffusion Implicit
 Models. In International Conference on Learning Representations.
+
 Nitish Srivastava, Elman Mansimov, and Ruslan Salakhudinov. 2015. Unsupervised
 learning of video representations using Istms. In International conference on machine
 learning. PMLR, 843-852.
+
 Sebastian Starke, Yiwei Zhao, Taku Komura, and Kazi Zaman. 2020. Local motion phases
 for learning multi-contact character movements. ACM Transactions on Graphics
 (TOG) 39, 4 (2020), 54-1.
+
 Sebastian Starke, Yiwei Zhao, Fabio Zinno, and Taku Komura. 2021. Neural animation
 layering for synthesizing martial arts movements. ACM Transactions on Graphics
 (TOG) 40, 4 (2021), 1-16.
+
 Ilya Sutskever, James Martens, and Geoffrey E Hinton. 2011. Generating text with
 recurrent neural networks. In ICML.
+
 Graham W Taylor and Geoffrey E Hinton. 2009. Factored conditional restricted Boltz-
 mann machines for modeling motion style. In Proceedings of the 26th annual inter-
 national conference on machine learning. 1025-1032.
+
 Guy Tevet, Sigal Raab, Brian Gordon, Yonatan Shafir, Daniel Cohen-Or, and Amit H
 Bermano. 2022. Human motion diffusion model. arXiv preprint arXiv:2209.14916
 (2022).
+
 Ruben Villegas, Jimei Yang, Duygu Ceylan, and Honglak Lee. 2018. Neural kinematic
 networks for unsupervised motion retargetting. In Proceedings of the IEEE Conference
 on Computer Vision and Pattern Recognition. 8639-8648.
+
 Oriol Vinyals, Alexander Toshev, Samy Bengio, and Dumitru Erhan. 2015. Show and tell:
 A neural image caption generator. In Proceedings of the IEEE conference on computer
 vision and pattern recognition. 3156-3164.
-Yunbo Wang, Mingsheng Long, Jianmin Wang, Zhifeng Gao, and Philip S Yu. 2017.
+
+Yunbo Wang, Mingsheng Long, Jianmin Wang, Zhifeng Gao, and Philip $ Yu. 2017.
 Predrnn: Recurrent neural networks for predictive learning using spatiotemporal
 Istms. Advances in neural information processing systems 30 (2017).
+
 He Zhang, Sebastian Starke, Taku Komura, and Jun Saito. 2018. Mode-adaptive neural
 networks for quadruped motion control. ACM Transactions on Graphics (TOG) 37, 4
 (2018), 1-11.
+
 Mingyuan Zhang, Zhongang Cai, Liang Pan, Fangzhou Hong, Xinying Guo, Lei Yang,
 and Ziwei Liu. 2022. Motiondiffuse: Text-driven human motion generation with
 diffusion model. arXiv preprint arXiv:2208.15001 (2022).
+
 Yi Zhou, Connelly Barnes, Jingwan Lu, Jimei Yang, and Hao Li. 2019. On the continuity
 of rotation representations in neural networks. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition. 5745-5753.
+
 Yi Zhou, Zimo Li, Shuangjiu Xiao, Chong He, Zeng Huang, and Hao Li. 2018. Auto-
 Conditioned Recurrent Networks for Extended Complex Human Motion Synthesis.
 In International Conference on Learning Representations.
-10
-•
-Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
-MDM
-ACRNN
+
+9
+
+--- Page 10 ---
+10 + Zihan Zhang, Richard Liu, Kfir Aberman, and Rana Hanocka
+
 Fig. 10. Long-term motion synthesis baseline comparisons. Top: We
 show two pairs of consecutive frames generated through an in-painting
 implementation with MDM [Tevet et al. 2022]. Classic in-painting shows
 visible discontinuity that happens along the border of in-painting. Bottom:
 ACRNN [Zhou et al. 2018] when trained on a large dataset is not stable, as
 seen by the foot levitation and penetration artifacts.
-A
-PERCEPTUAL STUDY
+
+A PERCEPTUAL STUDY
+
 Here we provide screenshots of our perceptual study in Fig. 11 and
 Fig. 12, as shown for respondents.
-From Set A, B, C, and D below, please select the one that displays the most
+
+From Set A, B, C, and D below, please select the one that displays the most *
 diverse set of motions. (Diversity means a wide variety of valid movement
 patterns, rather than repeating a few specific ones).
-Set A
-Set B
-Set C
+
+© seta
+O sets
+O sete
+O seto
+
 Set D
-From only Set A, B, and C below, please select the one that displays the highest
+
+From only Set A, B, and C below, please select the one that displays the highest *
 quality set of motions. (Quality means realism of movements, rather than
 resolution of the videos).
-Set B
-Set C
-Set A
+
+O sets
+O setc
+O seta
+
 Fig. 11. Questions from perceptual study.
-*
-Set A
-Set B
-Set C
-Set D
-7
+
 Fig. 12. Example motions from perceptual study. From top to bottom: Ours,
 ACRNN, MDM, and Motion VAE.
+

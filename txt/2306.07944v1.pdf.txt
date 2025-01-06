@@ -1,10 +1,19 @@
-arXiv:2306.07944v1 [eess.AS] 8 Jun 2023
+--- Page 1 ---
+2306.07944v1 [eess.AS] 8 Jun 2023
+
+arXiv
+
 Speech-to-Text Adapter and Speech-to-Entity Retriever
 Augmented LLMs for Speech Understanding
+
 Mingqiu Wang, Izhak Shafran, Hagen Soltau, Wei Han, Yuan Cao, Dian Yu, Laurent El Shafey
+
 Google DeepMind
+
 mingqiuwang, izhak, soltau, weihan, yuancao, dianyu, shafey@google.com
+
 Abstract
+
 Large Language Models (LLMs) have been applied in the
 speech domain, often incurring a performance drop due to
 misaligned between speech and language representations. To
@@ -22,7 +31,9 @@ prefix. With this retrieval-augmented SLM (ReSLM), the DST
 performance jumps to 34.6% accuracy. Moreover, augmenting
 the ASR task with the dialog understanding task improves the
 ASR performance from 9.4% to 8.5% WER.
+
 1. Introduction
+
 There has been considerable interest in extending the capability
 of the large language models (LLMs) from text to other modal-
 ities including speech. One thread of work attempts to map
@@ -30,6 +41,7 @@ speech and text to the same latent representations [1, 2, 3]. A
 shared encoder is employed for both speech and text, in one
 case with an explicit loss term promoting the same embedding
 space [3] and in other without the explicit term [1].
+
 In most practical spoken language systems, speech input is
 recognized using an automatic speech recognition (ASR) and
 the recognized transcripts are fed into a back-end NLU system,
@@ -38,6 +50,7 @@ cascaded approach does not offer an opportunity to correct po-
 tential ASR misrecognitions. Besides, both the LLMs and the
 ASR systems have a common weakness in processing entities
 that are not well-represented in their training data.
+
 In this paper, we examine these challenges in the context
 of a speech understanding system using the DSTC-11 dialog
 tracking task [5]. The task is a based on the popular Multi-
@@ -52,28 +65,31 @@ ognized version of the dialog history along with the previously
 inferred states. This task is particularly interesting because of
 high occurrence of rare entities such as restaurants, tourist at-
 tractions, cities and train stations.
-Utterance 1
-SLM / ReSLM
-Utterance 2
-Prediction
-[ASR] i'm looking for a train that
-departs ripley after 1:42 am
-[DST]
-train-departure-ripley
-train-leaveat-1:42 am
+
+Utterance 1 a
+7 SLM / ReSLM
+NS )
+* - Prediction
+! [ASR] i'm looking for a train that | ost]
+i departs ripley after 1:42 am ex
+
 What is your destination and
-on what day would you like
+
+on what day would you like Agent
 to go?
-SLM / ReSLM
-[ASR] i'm looking to travel to
-Agent
-Prediction
-[DST]
-train-leaveat-1:42 am
-train-destination-mcdou
-mcdougal, and i want to leave on gal train-day-thursday
-thursday.
-train-departure-ripley
+Utterance 2 |
+6 ‘ SLM /ReSLM
+4 Prediction
+[DsT]
+train-1
+
+[ASR] i'm looking to travel to :
+mcedougal, and i want to leave on gai tra
+thursday. trainede
+
+sday
+parture=ripley
+
 Figure 1: Direct speech to dialog state prediction in multi-turn
 dialogs. Given speech of the current user turn i and a text tran-
 script of the dialog history, the SLM / ReSLM models generate
@@ -81,21 +97,29 @@ a single output sequence for both the corresponding transcript
 [ASR] and dialog state [DST]. The ASR transcript predicted
 from turn i is used as history turn i + 1 in an auto-regressive
 manner.
-The key contributions of this
-paper are:
+
+The key contributions of this paper are:
+
 1. We propose a Speech2Text adapter which maps speech en-
 codings into text token embeddings with seemingly minimal
 loss of information.
+
 2. We propose a joint speech and language model (SLM) with
+
 both speech and text modalities in input. With the adapter,
 SLM can leverage the rich knowledge encoded in LLMs (pre-
 trained T5 XXL in our case) directly for speech tasks.
+
 3. We introduce a Speech2Entity retriever to handle rare task-
+
 specific entities, which uses speech to retrieve entities.
+
 4. We propose a novel retrieval-augmented speech language
+
 model (ReSLM) which augments SLM with the retriever. We
 show that ReSLM achieves strong performance in ASR and
 speech understanding tasks.
+
 Unlike cascaded systems, both SLM and ReSLM operate di-
 rectly on speech input and as such are not stuck with misrecog-
 nized words from the first stage ASR. We demonstrate the bene-
@@ -103,7 +127,10 @@ fits of the different components of the model using the DSTC11
 challenge task. While this work reports results on a dialog track-
 ing task, the model is applicable more widely for speech under-
 standing tasks.
+
+--- Page 2 ---
 2. Related work
+
 A closely related line of work injects text inputs into speech
 models [7, 1, 3, 8, 2] and align the learned representation of
 text and speech to the same space. This is done by TTS or
@@ -115,24 +142,27 @@ a CTC model [9] where we use the predictions to filter out
 blank frames. This results in a highly compressed speech en-
 codings that preserve semantic information and makes down-
 stream NLU tasks much easier. There also other use cases of
-filtering CTC blank frames. For example, the work in [10] used
+filtering CTC blank frames. For example, the work in [10] use
 it to speed up training of RNN-T [11] models.
+
 The compression of speech signal when combinining
 speech and text modalitiess has analogies in tasks where vision
-and text modalities are combined. For example, a Perceiver [12]
+and text modalities are combined. For example, a Perceiver [12
 architecture is used to compress images before interleaved with
 text tokens [13]. However, the cross-attentions between the Per-
 ceiver outputs and the frozen LM layers makes the model sub-
-stantially different from a standard LM and hence their model
+stantially different from a standard LM and hence their mode
 cannot share a standard LM at serving time, unlike our work.
-In an alternative approach, the speech input is tokenized and
+
+In an alternative approach, the speech input is tokenized an
 then fed into the LLMs [14, 15]. These approaches suffer from
 the same issue as cascaded systems where LLMs cannot utilize
 acoustic encodings to correct errors in tokenization.
-Retrieval-augmented language models have demonstrated
+
+Retrieval-augmented language models have demonstrate:
 superior performance on various natural language tasks [16,
 17, 18], especially the knowledge-intensive ones [19, 20,
-21]. In particular, retrieval-augmentation disentangles encoding
+21). In particular, retrieval-augmentation disentangles encoding
 domain-specific knowledge from training parameters, thereby
 being a desirable property for task-oriented dialog where inte-
 grating domain schema is a critical requirement [22, 23]. Fur-
@@ -141,6 +171,7 @@ may demand adaptation to a new set of schema [24]. To deal
 with these challenges, previous work propose to either retrieve
 similar training examples [25, 26] or corresponding intents and
 slots for dialog state tracking [27].
+
 Inspired by these work, we extend retrieval-augmented
 methods to speech understanding. As mentioned before, unlike
 written domain, speech understanding poses an additional chal-
@@ -148,8 +179,10 @@ lenge that rare entities are not easily recognizable [5]. Therefore
 we introduce an audio retrieval method to alleviate these dif-
 ficulties and achieve better performance on end-to-end speech
 dialog understanding.
+
 3. Model
 3.1. Joint speech and language model (SLM)
+
 The speech understanding task requires a model that can simul-
 taneously recognize speech inputs and understand the semantic
 meaning of the corresponding language. In previous research,
@@ -158,12 +191,14 @@ have demonstrated impressive capabilities for understanding se-
 mantics in NLU tasks [28, 29, 30]. Leveraging this capability,
 we combine a speech encoder with a T5 model for this speech
 understanding task as shown in Figure 2.
+
 The speech encoder is based on a CTC model trained sep-
 arately, described further in Section 4.2. We only utilize non-
 blank predicted frames of the CTC model. This CTC-based
 blank-filtering approach has two advantages: First, only seman-
-tic relevant information of the audio signal is being 'forwarded'
+tic relevant information of the audio signal is being ‘forwarded’
 to the down-stream task, making fine-tuning for NLU much
+
 easier. Secondly, the effective sequence length of the encoded
 speech sequence is reduced by approximately 4x. This helps
 with joint modeling of speech and text sequences, where other-
@@ -172,7 +207,9 @@ and makes processing much harder. Note, this is in contrast to
 the opposite approach employed in other works where text was
 upsampled to match the acoustic frame rate [7] which cannot
 take advantage of pre-trained LLMs.
+
 3.2. Speech2Text Adapter
+
 The Speech2Text adapter consists of a few self-attention lay-
 ers to map the CTC-filtered speech encodings to the text token
 embeddings of the pre-trained LLMs. The resulting outputs are
@@ -182,14 +219,17 @@ is crucial that it undergoes pre-training to ensure a successful
 mapping to the text embedding space. This can be done by sim-
 ply training SLM with any ASR task, where the input is the
 speech and the prediction is the corresponding transcript. The
-text input part of SLM is unused while training the adapter. It's
+text input part of SLM is unused while training the adapter. It’s
 worth noting that both the speech and language model weights
 are frozen during this pre-training process.
+
 Therefore, our Speech2Text adapter refers to two folds of
 meanings: 1) a few self-attention layers between speech en-
 coder and language model; 2) pretraining with both speech and
 language models frozen.
+
 3.3. Speech2Entity Retriever
+
 The main task of the retriever is to extract a subset of entities
 from a list of given task-specific entities that are relevant for the
 current speech input. We adopt a dual encoder architecture for
@@ -204,15 +244,19 @@ loss. In our case, we use the multimodal SLM encoder since it
 can encode both audio and text. During inference, we compute
 the nearest neighbors efficiently using cosine distance with the
 SCAM library and retrieve the top-K candidates [32].
+
 3.4. Retrieval-augmented SLM model (ReSLM)
+
 In the retriever-based SLM, we integrate the top-K candidates
 from the audio retriever into the previously described SLM.
 Specifically, with acoustic encodings of the current speech in-
 put as queries we retieve the top-K entities from the large pool
 of task-specific entities. The retrieved entities are pre-prended
 to the original text inputs before being fed into the encoder.
+
 4. Experiments and results
 4.1. Evaluation Task
+
 The DSTC11 Challenge Task is based on MutliWoz 2.1 and has
 the same distribution in terms of dialogs and turns [5]. The
 main difference is that the written user responses are replaced
@@ -221,32 +265,25 @@ in the training set and by human voices from crowd-sourced
 workers in the test set. Additionally, previously researchers had
 discovered that the slot values in the training and test sets had
 substantial overlap, which led to misleading and overly opti-
-Text
-[ASR] I'd like to book a train to
-outputs Mcdougal [DST] train-arrival=Mcdougal
-Text model
-(T5)
-Decoder
-Encoder
-Token embeddings
-Text inputs
-Top-k
-entities
-Audio embeddings
-Concatenate
-How can I help you today?
+
+--- Page 3 ---
 Database
-Speech2Entity
-retriever
-Speech2Text
-adapter (pretrained)
-Remove blank frames
-Speech
-encoder
-Filtered encodings
+
+Text | [ASR] I'd like to book a train to :
+outputs | Mcdougal [DST] train-arrival=Mcdougal_ | S
+Text model —— Speech2Entity
+(T5) Decoder Too-k retriever
+Encoder entities _ ———
+— Speech2Text
+Token embeddings Audio embeddings ke adapter (pretrained)
+| Conéatenate
+. Speech Filtered encodings [=~
+4sText inputs _ encoder
+
+‘How Re blank fre
+‘How can | help you today? ! [J Remove biank frames
 Speech encoder (frozen)
-Audio inputs
-I'd like to book a train to Mcdougal
+
 Figure 2: Model architecture for ReSLM, and SLM (without
 the Speech2Entity retriever component). The SLM and ReSLM
 models take both speech and text as inputs. The speech frame
@@ -255,22 +292,26 @@ formed by Speech2Text adapter, then concatenated with text em-
 beddings before being fed into a T5 encoder-decoder model. In
 ReSLM, a few entities are selected using the speech input by
 Speech2Entity retriever and prepended to the text input.
+
 mistic performance reports. To alleviate this issue, the organiz-
 ers of the challenge modified the test set by replacing the slot
 values (city, restuarant names, times, etc). As such, the perfor-
 mance of systems on DSTC11 test set are expected to be lower
 than the written version.
+
 The main focus of the task was dialog state tracking where
 the performance was measured using Joint Goal Accuracy
 (JGA) and Slot Error Rate (SER). For details, see [5]. Addition-
 ally, we also measure word error rate (WER) of the recognized
 input speech for ablation experiments to tease apart the impact
 of misrecognitions.
+
 4.2. Experiment Setup
+
 The speech encoder is derived from a CTC [9] model trained on
 the PeopleSpeech public corpus [33] of approx. 32,000 hours of
 speech data. The encoder consists of 16 Transformer layers, al-
-together a 220m parameter model. The model's input frame rate
+together a 220m parameter model. The model’s input frame rate
 is 25ms and produces outputs every 75ms obtained via a down-
 sampling layer sandwiched between the transformer layers. We
 use the activations (1024-dim) from the last transformer layer
@@ -281,43 +322,53 @@ each word is encoded on average with 1.48 frames. Filtering
 CTC blank frames results in a very strong compression of the
 speech signal and makes down-stream NLU tasks substantially
 easier while preserving the semantic information.
+
 We reused the previously trained unimodal checkpoints:
-specifically the T5 XXL checkpoints for the text encoder-
+specifically the TS XXL checkpoints for the text encoder-
 decoder, and the CTC speech encoder checkpoints for the
 speech encoder. Throughout the training process, we main-
 tained the speech encoder in a frozen state for all experiments
 and exclusively trained the text encoder-decoder along with the
 Speech2Text adaptation layer. We also show ablation studies of
-only partially finetuning T5 models.
+only partially finetuning TS models.
+
 4.3. Auto-Regressive Inference
+
 Dialogs have multiple turns and the dialog state values are in-
 ferred turn-by-turn auto-regressively. The task of dialog state
+
 tracking requires predicting all dialog states up to the current
 turn i, therefore the entire dialog history is required as input.
+
 As shown in Figure 1, we feed the speech of turn i as speech
-input and the dialog history from turn 1 to i − 1 as text input.
+input and the dialog history from turn 1 to 7 — 1 as text input.
 The dialog history can be long and is best represented in the text
 form, not speech. For this reason, we trained the SLM model
-to simultaneously recognize the words spoken in turn i along
+to simultaneously recognize the words spoken in turn 7 along
 with the dialog states in one output string. The transcript from
 each turn is incrementally collated to create the dialog history
 for subsequent turns.
+
 During the training process, the input consists of speech of
 the current turn and the dialog history based on the ASR tran-
 scripts from the previously described CTC model. The loss is
 computed with target consisting of the reference transcript of
 the current turn and the associated reference dialog state values.
-4.4. Speech2Entity Retriever Results
+
+4.4, Speech2Entity Retriever Results
+
 The Speech2Entity retriever, describe in Section 3.3, was
 trained on three categories of the entities: hotel names, restau-
 rant names, and city names [5]. The retriever was trained on
 a pool of 2.5k entities and a separate pool of 14k entities were
 used for evaluation.
+
 In principle, the two-tower retriever model can utilize any
 speech and text encoders. In our experiments, we use the SLM
 speech and text encoders both query and candidates. The check-
 points from previously trained SLM was used to initialize the
 two-tower encoders before training the retriever.
+
 The performance of the Speech2Entity retriever is shown
 in Table 1. The subset of retrieved entities were selected us-
 ing a distance threshold of -0.78, which resulted in top-10 en-
@@ -331,32 +382,23 @@ tities. Clearly, the retriever can be improved further and this is
 mostly a demonstration of the proof-of-the-concept and in spite
 of the poor precision we obtain substantial gains in ReSLM as
 described later.
+
 Recall (%)
-Precision (%)
-R@1 40.2
-P@1
-13.3
-R@3 51.9
-P@3
-6.7
-R@5
-57.0
-P@5
-5.0
-R@ 10
-62.2
-P@ 10
-3.6
-R@20
-66.5
-P@20
-2.8
-R@ 100
-70.4
-P@ 100 2.0
+
+R@1 40.2 P@1 13.3
+R@3 51.9 P@3 6.7
+R@S 57.0 P@5S 5.0
+R@10 62.2 P@10 3.6
+R@20 665 P@20 2.8
+R@100 70.4 P@100 2.0
+
 Table 1: Performance of the Speech2Entity retriever. Top-k re-
 call and precision filtered by -0.78 similarity threshold.
+
+Precision (%)
+
 4.5. Dialog State Tracking Results
+
 The results on dialog state tracking are reported in the Table 2
 where the left half corresponds to the SLM model and the right
 to the ReSLM. In the upper half of the table, the adapter lay-
@@ -364,101 +406,52 @@ ers were trained from scratch and in lower half of the table, the
 Speech2Text adapter was trained with ASR task. The different
 rows shows the impact of training different groups of parame-
 ters including the embedding layer, the encoder and the decoder
-of the T5 model.
+of the TS model.
+
 The results show that the Speech2Text adapter improves
 performance for both SLM and ReSLM, with gains ranging
+
+--- Page 4 ---
 from 3-5 JGA. Interestingly, when Speech2Text adapter is em-
 ployed just training the encoder and/or embedding gives the best
 result (29.8% and 35.1% JGA), suggesting that adapter is effec-
 tive is bringing the speech modality close to the text modality.
 On top of the gains from Speech2Text adapter, the Speech2Text
 retriever gives a further boost of 5% JGA in all conditions.
-%
-WER↓
-RNN-T [5]
-13.0
-RNN-T in-domain finetuned [5]
-10.4
-Adapter only
-10.7
-Trainable params
-SLM ReSLM
+
+% JGAt WER | JGAt WER
+Cascaded [5] 31.8 13.0
+Trainable params SLM ReSLM
 without Speech2Text Adapter
-%
-JGA ↑ WER↓↓
-JGA ↑ WER↓
-Whole T5
-Cascaded [5]
-31.8
-13.0
-T5 encoder+emb
-T5 encoder only
-Trainable params
-SLM
-ReSLM
+
+“WholeTS5 247° ° 115 31300 85
+TS encodertemb 27.3 10.1 32.0 8.9
+TS5 encoder only 27.1 11.6 31.6 9.3
+
 with Speech2Text Adapter
-without Speech2Text Adapter
-Whole T5
-Whole T5
-24.7
-11.5
-31.3
-9.5
-T5 encoder+emb
-27.3
-10.1
-32.0
-8.9
-T5 encoder+emb
-T5 encoder only
-12.0
-11.0
-11.2
-11.2
-11.3
-10.1
-9.7
-9.4
-9.4
-9.5
-9.5
-9.4
-T5 encoder only
-27.1
-11.6
-31.6
-9.3
-with Speech2Text Adapter
-Whole T5
-28.4
-9.2
-34.6
-8.5
-T5 encoder+emb
-29.5
-9.2
-35.1
-8.5
-T5 encoder only
-29.8
-9.2
-34.5
-8.6
+
+“WholeT5 284° 92° (34600 BS”
+TS encodertemb 29.5 9.2 35.1 8.5
+TS encoder only 29.8 9.2 34.5 8.6
+
 Table 2: Dialog state tracking performance evaluated using
 joint goal accuracy (JGA). We compare model performances
 with and without pretrained (see section 3.2) Speech2Text
 adapters, with and without retrieved entities. Note that the SLM
-/ReSLM models predict both speech recognized transcript and
+/ ReSLM models predict both speech recognized transcript and
 dialog state in the same output sequence. So we can also report
 word error rate (WER) here. All numbers are on test set.
+
 Zooming into the improvements for categories of dialog
 state variables, using Slot Error Rate (SER), show that the fol-
 lowing categories of dialog state variables benefited from the
 Speech2Text retriever: hotel names (26% gain), train destina-
 tion station (35% gain), and and restaurant name (14% gain).
-This is in spite of poor precision of the Speech2Text retriever
+Thi in spite of poor precision of the Speech2Text retriever
 (see section below), which makes this a remarkable gain.
+
 4.6. ASR Results
+
 Since we trained the model using multi-task objective to in-
 clude ASR, we can evaluate the performance of the model
 on the recognition task. There are two clear trends, the
@@ -467,6 +460,7 @@ conditions for SLM. It also compares favorably with a general
 purpose baseline RNN-T ASR model (13.0% WER) [5]. When
 Speech2Entity retriever is also used the gain is further boosted
 in all cases, mirroring the results in dialog state tracking.
+
 One useful ablation study would be to understand the ASR
 gains without the DST loss. We tested this by feeding speech in-
 put and training the model for ASR task alone and report the re-
@@ -480,44 +474,69 @@ when trained on ASR task alone, it brings gains when trained
 with DST task (Table 2). This can be attributed to the fact that
 the DST loss places additional focus on improving the recogni-
 tion of entities and semantics of their context.
+
 5. Conclusions
+
 We proposed a joint speech and language model (SLM) with
 both speech and text inputs. The speech input is encoded us-
 ing a separately trained CTC encoder where the input is down-
+
+% WER |
+
+RNN-T [5] 13.0
+RNN-T in-domain finetuned [5] 10.4
+Adapter only 10.7
+
+Trainable params SLM ReSLM
+
+without Speech2Text Adapter
+
+Whole T5 12.0 11.0
+TS encodertemb 11.2 11.2
+T5 encoder only 11.3 10.1
+with Speech2Text Adapter
+“WholeTS 97 O47
+TS encodertemb 94 9.5
+T5 encoder only 9.5 94
+
 Table 3: Speech recognition performance. We compare model
 performances with and without pretrained (see section 3.2)
 Speech2Text adapters, with and without retrieved entities. The
 WER values here were calculated from an ASR-only setup (dif-
 ferent from joint DST-ASR setup in Table 2).
-%
-WER↓↓
-RNN-T [5]
-13.0
-RNN-T in-domain finetuned [5]
-Adapter only
-10.4
-10.7
-Trainable params
-SLM
+
+% WER |
+
+RNN-T [5] 13.0
+
+RNN-T in-domain finetuned [5] 10.4
+
+Adapter only 10.7
+
+Trainable params SLM
+
 without Speech2Text Adapter
-Whole T5
-12.0
-T5 encoder+emb
-T5 encoder only
-11.2
-11.3
+
+“WholeTS 7 12.00
+
+TS encoder+emb 11.2
+
+TS5 encoder only 11.3
+
 with Speech2Text Adapter
-Whole T5
-9.7
-T5 encoder+emb
-T5 encoder only
-9.4
-9.5
+
+“WholeTS 7 LT
+
+TS encoder+emb 9.4
+
+TS5 encoder only 9.5
+
 Table 4: Speech recognition performance. We compare model
 performances with and without pretrained (see section 3.2)
 Speech2Text adapters, with and without retrieved entities. The
 WER values here were calculated from an ASR-only setup (dif-
 ferent from joint DST-ASR setup in Table 2).
+
 sampled by filtering out the blank symbols from the CTC de-
 coder. The CTC-based blank filtering reduces the number
 of speech frames to roughly match the textual units, unlike
@@ -540,6 +559,9 @@ by pre-pending the retrieved entities to the text input, we show
 that the performance of inferring the dialog states related to
 task-specific entities can be improved. This also translates to
 significant improvement in the downstream speech understand-
+
+
+--- Page 5 ---
 ing task, in our case, prediction of dialog states (34.5% JGA).
 Thus, the combined system with the Speech2Text adapter and
 the Speech2Text retriever outperforms a strong cascade base-
@@ -547,138 +569,222 @@ line system (31.8% JGA) where the DST was trained on error-
 prone ASR transcripts. Similarly, the ReSLM model (8.6%
 WER) with the adapter and the retriever outperforms a strong
 in-domain ASR baseline (10.4% WER).
+
 While the experiments are performed on DST task, the
+
 model is more widely applicable and its performance can be
 further improved with better retriever.
+
 6. Acknowledgements
+
 We would like to acknowledge Jeffrey Zhao, Abhinav Rastogi
-and Aramys Miranda for their invaluable help.
+
+an
+
+Aramys Miranda for their invaluable help.
+
 7. References
-[1] A. Bapna, Y. Chung, N. Wu, A. Gulati, Y. Jia, J. H. Clark,
-M. Johnson, J. Riesa, A. Conneau, and Y. Zhang, "SLAM: A
+
+A. Bapna, Y. Chung, N. Wu, A. Gulati, Y. Jia, J. H. Clark,
+M. Johnson, J. Riesa, A. Conneau, and Y. Zhang, “SLAM: A
 unified encoder for speech and language modeling via speech-text
-joint pre-training," CORR, vol. abs/2110.10329, 2021. [Online].
+joint pre-training,” CoRR, vol. abs/2110.10329, 2021. [Online].
 Available: https://arxiv.org/abs/2110.10329
-[2] S. Thomas, B. Kingsbury, G. Saon, and H.-K. J. Kuo, “Integrating
-text inputs for training and adapting rnn transducer asr models,"
+
+S. Thomas, B. Kingsbury, G. Saon, and H.-K. J. Kuo, “Integrating
+text inputs for training and adapting rnn transducer asr models,”
 in Proc. ICASSP, 2022.
-[3] Z. Chen, Y. Zhang, A. Rosenberg, B. Ramabhadran, P. J. Moreno,
+
+Z. Chen, Y. Zhang, A. Rosenberg, B. Ramabhadran, P. J. Moreno,
 A. Bapna, and H. Zen, “MAESTRO: Matched Speech Text Rep-
 resentations through Modality Matching,” in Proc. Interspeech,
 2022.
-[4] J. Zhao, R. Gupta, Y. Cao, D. Yu, M. Wang, H. Lee, A. Rastogi,
-I. Shafran, and Y. Wu, “Description-driven task-oriented dialog
-modeling," arXiv preprint arXiv:2201.08904, 2022.
-[5] H. Soltau, I. Shafran, M. Wang, A. Rastogi, J. Zhao, Y. Jia,
-W. Han, Y. Cao, and A. Miranda, "Speech aware dialog system
-technology challenge (dstc11)," arXiv preprint arXiv:2212.08704,
+
+J. Zhao, R. Gupta, Y. Cao, D. Yu, M. Wang, H. Lee, A. Rastogi,
+IL. Shafran, and Y. Wu, “Description-driven task-oriented dialog
+modeling,” arXiv preprint arXiv:2201.08904, 2022.
+
+H. Soltau, I. Shafran, M. Wang, A. Rastogi, J. Zhao, Y. Jia,
+W. Han, Y. Cao, and A. Miranda, “Speech aware dialog system
+technology challenge (dste11),” arXiv preprint arXiv:2212.08704,
 2022.
-[6] M. Eric, R. Goel, S. Paul, A. Sethi, S. Agarwal, S. Gao,
-and D. Hakkani-Tür, “Multiwoz 2.1: Multi-domain dialogue
-state corrections and state tracking baselines," CORR, vol.
+
+M. Eric, R. Goel, S. Paul, A. Sethi, S. Agarwal, S. Gao,
+and D. Hakkani-Tiir, “Multiwoz 2.1: Multi-domain dialogue
+state corrections and state tracking baselines,’ CoRR, vol.
 abs/1907.01669, 2019. [Online]. Available: http://arxiv.org/abs/
 1907.01669
-[7] A. Rosenberg, Y. Zhang, B. Ramabhadran, Y. Jia, P. J. Moreno,
+
+A. Rosenberg, Y. Zhang, B. Ramabhadran, Y. Jia, P. J. Moreno,
 Y. Wu, and Z. Wu, “Speech recognition with augmented
-synthesized speech," CORR, vol. abs/1909.11699, 2019. [Online].
+synthesized speech,” CoRR, vol. abs/1909.11699, 2019. [Online].
 Available: http://arxiv.org/abs/1909.11699
-[8] Z. Chen, Y. Zhang, A. Rosenberg, B. Ramabhadran, P. Moreno,
-and G. Wang, "Tts4pretrain 2.0: Advancing the use of text and
-speech in asr pretraining with consistency and contrastive losses,"
+
+Z. Chen, Y. Zhang, A. Rosenberg, B. Ramabhadran, P. Moreno,
+and G. Wang, “Tts4pretrain 2.0: Advancing the use of text and
+speech in asr pretraining with consistency and contrastive losses,”
 in Proc. ICASSP, 2022.
-[9] A. Graves, S. Fernández, F. Gomez, and J. Schmidhuber, "Con-
+
+A. Graves, S. Ferndndez, F. Gomez, and J. Schmidhuber, “Con-
 nectionist temporal classification: Labelling unsegmented se-
-quence data with recurrent neural networks," in Proc. ICML. As-
+quence data with recurrent neural networks,” in Proc. ICML. As-
 sociation for Computing Machinery, 2006.
-[10] Y. Wang, Z. Chen, C. Zheng, Y. Zhang, W. Han, and P. Haghani,
-"Accelerating rnn-t training and inference using ctc guidance,"
+
+YY. Wang, Z. Chen, C. Zheng, Y. Zhang, W. Han, and P. Haghani,
+“Accelerating rnn-t training and inference using cte guidance,”
 2022. [Online]. Available: https://arxiv.org/abs/2210.16481
-[11] A. Graves, “Sequence transduction with recurrent neural net-
-works," CORR, 2012.
-[12] A. Jaegle, S. Borgeaud, J. Alayrac, C. Doersch, C. Ionescu,
+
+A. Graves, “Sequence transduction with recurrent neural net-
+works,” CoRR, 2012.
+
+A. Jaegle, S. Borgeaud, J. Alayrac, C. Doersch, C. Ionescu,
 D. Ding, S. Koppula, D. Zoran, A. Brock, E. Shelhamer, O. J.
 Hénaff, M. M. Botvinick, A. Zisserman, O. Vinyals, and J. Car-
-reira, "Perceiver io: A general architecture for structured inputs &
-outputs." arXiv, 2021.
-[13] J. Alayrac, J. Donahue, P. Luc, A. Miech, I. Barr, Y. Has-
+reira, “Perceiver io: A general architecture for structured inputs &
+outputs.” arXiv, 2021.
+
+J. Alayrac, J. Donahue, P. Luc, A. Miech, I. Barr, Y. Has-
 son, K. Lenc, A. Mensch, K. Millican, M. Reynolds, R. Ring,
+
+(14]
+
+(15)
+
+{16]
+
+17]
+
+18
+
+19
+
+20)
+
+21
+
+22
+
+23
+
+24)
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30)
+
 E. Rutherford, S. Cabi, T. Han, Z. Gong, S. Samangooei, M. Mon-
 teiro, J. Menick, S. Borgeaud, A. Brock, A. Nematzadeh, S. Shar-
 ifzadeh, M. Binkowski, R. Barreira, O. Vinyals, A. Zisserman,
-and K. Simonyan, "Flamingo: a visual language model for few-
-shot learning," CORR, vol. abs/2204.14198, 2022.
-[14] Z. Borsos, R. Marinier, D. Vincent, E. Kharitonov, O. Pietquin,
+and K. Simonyan, “Flamingo: a visual language model for few-
+shot learning,” CoRR, vol. abs/2204.14198, 2022.
+
+Z. Borsos, R. Marinier, D. Vincent, E. Kharitonov, O. Pietquin,
 M. Sharifi, O. Teboul, D. Grangier, M. Tagliasacchi, and N. Zeghi-
-dour, "Audiolm: a language modeling approach to audio genera-
-tion," arXiv preprint arXiv:2209.03143, 2022.
-[15] F. Wu, K. Kim, S. Watanabe, K. Han, R. McDonald, K. Q.
-Weinberger, and Y. Artzi, "Wav2seq: Pre-training speech-to-
-text encoder-decoder models using pseudo languages," 2022.
+dour, “Audiolm: a language modeling approach to audio genera-
+tion,” arXiv preprint arXiv:2209.03143, 2022.
+
+F. Wu, K. Kim, S. Watanabe, K. Han, R. McDonald, K. Q.
+Weinberger, and Y. Artzi, “Wav2seq: Pre-training speech-to-
+text encoder-decoder models using pseudo languages,” 2022.
 [Online]. Available: https://arxiv.org/abs/2205.01086
-[16] U. Khandelwal, A. Fan, D. Jurafsky, and L. Z. amd M. Lewis,
-"Nearest neighbor machine translation," in Proc. ICLR, 2021.
-[17] S. Borgeaud, A. Mensch, J. Hoffmann, T. Cai, E. Rutherford,
+
+U. Khandelwal, A. Fan, D. Jurafsky, and L. Z. amd M. Lewis,
+“Nearest neighbor machine translation,” in Proc. ICLR, 2021.
+
+S. Borgeaud, A. Mensch, J. Hoffmann, T. Cai, E. Rutherford,
 K. Millican, G. v. d. Driessche, J.-B. Lespiau, B. Damoc, A. Clark,
 D. d. L. Casas, A. Guy, J. Menick, R. Ring, T. Hennigan,
 S. Huang, L. Maggiore, C. Jones, A. Cassirer, A. Brock, M. Pa-
 ganini, G. Irving, O. Vinyals, S. Osindero, K. Simonyan, J. W.
 Rae, E. Elsen, and L. Sifre, “Improving language models by re-
-trieving from trillions of tokens," CORR, vol. abs/2112.04426,
+trieving from trillions of tokens,” CoRR, vol. abs/2112.04426,
 2021.
-[18] G. Izacard, P. Lewis, M. Lomeli, L. Hosseini, F. Petroni,
+
+G. Izacard, P. Lewis, M. Lomeli, L. Hosseini, F. Petroni,
 T. Schick, J. Dwivedi-Yu, A. Joulin, S. Riedel, and E. Grave,
-"Atlas: Few-shot learning with retrieval augmented language
-models," 2022. [Online]. Available: https://arxiv.org/abs/2208.
+“Atlas: Few-shot learning with retrieval augmented language
+models,” 2022. [Online]. Available: https://arxiv.org/abs/2208.
 03299
-[19] K. Guu, K. Lee, Z. Tung, P. Pasupat, and M.-W. Chang, “Re-
+
+K. Guu, K. Lee, Z. Tung, P. Pasupat, and M.-W. Chang, “Re-
 trieval augmented language model pre-training,” in Proc. ICML,
-vol. 119. PMLR, 2020, pp. 3929–3938.
-[20] P. Lewis, E. Perez, A. Piktus, F. Petroni, V. Karpukhin, N. Goyal,
-H. Küttler, M. Lewis, W.-t. Yih, T. Rocktäschel, S. Riedel,
-and D. Kiela, "Retrieval-augmented generation for knowledge-
-intensive nlp tasks,” in Proc. NIPS, vol. 33, 2020, pp. 9459–9474.
-[21] G. Izacard and E. Grave, “Distilling knowledge from reader to
+vol. 119. PMLR, 2020, pp. 3929-3938.
+
+P. Lewis, E. Perez, A. Piktus, F. Petroni, V. Karpukhin, N. Goyal,
+H. Kiittler, M. Lewis, W.-t. Yih, T. Rocktiischel, S. Riedel,
+and D. Kiela, “Retrieval-augmented generation for knowledge-
+intensive nlp tasks,” in Proc. NIPS, vol. 33, 2020, pp. 9459-9474.
+
+G. Izacard and E. Grave, “Distilling knowledge from reader to
 retriever for question answering,” in Proc. ICLR, 2021. [Online].
 Available: https://openreview.net/forum?id=NTEz-6wysdb
-[22] C.-S. Wu, A. Madotto, E. Hosseini-Asl, C. Xiong, R. Socher,
-and P. Fung, "Transferable multi-domain state generator for task-
-oriented dialogue systems,” in Proc. ACL, Jul. 2019, pp. 808–819.
-[23] L. Zhou and K. Small, "Multi-domain dialogue state tracking
-as dynamic knowledge graph enhanced question answering,"
-CORR, vol. abs/1911.06192, 2019. [Online]. Available: http:
-//arxiv.org/abs/1911.06192
-[24] A. Rastogi, X. Zang, S. Sunkara, R. Gupta, and P. Khaitan, “To-
+
+C.-S. Wu, A. Madotto, E. Hosseini-Asl, C. Xiong, R. Socher,
+and P. Fung, “Transferable multi-domain state generator for task-
+oriented dialogue systems,” in Proc. ACL, Jul. 2019, pp. 808-819.
+
+L. Zhou and K. Small, “Multi-domain dialogue state tracking
+as dynamic knowledge graph enhanced question answering,”
+CoRR, vol. abs/1911.06192, 2019. [Online]. Available: http:
+/arxiv.org/abs/1911.06192
+
+A. Rastogi, X. Zang, S. Sunkara, R. Gupta, and P. Khaitan, “To-
 wards scalable multi-domain conversational agents: The schema-
-guided dialogue dataset," Proc. AAAI Conference on Artificial In-
+guided dialogue dataset,’ Proc. AAAI Conference on Artificial In-
 telligence, 2020.
-[25] P. Pasupat, Y. Zhang, and K. Guu, “Controllable semantic pars-
+
+P. Pasupat, Y. Zhang, and K. Guu, “Controllable semantic pars-
 ing via retrieval augmentation,” in Proc. EMNLP, Nov. 2021, pp.
 7683-7698.
-[26] R. Gupta, H. Lee, J. Zhao, Y. Cao, A. Rastogi, and Y. Wu, “Show,
-don't tell: Demonstrations outperform descriptions for schema-
+
+R. Gupta, H. Lee, J. Zhao, Y. Cao, A. Rastogi, and Y. Wu, “Show,
+don’t tell: Demonstrations outperform descriptions for schema-
 guided task-oriented dialogue,” in Proc. NACCL. ACL, Jul. 2022.
-[27] D. Yu, M. Wang, Y. Cao, L. El Shafey, I. Shafran, and H. Soltau,
-"Knowledge-grounded dialog state tracking,” in Proc. EMNLP,
+D. Yu, M. Wang, Y. Cao, L. El Shafey, I. Shafran, and H. Soltau,
+
+“Knowledge-grounded dialog state tracking,” in Proc. EMNLP,
 2022.
-[28] J. Devlin, M. Chang, K.Lee, and K. Toutanova, “Bert: Pre-
+
+J. Devlin, M. Chang, K.Lee, and K. Toutanova, “Bert: Pre-
 training of deep bidirectional transformers for language under-
-standing," arXiv preprint arXiv:1810.04805, 2018.
-[29] C. Raffel, N. Shazeer, A. Roberts, K. Lee, S. Narang, M. Matena,
+standing,” arXiv preprint arXiv: 1810.04805, 2018.
+
+C. Raffel, N. Shazeer, A. Roberts, K. Lee, S. Narang, M. Matena,
 Y. Zhou, W. Li, and P. J. Liu, “Exploring the limits of transfer
 learning with a unified text-to-text transformer,” The Journal of
 Machine Learning Research, 2020.
-[30] A. Radford, K. Narasimhan, T. Salimans, and I. Sutskever,
-"Improving language understanding by generative pre-training,"
+
+A. Radford, K. Narasimhan, T. Salimans, and I. Sutskever,
+“Improving language understanding by generative pre-training,”
 2018.
-[31] J. Ni, C. Qu, J. Lu, Z. Dai, G. H. Ábrego, J. Ma, V. Y.
+
+--- Page 6 ---
+Bu
+
+[32]
+
+[33]
+
+J. Ni, C. Qu, J. Lu, Z. Dai, G. H. Abrego, J. Ma, V. Y.
 Zhao, Y. Luan, K. B. Hall, M.-W. Chang, and Y. Yang,
-"Large dual encoders are generalizable retrievers," arXiv preprint
+“Large dual encoders are generalizable retrievers,” arXiv preprint
 arXiv:2112.07899, 2021.
-[32] R. Guo, P. Sun, E. Lindgren, Q. Geng, D. Simcha, F. Chern, and
-S. Kumar, "Accelerating large-scale inference with anisotropic
-vector quantization," in International Conference on Machine
+
+R. Guo, P. Sun, E. Lindgren, Q. Geng, D. Simcha, F. Chern, and
+S. Kumar, “Accelerating large-scale inference with anisotropic
+vector quantization,” in International Conference on Machine
 Learning. PMLR, 2020, pp. 3887-3896.
-[33] D. Galvez, G. Diamos, J. Ciro, J. F. Cerón, K. Achorn, A. Gopi,
-D. Kanter, M. Lam, M. Mazumder, and V. J. Reddi, “The people's
+
+D. Galvez, G. Diamos, J. Ciro, J. F. Cerén, K. Achorn, A. Gopi,
+D. Kanter, M. Lam, M. Mazumder, and V. J. Reddi, “The people’s
 speech: A large-scale diverse english speech recognition dataset
-for commercial usage," CoRR, vol. abs/2111.09344, 2021.
+for commercial usage,” CoRR, vol. abs/2111.09344, 2021.
+

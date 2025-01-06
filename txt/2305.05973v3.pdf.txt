@@ -1,19 +1,19 @@
-arXiv:2305.05973v3 [cs.CL] 23 May 2024
+--- Page 1 ---
+arX1iv:2305.05973v3_ [cs.CL] 23 May 2024
+
 Synthetic Query Generation for Privacy-Preserving Deep Retrieval Systems
 using Differentially Private Language Models
+
 Aldo Gael Carranza
 Stanford University
 aldogael@stanford.edu
+
 Alex Kurakin
 Google DeepMind
 kurakin@google.com
+
 Abstract
-Rezsa Farahani
-Google Inc.
-farahani@google.com
-Matthew Jagielski
-Google DeepMind
-jagielski@google.com
+
 We address the challenge of ensuring differen-
 tial privacy (DP) guarantees in training deep re-
 trieval systems. Training these systems often in-
@@ -35,7 +35,9 @@ rect DP-training, all while maintaining query-
 level privacy guarantees. This work highlights
 the potential of harnessing LMs to overcome
 limitations in standard DP-training methods.
+
 1 Introduction
+
 Deep retrieval systems have been widely adopted
 in many online services, from search to advertising,
 to match user queries to relevant recommendations
@@ -54,17 +56,29 @@ neural network models have been demonstrated to
 implicitly memorize and leak sensitive user infor-
 mation in the training data (Carlini et al., 2019).
 This raises privacy sensitivities around each stage
+
+Rezsa Farahani
+Google Inc.
+farahani@google.com
+
+Matthew Jagielski
+Google DeepMind
+jagielski@google.com
+
 Natalia Ponomareva
 Google Research
 nponomareva@google.com
+
 Milad Nasr
 Google DeepMind
 srxzr@google.com
+
 of data collection, training, inference, and hosting
 these systems. In this work, we seek to address
 the problem of ensuring user query privacy guaran-
 tees in deep retrieval systems without significantly
 hindering their utility.
+
 The standard approach to ensure the privacy of
 training data in many large-scale machine learning
 models is to directly introduce differential privacy
@@ -82,6 +96,7 @@ mareva et al., 2023) and models with losses that
 cannot be decomposed into per-example losses
 such as pairwise and contrastive-style losses (Huai
 et al., 2020; Xue et al., 2021).
+
 This limits the application of DP-training on
 deep retrieval systems since these systems typically
 use non-per-example decomposable contrastive-
@@ -96,24 +111,33 @@ quality degradation. Hence, additional considera-
 tions are often needed to adapt DP-training to deep
 retrieval models for achieving an adequate privacy-
 performance tradeoff.
+
 In this work, we take an approach that ensures
 user query privacy prior to training a deep retrieval
 system in order to circumvent the various issues
 with directly DP-training deep retrieval systems
 with a non-per-example decomposable contrastive-
+
+--- Page 2 ---
 Data owner
-DP finetune LLM on
+
+OP finetune LLM on.
 conditional query
-generation task
+
+generation task using DP LLM
+
 Generate synthetic queries
-using DP LLM
+
 System server
+
 Finetune downstream
 retrieval system
 on synthetic data
+
 Figure 1: Illustration of approach.
+
 style loss. We build on the framework of synthetic
-data generation using DP language models (LMS)
+data generation using DP language models (LMs)
 (Yue et al., 2022; Mattern et al., 2022) to develop
 an approach for private query sharing to train any
 downstream deep retrieval system with query-level
@@ -126,8 +150,10 @@ generally, our work presents an initial study into
 a nascent opportunity to leverage exciting break-
 throughs in LMs to overcome crucial limitations in
 directly DP-training machine learning systems.
+
 2 Related Work
-Synthetic Generation using DP LMS Several re-
+
+Synthetic Generation using DP LMs __ Several re-
 cent studies (Yue et al., 2022; Mattern et al., 2022;
 Mireshghallah et al., 2022; Putta et al., 2022) have
 investigated the utility of private synthetic data
@@ -148,10 +174,12 @@ a non-per-example decomposable loss. In partic-
 ular, our motivation is to achieve query privacy
 DP guarantees in deep retrieval systems with high
 utility.
+
 DP-training under Non-per-example Decompos-
 able Losses Figuring out better ways of DP-
 training models with non-per-example decompos-
 able losses remains an active research topic. Re-
+
 search in this area has entirely focused on pairwise
 losses (Huai et al., 2020; Xue et al., 2021; Kang
 et al., 2021), introducing specialized algorithms
@@ -162,8 +190,11 @@ general-purpose approach without such additional
 assumptions for achieving some level of privacy
 for a system trained with a non-per-example de-
 composable loss.
+
 3 Background
+
 3.1 Deep Retrieval
+
 Deep retrieval systems have emerged as highly ef-
 fective and scalable information retrieval systems
 to find candidate items based on their semantic
@@ -187,34 +218,42 @@ loss, which makes memory-efficient use of items
 already loaded in a mini-batch as randomly sam-
 pled soft negatives (Gillick et al., 2019; Karpukhin
 et al., 2020; Qu et al., 2020). In particular, given
-a training batch of query-item pairs {(qi, di)}iЄB,
-each d; is the positive item document for query qi,
-and all other item documents {d;}ji within the
+a training batch of query-item pairs {(q;, di) }ies.
+each d; is the positive item document for query q;,
+and all other item documents {dj} jz; within the
 batch are treated as the negatives. The in-batch
+
+--- Page 3 ---
 softmax loss for each sample in the batch is
-=
-Li - log
-esim (qi,di)
-ΣjEB esim (qi,dj)'
-(1)
-where sim(qi, dj) is the cosine similarity between
-the embeddings of qi and d; for any i, j = B. The
+
+esim(ai,di)
+
+Vics esim(qi.d;)’
+
+where sim(q;, d;) is the cosine similarity between
+the embeddings of q; and d; for any i, 7 ¢ B. The
 larger and more diverse the batch, the better it is
 for representation learning.
-query embeddings
-Encoder
-queries
-loss
+
+L; log
+
+d)
+
 similarity
-document embeddings
-Encoder
-documents
+
+query embeddings document embeddings
+
+Encoder Encoder
+
+queries documents
+
 Figure 2: Illustration of deep retrieval dual encoder
 model. Dashed lines connecting the query and docu-
 ment encoders represent the possibility of sharing the
 same encoder.
-3.1.1
-Privacy Risks of Deep Retrieval
+
+3.1.1 Privacy Risks of Deep Retrieval
+
 The neural encoders in deep retrieval systems are
 high-capacity models known to implicitly memo-
 rize sensitive information present in the training
@@ -230,59 +269,63 @@ models trained on the private data (Huang et al.,
 2023; Zeng et al., 2024). This underscores the
 increase in privacy risks associated with deep re-
 trieval systems.
-3.2 Conditional Text Generation
+
+3.2. Conditional Text Generation
+
 Conditional text generation is the task of gener-
 ating a sequence of text given a specific prompt
-(Keskar et al., 2019; Schick and Schütze, 2021).
-Pre-trained generative LMs such as GPT-3 and T5
+(Keskar et al., 2019; Schick and Schiitze, 2021).
+Pre-trained generative LMs such as GPT-3 and TS
 have been shown to be highly effective at generat-
 ing high-quality text conditioned on various prompt
 inputs (Raffel et al., 2020; Brown et al., 2020).
 Given a context c, the probability distribution of
-a text sequence x = (x1,.
-,
-...,xn) is decomposed
-as p(x|c) = [[²²±=1 P(xi|x1, · , xi−1, c). A neural
-network Pe is trained to model the conditional dis-
+a text sequence x = (21,...,2n) is decomposed
+as p(x|c) = []}_, p(wilxi,-..,2i-1,¢). A neural
+
+network pg is trained to model the conditional dis-
 tributions. The model can then be used to gener-
-ate a new sample x = (x1,..., πm) conditioned
+ate a new sample Z = (%1,...,Zm) conditioned
 on a given context c by sequentially sampling
-Po(·|c), Po(·|≈1, c), · · · ‚ Pø (· |˜1, · · · ‚ ≈m−1, c). In
 this work, we model the distribution of query texts
 given item documents as contexts with a publicly
 pre-trained LM.
+
 3.3 Differential Privacy
+
 Differential privacy (DP) has become a gold stan-
 dard for ensuring data anonymization (Dwork et al.,
 2014). In this work, we make use of the follow-
 ing relaxed notion of differential privacy known as
-(ε, 8)-differential privacy.
+(e, 6)-differential privacy.
+
 Definition 3.1 (Differential Privacy). A random-
-ized algorithm M : D → S is (e, §)-differentially
+ized algorithm M : D > S is (e, 6)-differentially
 private if for all S C S and for any two neighbor-
-ing datasets D, D' E D that differ exactly by a
-single data point, we have that P[M(D) € S] ≤
-e€ P[M(D′) € S] + 8.
+ing datasets D, D’ € D that differ exactly by a
+single data point, we have that P[M(D) € S] <
+e& PIM(D') € S] +6.
+
 Note that for capturing query-level differential
 privacy in retrieval datasets under this definition,
 neighboring datasets are datasets that differ by ex-
 actly one query. This definition captures a privacy
 guarantee based on the indistinguishability of the
 presence of a single data point in a dataset. The
-€ and 8 parameter control the strength of this pri-
+€ and 6 parameter control the strength of this pri-
 vacy guarantee, where smaller values correspond
 to stronger guarantees. A useful property of DP
 that is crucial to our approach is its post-processing
 property (Dwork et al., 2014) which states that
 for any deterministic or randomized function f de-
 fined over the range of the mechanism M, if M
-satisfies (e, 8)-DP, so does the composition f o M.
+satisfies (€, 5)-DP, so does the composition f o M.
 The post-processing property ensures that arbitrary
 computations on the output of a DP mechanism do
 not incur any additional privacy loss.
-3.3.1
-Differentially Private Training
-о
+
+3.3.1 Differentially Private Training
+
 In the context of machine learning, DP can be
 used to protect the privacy of data used to train
 a model, preventing an adversary from inferring
@@ -295,18 +338,21 @@ also referred to as DP-training (Ponomareva et al.,
 2023). The most popular methods for DP-training
 are gradient noise injection methods like differ-
 entially private stochastic gradient descent (DP-
+
+--- Page 4 ---
 SGD) (Abadi et al., 2016). DP-SGD works by
 clipping per-example gradients to have norm no
-greater than C and adding isotropic Gaussian noise
-N(0,02C2I) to the clipped gradients before aggre-
+greater than C' and adding isotropic Gaussian noise
+N (0, o?C?I) to the clipped gradients before aggre-
 gating and applying the gradient update to model
-weights. The noise multiplier σ is set based on the
-privacy parameters ε, 8, and it can be determined
+weights. The noise multiplier a is set based on the
+privacy parameters ¢€, 6, and it can be determined
 using a privacy accountant (Abadi et al., 2016).
+
 Clipping is done to bound gradient sensitivity,
 which captures how much a single example can
 influence the trained model. The specific value of
-C does not actually affect the (ε, 8)-DP guarantee,
+C does not actually affect the (€,5)-DP guarantee,
 since a larger value of C means more noise will
 be added to compensate. However, the primary
 challenge in setting the clipping norm is in finding
@@ -315,9 +361,11 @@ norm is set too low, it may overly constrain the
 gradients during training. If the clipping norm is set
 too high, sensitivity is less controlled, and too much
 noise is added to the gradients. Both cases hinder
-the model's ability to learn and worsen utility.
+the model’s ability to learn and worsen utility.
+
 3.3.2 Limitations of Directly Differentially
 Private Training Retrieval Systems
+
 Our work was primarily motivated by the fact that
 DP-SGD is not immediately compatible with the
 in-batch softmax loss used to train dual encoders.
@@ -332,6 +380,7 @@ higher sensitivity means that more noise needs to
 be added to the gradient updates during training to
 achieve the same level of privacy guarantees, which
 leads to worse utility.
+
 Moreover, DP-SGD provides guarantees on
 example-level privacy, and every example in this
 case contains a query and item. However, in this
@@ -339,6 +388,7 @@ work, we are interested in achieving query-level
 privacy which should be easier than protecting both
 queries and items. Standard DP-SGD is not able to
 guarantee these less strict levels of privacy.
+
 Lastly, a systems-level issue of DP-training on
 the in-batch softmax loss is that in order to take ad-
 vantage of vectorization and parallelization strate-
@@ -346,6 +396,7 @@ gies for computing per-example gradients more
 quickly (Subramani et al., 2021), each query-item
 example in a batch must be duplicated to be con-
 tained in every de facto example in the batch, lead-
+
 ing to a quadratic increase in memory requirements.
 Given fixed memory resources, this necessitates
 significantly smaller batch sizes, which has an ad-
@@ -356,11 +407,14 @@ the amount and diversity of in-batch examples. Our
 approach of training with private synthetic queries
 precludes the above limitations when training a
 downstream dual encoder deep retrieval model.
+
 4 Approach
+
 We describe our general-purpose approach to ob-
 tain DP synthetic data for training a downstream
 deep retrieval system while ensuring query-level
 privacy on the original training data.
+
 1) DP-training LM on Conditional Query Gen-
 eration Task First, we obtain a suitable publicly
 pre-trained LM that has not been pre-trained on the
@@ -373,7 +427,7 @@ as per the DP-SGD algorithm (Abadi et al., 2016).
 The conditional query generation task is the follow-
 ing: given a query-item document pair (q, d) in the
 training data, the LM is fine-tuned to generate the
-target text "q" given input text "d". Note that for
+target text “q’ given input text “d”. Note that for
 larger LMs with billions of parameters, it is possi-
 ble to leverage more parameter-efficient finetuning
 techniques (Lester et al., 2021; Hu et al., 2021) in
@@ -381,20 +435,24 @@ order to overcome the high cost of training such
 large models. The effect of parameter-efficient DP-
 finetuning on the quality of synthetically generated
 retrieval data is a subject of further study.
+
 2) Synthetic Query Generation using DP LM
 Then, the DP fine-tuned LM is capable of gener-
 ating synthetic queries that are representative of
 the real queries and relevant to the items. For each
 item document d, we generate a matching synthetic
-query ğ by providing the input “generate_query: d"
+query q by providing the input “generate_query: d”
 to the model. This method allows for generating
 multiple synthetic queries from each document. A
 synthetic training dataset is then constructed to be
 the set of original documents matched with their
 corresponding synthetic queries.
+
 3) Training Dual Encoder with DP Synthetic
 Data Lastly, the synthetic data can then be shared
 securely for any subsequent training tasks without
+
+--- Page 5 ---
 taking on any additional DP losses on the original
 queries, as guaranteed by the post-processing prop-
 erty of DP (see Section 3.3). In particular, we can
@@ -403,8 +461,10 @@ max loss (see Equation 1) on the synthetic training
 data using standard non-private training methods,
 while still guaranteeing DP protection of the origi-
 nal queries.
+
 5 Experimental Setup
 5.1 Datasets
+
 We use publicly available datasets for informa-
 tion retrieval tasks. For finetuning and evaluation,
 we consider the MSMARCO dataset (Bajaj et al.,
@@ -415,26 +475,28 @@ concepts. Additionally, we consider datasets in the
 BEIR benchmark suite (Thakur et al., 2021), which
 contains information retrieval datasets across a va-
 riety of domains, for zero-shot evaluation.
-5.2 Synthetic Data Generation
-5.2.1
-Implementation Details
+
+5.2. Synthetic Data Generation
+5.2.1 Implementation Details
+
 Model Training For synthetic data generation,
 we trained various T5 LMs (Raffel et al., 2020)
 with different sizes {Small, Base, Large, XL} and
-privacy guarantees € = {3,8,16, ∞} to generate
+privacy guarantees « € {3,8, 16,00} to generate
 synthetic queries given corresponding input docu-
 ments from the MSMARCO dataset. The T5 Small,
 Base, Large, XL models have around 60 million,
 220 million, 770 million, 3 billion parameters, re-
 spectively. All experiments were performed on a
 TPU v4 chip.
+
 Hyperparameters We trained each LM over 30
 epochs with batch size 1024 and set the maximum
 token length to be 384 for input documents and 128
 for target queries. We used the DP-Adam optimizer
 with a learning rate of 0.001 and clip norm of 0.1.
 Following (Li et al., 2021), we set the privacy pa-
-rameter 8 = 1/2n where n is the training dataset
+rameter 5 = 1/2n where n is the training dataset
 size. For sampling, we used a nucleus sampling
 strategy (Holtzman et al., 2019) with p = 0.8.
 The hyperparameters above were chosen from
@@ -445,23 +507,30 @@ optimal criteria were the highest BLEU scores
 achieved on a validation dataset. We found that
 learning rate of 0.001, clipping norm 0.1, batch
 size 1024, and epochs 30 mostly resulted in the
+
 best model. We used these hyperparameters in all
-other T5 models. See Table 1 for the hyperparame-
+other TS models. See Table 1 for the hyperparame-
 ter grid.
+
 Table 1: Hyperparameter grid.
-Hyperparameter
+
+Hyperparameter | Values
+
 Token Lengths
 Learning Rate
 Clipping Norm
 Batch Size
 Epochs
-Values
+
 Input: 384, Target: 128
-0.001.2k for k = {0, 1, 2, 3}
-5.2.2 Data Synthesis
+0.001 - 2~* for k € {0, 1,2, 3}
 {0.1, 0.25, 0.5, 1}
+
 {128, 256, 512, 1024}
 {10, 20, 30}
+
+5.2.2 Data Synthesis
+
 We used each DP-finetuned T5 LM to generate
 synthetic queries given documents from the origi-
 nal training data. These pairs of synthetic queries
@@ -470,7 +539,9 @@ dataset. For qualitative comparison, we provide an
 example in Table 2 of an original query-document
 pairs and the synthetic queries generated under var-
 ious model configurations and privacy levels.
-5.2.3 Pretraining and Training Data Overlap
+
+5.2.3. Pretraining and Training Data Overlap
+
 We note the importance that the pretrained LMs
 used to generate the synthetic data were not
 markedly trained on the original query data we seek
@@ -479,11 +550,12 @@ would be undermined since the models would have
 already seen the data. To address this matter in
 our experiments, we conducted an analysis to de-
 termine the extent of overlap of the MSMARCO
-dataset on the pre-training data of T5 models, the
-C4 common crawl dataset (Raffel et al., 2020). We
+dataset on the pre-training data of TS models, the
+C4 common craw] dataset (Raffel et al., 2020). We
 conducted multiple runs of selecting random sub-
 sets of 10,000 query and text pairs to determine if
 there was an exact match in the C4 dataset.
+
 Our analysis determined that while a signifi-
 cant percentage of MSMARCO documents (~22%)
 were exactly found in C4 on average, a negligible
@@ -497,38 +569,35 @@ to give reasonable guarantees of privacy. In Sec-
 tion 6.3, we provide a more extensive study of the
 empirical privacy guarantees of our training proce-
 dure.
+
+--- Page 6 ---
 Table 2: Synthetic query example.
-Source
+
+Source Text
+
 Document
+
 Original Query
-Text
-€ = ∞
-€ = 16
-T5-Base
-€ = 8
+
 The main cast of the show: Mickey Mouse, Minnie Mouse, Donald Duck, Daisy Duck, Goofy, and
 Pluto star in the series, which focuses on interacting with the viewer to stimulate problem solving.
 characters from the Mickey Mouse clubhouse show
-the Mickey Mouse show cast
-what is the most important characters in the series
-what is in this series?
-€ = 3
-what is in this code for dfrl
-T5-XL
-T5-Large
-T5-Small
-€ = 3
-issue with show by mickey mouse
-€ = 3
-€ = 3
-what is the most animated characters on disney cartoon show
-what is isn't a character will do a story
-5.3 Downstream Retrieval System
-5.3.1
-Implementation Details
+
+€= oo | the Mickey Mouse show cast
+¢€=16 | what is the most important characters in the series
+T5-Base the 5
+e=8 what is in this series?
+e=3 what is in this code for dfr1
+TS-XL e=3 issue with show by mickey mouse
+TS-Large ¢€=3 what is the most animated characters on disney cartoon show
+TS5-Small ¢€=3 what is isn’t a character will do a story
+
+5.3. Downstream Retrieval System
+5.3.1 Implementation Details
+
 Model Training For each data source (i.e., orig-
 inal MSMARCO data and synthetic datasets for
-various & and model sizes), we train a separate dual
+various € and model sizes), we train a separate dual
 encoder model on the in-batch softmax loss. We
 utilize a separate pre-trained T5-Base encoder for
 both the query and document encoders, sharing pa-
@@ -538,13 +607,16 @@ significantly pretrained on the original queries. We
 emphasize that the encoders of the retrieval models
 are distinct from the T5 models used to generate
 synthetic data.
+
 Hyperparameters For the hyperparameters in
 dual encoder model training, we used learning rate
 0.001, batch size 32, epochs 5, the maximum token
 length 384 for documents and 128 for queries. For
 the directly DP finetuning experiments, we used a
 clipping norm of 0.1.
+
 5.3.2 Baseline Approach
+
 A baseline comparison of our approach will be to
 compare against a deep retrieval system that is di-
 rectly DP-trained on the original data. For direct
@@ -556,22 +628,28 @@ creased to 32. We do not experiment with different
 downstream deep retrieval models since our intent
 is to compare general-purpose methods for achiev-
 ing DP guarantees in retrieval systems.
+
 6 Evaluation
+
 6.1 Evaluation on Retrieval Tasks
+
 We evaluate the retrieval models on the MS-
 MARCO test data set and various other BEIR re-
+
 trieval data sets for zero-shot evaluation. We evalu-
 ate on the normalized discounted cumulative gain
-score over the top 10 predictions (NDCG@10)
+score over the top 10 predictions (NDCG@ 10)
 which measures the relevance and ranking qual-
 ity of items in a recommendation list, considering
 both quality and position. We also report the re-
-call score over the top 10 predictions (Recall@10),
+call score over the top 10 predictions (Recall @ 10),
 which measures the percentage of times the ground
 truth recommendation appears in the top 10 predic-
 tions. We report the evaluation results of a single
 training run.
+
 6.1.1 Search & Retrieval Procedure
+
 Evaluation of the dual encoder retrieval models re-
 quires a query-document nearest neighbor search
 implementation for the inference stage. For our
@@ -579,10 +657,11 @@ experiments, we used the Scalable Nearest Neigh-
 bors (ScaNN) library, an open-source library that
 provides a fast and scalable approximate nearest
 neighbor search procedure (Guo et al., 2020). The
-procedure was executed using ScaNN's brute force
+procedure was executed using ScaNN’s brute force
 scoring and the inner product distance settings.
-6.1.2
-MSMARCO Evaluation
+
+6.1.2 MSMARCO Evaluation
+
 Table 3 shows the evaluation results on the MS-
 MARCO test set for deep retrieval models regu-
 larly trained on the synthetically generated data
@@ -594,11 +673,14 @@ on the original data under varying privacy levels.
 In the top rows of both tables, we also provide
 another baseline reference evaluation of a dual en-
 coder model regularly finetuned on the original
-data without any DP guarantees (i.e., € = ∞).
+data without any DP guarantees (i.e., € = 00).
+
 We observe that the retrieval model trained on
 synthetic data with DP significantly outperform
 retrieval trained with DP on original data. As dis-
 cussed in Section 3.3.2, there are a number of chal-
+
+--- Page 7 ---
 lenges associated with training DP models with
 contrastive-style losses. Our naive approach of im-
 plementing DP-training on contrastive loss likely
@@ -606,6 +688,7 @@ explains poor utility of DP-training on original data.
 Additionally, our DP synthetic data essentially in-
 troduces additional public knowledge into the pro-
 cess, since we utilize a publicly pretrained LM.
+
 Moreover, we found that the retrieval model
 trained with non-DP synthetic data outperformed
 the retrieval model trained on the original data.
@@ -626,67 +709,39 @@ form significantly better than previously thought
 that training with synthetic data from DP LMs is
 viable for achieving DP guarantees and efficiency
 in retrieval models.
+
 Table 3: Evaluation of retrieval models. Top: Trained on DP
-synthetic data with varying e and fixed model size T5-Base.
+synthetic data with varying € and fixed model size T5-Base.
 Bottom: Trained on DP synthetic data with varying model
-size and fixed € = 3.
-€ | NDCG@10 | Recall@10
-Source
-Original
-T5-Base
-0.2525
-0.4098
-∞
-0.2590
-0.4192
-T5-Base 16
-0.2027
-0.3342
-T5-Base 8
-0.1912
-0.3196
-T5-Base 3
-0.1830
-0.3108
-T5-XL
-3
-0.1854
-0.3098
-T5-Large 3
-0.1833
-0.3094
-T5-Base 3
-T5-Small 3
-0.1830
-0.1346
-0.3108
-0.2272
+size and fixed « = 3.
+
+Source « | NDCG@10 | Recall@10
+Original | oo 0.2525 0.4098
+T5-Base | co 0.2590 0.4192
+T5-Base | 16 0.2027 0.3342
+T5-Base | 8 0.1912 0.3196
+T5-Base | 3 0.1830 0.3108
+T5-XL 3 0.1854 0.3098
+T5-Large | 3 0.1833 0.3094
+T5-Base | 3 0.1830 0.3108
+T5-Small | 3 0.1346 0.2272
+
 Table 4: Evaluation of retrieval models DP-trained directly
-on original data with varying €.
-| ∞
-Source
-€ | NDCG@10
-Recall @ 10
-Original
-0.2525
-0.4098
-Original
-16
-0.0523
-0.0862
-Original 8
-0.0386
-0.0649
-Original 3
-0.0234
-0.0388
-6.1.3
-Zero-shot Evaluation
+on original data with varying e.
+
+Source | € | NDCG@1O | Recall@10
+Original | 00 | 0.2525. | 0.4098
+Original | 16 0.0523 0.0862
+Original | 8 0.0386 0.0649
+Original | 3 0.0234 0.0388
+
+6.1.3 Zero-shot Evaluation
+
 We also evaluate the zero-shot generalization ca-
 pabilities of a retrieval model trained on synthetic
 data. We compare against a retrieval model trained
-on the original data with no DP (i.e., € = ∞) and
-with € = 16. See Table 5 for the results. Again,
+on the original data with no DP (i.e., € = oo) and
+with « = 16. See Table 5 for the results. Again,
 our results demonstrate significant advantage of DP
 synthetic data compared to DP-training on original
 data, nearly matching and in some cases outper-
@@ -695,10 +750,12 @@ the benefits of synthetic data generation can out-
 weigh the utility degradation of DP-training with
 reasonable levels of privacy, at least in zero-shot
 generalization tasks.
+
 6.2 Similarity between Synthetic and Original
 Datasets
+
 We compute measures of similarity between the
-synthetic data generated by the DP-trained T5 mod-
+synthetic data generated by the DP-trained TS mod-
 els against the original data. Since the synthetic
 data is one-to-one generated from the original data,
 we can compute BLEU scores to evaluate similarity
@@ -708,17 +765,19 @@ of text distributions (Pillutla et al., 2021). See Ta-
 ble 6 for the scores. We observe that the non-DP
 finetune model generates synthetic data that is as
 similar as one could expect under these metrics,
-and there is a significant drop with finite e, with
-increasing similarity with higher & and increasing
+and there is a significant drop with finite €, with
+increasing similarity with higher € and increasing
 model size. By comparing the similarity scores
 with the retrieval evaluation results, we observe
 that while larger models lead to drastic improve-
 ments in the synthetic data similarity, the down-
 stream retrieval performance sees comparatively
 more modest gains with increasing model size.
+
 6.3 Empirical Privacy
+
 The provable privacy provided by DP decays sig-
-nificantly as e grows, but prior work has shown that
+nificantly as € grows, but prior work has shown that
 even these large values can provide strong protec-
 tion against state of the art privacy attacks (Car-
 lini et al., 2019, 2022; Ponomareva et al., 2023).
@@ -731,69 +790,144 @@ empirical privacy (Zanella-Béguelin et al., 2020;
 Ramaswamy et al., 2020; Jagielski et al., 2022).
 To perform this test, we construct examples with
 private information, referred to as canaries, and
-Table 5: Zero-shot evaluation of retrieval models trained on DP synthetic data vs. directly DP-trained retrieval models with
-€ = 16. Top table: NDCG@10. Bottom table: Recall @10.
-Source
+
+--- Page 8 ---
+Table 5: Zero-s!
+€ = 16. Top table: N.
+
+DCG@ 10. Bottom table: Recall @ 10.
+
+ot evaluation of retrieval models trained on DP synthetic data vs. directly DP-trained retrieval models with
+
+Source | €
+
+arguana
+
+cqadup
+
+dbpedia
+
+fiqa
+
 NDCG@10
-arguana cqadup dbpedia fiqa hotpot nfcorpus quora scidocs scifact covid touche
-Original ∞ 0.2653 0.2659 0.3905 0.2257 0.5232 0.2974 0.8126 0.1857 0.4527 0.4971 0.2764
-Original 16 0.2132 0.0990 0.1272 0.0870 0.1422 0.1331 0.6856 0.0792 0.2051 0.3133 0.1185
-T5-Base 16 0.2757 0.2474 0.3728 0.2140 0.5122 0.2971 0.7850 0.1750 0.4645 0.4351 0.2547
-Source € arguana cqadup dbpedia
-Recall@10
-fiqa hotpot nfcorpus quora scidocs scifact covid touche
-Original ∞ 0.5569 0.3368 0.1479 0.2440 0.3706
-Original 16 0.4388 0.1325 0.0313 0.0906 0.1108
-T5-Base 16 0.5768 0.3165 0.1217 0.2261 0.3398
-0.1013
-0.0365
-0.1110
-0.8989 0.1071 0.5801 0.0116 0.0530
-0.7762 0.0503 0.2969 0.0063 0.0149
-0.8763 0.1066 0.5848 0.0101 0.0489
+
+hotpot
+
+nfcorpus quora scidocs scifact covid touche
+
+Original
+
+0.2653
+
+0.2659
+
+0.3905
+
+0.2257
+
+0.5232
+
+0.2974 0.8126 0.1857 0.4527 0.4971 0.2764
+
+16
+16
+
+Original
+T5-Base
+
+0.2132
+0.2757
+
+0.0990
+0.2474
+
+0.1272
+0.3728
+
+0.0870
+0.2140
+
+0.1422
+0.5122
+
+0.1331 0.6856
+0.2971 0.7850
+
+0.0792
+0.1750
+
+0.2051
+0.4645
+
+0.3133
+0.4351
+
+0.1185
+0.2547
+
+Source | €
+
+arguana
+
+cqadup
+
+dbpedia
+
+fiqa
+
+Recall@ 10
+
+hotpot
+
+nfcorpus quora scidocs scifact covid touche
+
+Original
+
+0.5569
+
+0.3368
+
+0.1479
+
+0.2440
+
+0.3706
+
+0.1013 0.8989 0.1071 0.5801 0.0116 0.0530
+
+Original
+T5-Base
+
+0.4388
+
+0.5768
+
+0.1325
+0.3165
+
+0.0313
+0.1217
+
+0.0906
+0.2261
+
+0.1108
+0.3398
+
 Table 6: Similarity scores of generated synthetic data. Top:
-Varying e and fixed model size. Bottom: Varying model size
+Varying ¢€ and fixed model size. Bottom: Varying model size
 with fixed € = 3.
-Model €
-BLEU MAUVE
-T5-Base
-0.2939 0.9763
-T5-Base 16 0.0984 0.3715
-T5-Base 8 0.0940
-3 0.1021 0.7117
-lower bounds on the € parameter (Stock et al., 2022)
-allow us to interpret these ranks as a lower bound
-of roughly 0.015 on e. This large gap is consis-
-tent with prior findings on the empirical privacy of
-DP-SGD on language models (Carlini et al., 2019;
-Ponomareva et al., 2023).
-Table 7: Privacy leakage.
-0.3431
-T5-Base 3
-0.0856
-0.2974
-T5-XL
-T5-Large 3
-T5-Base
-0.1096 0.6359
-0.0940 0.2974
-0.0436 0.2296
-Model
-€
-Repetition = 10
-Rank Leaked
-T5-Base
-1/100
-T5-Base 16 43/100
-67%
-0%
-1/100 100%
-32/100
-0%
-T5-Small
-3 3
-Repetition = 100
-Rank Leaked
+
+Model | ¢ | BLEU MAUVE
+T5-Base | 00 | 0.2939 0.9763
+T5-Base | 16 | 0.0984 0.3715
+TS-Base | 8 | 0.0940 0.3431
+T5-Base | 3 | 0.0856 0.2974
+TS-XL | 3 | 0.1021 0.7117
+T5-Large | 3 | 0.1096 0.6359
+T5-Base | 3 | 0.0940 0.2974
+T5-Small | 3 | 0.0436 0.2296
+
 introduce a subset of them into the original train-
 ing data, and measure how likely the model is to
 output the injected canaries. In general, canary
@@ -805,6 +939,7 @@ query, corresponding document + random 10-digit
 string), (random query, random document + ran-
 dom 10-digit string). The secret part of each canary
 is the random 10-digit string.
+
 We train the language model on this modified
 dataset using different DP guarantees, generate syn-
 thetic datasets, and assess canary exposure. We
@@ -818,7 +953,40 @@ ways extractable. However, our approach with a
 large € of 16 prevents the model from leaking se-
 crets and significantly increases the rank. Recent
 techniques for converting attack success rates to
+
+0.0365 0.7762
+0.1110 0.8763
+
+0.0503
+0.1066
+
+0.2969
+0.5848
+
+0.0063
+0.0101
+
+0.0149
+0.0489
+
+lower bounds on the € parameter (Stock et al., 2022)
+allow us to interpret these ranks as a lower bound
+of roughly 0.015 on e. This large gap is consis-
+tent with prior findings on the empirical privacy of
+DP-SGD on language models (Carlini et al., 2019;
+Ponomareva et al., 2023).
+
+Table 7: Privacy leakage.
+
+Repetition = 100
+
+Repetition = 10
+Model | « | Rank Leaked | Rank — Leaked
+T5-Base | co | 1/100 67% 1/100 100%
+T5-Base | 16 | 43/100 0% 32/100 0%
+
 7 Conclusion
+
 Our work focused on ensuring DP guarantees in
 training deep retrieval systems. We discussed the
 limitations of DP-training such systems with the
@@ -835,11 +1003,14 @@ compared to direct DP-training, without compro-
 mising query privacy. Our work highlights the
 potential of LMs to overcome crucial limitations in
 DP-training ML systems.
+
 Limitations There are a few limitations to our
 approach. Firstly, while we observed that larger
 LMs generate higher quality synthetic queries, it is
 worth noting that training such large models may
 too computationally expensive. Exploring more
+
+--- Page 9 ---
 parameter-efficient finetuning methods tailored to
 DP-training could mitigate the computational bur-
 den associated with training such larger models.
@@ -857,6 +1028,7 @@ approach exclusively ensures query-level privacy.
 For achieving more general example-level privacy,
 it may be necessary to resort to other approaches
 or more conventional DP-training methods.
+
 Risks & Ethical Considerations Data privacy
 is a crucial consideration in the responsible devel-
 opment of personalized machine learning systems.
@@ -865,7 +1037,9 @@ dress issues of data privacy in deep retrieval sys-
 tems. However, it is important to acknowledge
 the above limitations on privacy guarantees of our
 approach to prevent undesired privacy risks.
+
 Acknowledgements
+
 We thank Rishabh Bansal, Manoj Reddy, An-
 dreas Terzis, Sergei Vassilvitskii, Abhradeep Guha
 Thakurta, Shuang Song, Arthur Asuncion, and
@@ -875,84 +1049,103 @@ the retrieval training pipeline. Finally, we appre-
 ciate the support and encouragement of YouTube
 Ads leadership Shobha Diwakar, Marija Mikic, and
 Ashish Gupta throughout this work.
+
 References
+
 Martin Abadi, Andy Chu, Ian Goodfellow, H Bren-
 dan McMahan, Ilya Mironov, Kunal Talwar, and
 Li Zhang. 2016. Deep learning with differential pri-
 vacy. In Proceedings of the 2016 ACM SIGSAC con-
 ference on computer and communications security,
 pages 308-318.
+
 Payal Bajaj, Daniel Campos, Nick Craswell, Li Deng,
 Jianfeng Gao, Xiaodong Liu, Rangan Majumder,
 Andrew McNamara, Bhaskar Mitra, Tri Nguyen,
 et al. 2016. Ms marco: A human generated ma-
 chine reading comprehension dataset. arXiv preprint
-arXiv:1611.09268.
+arXiv: 1611.09268.
+
 Luiz Bonifacio, Hugo Abonizio, Marzieh Fadaee, and
 Rodrigo Nogueira. 2022. Inpars: Data augmentation
 for information retrieval using large language models.
 arXiv preprint arXiv:2202.05144.
+
 Tom Brown, Benjamin Mann, Nick Ryder, Melanie
 Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind
 Neelakantan, Pranav Shyam, Girish Sastry, Amanda
 Askell, et al. 2020. Language models are few-shot
 learners. Advances in neural information processing
 systems, 33:1877-1901.
+
 Nicholas Carlini, Steve Chien, Milad Nasr, Shuang
 Song, Andreas Terzis, and Florian Tramer. 2022.
 Membership inference attacks from first principles.
 In 2022 IEEE Symposium on Security and Privacy
 (SP), pages 1897-1914. IEEE.
-Nicholas Carlini, Chang Liu, Úlfar Erlingsson, Jernej
+
+Nicholas Carlini, Chang Liu, Ulfar Erlingsson, Jernej
 Kos, and Dawn Song. 2019. The secret sharer: Eval-
 uating and testing unintended memorization in neural
 networks. In USENIX Security Symposium, volume
 267.
+
 Nicholas Carlini, Florian Tramer, Eric Wallace,
 Matthew Jagielski, Ariel Herbert-Voss, Katherine
 Lee, Adam Roberts, Tom Brown, Dawn Song, Ulfar
 Erlingsson, et al. 2021. Extracting training data from
 large language models. In 30th USENIX Security
 Symposium (USENIX Security 21), pages 2633-2650.
+
 Paul Covington, Jay Adams, and Emre Sargin. 2016.
 Deep neural networks for youtube recommendations.
 In Proceedings of the 10th ACM Conference on Rec-
 ommender Systems, New York, NY, USA.
+
 Zhuyun Dai, Vincent Y Zhao, Ji Ma, Yi Luan, Jianmo
 Ni, Jing Lu, Anton Bakalov, Kelvin Guu, Keith B
 Hall, and Ming-Wei Chang. 2022. Promptagator:
 Few-shot dense retrieval from 8 examples. arXiv
 preprint arXiv:2209.11755.
+
 Soham De, Leonard Berrada, Jamie Hayes, Samuel L
 Smith, and Borja Balle. 2022. Unlocking high-
 accuracy differentially private image classification
-through scale. arXiv preprint arXiv:2204.13650.
+through scale. arXiv preprint arXiv:2204. 13650.
+
 Cynthia Dwork, Aaron Roth, et al. 2014. The algorith-
 mic foundations of differential privacy. Foundations
-and TrendsⓇ in Theoretical Computer Science, 9(3-
+and Trends® in Theoretical Computer Science, 9(3-
 4):211-407.
+
 Daniel Gillick, Sayali Kulkarni, Larry Lansing, Alessan-
 dro Presta, Jason Baldridge, Eugene Ie, and Diego
 Garcia-Olano. 2019. Learning dense representations
-for entity retrieval. arXiv preprint arXiv:1909.10506.
+for entity retrieval. arXiv preprint arXiv: 1909.10506.
+
 Ruiqi Guo, Philip Sun, Erik Lindgren, Quan Geng,
 David Simcha, Felix Chern, and Sanjiv Kumar. 2020.
 Accelerating large-scale inference with anisotropic
 vector quantization. In International Conference on
 Machine Learning, pages 3887-3896. PMLR.
+
 Ari Holtzman, Jan Buys, Li Du, Maxwell Forbes, and
 Yejin Choi. 2019. The curious case of neural text
 degeneration. arXiv preprint arXiv:1904.09751.
+
+--- Page 10 ---
 Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan
 Allen-Zhu, Yuanzhi Li, Shean Wang, Lu Wang,
 and Weizhu Chen. 2021. Lora: Low-rank adap-
 tation of large language models. arXiv preprint
 arXiv:2106.09685.
+
 Mengdi Huai, Di Wang, Chenglin Miao, Jinhui Xu,
 and Aidong Zhang. 2020. Pairwise learning with
 differential privacy guarantees. In Proceedings of
 the AAAI Conference on Artificial Intelligence, vol-
-ume 34, pages 694–701.
+ume 34, pages 694-701.
+
 Jui-Ting Huang, Ashish Sharma, Shuying Sun, Li Xia,
 David Zhang, Philip Pronin, Janani Padmanab-
 han, Giuseppe Ottaviano, and Linjun Yang. 2020.
@@ -960,127 +1153,159 @@ Embedding-based retrieval in facebook search. In
 Proceedings of the 26th ACM SIGKDD International
 Conference on Knowledge Discovery & Data Mining,
 pages 2553-2561.
+
 Yangsibo Huang, Samyak Gupta, Zexuan Zhong, Kai
 Li, and Danqi Chen. 2023. Privacy implications
 of retrieval-based language models. arXiv preprint
 arXiv:2305.14888.
+
 Matthew Jagielski, Om Thakkar, Florian Tramer,
 Daphne Ippolito, Katherine Lee, Nicholas Carlini,
 Eric Wallace, Shuang Song, Abhradeep Thakurta,
 Nicolas Papernot, et al. 2022. Measuring forget-
 ting of memorized training examples. arXiv preprint
 arXiv:2207.00099.
+
 Yilin Kang, Yong Liu, Jian Li, and Weiping Wang.
 2021. Towards sharper utility bounds for differ-
 entially private pairwise learning. arXiv preprint
 arXiv:2105.03033.
-Vladimir Karpukhin, Barlas Oğuz, Sewon Min, Patrick
+
+Vladimir Karpukhin, Barlas Oguz, Sewon Min, Patrick
 Lewis, Ledell Wu, Sergey Edunov, Danqi Chen, and
 Wen-tau Yih. 2020. Dense passage retrieval for
 open-domain question answering. arXiv preprint
 arXiv:2004.04906.
+
 Nitish Shirish Keskar, Bryan McCann, Lav R Varshney,
 Caiming Xiong, and Richard Socher. 2019. Ctrl: A
 conditional transformer language model for control-
-lable generation. arXiv preprint arXiv:1909.05858.
+lable generation. arXiv preprint arXiv: 1909.05858.
+
 Eric Lehman, Sarthak Jain, Karl Pichotta, Yoav Gold-
 berg, and Byron C Wallace. 2021. Does bert pre-
 trained on clinical notes reveal sensitive data? arXiv
 preprint arXiv:2104.07762.
+
 Brian Lester, Rami Al-Rfou, and Noah Constant. 2021.
 The power of scale for parameter-efficient prompt
 tuning. arXiv preprint arXiv:2104.08691.
+
 Xuechen Li, Florian Tramer, Percy Liang, and Tatsunori
 Hashimoto. 2021. Large language models can be
 strong differentially private learners. arXiv preprint
 arXiv:2110.05679.
+
 Justus Mattern, Zhijing Jin, Benjamin Weggenmann,
 Bernhard Schoelkopf, and Mrinmaya Sachan. 2022.
 Differentially private language models for secure data
 sharing. arXiv preprint arXiv:2210.13918.
+
 Fatemehsadat Mireshghallah, Richard Shin, Yu Su, Tat-
 sunori Hashimoto, and Jason Eisner. 2022. Privacy-
 preserving domain adaptation of semantic parsers.
 arXiv preprint arXiv:2212.10520.
+
 Jianmo Ni, Chen Qu, Jing Lu, Zhuyun Dai, Gus-
-tavo Hernández Ábrego, Ji Ma, Vincent Y Zhao,
+tavo Herndndez Abrego, Ji Ma, Vincent Y Zhao,
 Yi Luan, Keith B Hall, Ming-Wei Chang, et al.
 2021. Large dual encoders are generalizable retriev-
 ers. arXiv preprint arXiv:2112.07899.
+
 Krishna Pillutla, Swabha Swayamdipta, Rowan Zellers,
 John Thickstun, Sean Welleck, Yejin Choi, and Zaid
 Harchaoui. 2021. Mauve: Measuring the gap be-
 tween neural text and human text using divergence
 frontiers. Advances in Neural Information Process-
-ing Systems, 34:4816-4828.
+ing Systems, 34:48 16-4828.
+
 Natalia Ponomareva, Hussein Hazimeh, Alex Kurakin,
 Zheng Xu, Carson Denison, H Brendan McMahan,
 Sergei Vassilvitskii, Steve Chien, and Abhradeep
 Thakurta. 2023. How to dp-fy ml: A practical guide
 to machine learning with differential privacy. arXiv
 preprint arXiv:2303.00654.
+
 Matt Post. 2018. A call for clarity in reporting bleu
-scores. arXiv preprint arXiv:1804.08771.
+scores. arXiv preprint arXiv: 1804.08771.
+
 Pranav Putta, Ander Steele, and Joseph W Ferrara. 2022.
 Differentially private conditional text generation for
 synthetic data production.
+
 Yingqi Qu, Yuchen Ding, Jing Liu, Kai Liu, Ruiyang
 Ren, Wayne Xin Zhao, Daxiang Dong, Hua Wu,
 and Haifeng Wang. 2020. Rocketqa: An opti-
 mized training approach to dense passage retrieval
 for open-domain question answering. arXiv preprint
 arXiv:2010.08191.
+
 Colin Raffel, Noam Shazeer, Adam Roberts, Katherine
 Lee, Sharan Narang, Michael Matena, Yanqi Zhou,
 Wei Li, and Peter J Liu. 2020. Exploring the limits
 of transfer learning with a unified text-to-text trans-
 former. The Journal of Machine Learning Research,
+
 21(1):5485-5551.
+
 Swaroop Ramaswamy, Om Thakkar, Rajiv Mathews,
-Galen Andrew, H Brendan McMahan, and Françoise
+Galen Andrew, H Brendan McMahan, and Frangoise
 Beaufays. 2020. Training production language mod-
 els without memorizing user data. arXiv preprint
 arXiv:2009.10031.
-Timo Schick and Hinrich Schütze. 2021. Few-shot text
+
+Timo Schick and Hinrich Schiitze. 2021. Few-shot text
 generation with natural language instructions. In
 Proceedings of the 2021 Conference on Empirical
 Methods in Natural Language Processing, pages 390-
 402.
+
 Noam Shazeer and Mitchell Stern. 2018. Adafactor:
 Adaptive learning rates with sublinear memory cost.
+
 In International Conference on Machine Learning,
 pages 4596-4604. PMLR.
+
 Pierre Stock, Igor Shilov, Ilya Mironov, and Alexandre
 Sablayrolles. 2022. Defending against reconstruction
 attacks with rényi differential privacy. arXiv preprint
 arXiv:2202.07623.
+
+--- Page 11 ---
 Pranav Subramani, Nicholas Vadivelu, and Gautam Ka-
 math. 2021. Enabling fast differentially private sgd
 via just-in-time compilation and vectorization. Ad-
 vances in Neural Information Processing Systems,
+
 34:26409-26421.
-Nandan Thakur, Nils Reimers, Andreas Rücklé, Ab-
+
+Nandan Thakur, Nils Reimers, Andreas Riicklé, Ab-
 hishek Srivastava, and Iryna Gurevych. 2021. Beir:
 A heterogenous benchmark for zero-shot evalua-
 tion of information retrieval models. arXiv preprint
 arXiv:2104.08663.
+
 Zhiyu Xue, Shaoyang Yang, Mengdi Huai, and Di Wang.
 2021. Differentially private pairwise learning revis-
-ited. In IJCAI, pages 3242-3248.
+ited. In JJCAI, pages 3242-3248.
+
 Xiang Yue, Huseyin A Inan, Xuechen Li, Girish Ku-
 mar, Julia McAnallen, Huan Sun, David Levitan, and
 Robert Sim. 2022. Synthetic text generation with
 differential privacy: A simple and practical recipe.
 arXiv preprint arXiv:2210.14348.
+
 Santiago Zanella-Béguelin, Lukas Wutschitz, Shruti
-Tople, Victor Rühle, Andrew Paverd, Olga Ohri-
-menko, Boris Köpf, and Marc Brockschmidt. 2020.
+Tople, Victor Riihle, Andrew Paverd, Olga Ohri-
+menko, Boris Képf, and Marc Brockschmidt. 2020.
 Analyzing information leakage of updates to natural
 language models. In Proceedings of the 2020 ACM
 SIGSAC conference on computer and communica-
-tions security, pages 363–375.
+tions security, pages 363-375.
+
 Shenglai Zeng, Jiankun Zhang, Pengfei He, Yue Xing,
-Yiding Liu, Han Xu, Jie Ren, Shuaiqiang Wang,
+Yiding Liu, Han Xu, Jie Ren, Shuaigqiang Wang,
 Dawei Yin, Yi Chang, et al. 2024. The good and the
 bad: Exploring privacy issues in retrieval-augmented
 generation (rag). arXiv preprint arXiv:2402.16893.
+

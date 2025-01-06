@@ -1,12 +1,19 @@
-arXiv:2305.07214v1 [cs.CV] 12 May 2023
+--- Page 1 ---
+2305.07214v1 [cs.CV] 12 May 2023
+
+arXiv
+
 MMG-Ego4D: Multi-Modal Generalization in Egocentric Action Recognition
-Xinyu Gong 2*+, Sreyas Mohan¹*, Naina Dhingra¹, Jean-Charles Bazin¹, Yilei Li¹,
-Zhangyang Wang², Rakesh Ranjan¹
-¹Meta Reality Labs, 2The University of Texas at Austin
+
+Xinyu Gong’, Sreyas Mohan!* , Naina Dhingra!, Jean-Charles Bazin!, Yilei Li',
+Zhangyang Wang’, Rakesh Ranjan!
+'Meta Reality Labs, ?The University of Texas at Austin
+
 Abstract
+
 In this paper, we study a novel problem in egocentric
-action recognition, which we term as "Multimodal Gener-
-alization" (MMG). MMG aims to study how systems can
+action recognition, which we term as “Multimodal Gener-
+alization” (MMG). MMG aims to study how systems can
 generalize when data from certain modalities is limited or
 even completely missing. We thoroughly investigate MMG
 in the context of standard supervised action recognition and
@@ -33,56 +40,56 @@ performance. We hope this study will serve as a bench-
 mark and guide future research in multimodal generaliza-
 tion problems. The benchmark and code are available at
 https://github.com/facebookresearch/MMG_Ego4D
+
 1. Introduction
+
 Action recognition systems are typically trained on data
 captured from a third-person or spectator perspective [37,
 56]. However, in areas such as robotics and augmented
 reality, we capture data through the eyes of agents, i.e.,
 in a first-person or egocentric perspective. With head-
-*Equal contribution
-*Work done during an internship at Meta Reality Labs.
+
+“Equal contribution
++ Work done during an internship at Meta Reality Labs.
+
+Training Testing
+
 (a) Normal
 Evaluation
-video
-audio
-Training
-o o oo o o oŎ08
-Attention Fusion
-video
-audio
-Testing
-990
-IMU
-IMU
-ဝားက
-000
-Multimodal Network
-video
-(b) Missing HD
+
+aes
+
+eee
+
+Multimodal Network Multimodal Network
+
+(b) Missing
 Modality
 Evaluation
-audio
-Attention Fusion
-IMU
-Multimodal Network
-audio
-(c) Cross-modal
+
+Ez
+
+aes
+
+Muttimodat Network I Network
+
+(c) Cross-mox
 Zero-shot
 Evaluation
-IMU
-Attention Fusion
-Multimodal Network |
-audio
-IMU
-Attention Fusion
-Multimodal Network
-Attention Fusion
-Multimodal Network
-Attention Fusion
-Multimodal Network
+
+>
+
+wv
+
+‘ore venue
+
+RRS
+
+Multimodal Network Multimodal Network
+
 Figure 1. Overview of MMG-Ego4D challenge. In a typical eval-
 uation setting (a) networks are trained for the supervised setting or
-the few-shot setting using training/support sets with data from all
+the few-shot setting using training/support sets with data from al}
 modalities and evaluated on data points with all modalities. How-
 ever, there can often be a mismatch between training and testing
 modalities. Our proposed challenge contains two tasks to mimic
@@ -90,50 +97,42 @@ these settings. In (b) missing modality evaluation, the model can
 only use a subset of training modalities for inference. In (c) Cross-
 modal zero-shot evaluation, the models are on modalities unseen
 during training.
+
 mounted devices such Ray-Ban Stories becoming popu-
 lar, action recognition from egocentric videos is critical to
 enable downstream applications, such as contextual rec-
 ommendations or reminders. However, egocentric action
 recognition is fundamentally different and more challeng-
-ing [6, 7, 43, 55]. While third-person video clips are of-
+ing [6, 7,43, 55]. While third-person video clips are of-
 ten curated, egocentric video clips are uncurated and have
 low-level corruptions, such as large motion blur due to head
 motion. Moreover, egocentric perception requires a careful
-understanding of the camera wearer's physical surround-
+understanding of the camera wearer’s physical surround-
 ings, and must interpret the objects and interactions from
-the wearer's perspective.
+the wearer’s perspective.
+
 Recognizing egocentric activity exclusively from one
-1
+
+--- Page 2 ---
+and > ope —+ trim grass with other tools }¢
 Video
+creat foes [toweaffteers cS ope —. puttrashintrashcan
+
 Audio
-IMU
-Video
-Audio
-↑ ↑ ↑
-trim grass with other tools
-put trash in trash can ☑
-wipe a table X
-collect dry leaves
-on the ground
-Modality
-Memory per second of data (KB)
-Typical model FLOPS (G)
-video audio IMU
-593.92 62.76 9.44
-70.50 42.08 1.65
-Table 1. Compute and memory cost for different modalities.
-Memory used per second for each modality is computed by aver-
-aging the memory used by 1000 data points drawn randomly from
-Ego4D [27]. The provided compute number corresponds to the
-forward pass cost of MVIT [15] for video, AST [26] for audio,
-and a ViT [11] based transformer model for IMU data.
+> ope —+ wipeatable
+
 Unimodal Networks
-Attention Fusion
-IMU
+
+collect dry leaves
+cntrageama) |
+
+uoisng uonuaray
+
 Multimodal Network
+
 Figure 2. Multimodal data is crucial for egocentric perception.
 Input data consists of three modalities: video, audio, and IMU.
-(top) Video action recognition identifies the clip with a tool and
+(top) Video action recognition identifies the clip with a tool an
 much grass in the background as the class trim grass with other
 tools. Audio action recognition system classifies the periodic rub-
 bing sound as put trash in a trash can. The IMU model clas-
@@ -141,11 +140,12 @@ sifies the head movement action into the class wipe a table. (bot-
 tom) Multimodal action recognition system correctly combines the
 video feed and audio feed and identifies the activity as collect dry
 leaves on the ground.
+
 modality can often be ambiguous. This is because we want
-to perceive what the device's wearer is performing instead
+to perceive what the device’s wearer is performing instead
 of what the camera feed is capturing. To this end, Mul-
 timodal information can be crucial for understanding and
-disambiguating the user's intent or action. We demonstrate
+disambiguating the user’s intent or action. We demonstrate
 it through an example in Fig. 2. In the example, the video
 feed shows a tool in the background of the grassland. An
 activity recognition model exclusively based on video rec-
@@ -156,10 +156,10 @@ an IMU model mistakes the head motion as wipe a table.
 However, a multimodal system correctly identifies the class
 as collect dry leaves on the ground by combining video, au-
 dio, and IMU signals.
--
+
 While using multimodal information is essential to
 achieve state-of-the-performance, it also presents a unique
-challenge we may not be able to use all modalities in
+challenge - we may not be able to use all modalities in
 the real world due to security or efficiency considerations.
 For example, a user might be located in a sensitive envi-
 ronment and decide to turn off the camera due to security
@@ -169,12 +169,24 @@ systems must be able generalize to missing modalities (Fig.
 1 (b)), i.e., work with an incomplete set of modalities at in-
 ference, and make a robust prediction. These challenges are
 not just limited to inference time but could manifest in re-
+
+Modality | video audio IMU
+Memory per second of data (KB) | 593.92 62.76 9.44
+Typical model FLOPs (G) 70.50 42.08 1.65
+
+Table 1. Compute and memory cost for different modalities.
+Memory used per second for each modality is computed by aver-
+aging the memory used by 1000 data points drawn randomly from
+Ego4D [27]. The provided compute number corresponds to the
+forward pass cost of MViT [15] for video, AST [26] for audio,
+and a ViT [11] based transformer model for IMU data.
+
 strictions during training. For example, if a user has to train
 a system, often in a few-shot setting, computationally ex-
 pensive modalities like video are best trained on the cloud.
 However, the user might prefer that their data stays on the
-device. However, the video will consume 60× more stor-
-age, and 43× more compute compared to cheaper modali-
+device. However, the video will consume 60x more stor-
+age, and 43x more compute compared to cheaper modali-
 ties like IMU (see Tab. 1), significantly increasing the dif-
 ficulty of training on devices with limited compute and
 storage. In this situation, we may want to enable training
@@ -182,12 +194,13 @@ with computationally less demanding modalities like audio
 while maintaining the flexibility of performing inference on
 more informative modalities like video. Multimodal sys-
 tems should robustly generalize across modalities.
+
 In this work, we propose MMG-Ego4D: a challenge de-
 signed to measure the generalization ability of egocentric
 activity recognition models. Our challenge consists of two
 novel tasks: (1) missing modality generalization aimed at
 measuring the generalization ability of models when eval-
-uated on an incomplete set of modalities (shown in Fig. 1
+uated on an incomplete set of modalities (shown in Fig. |
 (b)), and (2) cross-modal zero-shot generalization aimed at
 measuring the generalization ability of models in general-
 izing to unseen modalities during test time (shown in Fig.
@@ -196,7 +209,8 @@ ing this benchmark and introduce a novel approach that en-
 hances generalization capability in the MMG-Ego4D chal-
 lenge, while also improving performance in standard full-
 modalities settings. Our primary contributions are:
-• MMG Problem. We present MMG, a novel and practical
+
+* MMG Problem. We present MMG, a novel and practical
 problem with two tasks, missing modality generalization
 and cross-modal zero-shot generalization, for evaluating
 the generalization ability of multimodal action recogni-
@@ -204,18 +218,19 @@ tion models. These tasks are designed to support real-
 world security and efficiency considerations, and we de-
 fine them in both supervised and more challenging few-
 shot settings.
-•
-MMG-Ego4D Dataset. To facilitate the study of MMG
+
+* MMG-Ego4D Dataset. To facilitate the study of MMG
 problem in ego-centric action recognition task, we intro-
 duce a new dataset, MMG-Ego4d, which is derived from
 Ego4D [27] dataset by preprocessing the data points and
 thoroughly re-annotating by human experts to suit the
 task. To the best of our knowledge, this is the first work
-2
-•
+
+--- Page 3 ---
 to introduce these novel evaluation tasks and a benchmark
 challenge of its kind.
-Strong Baselines. We present a new method that
+
+¢ Strong Baselines. We present a new method that
 achieves strong performance on the generalization abil-
 ity benchmark and also improves the performance un-
 der the normal full-modalities setting. Our method em-
@@ -226,23 +241,26 @@ of different modalities into a unified space. Finally, a
 novel loss function is introduced, which is called cross-
 modal prototypical loss, achieving state-of-the-art results
 in multimodal few-shot settings. Extensive ablation stud-
-ies are performed to identify each proposed component's
+ies are performed to identify each proposed component’s
 contribution.
+
 2. Related Work
+
 Multimodal egocentric action recognition. Action recog-
-nition systems are typically trained on video [15–19, 25,
-65, 70]. However, for egocentric activity recognition (i.e.,
+nition systems are typically trained on video [15-19, 25,
+65,70]. However, for egocentric activity recognition (i.e.,
 first-person perspective, or recognizing the activity the user
 wearing the capturing device is performing), complimen-
 tary multimodal information is essential for identifying the
 correct activity (see Fig. 2). Previous methods for multi-
 modal fusion in egocentric activity recognition have ranged
-from simple concatenation [57, 73] to tensor decomposi-
+from simple concatenation [57,73] to tensor decomposi-
 tion [45], with some recent studies adopting transformer-
 based architectures [1,38,46,49] that have shown promising
 results. In this work, we utilize a Transformer-based fusion
 module and a modality dropout training strategy to further
 improve performance on MMG tasks.
+
 Generalizability of multimodal models. As one of the
 tasks belonging to MMG problem, the missing modality
 problem has been studied by a few work recently [40, 46,
@@ -257,28 +275,31 @@ text-visual classification task, and improve robustness via
 multi-task learning and a searched optimal fusion strategy.
 Cross-modal zero-shot action recognition is still an under-
 explored new problem. It is related to the cross-modal
-retrieval problem [63, 74, 75, 77], while the latter focuses
+retrieval problem [63, 74, 75,77], while the latter focuses
 on how to measure the feature similarity across different
 modalities.
+
 Multimodal few-shot learning. Multimodal few-shot
-learning [13, 48, 52, 53, 68] is an emerging research area
+learning [13, 48, 52,53, 68] is an emerging research area
 that aims to enable machine learning models to recog-
 nize and classify new objects based on limited examples
+
 from multiple modalities. Existing research in few-shot
 learning has predominantly focused on a single modality,
 like image [5, 8, 12, 23, 24, 41, 50, 59, 62, 64, 78] or lan-
-guage [2, 29, 71, 72, 76]. However, there has been an in-
+guage [2, 29,71, 72,76]. However, there has been an in-
 creasing interest in extending few-shot learning to multi-
 modal scenarios. Pioneering work in this area includes us-
 ing text-conditional GANs to augment data via hallucinat-
 ing images, as demonstrated in [52,53]. Eloff et al. [13] uti-
 lize a siamese network for a one-shot cross-modal matching
 problem on speech and image modalities.
+
 Datasets and benchmarks. Availability of datasets and
 clearly defined benchmark tasks have been a driving fac-
 tor in improving performance in use cases like classifica-
 tion [9], detection [14], segmentation [44] and action recog-
-nition [3, 14, 28, 37]. While performance on these tasks has
+nition [3, 14, 28,37]. While performance on these tasks has
 often surpassed human performance [31], researchers have
 shown that state-of-the-art methods are often fragile [35]
 and do not generalize well to slightly different data points
@@ -291,9 +312,11 @@ designed specifically to measure multimodal generaliza-
 tion ability in egocentric action recognition. We hope this
 benchmark will spur progress in MMG tasks and encourage
 the development of safety-aware generalizable models.
+
 3. Proposed Benchmark: MMG-Ego4D
 3.1. Overview
-Preliminaries. We use the term "supervised setting” to re-
+
+Preliminaries. We use the term “supervised setting” to re-
 fer to the regular action recognition task where a large num-
 ber of labeled training data (training set) are available. Dur-
 ing test time, the goal is to classify each testing data point
@@ -308,6 +331,7 @@ ities and testing modalities refer to the available modalities
 during supervised training and testing, respectively, in the
 supervised setting. In the few-shot setting, they refer to the
 support and query modalities.
+
 Data. The MMG-Ego4D dataset comprises data points with
 three modalities - video, audio, and inertial motion sen-
 sors (IMU) sourced from the Ego4D dataset [27] (we illus-
@@ -316,22 +340,26 @@ tary). The IMU data contains signals obtained from the
 accelerometer and gyroscope. We use approximately 202
 hours of data from the Ego4D dataset to create our bench-
 mark: 167 hours of unlabelled temporal-aligned Video-
-3
+
+--- Page 4 ---
 Audio-IMU data and 35 hours of labeled temporal-aligned
 data. We perform several steps to make the data suitable for
 our benchmark.
+
 First, we identify timestamps in the data where the activ-
 ity occurs and standardize each data point to five seconds,
 drawing data from the Ego4D Moments track [27]. IMU
 and video data are subsampled to 200 Hz and 4 FPS.
+
 Second, several data points in Ego4D contain multiple
 labels, primarily resulting from (1) multiple activities being
-performed and (2) activities being related to each other in a
+performed and (2) activities being related to each other ina
 hierarchy (e.g., mixing ingredients vs. cooking). We used
 the WordNet hierarchy as a heuristic to consolidate the label
 space, using human annotators to scrutinize the labels. If
 annotators could not conclusively identify a single correct
 label, we discarded that data point from our benchmark.
+
 Finally, we created the MMG-Ego4D few-shot bench-
 mark with two main criteria. Firstly, it must consist of two
 semantically-disjoint class sets, namely the base classes and
@@ -346,7 +374,9 @@ were not present in both the base and novel classes. We used
 the base classes as the training set for the supervised task
 and drew additional data from the Ego4D Moments track to
 form the corresponding testing set for the supervised task.
+
 3.2. Proposed MMG Tasks
+
 The goal of MMG-Ego4D is to evaluate the generaliza-
 tion ability of machine learning algorithms in situations
 where there is a mismatch between training and testing
@@ -361,7 +391,7 @@ tion systems. These tasks reflect real-world security con-
 siderations while using wearable devices. Further, perfor-
 mance on these tasks could also measure how close our cur-
 rent multimodal machine perception is to human percep-
-tion. The overview of MMG tasks is presented in Fig. 1.
+tion. The overview of MMG tasks is presented in Fig. |.
 Missing modality evaluation. This task measures how
 well models can perform inference using only a subset of
 modalities that were used for training. During inference,
@@ -369,9 +399,11 @@ maybe due to power or computational constraints, we may
 only use a subset of the modalities to perform the evalu-
 ation. This presents us with variable evaluation settings,
 and we select some of them to report their results on the
+
 benchmark. In the context of the few-shot setting, this task
 reduces to using a subset of the support modalities as the
 query modalities.
+
 Zero-Shot Cross-Modal generalization. This task mea-
 sures how well models can generalize to unseen modali-
 ties. The training and testing modalities are disjoint. In our
@@ -381,7 +413,9 @@ could use video data at test time (the budget for video infer-
 ence is acceptable and may yield better results). Similarly,
 in the context of few-shot learning, the support and query
 modalities are disjoint in this task.
+
 4. Improving Generalization Performance
+
 This section introduces a strong baseline that achieves
 high performance on the proposed MMG-Ego4D bench-
 mark. Our method comprises three novel components de-
@@ -390,7 +424,9 @@ systems. We begin by presenting an overview of our pro-
 posed method, emphasizing the significance of each com-
 ponent, and providing a detailed description of their imple-
 mentation.
+
 4.1. Method Overview
+
 We illustrate the overview of our proposed method
 pipeline in this section. Under the few-shot setting, all eval-
 uation tasks adopt the same training pipeline, composed of
@@ -404,11 +440,12 @@ term aims to enhance the multimodal generalizability of the
 model by constructing a unified feature space for all modali-
 ties. (3) multimodal meta-training: the multimodal network
 is meta-trained with prototypical-based loss to further im-
-prove the model's cross-modal generalizability. It's worth
+prove the model’s cross-modal generalizability. It’s worth
 noting that data of all modalities are used in the above train-
 ing pipeline of the few-shot setting. The modality restric-
 tion of MMG-Ego4D tasks is only applied in the support
 and query set during the few-shot evaluation.
+
 In the supervised setting, the regular and missing modal-
 ity evaluation settings adopt the same training pipeline, con-
 taining (1) unimodal supervised pre-training and (2) mul-
@@ -420,42 +457,28 @@ training: the multimodal network is trained with a cross-
 modal contrastive alignment loss using unlabeled data, to
 establish a modality-agnostic unified feature space. (2) mul-
 timodal supervised pre-training: the multimodal network is
-4
-Multimodal
-meta-train
-Setting
-Task
+
+
+--- Page 5 ---
 Multimodal Unimodal Multimodal
-unsupervised supervised supervised
-pre-train pre-train
-train
-Supervised Missing Modal
-Regular
-Zero-Shot
-Lalign
--
-Few-shot
-Regular
-Missing Modal
-Zero-Shot
-ССЕ
-LCE + Lalign
-ССЕ
-LCE + Lalign
-LCE
-ССЕ
-LCE + Lalign
-Lproto
-ССЕ
-LCE + Lalign
-ССЕ
-LCE + Lalign
-Lproto
-Lproto
+
+. i i" Multimodal
+Setting Task unsupervised supervised supervised Wutimmoca
+pre-train pre-train train
+Regular Lee Lee + Latign
+Supervised | Missing Modal Lee Lee + Latiga
+Zero-Shot Latign -
+Regular Lee Loroto
+Few-shot_| Missing Modal Lee Loreto
+Zero-Shot Lee Loroto
+
 Table 2. Training pipelines of supervised & few-shot settings.
-LCE denotes the cross-entropy loss. Lalign and proto are cross-
+Lce denotes the cross-entropy loss. Latign and Loroio are cr
 modal contrastive alignment loss and cross-modal prototypical
 loss, which will be explained in Sec. 4.3 and 4.4.
+
+S-
+
 trained using a cross-entropy loss, without the contrastive
 alignment loss term used in previous settings, as the evalua-
 tion modality is absent in the labeled data, due to the restric-
@@ -468,18 +491,20 @@ the MMG-Ego4D tasks applies to the labeled training data
 used in the multimodal supervised pre-training stage and
 the evaluation stage. This is different from the few-shot set-
 ting. We have summarized the training pipeline in Tab. 2.
+
 4.2. Multimodal Network with a Transformer-
 based Fusion Module
+
 Our proposed multimodal network consists of two main
 components: unimodal backbones and a Transformer-based
 fusion module. The unimodal backbones consist of three
 separate feature extractors, which extract features from dif-
 ferent input modalities. The fusion module aims to fuse
-and I aggregate the features of different modalities from uni-
+and aggregate the features of different modalities from uni-
 modal backbones and output the fused feature. There are
 two widely-used options for fusing modalities: using an
 MLP to process the concatenated representations of dif-
-ferent modalities [51, 54, 57], or utilizing a Transformer-
+ferent modalities [51, 54,57], or utilizing a Transformer-
 based fusion module to take a series of tokens from differ-
 ent modalities [46,49,60]. We adopt the Transformer-based
 fusion design as it can easily scale to an arbitrary number
@@ -489,25 +514,28 @@ data with a varying number of modalities in the context of
 our proposed task. The final output of the fusion module
 is obtained by averaging the output tokens instead of using
 the CLS token [11,46]. Formally, the output of the fusion
-module fuse can be written as follows:
-zfuse =
-m
-f ([output
-'output
-+e™;]m = {audio, video, IMU}]),
-(1)
-where x represents the output representation of the fea-
+module Zfuse can be written as follows:
+
+Ziuse = f ([@ehtpur + 5 | € {audio, video, IMU}]) ,
+
+qd)
+where © (vipat Fepresents the output representation of the fea-
 ture extractor for modality m. f is the fusion module that
+
 takes a sequence of input tokens from different modalities.
+
 Tokens from each modality are augmented with a modality-
-specific learnable embedding em, which is used to disam-
-biguate input tokens' modality information.
+specific learnable embedding e™, which is used to disam-
+biguate input tokens’ modality information.
+
 During the training of the fusion module, we applied a
 technique named modality drop. A subset of modalities is
 randomly dropped out with a probability p during training,
 to ensure the robustness of the fusion module to a varying
 number of input modalities.
+
 4.3. Cross-Modal Alignment Multimodal Training
+
 In the zero-shot cross-modal setting, the multimodal
 model is required to learn and infer from disjoint modali-
 ties. One approach to achieving this is to construct a uni-
@@ -521,10 +549,9 @@ tures from the same data point but different modalities in
 multimodal training with contrastive loss. Specifically, the
 unimodal feature output by the fusion module is represented
 as follows:
-zm =
-f(xutput
-em),
-m = {audio, video, IMU},
+
+m € {audio, video, IMU},
+
 (2)
 which is expected to lie in the unified feature space. We
 impose Noise Contrastive Estimation (NCE) [58] loss to
@@ -532,127 +559,88 @@ align video-audio and video-IMU pairs, drawn from differ-
 ent time stamps of video-audio-IMU data. Positive pairs
 consist of different modalities pairs from the same temporal
 location, while negative pairs are from different temporal
-locations. Our NCE alignment loss Lalign is written as fol-
+locations. Our NCE alignment loss Lajign is written as fol-
 lows:
-Lalign (Zvideo, Zm)
-― log
-Σ
-mЄ{audio, IMU}
-exp (z videoZm/T)
-exp (z video zm/T) + Σz'en exp (z video z'm/T)
-where N are negative pairs in a batch. We use cosine sim-
+
+Latign (Zvideos Zm) = >
+
+mé€ {audio, IMU}
+
+zm = f (aoteput + e”) ;
+
+— log exp (Zyiaeo%m/T)
+EXP (Zyideo%m/T) + Levens &XP (Zyideo%in/T)
+(3)
+
+where NV are negative pairs in a batch. We use cosine sim-
 ilarity as the feature distance measurement metric in our
-NCS loss. T is a temperature parameter controlling the
+NCS loss. 7 is a temperature parameter controlling the
 softness. Unlike previous methods that build a hierarchical
 common space [1], our approach defines a unified feature
 space for all modalities.
+
 4.4. Cross-Modal Prototypical Loss
+
 What properties can help representations better gener-
 alize in the few-shot task? We design a novel extension of
 prototypical loss [61] that takes into account the alignment
 between features of different modalities.
-5
+
+--- Page 6 ---
 The prototypical loss aims to minimize the distance be-
 tween the centroid of support embeddings and the query
 embeddings in the feature space, where the labels for query
 data points are assigned according to their distance to ev-
 ery support centroid. In our proposed approach, support
 and query examples can belong to different modalities, al-
-lowing for cross-modal alignment (see Fig. 3). We use zk
-to denote a unified space support feature of class k and n
+lowing for cross-modal alignment (see Fig. 3). We use 2*,
+to denote a unified space support feature of class k and Z,,
 to represent a unified space query feature, where they might
-belong to different modalities m, n = {audio, video, IMU}.
-The centroid unified space support feature ch is calculated
+belong to different modalities m,n € {audio, video, IMU}.
+The centroid unified space support feature c*, is calculated
 by averaging:
+
 1
-k
-m
-=
-Σ
-.k
-Zm
-zmzm
-m
-(4)
-where Z is the set of support features of class k with
+fe =>
+om TEE
+
+zh, (4)
+
+zk eZk,
+
+where Z*, is the set of support features of class k with
 modality m.
-'n
-The predicted probability of a query example z belong-
+
+The predicted probability of a query example Z,, belong-
 ing to class k is computed using the negative exponential of
-the 12 distance d between the query feature and the centroid
+the fy distance d between the query feature and the centroid
+
 of the unified space support feature for class k:
-☐ ☐ ☐ ☐ ☐
-☐ ☐ ☐ ☐ ☐
-A video clip showing a woman is
-conversing with someone.
-class 1
-Women chatting.
-class 2
-☐ ☐ ☐ ☐ ☐
-A man is harvesting fruits
-from a tree.
-☐ ☐ ☐ ☐ ☐
-Cs
-C3
-ㅁㅁㅁㅁㅁ
-class 3
-A man is hanging clothes
-on hangers.
-○ Support feature from video modality.
-Query feature from audio modality.
-Figure 3. Cross-modal prototypical loss. Few-shot prototypes
-centroid Ck computed by averaging support examples' feature. In
-contrast to the vanilla prototypical loss, our approach allows sup-
-port and query examples to belong to different modalities. The
-figure shows an example where the support examples are video
-data, and the query example is audio data.
-Model
-FLOPS (G) Param (M)
-Modality
-5 Way 5 Shot
-Accuracy
-MVIT-B [15]
-AST [26]
-70.50
-36.50
-video
-58.89
-Top-1
-Accuracy
-52.40
-IMU Transformer
-42.08
-1.65
-87.03
-audio
-31.06
-39.48
-15.55
-IMU
-40.07
-29.78
-Pk
-exp(-d (n, c))
-m, n = {audio, video, IMU}
-Σ exp(-d (n, ch))
-(5)
-Our proposed cross-modal prototypical loss proto is then
+
+—d (Zn, ck
+Sy exp (—d (Zn, ch’)) 5)
+¢
+
+Our proposed cross-modal prototypical loss Lproto is then
 formulated as the negative log-likelihood loss between the
 predicted probability and the ground truth class for the
-query example ŷ:
-Lproto
-=
-NLL (log [Po, P1, ... PN-1],ŷ).
-(6)
+query example 7:
+
+Loroto = NLL (log [Po, Pi, -..Pn—1].9) - (6)
+
+Pr
+
 In summary, our cross-modal prototypical loss extends
 the prototypical loss by enabling the cross-modal alignment
 between support and query features in the unified feature
 space. This loss can improve the generalization ability of
 representations in the zero-shot cross-modal task under the
 few-shot setting.
+
 5. Experimental Setup
 5.1. Architecture Details
-Unimodal backbones. We use MVIT-B (16 × 4) [15]
+
+Unimodal backbones. We use MViT-B (16 x 4) [15]
 as the feature extractor for video modality, which is pre-
 trained on Kinetics-400 [37]. Audio Spectrogram Trans-
 former (AST) [26] is used as the audio feature extractor,
@@ -661,30 +649,66 @@ tractor, we designed a ViT [11] based transformer network.
 Fusion module. Our fusion module is a transformer net-
 work with two layers. Each layer contains a self-attention
 block with 12 heads. The embedding dimension is 768.
+
 5.2. Training & Evaluation Details
+
 We illustrate some basic details of the model training and
 evaluation. Hyper-parameters like learning rate and batch
 size are detailed in our supplementary material.
+
+oO
+oOo 00 @ ~
+. \ J ooogg
+oooog an froma tree
+ANSnversing nthomeone. Zi “ @ ono oo
+@ es
+doouoo
+
+‘Amanis hanging clothes
+lon hangers.
+
+© Support feature from video modality.
+AX Query feature from audio modality
+
+Figure 3. Cross-modal prototypical loss. Few-shot prototypes
+centroid C;, computed by averaging support examples’ feature. In
+
+contrast to the vanilla prototypical loss, our approach allows sup-
+port and query examples to belong to different modalities. The
+figure shows an example where the support examples are video
+data, and the query example is audio data.
+
+5 Way 5Shot _Top-I
+
+Model | FLOPs (G) Param (M) | Modality | Accuracy Accuracy
+MViT-B [15] 70.50 36.50 video 58.89 52.40
+AST [26] 42.08 87.03 audio 31.06 39.48
+IMU Transformer 1.65 15.55 IMU 40.07 29.78
+
 Table 3. Unimodal few-shot & supervised evaluation results.
 Networks are trained on each modality independently. Video
 achieves the best performance, while also consuming more com-
 putational resources.
+
 Supervised setting. Our model uses MMG-Ego4D base
 classes for multimodal supervised training. Under the zero-
 shot cross-modal setting, our model also utilizes MMG-
 Ego4D unlabeled data to do the multimodal unsupervised
 pre-training. We use Top-1 Accuracy to measure model per-
 formance.
+
 Few-Shot setting. We use the finetune-based method to
 perform few-shot evaluation, where a small neural network
 is trained on the support set and is used to classify data
 points in the query set [30,36,42]. We adopt the standard N-
 way K-shot setting [20,69] as the evaluation setting. Top-1
 Accuracy is used to measure model performance. The fi-
-nal number is obtained by averaging the results on 10000
+nal number is obtained by averaging the results on 10 000
 episodes.
+
 6. Results on MMG-Ego4D Benchmark
 6.1. MMG-Ego4D Few-Shot Setting Results
+
 Multimodal system outperforms unimodal system sig-
 nificantly. Tab. 3 presents the few-shot classification re-
 sults for individual modalities. Notably, the video modal-
@@ -692,70 +716,26 @@ ity achieves the highest accuracy, which is anticipated since
 most classes can be easily recognized using visual informa-
 tion. However, as illustrated in Fig 2, fusing information
 from different modalities is critical to achieving better per-
-6
-Eval.
-Setting
-Support Modalities
-Query Modalities
-5 Way 5 Shot
-Accuracy
-Eval.
-Setting
-Train Modalities
-Video
-Audio IMU
-Video
-Audio IMU
-Test Modalities
-Video Audio IMU Video Audio IMU
-Top-1
-Accuracy
-Regular ✓
-✓
-✓
-✓
-✓
-63.00
-Regular ✓
-✓
-✓
-✓
-✓
-✓
-55.66
-61.76
-Missing
-Modality
-✓
-50.77
-62.79
-Missing
-62.68
-✓
-43.65
-47.48
-46.90
-42.07
-Zero-Shot
-Evaluation
-Zero-Shot
-Evaluation
-Modality
-11
-55.47
-37.07
-54.57
-30.98
-20.00
-25.03
-43.43
-35.67
-50.80
-41.02
-44.01
-46.56
-✓
-49.37
+
+--- Page 7 ---
+Eval. | Support Modalities | Query Modalities _| 5 Way 5 Shot Eval. Train Modalities Test Modalities Top-1
+Setting | Video Audio IMU | Video Audio IMu| Accuracy Setting | Video Audio IMU | Video Audio imu | 4¢curacy
+Regular |v v v v v v 63.00 Regular | ¥ v v v v v 55.66
+
+v v v v v 61.76 > v v v v v 55.47
+we
+¥ ¥ ¥ y v ¥ or a8 v v v v v 37.07
+: aa v v 54.57
+Yow wily 62.68 * viv v
+v v v v 43.65 v v 30.98
+v v v v 47.48 v v 20.00
+v v7 46.90 yO OE a
+v v 42.07 ,
+v v v 50.80 v v 35.67
+v Vv 4401 v v v 41.02
+v v 46.56
+vo v v 49.37 Table 5. Supervised setting evaluation results. Results are orga-
+
 Table 4. Multimodal few-shot evaluation results. These results
 are obtained with a single network that works across all three eval-
 uation settings. We show the regular evaluation results in the first
@@ -763,10 +743,12 @@ block, where the model is trained and evaluated with all the modal-
 ities. The second block presents missing-modality results, where
 the model is trained on all modalities but evaluated only on a sub-
 set. The last block is the result of cross-modal zero-shot evalu-
+
 ation, where the training and evaluation modalities are disjoint.
 Note that all results are obtained using the same model weight.
 Our supplementary material provides results with more training
 and test modalities configurations.
+
 formance in egocentric action detection. Our proposed mul-
 timodal system outperforms the best-performing unimodal
 system by 4.11 in terms of accuracy (Tab. 4 block 1).
@@ -785,29 +767,30 @@ Surprisingly, when queries have only one cheap modality
 (Tab. 3) by a large margin of 19.24% on IMU and 40.53%
 on audio modality, demonstrating the effectiveness of our
 approach.
+
 Zero-shot cross-modal generalization. This task presents
 a more significant challenge than missing modality gener-
 alization as the support and query modalities are disjoint.
 We select a few combinations and present the results in
 the last block of Tab. 4. To enable efficient training, we
 choose a setting where the support modality is computation-
-ally cheap, such as IMU and Audio, while the
-query modal-
+ally cheap, such as IMU and Audio, while the query modal-
 ity is relatively more informative, such as video, to achieve
 high performance. Our model significantly outperforms the
 audio and IMU unimodal settings using this evaluation set-
-Table 5. Supervised setting evaluation results. Results are orga-
+
 nized following the same structure as in Tab. 4. The model has the
 same weight in regular and missing modality evaluation.
+
 ting. We also present the results of using video as the sup-
 port modality and IMU and/or audio as the query modality,
 where our model still obtains decent accuracy. While we
 did not include all support-query modality combinations in
-due to space limitations, readers can refer to our
-paper
+the paper due to space limitations, readers can refer to our
 supplementary materials for additional results.
-the
+
 6.2. MMG-Ego4D Supervised Setting Results
+
 The results of the supervised settings are presented in
 Tab. 5. Our multimodal model outperforms each unimodal
 model in Tab. 3 significantly in the regular setting. Re-
@@ -825,76 +808,44 @@ inference, and using cheap modalities for training and ex-
 pensive modalities for inference. We observe that the model
 performs better in the latter case, indicating that learning
 from informative modalities benefits the model more.
+
 6.3. Insights from Ablation Study
+
 In this section, we carefully ablate the effect of each
 component in our designed multimodal system under var-
 ious evaluation settings, including the regular, missing
 modality, and cross-modal zero-shot evaluations.
+
 Fusion module. In this study, we propose the use of
 a Transformer-based fusion module as an alternative ap-
 proach to integrating information from different modalities
 in a multimodal network. To evaluate its performance, we
 conduct a comparative analysis against an MLP-based fu-
 sion module that concatenates representations from diverse
-7
-Eval.
-Setting
-Video
-Train/Support Modal.
-Module
-Test/Query Modal. Fusion Contrastive Top-1
-Alignment Accuracy
-Cross-Modal
-Proto. Loss
-Audio IMU
-Video
-Audio IMU
-5 Way 5 Shot
-Accuracy
-Attention
-55.66
-63.00
-Regular
-✓
-Attention
-52.18
-61.16
-MLP
-52.79
-58.67
-Attention
-62.37
-Attention
-37.07
-Missing
-Modality
-50.77
-Attention
-21.32
-40.87
-MLP
-32.89
-49.00
-Attention
-×
-50.03
-Attention
-25.03*
-51.40
-Zero-shot
-Cross-Modal
-Attention
-MLP
-Attention
-2.37
-24.54*
-33.93
-51.08
-50.80
+
+--- Page 8 ---
+Eval. Train/Support Modal. | Test/Query Modal. Fusion _Contrastive Top-1 Cross-Modal | 5 Way 5 Shot
+Setting Video Audio IMU | Video Audio IMU Module Alignment , Accuracy , Proto. Loss Accuracy
+Attention v 55.66 v 63.00
+Regular v v v v v v Attention x 52.18 v 61.16
+MLP v 52.79 v 58.67
+Attention v - x 62.37
+Missing | yoy vv | attention 232 i 403)
+. ention x . .
+
+Modality MLP v 32.89 v 49.00
+Attention v - x 50.03
+Zero-shot Attention v 25.03* v 51.40
+Cross-Modal v v v Attention x 2.37 v 33.93
+MLP v 24.54* v 51.08
+Attention v - x 50.80
+
 Table 6. Ablation study of each design component under supervised & few-shot settings. Our proposed components improve the per-
 formance under all evaluation settings. Note that cross-modal prototypical loss is only applied under the few-shot setting. *Different from
 other settings, the cross-modal contrastive alignment loss is applied at the unsupervised multimodal pre-training stage in the supervised
+
 zero-shot cross-modal setting.
+
 modalities and processes them using an MLP. To ensure a
 fair comparison, we maintain the dimensionality of input
 and output representations of both modules to be consis-
@@ -911,11 +862,12 @@ CLS token or averaging all output tokens for the final pre-
 diction. We find that averaging all output tokens produces
 better performance. Additionally, we evaluate the inclusion
 of modality-specific embeddings before fusion and find that
-it is effective in aiding the model's ability to differentiate
+it is effective in aiding the model’s ability to differentiate
 between modalities. Finally, we experiment with various
 dropout rates (p) for modality dropout and find that consis-
 tent performance is obtained across a range of values (0.3
 to 0.8), with the best results achieved at p = 0.6.
+
 Cross-modal contrastive alignment loss. Our motiva-
 tion for incorporating cross-modal alignment loss into our
 pipeline is rooted in the desire to enhance cross-modal zero-
@@ -928,7 +880,9 @@ ration of cross-modal alignment loss also yielded perfor-
 mance gains in regular and missing modality tasks. These
 results underscore the importance of cross-modal alignment
 in succeeding in the MMG-Ego4D benchmark.
+
 Cross-Modal prototypical loss. In our study, we pro-
+
 posed the incorporation of cross-modal prototypical loss as
 a means of enhancing few-shot performance in MMG tasks.
 Our experimental results, as demonstrated in Tab. 6, reveal
@@ -939,11 +893,13 @@ hancement of 0.63 points in the regular modality complete
 evaluation setting. These findings attest to the efficacy of
 cross-modal prototypical loss as a valuable addition to the
 MMG task performance optimization strategy.
+
 7. Conclusions
+
 In this paper, we introduced the first comprehensive
 benchmark for multimodal generalization (MMG) and pro-
 posed three components to improve the generalization per-
-formance of models. Our benchmark, MMG-Ego4D, in-
+ormance of models. Our benchmark, MMG-Ego4D, in-
 cludes two new tasks and a new dataset. The evaluation
 of different baseline architectures showed that the gener-
 alization ability of current systems is limited. Therefore,
@@ -961,342 +917,556 @@ novel experiments for the rigorous study of multimodal gen-
 eralization problems. These methods can increase general-
 izability and are essential for real-world settings where se-
 cure environemnts are important.
-8
+
+
+--- Page 9 ---
 References
-[1] Hassan Akbari, Liangzhe Yuan, Rui Qian, Wei-Hong
+
+1
+
+[10
+
+(ll
+
+[12
+
+2X
+
+Hassan Akbari, Liangzhe Yuan, Rui Qian, Wei-Hong
 Chuang, Shih-Fu Chang, Yin Cui, and Boqing Gong. Vatt:
 Transformers for multimodal self-supervised learning from
 raw video, audio and text. Advances in Neural Information
 Processing Systems, 34:24206-24221, 2021. 3,5
-[2] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Sub-
+
+Tom Brown, Benjamin Mann, Nick Ryder, Melanie Sub-
 biah, Jared D Kaplan, Prafulla Dhariwal, Arvind Neelakan-
 tan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. Lan-
 guage models are few-shot learners. Advances in neural in-
 formation processing systems, 33:1877-1901, 2020. 3
-[3] Fabian Caba Heilbron, Victor Escorcia, Bernard Ghanem,
+Fabian Caba Heilbron, Victor Escorcia, Bernard Ghanem,
 and Juan Carlos Niebles. Activitynet: A large-scale video
 benchmark for human activity understanding. In Proceed-
 ings of the ieee conference on computer vision and pattern
 recognition, pages 961-970, 2015. 3
-[4] Nicholas Carlini, Guy Katz, Clark Barrett, and David L Dill.
+
+Nicholas Carlini, Guy Katz, Clark Barrett, and David L Dill.
 Provably minimally-distorted adversarial examples. arXiv
 preprint arXiv:1709.10207, 2017. 3
-[5] Zitian Chen, Yanwei Fu, Yu-Xiong Wang, Lin Ma, Wei Liu,
+
+Zitian Chen, Yanwei Fu, Yu-Xiong Wang, Lin Ma, Wei Liu,
 and Martial Hebert. Image deformation meta-networks for
 one-shot learning. In CVPR, 2019. 3
-[6] Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
+
+Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
 Sanja Fidler, Antonino Furnari, Evangelos Kazakos, Davide
 Moltisanti, Jonathan Munro, Toby Perrett, Will Price, et al.
 Scaling egocentric vision: The epic-kitchens dataset. In Pro-
 ceedings of the European Conference on Computer Vision
-(ECCV), pages 720-736, 2018. 1
-[7] Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
+(ECCV), pages 720-736, 2018.
+Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
 Antonino Furnari, Evangelos Kazakos, Jian Ma, Davide
 Moltisanti, Jonathan Munro, Toby Perrett, Will Price, et al.
 Rescaling egocentric vision: collection, pipeline and chal-
 lenges for epic-kitchens-100. International Journal of Com-
-puter Vision, 130(1):33–55, 2022. 1
-[8] Rajshekhar Das, Yu-Xiong Wang, and Jose MF Moura. On
+puter Vision, 130(1):33-55, 2022. 1
+
+Rajshekhar Das, Yu-Xiong Wang, and Jose MF Moura. On
 the importance of distractors for few-shot classification. In
 ICCV, 2021. 3
-[9] Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li,
+
+Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li,
 and Li Fei-Fei. Imagenet: A large-scale hierarchical image
 database. In 2009 IEEE conference on computer vision and
-pattern recognition, pages 248–255. Ieee, 2009. 3
-[10] Samuel Dodge and Lina Karam. A study and comparison
+pattern recognition, pages 248-255. Ieee, 2009. 3
+
+Samuel Dodge and Lina Karam. A study and comparison
 of human and deep learning recognition performance under
 visual distortions. In 2017 26th international conference on
-computer communication and networks (ICCCN), pages 1–
+computer communication and networks (ICCCN), pages 1-
 7. IEEE, 2017. 3
-[11] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
+
+Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
 Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,
 Mostafa Dehghani, Matthias Minderer, Georg Heigold, Syl-
 vain Gelly, et al. An image is worth 16x16 words: Trans-
 formers for image recognition at scale. arXiv preprint
-arXiv:2010.11929, 2020. 2, 5, 6
-[12] Nikita Dvornik, Cordelia Schmid, and Julien Mairal. Diver-
+arXiv:2010.11929, 2020. 2, 5,6
+
+Nikita Dvornik, Cordelia Schmid, and Julien Mairal. Diver-
 sity with cooperation: Ensemble methods for few-shot clas-
 sification. In ICCV, 2019. 3
-[13] Ryan Eloff, Herman A Engelbrecht, and Herman Kam-
+
+Ryan Eloff, Herman A Engelbrecht, and Herman Kam-
 per. Multimodal one-shot learning of speech and images.
+
+14
+
+15
+
+16
+
+17
+
+18
+
+19
+
+20
+
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
 In ICASSP 2019-2019 IEEE International Conference on
 Acoustics, Speech and Signal Processing (ICASSP), pages
 8623-8627. IEEE, 2019. 3
-[14] Mark Everingham, Luc Van Gool, Christopher KI Williams,
+
+Mark Everingham, Luc Van Gool, Christopher KI Williams,
 John Winn, and Andrew Zisserman. The pascal visual object
 classes (voc) challenge. International journal of computer
 vision, 88(2):303-338, 2010. 3
-[15] Haoqi Fan, Bo Xiong, Karttikeya Mangalam, Yanghao Li,
+
+Haoqi Fan, Bo Xiong, Karttikeya Mangalam, Yanghao Li,
 Zhicheng Yan, Jitendra Malik, and Christoph Feichten-
 hofer. Multiscale vision transformers. In Proceedings of
 the IEEE/CVF International Conference on Computer Vi-
 sion, pages 6824-6835, 2021. 2, 3, 6
-[16] Christoph Feichtenhofer. X3d: Expanding architectures for
+
+Christoph Feichtenhofer. X3d: Expanding architectures for
 efficient video recognition. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition,
 pages 203-213, 2020. 3
-[17] Christoph Feichtenhofer, Haoqi Fan, Jitendra Malik, and
+
+Christoph Feichtenhofer, Haoqi Fan, Jitendra Malik, and
 Kaiming He. Slowfast networks for video recognition. In
 Proceedings of the IEEE/CVF international conference on
 computer vision, pages 6202-6211, 2019. 3
-[18] Christoph Feichtenhofer, Axel Pinz, and Richard P Wildes.
+
+Christoph Feichtenhofer, Axel Pinz, and Richard P Wildes.
 Spatiotemporal multiplier networks for video action recog-
 nition. In Proceedings of the IEEE conference on computer
-vision and pattern recognition, pages 4768–4777, 2017. 3
-[19] Christoph Feichtenhofer, Axel Pinz, and Andrew Zisserman.
+vision and pattern recognition, pages 4768-4777, 2017. 3
+Christoph Feichtenhofer, Axel Pinz, and Andrew Zisserman.
 Convolutional two-stream network fusion for video action
 recognition. In Proceedings of the IEEE conference on
-computer vision and pattern recognition, pages 1933–1941,
+computer vision and pattern recognition, pages 1933-1941,
 2016. 3
-[20] Chelsea Finn, Pieter Abbeel, and Sergey Levine. Model-
+
+Chelsea Finn, Pieter Abbeel, and Sergey Levine. Model-
 agnostic meta-learning for fast adaptation of deep networks.
 In International conference on machine learning, pages
-1126–1135. PMLR, 2017. 3,6
-[21] Robert Geirhos, David HJ Janssen, Heiko H Schütt, Jonas
+1126-1135. PMLR, 2017. 3,6
+
+Robert Geirhos, David HJ Janssen, Heiko H Schiitt, Jonas
 Rauber, Matthias Bethge, and Felix A Wichmann. Com-
 paring deep neural networks against humans: object recog-
-nition when the signal gets weaker. arXiv preprint
-arXiv:1706.06969, 2017. 3
-[22] Jort F Gemmeke, Daniel PW Ellis, Dylan Freedman, Aren
+arXiv preprint
+
+nition when the signal gets weaker.
+arXiv: 1706.06969, 2017. 3
+
+Jort F Gemmeke, Daniel PW Ellis, Dylan Freedman, Aren
 Jansen, Wade Lawrence, R Channing Moore, Manoj Plakal,
 and Marvin Ritter. Audio set: An ontology and human-
 labeled dataset for audio events. In 2017 IEEE interna-
 tional conference on acoustics, speech and signal processing
 (ICASSP), pages 776-780. IEEE, 2017. 6
-[23] Spyros Gidaris, Andrei Bursuc, Nikos Komodakis, Patrick
+
+Spyros Gidaris, Andrei Bursuc, Nikos Komodakis, Patrick
 Perez, and Matthieu Cord. Boosting few-shot visual learning
-with self-supervision. In ICCV, 2019. 3
-[24] Spyros Gidaris and Nikos Komodakis. Generating classifi-
+with self-supervision. In JCCV, 2019. 3
+
+Spyros Gidaris and Nikos Komodakis. Generating classifi-
 cation weights with gnn denoising autoencoders for few-shot
 learning. In CVPR, 2019. 3
-[25] Xinyu Gong, Heng Wang, Mike Zheng Shou, Matt Feiszli,
+
+Xinyu Gong, Heng Wang, Mike Zheng Shou, Matt Feiszli,
 Zhangyang Wang, and Zhicheng Yan. Searching for two-
 stream models in multivariate space for video recognition.
 In Proceedings of the IEEE/CVF International Conference
 on Computer Vision, pages 8033-8042, 2021. 3
-[26] Yuan Gong, Yu-An Chung, and James Glass. Ast: Audio
+
+Yuan Gong, Yu-An Chung, and James Glass. Ast: Audio
 spectrogram transformer. arXiv preprint arXiv:2104.01778,
 2021. 2,6
-9
-[27] Kristen Grauman, Andrew Westbury, Eugene Byrne,
+
+--- Page 10 ---
+[27]
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+[36]
+
+Kristen Grauman, Andrew Westbury, Eugene Byrne,
 Zachary Chavis, Antonino Furnari, Rohit Girdhar, Jackson
 Hamburger, Hao Jiang, Miao Liu, Xingyu Liu, et al. Ego4d:
 Around the world in 3,000 hours of egocentric video. In Pro-
 ceedings of the IEEE/CVF Conference on Computer Vision
 and Pattern Recognition, pages 18995-19012, 2022. 1, 2, 3,
 4
-[28] Chunhui Gu, Chen Sun, David A Ross, Carl Vondrick, Car-
+
+Chunhui Gu, Chen Sun, David A Ross, Carl Vondrick, Car-
 oline Pantofaru, Yeqing Li, Sudheendra Vijayanarasimhan,
 George Toderici, Susanna Ricco, Rahul Sukthankar, et al.
 Ava: A video dataset of spatio-temporally localized atomic
 visual actions. In Proceedings of the IEEE Conference
-on Computer Vision and Pattern Recognition, pages 6047-
+on Computer Vision and Pattern Recognition, pages 6047—
 6056, 2018. 3
-[29] Yuxian Gu, Xu Han, Zhiyuan Liu, and Minlie Huang. Ppt:
+
+Yuxian Gu, Xu Han, Zhiyuan Liu, and Minlie Huang. Ppt:
 Pre-trained prompt tuning for few-shot learning. arXiv
 preprint arXiv:2109.04332, 2021. 3
-[30] Yunhui Guo, Noel C Codella, Leonid Karlinsky, James V
+
+Yunhui Guo, Noel C Codella, Leonid Karlinsky, James V
 Codella, John R Smith, Kate Saenko, Tajana Rosing, and
 Rogerio Feris. A broader study of cross-domain few-shot
 learning. In European conference on computer vision, pages
-124–141. Springer, 2020. 6
-[31] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+124-141. Springer, 2020. 6
+
+Kaiming He, Xiangyu Zhang, Shaoqging Ren, and Jian Sun.
 Delving deep into rectifiers: Surpassing human-level perfor-
 mance on imagenet classification. In Proceedings of the
 IEEE international conference on computer vision, pages
 1026-1034, 2015. 3
-[32] Dan Hendrycks and Thomas Dietterich. Benchmarking neu-
+
+Dan Hendrycks and Thomas Dietterich. Benchmarking neu-
 ral network robustness to common corruptions and perturba-
 tions. arXiv preprint arXiv:1903.12261, 2019. 3
-[33] Guenter Hirsch. Experimental framework for the perfor-
+
+Guenter Hirsch. Experimental framework for the perfor-
 mance evaluation of speech recognition front-ends on a large
 vocabulary task. ETSI STQ Aurora DSR Working Group,
 Dec. 2002, 2002. 3
-[34] Hans-Günter Hirsch and David Pearce. The aurora experi-
+
+Hans-Giinter Hirsch and David Pearce. The aurora experi-
 mental framework for the performance evaluation of speech
 recognition systems under noisy conditions. In ASR2000-
 Automatic speech recognition: challenges for the new Mil-
 lenium ISCA tutorial and research workshop (ITRW), 2000.
 3
-[35] Hossein Hosseini, Baicen Xiao, and Radha Poovendran.
-Google's cloud vision api is not robust to noise. In 2017 16th
+
+Hossein Hosseini, Baicen Xiao, and Radha Poovendran.
+Google’s cloud vision api is not robust to noise. In 2017 16th
 IEEE international conference on machine learning and ap-
-plications (ICMLA), pages 101–105. IEEE, 2017. 3
-[36] Shell Xu Hu, Da Li, Jan Stühmer, Minyoung Kim, and Tim-
+plications (ICMLA), pages 101-105. IEEE, 2017. 3
+
+Shell Xu Hu, Da Li, Jan Stiihmer, Minyoung Kim, and Tim-
 othy M Hospedales. Pushing the limits of simple pipelines
 for few-shot learning: External data and fine-tuning make
 a difference. In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 9068-
+on Computer Vision and Pattern Recognition, pages 9068—
 9077, 2022. 6
-[37] Will Kay, Joao Carreira, Karen Simonyan, Brian Zhang,
+
+Will Kay, Joao Carreira, Karen Simonyan, Brian Zhang,
 Chloe Hillier, Sudheendra Vijayanarasimhan, Fabio Viola,
 Tim Green, Trevor Back, Paul Natsev, et al. The kinetics hu-
 man action video dataset. arXiv preprint arXiv:1705.06950,
-2017. 1, 3, 6
-[38] Wonjae Kim, Bokyung Son, and Ildoo Kim. Vilt: Vision-
+2017. 1, 3,6
+
+Wonjae Kim, Bokyung Son, and Ildoo Kim. Vilt: Vision-
 and-language transformer without convolution or region su-
+
+10
+
+39
+
+40
+
+41
+
+42
+
+43
+
+44
+
+45
+
+46
+
+47
+
+48
+
+49
+
+50
+
+51
+
+52
+
 pervision. In International Conference on Machine Learn-
 ing, pages 5583-5594. PMLR, 2021. 3
-[39] Alexey Kurakin, Ian Goodfellow, and Samy Bengio. Ad-
+
+Alexey Kurakin, Ian Goodfellow, and Samy Bengio. Ad-
 versarial machine learning at scale. arXiv preprint
 arXiv:1611.01236, 2016. 3
-[40] Hu-Cheng Lee, Chih-Yu Lin, Pin-Chun Hsu, and Winston H
+
+Hu-Cheng Lee, Chih-Yu Lin, Pin-Chun Hsu, and Winston H
 Hsu. Audio feature generation for missing modality problem
-in video action recognition. In ICASSP 2019-2019 IEEE In-
+in video action recognition. In JCASSP 2019-2019 IEEE In-
 ternational Conference on Acoustics, Speech and Signal Pro-
 cessing (ICASSP), pages 3956-3960. IEEE, 2019. 3
-[41] Aoxue Li, Tiange Luo, Tao Xiang, Weiran Huang, and Liwei
+
+Aoxue Li, Tiange Luo, Tao Xiang, Weiran Huang, and Liwei
 Wang. Few-shot learning with global class representations.
 In ICCV, 2019. 3
-[42] Wei-Hong Li, Xialei Liu, and Hakan Bilen. Improving
+
+Wei-Hong Li, Xialei Liu, and Hakan Bilen. Improving
 task adaptation for cross-domain few-shot learning. arXiv
 preprint arXiv:2107.00358, 2021. 6
-[43] Yin Li, Miao Liu, and James M Rehg. In the eye of beholder:
+
+Yin Li, Miao Liu, and James M Rehg. In the eye of beholder:
 Joint learning of gaze and actions in first person video. In
 Proceedings of the European conference on computer vision
-(ECCV), pages 619-635, 2018. 1
-[44] Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
-Pietro Perona, Deva Ramanan, Piotr Dollár, and C Lawrence
+(ECCYV), pages 619-635, 2018. 1
+
+Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
+Pietro Perona, Deva Ramanan, Piotr Dollar, and C Lawrence
 Zitnick. Microsoft coco: Common objects in context. In
 European conference on computer vision, pages 740-755.
 Springer, 2014. 3
-[45] Zhun Liu, Ying Shen, Varun Bharadhwaj Lakshmi-
+
+Zhun Liu, Ying Shen, Varun Bharadhwaj Lakshmi-
 narasimhan, Paul Pu Liang, Amir Zadeh, and Louis-Philippe
 Morency. Efficient low-rank multimodal fusion with
-modality-specific factors. arXiv preprint arXiv:1806.00064,
+modality-specific factors. arXiv preprint arXiv: 1806.00064,
 2018. 3
-[46] Mengmeng Ma, Jian Ren, Long Zhao, Davide Testuggine,
+
+Mengmeng Ma, Jian Ren, Long Zhao, Davide Testuggine,
 and Xi Peng. Are multimodal transformers robust to miss-
 ing modality? In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 18177-
+on Computer Vision and Pattern Recognition, pages 18177—
 18186, 2022. 3,5
-[47] Mengmeng Ma, Jian Ren, Long Zhao, Sergey Tulyakov,
+
+Mengmeng Ma, Jian Ren, Long Zhao, Sergey Tulyakov,
 Cathy Wu, and Xi Peng. Smil: Multimodal learning with
 severely missing modality. In Proceedings of the AAAI Con-
 ference on Artificial Intelligence, volume 35, pages 2302-
 2310, 2021. 3
-[48] Yao Ma, Shilin Zhao, Weixiao Wang, Yaoman Li, and Ir-
+Yao Ma, Shilin Zhao, Weixiao Wang, Yaoman Li, and Ir-
 win King. Multimodality in meta-learning: A comprehen-
 sive survey. Knowledge-Based Systems, page 108976, 2022.
 3
-[49] Arsha Nagrani, Shan Yang, Anurag Arnab, Aren Jansen,
+Arsha Nagrani, Shan Yang, Anurag Arnab, Aren Jansen,
 Cordelia Schmid, and Chen Sun. Attention bottlenecks for
 multimodal fusion. Advances in Neural Information Pro-
-cessing Systems, 34:14200-14213, 2021. 3, 5
-[50] Alex Nichol, Joshua Achiam, and John Schulman. On first-
+cessing Systems, 34:14200-14213, 2021. 3,5
+
+Alex Nichol, Joshua Achiam, and John Schulman. On first-
 order meta-learning algorithms. arXiv, 2018. 3
-[51] Juan DS Ortega, Mohammed Senoussaoui, Eric Granger,
+
+Juan DS Ortega, Mohammed Senoussaoui, Eric Granger,
 Marco Pedersoli, Patrick Cardinal, and Alessandro L Ko-
 erich. Multimodal fusion with deep neural networks
 for audio-video emotion recognition. arXiv preprint
 arXiv:1907.03196, 2019. 5
-[52] Frederik Pahde, Patrick Jähnichen, Tassilo Klein, and Moin
+
+Frederik Pahde, Patrick Jahnichen, Tassilo Klein, and Moin
 Nabi. Cross-modal hallucination for few-shot fine-grained
-recognition. arXiv preprint arXiv:1806.05147, 2018. 3
-10
-[53] Frederik Pahde, Oleksiy Ostapenko, Patrick Jä Hnichen, Tas-
+recognition. arXiv preprint arXiv: 1806.05147, 2018. 3
+
+
+--- Page 11 ---
+53
+
+54
+
+55
+
+56
+
+57
+
+58
+
+59
+
+60
+
+61
+
+62
+
+63
+
+64
+
+65
+
+66
+
+Frederik Pahde, Oleksiy Ostapenko, Patrick Ja Hnichen, Tas-
 silo Klein, and Moin Nabi. Self-paced adversarial training
 for multimodal few-shot learning. In 2019 IEEE Winter Con-
 ference on Applications of Computer Vision (WACV), pages
-218–226. IEEE, 2019. 3
-[54] Yagya Raj Pandeya and Joonwhoan Lee. Deep learning-
+218-226. IEEE, 2019. 3
+
+Yagya Raj Pandeya and Joonwhoan Lee. Deep learning-
 based late fusion of multimodal information for emotion
 classification of music video. Multimedia Tools and Appli-
 cations, 80(2):2887-2905, 2021. 5
-[55] Hamed Pirsiavash and Deva Ramanan. Detecting activi-
+
+Hamed Pirsiavash and Deva Ramanan. Detecting activi-
 ties of daily living in first-person camera views. In 2012
 IEEE conference on computer vision and pattern recogni-
-tion, pages 2847-2854. IEEE, 2012. 1
-[56] Ronald Poppe. A survey on vision-based human action
-recognition. Image and vision computing, 28(6):976–990,
+tion, pages 2847-2854. IEEE, 2012. |
+
+Ronald Poppe. A survey on vision-based human action
+recognition. Image and vision computing, 28(6):976-990,
 2010. 1
-[57] Soujanya Poria, Iti Chaturvedi, Erik Cambria, and Amir Hus-
-sain. Convolutional mkl based multimodal emotion recogni-
-tion and sentiment analysis. In 2016 IEEE 16th international
-conference on data mining (ICDM), pages 439–448. IEEE,
+
+Soujanya Poria, Iti Chaturvedi, Erik Cambria, and Amir Hus-
+sain. Convolutional mk based multimodal emotion recogni-
+tion and sentiment analysis. In 20/6 IEEE 16th international
+conference on data mining (ICDM), pages 439-448. IEEE,
 2016. 3,5
-[58] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
 Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry,
 Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learn-
 ing transferable visual models from natural language super-
-vision. In International Conference on Machine Learning,
+vision. In Jnternational Conference on Machine Learning,
 pages 8748-8763. PMLR, 2021. 5
-[59] Avinash Ravichandran, Rahul Bhotika, and Stefano Soatto.
+
+Avinash Ravichandran, Rahul Bhotika, and Stefano Soatto.
 Few-shot learning with embedded class models and shot-free
-meta training. In ICCV, 2019. 3
-[60] Tim Siebert, Kai Norman Clasen, Mahdyar Ravanbakhsh,
-and Begüm Demir. Multi-modal fusion transformer for vi-
+meta training. In JCCV, 2019. 3
+
+Tim Siebert, Kai Norman Clasen, Mahdyar Ravanbakhsh,
+and Begiim Demir. Multi-modal fusion transformer for vi-
 sual question answering in remote sensing. In Image and Sig-
 nal Processing for Remote Sensing XXVIII, volume 12267,
-pages 162–170. SPIE, 2022. 5
-[61] Jake Snell, Kevin Swersky, and Richard Zemel. Prototypical
+pages 162-170. SPIE, 2022. 5
+
+Jake Snell, Kevin Swersky, and Richard Zemel. Prototypical
 networks for few-shot learning. Advances in neural informa-
-tion processing systems, 30, 2017. 3,5
-[62] Qianru Sun, Yaoyao Liu, Tat-Seng Chua, and Bernt Schiele.
+tion processing systems, 30, 2017. 3, 5
+
+Qianru Sun, Yaoyao Liu, Tat-Seng Chua, and Bernt Schiele.
 Meta-transfer learning for few-shot learning. In CVPR, 2019.
 3
-[63] Christopher Thomas and Adriana Kovashka. Emphasiz-
+
+Christopher Thomas and Adriana Kovashka. Emphasiz-
 ing complementary samples for non-literal cross-modal re-
 trieval. In Proceedings of the IEEE/CVF Conference on
 Computer Vision and Pattern Recognition, pages 4632-
 4641, 2022. 3
-[64] Pavel Tokmakov, Yu-Xiong Wang, and Martial Hebert.
+
+Pavel Tokmakov, Yu-Xiong Wang, and Martial Hebert.
 Learning compositional representations for few-shot recog-
-nition. In ICCV, 2019. 3
-[65] Du Tran, Heng Wang, Lorenzo Torresani, Jamie Ray, Yann
+nition. In JCCV, 2019. 3
+
+Du Tran, Heng Wang, Lorenzo Torresani, Jamie Ray, Yann
 LeCun, and Manohar Paluri. A closer look at spatiotemporal
 convolutions for action recognition. In Proceedings of the
 IEEE conference on Computer Vision and Pattern Recogni-
 tion, pages 6450-6459, 2018. 3
-[66] Luan Tran, Xiaoming Liu, Jiayu Zhou, and Rong Jin. Miss-
+
+Luan Tran, Xiaoming Liu, Jiayu Zhou, and Rong Jin. Miss-
 ing modalities imputation via cascaded residual autoencoder.
 In Proceedings of the IEEE conference on computer vision
-and pattern recognition, pages 1405–1414, 2017. 3
-[67] Yao-Hung Hubert Tsai, Paul Pu Liang, Amir Zadeh, Louis-
-Philippe Morency, and Ruslan Salakhutdinov. Learn-
+and pattern recognition, pages 1405-1414, 2017. 3
+
+11
+
+67
+
+68
+
+69
+
+70
+
+71
+
+72
+
+73
+
+74
+
+75
+
+76
+
+77
+
+78
+
+Yao-Hung Hubert Tsai, Paul Pu Liang, Amir Zadeh, Louis-
+Philippe Morency, and Ruslan Salakhutdinov. —Learn-
 ing factorized multimodal representations. arXiv preprint
 arXiv:1806.06176, 2018. 3
-[68] Maria Tsimpoukelli, Jacob L Menick, Serkan Cabi, SM Es-
+
+Maria Tsimpoukelli, Jacob L Menick, Serkan Cabi, SM Es-
 lami, Oriol Vinyals, and Felix Hill. Multimodal few-shot
 learning with frozen language models. Advances in Neural
 Information Processing Systems, 34:200-212, 2021. 3
-[69] Oriol Vinyals, Charles Blundell, Timothy Lillicrap, Daan
+
+Oriol Vinyals, Charles Blundell, Timothy Lillicrap, Daan
 Wierstra, et al. Matching networks for one shot learning. Ad-
 vances in neural information processing systems, 29, 2016.
 3,6
-[70] Limin Wang, Wei Li, Wen Li, and Luc Van Gool.
+
+Limin Wang, Wei Li, Wen Li, and Luc Van Gool.
 Appearance-and-relation networks for video classification.
 In Proceedings of the IEEE conference on computer vision
-and pattern recognition, pages 1430–1439, 2018. 3
-[71] Sinong Wang, Han Fang, Madian Khabsa, Hanzi Mao, and
+and pattern recognition, pages 1430-1439, 2018. 3
+
+Sinong Wang, Han Fang, Madian Khabsa, Hanzi Mao, and
 Hao Ma. Entailment as few-shot learner. arXiv preprint
 arXiv:2104.14690, 2021. 3
-[72] Genta Indra Winata, Andrea Madotto, Zhaojiang Lin,
+
+Genta Indra Winata, Andrea Madotto, Zhaojiang Lin,
 Rosanne Liu, Jason Yosinski, and Pascale Fung. Language
 models are few-shot multilingual learners. arXiv preprint
 arXiv:2109.07684, 2021. 3
-[73] Fanyi Xiao, Yong Jae Lee, Kristen Grauman, Jitendra Malik,
+
+Fanyi Xiao, Yong Jae Lee, Kristen Grauman, Jitendra Malik,
 and Christoph Feichtenhofer. Audiovisual slowfast networks
 for video recognition. arXiv preprint arXiv:2001.08740,
 2020. 3
-[74] Hong Xuan and Xi Stephen Chen. Dissecting deep metric
+
+Hong Xuan and Xi Stephen Chen. Dissecting deep metric
 learning losses for image-text retrieval. In Proceedings of the
 IEEE/CVF Winter Conference on Applications of Computer
 Vision, pages 2164-2173, 2023. 3
-[75] Yan Zeng, Xinsong Zhang, Hang Li, Jiawei Wang, Jipeng
-Zhang, and Wangchunshu Zhou. X²-vlm: All-in-one pre-
+
+Yan Zeng, Xinsong Zhang, Hang Li, Jiawei Wang, Jipeng
+Zhang, and Wangchunshu Zhou. X?-vim: All-in-one pre-
 trained model for vision-language tasks. arXiv preprint
 arXiv:2211.12402, 2022. 3
-[76] Zihao Zhao, Eric Wallace, Shi Feng, Dan Klein, and Sameer
+
+Zihao Zhao, Eric Wallace, Shi Feng, Dan Klein, and Sameer
 Singh. Calibrate before use: Improving few-shot perfor-
 mance of language models. In International Conference on
 Machine Learning, pages 12697-12706. PMLR, 2021. 3
-[77] Liangli Zhen, Peng Hu, Xu Wang, and Dezhong Peng.
+Liangli Zhen, Peng Hu, Xu Wang, and Dezhong Peng.
 Deep supervised cross-modal retrieval. In Proceedings of
 the IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 10394-10403, 2019. 3
-[78] Xiatian Zhu, Antoine Toisoul, Juan Perez-Rua, Li Zhang,
+
+Xiatian Zhu, Antoine Toisoul, Juan Perez-Rua, Li Zhang,
 Brais Martinez, and Tao Xiang. Few-shot action recogni-
 tion with prototype-centered attentive learning. In BMVC,
 2021. 3
-11
+

@@ -1,0 +1,1320 @@
+arXiv:2306.04632v1 [cs.CV] 7 Jun 2023
+Designing a Better Asymmetric VQGAN for StableDiffusion
+Zixin Zhu¹*
+Xuelu Feng¹* Dongdong Chen² Jianmin Bao² Le Wang Yinpeng Chen²
+Lu Yuan² Gang Hua ¹,3
+Lincoln's
+Toe Truck
+Lincoln's
+Toe Truck
+Input
+¹Xi'an Jiaotong University 2Microsoft 3 Wormpex AI Research
+{zhuzixin@stu., xueluF @stu., lewang@}xjtu.edu.cn
+{jianbao, yiche, luyuan}@microsoft.com, {cddlyf, ganghua}@gmail.com
+Lancia's
+The fran
+Toe Stook
+Lasbild's
+Fun Track
+K
+Baseline
+Lincoln's
+Lincoln's
+Toe Truck
+Toe Truck
+Lincoln's
+Toe Truck
+CB50
+XPU 383
+Ours
+Lincoln's
+Toe Truck
+Toe Truck
+Lincoln's
+Toe Truck
+XPU 383
+Ground Truth
+Figure 1: Comparing StableDiffusion-based inpainting (top) / editing [40] (bottom) results with default VQGAN and our
+proposed asymmetric VQGAN. The vanilla VQGAN in StableDiffusion will cause serious distortion even for the non-edited
+regions. In contrast, our proposed asymmetric VQGAN can preserve more details and deliver superior results.
+Abstract
+StableDiffusion is a revolutionary text-to-image genera-
+tor that is causing a stir in the world of image generation
+and editing. Unlike traditional methods that learn a diffu-
+sion model in pixel space, StableDiffusion learns a diffu-
+sion model in the latent space via a VQGAN, ensuring both
+efficiency and quality. It not only supports image genera-
+tion tasks, but also enables image editing for real images,
+such as image inpainting and local editing. However, we
+have observed that the vanilla VQGAN used in StableD-
+iffusion leads to significant information loss, causing dis-
+tortion artifacts even in non-edited image regions. To this
+end, we propose a new asymmetric VQGAN with two sim-
+ple designs. Firstly, in addition to the input from the en-
+coder, the decoder contains a conditional branch that in-
+*
+Work done during internship at Microsoft
+corporates information from task-specific priors, such as
+the unmasked image region in inpainting. Secondly, the de-
+coder is much heavier than the encoder, allowing for more
+detailed
+recovery while only slightly increasing the total in-
+ference cost. The training cost of our asymmetric VQGAN
+is cheap, and we only need to retrain a new asymmetric de-
+coder while keeping the vanilla VQGAN encoder and Sta-
+bleDiffusion unchanged. Our asymmetric VQGAN can be
+widely used in StableDiffusion-based inpainting and local
+editing methods. Extensive experiments demonstrate that it
+can significantly improve the inpainting and editing perfor-
+mance, while maintaining the original text-to-image capa-
+bility. The code is available at https://github.com/
+buxiangzhiren/Asymmetric_VQGAN.
+1. Introduction
+Diffusion models have emerged as the most popular gen-
+erative models, achieving remarkable results in image syn-
+thesis. Early diffusion models required significant com-
+putational resources, as they performed the diffusion pro-
+cess in the high-dimensional pixel space of RGB images.
+To reduce the training cost while preserving the generation
+quality, laten diffusion model (LDM) [31] employs VQ-
+GAN [10] to move the diffusion step to a low-dimensional
+latent space. In a subsequent development, StableDiffusion
+has further scaled up LDM with a larger model and data
+scale, resulting in a highly powerful general text-to-image
+generator. Since its public release, it has drawn significant
+attention in the world of generative AI.
+StableDiffusion not only possesses text-to-image gen-
+eration capabilities, but it also supports various editing-
+related tasks, such as inpainting [31] and local editing
+tasks [5, 24, 40]. For these editing tasks, StableDiffu-
+sion can generate new content for selected regions based
+on user-supplied input condition while aiming to preserve
+other regions. However, we have observed that the re-
+sults of StableDiffusion-based editing in all existing meth-
+ods [31, 40] suffer from distortion artifacts in the non-edited
+image regions, especially for the regions with fine-grained
+structures (e.g., texts). For example, as depicted in Figure
+1, despite our intention to only inpaint the black mask re-
+gion or composite the object provided in the reference im-
+age into the mask region, we observe severe distortion in
+the non-mask/non-edited areas.
+After extensive analysis, we have found that these issues
+are caused by the quantization error present in the vanilla
+VQGAN utilized by StableDiffusion. Specifically, VQ-
+GAN utilizes an encoder to downsample images multiple
+times into a latent space, after which the downsampled im-
+age vectors are quantified based on a codebook. As a result,
+quantization errors are inevitable even for the non-edited
+regions if we only feed the output of the encoder into the
+decoder, as the vanilla VQGAN operates by default. Addi-
+tionally, during the inference process, the convolutional lay-
+ers utilized in VQGAN's encoder impact the feature vectors
+of non-masked regions due to the masked regions.
+To this end, we propose a new asymmetric VQGAN with
+two simple yet effective designs in the decoder part. Firstly,
+we reformulate the VQGAN decoder as a conditional de-
+coder to better support local editing tasks. This is achieved
+by incorporating an extra branch that can integrate informa-
+tion from task-specific priors. For instance, for inpainting
+or local editing tasks, we feed the non-edited regions into
+this branch so that the decoder can use both the output of
+the encoder and the original non-edited regions as inputs.
+In contrast, the vanilla VQGAN decoder only takes the out-
+put of the VQGAN encoder as input. Secondly, we enhance
+the capability of the decoder by using deeper or wider de-
+coders rather than similar complexity as the encoder. This
+stronger decoder can better preserve the non-edited regions
+and recover more details from the quantized output of the
+encoder. Considering that the most time-consuming part of
+StableDiffusion inference is the iterative diffusion process,
+this larger decoder only slightly increases the total inference
+cost.
+In addition to the inference cost, the training cost of our
+asymmetric VQGAN is still very cheap. We only need to
+retrain a new asymmetric decoder while keeping StableDif-
+fusion and the original vanilla VQGAN encoder unchanged.
+Additionally, by alternatively feeding/not feeding the task-
+specific priors into the decoder, our asymmetric VQGAN
+can naturally support both editing tasks that require the task-
+specific priors and pure generation tasks such as text-to-
+image generation, which do not require such prior input.
+To demonstrate the effectiveness of our asymmetric VQ-
+GAN, we conducted experiments on three different tasks.
+In inpainting and local editing tasks with masks (paint-by-
+example [40]), our asymmetric VQGAN achieved state-of-
+the-art performance (1.03 FID on the Place dataset [44] and
+86.35% CLIP score on the COCOEE dataset [40]). In the
+pure text-to-image task, our model can also achieve com-
+parable or even better results compared to the original Sta-
+bleDiffusion. Our contributions can be summarized in the
+below three-folds:
+• To the best of our knowledge, we are the first that ex-
+plicitly point out and investigate the distortion problem
+in StableDiffusion-based editing methods.
+• We design a new asymmetric VQGAN to address the
+above distortion issues with two simple yet effective
+designs. Compared to the typical symmetric VQGAN
+design, this new design can better preserve the non-
+edited regions and recover details, while maintaining a
+low training and inference cost.
+• Our asymmetric VQGAN achieves state-of-the-art
+performance on two representative tasks: the inpaint-
+ing task on the Place dataset [44] and the local edit-
+ing task (i.e., paint by example [40]) on the COCOEE
+dataset.
+2. Related Work
+2.1. Diffusion Models
+Diffusion models are a powerful family of generative
+models that have recently evolved and drawn significant
+attention due to their impressive performance on various
+tasks. Recent works [8, 35] have demonstrated that diffu-
+sion model can achieve astonishing results in high-fidelity
+image generation, even outperforming generative adversar-
+ial networks. Diffusion models are naturally ideal for learn-
+ing models from complex and diverse data, and many vari-
+ants have been proposed recently. For instance, Denoising
+Diffusion Probabilistic Models (DDPMs) [13] are the most
+popular diffusion models that learn to perform a diffusion
+process on a Markov chain of latent variables. And Denois-
+ing Diffusion Implicit Models (DDIMs) [35] is further pro-
+posed to accelerate the denoising process. To improve the
+efficiency while preserving high generation quality, Latent
+Diffusion Models (LDM) [31] propose to learn a diffusion
+model within the latent space rather than the pixel space.
+Diffusion models have proven to be highly effective in
+a variety of applications, including image generation [29,
+26, 14, 4], image-to-image translation [6, 37, 38], super-
+resolution [31], and image editing [26, 1]. Particularly,
+recent advancements in diffusion models [34] have led to
+state-of-the-art image synthesis [8, 10, 9, 26, 32, 11, 2, 31]
+as well as generative models for other modalities such as
+text [19], audio [18], and video [15]. In this paper, we focus
+on designing a new VQGAN architecture that can improve
+the performance of StableDiffusion like diffusion models
+that operates in the latent space, for image generation and
+editing tasks.
+2.2. VQGAN
+The Vector Quantized Variational Autoencoder (VQ-
+VAE) [27, 30] is a widely used method for learning discrete
+image representations. VQ-based techniques have been
+successfully applied to image generation and completion,
+leveraging a learned codebook in the feature domain. While
+[27] extended this approach to use a hierarchy of learned
+representations, these methods still rely on density estima-
+tion from convolutional operations, making it challenging to
+capture long-range interactions in high-resolution images.
+In order to address above issues, the Vector Quantized Gen-
+erative Adversarial Network (VQGAN) [10] was proposed,
+which identified that a powerful latent space auto-encoder
+is critical to capture image details for the following gener-
+ation stage. So VQGAN uses the quantization procedure
+of VQVAE and improves the richness of VQVAE's learned
+codebook. VQGAN uses the quantization procedure of VQ-
+VAE and improves the richness of its learned codebook.
+Specifically, it employs adversarial loss and perceptual loss
+to train a better autoencoder in the first stage for synthesiz-
+ing greater image details. VQ-based generative models have
+been applied in many tasks, including text [19], audio [18],
+image inpainting [22], and video [15] generations. While
+VQGAN has numerous benefits, the quantization error it
+introduces can lead to losing image details and causing se-
+rious distortion. Motivated by this observation, unlike the
+conventional symmetric VQGAN design, we explore a new
+asymmetric VQGAN to retain more details, which can ben-
+efit both image generation and editing tasks.
+Masked Image
+Masked Image
+Conditional Branch
+23 1234
+51 7 9 13
+5 15 8 48
+23 49 87 7
+Encoder
+Larger
+Decoder
+Zm
+Quantized
+ZT
+Stable Diffusion
+Zo
+Encoder
+23 1 2 34
+51 7 9 13
+5 15 8 48
+Decoder
+23 49 87 75
+Zm
+Quantized
+ZT
+Stable Diffusion
+Zo
+Output
+Output
+Figure 2: Top: The inference process of our symmetric VQ-
+GAN. Bottom: The inference process of vanilla VQGAN.
+3. Method
+VQGAN plays an important role in StableDiffusion to
+map the original high-dimensional pixel space to low-
+dimensional latent space. However, this mapping process
+can lead to information loss in image conditional tasks,
+causing a lack of detail that hurt the quality of the gener-
+ated result. In this section, we will first discuss the issue of
+information loss in VQGAN and then introduce our solu-
+tion, the asymmetric VQGAN, which serves to address this
+challenge.
+3.1. Information loss in VQGAN
+VQGAN aims to compress the pixel space into discrete
+latent space. Suppose X Є RH×W×3 is the input image.
+VQGAN first utilizes a CNN-based Encoder to obtain its
+feature variable z Є Rhxwxnz, where h× w is the spatial
+resolution and nz is the channel of the latent vector. Then
+VQGAN aims to be able to represent it with discrete code-
+book {z}1, where each spatial code zij find its closest
+codebook entry Zk in the codebook, the process can be de-
+noted as follows:
+k=1'
+Zij =
+q(ij) = arg min ||Zij – Zk||
+kЄ1,2,.., K
+(1)
+where q
+is the quantization encoder that maps the vector
+to an index of the codebook, Based on the quantized code-
+words z, VQGAN then adopts the decoder to reconstruct
+the input image x. Suppose the reconstructed result is
+= Dec(q(Enc(x)).
+Then the model and codebook can be trained end-to-end
+via the loss function:
+LvQ(Enc, Dec, {zk}k=1) = Lpixel + percep
++ ||sg[Enc(x)] − z ||22 (2)
++ ß ||sg [z] – Enc(X) ||
+where Lpixel = ||x-✩||² is pixel-level loss and Lpercep per-
+ceptual loss calculated with VGG16 [33] network. sg[] is
+Input
+Mask m =
+Encoder
+23
+1234
+51 7 9 13
+5 15 8 48
+23 49 87 75
+or
+Conv
+MGB
+m
+Conv
+Conv
+m
+MGB
+> m
+8 ա
+Conv
+Conv
+Output
+MGB
+or
+Elementwise
+Multiplication
+Elementwise
+Addition
+Mask Guided
+Blend
+Random Mask
+Full Mask
+Our asymmetric decoder
+Masked Image
+Figure 3: The training process of our symmetric VQGAN. We generate two kinds of masks, i.e., random mask and full mask.
+The quantized vector from the encoder is fed to our asymmetric decoder. At the same time, the masked image is sent to our
+decoder as the input of conditional branch. After the conditional and main branches blend, the decoder output final results.
+the stop-gradient operator, ẞ is a hyper-parameter for loss
+weight. To further improve the quality of the generated
+samples, a discriminator is employed to perform an adver-
+sarial training process with the encoder and decoder. Since
+the continuous pixel space is mapped into limited discrete
+space, the information loss phenomenon exists during this
+process.
+We also notice that in some versions of StableDiffusion,
+the compressing from pixel space to latent space is trained
+by a KL-reg. The KL-reg shares a similar purpose to VQ-
+GAN since they all try to avoid arbitrarily high-variance la-
+tent spaces, and both of them share a similar issue: infor-
+mation loss from pixel space to latent space.
+3.2. Asymmetric VQGAN
+Due to the impressive performance of StableDiffusion
+on text2image generation, it has been widely applied to var-
+ious conditional image generation tasks. One of the most
+important and typical of these conditions is the use of im-
+age input. However, according to our analysis, these image
+conditions must be mapped into latent space to satisfy the
+diffusion process of StableDiffusion. As a result, these con-
+ditional images may lose some of their original information
+during manipulation. Our focus in this paper is to preserve
+the information of the conditional image input while leaving
+the pre-trained weights of StableDiffusion unchanged.
+To this end, we propose the Asymmetric VQGAN, to
+preserve the information of conditional image input. Asym-
+metric VQGAN involves two core designs compared with
+the original VQGAN as shown in Figure 2. First, we in-
+troduce a conditional branch into the decoder of the VQ-
+GAN which aims to handle the conditional input for image
+manipulation tasks. Second, we design a larger decoder for
+VQGAN to better recover the losing details of the quantized
+codes. In the next section, we will introduce the detailed
+structure and training strategy of Asymmetric VQGAN.
+Conditional decoder. We design a conditional decoder
+that aims to preserve the details of the conditional input. As
+illustrated in Figure 3, Suppose the conditional image is a
+masked input Y with mask m, We propose to represent the
+conditional image input as multi-level feature maps, instead
+of compressing it into single-layer features. Concretely, we
+feed the conditional input Yinto a lightweight encoder E
+and extract the feature map at different layers as the condi-
+tional input representation. More formally, we can define
+(3)
+fE(Y) = {f}(Y),fE(Y),…fE(Y)},
+where f½ (Y) represents the k-th level feature map from the
+encoder E, n is the number of feature levels.
+Then these features will be integrated into the decoder
+via a mask-guided blending (MGB) module. MGB aims to
+preserve the decoders' capability for decoding latent codes
+while making full use of the features from encoder E. It
+utilizes a mask to directly copy the masked region of the
+decoder feature while combining the unmasked region fea-
+ture from the encoder E. Specifically, suppose the feature
+at k-th level of the decoder is f/ Dec (z). So the blending
+process can be formulated as:
+fec(z) = fec(z) > m + f / (
+>m,
+(4)
+where is element-wise multiplication, m = 1 − m. With
+this designed mask-guided blending module, we do not re-
+quire any modification to the decoder and just insert several
+MGB modules into the decoder network while keeping the
+structures unchanged.
+Larger decoder. To further enhance the capability of de-
+coders for recovering details from given latent codes, we
+enlarge the decoder model size of the original VQGAN. In-
+creasing the model size of VQGAN is efficient since during
+the inference stage of StableDiffusion for conditional image
+input tasks, the decoder only requires to be forwarded one
+40-50% masked
+Method
+FID↓ LPIPS↓↓
+FID↓
+All samples
+LPIPS↓
+LaMa [36]
+12.0
+0.24
+2.21
+0.14
+CoModGAN [43]
+10.4
+0.26
+1.82
+0.15
+RegionWise [23]
+21.3
+0.27
+4.75
+0.15
+DeepFill v2 [41]
+22.1
+0.28
+5.20
+0.16
+EdgeConnect [25]
+30.5
+0.28
+8.37
+0.16
+StableDiffusion* [31]
+8.26
+0.324
+2.27
+Ours
+6.80 0.244
+0.245
+1.03 0.141
+Table 1: Comparison of inpainting performance on 30k
+crops of size 512 × 512 from test images of Places [44].
+Since the high-resolution images of Places is not available,
+we resize the 256 × 256 images to 512 × 512. The col-
+umn 40-50% reports metrics computed over hard examples
+where 40-50% of the image region have to be inpainted. *
+denotes that the results are reproduced by us.
+time while the StableDiffusion model needs to be forwarded
+many times with a significantly larger model size.
+Training strategies. During training, we use the same
+weights and codebook from the original VQGAN in the
+Asymmetric VQGAN and only train the new decoder. To
+avoid the decoder from developing a simple solution of re-
+covering information only from the conditional masked in-
+put, we consider two scenarios: one where the mask is ran-
+domly generated, and one where the mask is completely
+filled with 1, meaning the decoder needs to rely on the la-
+tent codes to recover the image. We alternately use these
+two scenarios for 50% of the training process. For the train-
+ing objectives, we use the pixel level loss, perceptual loss,
+and adversarial loss as described in Section 3.1 to only up-
+date the weights of the Decoder.
+Asymmetric VQGAN is lightweight and flexible, it
+keeps the encode and latent space diffusion process un-
+changed, in which we can leverage all the pre-trained
+weights of the Encoder and StableDiffusion. We just need
+to change the decoder part while enjoying the strong capa-
+bility of StableDiffusion for a wide
+of tasks.
+4. Experiments
+range
+In order to demonstrate the outstanding application po-
+tential of our model, we conduct sufficient experiments
+based on our base and large models in three different tasks.
+Implementation details. In accordance with the train-
+ing setting used for VQGAN [10] in StableDiffusion [31],
+we train our asymmetric VQGAN on the ImageNet [7]
+dataset. During training, we preprocess the image resolu-
+tion to 256 × 256, and train our base model for 12 epochs.
+This process took approximately 5 days on 8 NVIDIA V100
+GPUs, with a batch size per GPU of 10 and a learning rate
+warmed up to 3.6e-4 in the first 5,000 iterations. The learn-
+ing rate was then decayed with a cosine scheduler. As for
+our large model, we use 64 NVIDIA V100 GPUs, with a
+batch size per GPU of 5 and a learning rate warmed up to
+7.2e-4 in the first 5,000 iterations. The training for the large
+model also took around 5 days, with the learning rate de-
+cayed using a cosine scheduler too.
+Evaluation benchmark. For our inpainting task, we evalu-
+ated our model using the same protocol as LaMa [36], a re-
+cent inpainting model, to generate image masks. Our exper-
+iments were conducted on two popular datasets: Places [44]
+and ImageNet [7]. Due to the unavailability of high-
+resolution images in the Places dataset, we resized the
+256 × 256 images to 512 × 512. For the ImageNet dataset,
+we try to randomly select 3 images from each class in the
+ImageNet validation dataset. However, since some cate-
+gories do not have 3 images available, we end up selecting
+a total of 2,968 images for our experiments.
+For the paint-by-example task, we evaluate our model
+using the COCOEE [40] dataset. COCOEE is a COCO
+exemplar-based image editing benchmark that contains
+3,500 source images from the MSCOCO [20] validation
+set. Each image contains only one bounding box, and the
+mask region is no more than half of the entire image. The
+corresponding reference image patch is chosen from the
+MSCOCO training set.
+In the text-to-image task, we evaluated our model using
+the MSCOCO [20] validation set. Following the widely-
+used "Karpathy" split [17], we used 5,000 images for val-
+idation, with each image having approximately 5 captions.
+Hence, we generated a total of 25,000 images according to
+the captions. All images were resized to 512 × 512.
+Evaluation metrics. In the inpainting task, we use FID [12]
+and LPIPS [42] as metrics to evaluate the quality of our
+model's predictions. Additionally, to showcase the model's
+ability to preserve the non-edited regions of the image, we
+report the mean squared error (MSE) between our predic-
+tions and ground truth for such non-edited regions. In
+the paint-by-example task, we measure the quality of our
+model's output using the mean squared error (MSE) of non-
+edited image regions and the CLIP score [28]. The CLIP
+score evaluates the similarity between the edited region and
+the reference image. Specifically, we resize the two images
+to 224 × 224, extract their features via CLIP image encoder,
+and calculate their cosine similarity. A higher CLIP score
+indicates that the edited region is more similar to the ref-
+erence image. In the text-to-image task, we evaluate our
+model's performance using FID and IS [3] as metrics.
+4.1. Evaluation on the Inpainting Task
+Comparison with state-of-the-art methods. Table 1
+shows the comparison of our inpainting approach with other
+state-of-the-art methods. Our results demonstrate that ap-
+plying our asymmetric VQGAN to StableDiffusion can im-
+Method
+FID↓
+LPIPS↓
+Pre_error↓
+StableDiffusion [31]
+9.57
+0.255
+1082.8e-5
+Ours (base) w/ mask
+7.604 0.137
+5.7e-5
+Ours (base) w/o mask
+9.48
+0.248
+1078.6e-5
+Ours (large) w/ mask
+Ours (large) w/o mask
+7.55
+0.136
+2.6e-5
+9.17
+0.243
+1047.7e-5
+Table 2: Results of our different modules in inpainting task.
+StableDiffusion is our baseline. All results are reported in
+ImageNet validation dataset.
+Input
+Naïve Blend
+Baseline
+Ours
+Figure 4: The harmonization of our asymmetric VQGAN
+in inpainting task. “Naive Blend” denotes that adding the
+non-edited image regions of inputs and the edited regions
+of results. StableDiffusion [31] is our baseline. All results
+are reported on ImageNet validation dataset.
+prove FID by 1.24. Additionally, our approach outperforms
+other methods on hard examples where 40-50% of the im-
+age region needs to be inpainted, further highlighting the
+effectiveness of our conditional branch and larger decoder.
+Effectiveness of our modules. This ablation study aims
+to support the effectiveness of our conditional branch and
+larger decoder. Table 2 presents the inpainting results that
+compare our conditional decoder with the original decoder
+in StableDiffusion [31]. Specifically, we replace the orig-
+inal decoder with our conditional decoder to decode the
+quantized vectors obtained from StableDiffusion. It's worth
+noting that the sample results sent to different decoders are
+the same since the diffusion process generates various sam-
+ple results.
+Both our base model and larger model show an improve-
+ment of approximately 2.00 on FID and 50% on LPIPS.
+Furthermore, the error of non-edited image regions is sig-
+nificantly reduced. These results indicate that with the help
+of the conditional branch, the ability of VQGAN to pre-
+serve details has been greatly improved. If we do not use
+the conditional branch, our base model can still perform the
+same function as the original decoder. And our larger model
+can further outperform the original decoder. These results
+demonstrate that our model is compatible with various ap-
+plications, whether they have masks or not.
+Method
+FID↓
+LPIPS
+Pre_error_↓
+Ours (base) add.
+7.60
+0.137
+5.7e-5
+Ours (base) concat.
+7.64
+0.138
+5.3e-5
+7.55
+0.136
+2.6e-5
+4.4e-5
+Ours (large) add.
+Ours (large) concat. 7.56 0.137
+Table 3: Ablation study of different blending ways. The
+"add." denotes addition and "concat." denotes concatena-
+tion. All results are reported in ImageNet validation dataset.
+Method
+Blended Diffusion [1]
+DCCF [39]
+CLIP score Pre_error_↓
+80.65
+82.18
+StableDiffusion [31]
+75.33
+Paint-by-Example [40]
+Paint-by-Example* [40]
+84.97
+85.67
+Ours
+86.35
+588.86
+0.76
+Table 4: Comparison of paint-by-example [40] performance
+on 3500 images of size 512 × 512. * denotes that the results
+are reproduced by us. All results are reported on COCOEE.
+Addition or concatenation. Our model offers two different
+blending methods: mask-guided addition and mask-guided
+concatenation. This ablation study aims to explore how they
+improve VQGAN. Since the mask is a hard mask, meaning
+its value is either 0 or 255, our conditional branch does not
+use Partial Convolutional Layer [21] when the blending way
+is mask-guided addition. This means that the main branch
+is responsible for the edited regions, while the conditional
+branch handles the non-edited image regions. As a result,
+the Partial Convolutional Layer, which infers the informa-
+tion of the edited regions, cannot contribute to the condi-
+tional branch. The detailed results are shown in Table 3.
+The overall performance of the concatenation is similar to
+the addition. Finally, we choose the addition as our blend-
+ing way.
+Visual Comparison. In order to preserve the details of
+non-edited image regions, a common approach is to post-
+process by adding the non-edited regions of the inputs to
+the edited regions of the results. However, this naive solu-
+GUINNESS
+GUINNESS
+ARAC
+INNE
+105909
+662
+GUINNESS
+DRAG
+JINNE
+FOREIGN
+EXTRA
+GUINNESS BAGO
+DRAG
+INNE
+FOREIGN
+EXTRA
+886
+886
+TO กล
+Toilets
+Toilets
+Cra
+The
+Cool
+Frappes
+Cool
+Frappes
+MINSEED
+AUS
+MUSEUM
+AND
+MUSEUM
+AND
+Masked Image
+Reference
+Painting by Example
+Ours
+Source Image
+Figure 5: The preserving ability of our asymmetric VQGAN in paint-by-example [40] task. All results are reported in
+COCOEE dataset.
+CLIP score Pre_error_↓
+Method
+Paint-by-Example*
+85.67
+588.86
+Ours (base)
+86.24
+1.37
+Ours (base) w/o mask
+86.15
+478.47
+Ours (large)
+86.35
+0.76
+Ours (large) w/o mask
+86.32
+451.67
+Method
+StableDiffusion [31]
+Ours (base) w/o mask
+Ours (large) w/o mask
+FID↓↓ IS↑
+19.88 37.55
+19.92 37.52
+19.75 37.64
+Table 5: Results of our different modules in paint-by-
+example [40] task. Paint-by-Example is our baseline. All
+results are reported in COCOEE dataset.
+tion can cause non-harmonization issues, as shown in Fig-
+ure 4 in the third column. In contrast, our asymmetric VQ-
+GAN generates images with the same level of harmoniza-
+tion as the baseline (original StableDiffusion), while pre-
+serving many details of the non-edited regions. This indi-
+cates that our method effectively preserves details without
+causing harm to the harmonization of the image. Overall,
+our results demonstrate that our model with the asymmetric
+decoder and mask-guided addition blending way can signif-
+icantly improve the performance of inpainting tasks, while
+maintaining harmonization and preserving details of non-
+edited image regions.
+Table 6: Results of text-to-image task. StableDiffusion is
+our baseline. Even though there is no any mask, our asym-
+metric VQGAN is comparable or superior to the baseline,
+StableDiffusion. All results are reported on MSCOCO.
+4.2. Paint by example
+Paint-by-example [40] is a novel image editing scenario
+that semantically alters image content based on an exemplar
+image. Their approach relies on StableDiffusion as a strong
+prior, making our model easily applicable to their method.
+Comparison with state-of-the-art methods. The com-
+parison results are presented in Table 4, where the "CLIP
+score" represents the similarity between the edited regions
+of edited images and reference images, while Pre_error" de-
+notes the MSE between the non-edited image regions of
+edited images and source images. Our model can achieve
+the best performance in both masked and non-edited image
+regions. It can be seen that our model can achieve the best
+Input
+Naïve Blend
+Baseline
+Ours
+Figure 6: The harmonization of our asymmetric VQGAN in
+paint-by-example [40] task. The inputs are masked source
+images and reference images. 'Naive Blend” denotes that
+adding the non-edited image regions of source images and
+the edited regions of results. Paint-by-example [40] is our
+baseline. All results are reported on COCOEE dataset.
+"A red and white bus
+traveling down a street."
+"A man standing on a
+tennis court holding a
+racquet."
+"A little locomotive in a
+museum all shined
+Input
+up.
+Stable Diffusion
+Ours
+Figure 7: The comparison between StableDiffusion and
+ours in text-to-image task. Without the help of our con-
+ditional branch, we will get comparable results.
+performance in both masked and non-edited image regions.
+Effectiveness of our modules. The purpose of this abla-
+tion study is to demonstrate the effectiveness of our condi-
+tional branch and larger decoder. The results are presented
+in Table 5. In contrast to the inpainting task, the paint-by-
+example task involves combining two different images, re-
+sulting in a more severe loss of details in non-edited im-
+age regions. The non-edited regions of an image can be in-
+fluenced by the other image, further complicating the task.
+Our base model reduces the preserving error from 588.86
+to 1.37, while our larger model further reduces it to 0.76.
+Surprisingly, we find that the conditional branch not only
+improves the preservation of non-edited image regions but
+also enhances the generation quality of edited regions, as
+measured by the "CLIP score"
+Visual results. We have provided a significant number
+of visualization results in Figures 5 and 6 to demonstrate
+the preserving ability and harmonization of our asymmet-
+ric VQGAN. These visualization results illustrate that our
+model can be effortlessly applied to various tasks on differ-
+ent datasets while consistently enhancing performance. We
+firmly believe that our model has immense potential for a
+wide range of applications.
+4.3. Text-to-Image
+These experiments aim to demonstrate that our asym-
+metric VQGAN can handle tasks without masks or task-
+specific priors, in addition to tasks with mask (task-specific
+priors). The results are presented in Table 6. We can ob-
+serve that when our base model does not use the condi-
+tional branch, its performance is comparable to the base-
+line, which suggests that the training strategy of replacing
+some masks with a full mask has been successful. More-
+over, when our large model does not use the conditional
+branch, its performance is comparable to the baseline, indi-
+cating that the larger decoder can restore more details even
+without the help of the conditional branch.
+Visual results. To support our claim that our asymmet-
+ric VQGAN can perform well even without the conditional
+branch, we present visualization results in Figure 7. In the
+first row, it is evident that our model can work effectively
+without masks and does not produce inferior results. In the
+second and third rows, we observe that our larger decoder
+can recover more intricate details to some extent.
+Effectiveness of our modules. The purpose of this abla-
+tion study is to demonstrate the effectiveness of our condi-
+tional branch and larger decoder. The results are presented
+in Table 5. In contrast to the inpainting task, the paint-by-
+example task involves combining two different images, re-
+sulting in a more severe loss of details in non-edited im-
+age regions. The non-edited regions of an image can be in-
+fluenced by the other image, further complicating the task.
+Our base model reduces the preserving error from 588.86
+to 1.37, while our larger model further reduces it to 0.76.
+Surprisingly, we find that the conditional branch not only
+improves the preservation of non-edited image regions but
+also enhances the generation quality of edited regions, as
+measured by the "CLIP score".
+Visual results. We have provided a significant number
+of visualization results in Figures 5 and 6 to demonstrate
+the preserving ability and harmonization of our asymmet-
+ric VQGAN. These visualization results illustrate that our
+model can be effortlessly applied to various tasks on differ-
+ent datasets while consistently enhancing performance. We
+firmly believe that our model has immense potential for a
+wide of applications.
+range
+4.4. Text-to-Image
+These experiments aim to demonstrate that our asym-
+metric VQGAN can handle tasks without masks or task-
+specific priors, in addition to tasks with mask (task-specific
+priors). The results are presented in Table 6. We can ob-
+serve that when our base model does not use the condi-
+tional branch, its performance is comparable to the base-
+line, which suggests that the training strategy of replacing
+some masks with a full mask has been successful. More-
+over, when our large model does not use the conditional
+branch, its performance is comparable to the baseline, indi-
+cating that the larger decoder can restore more details even
+without the help of the conditional branch.
+Visual results. To support our claim that our asymmet-
+ric VQGAN can perform well even without the conditional
+branch, we present visualization results in Figure 7. In the
+first row, it is evident that our model can work effectively
+without masks and does not produce inferior results. In the
+second and third rows, we observe that our larger decoder
+can recover more intricate details to some extent.
+5. Conclusion
+In this paper, we present a novel asymmetric VQGAN
+for StableDiffusion with two new design features. Firstly,
+our decoder incorporates an additional conditional branch,
+allowing it to accept both the output of the VQGAN encoder
+and task-specific priors as input. Secondly, our decoder is
+designed to be more complex (e.g. deeper and wider) than
+the encoder, enabling it to better preserve local details of
+non-edited regions and recover details from the quantized
+output of the encoder. Our asymmetric VQGAN architec-
+ture is highly efficient for both training and inference, and
+can be used for local editing tasks and pure text-to-image
+generation tasks. Through extensive experimentation on
+two representative tasks, we demonstrate the effectiveness
+of our asymmetric VQGAN design. Moving forward, we
+plan to explore whether scaling up the decoder could fur-
+ther improve the quality of our results.
+References
+[1] Omri Avrahami, Dani Lischinski, and Ohad Fried. Blended
+diffusion for text-driven editing of natural images. In CVPR,
+pages 18208-18218, 2022.
+[2] Yogesh Balaji, Seungjun Nah, Xun Huang, Arash Vahdat,
+Jiaming Song, Karsten Kreis, Miika Aittala, Timo Aila,
+Samuli Laine, Bryan Catanzaro, et al. ediffi: Text-to-image
+diffusion models with an ensemble of expert denoisers. arXiv
+preprint arXiv:2211.01324, 2022.
+[3] Shane Barratt and Rishi Sharma. A note on the inception
+score. arXiv preprint arXiv:1801.01973, 2018.
+[4] Georgios Batzolis, Jan Stanczuk, Carola-Bibiane Schönlieb,
+and Christian Etmann. Conditional image genera-
+arXiv preprint
+tion with score-based diffusion models.
+arXiv:2111.13606, 2021.
+[5] Tim Brooks, Aleksander Holynski, and Alexei A Efros. In-
+structpix2pix: Learning to follow image editing instructions.
+arXiv preprint arXiv:2211.09800, 2022.
+[6] Jooyoung Choi, Sungwon Kim, Yonghyun Jeong, Youngjune
+Gwon, and Sungroh Yoon. Ilvr: Conditioning method for
+denoising diffusion probabilistic models. arXiv preprint
+arXiv:2108.02938, 2021.
+[7] Jia Deng, Wei Dong, Richard Socher, Li-Jia Li, Kai Li,
+and Li Fei-Fei. Imagenet: A large-scale hierarchical image
+database. In CVPR, pages 248–255. Ieee, 2009.
+[8] Prafulla Dhariwal and Alexander Nichol. Diffusion models
+beat
+gans on image synthesis. Advances in Neural Informa-
+tion Processing Systems, 34:8780-8794, 2021.
+[9] Patrick Esser, Robin Rombach, Andreas Blattmann, and
+Bjorn Ommer. Imagebart: Bidirectional context with multi-
+nomial diffusion for autoregressive image synthesis. Ad-
+vances in Neural Information Processing Systems, 34:3518–
+3532, 2021.
+[10] Patrick Esser, Robin Rombach, and Bjorn Ommer. Taming
+transformers for high-resolution image synthesis. In CVPR,
+pages 12873-12883, 2021.
+[11] Shuyang Gu, Dong Chen, Jianmin Bao, Fang Wen, Bo
+Zhang, Dongdong Chen, Lu Yuan, and Baining Guo. Vec-
+tor quantized diffusion model for text-to-image synthesis. In
+CVPR, pages 10696-10706, 2022.
+[12] Martin Heusel, Hubert Ramsauer, Thomas Unterthiner,
+Bernhard Nessler, and Sepp Hochreiter. Gans trained by a
+two time-scale update rule converge to a local nash equilib-
+rium. Advances in neural information processing systems,
+30, 2017.
+[13] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffu-
+sion probabilistic models. Advances in Neural Information
+Processing Systems, 33:6840-6851, 2020.
+[14] Jonathan Ho, Chitwan Saharia, William Chan, David J Fleet,
+Mohammad Norouzi, and Tim Salimans. Cascaded diffusion
+models for high fidelity image generation. J. Mach. Learn.
+Res., 23(47):1-33, 2022.
+[15] Jonathan Ho, Tim Salimans, Alexey Gritsenko, William
+Chan, Mohammad Norouzi, and David J Fleet. Video dif-
+fusion models. arXiv preprint arXiv:2204.03458, 2022.
+[16] Phillip Isola, Jun-Yan Zhu, Tinghui Zhou, and Alexei A
+Efros. Image-to-image translation with conditional adver-
+sarial networks. In CVPR, 2017.
+[17] Andrej Karpathy and Li Fei-Fei. Deep visual-semantic align-
+ments for generating image descriptions. IEEE Transactions
+on Pattern Analysis and Machine Intelligence, 39:664–676,
+2017.
+[18] Zhifeng Kong, Wei Ping, Jiaji Huang, Kexin Zhao, and
+Bryan Catanzaro. Diffwave: A versatile diffusion model for
+audio synthesis. arXiv preprint arXiv:2009.09761, 2020.
+[19] Xiang Lisa Li, John Thickstun, Ishaan Gulrajani, Percy
+Liang, and Tatsunori B Hashimoto. Diffusion-lm im-
+proves controllable text generation.
+arXiv preprint
+arXiv:2205.14217, 2022.
+[20] Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
+Pietro Perona, Deva Ramanan, Piotr Dollár, and C Lawrence
+Zitnick. Microsoft coco: Common objects in context. In
+ECCV, pages 740-755, 2014.
+[21] Guilin Liu, Fitsum A Reda, Kevin J Shih, Ting-Chun Wang,
+Andrew Tao, and Bryan Catanzaro. Image inpainting for ir-
+regular holes using partial convolutions. In ECCV, pages
+85-100, 2018.
+[22] Qiankun Liu, Zhentao Tan, Dongdong Chen, Qi Chu, Xiyang
+Dai, Yinpeng Chen, Mengchen Liu, Lu Yuan, and Nenghai
+Yu. Reduce information loss in transformers for pluralis-
+tic image inpainting. In Proceedings of the IEEE/CVF Con-
+ference on Computer Vision and Pattern Recognition, pages
+11347-11357, 2022.
+[23] Yuqing Ma, Xianglong Liu, Shihao Bai, Lei Wang, Aishan
+Liu, Dacheng Tao, and Edwin R Hancock. Regionwise gen-
+erative adversarial image inpainting for large missing areas.
+IEEE Transactions on Cybernetics, 2022.
+[24] Ron Mokady, Amir Hertz, Kfir Aberman, Yael Pritch,
+and Daniel Cohen-Or. Null-text inversion for editing real
+images using guided diffusion models. arXiv preprint
+arXiv:2211.09794, 2022.
+[25] Kamyar Nazeri, Eric Ng, Tony Joseph, Faisal Z Qureshi,
+and Mehran Ebrahimi. Edgeconnect: Generative image
+inpainting with adversarial edge learning. arXiv preprint
+arXiv:1901.00212, 2019.
+[26] Alex Nichol, Prafulla Dhariwal, Aditya Ramesh, Pranav
+Shyam, Pamela Mishkin, Bob McGrew, Ilya Sutskever, and
+Mark Chen. Glide: Towards photorealistic image generation
+and editing with text-guided diffusion models. arXiv preprint
+arXiv:2112.10741, 2021.
+[27] Jialun Peng, Dong Liu, Songcen Xu, and Houqiang Li. Gen-
+erating diverse structure for image inpainting with hierarchi-
+cal vq-vae. In CVPR, pages 10775-10784, 2021.
+[28] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
+Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry,
+Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learn-
+ing transferable visual models from natural language super-
+vision. In ICML, pages 8748–8763, 2021.
+[29] Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu,
+and Mark Chen. Hierarchical text-conditional image gen-
+eration with clip latents. arXiv preprint arXiv:2204.06125,
+2022.
+[30] Ali Razavi, Aaron Van den Oord, and Oriol Vinyals. Gener-
+ating diverse high-fidelity images with vq-vae-2. Advances
+in neural information processing systems, 32, 2019.
+[31] Robin Rombach, Andreas Blattmann, Dominik Lorenz,
+Patrick Esser, and Björn Ommer. High-resolution image syn-
+thesis with latent diffusion models. In CVPR, pages 10684-
+10695, 2022.
+[32] Chitwan Saharia, William Chan, Saurabh Saxena, Lala
+Li, Jay Whang, Emily Denton, Seyed Kamyar Seyed
+Ghasemipour, Burcu Karagol Ayan, S Sara Mahdavi,
+Rapha Gontijo Lopes, et al. Photorealistic text-to-image
+diffusion models with deep language understanding. arXiv
+preprint arXiv:2205.11487, 2022.
+[33] Karen Simonyan and Andrew Zisserman. Very deep convo-
+lutional networks for large-scale image recognition. arXiv
+preprint arXiv:1409.1556, 2014.
+[34] Jascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan,
+and Surya Ganguli. Deep unsupervised learning using
+nonequilibrium thermodynamics. In International Confer-
+ence on Machine Learning, pages 2256-2265. PMLR, 2015.
+[35] Jiaming Song, Chenlin Meng, and Stefano Ermon.
+Denoising diffusion implicit models. arXiv preprint
+arXiv:2010.02502, 2020.
+[36] Roman Suvorov, Elizaveta Logacheva, Anton Mashikhin,
+Anastasia Remizova, Arsenii Ashukha, Aleksei Silvestrov,
+Naejin Kong, Harshith Goka, Kiwoong Park, and Victor
+Lempitsky. Resolution-robust large mask inpainting with
+fourier convolutions. In WACV, pages 2149–2159, 2022.
+[37] Weilun Wang, Jianmin Bao, Wengang Zhou, Dongdong
+Chen, Dong Chen, Lu Yuan, and Houqiang Li. Seman-
+tic image synthesis via diffusion models. arXiv preprint
+arXiv:2207.00050, 2022.
+[38] Weilun Wang, Jianmin Bao, Wengang Zhou, Dongdong
+Chen, Dong Chen, Lu Yuan, and Houqiang Li. Sindiffu-
+sion: Learning a diffusion model from a single natural im-
+age. arXiv preprint arXiv:2211.12445, 2022.
+[39] Ben Xue, Shenghui Ran, Quan Chen, Rongfei Jia, Binqiang
+Zhao, and Xing Tang. Dccf: Deep comprehensible color
+filter learning framework for high-resolution image harmo-
+nization. In ECCV, pages 300-316, 2022.
+[40] Binxin Yang, Shuyang Gu, Bo Zhang, Ting Zhang, Xuejin
+Chen, Xiaoyan Sun, Dong Chen, and Fang Wen. Paint by
+example: Exemplar-based image editing with diffusion mod-
+els. arXiv preprint arXiv:2211.13227, 2022.
+[41] Jiahui Yu, Zhe Lin, Jimei Yang, Xiaohui Shen, Xin Lu, and
+Thomas S Huang. Free-form image inpainting with gated
+convolution. In ICCV, pages 4471–4480, 2019.
+[42] Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shechtman,
+and Oliver Wang. The unreasonable effectiveness of deep
+features as a perceptual metric. In CVPR, pages 586-595,
+2018.
+[43] Shengyu Zhao, Jonathan Cui, Yilun Sheng, Yue Dong, Xiao
+Liang, Eric I Chang, and Yan Xu. Large scale image comple-
+tion via co-modulated generative adversarial networks. arXiv
+preprint arXiv:2103.10428, 2021.
+[44] Bolei Zhou, Agata Lapedriza, Aditya Khosla, Aude Oliva,
+and Antonio Torralba. Places: A 10 million image database
+for scene
+recognition. IEEE transactions on pattern analysis
+and machine intelligence, 40(6):1452–1464, 2017.
+Appendices
+In the following section, we first introduce the loss ob-
+jectives for Asymmetric VQGAN, then we present the other
+technique for compressing image space to latent space KL-
+reg, which shares a similar spirit to VQGAN. Finally, we
+introduce the architecture of our models.
+A. Training Objectives
+For the training of Asymmetric VQGAN, we fix the
+weights of the encoder and the codebook and employ a re-
+construction and adversarial loss to train the decoder. The
+reconstruction loss is the sum of pixel-loss and percep-
+tual loss. Pixel-level loss is the MAE loss used between
+each pixel of the output image from the quantized vector
+z and input image x, which can be denoted by Spixel
+3HW |× - ✰, where x = Dec(z) denotes the output image,
+H and w denote the high and width of the image, respec-
+tively. Moreover, the perceptual loss percep is calculated
+with VGG16 [33] network, and it can be formulated as:
+1
+1
+HkWk
+percep(x, x) = - fk (||øk (x) — øk (ŵ)||²),
+4
+Lpercep = Σ percep (x, ✰)
+=
+k=0
+-
+=
+(5)
+where k {0, 1, 2, 3, 4}, Hk and Wk denote the high and
+width of the image feature in k-th layer, respectively. f
+means a convolution operation with 1 × 1 kernel to reduce
+the channel to 1. And ok (.) is the k-th layer of pretrained
+VGG16 network.
+To sum up, the reconstruction loss can be generalized as
+follows:
+=
+LREC(Dec) Lpixel + Lpercep
+(6)
+Another important loss to improve the quality of the gen-
+erated results is the GAN loss, and the equation is defined
+by:
+LGAN (Dec, D): = min max Ex [log(D(x))]
+Dec D
++ Ex[log(1 − D(✩)],
+(7)
+where D denotes a patch-based discriminator [16], Dec de-
+notes the generator which is our asymmetric decoder.
+Therefore the overall objective for training the decoder
+model then reads
+L = LREC (Dec) + ALGAN (Dec, D),
+where we compute the adaptive weight > according to
+(8)
+The VGL] denotes the gradient of its input w.r.t. the last
+layer L of our decoder and 10-4 is used for numerical
+stability.
+-
+B. KL-reg for Training VAEGAN
+Besides VQGAN, in some versions of StableDiffusion,
+the compressing from pixel space to latent space is trained
+by a KL-reg, which can be regarded as VAEGAN. The
+VAEGAN shares a similar purpose to VQGAN since they
+all try to avoid arbitrarily high-variance latent spaces.
+For VAEGAN, the encoder network outputs the mean
+and covariance of the latent vector, i.e., μ and €. Lkl is
+used to reduce the gap between the prior and the proposal
+distributions.
+Ски
+=
+(μμ+sum(exp(€) — € − 1)) .
+and the VAEGAN loss can be formulated as:
+LVAEGAN ({Enc, Dec}) = Lpixel + Lpercep + Lkl.
+(10)
+(11)
+We also include a GAN loss (Eqn. 9) to improve the quality.
+For the training of the asymmetric VAEGAN, the encoder
+part is also fixed, and we only apply the Lpixel + Lpercep +
+LGAN (Dec, D) loss functions to update the decoder. The
+Lk is omitted during the training process.
+C. Architecture of Our Models
+We further present the details of the architecture of our
+base model in Table 7, and the architecture of our large
+model is shown in Table 8.
+D. Larger Decoder
+In contrast to the conventional balanced size between en-
+coder and decoder, we propose to design the decoder to be
+heavier than the encoder (in-balanced design). This is based
+on the important observation that the main computation bot-
+tleneck of StableDiffusion [31] lies in the diffusion process
+but not VQGAN. This design can not only improve the qual-
+ity for both masked and unmasked regions for local editing,
+but benefit the pure text-to-image generation performance.
+As shown in Table 9 and Table 10, our method not only
+benefits the masked region generation quality in local edit-
+ing (FID and LPIPS improvement for the whole edited im-
+age) but also improves the original text-to-image generation
+task quality upon StableDiffusion, whereas all the blending
+methods cannot achieve this goal.
+VGL [pixel]
+入
+=
+V GL [LGAN] +8°
+(9)
+Branch
+l-th
+0
+Layer/kernel
+PConv2d(3, 3)
+Output Size
+192 x 512 x 512
+1
+PConv2d(3, 3)
+384 × 512 × 512
+Condition
+2
+PConv2d(4, 4)
+768 x 256 × 256
+3
+PConv2d(4, 4)
+768 × 128 × 128
+4
+PConv2d(4, 4)
+Out
+Concat
+Conv2d(1, 1)
+GroupNorm (1, 1)
+Conv2d/(3, 3)
+Concat
+Conv2d(1, 1)
+ResBlock x4
+Concat
+768 x 64 x 64
+385 × 512 x 512
+192 x 512 x 512
+192 × 512 × 512
+3 x 512 x 512
+769 × 512 x 512
+384 × 512 x 512
+Branch
+l-th
+Layer/kernel
+Output Size
+0
+1
+Condition 2
+3
+4
+PConv2d / (3, 3)
+PConv2d(3, 3)
+PConv2d(4, 4)
+PConv2d(4, 4)
+PConv2d(4, 4)
+128 × 512 × 512
+256 × 512 × 512
+512 × 256 × 256
+512 × 128 × 128
+Conv2d(1, 1)
+ResBlock x4
+192 x 512 x 512
+1537 x 256 × 256
+768 x 256 × 256
+384 × 256 × 256
+Upsample
+Out
+Main
+2
+Concat
+Conv2d(1, 1)
+GroupNorm (1, 1)
+Conv2d(3, 3)
+Concat
+Conv2d(1, 1)
+ResBlock x3
+Concat
+Conv2d(1, 1)
+ResBlock x3
+Upsample
+Concat
+Conv2d(1, 1)
+ResBlock x3
+Upsample
+Concat
+Conv2d(1, 1)
+ResBlock x3
+Upsample
+Conv2d/(3,3)
+512 × 64 × 64
+257 × 512 × 512
+128 x 512 x 512
+128 x 512 x 512
+3 x 512 x 512
+513 x 512 x 512
+256 × 512 x 512
+Main
+Concat
+384 x 512 x 512
+1537 × 128 × 128
+3
+128 x 512 x 512
+1025 x 256 × 256
+Conv2d(1, 1)
+ResBlock x4
+Upsample
+Concat
+Conv2d(1, 1)
+ResBlock x4
+Upsample
+Conv2d / (3, 3)
+768 x 128 × 128
+768 x 128 × 128
+768 x 256 × 256
+1537 x 64 x 64
+768 × 64 × 64
+768 × 64 × 64
+768 x 128 × 128
+512 × 256 x 256
+ResBlock
+256 x 256 × 256
+4
+768 x 64 x 64
+AttnBlock
+256 × 512 x 512
+ResBlock
+1025 × 128 × 128
+512 × 128 × 128
+512 × 128 × 128
+512 × 256 × 256
+1025 × 64 × 64
+512 × 64 × 64
+512 × 64 × 64
+512 × 128 x 128
+Table 8: Architecture of our large model. The way of mask
+guided blend is concatenation. "PConv" denotes Partial
+Convolutional Layer [21].
+Method
+Base decoder
+4
+ResBlock
+AttnBlock
+ResBlock
+512 x 64 x 64
+Largel decoder
+Large 2 decoder
+FID↓ LPIPS↓
+7.60 0.137
+7.55 0.136
+7.49 0.134
+Pre_error↓
+5.7e-5
+2.6e-5
+2.1e-5
+Table 7: Architecture of our base model. The way of mask
+guided blend is concatenation. “PConv” denotes Partial
+Convolutional Layer [21]. The gray font denotes the vanilla
+decoder.
+Table 9: Effectiveness of our larger decoder in inpainting
+task. "Large decoder” denotes we increase the width and
+depth of the decoder by 1.5 times. “Large×2 decoder" de-
+notes we increase the width of the decoder by 2 times and
+the depth by 2.5 times.
+Method
+Base decoder w/o mask
+Large decoder w/o mask
+FID↓↓ IS↑
+19.92 37.52
+19.75 37.64
+Largex2 decoder w/o mask
+19.68 37.74
+Table 10: Effectiveness of our larger decoder on text-to-
+image task.

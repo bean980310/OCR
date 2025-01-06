@@ -1,22 +1,27 @@
+--- Page 1 ---
 arXiv:2305.17098v2 [cs.CV] 28 Nov 2023
-Control Video: Conditional Control for One-shot
+
+ControlVideo: Conditional Control for One-shot
 Text-driven Video Editing and Beyond
-2
-Min Zhao¹,3, Rongzhen Wang², Fan Bao¹,³, Chongxuan Li²*, Jun Zhu¹,3,4*
-¹Dept. of Comp. Sci. & Tech., BNRist Center, THU-Bosch ML Center, Tsinghua University, China
-Gaoling School of Artificial Intelligence, Renmin University of China, Beijing, China
-Beijing Key Laboratory of Big Data Management and Analysis Methods, Beijing, China
-3ShengShu, Beijing, China; 4Pazhou Laboratory (Huangpu), Guangzhou, China
-gracezhao1997@gmail.com; wangrz@ruc.edu.cn; bf 19@mails.tsinghua.edu.cn;
+
+Min Zhao!:*, Rongzhen Wang?, Fan Bao!*, Chongxuan Li?*, Jun Zhu!3:+*
+
+Dept. of Comp. Sci. & Tech., BNRist Center, THU-Bosch ML Center, Tsinghua University, China
+? Gaoling School of Artificial Intelligence, Renmin University of China, Beijing, China
+Beijing Key Laboratory of Big Data Management and Analysis Methods , Beijing, China
+3ShengShu, Beijing, China; +Pazhou Laboratory (Huangpu), Guangzhou, China
+gracezhao1997@gmail.com; wangrz@ruc.edu.cn; bf19@mails.tsinghua.edu.cn;
 chongxuanli@ruc.edu.cn; dcszj@tsinghua.edu.cn
+
 Abstract
-This paper presents ControlVideo for text-driven video editing – generating a video
+
+This paper presents ControlVideo for text-driven video editing — generating a video
 that aligns with a given text while preserving the structure of the source video.
-Building on a pre-trained text-to-image diffusion model, ControlVideo enhances
+Building on a pre-trained text-to-image diffusion model, Control Video enhances
 the fidelity and temporal consistency by incorporating additional conditions (such
 as edge maps), and fine-tuning the key-frame and temporal attention on the source
 video-text pair via an in-depth exploration of the design space. Extensive exper-
-imental results demonstrate that ControlVideo outperforms various competitive
+imental results demonstrate that Control Video outperforms various competitive
 baselines by delivering videos that exhibit high fidelity w.r.t. the source content,
 and temporal consistency, all while aligning with the text. By incorporating Low-
 rank adaptation layers into the model before training, ControlVideo is further
@@ -24,69 +29,86 @@ empowered to generate videos that align seamlessly with reference images. More
 importantly, Control Video can be readily extended to the more challenging task of
 long video editing (e.g., with hundreds of frames), where maintaining long-range
 temporal consistency is crucial. To achieve this, we propose to construct a fused
-ControlVideo by applying basic ControlVideo to overlapping short video segments
+Control Video by applying basic ControlVideo to overlapping short video segments
 and key frame videos and then merging them by pre-defined weight functions.
 Empirical results validate its capability to create videos across 140 frames, which
 is approximately 5.83 to 17.5 times more than what previous works achieved. The
+
 code is available at https://github.com/thu-ml/controlvideo and the visualization
-results are available at HERE.
-1
-Introduction
+
+results are available at HERE
+
+1 Introduction
+
 The endeavor of text-driven video editing is to generate videos derived from textual prompts and
 existing video footage, thereby reducing manual labor. This technology stands to significantly
 influence an array of fields such as advertising, marketing, and social media content. During this
 process, it is critical for the edited videos to faithfully preserve the content of the source video,
 maintain temporal consistency between generated frames, and align with the provided text and
 optional reference images. However, fulfilling all these requirements simultaneously poses substantial
-challenges. What's more, a further challenge arises when dealing with real-world videos that typically
+challenges. What’s more, a further challenge arises when dealing with real-world videos that typically
 consist of hundreds of frames: how can long-range temporal consistency be maintained?
-Previous research [1-4] has made significant strides in text-driven video editing under zero-shot
+
+Previous research has made significant strides in text-driven video editing under zero-shot
 and one-shot settings, capitalizing on advancements in large-scale text-to-image (T2I) diffusion
-*The Corresponding authors.
+
+“The Corresponding authors.
+
 Preprint. Under review.
+
+--- Page 2 ---
 (a) Single Control
-"a car, autumn" +Canny Edge Maps
-"a Swarovski crystal swan
-is swimming in a river"
-HED
-+
-Boundary
-"a jeep car is moving
-on the road, snowy winter"
-"Sherlock Holmes is dancing,
-+ Depth
-+ Pose
-on the street of London, raining"
+
+« ” “a Swarovski stal swar
+
+a ay i a A ie iat
+
+Jeep car is moving
+
+(Con the road, snowy wintert “Depth FI a ea
+
 (b) Multiple Controls
-"a panda is dancing
-"
-Control 1
-Control 2
-Editing with Multiple Controls
-Editing with Canny Control
-Editing with Pose Control
+“a panda is dancing “ Control 1 Control 2
+
+Editing with Multiple Controls Editing with Canny Control Editing with Pose Control
+
 (c) Image-driven Editing
+Editing with Reference Images I Editing with Reference Images II
+
+ap) IH PORTO
+
+sduifeng style, a girl, black hair,
+Tong hair, jewelry"
+
 Source
 Video
-Editing with Reference Images I
-Editing with Reference Images II
+
++a
+
 (d) Long Video Editing
-"Evangelinelilly wearing dress"
-[140 Frames]
-"gufeng style, a girl, black hair,
-long hair, jewelry"
-מחחחחחחחחחחההה
-CANADAQAD
-วา
+
+*Evangelinelilly wearing dress”
+
+< [140 Frames] >
+. < ay j ] ] ] ] 1
+y = |
+REAAHRARRRHRAAAA
+“a girl with rich makeup"
+\ EY OW a8 ae ae ef
+HHRAHRE )
 Figure 1: Main results of Control Video with (a) single control, (b) multiple controls, (c) image-driven
 video editing, and (d) long video editing.
-models [5, 6] and image editing techniques [7–9]. However, despite these advancements, they
-still cannot address the aforementioned challenges. First, empirical evidence (see Fig. 6) suggests
+
+\
+
+models [5] [6] and image editing techniques [7}9]. However, despite these advancements, they
+still cannot address the aforementioned challenges. First, empirical evidence (see Fig.|6) suggests
 that existing approaches still struggle with fulfilling three requirements of text-driven video editing
 simultaneously, such as faithfully controlling the output while preserving temporal consistency.
 Second, these approaches primarily focus on short video editing, specifically videos shorter than 24
 frames, and do not explore how to maintain temporal consistency over extended durations.
-To address the first challenge, we present Control Video for faithful and temporal consistent video
+
+To address the first challenge, we present ControlVideo for faithful and temporal consistent video
 editing, building upon a pre-trained T2I diffusion model. To enhance fidelity, we propose to incorpo-
 rate visual conditions such as edge maps as additional inputs into T2I diffusion models to amplify the
 guidance from the source video. As ControlNet [10] has been pre-trained alongside the diffusion
@@ -98,78 +120,85 @@ we transform the original spatial self-attention into key-frame attention, align
 selected one, and incorporate temporal attention modules as extra branches in the diffusion model to
 improve faithfulness and temporal consistency further, which is designed by a systematic empirical
 study. Additionally, Control Video can generate videos that align with optional reference images by
-introducing Low-rank adaptation (LORA) [11] layers on the diffusion model before training.
-2
+introducing Low-rank adaptation (LoORA) layers on the diffusion model before training.
+
+
+--- Page 3 ---
 Empirically, we validate our method on 50 video-text pair data collected from the Davis dataset
-following previous works [1, 3, 4] and the internet. We compare with Stable Diffusion and SOTA
-text-driven video editing methods [1, 3, 4] under objective metrics and a user study. In particular,
-following [1, 4] we use CLIP [12] to measure text-alignment and temporal consistency and employ
+following previous works [11] [3)|4]] and the internet. We compare with Stable Diffusion and SOTA
+text-driven video editing methods under objective metrics and a user study. In particular,
+following ] we use CLIP to measure text-alignment and temporal consistency and employ
 SSIM to assess faithfulness. Extensive results demonstrate that Control Video outperforms various
 competitors by fulfilling three requirements of text-driven video editing simultaneously. Notably,
 Control Video can produce videos with extremely realistic visual quality and very faithfully preserve
 original source content while following the text guidance. For instance, Control Video can successfully
-make up a woman with maintaining her identity while all existing methods fail (see Fig. 6).
+make up a woman with maintaining her identity while all existing methods fail (see Fig. (6p.
+
 Furthermore, Control Video is readily extendable for the aforementioned second challenge: video
-editing for long videos that encompass hundreds of frames (see Sec. 3.2). To achieve this, we
-propose to construct a fused ControlVideo by applying basic ControlVideo to overlapping short
+editing for long videos that encompass hundreds of frames (see Sec. . To achieve this, we
+propose to construct a fused ControlVideo by applying basic Control Video to overlapping short
 videos and key frame videos and then merging them by defined weight functions at each denoising
 step. Intuitively, fusion with overlapping short videos encourages the overlapping frames to merge
 features from neighboring short videos, thereby effectively mitigating inconsistency issues between
 adjacent video clips. On the other hand, key frame video, which incorporates the first frame of each
 video segment, provides global guidance from the whole video, and thus fusion with it can further
-improve long-range temporal consistency. Empirical results affirm ControlVideo's ability to produce
+improve long-range temporal consistency. Empirical results affirm Control Video’s ability to produce
 videos spanning 140 frames, which is approximately 5.83 to 17.5 times longer than what previous
 works handled.
+
 2 Background
-2.1
-Diffusion Models for Image Generation and Editing
-Let q(x) be the data distribution on RD. Diffusion models [13–15] gradually perturb data xo ~
-q(x) by a forward diffusion process:
+
+2.1 Diffusion Models for Image Generation and Editing
+
+Let q(xo) be the data distribution on R?. Diffusion models [13} gradually perturb data a ~
+q(ao) by a forward diffusion process:
+
 T
-q(×1:T) = q(x0) II 9(xt|xt−1), q(xt|xt−1) = N(×t; √αtxt−1, ßtĪ),
+
+(wir) = 4(xo) |] a(@elae-1), q(a1\ar—-1) = N (ae; forar—1, 6:1), (1)
+
 t=1
-(1)
-where ẞt is the noise schedule, at = 1 − ẞt and is designed to satisfy xT ~N(0, 1). The forward
-process {xt}te[0,T] has the following transition distribution:
-It|0(xt|xo) = N(xt|√āt×0, (1 – āt)I),
-where at = 1 as. The data can be generated starting from xτ ~ N(0, 1) through the reverse
-diffusion process, where the reverse transition kernel q(xt−1 xt) is learned by a Gaussian model:
-Po(xt-1xt) N(x+ 1;1
-t−1; 
-µØ(×t),σI). Ho et al. [15] shows learning the mean μ(x+) can be
-derived to learn a noise prediction network €0 (x, t) via a mean-squared error loss:
-=
-min Et,xo,€€€ (xt, t)||²,
-Ꮎ
-(3)
-where xt~
-Ito (xt |xo), ~N(0, 1). Deterministic DDIM sampling [16] generate samples starting
-from xT ~N(0, 1) via the following iteration rule:
-xt
-xt-1 =
-at-1
-√1 – α₁€ (x, t)
-√at
-+ 1 — αt−1€ (x, t).
-xt-1
-(4)
+
+where (3; is the noise schedule, a; = 1 — {; and is designed to satisfy ap ~ N(0, I). The forward
+process {2 },<{0,r] has the following transition distribution:
+
+duo (#z|@0) = N(a4|Varx0, (1 — ar)Z), (2)
+
+where Q; = Th 1 @s. The data can be generated starting from wp ~ N(0, I) through the reverse
+vale process, where the reverse transition kernel q(x1—1|2+) is Icarnei by a Gaussian model:
+po(ty-1\@1) = N(a@,~1; wo(a,), 07D). Ho et al. (15) shows learning the mean jg(a,) can be
+derived to learn a noise prediction network €9(az,t) via a mean-squared error loss:
+
+min Ey,x0,¢||€ — ¢o(#e,t)||”. 3)
+
+where x; ~ qu\o(az|a0), € ~ N(O, I). Deterministic DDIM sampling [16] generate samples starting
+from wp ~ N(0, I) via the following iteration rule:
+
+x, — J1— ay€o(2,,t)
+Vat
+
 Due to the ability to generate high-quality samples, diffusion models are naturally applied to in image
-translation and image editing [7, 17, 18]. Unlike unconditional generation, they usually need to
-preserve the content from the source image xo. Considering the reversible property of ODE, DDIM
-inversion [16] is adopted to convert a real image xo to related inversion noise xм by reversing the
+translation and image editing {18}. Unlike unconditional generation, they usually need to
+preserve the content from the source image a9. Considering the reversible property of ODE, DDIM
+inversion is adopted to convert a real image ao to related inversion noise aa, by reversing the
 above process for faithful image editing:
--xt-1 - √1 — αt-1 €0 (x−1, t − 1)
-xt =
-+ √√1 − α+€¤ (xt−1, t − 1).
-(5)
-αt-1
-3
-2.2 Latent Diffusion Models and ControlNet
-=
-To reduce computational cost, latent diffusion models (LDM, a.k.a Stable Diffusion) [5] use an
-encoder & to transform xo into low-dimensional latent space zo E(xo), which can be reconstructed
-by a decoder xo ≈ D(zo), and then learns the noise prediction network ε0 (zt, p, t) in the latent
-space, where p is the textual prompts. The backbone for ε (zt, p, t) is the UNet (termed main UNet)
+
+ay = yop enol F AD VT apeg (aa. t 1). 6)
+
+4-1
+
++ \/1 — a4-1€9 (a+, t). (4)
+
+Lt-1 Ot-1
+
+
+--- Page 4 ---
+2.2. Latent Diffusion Models and ControlNet
+
+To reduce computational cost, latent diffusion models (LDM, a.k.a Stable Diffusion) use an
+encoder € to transform ao into low-dimensional latent space z) = E(ao), which can be reconstructed
+by a decoder a ~ D(z), and then learns the noise prediction network €9(z;, p,t) in the latent
+space, where p is the textual prompts. The backbone for €g (zz, p, t) is the UNet (termed main UNet)
 that stacks several basic blocks. Specifically, the U-Net consists of an encoder, a middle block, and a
 decoder. The encoder and decoder each consist of 12 blocks, while the full model encompasses a
 total of 25 blocks. Within these blocks, 8 are utilized for down-sampling or up-sampling convolution
@@ -177,714 +206,683 @@ layers, and the remaining blocks constitute the basic building blocks. Each basi
 of a transformer block and a residual block. The transformer block incorporates a self-attention layer,
 a cross-attention layer, and a feedforward neural network. The text embeddings, processed by CLIP
 text encoder, are integrated into the U-Net via the cross-attention layer. To enable models to learn
-additional conditions c, ControlNet [10] adds a trainable copy of the encoder and middle blocks
+additional conditions c, ControlNet adds a trainable copy of the encoder and middle blocks
 of the main UNet (termed ControlNet) to incorporate task-specific conditions on the locked Stable
 Diffusion. The outputs of ControlNet are then followed by a zero-initialization convolutional layer,
 which is subsequently added to the features of the main U-Net at the corresponding layer.
-3 Methods
-To address the challenges mentioned in Sec. 1, we first present Control Video for faithful and
+
+3. Methods
+
+To address the challenges mentioned in Sec. we first present ControlVideo for faithful and
 temporally consistent text-driven video editing building upon a pre-trained T2I diffusion model (see
-Sec. 3.1). Then we extend Control Video for the second challenge: video editing for long videos that
-encompass hundreds of frames (see Sec. 3.2).
-3.1
-Control Video
-In this section, we first introduce the architecture of ControlVideo via an in-depth exploration of
-the design space (see Sec. 3.1.1). As shown in Figure 2, ControlVideo incorporates additional
-conditions, fine-tuning the key-frame, and temporal attention. In Sec. 3.1.2, we present the training
-and sampling framework of ControlVideo. Furthermore, we show how ControlVideo can produce
+). Then we extend Control Video for the second challenge: video editing for long videos that
+encompass hundreds of frames (see Sec. [3.2}.
+
+3.1 ControlVideo
+
+In this section, we first introduce the architecture of Control Video via an in-depth exploration of
+the design space (see Sec. B11). As shown in Figure [2} ControlVideo incorporates additional
+conditions, fine-tuning the key-frame, and temporal attention. In Sec. B.1.2} we present the training
+and sampling framework of Control Video. Furthermore, we show how Control Video can produce
 videos in alignment with optional reference images by incorporating Low-rank adaptation layers in
-Sec. 3.1.3.
-3.1.1
-Architecture
+
+Sec. 3.1.3]
+
+3.1.1 Architecture
+
 As the T2I diffusion model has been pre-trained on large-scale text-image data, we build upon it to
-align with given texts. In line with prior studies [1, 3], we first replace the spatial kernel (3 × 3 ) in
-2D convolution layers with 3D kernel (1 × 3 × 3) to handle videos inputs.
-=
+align with given texts. In line with prior studies [1] 3], we first replace the spatial kernel (3 x 3 ) in
+2D convolution layers with 3D kernel (1 x 3 x 3) to handle videos inputs.
+
 Adding Visual Controls. Recall that a key objective in text-driven video editing is to faithfully
 preserve the content of the source video. An intuitive approach is to generate edited videos starting
-from DDIM inversion Xм in Eq. 5 to leverage information from Xo. However, despite the reversible
-nature of ODE, as depicted in Fig. 3, empirically, the combination of DDIM inversion and DDIM
+from DDIM inversion X jy in Eq. [Sto leverage information from Xo. However, despite the reversible
+nature of ODE, as depicted in Fig.B] empirically, the combination of DDIM inversion and DDIM
 sampling significantly disrupts the structure of the source video. To enhance fidelity, we propose
-to introduce additional visual conditions C {1, such as edge maps for all frames, into
-the main UNet to amplify the source video's guidance at each time step rather than only initial
-time: (X+, C, p, t). Notably, as ControlNet[10] has been pre-trained alongside the main UNet in
-Stable Diffusion, we utilize it to process these visual conditions C. Formally, let h₂ ЄRNxd and
-he ЄRNxd denote the hidden features with dimension d of the same layer in the main UNet and
-ControlNet, respectively. We combine these features by summation, yielding h huhe, which
-i=1'
-=
-is then fed into the decoder of the main UNet through a skip connection, with A serving as the control
-scale. As illustrated in Figure 3, the introduction of visual conditions to provide structural guidance
+to introduce additional visual conditions C = {c'}‘_,, such as edge maps for all frames, into
+the main UNet to amplify the source video’s guidance at each time step rather than only initial
+time: €9(Xz, C, p,t). Notably, as ControlNet{[10] has been pre-trained alongside the main UNet in
+Stable Diffusion, we utilize it to process these visual conditions C. Formally, let h,, € RY *¢ and
+he € R%*4 denote the hidden features with dimension d of the same layer in the main UNet and
+ControlNet, respectively. We combine these features by summation, yielding h = h,, + Ah-, which
+is then fed into the decoder of the main UNet through a skip connection, with \ serving as the control
+scale. As illustrated in Figure[3] the introduction of visual conditions to provide structural guidance
 from Xo significantly enhances the faithfulness of the edited videos.
+
 Further, given that different visual conditions encompass varying degrees of information derived from
 Xo, we comprehensively investigate the advantages of employing different conditions. As depicted in
-Figure 1, our findings indicate that conditions yielding detailed insights into Xo, such as edge maps,
+Figure[T] our findings indicate that conditions yielding detailed insights into Xo, such as edge maps,
 are particularly advantageous for attribute manipulation such as facial video editing, demanding
 precise control to preserve human identity. Conversely, conditions offering coarser insights into Xo,
-4
-(a)
-Encoder Middle Decoder
-Blocks Block Blocks
-Source Video
-Controls
-(b)
-Source Prompt
-"a car"
-Overlapping
-Short Videos
-Fused Features
-with NSV
-Fused Features
-with KFV
-Training
-Basic Block
-Pseudo 3D
-ResNet
-Predicted Noise
-Key-frame
-Attention
-Temporal
-Attention
-Zero
-Convolution
-Source Video
-Cross Attention
-Feedforward
-Neural Networks
-Edited Video
-With
-Temporal
-Attention
-Key-frame Attention
-Temporal Attention
-Without
-Key, Value
-Query
-Temporal
-Attention
-[T frames]
-Control Video
-Fusion with Neighboring Short Videos
-Inference
-Gaussian Noise/
-Noisy Source Video/
-DDIM Inversion
-ControlVideo
+
+--- Page 5 ---
+(a) Training Inference
+Encoder Middle Decoder Basic Block
+Blocks Block Blocks Gaussian Noise/
+| Poeudo 3D
+Source Video Predicted Noise *
+
+Noisy Source Video!
+a DDIM Inversion aap
+
 Initial Value
-DDIM
-Sampling
-Target Prompt
-"a car, autumn"
-First Frame of
-Each Video
-Key Frame
-Video
-Control Video
-Fusion with
-Key Frame Video
+
+l
+
+| Cross Attention
+Source Prompt
+
+“a car"
+
+=
+
+oe =
+
+Zero
+
+Source Video
+Convolution
+
+Feedforward
+
+Neural Networks
+
+Edited Video A
+Controls 3 DDIM
+i: With ; 2 Sampling
+Attention 2
+is}
+Without Tt
+Temporal Ty
+BH Key, value I Quen Attention = Lareet Prompt
+‘a car, autumn’
+(b)
+[ T frames | Key Frame
+Overlapping y
+I First Frame of Video
+Short Videos Each Video
+a)
+pp Fosed Features ontrol Video ControlVid
+i nae a ontrolVideo
+ @ Fused Features! sion with Neighboring Short Vid a 4
+: *! Fusion with Neighboring Short Videos | Fusion with
+at J Key Frame Video
+
+dE
 Fused
-ControlVideo
+Controivieeo @ ce #4
+
 Figure 2: (a) The overview of ControlVideo. Left: the architecture. ControlVideo incorporates
 additional controls, fine-tunes the key-frame attention, and temporal attention. The attention modules
 are initialized using the self-attention weights from T2I diffusion models. Right: the inference
 framework. Depending on the editing scenarios, we have three ways to derive initial values (see Sec.
-3.1.2). (b) The overview of extended Control Video for long video editing. NSV and KFV represent
+B.1.2). (b) The overview of extended Control Video for long video editing. NSV and KFV represent
 neighboring short videos and key frame videos respectively.
+
+|
+
 such as pose information, facilitate flexible adjustments to shape and background. This exploration
 naturally raises the question of whether we can combine multiple controls to leverage their respective
 advantages. To this end, we compute a weighted sum of hidden features derived from different
-controls, denoted as h = huhe, and subsequently feed the fused features into the decoder of
-the main UNet, where λ; represents the control scale associated with the i-th control. In situations
-where multiple controls may exhibit conflicts or inconsistencies, we can employ SAM [19] or cross-
+controls, denoted as h = h, + Y; Ai he, and subsequently feed the fused features into the decoder of
+the main UNet, where \; represents the control scale associated with the z-th control. In situations
+where multiple controls may exhibit conflicts or inconsistencies, we can employ SAM or cross-
 attention map [7] to generate a mask based on text and feed the masked controls into Control Video to
-enhance control synergy. As shown in Figure 1, Canny edge maps excel at preserving the background
+enhance control synergy. As shown in Figure[I] Canny edge maps excel at preserving the background
 while having a limited impact on shape modification. In contrast, pose control facilitates flexible
 shape adjustments but may overlook other crucial details. By combining these controls, we can
 simultaneously preserve the background and effect shape modifications, demonstrating the feasibility
 of leveraging multiple controls in complex video editing scenarios.
+
 Key-frame Attention. The T2I diffusion models update the features of each frame independently
 and have no interaction between frames, thus resulting in temporal inconsistencies. To address
 this issue and improve temporal consistency, we introduce a key frame that serves as a reference
 for propagating information throughout the video. Specifically, drawing inspiration from previous
-works [3], we transform the spatial self-attention in both main UNet and ControlNet into key-frame
-attention, aligning all frames with a selected reference frame. Formally, let v² = Rd represent the
-hidden features of the i-th frame, and let k = [1, N] denote the chosen key frame. The key-frame
+works [3]], we transform the spatial self-attention in both main UNet and ControlNet into key-frame
+attention, aligning all frames with a selected reference frame. Formally, let v’ € R¢ represent the
+hidden features of the i-th frame, and let k € [1, N] denote the chosen key frame. The key-frame
 attention mechanism is defined as follows:
-Q = WQv², K = WKyk, ‚V = WV vk,
-where WQ, WK, WV are the projected matrix. We initialize these matrices using the original
+
+Q=Wev'" K=Weo'- Vewol,”
+
+where W°, W*,WY are the projected matrix. We initialize these matrices using the original
 self-attention weights to leverage the capabilities of T2I diffusion models fully. Empirically, we
-5
-(a)
-[100 Frames]
-Source Video 0
-Weight
-10
-Overlapping Length
-L
-"a car" "a car, Vincent van Gogh style"
-Source Video
-Editing Short Videos Independently
+
+--- Page 6 ---
+(a) <——___—__ [100 Frames] > _ Source Video 0. Weight L 0 Overlapping Length L.
+
+iting Short Videos Independently
+
 Fusion with Neighboring Short Videos
-[100 Frames]
-+Controls
-Fusion with Neighboring Short Videos and Key Frame Video
-(b) Source DDIM
-+Ker-frame +Temporal
-Video Inversion
-"a girl" "a girl with rich makeup"
-Full Version
-At.
-At.
-Source
-Video
-DDIM
-Inversion
-+Ker-frame +Temporal
-+Controls
-Full Version
-At.
-At.
-"a car" → "a red car"
-"a person is dancing" "a panda is dancing"
+
+“a car" “a car, Vincent van Gogh style”
+
+Fusion with Neighboring Short Videos and Key Frame Video “a girl" “a girl with rich makeup"
+(b) Source — DDIM +Ker- s frame + Temporal Source DDIM “Ker frame Tem oral
+Video Inversion *COmOlS Full Version Viteg Inversion *COntOMs Por" Fall Version
+
+—— =! | -——
+
+“acar"—> “a red car" “a person is dancing’ “a panda is dancing"
+
 Figure 3: (a) Ablation study for fusion strategies, overlapping length a and weight w for key frame
-video fusion for long video editing. See detailed analysis in Sec. 3.2 and Sec. 5.2.3. (b) Ablation
-studies for key components in Control Video. At. denote attention. See detailed analysis in Sec. 5.2.3.
+video fusion for long video editing. See detailed analysis in Sec. [3.2]and Sec. [5.2.3] (b) Ablation
+studies for key components in ControlVideo. At. denote attention. See detailed analysis in Sec
+
 systematically study the design of key frame, key and value selection in self-attention and fine-tuned
 parameters. A detailed analysis is provided in Appendix. In summary, we utilize the first frame as
 key frame, which serves as both the key and value in the attention mechanism, and we finetune the
 output projected matrix W° within the attention modules to enhance temporal consistency.
+
 Temporal Attention. In pursuit of enhancing both the faithfulness and temporal consistency of the
 edited video, we introduce temporal attention modules as extra branches in the network, which capture
-relationships among corresponding spatial locations across all frames. Formally, let v = RN×d denote
+relationships among corresponding spatial locations across all frames. Formally, let v € R“ <4 denote
 the hidden features, the temporal attention is defined as follows:
-Q=WQv, K = WK v,V = WVv.
+
+Q=W2v, K =W*o,V =W.
+
 Prior research [20] has benefited from extensive data to train temporal attention, a luxury we do not
 have in our one-shot setting. To address this challenge, we draw inspiration from the consistent manner
 in which different attention mechanisms model relationships between image features. Accordingly,
 we initialize temporal attention using the original spatial self-attention weights, harnessing the
 capabilities of the T2I diffusion model. After each temporal attention module, we incorporate a zero
-convolutional layer [10] to retain the module's output prior before fine-tuning. Furthermore, we
+convolutional layer to retain the module’s output prior before fine-tuning. Furthermore, we
 conduct a comprehensive study on the incorporation of local and global positions for introducing
-temporal attention. The qualitative results are shown in Figure 4. Concerning local positions in
+temporal attention. The qualitative results are shown in Figure [4] Concerning local positions in
 the transformer block, we find that the most effective placement is both before and within the self-
 attention mechanism. This choice is substantiated by the fact that the input in these two positions
 matches that of self-attention, serving as the initial weight for temporal attention. With self-attention
 location exhibits higher text alignment, ultimately making it our preferred choice. For global location
-in ControlVideo, our main finding is that the effectiveness of positions is correlated with the amount
+in Control Video, our main finding is that the effectiveness of positions is correlated with the amount
 of information they encapsulate. For instance, the main UNet responsible for image generation retains
 a full spectrum of information, outperforming the ControlNet, which focuses solely on extracting
 condition-related features while discarding others. As a result, we incorporate temporal attention
 alongside self-attention at all stages of the main UNet, with the exception of the middle block. More
 detailed analyses are provided in Appendix.
-6
-3.1.2 Training and Sampling Framework
-Let C = {c²}₁ denote the visual conditions (e.g., Canny edge maps) for X and ε (Xt,C,p,t)
-denote the Control Video network. Let p, and pt represent the source prompt and target prompt,
-respectively. Similar to Eq. 3, we finetune ε0 (Xt, C, p, t) on the source video-text pair (Xo, ps) using
+
+
+--- Page 7 ---
+3.1.2. Training and Sampling Framework
+
+Let C = {c'}%_, denote the visual conditions (e.g., Canny edge maps) for Xo and e9(Xz,C, p, t)
+denote the ControlVideo network. Let p, and p; represent the source prompt and target prompt,
+respectively. Similar to Eq. |3} we finetune €9(X,, C, p, t) on the source video-text pair (Xo, ps) using
 the mean-squared error loss, defined as follows:
-~
-min Et,e||€ – € (Xt, C, ps, t)||²,
-Ꮎ
-60
-where € ~ N(0, I), Xt Ito (Xt Xo). Note that during training, we exclusively optimize the
-parameters within the attention modules (as discussed in Sec. 3.1.1), while keeping all other
+
+min Ey,¢|le - €6(X1,C, ps, t)||?,
+
+where € ~ N(0,I),X; ~ qjo(X:|Xo). Note that during training, we exclusively optimize the
+parameters within the attention modules (as discussed in Sec. |3.1.1), while keeping all other
 parameters fixed.
-Choice of Initial Value XM. Built upon ε (Xt, C, p, t), we can generate the edited video starting
-from the initial value XM using DDIM sampling [16], based on the target prompt pt. For Xм, we
-employ DDIM inversion as described in Eq. 5 for local editing tasks, such as attribute manipulation.
-For global editing, different from previous work [1, 3], we can also start from noisy source video
-XM ~ 9M|0(XM|X0) using forward transition distribution in Eq. 2 with large M and even XM
-N(0, 1) to improve editability because visual conditions have already provided structure guidance
+
+Choice of Initial Value Xy7. Built upon €9(X;, C,p, t), we can generate the edited video starting
+from the initial value X yz using DDIM sampling [16], based on the target prompt p;. For X yz, we
+employ DDIM inversion as described in Eq. [5]for local editing tasks, such as attribute manipulation.
+For global editing, different from previous work [1] [3], we can also start from noisy source video
+Xyu~ amjo(Xm|Xo) using forward transition distribution in Eq. 2}with large M and even Xj ~
+N (0, I) to improve editability because visual conditions have already provided structure guidance
 from Xo. During this process, the sampled noise is shared across all frames for temporal consistency.
-Algorithm 1 Extended ControlVideo for Long Video Editing
-~
-Require: initial value XM, controls C, short video length L, overlapped length a, fusion function
-F(), weight w, model € (·, ·, ·, ·), prompt p
-n = [N/(L- a)] +1
-for tM to 1 do
-for j
-= 1 ton do
-<
-€ (X, C³,p,t)
+
+Algorithm 1 Extended Control Video for Long Video Editing
+
+Require: initial value Xy,, controls C, short video length L, overlapped length a, fusion function
+F(-), weight w, model €g(-,-,-,-), prompt p
+n= |N/(L—a)|4+1 > number of short videos
+for t = M tol do
+for j = 1 tondo
+
+€ < €9(X},C%,p,t) > Control Video for each short video
 end for
-E
-€
-K
-F(E,..., €)
-€ (XK, CK,p,t)
-€0← wo() + (1 – w)êo
-Xt-1DDIM_Sampling(€0, Xt, t)
+éo + F(e},...,€3 > fusion with neighboring short videos via Eq.
+ek & e9(X#,C*,p,t) > ControlVideo for key frame video
+eg — wO(es) + (1 — w)éo > fusion with key frame video via faa
+X,_1 < DDIM_Sampling(€9, X;, t) > denoising step in Eq. [4]
 end for
 return Xo
-3.1.3 Image-driven Video Editing
-▶ number of short videos
-► Control Video for each short video
-fusion with neighboring short videos via Eq. 7
-► Control Video for key frame video
-▶ fusion with key frame video via Eq. 8
-▶ denoising step in Eq. 4
+
+3.1.3. Image-driven Video Editing
+
 In certain scenarios, textual descriptions may fall short of fully conveying the precise desired
 effects from users. In such cases, users may wish for the generated video to also align with given
 reference images. Here, we show a simple way to extend ControlVideo for image-driven video
 editing. Specifically, we can first add the Low-rank adaptation (LoRA)[11] layer on the main UNet
 to facilitate the learning of concepts relevant to reference images and then freeze them to train
-Control Video following Sec. 3.1.2. Since the training for reference images and video is independent,
-we can flexibly utilize models in the community like CivitAI.
+Control Video following Sec. Since the training for reference images and video is independent,
+we can flexibly utilize models in the community like CivitAL.
+
 3.2 Extended ControlVideo for Long Video Editing
-Although ControlVideo described in the above section has the appealing ability to generate highly
+
+Although Control Video described in the above section has the appealing ability to generate highly
 temporal consistent videos, it is still difficult to deal with real-world videos that typically encom-
 pass hundreds of frames due to memory limitations. A straightforward approach to address this
 issue involves dividing the entire video into several non-overlapping short segments and applying
-Control Video to each segment independently. However, as depicted in Figure 3, this method still
+Control Video to each segment independently. However, as depicted in Figure [3] this method still
 results in temporal inconsistencies between video clips. To tackle this problem, we propose to fuse
 the features of the frames that bridge between short videos at each denoising step. To achieve this,
-as shown in Figure 2, we split the whole video into overlapping short videos, apply Control Video
+as shown in Figure[2| we split the whole video into overlapping short videos, apply Control Video
 for each segment, and then merge features of overlapping frames from neighboring short videos via
 pre-defined weight functions, where the weight fusion strategy is also used in the image generation
 task [21]. Furthermore, in the subsequent denoising step, both non-overlapping and overlapping
-7
+
+--- Page 8 ---
 (a) Comparison with different initialization (b) Comparison with different local locations of temporal attention in transformer block
+
+random using pretrain before with after after after FNN
+
+Penne , source video . . ji
+initialization weights self-attention _self-attention _self-attention _cross-attention
+
 source video
-random
-initialization
-using pretrain
-weights
-source video
-before
-self-attention
-with
-self-attention
-after
-self-attention
-after
-cross-attention
-after FNN
-"the back view of a woman with beautiful
-scenery"", starry sky"
-"the back view of a woman with beautiful
-scenery" "..., sunrising, early morning"
+
+“the back view of a woman with beautiful “the back view of a woman with beautiful
+scenery" “--, starry sky" scenery" “--, sunrising , early morning"
 (c) Comparison with different global locations of temporal attention
-ControlNet +
-source video
-UNet
-ControlNet
-UNet
-encoder
-of UNet
-decoder
-of UNet
-block 1,2,3
-in UNet
-block 1,2
-in UNet
-block 2,3
-in UNet
-HHHHHHH
-"a person is dancing" "a panda is dancing"
+ControINet + -
+F UNet encoder decoder block 1,2.3 block 1,2 block 2,3
+source video UNet ControlNet “ of UNet of UNet in UNet in UNet in UNet
+
+“a person is dancing’—> “a panda is dancing"
+
 Figure 4: Ablation studies of (a) the way to initialize and the incorporation of (b) local positions and
 (c) global positions for introducing temporal attention. The green color marked our choice.
-frames within a short video clip are fed into Control Video together, which brings the features of
+
+frames within a short video clip are fed into ControlVideo together, which brings the features of
 non-overlapping frames closer to those of the overlapping frames, thus indirectly improving global
-temporal consistency. Formally, the j-th short video clip X and the corresponding visual conditions
-C³ are defined as:
-"
-C³ = {c}=(-1)(L-a)+1
-min((j−1)(L-a)
-+L,N)
-"
-j Є [1, n]
-X² = {x}i=(j−1)(L-a)+1
-imin((j−1)(L-a)
-+L,N)
-(6)
-where n = [N/(L − a)] + 1 is the number of short video clips, L is the length of short video clip
-and a is the overlapped length. Let & € RL×D = €0 (X²², C'³‚p, t) denote the ControlVideo for j-th
-short video and ê0 € RND denote the fused ControlVideo for entire video. The fusion function
-F(): RnxLxD
-→RNXD is defined as follows:
-= F(ε √ √, ..., ε )
-=
-Sum (Normalize(O(w; & 1D)) O(€²)),
-(7)
-where w; ER is the weight vector for the j-th short video, 1ɲ Є R³ is a vector of ones, ◇ is
-vector outer product, is the element-wise multiplication and Sum(•) adds elements at correspond-
-ing positions in the matrix. O(.) : RLXD → RND denote zero-padding. For instance, O (€)
-represents the corresponding frame indexes of j-th video are 6 and the other frame indexes are
-zero. Normalize() scales matrix elements by their sum at corresponding positions, ensuring fusion
+temporal consistency. Formally, the j-th short video clip Xj and the corresponding visual conditions
+C4 are defined as:
+
+jymin((j—1)(L—a)+L,N j iymin((j-1)(L—a)+L,N)
+
+Xj = {ae ee , Cl = {a » J€[hn (6)
+where n = |N/(L —a)| +1 is the number of short video clips, L is the length of short video clip
+and a is the overlapped length. Let 4 € R’*? = e9(X},C!, p, t) denote the Control Video for j-th
+short video and éy € R“*? denote the fused Control Video for entire video. The fusion function
+F(-): R°*£*? 5 RN*° is defined as follows:
+
+é = F(é},...,€%) = Sum(Normalize(O(w; @ 1p)) © O(é))), (7)
+
+where w; € RE is the weight vector for the j-th short video, 1p € R? is a vector of ones, & is
+vector outer product, © is the element-wise multiplication and Sum(-) adds elements at correspond-
+ing positions in the matrix. O(-) : R’*? — RN*P denote zero-padding. For instance, O(€})
+represents the corresponding frame indexes of j-th video are e and the other frame indexes are
+zero. Normalize(-) scales matrix elements by their sum at corresponding positions, ensuring fusion
 weights sum to one and maintaining value range post-fusion. In this work, we define normal random
-variables w; ~ N(l; L/2,σ²), where σ = 0.1. Alternative weight functions were tested, with results
-indicating insensitivity to the choice of function (see Sec. 5.2.4). As shown in Figure 3, this fusion
+variables w; ~ N(1; L/2,07), where o = 0.1. Alternative weight functions were tested, with results
+indicating insensitivity to the choice of function (see Sec. [5 As shown in Figure[3} this fusion
 strategy significantly enhances temporal consistency between short videos.
+
 However, this approach directly fuses nearby videos to ensure local consistency between adjacent
 video clips, and global consistency for the entire video is improved indirectly during repeated
-denoising steps. Consequently, as illustrated in Figure 3, temporal consistency deteriorates when
+denoising steps. Consequently, as illustrated in Figure [3 temporal consistency deteriorates when
 video clips are spaced farther apart, exemplified by the degradation of the black car into the green
 car. In light of these observations, a natural question arises: can we fuse more global features
 directly to enhance long-range temporal consistency further? To achieve this, we create a key
 frame video by incorporating the first frame of each short video segment to provide global guidance
 directly. ControlVideo is then applied to this key frame video, which is subsequently fused with
-8
-0.2
-0.4
-Weight
-0.6
-0
-0.8
-1.0
-1.2
-(a) Visualization of Different Weight Functions
-(b) Results of Different Weight Functions
-Inverse square
-Gaussian
-Source
-Gaussian
+
+--- Page 9 ---
+(a) Visualization of Different Weight Functions (b) Results of Different Weight Functions
+Inverse square Gaussian
 root
-(Convex)
-Gaussian
-linear
-constant
-cosine
-exp
-convex inverse_square_root
-convex gaussian
-10
-15
-20
-l
-Frame=30
+
+, Gaussian
+Source (Convex:
+
 Frame=0
-Frame=30
-Frame=0
-Cosine
-Exponential
-Linear
+
+=30
+
+Frame
+
 Constant
+
+Cosine Exponential
+
+=0
+
+Frame
+
+08
+
+30
+
+2}—+-—= — comer gaussian
+
+Frame
+
+0 i a] 5 70 Ea
+
 Figure 5: (a) Visualization of different weight functions, where we take L = 25 as example. (b) The
 edited results with different weight functions.
-=
-the previously obtained ĉe. Formally, let X : {x(−1)(L-a)+1}}=1 denote the keyframe video
-and CK = {c(-1)(L-a)+1}; 21 denote the corresponding visual conditions. The final model eð is
+
+the previously obtained €g. Formally, let X = {al ~YE—a)+t }#_1 denote the keyframe video
+
+and CK = {cU-)(4~4)+1}"_| denote the corresponding visual conditions. The final model eg is
 defined as follows:
-€g = wo(€ỗ) + (1 – w)ĉo,
-(8)
-where w € [0,1] is the weight, € = €(XK,C,p,t). Note that the frames in keyframe videos
+
+€9 = wO(e ) + (1— wep, (8)
+
+where w € (0, 1] is the weight, ef = e(X/,C*,p,t). Note that the frames in keyframe videos
 here are also selected as key frames in each short video in key frame attention, thus ensuring global
-temporal consistency. The complete algorithm is presented in Algorithm 1. As depicted in Figure 3,
+temporal consistency. The complete algorithm is presented in Algorithm[T] As depicted in Figure]
 with the keyframe video fusion strategy, the color of the car is consistently retained throughout the
 entire video.
+
 4 Related Work
+
 4.1 Diffusion Models for Text-driven Generation and Image Editing
+
 Recently, diffusion models have achieved major breakthroughs in the field of generative artificial
-intelligence and thus are utilized for text-to-image generation [5, 22]. These models usually train a
+intelligence and thus are utilized for text-to-image generation 2]. These models usually train a
 diffusion model conditioned on text on large-scale image-text paired datasets. Building upon these
 remarkable advances of T2I diffusion models, numerous methods have shown promising results
 in text-driven image editing. In particular, several works such as Prompt-to-Prompt [7], Plug-and-
-Play [8] and Pix2pix-Zero [9] explore the attention control over the generated content and achieve
+Play [8] and Pix2pix-Zero [9]] explore the attention control over the generated content and achieve
 SOTA results. Such methods usually start from the DDIM inversion and replace attention maps in the
 generation process with the attention maps from the source prompt, which retrain the spatial layout
 of the source image. Despite significant advances, directly applying these image editing methods to
 video frames leads to temporal flickering.
+
 4.2 Diffusion Models for Text-driven Video Editing
-Gen-1 [23] trains a video diffusion model on large-scale datasets, achieving impressive performance.
+
+Gen-1 trains a video diffusion model on large-scale datasets, achieving impressive performance.
 However, it requires expensive computational resources. To overcome this, recent works build upon
 T2I diffusion models on a single text-video pair. In particular, Tune-A-Video [3] inflates the T2I
 diffusion model to the T2V diffusion model and finetunes it on the source video-text data. Inspired
-by this, several works [1, 2, 4] combine it with attention map injection methods, achieving superior
+by this, several works combine it with attention map injection methods, achieving superior
 performance. Despite advances, empirical evidence suggests that they still struggle to faithfully and
 adequately control the output while preserving temporal consistency.
-9
-Source
+
+
+--- Page 10 ---
+Source Sod Lat | EP asin BP sie
 Video
-"a Swarovski crystal swan is swimming in a river"
-"a girl, red hair"
-"A man is dancing in the park, Van Gogh style"
+
+“a Swarovski crystal swan is swimming ina river"
+
 Ours
+
 Stable
 Diffusion
-Tune-A-
-Video
-Vid2vid-
-zero
+
+Vid2vid- eke A Rf
+
+zero ee SY
+
 Video-
 P2P
-Fate Zero
+
+FateZero
+
 Figure 6: Comparison with baselines on DAVIS and collected data from the website. Control Video
 achieves better visual quality by fulfilling three requirements simultaneously. By starting from
 Gaussian noise rather than DDIM inversion, we can improve editability in global editing (see the
 third example).
+
 5 Experiments
+
 5.1 Setup
 5.1.1 Implementation Details
-For short video editing, following previous research [2], we use 8 frames with 512 × 512 resolution
-for fair comparisons. We collect 50 video-text pair data from DAVIS dataset [24] and website².
-We compare Control Video with Stable Diffusion and the following SOTA text-driven video editing
-methods: Tune-A-Video [3], Vid2vid-zero [9], Video-P2P [4] and FateZero [1]. By default, we train
+
+For short video editing, following previous research [2], we use 8 frames with 512 x 512 resolution
+for fair comparisons. We collect 50 video-text pair data from DAVIS dataset [24] and websitd?|
+We compare ControlVideo with Stable Diffusion and the following SOTA text-driven video editing
+methods: Tune-A-Video [3], Vid2vid-zero [9], Video-P2P [4] and FateZero [I]. By default, we train
 the Control Video for 80, 300, 500, and 1500 iterations for canny edge maps, HED boundary, depth
-maps, and pose respectively with a learning rate 3 × 10−5. The control scale A is set to 1. For multiple
-controls, we set λi 0.5 by default. The DDIM sampler [16] with 50 steps and 12 classifier-free
-guidance are used for inference. The Stable Diffusion 1.5 [5] and ControlNet 1.0 [10] with canny
+maps, and pose respectively with a learning rate 3 x 10°. The control scale . is set to 1. For multiple
+controls, we set A; = 0.5 by default. The DDIM sampler with 50 steps and 12 classifier-free
+guidance are used for inference. The Stable Diffusion 1.5 [5] and ControlNet 1.0 with canny
 edge maps, HED boundary, depth maps, and pose are adopted in the experiment. For image-driven
 video editing, we employ the Lora weight from Civitai and merge it into Stable Diffusion.
-=
+
 5.1.2 Evaluation
-Following the previous work [1], we report CLIP-temp for temporal consistency and CLIP-text
-for text alignment. We also report SSIM [25] within the unedited area between input-output pairs
+
+Following the previous work [I], we report CLIP-temp for temporal consistency and CLIP-text
+for text alignment. We also report SSIM within the unedited area between input-output pairs
 for faithfulness. The metric for faithfulness only considers the unedited area. The unedited area
-is computed by SAM [19] according to text. Additionally, we perform a user study to quantify
+is computed by SAM [19]] according to text. Additionally, we perform a user study to quantify
 text alignment, temporal consistency, faithfulness, and overall all aspects by pairwise comparisons
-between the baselines and ControlVideo. A total of 10 subjects participated in this section. Taking
+between the baselines and Control Video. A total of 10 subjects participated in this section. Taking
 faithfulness as an example, given a source video, the participants are instructed to select which edited
 video is more faithful to the source video in the pairwise comparisons between the baselines and
 Control Video.
-2https://www.pexels.com
+
+*https://www.pexels.com
+
 10
-10
+
+--- Page 11 ---
 0.30
+
 Stable Diffusion
-Stable
-44%
-56%
-Diffusion
-Stable
-Diffusion
-18%
-82%
-● Tune-A-Video
-• Vid2vid-zero
-Tune-A-
-36%
-64%
-Video
-Tune-A-
-Video
-0.27
-24%
-76%
-Video-P2P 4%
-96%
-Ours
-Video-P2P
-36%
-64%
-Ours
-Vid2vid
-38%
-62%
-Vid2vid 20%
-CLIP-text ↑
-0.24
-● Fatezero
-● Video-P2P
-Ours
-80%
-0.21
-Fatezero
-32%
-68%
-Fatezero
-30%
-70%
-0.18
-0%
-25%
-50%
-75%
-100%
-0%
-25% 50%
-75% 100%
-0.50 0.60
-0.70
-0.80
-0.90 1.00
-Text Alignment
-Temporal Consistency
-SSIM ↑
-Stable
-Diffusion
-Tune-A-
-Video
-12%
-88%
-Video-P2P
-38%
-62%
-Vid2vid
-20%
-92%
-Stable
-Diffusion
-Tune-A-
-Video
-10%
-90%
-0.97
-14%
-86%
-0.95
-Ours
-Video-P2P 18%
-82%
-Ours
-80%
-Vid2vid 20%
-80%
-CLIP-temp ↑
-0.93
-0.91
-Stable Diffusion
-Tune-A-Video
-● Vid2vid-zero
-• Fatezero
-● Video-P2P
-Fatezero 22%
-78%
-Fatezero
-26%
-74%
-0%
-25% 50% 75% 100%
-0%
-25%
-Faithfulness
-50%
-Overall
-75%
-100%
-0.89
-0.50 0.60
-(a) User Preference
-• Ours
-0.70 0.80 0.90 1.00
-SSIM ↑
-(b) Objective Metrics
-Figure 7: Quantitative results under user study and objective metrics. ControlVideo outperforms all
-baselines from overall aspects. See detailed analysis in Sec. 5.2.2.
+
+hey 44% 5 mia |
+Diffusion Dison LA
+VL? TT £ Vico 2? LTT Sf os
+| 3 a8
+1 Vilvd em — o ..
+!
+I O18 s
+0% = 25% = 50% 100% 0% =——-25% = 50% += 75% © 100% 050 060 070 080 090 1.00
+Text Alignment Temporal Consistency SSIM f
+Stable Stable u 097
+Diffusion dition °
+i a P i
+Video Video 0.95
+I
+9 a
+3 “ E 0.93
+i I g Stable Diffusion
+a ‘© Vid2vid-zero
+! 2 091 © Fatezero
+T ’ © ours
+0% 25% 50% 7 100% 0% 25% 50% = 75% 100% 0.89
+050 060 070 080 090 1.00
+Faithfulness Overall SsIMt
+(a) User Preference (b) Objective Metrics
+
+Figure 7: Quantitative results under user study and objective metrics. Control Video outperforms all
+baselines from overall aspects. See detailed analysis in Sec.
+
 5.2 Results
-5.2.1
-Applications
-The main results are shown in Figure 1. Firstly, under the guidance of different single controls,
+
+5.2.1 Applications
+
+The main results are shown in Figure|1| Firstly, under the guidance of different single controls,
 Control Video delivers videos with high visual realism in attributes, style, and background editing. For
 instance, HED boundary control helps to change the swan into a Swarovski crystal swan faithfully.
 Pose control allows shape modification flexibly by changing the man into Sherlock Holmes with a
-black coat. Secondly, in the “person” → “panda” case, ControlVideo can preserve the background
-and change the shape simultaneously by combining multiple controls (Canny edge maps
-and pose
+black coat. Secondly, in the “person” — “panda” case, Control Video can preserve the background
+and change the shape simultaneously by combining multiple controls (Canny edge maps and pose
 control) to utilize the advantage of different control types. Moreover, in image-driven video editing,
-Control Video successfully changes the woman in the source video into Evangeline Lilly to align the
+ControlVideo successfully changes the woman in the source video into Evangeline Lilly to align the
 reference images. Finally, we can preserve the identity of the woman across hundreds of frames,
-demonstrating the ability of ControlVideo to maintain long-range temporal consistency.
+demonstrating the ability of Control Video to maintain long-range temporal consistency.
+
 5.2.2 Comparisons
-The quantitative and qualitative results are shown in Figure 7 and Figure 6 respectively. We emphasize
+
+The quantitative and qualitative results are shown in Figure[7Jand Figure|6Jrespectively. We emphasize
 that text-driven video editing should fulfill three requirements simultaneously and a single objective
 metric cannot reflect the edited results. For instance, Video-P2P with high SSIM tends to reconstruct
-the source video and fails to align the text. As shown in Figure 6, in the "a girl with red hair" example,
+the source video and fails to align the text. As shown in Figure(G in the "a girl with red hair" example,
 it cannot change the hair color. Stable Diffusion and Vid2vid-zero with high CLIP-text generate a
 girl with striking red hair, but entirely ignore the identity of the female from the source video, leading
 to unsatisfactory results.
-As shown in Figure 7(a), for overall aspects conducted by user study, our method outperforms all
-baselines significantly. Specifically, 86% persons prefer our edited videos to Tune-A-Video. What's
+
+As shown in Figure (fa), for overall aspects conducted by user study, our method outperforms all
+baselines significantly. Specifically, 86% persons prefer our edited videos to Tune-A-Video. What’s
 more, human evaluation is the most reasonable quantitative metric for video editing tasks and we can
-observe Control Video outperforms all baselines in all aspects. The qualitative results in Figure 6 are
-consistent with quantitative results, where ControlVideo not only successfully changes the hair color
+observe Control Video outperforms all baselines in all aspects. The qualitative results in Figure [6Jare
+consistent with quantitative results, where Control Video not only successfully changes the hair color
 but also keeps the identity of the female unchanged while all existing methods fail. Overall, extensive
 results demonstrate that Control Video outperforms all baselines by delivering temporal consistent,
 and faithful videos while still aligning with the text prompt.
+
 11
-5.2.3
-Ablation Studies for Key Components in Control Video
-As shown in Figure 3, adding controls provides additional guidance from the source video, thus
+
+--- Page 12 ---
+5.2.3. Ablation Studies for Key Components in ControlVideo
+
+As shown in Figure 3] adding controls provides additional guidance from the source video, thus
 improving faithfulness a lot. The key-frame attention improves temporal consistency a lot. The
 temporal attention improves faithfulness and temporal consistency. Combining all the modules
 achieves the best performance. The quantitative results in the Appendix are consistent with the
 qualitative results.
+
 5.2.4 Ablation Studies for hyper-parameters in Long Video Editing
+
 In this section, we perform ablation studies for overlapping Length a, weight w for key frame video
 fusion and weight functions for fusion with nearby videos in extended controlvideo. As depicted in
-Figure 3, an increased overlapping length a yields videos with enhanced temporal consistency. In
-this study, we set a Є [½, L]. A larger w promotes consistency over extended temporal sequences
+Figure[3} an increased overlapping length a yields videos with enhanced temporal consistency. In
+this study, we set a € [s, L}. A larger w promotes consistency over extended temporal sequences
 in whole videos. Nonetheless, too large w can introduce temporal flickering. In this work, we set
-w Є [0.2, 0.5]. Additionally, we devise a variety of weight functions for fusion with nearby videos.
+w € [0.2,0.5]. Additionally, we devise a variety of weight functions for fusion with nearby videos.
 Given that fusion occurs at both ends of a video, we prefer to create functions that are symmetric
-about L/2 and maintain all elements greater than zero. As depicted in Figure 5, we explore several
+about L/2 and maintain all elements greater than zero. As depicted in Figure|5] we explore several
 functional forms, including constant, linear, concave (e.g., cosine), and convex (e.g., inverse square
-root) functions. The outcomes presented in Figure 5 indicate that the quality of the edited video
+root) functions. The outcomes presented in Figure|5]indicate that the quality of the edited video
 remains largely unaffected by the choice of weight function.
+
 6 Conclusion
+
 In this paper, we present ControlVideo, a general framework to utilize T2I diffusion models for
 one-shot video editing, which incorporates additional conditions such as edge maps, the key frame and
 temporal attention to improve faithfulness and temporal consistency. We demonstrate its effectiveness
 by outperforming state-of-the-art text-driven video editing methods.
+
 References
-[1] Chenyang Qi, Xiaodong Cun, Yong Zhang, Chenyang Lei, Xintao Wang, Ying Shan, and
+1] Chenyang Qi, Xiaodong Cun, Yong Zhang, Chenyang Lei, Xintao Wang, Ying Shan, and
 Qifeng Chen. Fatezero: Fusing attentions for zero-shot text-based video editing. arXiv preprint
+
 arXiv:2303.09535, 2023.
-[2] Wen Wang, Kangyang Xie, Zide Liu, Hao Chen, Yue Cao, Xinlong Wang, and Chunhua
+2
+
+Wen Wang, Kangyang Xie, Zide Liu, Hao Chen, Yue Cao, Xinlong Wang, and Chunhua
 Shen. Zero-shot video editing using off-the-shelf image diffusion models. arXiv preprint
 arXiv:2303.17599, 2023.
-[3] Jay Zhangjie Wu, Yixiao Ge, Xintao Wang, Weixian Lei, Yuchao Gu, Wynne Hsu, Ying Shan,
+
+3
+
+Jay Zhangjie Wu, Yixiao Ge, Xintao Wang, Weixian Lei, Yuchao Gu, Wynne Hsu, Ying Shan,
 Xiaohu Qie, and Mike Zheng Shou. Tune-a-video: One-shot tuning of image diffusion models
 for text-to-video generation. arXiv preprint arXiv:2212.11565, 2022.
-[4] Shaoteng Liu, Yuechen Zhang, Wenbo Li, Zhe Lin, and Jiaya Jia. Video-p2p: Video editing
+
+4
+
+Shaoteng Liu, Yuechen Zhang, Wenbo Li, Zhe Lin, and Jiaya Jia. Video-p2p: Video editing
 with cross-attention control. arXiv preprint arXiv:2303.04761, 2023.
-[5] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. High-
+
+5
+
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bj6rn Ommer. High-
 resolution image synthesis with latent diffusion models. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition, pages 10684-10695, 2022.
-[6] Jonathan Ho, William Chan, Chitwan Saharia, Jay Whang, Ruiqi Gao, Alexey Gritsenko,
+
+6
+
+Jonathan Ho, William Chan, Chitwan Saharia, Jay Whang, Ruigi Gao, Alexey Gritsenko,
 Diederik P Kingma, Ben Poole, Mohammad Norouzi, David J Fleet, et al. Imagen video: High
 definition video generation with diffusion models. arXiv preprint arXiv:2210.02303, 2022.
-[7] Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman, Yael Pritch, and Daniel Cohen-Or.
+
+7
+
+Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman, Yael Pritch, and Daniel Cohen-Or.
 Prompt-to-prompt image editing with cross attention control. International Conference on
 Learning Representations, 2023.
-[8] Narek Tumanyan, Michal Geyer, Shai Bagon, and Tali Dekel. Plug-and-play diffusion features
+
+8] Narek Tumanyan, Michal Geyer, Shai Bagon, and Tali Dekel. Plug-and-play diffusion features
 for text-driven image-to-image translation. arXiv preprint arXiv:2211.12572, 2022.
+
 12
-[9] Gaurav Parmar, Krishna Kumar Singh, Richard Zhang, Yijun Li, Jingwan Lu, and Jun-Yan Zhu.
+
+--- Page 13 ---
+9] Gaurav Parmar, Krishna Kumar Singh, Richard Zhang, Yijun Li, Jingwan Lu, and Jun-Yan Zhu.
 Zero-shot image-to-image translation. arXiv preprint arXiv:2302.03027, 2023.
-[10] Lvmin Zhang and Maneesh Agrawala. Adding conditional control to text-to-image diffusion
+
+0] Lvmin Zhang and Maneesh Agrawala. Adding conditional control to text-to-image diffusion
 models. arXiv preprint arXiv:2302.05543, 2023.
-[11] Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang,
+
+1
+
+Edward J Hu, Yelong Shen, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li, Shean Wang,
 Lu Wang, and Weizhu Chen. Lora: Low-rank adaptation of large language models. arXiv
 preprint arXiv:2106.09685, 2021.
-[12] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal,
+
+2
+
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal,
 Girish Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learning transferable visual
+
 models from natural language supervision. In International conference on machine learning,
 pages 8748-8763. PMLR, 2021.
-[13] Yang Song, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and
+
+3
+
+Yang Song, Jascha Sohl-Dickstein, Diederik P Kingma, Abhishek Kumar, Stefano Ermon, and
 Ben Poole. Score-based generative modeling through stochastic differential equations. In
 International Conference on Learning Representations, 2020.
-[14] Fan Bao, Chongxuan Li, Jun Zhu, and Bo Zhang. Analytic-dpm: an analytic estimate of the
+
+4
+
+Fan Bao, Chongxuan Li, Jun Zhu, and Bo Zhang. Analytic-dpm: an analytic estimate of the
 optimal reverse variance in diffusion probabilistic models. In International Conference on
 Learning Representations, 2021.
-[15] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. Advances
-in Neural Information Processing Systems, 33:6840–6851, 2020.
-[16] Jiaming Song, Chenlin Meng, and Stefano Ermon. Denoising diffusion implicit models. arXiv
-preprint arXiv: 2010.02502, 2020.
-[17] Chenlin Meng, Yang Song, Jiaming Song, Jiajun Wu, Jun-Yan Zhu, and Stefano Ermon. Sdedit:
+
+5
+
+Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. Advances
+in Neural Information Processing Systems, 33:6840-685 1, 2020.
+
+6
+
+Jiaming Song, Chenlin Meng, and Stefano Ermon. Denoising diffusion implicit models. arXiv
+preprint arXiv:2010.02502, 2020.
+
+7| Chenlin Meng, Yang Song, Jiaming Song, Jiajun Wu, Jun-Yan Zhu, and Stefano Ermon. Sdedit:
 Image synthesis and editing with stochastic differential equations. International Conference on
 Learning Representations, 2022.
-[18] Min Zhao, Fan Bao, Chongxuan Li, and Jun Zhu. Egsde: Unpaired image-to-image translation
+
+8
+
+Min Zhao, Fan Bao, Chongxuan Li, and Jun Zhu. Egsde: Unpaired image-to-image translation
 via energy-guided stochastic differential equations. Advances in Neural Information Processing
 Systems, 35:3609-3623, 2022.
-[19] Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao, Chloe Rolland, Laura Gustafson,
-Tete Xiao, Spencer Whitehead, Alexander C. Berg, Wan-Yen Lo, Piotr Dollár, and Ross Girshick.
+
+9
+
+Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao, Chloe Rolland, Laura Gustafson,
+Tete Xiao, Spencer Whitehead, Alexander C. Berg, Wan- Yen Lo, Piotr Dollar, and Ross Girshick.
 Segment anything. arXiv:2304.02643, 2023.
+
 [20] Uriel Singer, Adam Polyak, Thomas Hayes, Xi Yin, Jie An, Songyang Zhang, Qiyuan Hu,
+
 Harry Yang, Oron Ashual, Oran Gafni, et al. Make-a-video: Text-to-video generation without
-text-video data. arXiv preprint arXiv:2209.14792, 2022.
-[21] Álvaro Barbero Jiménez. Mixture of diffusers for scene composition and high resolution image
+text-video data. arXiv preprint arXiv:2209. 14792, 2022.
+
+[21] Alvaro Barbero Jiménez. Mixture of diffusers for scene composition and high resolution image
+
 generation. arXiv preprint arXiv:2302.02412, 2023.
+
 [22] Chitwan Saharia, William Chan, Saurabh Saxena, Lala Li, Jay Whang, Emily L Denton,
+
 Kamyar Ghasemipour, Raphael Gontijo Lopes, Burcu Karagol Ayan, Tim Salimans, et al.
 Photorealistic text-to-image diffusion models with deep language understanding. Advances in
-Neural Information Processing Systems, 35:36479–36494, 2022.
+Neural Information Processing Systems, 35:36479-36494, 2022.
+
 [23] Patrick Esser, Johnathan Chiu, Parmida Atighehchian, Jonathan Granskog, and Anastasis
+
 Germanidis. Structure and content-guided video synthesis with diffusion models. arXiv preprint
 arXiv:2302.03011, 2023.
-[24] Jordi Pont-Tuset, Federico Perazzi, Sergi Caelles, Pablo Arbeláez, Alex Sorkine-Hornung,
+
+[24] Jordi Pont-Tuset, Federico Perazzi, Sergi Caelles, Pablo Arbeldez, Alex Sorkine-Hornung,
+
 and Luc Van Gool. The 2017 davis challenge on video object segmentation. arXiv preprint
-arXiv:1704.00675, 2017.
+arXiv: 1704.00675, 2017.
+
 [25] Zhou Wang, Alan C Bovik, Hamid R Sheikh, and Eero P Simoncelli. Image quality assessment:
-from error visibility to structural similarity. IEEE transactions on image processing, 13(4):600–
+
+from error visibility to structural similarity. EEE transactions on image processing, 13(4):600-
 612, 2004.
+
 13
+

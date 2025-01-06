@@ -1,14 +1,15 @@
+--- Page 1 ---
 arXiv:2306.09329v1 [cs.CV] 15 Jun 2023
+
 DreamHuman: Animatable 3D Avatars from Text
-Nikos Kolotouros
-Eduard Gabriel Bazavan
-Thiemo Alldieck
-Mihai Fieraru
+
+Nikos Kolotouros Thiemo Alldieck Andrei Zanfir
+Eduard Gabriel Bazavan Mihai Fieraru Cristian Sminchisescu
 Google Research
-Andrei Zanfir
-Cristian Sminchisescu
-{kolotouros, alldieck, andreiz, egbazavan, fieraru, sminchisescu}@google.com
+{kolotouros,alldieck,andreiz,egbazavan,fieraru,sminchisescu}@google.com
+
 Abstract
+
 We present DreamHuman, a method to generate realistic animatable 3D human
 avatar models solely from textual descriptions. Recent text-to-3D methods have
 made considerable strides in generation, but are still lacking in important aspects.
@@ -24,7 +25,9 @@ Our 3D models have diverse appearance, clothing, skin tones and body shapes,
 and significantly outperform both generic text-to-3D approaches and previous
 text-based 3D avatar generators in visual fidelity. For more results and animations
 please check our website at https://dream-human.github.io.
+
 1 Introduction
+
 The remarkable progress in Large Language Models [40, 8] has sparked considerable interest in
 generating a wide variety of media modalities from text. There has been significant progress in
 text-to-image [43, 44, 46, 61, 9, 28], text-to-speech [31, 35], text-to-music [2, 15] and text-to-3D
@@ -32,6 +35,7 @@ text-to-image [43, 44, 46, 61, 9, 28], text-to-speech [31, 35], text-to-music [2
 methods conditioned on text has been diffusion models [46, 44, 49]. Recent works have shown these
 text-to-image models can be combined with differentiable neural 3D scene representations [5] and
 optimized to generate realistic 3D models solely from textual descriptions [17, 37].
+
 Controllable generation of photorealistic 3D human models has been in the focus of the research
 community for a long time. This is also the goal of our work; we want to generate realistic,
 animatable 3D humans given only textual descriptions. Our method goes beyond static text-to-
@@ -40,38 +44,54 @@ different poses, without additional training or fine-tuning. We capitalize on th
 in text-to-3D generation [37], neural radiance fields [25, 5] and human body modelling [58, 3] to
 produce 3D human models with realistic appearance and high-quality geometry. We achieve this
 without using any supervised text-to-3D data, or any image conditioning. We photorealistic and
-animatable 3d human models by relying only on text, as can be seen in Figure 1 and Figure 2.
+animatable 3d human models by relying only on text, as can be seen in Figure | and Figure 2.
 As impressive as general-purpose 3D generation methods [37] are, we argue these are suboptimal
 for 3D human synthesis, due to limited control over generation which often results in undesirable
 visual artifacts such as unrealistic body proportions, missing limbs, or the wrong number of fingers.
 Such inconsistencies can be partially attributed to known problems of text-to-image networks, but
 become even more apparent when considering the arguably more difficult problem of 3D generation.
 Besides enabling animation capabilities, we show that geometric and kinematic human priors can
+
 Preprint. Under review.
-111
+
+--- Page 2 ---
 A man with dreadlocks
+
+..
+
+PKEAAAS
+
 A blonde woman wearing yoga pants
+
 Figure 1: Example of 3D models synthesized and posed by our method. DreamHuman can
-produce an animatable 3D avatar given only a textual description of a human's appearance. At test
+produce an animatable 3D avatar given only a textual description of a human’s appearance. At test
 time, our avatar can be reposed based on a set of 3D poses or a motion, without additional refinement.
+
 resolve anthropometric consistency problems in an effective way. Our proposed method, coined
 DreamHuman, can become a powerful tool for professional artists and 3D animators and can automate
 complex parts of the design process, with potentially transformative effects in industries such as
 gaming, special effects, as well as film and content creation.
+
 Our main contributions are:
-• We present a novel method to generate 3D human models that can be placed in a variety a
+
+¢ We present a novel method to generate 3D human models that can be placed in a variety a
 poses, with realistic clothing deformations, given only a single textual description, and by
 training without any supervised text-to-3D data.
-• Our models incorporate 3D human body priors that are necessary for regularizing the
+
+¢ Our models incorporate 3D human body priors that are necessary for regularizing the
 generation and re-posing of the resulting avatar, by using multiple losses to ensure the
 quality of human structure, appearance, and deformation.
-• We improve the quality of the generation by means of semantic zooming with refining
+
+¢ We improve the quality of the generation by means of semantic zooming with refining
 prompts to add detail in perceptually important body regions, such as the face and the hands.
+
 2 Related Work
+
 There is considerable work related to diffusion models [52] and their applications to image generation
 [13, 29, 10, 46, 44, 49, 48] or image editing [18, 47, 12, 26]. Our focus is on text-to-3D [17, 37, 41]
 and more specifically on realistic 3D human generation conditioned on text prompts. In the following
 subsections we revisit some of the relevant work related to our goals.
+
 Text-to-3D generation. CLIP-Forge [50] combines CLIP [39] text-image embeddings with a learned
 3D shape prior to generate 3D objects without any labeled text-to-3D pairs. DreamFields [17]
 optimizes a NeRF model given a text prompt using guidance from CLIP [39]. CLIP-Mesh [19] also
@@ -86,70 +106,118 @@ When queried with human related prompts, results often exhibit artifacts like mi
 unrealistic geometric proportions, partial body generation, or incorrect number of body parts like
 legs or fingers. We generate accurate and anthropomorphically consistent results by incorporating 3D
 human priors in the loop.
+
 Text-to-3D human generation. Several methods [34, 54, 4, 20, 11] learn to generate 3D human
 motions from text by leveraging text-to-MoCap datasets. MotionCLIP [53] learns to generate 3D
 human motions without using any paired text-to-motion data by leveraging CLIP as supervision.
 However, all these methods output 3D human motions in the form of 3D coordinates or human body
-2
-A Buddhist monk
-An Asian man wearing a navy suit
-A woman wearing a short jean skirt and a cropped top
-177
-A woman wearing a wedding dress
-A man with blond hair wearing a brown leather jacket
-A young man wearing a turtleneck
-A pregnant person of color
-A thin Marathon runner
-A man wearing a Christmas sweater
-A senior Black person wearing a polo shirt
-A Karate master wearing a black belt
-A bodybuilder wearing a tanktop
-A clown
-A plus-size model wearing pyjamas
-A chef dressed in white
-A Black female surgeon
-An Indian bride in a traditional dress
-A woman wearing ski clothes
-A Black woman dressed in gym clothes
-A farmer
+
+--- Page 3 ---
+7 t 5 , ‘S t a) (9 f
+{ \ ' 1
+A Buddhist monk An Asian man wearing a navy suit A woman wearing a short jean skirt and a cropped top
+
+A woman wearing a wedding dress A man with blond hair wearing a brown leather jacket A young man wearing a turtleneck
+
+gio Fak
+a
+
+emer
+=m,
+~ >
+
+A pregnant person of color A thin Marathon runner A man wearing a Christmas sweater
+%.,
+
+R
+
+A senior Black person wearing a polo shirt A Karate master wearing a black belt A bodybuilder wearing a tanktop
+
+hs
+
+yt
+
+-
+
+“tee
+2B 3.
+
+~~
+2. =
+
+sa
+
+mz
+~ae,
+=e
+‘
+i
+
+Aclown A plus-size model wearing pyjamas A chef dressed in white
+ao 4
+a 4 4
+A Black female surgeon An Indian bride in a traditional dress A woman wearing ski clothes
+
+a4
+
 A Spanish flamenco dancer
-TH
-A person in a diving suit
-A Black person in a military uniform
-A man wearing a bomber jacket
-A track and field athlete
-A person dressed at the Venice Carnival
-A man wearing a hoodie
+
+tf
+
+4
+
+A Black woman dressed in gym clothes
+
+i
+
+Be
+
+a
+mt
+BB a > =) >-
+
+A farmer
+
+f
+i
+
+las an
+2. a =
+
+—-
+a
+
+> Sp A
+> =z = =
+
+A person in a diving suit A Black person in a military uniform Aman wearing a bomber jacket
+A track and field athlete A person dressed at the Venice Carnival Aman wearing a hoodie
+
 Figure 2: 3D human avatars generated using our method given text prompts. We render each
 example in a random pose from two viewpoints, along with corresponding surface normal maps.
-3
-Model Input
-Prompt p = a woman wearing
-a dress
-Pose Ot
-~
-►L(§, h, ß) = L₁ + Ln + Lm + Lp + Lo + Lsds
-Semantic
+
+--- Page 4 ---
+carers >L(®,h, B) = Lr + Ln + Lm + Lp t+ Lo + Leas
+Prompt p = a woman wearing Semantic
+
 Zoom
+
 Full body
-photo of {p}
-Albedo c
-imGHUM
-S(x, 0, B)
-(d, s)
-NeRF
-f(Þ,d,s,0, ẞ)
+i photo of {p}
+
 Headshot of {p} Diffusion
-Renderer
 Model
-Posed space Canonical space i
-(d,
-Density 7
-Spherical
-Harmonics
-h
-Photo of
-right arm of {p}
+
+NeRF i ¢
+
+imGHUM
+L_s,0,)_| piaal™ f(@.d.,0, p)
+
+Renderer
+
+: Spherical : Photo of
+‘4 is Harmonics right arm of {p}
+
 Figure 3: Overview of DreamHuman. Given a text prompt, such as a woman wearing a dress,
 we generate a realistic, animatable 3D avatar whose appearance and body shape match the textual
 description. A key component in our pipeline is a deformable and pose-conditioned NeRF model
@@ -157,9 +225,10 @@ learned and constrained using imGHUM [3], an implicit statistical 3D human pose 
 At each training step, we synthesize our avatar based on randomly sampled poses and render it from
 random viewpoints. The optimisation of the avatar structure is guided by the Score Distillation
 Sampling loss [37] powered by a text-to-image generation model [48]. We rely on imGHUM [3] to
-add I pose control and inject anthropomorphic priors in the avatar optimisation process. We also use
+add pose control and inject anthropomorphic priors in the avatar optimisation process. We also use
 several other normal, mask and orientation-based losses in order to ensure coherent synthesis. NeRF,
 body shape, and spherical harmonics illumination parameters (in red) are optimised.
+
 model parameters [23] and do not have the capability to generate photorealistic results. The most
 relevant method to ours is AvatarCLIP [14]. For a given text prompt, AvatarCLIP learns a NeRF
 in the rest pose of SMPL [23] which is then converted back to a mesh using marching cubes. The
@@ -168,6 +237,7 @@ However the reposing procedure depends on fixed skinning weights that limit the 
 of the animation. In contrast, our method learns per-instance pose-specific geometric deformations
 that result in significantly more realistic clothing appearance. Unlike AvatarCLIP, this also makes it
 possible to handle loose garments such as skirts and dresses.
+
 Deformable Neural Radiance Fields. Several methods attempt to learn Deformable NeRFs to
 model dynamic content [32, 38, 55, 33, 51]. There has also been work on representing articulated
 human bodies [59, 30, 57, 63, 16, 60, 21]. The method more closely related to ours is H-NeRF [59],
@@ -176,45 +246,47 @@ simpler approach where we enforce consistency directly in 3D and not via renderi
 density fields. Also, while H-NeRF that uses videos for supervision, our only input is text, and we
 use are not constrained by the poses and viewpoints present on the video. Thus our method can
 generalize better in a variety of different poses and camera viewpoints.
+
 3 Methodology
-3.1
-Architecture
+
+3.1 Architecture
+
 We rely on Neural Radiance Fields (NeRF) [25] to represent our 3D scene as a continuous function
 of its spatial coordinates [27]. We use a multi-layer Perceptron (MLP) that maps each spatial point
-x = R³ to a tuple (c, 7) of RGB color and density values. To render a scene using NeRF, one
+x € R* toa tuple (c,7) of RGB color and density values. To render a scene using NeRF, one
 needs to cast rays from the camera center passing through the image pixels and then compute the
-expected color C along each ray. In practice, this is done by sampling points x¿ on the ray and then
+expected color C along each ray. In practice, this is done by sampling points x; on the ray and then
 approximating the rendering integral [5]
-C = Σ Wici, w₁ = arП[(1 − αj), ai
-1
-i
-j<i
--
-· exp (−Ti ||xi+1
-·xi||).
-(1)
+
+C= Se wie, wi = a [[Q aj), a =1-exp(—7; ||xiz1 — xi||)- (1)
+i j<i
+
 While NeRF provides a general purpose scene representation, we aim to regularize the optimised
 geometry and appearance using human structural priors. To that effect, we use imGHUM [3], which
-4
+
+--- Page 5 ---
 is the implicit version of the GHUM [58] body model, and thus compatible with neural scene
-representations. Given pose e and shape ẞ parameters, imGHUM predicts a semantic signed distance
-function S(x, 0, ẞ) that maps a 3D spatial point x to a tuple (d, s) containing the signed distance d of
-the point from the body surface together with a semantic correspondence code s = R³ that associates
+representations. Given pose @ and shape (@ parameters, imGHUM predicts a semantic signed distance
+function $(x, 0, 3) that maps a 3D spatial point x to a tuple (d,s) containing the signed distance d of
+the point from the body surface together with a semantic correspondence code s € R° that associates
 x with the nearest surface point on the body.
+
 Our model architecture uses mip-NeRF 360 [5] for the NeRF backbone. An overview can be seen in
 Figure 3. Specifically, we modify each of the MLPs in the standard NeRF model in order to operate in
 the imGHUM [3] semantic signed distance space instead of the standard 3D coordinates. Given a 3D
-point x Є R³ and pose and shape parameters 0 and 3 respectively, we first encode it with imGHUM
-[3] into the 4D semantic descriptor (d, s) = S(x, 0, ß). We can then learn a NeRF ƒ in this semantic
-(2)
-where represents the trainable weights for the NeRF module. Similarly with DreamFusion [37], c
+point x € R® and pose and shape parameters and (3 respectively, we first encode it with imGHUM
+[3] into the 4D semantic descriptor (d,s) = S(x, 6, 3). We can then learn a NeRF f in this semantic
+space
+
+(c,7) = f(®,d,s). (2)
+
+where ® represents the trainable weights for the NeRF module. Similarly with DreamFusion [37], ¢
 models the albedo of the surface at the corresponding point, and we use this together with the learnt
 geometry to produce shaded renderings.
-space
-(c,T) = f(Þ, d, s).
+
 By learning a NeRF in the semantic signed distance space of a human body model, we learn a
 representation that can generalize to different human poses and body shapes. This is because the
-local geometry and color are generally preserved in (d, s) for different shape and pose parameters.
+local geometry and color are generally preserved in (d,s) for different shape and pose parameters.
 One can think of the process similarly to learning a NeRF for the template pose and then warping to
 new shapes and poses by leveraging the 3D correspondences from the body model [36, 6]. However,
 animating the model in different poses is challenging. Clothing deformations work reasonably only
@@ -223,26 +295,29 @@ hats and glasses. For this reason, we propose to augment and modulate the NeRF i
 and shape parameters, thus giving it the capability to model non-rigid pose and surface dependent
 effects beyond the body shape itself. By doing so, the model can learn per-instance, pose-dependent
 deformations of the clothing surface, on top of what the imGHUM model can represent. Thus, our
-NERF input becomes
-(c,T) = f(Þ, d, s, 0, ß).
-(3)
+NeRF input becomes
+
+(c,7) = f(®, d,s, 6, B). (3)
+
 To make sure the NeRF model conforms to the underlying body geometry we propose to calculate
 the final density as the maximum of the density 7 computed by the NeRF MLP and the density proxy
-(d) = ao(-ad) computed from imGHUM based on the signed distance value. In the previous
-equation, σ is the sigmoid function and a a positive constant that controls the sharpness of the density
-field. Effectively ↑ is a smooth scaled indicator function, with ↑ ≈ a inside the body and ↑ ≈0
+7(d) = ao(—ad) computed from imGHUM based on the signed distance value. In the previous
+equation, o is the sigmoid function and a a positive constant that controls the sharpness of the density
+field. Effectively 7 is a smooth scaled indicator function, with 7 ~ a inside the body and 7 = 0
 outside. In this way we avoid undesirable artifacts, such as the model removing limbs or fine structure
 like fingers, unless the prompt indicates so.
+
 Shading and rendering model. We found that a diffuse reflectance model [37] does not produce
 very realistic renderings of the human appearance, with results that often look cartoon-like. Hence we
 rely on a spherical harmonics lighting model [42] and preserve the first 9 components. During NeRF
-training, we additionally optimize for the spherical harmonics coefficients (i.e. hЄ R¹×10). However,
+training, we additionally optimize for the spherical harmonics coefficients (ic. h € R!*1°), However,
 by using just the optimized coefficients can lead to inadequate albedo-shading disentanglement and
 occasionally some geometric regions may never get highlights. Empirically, we found that sampling
 random coefficients a fraction of the time during training produces better results.
-Semantic zoom. One limitation in using a text-to-image diffusion model for supervision is its 64 × 64
+
+Semantic zoom. One limitation in using a text-to-image diffusion model for supervision is its 64 x 64
 pixels input resolution. As a result textures are often blurry and the geometry lacks fine details. One
-way around this would be the use of super-resolution diffusion models, e.g. the 64 × 64 → 256 × 256.
+way around this would be the use of super-resolution diffusion models, e.g. the 64 x 64 + 256 x 256.
 However these make rendering very expensive as memory requirements increase by a factor of 16. By
 using a human body model with attached semantics like imGHUM to control the NeRF, we benefit
 from direct correspondences between the 3D space occupancy and the human body parts. We can
@@ -250,28 +325,31 @@ then very easily infer the location of important body parts such as the head, ha
 pose. Therefore, during optimization we propose to use this information to zoom in on different parts
 of the body, thus increasing the effective model resolution. This can leverage both detail implicit
 in the image diffusion model used, and structure in the imGHUM human body prior. Instead of
-rendering a 64 × 64 image of the whole body, we render instead a 64 × 64 image of the head and some
+rendering a 64 x 64 image of the whole body, we render instead a 64 x 64 image of the head and some
 body parts where fine details are important. In total, we define 6 semantic regions: head, upper body,
 lower body, midsection, left arm, right arm. We also modify the text prompt accordingly, in order to
 explicitly encode this information in the text. In contrast to AvatarCLIP that only zooms-in on the
-5
+
+--- Page 6 ---
 face, zooming-in on all body parts results in much crisper textures and geometric detail throughout.
 For more information please check our Supplementary Material.
+
 3.2 Loss functions
+
 imGHUM density loss. To enforce that the estimated avatar follows the underlying body shape
-geometry, we add an L₁ loss between the NeRF density and a density proxy computed from imGHUM.
+geometry, we add an L, loss between the NeRF density and a density proxy computed from imGHUM.
 This loss encourages sparse modifications in the body geometry and is necessary to preserve important
 geometric details on the body. The density loss is defined as
-L₁ = ||T — î||1 ·
-(4)
+
+Le =||r-7II,- (4)
+
 Predicted normal loss. Following Ref-NeRF [56], we modify the MLP to also predict the surface
-normal vector n' at each spatial location and then add a loss between the predicted normals and the
+normal vector n’ at each spatial location and then add a loss between the predicted normals and the
 normals n obtained from the gradient of the density field. The normal loss is
-Ln = Σ wi ||n' – n|| .
--
+
+Ly = Sow |[n’ — nl|. (5)
 i
-Wi
-(5)
+
 In our case, this loss serves two purposes: it acts as a smoothness loss on the surface normals and also
 helps learning the pose-dependent deformations. Regarding the first part, we noticed that for clothing
 such as skirts or dresses with uniform dark texture, the resulting surface normals are often very
@@ -284,48 +362,56 @@ by imGHUM. Hence, it is easy for the MLP to ignore the conditioning on the pose 
 it has a small overall impact on the loss. Note, however, that pose conditioning is necessary in order
 to predict the correct surface normals. If not used, then the predicted normal vector at a particular
 point on the surface, e.g. on the arm, will be always the same, regardless of the limb orientation,
-because it only depends on the canonical coordinates (d, s).
+because it only depends on the canonical coordinates (d,s).
+
 Foreground mask loss. The above density loss forces the NeRF to respect the underlying body
 geometry and disentangles the subject from the background. However, we noticed that in some cases
 this can result in making the clothing or hair translucent. To prevent it, we add a loss on the rendered
-mask M that encourages it to be binary. The loss is defined as
-H W
-1
-Ст
-HW
-Σ min (log M(x, y), log(1 — M(x, y))
-x=1 y=1
-where M(x, y) = Σ{ w₂, i.e. the sum of the rendering weights for the ray through pixel (x, y).
+mask MM that encourages it to be binary. The loss is defined as
+
+1 Am
+Lin = aw > » min (log M(a, y),log(1 — M(x, y)) (6)
+
+where M(x, y) = >>; wi, i.e. the sum of the rendering weights for the ray through pixel (, y).
+
 Diffusion Models and Score Distillation Sampling. Diffusion models are a class of generative
 models that learn to produce samples from a target distribution by iteratively denoising samples
 coming from a tractable base distribution. They consist of a fixed forward process that gradually
 transforms a sample u from the data distribution to Gaussian noise and a learnable reverse process
 that approximates the inverse of the forward process.
-To generate images from the data distribution given an NeRF with parameters §, [37] proposed to
+
+To generate images from the data distribution given an NeRF with parameters ®, [37] proposed to
 use Score Distillation Sampling. This involves optimizing an approximation of the diffusion model
 training loss. The gradient of the Score Distillation Sampling loss with respect to the NeRF is defined
-ди
-მი
 as
-VLsds
-Et~U[0,1]‚¤~N(0,1)
-s(t) (ê (zt; y, t) — €)
-(7)
+
+ou (1)
+O® | °
+
 We use the SDS loss [37, 48] to supervise the 3D generation given the actively modified semantic-
 zoom prompts.
-Additional losses. We use the orientation loss Lo from Ref-NeRF [56] that penalizes ‘back-facing'
-normals for points along the ray that are visible, as well as the loss on the proposal weights Lp in
+
+VLesas = Erwu(o,t}e~N (0.1) | s(t) (€(ze; 9, t) — ©)
+
+Additional losses. We use the orientation loss £, from Ref-NeRF [56] that penalizes ‘back-facing’
+normals for points along the ray that are visible, as well as the loss on the proposal weights £, in
 mip-NeRF360 [5].
 Our full loss function then becomes
-L = Lsds + Lo + Lp + Lm + Ln + LT
-(8)
-6
-A man wearing a striped shirt and white linen pants
-An African woman dressed in traditional clothes
+
+L=Lsas t+ Lo+ Lp + £m + Ln 4 Lr (8)
+
+
+--- Page 7 ---
+a
+
+A man wearing a striped shirt and white linen pants An African woman dressed in traditional clothes
+
 Figure 4: Importance of semantic zoom. For each example, the left image shows the generated
 avatar with semantic zoom, whereas the right image an avatars generated without it. Notice how the
 semantic zoom allows us to reconstruct sharper, higher-quality textures.
-3.3 Optimization
+
+3.3. Optimization
+
 Body pose sampling. Previous methods like H-NeRF [59] and Human-NeRF [57] have limited
 generalization capabilities because they are only trained on poses and viewpoints that are present in
 an input video. Our method on the other hand does not have such constraints. At each optimization
@@ -336,7 +422,8 @@ the generated avatar from objects in the background. Without the pose randomizat
 times there is not sufficient disentanglement of the avatar geometry from the background and the
 final geometry includes additional objects such as the ground floor, or even the shadow of the person
 around the legs
-Other details. We optimize the NeRF and the imGHUM shape parameters ẞ instead of randomly
+
+Other details. We optimize the NeRF and the imGHUM shape parameters ( instead of randomly
 sampling shape parameters. This is because the body shape is often explicitly or implicitly described
 in the caption. We generate one avatar with an underlying body shape given all constraints coming
 from the text prompt and the related losses. Similarly with DreamFusion, we randomly sample
@@ -344,36 +431,47 @@ camera positions in spherical coordinates and then augment the input prompt with
 conditioning based on the azimuth and elevation. We also randomly select the radius r from the
 origin as well as the focal length of the camera. For additional details please see our Supplementary
 Material.
+
 4 Experiments
+
 In this section we illustrate the effectiveness of our proposed method. We show how the individual
 proposed components help, and how we compare to recent state-of-the-art methods. Figure 2 shows
 a wide variety of generated 3d human models in different poses, so we can illustrate diverse body
 shapes, skin tones and body compositions. Due to space constraints, additional results are available
 in the Supplementary Material.
+
 4.1 Ablation Study
+
 Semantic zoom. In Figure 4, we show the importance of our semantic zoom strategy. Notice how
 our method is able to generate much higher-quality textures, both for the body and the face.
+
 Pose-dependent deformations. In Figure 5, we show examples of how we can learn realistic garment
 deformations. In the example of the ballerina, one can see that the skirt deforms more naturally when
 the legs move. On the other hand the baseline without non-rigid deformations struggles to capture
 the skirt geometry and exhibits floating artifacts around the legs. Similar observations can be made
 for the man wearing shorts. We hypothesize that our model can infer this because the text-to-image
 generator has been trained on lots of images of people wearing clothes in different poses. Therefore,
-7
-With pose-correctives
-Without pose-correctives
-With pose-correctives
-Without pose-correctives
-A ballerina
-A man wearing a Hawaiian shirt, sunglasses and shorts
+
+--- Page 8 ---
+\With pose-correctives Without pose-correctives With pose-correctives Without pose-correctives
+
+@ ¢ q ¢ &
+i
+K A , X
+t t
+A ballerina A man wearing a Hawaiian shirt, sunglasses and shorts
+
 Figure 5: Importance of pose-dependent deformations and pose sampling in the NeRF model,
-f(b,d, s, 0,3). Our non-rigid pose-dependent deformations enable more realistic clothing when
+f(®, d,s, 0, 8). Our non-rigid pose-dependent deformations enable more realistic clothing when
 reposing the avatar. For each of the two example prompts we show two generated avatars, with and
 without pose-correctives. Notice how the skirt and the shorts move more naturally when reposing the
 avatar.
+
 our model, although not using video, or relying on a text-to-video diffusion loss, can leverage general
 knowledge on how clothing drapes.
+
 4.2 Comparison with the state of the art
+
 In Figure 6, we show a qualitative comparison of our method with DreamFusion. DreamFusion
 suffers from limited control over generation. Even though it was prompted to generate the full body
 of the subject, very often it produces a 3D model of the upper body, or the head. At the same time
@@ -384,53 +482,54 @@ well as degenerate geometry that can be attributed to viewpoint overfitting. Our
 overcome these issues by utilizing a strong 3D prior on human body geometry. For more comparisons
 we refer the readers to the Supplementary Material. Additionally, following common practice, we
 also use CLIP to evaluate the rendered 3D models. We use a total of 160 prompts with descriptions
-of people. The results are shown in Table 1.
-DreamFusion
-(1)
-(1)
-1: Wrong face geometry and texture
-2: Multiple arms
-3: Unrealistic overall body
-A professional boxer
-Ours
-DreamFusion
-1: Multiple faces, no details on the face
-2: Missing arms
-3: Partial body generation
-A policewoman
-Ours
+of people. The results are shown in Table |.
+
+DreamFusion Ours DreamFusion Ours
+
+A professional boxer A policewoman
+
 Figure 6: Comparison with DreamFusion. For each example we show the rendered 3D model as
 well as the corresponding surface normals. Both methods were asked to reconstruct the full body of
 the subject by prepending A DSLR full body photo to the prompt.
+
 Table 1: Evaluation of the rendered 3D models using CLIP. We report the R-Precision as well as
 whether the true caption is in the top 3 and 5 highest-scoring captions.
-Method
-DreamFusion [37]
-Ours
-R-Precision ↑ Top-3 Top-5
-0.775
-0.838
-0.888 0.925
-0.931 0.956
+
+Method R-Precision + Top-3 Top-5
+DreamFusion [37] 0.775 0.888 0.925
+Ours 0.838 0.931 0.956
+
 Figure 7 shows a comparison between DreamHuman and AvatarCLIP. We can see that our method is
 able to generate significantly better geometry and texture quality. The geometry of the reconstructed
-8
+
+--- Page 9 ---
 avatars with AvatarCLIP is very close to the underlying body model geometry, with minor modifi-
 cations. As a result, it cannot handle loose-fitting clothing, dresses, and accessories like hats. The
 model textures from AvatarCLIP also have significant artifacts and do not match the realism and
 overall quality of DreamHuman in all examples we tried.
+
+PEERARAR ARID
+
 AvatarCLIP
+GaN i 2: 2 ial .
+a ee YL)
+a6
+
 Ours
+
 Figure 7: Comparison with AvatarCLIP. We compare DreamHuman with AvatarCLIP [14]. From
 left to right we used the following prompts: astronaut, construction manager, firefighter, gardener,
 pilot, police officer, robot, senior citizen, soldier, teenager, warrior, witch, wizard. Notice that our
 method generates much more realistic texture and geometry. All illustrations are in default A-Pose.
+
 5 Conclusion
+
 We presented DreamHuman, a novel method for generating 3D human avatars from text. Our method
 leverages statistical 3D human body models and recent advances in 3D modelling and text-to-3D
 generation to create animatable 3D human avatars, without any paired text-to-3D supervision. We
 illustrated that our method can generate photorealistic results, with detailed geometry and outperforms
 the state of the art by a large margin.
+
 Limitations and future work. Since our model is trained without any 3D data, it sometimes draws
 fine details like wrinkles using the albedo map instead of creating them based on geometry. Future
 work can address this by leveraging 3D data to resolve some of the reconstruction ambiguities.
@@ -438,6 +537,7 @@ Additionally, the model sometimes cannot properly disentangle albedo from shadin
 baked reflections and shadows. Current computational constraints from the diffusion models prevent
 us from scaling the method to very high resolution textures and geometric detail like hair. Finally, the
 realism of clothing animation can benefit from a video model.
+
 Broader Impact. While our method does not use any additional training data, it relies in part
 on text-to-image diffusion models which have been pre-trained on large-scale datasets containing
 sometimes insufficiently curated images and captions [7] (N.B. the level of effective automation to
@@ -446,187 +546,353 @@ Also, text-to-image generators use LLMs for the text encoder, pre-trained on unc
 data. Although our method uses statistical 3D human body shape models learnt using highly curated
 and diverse data to remove bias, ultimately our generation process may be vulnerable to some bias in
 its dependencies.
+
 The goal of our method is to generate 3D models of people, which has the potential to be misused in
 connection with fake media. However, it is important to highlight that our rendered 3D human models
 are typically less realistic than their 2D-generated counterparts. Regardless, in practical settings,
 safeguards should be used to prevent abuse, such as filtering the input text prompts and detecting any
 unsafe content in the model renderings.
+
 Our method has the ability to generate people with diverse body shapes, appearance, skin color and
 clothing. This can enable the generation of diverse large-scale synthetic 3D datasets for human-related
 tasks, and in turn may support training models with fairer outcomes across different groups.
+
 DreamHuman can potentially augment the work of artists and other creative professionals. It could
 be used as a complementary tool to boost productivity. It also has the potential to democratize 3D
 content creation that currently requires specialized knowledge and expensive proprietary software.
-9
+
+--- Page 10 ---
 References
-[1] http://mocap.cs.cmu.edu/.
-[2] Andrea Agostinelli, Timo I Denk, Zalán Borsos, Jesse Engel, Mauro Verzetti, Antoine Caillon, Qingqing
+
+1
+2
+
+20
+
+http://mocap.cs.cmu.edu/.
+
+Andrea Agostinelli, Timo I Denk, Zalan Borsos, Jesse Engel, Mauro Verzetti, Antoine Caillon, Qingqing
 Huang, Aren Jansen, Adam Roberts, Marco Tagliasacchi, et al. Musiclm: Generating music from text.
 arXiv preprint arXiv:2301.11325, 2023.
-[3] Thiemo Alldieck, Hongyi Xu, and Cristian Sminchisescu. imghum: Implicit generative models of 3d
+
+Thiemo Alldieck, Hongyi Xu, and Cristian Sminchisescu. imghum: Implicit generative models of 3d
 human shape and articulated pose. In Proceedings of the IEEE/CVF International Conference on Computer
 Vision, pages 5461-5470, 2021.
-[4] Nikos Athanasiou, Mathis Petrovich, Michael J. Black, and Gül Varol. Teach: Temporal action composi-
+
+Nikos Athanasiou, Mathis Petrovich, Michael J. Black, and Giil Varol. Teach: Temporal action composi-
 tions for 3d humans. In International Conference on 3D Vision (3DV), September 2022.
-[5] Jonathan T. Barron, Ben Mildenhall, Dor Verbin, Pratul P. Srinivasan, and Peter Hedman. Mip-nerf 360:
+
+Jonathan T. Barron, Ben Mildenhall, Dor Verbin, Pratul P. Srinivasan, and Peter Hedman. Mip-nerf 360:
 Unbounded anti-aliased neural radiance fields. CVPR, 2022.
-[6] Eduard Gabriel Bazavan, Andrei Zanfir, Mihai Zanfir, William T. Freeman, Rahul Sukthankar, and Cristian
+
+Eduard Gabriel Bazavan, Andrei Zanfir, Mihai Zanfir, William T. Freeman, Rahul Sukthankar, and Cristian
 Sminchisescu. Hspace: Synthetic parametric humans animated in complex environments, 2021.
-[7] Abeba Birhane, Vinay Uday Prabhu, and Emmanuel Kahembwe. Multimodal datasets: misogyny, pornog-
+
+Abeba Birhane, Vinay Uday Prabhu, and Emmanuel Kahembwe. Multimodal datasets: misogyny, pornog-
 raphy, and malignant stereotypes. arXiv preprint arXiv:2110.01963, 2021.
-[8] Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind
+
+Tom Brown, Benjamin Mann, Nick Ryder, Melanie Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvin
 Neelakantan, Pranav Shyam, Girish Sastry, Amanda Askell, et al. Language models are few-shot learners.
 Advances in neural information processing systems, 33:1877-1901, 2020.
-[9] Huiwen Chang, Han Zhang, Jarred Barber, AJ Maschinot, Jose Lezama, Lu Jiang, Ming-Hsuan Yang,
-Kevin Murphy, William T Freeman, Michael Rubinstein, et al. Muse: Text-to-image generation via masked
+
+Huiwen Chang, Han Zhang, Jarred Barber, AJ Maschinot, Jose Lezama, Lu Jiang, Ming-Hsuan Yang,
+Kevin Murphy, William T Freeman, Michael Rubinstein, et al. Muse: Text-to-image generation via maske
 generative transformers. arXiv preprint arXiv:2301.00704, 2023.
-[10] Prafulla Dhariwal and Alexander Nichol. Diffusion models beat gans on image synthesis. Advances in
+
+Prafulla Dhariwal and Alexander Nichol. Diffusion models beat gans on image synthesis. Advances in
 Neural Information Processing Systems, 34:8780-8794, 2021.
-[11] Chuan Guo, Shihao Zou, Xinxin Zuo, Sen Wang, Wei Ji, Xingyu Li, and Li Cheng. Generating diverse and
+
+Chuan Guo, Shihao Zou, Xinxin Zuo, Sen Wang, Wei Ji, Xingyu Li, and Li Cheng. Generating diverse an
 natural 3d human motions from text. In Proceedings of the IEEE/CVF Conference on Computer Vision
 and Pattern Recognition (CVPR), pages 5152-5161, June 2022.
-[12] Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman, Yael Pritch, and Daniel Cohen-Or. Prompt-to-
+
+Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman, Yael Pritch, and Daniel Cohen-Or. Prompt-to-
 prompt image editing with cross attention control. 2022.
-[13] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. Advances in Neural
-Information Processing Systems, 33:6840-6851, 2020.
-[14] Fangzhou Hong, Mingyuan Zhang, Liang Pan, Zhongang Cai, Lei Yang, and Ziwei Liu. Avatarclip:
+
+Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising diffusion probabilistic models. Advances in Neural
+Information Processing Systems, 33:6840-685 1, 2020.
+
+Fangzhou Hong, Mingyuan Zhang, Liang Pan, Zhongang Cai, Lei Yang, and Ziwei Liu. Avatarclip:
 Zero-shot text-driven generation and animation of 3d avatars. ACM Transactions on Graphics (TOG), 41
 (4):1-19, 2022.
-[15] Qingqing Huang, Daniel S Park, Tao Wang, Timo I Denk, Andy Ly, Nanxin Chen, Zhengdong Zhang,
+
+Qingging Huang, Daniel S Park, Tao Wang, Timo I Denk, Andy Ly, Nanxin Chen, Zhengdong Zhang,
 Zhishuai Zhang, Jiahui Yu, Christian Frank, et al. Noise2music: Text-conditioned music generation with
 diffusion models. arXiv preprint arXiv:2302.03917, 2023.
-[16] Mustafa Işık, Martin Rünz, Markos Georgopoulos, Taras Khakhulin, Jonathan Starck, Lourdes Agapito, and
-Matthias Nieẞner. Humanrf: High-fidelity neural radiance fields for humans in motion. ACM Transactions
-on Graphics (TOG), 42(4):1–12, 2023. doi: 10.1145/3592415. URL https://doi.org/10.1145/
+
+Mustafa Isik, Martin Riinz, Markos Georgopoulos, Taras Khakhulin, Jonathan Starck, Lourdes Agapito, and
+Matthias NieBner. Humanrf: High-fidelity neural radiance fields for humans in motion. ACM Transactions
+on Graphics (TOG), 42(4):1-12, 2023. doi: 10.1145/3592415. URL https://doi.org/10.1145/
 3592415.
-[17] Ajay Jain, Ben Mildenhall, Jonathan T. Barron, Pieter Abbeel, and Ben Poole. Zero-shot text-guided object
+
+Ajay Jain, Ben Mildenhall, Jonathan T. Barron, Pieter Abbeel, and Ben Poole. Zero-shot text-guided object
 generation with dream fields. 2022.
-[18] Bahjat Kawar, Shiran Zada, Oran Lang, Omer Tov, Huiwen Chang, Tali Dekel, Inbar Mosseri, and Michal
+
+Bahjat Kawar, Shiran Zada, Oran Lang, Omer Tov, Huiwen Chang, Tali Dekel, Inbar Mosseri, and Michal
 Irani. Imagic: Text-based real image editing with diffusion models, 2023.
-[19] Nasir Mohammad Khalid, Tianhao Xie, Eugene Belilovsky, and Popa Tiberiu. Clip-mesh: Generating
+
+Nasir Mohammad Khalid, Tianhao Xie, Eugene Belilovsky, and Popa Tiberiu. Clip-mesh: Generating
 textured meshes from text using pretrained image-text models. SIGGRAPH Asia 2022 Conference Papers,
 December 2022.
-[20] Jihoon Kim, Jiseob Kim, and Sungjoon Choi. Flame: Free-form language-based motion synthesis &
+
+Jihoon Kim, Jiseob Kim, and Sungjoon Choi. Flame: Free-form language-based motion synthesis &
 editing. AAAI, 2023.
+
 10
-[21] Zhe Li, Zerong Zheng, Yuxiao Liu, Boyao Zhou, and Yebin Liu. Posevocab: Learning joint-structured
+
+--- Page 11 ---
+21
+
+22
+
+23
+
+24
+
+25
+
+26
+
+27
+
+28
+
+29
+
+30
+
+31
+
+32
+
+33
+
+34
+
+35
+
+36
+
+37
+
+38
+
+39
+
+40
+
+Zhe Li, Zerong Zheng, Yuxiao Liu, Boyao Zhou, and Yebin Liu. Posevocab: Learning joint-structured
 pose embeddings for human avatar modeling. In ACM SIGGRAPH Conference Proceedings, 2023.
-[22] Chen-Hsuan Lin, Jun Gao, Luming Tang, Towaki Takikawa, Xiaohui Zeng, Xun Huang, Karsten Kreis,
+
+Chen-Hsuan Lin, Jun Gao, Luming Tang, Towaki Takikawa, Xiaohui Zeng, Xun Huang, Karsten Kreis,
 Sanja Fidler, Ming-Yu Liu, and Tsung-Yi Lin. Magic3d: High-resolution text-to-3d content creation. arXiv
 preprint arXiv:2211.10440, 2022.
-[23] Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J Black. Smpl: A
+
+Matthew Loper, Naureen Mahmood, Javier Romero, Gerard Pons-Moll, and Michael J Black. Smpl: A
 skinned multi-person linear model. ACM transactions on graphics (TOG), 34(6):1-16, 2015.
-[24] Gal Metzer, Elad Richardson, Or Patashnik, Raja Giryes, and Daniel Cohen-Or. Latent-nerf for shape-
+
+Gal Metzer, Elad Richardson, Or Patashnik, Raja Giryes, and Daniel Cohen-Or. Latent-nerf for shape-
 guided generation of 3d shapes and textures. arXiv preprint arXiv:2211.07600, 2022.
-[25] Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik, Jonathan T. Barron, Ravi Ramamoorthi, and Ren
+
+Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik, Jonathan T. Barron, Ravi Ramamoorthi, and Ren
 Ng. Nerf: Representing scenes as neural radiance fields for view synthesis. In ECCV, 2020.
-[26] Ron Mokady, Amir Hertz, Kfir Aberman, Yael Pritch, and Daniel Cohen-Or. Null-text inversion for editing
+
+Ron Mokady, Amir Hertz, Kfir Aberman, Yael Pritch, and Daniel Cohen-Or. Null-text inversion for editing
 real images using guided diffusion models, 2022.
-[27] Alexander Mordvintsev, Nicola Pezzotti, Ludwig Schubert, and Chris Olah. Differentiable image parame-
+
+Alexander Mordvintsev, Nicola Pezzotti, Ludwig Schubert, and Chris Olah. Differentiable image parame-
 terizations. Distill, 3(7):e12, 2018.
-[28] Alex Nichol, Prafulla Dhariwal, Aditya Ramesh, Pranav Shyam, Pamela Mishkin, Bob McGrew, Ilya
+
+Alex Nichol, Prafulla Dhariwal, Aditya Ramesh, Pranav Shyam, Pamela Mishkin, Bob McGrew, Ilya
 Sutskever, and Mark Chen. Glide: Towards photorealistic image generation and editing with text-guided
 diffusion models. arXiv preprint arXiv:2112.10741, 2021.
-[29] Alexander Quinn Nichol and Prafulla Dhariwal. Improved denoising diffusion probabilistic models. In
+
+Alexander Quinn Nichol and Prafulla Dhariwal. Improved denoising diffusion probabilistic models. In
 International Conference on Machine Learning, pages 8162-8171. PMLR, 2021.
-[30] Atsuhiro Noguchi, Xiao Sun, Stephen Lin, and Tatsuya Harada. Neural articulated radiance field. In
+
+Atsuhiro Noguchi, Xiao Sun, Stephen Lin, and Tatsuya Harada. Neural articulated radiance field. In
 Proceedings of the IEEE/CVF International Conference on Computer Vision, pages 5762-5772, 2021.
-[31] Aaron Oord, Yazhe Li, Igor Babuschkin, Karen Simonyan, Oriol Vinyals, Koray Kavukcuoglu, George
+
+Aaron Oord, Yazhe Li, Igor Babuschkin, Karen Simonyan, Oriol Vinyals, Koray Kavukcuoglu, George
 Driessche, Edward Lockhart, Luis Cobo, Florian Stimberg, et al. Parallel wavenet: Fast high-fidelity
 speech synthesis. In International conference on machine learning, pages 3918-3926. PMLR, 2018.
-[32] Keunhong Park, Utkarsh Sinha, Jonathan T Barron, Sofien Bouaziz, Dan B Goldman, Steven M Seitz, and
+
+Keunhong Park, Utkarsh Sinha, Jonathan T Barron, Sofien Bouaziz, Dan B Goldman, Steven M Seitz, and
 Ricardo Martin-Brualla. Nerfies: Deformable neural radiance fields. In Proceedings of the IEEE/CVF
 International Conference on Computer Vision, pages 5865-5874, 2021.
-[33] Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T. Barron, Sofien Bouaziz, Dan B Goldman,
+
+Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T. Barron, Sofien Bouaziz, Dan B Goldman,
 Ricardo Martin-Brualla, and Steven M. Seitz. Hypernerf: A higher-dimensional representation for
 topologically varying neural radiance fields. ACM Trans. Graph., 40(6), dec 2021.
-[34] Mathis Petrovich, Michael J. Black, and Gül Varol. TEMOS: Generating diverse human motions from
+
+Mathis Petrovich, Michael J. Black, and Giil Varol. TEMOS: Generating diverse human motions from
 textual descriptions. In European Conference on Computer Vision (ECCV), 2022.
-[35] Wei Ping, Kainan Peng, and Jitong Chen. Clarinet: Parallel wave generation in end-to-end text-to-speech.
-arXiv preprint arXiv:1807.07281, 2018.
-[36] Gerard Pons-Moll, Sergi Pujades, Sonny Hu, and Michael Black. Clothcap: Seamless 4d clothing
+
+Wei Ping, Kainan Peng, and Jitong Chen. Clarinet: Parallel wave generation in end-to-end text-to-speech.
+arXiv preprint arXiv: 1807.07281, 2018.
+
+Gerard Pons-Moll, Sergi Pujades, Sonny Hu, and Michael Black. Clothcap: Seamless 4d clothing
 capture and retargeting. ACM Transactions on Graphics, (Proc. SIGGRAPH), 36(4), 2017. URL http:
-//dx.doi.org/10.1145/3072959.3073711. Two first authors contributed equally.
-[37] Ben Poole, Ajay Jain, Jonathan T. Barron, and Ben Mildenhall. Dreamfusion: Text-to-3d using 2d diffusion.
+//dx.doi.org/10.1145/3072959 .3073711. Two first authors contributed equally.
+
+Ben Poole, Ajay Jain, Jonathan T. Barron, and Ben Mildenhall. Dreamfusion: Text-to-3d using 2d diffusion.
 ICLR, 2023.
-[38] Albert Pumarola, Enric Corona, Gerard Pons-Moll, and Francesc Moreno-Noguer. D-nerf: Neural radiance
+
+Albert Pumarola, Enric Corona, Gerard Pons-Moll, and Francesc Moreno-Noguer. D-nerf: Neural radiance
 fields for dynamic scenes. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 10318-10327, 2021.
-[39] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish
+
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya Ramesh, Gabriel Goh, Sandhini Agarwal, Girish
 Sastry, Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learning transferable visual models from
-natural language supervision. In International conference on machine learning, pages 8748-8763. PMLR,
+natural language supervision. In /nternational conference on machine learning, pages 8748-8763. PMLR,
 2021.
-[40] Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang, Michael Matena, Yanqi Zhou,
+
+Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee, Sharan Narang, Michael Matena, Yanqi Zhou,
 Wei Li, and Peter J. Liu. Exploring the limits of transfer learning with a unified text-to-text transformer.
-Journal of Machine Learning Research, 21(140):1–67, 2020. URL http://jmlr.org/papers/v21/
-20-074.html.
+Journal of Machine Learning Research, 21(140):1-67, 2020. URL http: //jmlr.org/papers/v21/
+20-074. html.
+
 11
-[41] Amit Raj, Srinivas Kaza, Ben Poole, Michael Niemeyer, Nataniel Ruiz, Ben Mildenhall, Shiran Zada,
+
+--- Page 12 ---
+41
+
+42
+
+43
+
+44
+
+45
+
+46
+
+47
+
+48
+
+49
+
+50
+
+51
+
+52
+
+53
+
+54
+
+55
+
+56
+
+57
+
+58
+
+Amit Raj, Srinivas Kaza, Ben Poole, Michael Niemeyer, Nataniel Ruiz, Ben Mildenhall, Shiran Zada,
 Kfir Aberman, Michael Rubinstein, Jonathan Barron, Yuanzhen Li, and Varun Jampani. Dreambooth3d:
 Subject-driven text-to-3d generation, 2023.
-[42] Ravi Ramamoorthi and Pat Hanrahan. An efficient representation for irradiance environment maps. In
+
+Ravi Ramamoorthi and Pat Hanrahan. An efficient representation for irradiance environment maps. In
 Proceedings of the 28th annual conference on Computer graphics and interactive techniques, pages
 497-500, 2001.
-[43] Aditya Ramesh, Mikhail Pavlov, Gabriel Goh, Scott Gray, Chelsea Voss, Alec Radford, Mark Chen, and
+
+Aditya Ramesh, Mikhail Pavlov, Gabriel Goh, Scott Gray, Chelsea Voss, Alec Radford, Mark Chen, and
 Ilya Sutskever. Zero-shot text-to-image generation. In International Conference on Machine Learning,
 pages 8821-8831, 2021.
-[44] Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and Mark Chen. Hierarchical text-conditional
+
+Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu, and Mark Chen. Hierarchical text-conditional
 image generation with clip latents. arXiv preprint arXiv:2204.06125, 2022.
-[45] Elad Richardson, Gal Metzer, Yuval Alaluf, Raja Giryes, and Daniel Cohen-Or. Texture: Text-guided
+
+Elad Richardson, Gal Metzer, Yuval Alaluf, Raja Giryes, and Daniel Cohen-Or. Texture: Text-guided
 texturing of 3d shapes. SIGGRAPH, 2023.
-[46] Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Björn Ommer. High-resolution
+
+Robin Rombach, Andreas Blattmann, Dominik Lorenz, Patrick Esser, and Bj6rn Ommer. High-resolution
 image synthesis with latent diffusion models. In Proceedings of the IEEE/CVF Conference on Computer
 Vision and Pattern Recognition, pages 10684-10695, 2022.
-[47] Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch, Michael Rubinstein, and Kfir Aberman. Dream-
+
+Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch, Michael Rubinstein, and Kfir Aberman. Dream-
 booth: Fine tuning text-to-image diffusion models for subject-driven generation. 2022.
-[48] Chitwan Saharia, William Chan, Saurabh Saxena, Lala Li, Jay Whang, Emily L Denton, Kamyar
+
+Chitwan Saharia, William Chan, Saurabh Saxena, Lala Li, Jay Whang, Emily L Denton, Kamyar
 Ghasemipour, Raphael Gontijo Lopes, Burcu Karagol Ayan, Tim Salimans, et al. Photorealistic text-to-
 image diffusion models with deep language understanding. Advances in Neural Information Processing
 Systems, 35:36479-36494, 2022.
-[49] Chitwan Saharia, Jonathan Ho, William Chan, Tim Salimans, David J Fleet, and Mohammad Norouzi.
-Image super-resolution via iterative refinement. IEEE Transactions on Pattern Analysis and Machine
+
+Chitwan Saharia, Jonathan Ho, William Chan, Tim Salimans, David J Fleet, and Mohammad Norouzi.
+Image super-resolution via iterative refinement. [EEE Transactions on Pattern Analysis and Machine
 Intelligence, 2022.
-[50] Aditya Sanghi, Hang Chu, Joseph G Lambourne, Ye Wang, Chin-Yi Cheng, Marco Fumero, and Ka-
+
+Aditya Sanghi, Hang Chu, Joseph G Lambourne, Ye Wang, Chin-Yi Cheng, Marco Fumero, and Ka-
 mal Rahimi Malekshan. Clip-forge: Towards zero-shot text-to-shape generation. In Proceedings of the
 IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 18603-18613, 2022.
-[51] Uriel Singer, Shelly Sheynin, Adam Polyak, Oron Ashual, Iurii Makarov, Filippos Kokkinos, Naman
+
+Uriel Singer, Shelly Sheynin, Adam Polyak, Oron Ashual, Iurii Makarov, Filippos Kokkinos, Naman
 Goyal, Andrea Vedaldi, Devi Parikh, Justin Johnson, et al. Text-to-4d dynamic scene generation. arXiv
 preprint arXiv:2301.11280, 2023.
-[52] Jascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan, and Surya Ganguli. Deep unsupervised
+
+Jascha Sohl-Dickstein, Eric Weiss, Niru Maheswaranathan, and Surya Ganguli. Deep unsupervised
 learning using nonequilibrium thermodynamics. In International Conference on Machine Learning, pages
-2256–2265. PMLR, 2015.
-[53] Guy Tevet, Brian Gordon, Amir Hertz, Amit H Bermano, and Daniel Cohen-Or. Motionclip: Exposing
-human motion generation to clip space. In Computer Vision-ECCV 2022: 17th European Conference, Tel
-Aviv, Israel, October 23-27, 2022, Proceedings, Part XXII, pages 358–374. Springer, 2022.
-[54] Guy Tevet, Sigal Raab, Brian Gordon, Yonatan Shafir, Amit H Bermano, and Daniel Cohen-Or. Human
-motion diffusion model. ICLR, 2023.
-[55] Edgar Tretschk, Ayush Tewari, Vladislav Golyanik, Michael Zollhöfer, Christoph Lassner, and Christian
+2256-2265. PMLR, 2015.
+
+Guy Tevet, Brian Gordon, Amir Hertz, Amit H Bermano, and Daniel Cohen-Or. Motionclip: Exposing
+human motion generation to clip space. In Computer Vision—ECCV 2022: 17th European Conference, Tel
+Aviv, Israel, October 23-27, 2022, Proceedings, Part XXII, pages 358-374. Springer, 2022.
+
+Guy Tevet, Sigal Raab, Brian Gordon, Yonatan Shafir, Amit H Bermano, and Daniel Cohen-Or. Human
+motion diffusion model. JCLR, 2023.
+
+Edgar Tretschk, Ayush Tewari, Vladislav Golyanik, Michael Zollhéfer, Christoph Lassner, and Christian
 Theobalt. Non-rigid neural radiance fields: Reconstruction and novel view synthesis of a dynamic scene
 from monocular video. In Proceedings of the IEEE/CVF International Conference on Computer Vision,
 pages 12959-12970, 2021.
-[56] Dor Verbin, Peter Hedman, Ben Mildenhall, Todd Zickler, Jonathan T. Barron, and Pratul P. Srinivasan.
+
+Dor Verbin, Peter Hedman, Ben Mildenhall, Todd Zickler, Jonathan T. Barron, and Pratul P. Srinivasan.
 Ref-NeRF: Structured view-dependent appearance for neural radiance fields. CVPR, 2022.
-[57] Chung-Yi Weng, Brian Curless, Pratul P. Srinivasan, Jonathan T. Barron, and Ira Kemelmacher-Shlizerman.
+
+Chung- Yi Weng, Brian Curless, Pratul P. Srinivasan, Jonathan T. Barron, and Ira Kemelmacher-Shlizerman.
 HumanNeRF: Free-viewpoint rendering of moving people from monocular video. In Proceedings of the
-IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pages 16210–16220, June
+IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR), pages 16210-16220, June
 2022.
-[58] Hongyi Xu, Eduard Gabriel Bazavan, Andrei Zanfir, William T Freeman, Rahul Sukthankar, and Cristian
+
+Hongyi Xu, Eduard Gabriel Bazavan, Andrei Zanfir, William T Freeman, Rahul Sukthankar, and Cristian
 Sminchisescu. Ghum & ghuml: Generative 3d human shape and articulated pose models. In CVPR, 2020.
+
 12
-113
-[59] Hongyi Xu, Thiemo Alldieck, and Cristian Sminchisescu. H-nerf: Neural radiance fields for rendering and
+
+--- Page 13 ---
+59
+
+60
+
+61
+
+62
+
+63
+
+Hongyi Xu, Thiemo Alldieck, and Cristian Sminchisescu. H-nerf: Neural radiance fields for rendering and
 temporal reconstruction of humans in motion. Advances in Neural Information Processing Systems, 34:
 14955-14966, 2021.
-[60] Yuelang Xu, Hongwen Zhang, Lizhen Wang, Xiaochen Zhao, Huang Han, Qi Guojun, and Yebin Liu.
+
+Yuelang Xu, Hongwen Zhang, Lizhen Wang, Xiaochen Zhao, Huang Han, Qi Guojun, and Yebin Liu.
 Latentavatar: Learning latent expression code for expressive neural head avatar. In ACM SIGGRAPH 2023
 Conference Proceedings, 2023.
-[61] Jiahui Yu, Yuanzhong Xu, Jing Yu Koh, Thang Luong, Gunjan Baid, Zirui Wang, Vijay Vasudevan,
+
+Jiahui Yu, Yuanzhong Xu, Jing Yu Koh, Thang Luong, Gunjan Baid, Zirui Wang, Vijay Vasudevan,
 Alexander Ku, Yinfei Yang, Burcu Karagol Ayan, et al. Scaling autoregressive models for content-rich
-text-to-image generation. arXiv preprint arXiv:2206.10789, 2022.
-[62] Andrei Zanfir, Eduard Gabriel Bazavan, Hongyi Xu, William T Freeman, Rahul Sukthankar, and Cristian
+text-to-image generation. arXiv preprint arXiv:2206. 10789, 2022.
+
+Andrei Zanfir, Eduard Gabriel Bazavan, Hongyi Xu, William T Freeman, Rahul Sukthankar, and Cristian
 Sminchisescu. Weakly supervised 3d human pose and shape reconstruction with normalizing flows. In
-Computer Vision-ECCV 2020: 16th European Conference, Glasgow, UK, August 23-28, 2020, Proceedings,
-Part VI 16, pages 465–481. Springer, 2020.
-[63] Fuqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang Zhang, Jingyi Yu, and Lan Xu. Humannerf:
+Computer Vision—ECCV 2020: 16th European Conference, Glasgow, UK, August 23-28, 2020, Proceedings,
+Part VI 16, pages 465-481. Springer, 2020.
+
+Fugqiang Zhao, Wei Yang, Jiakai Zhang, Pei Lin, Yingliang Zhang, Jingyi Yu, and Lan Xu. Humannerf:
 Efficiently generated human radiance field from sparse inputs. In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition (CVPR), pages 7743–7753, June 2022.
+on Computer Vision and Pattern Recognition (CVPR), pages 7743-7753, June 2022.
+
+13
+

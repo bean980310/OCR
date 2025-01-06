@@ -1,19 +1,39 @@
+--- Page 1 ---
 arXiv:2307.11418v3 [cs.CV] 17 Aug 2023
+
 FaceCLIPNeRF: Text-driven 3D Face Manipulation using Deformable
 Neural Radiance Fields
-Sungwon Hwang' Junha Hyung' Daejin Kim- Min-Jung Kim' Jaegul Choo'
-¹KAIST 2Scatter Lab
-{shwang. 14, sharpeeee, emjay73, jchoo}@kaist.ac.kr, daejin@scatterlab.co.kr
+
+Sungwon Hwang! Junha Hyung!
+
+‘KAIST
+
+Daejin Kim? Min-Jung Kim!
+
+Jaegul Choo!
+
+Scatter Lab
+
+{shwang.14, sharpeeee, emjay73, jchoo}@kaist.ac.kr, daejin@scatterlab.co.kr
+
 Reference
-"closed eyes and "frowning eyes and
-opened mouth'
-pursed lips"
-"happy face" "crying face" "scared face"
+
 (a) Dynamic Scene
+
+“closed eyes and
+opened mouth”
+
+“frowning eyes and
+
 (b) Text-driven manipulations to (left) locally descriptive and (right) emotional expression texts
+
+pursed lips” “happy face” “crying face” “scared face”
+
 Figure 1: FaceCLIPNeRF reconstructs a video of a dynamic scene of a face, and conducts face manipulation using texts
 only. Manipulated faces and their depths in top and bottom rows in (b), respectively, are rendered from novel views.
+
 Abstract
+
 As recent advances in Neural Radiance Fields (NeRF)
 have enabled high-fidelity 3D face reconstruction and novel
 view synthesis, its manipulation also became an essential
@@ -29,6 +49,7 @@ ever, representing a scene deformation with a single latent
 code is unfavorable for compositing local deformations ob-
 served in different instances. As so, our proposed Position-
 conditional Anchor Compositor (PAC) learns to represent
+
 a manipulated scene with spatially varying latent codes.
 Their renderings with the scene manipulator are then op-
 timized to yield high cosine similarity to a target text in
@@ -37,12 +58,16 @@ best of our knowledge, our approach is the first to address
 the text-driven manipulation of a face reconstructed with
 NeRF. Extensive results, comparisons, and ablation studies
 demonstrate the effectiveness of our approach.
+
 1. Introduction
+
 Easy manipulation of 3D face representation is an
 essential aspect of advancements in 3D digital human
 contents[32]. Though Neural Radiance Field[20] (NeRF)
 made a big step forward in a 3D scene reconstruction, many
 of its manipulative methods targets color[4, 34] or rigid ge-
+
+--- Page 2 ---
 ometry [45, 15, 41, 14] manipulations, which are inappro-
 priate for detailed facial expression editing tasks. While a
 recent work proposed a regionally controllable face editing
@@ -60,7 +85,8 @@ manipulation phases. On the contrary, our approach only
 uses a single text to conduct facial manipulations in NeRF,
 and trains over a dynamic portrait video with approximately
 300 training frames that include a few types of facial defor-
-mation examples as in Fig. 1a.
+mation examples as in Fig. la.
+
 In order to control a face deformation, our method first
 learns and separates observed deformations from a canon-
 ical space leveraging HyperNeRF[23]. Specifically, per-
@@ -69,18 +95,19 @@ conditional implicit scene network are trained over the
 training frames. Our key insight is to represent the defor-
 mations of a scene with multiple, spatially-varying latent
 codes for manipulation tasks. The insight originates from
-the shortcomings of naïvely adopting the formulations of
+the shortcomings of naively adopting the formulations of
 HyperNeRF to manipulation tasks, which is to search for a
 single latent code that represents a desired face deformation.
 For instance, a facial expression that requires a combination
 of local deformations observed in different instances is not
 expressible with a single latent code. In this work, we de-
-fine such a problem as "linked local attribute problem" and
+fine such a problem as “linked local attribute problem” and
 address this issue by representing a manipulated scene with
 spatially varying latent codes. As a result, our manipulation
 could express a combination of locally observed deforma-
 tions as seen from the image rendering highlighted with red
 boundary in Fig. 2a.
+
 To this end, we first summarize all observed deforma-
 tions as a set of anchor codes and let MLP learn to compose
 the anchor codes to yield multiple, position-conditional la-
@@ -89,30 +116,34 @@ attributes of a target text is then achieved by optimizing the
 rendered images of the latent codes to be close to a target
 text in CLIP[27] embedding space. In summary, our work
 makes the following contributions:
-•
-•
-Proposal of a text-driven manipulation pipeline of a
+
+¢ Proposal of a text-driven manipulation pipeline of a
+
 face reconstructed with NeRF.
-Design of a manipulation network that learns to repre-
+
+¢ Design of a manipulation network that learns to repre-
 sent a scene with spatially varying latent codes.
-• First to conduct text-driven manipulation of a face re-
+
+¢ First to conduct text-driven manipulation of a face re-
 constructed with NeRF to the best of our knowledge.
-w (hyper space)
-F(X1, W12)
-(b)
-Interpolative slicing volume
-Slicing surfaces from learned codes
+
+WHEE Interpolative slicing volume
+°———* Slicing surfaces from learned codes
+
 Interpolative slicing surfaces
+
 Non-interpolative slicing surface
-F(X2, W21)
-H(x', w₁)
-H(x', W₂)
-F(X1, W11)
-X1 (mouth)
-F(X2, W22) X (canonical space)
-X2 (eyes)
-Wij = H(xi, w;)
-(a)
+
+w (hyper space)
+
+“wy = W(x)
+
+X (eyes)
+
+yay t
+
+(b) (c)
+
 Figure 2: (a) Illustration of linked local attribute problem
 in hyper space. Expressing scene deformation with per-
 scene latent code cannot compose local facial deformation
@@ -120,12 +151,14 @@ observed in different instances. (b) Types of facial defor-
 mations observed during scene manipulator training. (c)
 Renderings of interpolated latent codes with a scene ma-
 nipulator.
+
 2. Related Works
+
 NeRF and Deformable NeRF Given multiple images
 taken from different views of a target scene, NeRF[20] syn-
 thesizes realistic novel view images with high fidelity by
 using an implicit volumetric scene function and volumet-
-ric rendering scheme[12], which inspired many follow-ups
+ric rendering scheme[ 12], which inspired many follow-ups
 [1, 35, 19, 37, 44]. As NeRF assumes a static scene, recent
 works [22, 23, 26, 16] propose methods to encode dynamic
 scenes of interest. The common scheme of the works is to
@@ -136,6 +169,8 @@ sign choice to learn and separate the observed deformations
 from a canonical space, yet overcome its limitation during
 the manipulation stage by representing a manipulated scene
 with spatially varying latent codes.
+
+--- Page 3 ---
 Text-driven 3D Generation and Manipulation Many
 works have used text for images or 3D manipulation[38,
 9, 25, 11, 29, 10]. CLIP-NeRF[38] proposed a disentan-
@@ -147,6 +182,7 @@ erative text-to-3D synthesis by supervising its generations
 in CLIP embedding space to a generation text. We extend
 from these lines of research to initiate CLIP-driven manip-
 ulation of face reconstructed with NeRF.
+
 NeRF Manipulations Among many works that studied
 NeRF manipulations[18, 45, 36, 13, 34, 33, 7, 48, 15],
 EditNeRF[18] train conditional NeRF on a shape category
@@ -154,21 +190,22 @@ to learn implicit semantics of the shape parts without ex-
 plicit supervision. Then, its manipulation process propa-
 gates user-provided scribbles to appropriate object regions
 for editing. NeRF-Editing[45] extracts mesh from trained
-NERF and lets the user perform the mesh deformation. A
+NeRF and lets the user perform the mesh deformation. A
 novel view of the edited scene can be synthesized with-
 out re-training the network by bending corresponding rays.
-CoNeRF[13] trains controllable neural radiance fields using
+CoNeRF[ 13] trains controllable neural radiance fields using
 user-provided mask annotations of facial regions so that the
 user can control desired attributes within the region. How-
 ever, such methods require laborious annotations and man-
 ual editing processes, whereas our method requires only a
 single text for detailed manipulation of faces.
+
 Neural Face Models Several works[42, 28, 47] built 3D
 facial models using neural implicit shape representation. Of
 the works, i3DMM[42] disentangles face identity, hairstyle,
 and expression, making decoupled components to be man-
 ually editable. Face representation works based on NeRF
-have also been exploited[39, 36, 47]. Wang et al. [39] pro-
+have also been exploited[39, 36, 47]. Wang et al.[39] pro-
 posed compositional 3D representation for photo-realistic
 rendering of a human face, yet requires guidance images
 to extract implicitly controllable codes for facial expression
@@ -179,62 +216,70 @@ trollability over pose and expressions. However, the meth-
 ods require a large number of training frames that cover
 many facial expression examples and manual adjustment of
 the priors for manipulation tasks.
+
 3. Preliminaries
 3.1. NeRF
-NERF [20] is an implicit representation of geometry and
+
+NeRF [20] is an implicit representation of geometry and
 color of a space using MLP. Specifically, given a point co-
-ordinate x = (x, y, z) and a viewing direction d, an MLP
+ordinate x = (x,y,z) and a viewing direction d, an MLP
 function F is trained to yield density and color of the point
-as (c, σ) = F(x, d). M number of points are sampled along
-M
-a ray r = 0 + td using distances, {t;} 0, that are collected
-from stratified sampling method. F predicts color and den-
+as (c,0) = F(x,d). M number of points are sampled along
+
+aray r = 0 + td using distances, {t;}“o, that are collected
+from stratified sampling method. F' predicts color and den-
 sity of each point, all of which are then rendered to predict
 pixel color of the ray from which it was originated as
-=
+
 M
-Ĉ(r) = (1-exp(−σidi))ci,
+
+C(x) = SOT, = exp(—o14;))ei, 0)
+
 i=1
-=
-(1)
-where Si ti+1 - ti, and Ti exp(-;;) is an
+
+where 6; = tiz1 — ti, and T; = exp(— mn o;6;) is an
 accumulated transmittance. F is then trained to minimize
 the rendering loss supervised with correspondingly known
 pixel colors.
+
 3.2. HyperNeRF
+
 Unlike NeRF that is designed for a static scene, HyperN-
 eRF [23] is able to encode highly dynamic scenes with large
 topological variations. Its key idea is to project points to
 canonical hyperspace for interpretation. Specifically, given
-a latent code w, a spatial deformation field T maps a point
+a latent code w, a spatial deformation field T’ maps a point
 to a canonical space, and a slicing surface field H deter-
 mines the interpretation of the point for a template NeRF
 F. Specifically,
-x' = T(x, w),
-w = H(x, w),
-(c, σ) = F(x', w, d),
-=
-(2)
-(3)
-(4)
-where w wn = {w₁WN} W is a trainable per-
+
+x’ = T(x,w), (2)
+w= H(x,w), (3)
+(c,0) = F(x’, w,d), (4)
+
+where w < wy, € {wi---wn} = W is a trainable per-
 frame latent code that corresponds to each N number of
 training frames. Then, the rendering loss is finally defined
 as
-L₁ = Σ || Cn (r") – În (r”)||¾2,
-nЄ{1...N},
-rn ERn
-(5)
-where Cn (r") is ground truth color at n-th training frame of
-a ray rn and Rn is a set of rays from n-th camera. Note that
-(x', w) and H(x, w) are often referred to canonical hyper-
-space and slicing surface, since x' can be interpreted differ-
+
+|Cn(e") — Calt")|I3; (5)
+
+L=
+n€{1---N},
+rmER"
+
+where C;,(r”) is ground truth color at n-th training frame of
+aray r” and R” is a set of rays from n-th camera. Note that
+(x’, w) and H(x, w) are often referred to canonical hyper-
+space and slicing surface, since x’ can be interpreted differ-
 ently for different w as illustrated in Fig. 2a.
+
 4. Proposed Method
+
 We aim to manipulate a face reconstructed with NeRF
 given a target text that represents a desired facial expres-
 sions for manipulation (e.g., “crying face”, “wink eyes and
-smiling mouth"). To this end, our proposed method first
+smiling mouth’). To this end, our proposed method first
 trains a scene manipulator, a latent code-conditional neural
 field that controls facial deformations using its latent code
 (§4.1). Then, we elaborate over the pipeline to utilize a tar-
@@ -242,59 +287,31 @@ get text for manipulation (§4.2), followed by proposing an
 MLP network that learns to appropriately use the learned
 deformations and the scene manipulator to render scenes
 with faces that reflect the attributes of target texts (§4.3).
-Trained & fixed during manipulation
-WR
-W
-{7}
-Deformation
-Field
-→
-d → F
-[7]→w
-Ambient
-Slicing Surface
-→
+
+--- Page 4 ---
+(Gp trained & fixed during manipulation (GG) train for manipulation
+
+r ‘||
+sien d 4 F Lui
+w few lh
+
+Ambient Template
+Slicing Surface NeRF
+
 (a) Scene Manipulator
-Template
-NeRF
-Train for manipulation
-Llip
-X
-X
-LACR
-17
-G¬
-W₁A
-·α [x,1]'*
-WA
-*
-G
-P
-σ
-WA
-Lc
-LCLIP
-[x,K]• W&
-W
-Anchor
-Codes
-Anchor Composition
-Network
-G
-(b) Vanilla Inversion
-(c) Position-conditional Anchor Compositor (PAC)
-7
-LCLIP
-Figure 3: (a) Network structure of scene manipulator G. (b) Vanilla inversion method for manipulation. (c) Position-
+
+Figure 3: (a) Network structure of scene manipulator G.
 conditional Anchor Compositor (PAC) for manipulation.
+
 4.1. Scene Manipulator
+
 First, we construct a scene manipulator using
 HyperNeRF[23] so that deformations of a scene can
 be controlled by fixing the parameters of the scene manip-
 ulator and manipulating its latent code. Specifically, we
 train a dynamic scene of interest with a network formulated
 as Eq.(4) following [23], after which we freeze the trained
-parameters of T, H, F, and W and use was a manipulation
+parameters of T, H, F, and W and use w as a manipulation
 handle. In addition, we empirically found that the deforma-
 tion network T tends to learn rigid deformations, such as
 head pose, while slicing surface field H learns non-rigid
@@ -303,15 +320,19 @@ eyes. As so, we select and fix a trained latent code for T
 and only manipulate a latent code fed to H. In summary,
 as illustrated in Fig. 3(a), our latent code-conditional scene
 manipulator G is defined as
-G(x, d, w) := F(T(x, wr), Ħ(x, w), d),
-(6)
-where represents that the parameters are trained and fixed
-for manipulation, and WR is a fixed latent code of the de-
+
+G(x, d,w) :=
+
+where * represents that the parameters are trained and fixed
+for manipulation, and we is a fixed latent code of the de-
 sired head pose chosen from a set of learned latent codes
 W. In the supplementary material, we report further exper-
 imental results and discussions over head pose controllabil-
-ity of WR.
-Lipschitz MLP Since G is only trained to be conditioned
+ity of Wr.
+
+F(T(x,0p),H(x,w).d), 6)
+
+Lipschitz MLP _ Since G is only trained to be conditioned
 over a limited set of trainable latent codes W, a subspace
 of w outside the learned latent codes that yields plausible
 deformations needs to be formulated to maximize the ex-
@@ -321,79 +342,103 @@ linearly interpolated from two learned latent codes. Thus,
 a valid latent subspace W can be formulated to include not
 only the learned latent codes but codes linearly interpolated
 between any two learned latent codes as well. Specifically,
-(7)
-W > {y * ŵi + (1 − y) * ŵj | Ŵi, Ŵj Є W,
-0≤≤ 1}.
+
+Wd {y*Wt+(L—7)*0;| W,0; EW,
+
+o<y<y.
+
 However, we learned that the fidelity of images from
+
+(b) Vanilla Inversion
+
+Anchor: nats
+Network
+
+(c) Position-conditional Anchor Compositor (PAC)
+
+(b) Vanilla inversion method for manipulation. (c) Position-
+
 interpolated latent codes needs to be higher to be lever-
 aged for manipulation. As so, we regularize the MLPs
 of the scene manipulator to be more Lipschitz continu-
 ous during its training phase. Note that Lipschitz bound
-of a neural network with L number of layers and piece-
+of a neural network with LZ number of layers and piece-
 wise linear functions such as ReLU can be approximated
-as c = II
-П
-±1 ||W|| [17, 43], where W² is an MLP weight
+asc = [[/., |W" ||, [17, 43], where W’ is an MLP weight
 at i-th layer. Since a function f that is c-Lipschitz has the
 property
--
--
-(8)
-||ƒ (w1) – ƒ (w2)||p ≤ C||W1 – W2||p,
+
+f(r)
+
 successful regularization of c would make smaller differ-
 ences between outputs of adjacent latent codes, which in-
 duce interpolated deformations to be more visually natural.
-As so, we follow [17] and regularize trainable matrix at l-th
-layer of F by introducing extra trainable parameters c² as
-y' = o(Ŵ'x+b²), Ŵ'; = W¹; · min(1,
-softplus(c)), (9)
-||W||∞
-where W is the j-th row of a trainable matrix at l-th layer
-W, and || ||∞ is matrix ∞-norm. Trinable Lipschitz con-
+As so, we follow [17] and regularize trainable matrix at /-th
+layer of F by introducing extra trainable parameters c! as
+
+— f(we)|lp < ellwr — wally, (8)
+
+softplus(c'
+
+=o(Wae +8), Wi = Wh -min(1, () (9)
+
+[Wi lloe
+
+where wi is the j-th row of a trainable matrix at /-th layer
+W!, and || - ||. is matrix oo-norm. Trinable Lipschitz con-
 stants from the layers are then minimized via gradient-based
 optimization with loss function defined as
+
 L
-Llip softplus (c').
-1=1
-(10)
+
+Liip = Il softplus(c'). (10)
+
+l=1
+
 In summary, networks in Eq. (4) are trained to retrieve
 F, T, H, and W using our scene manipulator objective
 function
-LSM = c Lc + Alip Llip,
-where and lip are hyper-parameters.
+
+Lsu = AcLe + MipLuip, (11)
+
+where A, and Aj;p are hyper-parameters.
+
 4.2. Text-driven Manipulation
-(11)
+
 Given a trained scene manipulator G, one manipulation
 method is to find a single optimal latent code w whose ren-
-dered image using G yields the highest cosine similarity
+dered image using G' yields the highest cosine similarity
 with a target text in CLIP[27] embedding space, so that the
+
+--- Page 5 ---
 manipulated images can reflect the visual attributes of a tar-
-get text. Specifically, given images rendered with G and w
-at a set of valid camera poses [R\t] as IG and a target text
+get text. Specifically, given images rendered with G' and w
+at a set of valid camera poses [R|t] as Tin and a target text
 for manipulation p, the goal of the method is to solve the
 following problem:
-w* = arg max DCLIP (IP),
-พ
-(12)
-where DCLIP measures the cosine similarity of features be-
+
+w* = arg max Deuw(ZipinsP): (12)
+w
+
+where Dc,jp measures the cosine similarity of features be-
 tween rendered images and a target text extracted from pre-
 trained CLIP model.
+
 As illustrated in Fig. 3b, a straightforward vanilla ap-
 proach to find an optimal latent embedding w* is inversion,
-a gradient-based optimization of w that maximizes Eq. (12)
-=
--G,w
-by defining a loss function as LCLIP 1-DCLIP (RP).
+a gradient-based optimization of w that maximizes Eq.(12)
+by defining a loss function as Lotrp = 1—Deur (Livin ;P).
 However, we show that this method is sub-optimal by show-
 ing that it inevitably suffers from what we define as a linked
 local attributes problem, which we then solve with our pro-
 posed method.
+
 Linked local attribute problem Solutions from the
 vanilla inversion method are confined to represent deforma-
 tions equivalent to those from W. However, W cannot rep-
 resent all possible combinations of locally observed defor-
 mations, as interpolations between two learned latent codes,
-which essentially comprise W, cause facial attributes in dif-
+which essentially comprise WV, cause facial attributes in dif-
 ferent locations to change simultaneously. For example,
 consider a scene with deformations in Fig. 2b and render-
 ings of interpolations between two learned latent codes in
@@ -402,6 +447,7 @@ nor the interpolated codes can express opened eyes with
 opened mouth or closed eyes with a closed mouth. Simi-
 lar experiments can be done with any pair of learned latent
 codes and their interpolations to make the same conclusion.
+
 We may approach this problem from the slicing surface
 perspective of canonical hyperspace introduced in Sec. 3.2.
 As in Fig. 2a, hyperspace allows only one latent code to rep-
@@ -410,30 +456,29 @@ deformation of all spatial locations. Such representation
 causes a change in one type of deformation in one loca-
 tion to entail the same degree of change to another type of
 deformation in different locations during interpolation.
+
 Our method is motivated by the observation and is there-
 fore designed to allow different position x to be expressed
 with different latent codes to solve the linked local attribute
 problem.
+
 4.3. Position-conditional Anchor Compositor
+
 For that matter, Position-conditional Anchor Composi-
 tor (PAC) is proposed to grant our manipulation pipeline
 the freedom to learn appropriate latent codes for different
 spatial positions.
-Specifically, we define anchor codes {wƒ‚……. w^{}
-WA CW, a subset of learned latent codes where each rep-
-աշ
-WA
-a[x,2]
-W*
-+
-a[x,1]
-A
-a[x,3]
-W3
+
+Specifically, we define anchor codes {wy!,--- wf} =
+W* CW, asubset of learned latent codes where each rep-
+
 Interpolative, valid region
+
 Extrapolative, unseen region
+
 Figure 4: Illustration of barycentric interpolation of latent
 codes for validly expressive regions when K = 3.
+
 resent different types of observed facial deformations, to set
 up a validly explorable latent space as a prior. We retrieve
 anchor codes by extracting facial expression parameters us-
@@ -441,115 +486,127 @@ ing DECA[5] from images rendered from all codes in W
 over a fixed camera pose. Then, we cluster the extracted ex-
 pression parameters using DBSCAN[3] and select the latent
 code corresponding to the expression parameter closest to
-the mean for each cluster. For instance, we may get K = 4
-anchor codes in the case of the example scenes in Fig. 1a
+the mean for each cluster. For instance, we may get k = 4
+anchor codes in the case of the example scenes in Fig. la
 and Fig. 2b.
+
 Then for every spatial location, a position-conditional
 MLP yields appropriate latent codes by learning to com-
 pose these anchor codes. By doing so, a manipulated scene
 can be implicitly represented with multiple, point-wise la-
 tent codes. Specifically, the anchor composition network
-PR(3+dw) → R¹ learns to yield w* for every spatial
+P : RG@+4w) _; R! learns to yield w* for every spatial
 position x via barycentric interpolation[8] of anchors as
-â[x‚k] = P(x@w^), w² = Σ σk (â[x, k)]) W^^, (13)
+
+Ayn = PRO WE), wE= lolx we, (13)
 k
-where dw is the dimension of a latent code, is concatena-
-tion, and σk
-is softmax activation along k network outputs.
-Also, denote a[x,k] = σ σk (â[x,k]) as anchor composition ra-
+
+where d,, is the dimension of a latent code, @ is concatena-
+tion, and o;, is softmax activation along k network outputs.
+Also, denote ajx,4) = %(Gjx,4]) aS anchor composition ra-
 tio (ACR) for ease of notation. As in the illustrative exam-
 ple in Fig. 4, the key of the design is to prevent the com-
 posited code from diverging to extrapolative region of the
 latent. Thus, barycentric interpolation defines a safe bound
 of composited latent code for visually natural renderings.
+
 Finally, a set of points that are sampled from rays pro-
 jected at valid camera poses and their corresponding set of
 latent codes [w] are queried by G, whose outputs are ren-
 dered as images to be supervised in CLIP embedding space
 for manipulation as
-LCLIP = 1
--
-DCLIP (G ,p),
-(14)
+
+Loire =1- Dow(Zigin* sD); (14)
+
 Total variation loss on anchor composition ratio As,
 the point-wise expressibility of PAC allows adjacent latent
 codes to vary without mutual constraints, P is regularized
 with total variation (TV) loss. Smoother ACR fields al-
 lows similar latent embeddings to cover certain facial po-
+
+--- Page 6 ---
+“closed eyes and
+smiling mouth ”
+
+‘wink eyes and
+smiling mouth”
+
 Reference
-"closed eyes and
-smiling mouth"
-"closed, frowning eyes and
-smiling mouth"
-"wink eyes and
-smiling mouth"
-"opened eyes and
-smiling mouth'
-"frowning eyes and
-pursed lips"
-"closed eyes and
-pursed lips"
-"wink eyes and
-widely opened mouth'
-"closed eyes
-and
-opened mouth
-"wink, frowning
-eyes and
-closed
-mouth"
-"surprised
-face"
-"opened eyes and
-widely opened mouth"
-"frowning eyes and
-closed mouth"
-"closed, frowning eyes and "wink, frowning eyes and
-closed mouth'
-closed mouth"
-"happy
-face"
-3D
+
+frowning eyes and
+pursed lips”
+
+‘wink eyes and
+widely opened mou
+
+“frowning eyes and “closed, frowning eyes and “wink, frowning eyes and
+closed mouth ” closed mouth” closed mouth”
+
 Figure 5: Qualitative results manipulated with descriptive
 texts using our method. Local facial deformations can eas-
 ily be controlled using texts only.
+
 sitions to yield more naturally rendered images. Specifi-
-cally, a[x,k] is rendered to valid camera planes using the
+cally, Qx,4] is rendered to valid camera planes using the
 rendering equation in Eq. (1) for regularization. Given a
-ray ruv(t) = 0 tduv, ACR can be rendered for each an-
-chor k at an image pixel located at (u, v) of a camera plane,
+ray ¥,,,(t) = 0 + td,,,, ACR can be rendered for each an-
+chor & at an image pixel located at (u, v) of a camera plane,
 and regularized with TV loss as
-akuv
+
 M
--
-Σ Ti(1 – exp(-σidi))¤[ruv(ti),k],
-i=1
-(15)
-LACR = Σ ||ãk(u+1)v − ˜kuv||2 + ||ãku(v+1) — Õkuv||2.
-k,u,v
+Qu = ere — exp(—010i) Of, (t),k]> (15)
+
+i=l
+
+Lacr= Ss l@x(utajy — Akuvll2 + |]@ru(v4a) — Geuvll2-
+
+k,uyv
+
 (16)
+
 In summary, text-driven manipulation is conducted by
 optimizing P and minimizing the following loss
-Ledit=CLIPLCLIP + ACRLACR
-where ACLIP and AACR are hyper-parameters.
+
+Leait = AcLiPLciip + AACRLACR a7)
+
+where Ac rp and A4cr are hyper-parameters.
+
 5. Experiments
-(17)
+
 Dataset We collected portrait videos from six volun-
 teers using Apple iPhone 13, where each volunteer was
 asked to make four types of facial deformations shown in
-Fig. 1a and Fig. 2b. A pre-trained human segmentation
+Fig. la and Fig. 2b. A pre-trained human segmentation
 network was used to exclude descriptors from the dynamic
 part of the scenes during camera pose computation using
 COLMAP[31]. Examples of facial deformations observed
-Reference
-NeRF+FT
-Nerfies +1 HyperNeRF +1 Ours
+
+“closed eyes
+and
+opened mouth”)
+
+“wink, frowning]
+
+eyes and
+closed
+mouth”
+
+“surprised ¥
+face”
+
+“happy
+face”
+
+Reference NeRF+FT — Nerfies+/  HyperNeRF+/ Ours
+
 Figure 6: Text-driven manipulation results of our method
 and the baselines. Our result well reflects the implicit at-
 tributes of target emotional texts while preserving visual
 quality and face identity.
+
 during training for each scene are reported in the supple-
 mentary material.
+
 Manipulation Texts We selected two types of texts for
 manipulation experiments. First is a descriptive text that
 characterizes deformations of each facial parts. Second
@@ -557,38 +614,46 @@ is an emotional expression text, which is an implicit rep-
 resentation of a set of multiple local deformations on all
 face parts hard to be described with descriptive texts. We
 selected 7 frequently used and distinguishable emotional
-expression texts for our experiment: "crying", "disap-
-pointed", "surprised", "happy", "angry", "scared" and
-"sleeping". To reduce text embedding noise, we followed
+expression texts for our experiment: “crying”, ”disap-
+pointed”, ’surprised”, “happy”, ”angry”, ”scared” and
+”sleeping”. To reduce text embedding noise, we followed
 [24] by averaging augmented embeddings of sentences with
 identical meanings.
+
 Baselines Since there is no prior work that is parallel to
 our problem definition, we formulated 3 baselines with ex-
 isting state-of-the-art methods for comparisons: (1) NeRF
 +FT is a simple extension from NeRF [20] that fine-tunes
-the whole network using CLIP loss, (2) Nerfies+1 uses
-Nerfies [22] as a deformation network followed by conduct-
+the whole network using CLIP loss, (2) Nerfies+/ uses
+Nerfies[22] as a deformation network followed by conduct-
 ing vanilla inversion method introduced in Sec. §4.2 for
-manipulation, and (3) HyperNeRF+1 replaces Nerfies in (2)
+manipulation, and (3) HyperNeRF+/ replaces Nerfies in (2)
 with HyperNeRF [23].
+
 Text-driven Manipulation We report qualitative manip-
 ulation results of our methods driven with a set of descrip-
 tive sentences in Fig. 5. Our method not only faithfully re-
 flects the descriptions, but also can easily control local fa-
 cial deformations with simple change of words in sentences.
 We also report manipulated results driven by emotional ex-
+
+--- Page 7 ---
 Reference
-"angry"
-"crying"
-"surprised" "disappointed" "happy"
-"scared" "sleeping"
+
+“angry” “crying”
+
+“surprised”
+
+“disappointed” “happy” “scared” “sleeping”
+
 Figure 7: Extensive face manipulation results driven by a set of frequently used emotional expression texts using our method.
 Manipulating to emotional expression texts are challenging, as they implicitly require compositions of subtle facial deforma-
 tions that are hard to be described. Our method reasonably reflects the attributes of the manipulation texts.
+
 pression texts in Fig. 7. As can be seen, our method con-
 ducts successful manipulations even if the emotional texts
 are implicit representations of many local facial deforma-
-tions. For instance, result manipulated with "crying” in first
+tions. For instance, result manipulated with ’crying” in first
 row of Fig. 7 is not expressed with mere crying-looking eyes
 and mouth, but also includes crying-looking eyebrows and
 skin all over the face without any explicit supervision on lo-
@@ -596,14 +661,15 @@ cal deformations. We also compare our qualitative results
 to those from the baselines in Fig. 6. Ours result in the
 highest reflections of the target text attributes. NeRF+FT
 shows significant degradation in visual quality, while Ner-
-fies+ moderately suffers from low reconstruction quality
-and reflection of target text attributes. HyperNeRF+ I shows
+fies+/ moderately suffers from low reconstruction quality
+and reflection of target text attributes. HyperNeRF+ J shows
 the highest visual quality out of all baselines, yet fails to re-
 flect the visual attributes of target texts.
+
 High reflectivity on various manipulation texts can be at-
 tributed to PAC that resolves the linked local attribute prob-
-lem. In Fig. 8, we visualize ãkuv for each anchor code k,
-which is the rendering of ACR a[x,k] in Eq. (15), over an
+lem. In Fig. 8, we visualize @.., for each anchor code k,
+which is the rendering of ACR ay,,4) in Eq. (15), over an
 image plane. Whiter regions of the renderings are closer
 to one, which indicates that the corresponding anchor code
 is mostly composited to yield the latent code of the region.
@@ -612,80 +678,60 @@ on the left to help understand the local attributes for each
 anchor code. As can be seen, PAC composes appropriate
 anchor codes for different positions. For example, when
 manipulating for sleeping face, PAC reflects closed eyes
-R-Prec.[40] ↑
-LPIPS [46]↓
-CFS
-NERF + FT
-Nerfies I
-HyperNeRF + I
-0.763
-0.350
-0.350
-0.213
-0.222
-0.684
-0.342
-0.198
-0.721
-Ours
-0.780 (+0.017)
-0.082 (-0.116) 0.749 (+0.028)
+
+R-Prec.[40] LPIPS[46] | CFS ¢
+NeRF + FT 0.763 0.350 0.350
+Nerfies + / 0.213 0.222 0.684
+
+HyperNeRF +1 0.342 0.198 0.721
+
+Ours 0.780 (+0.017) 0.082 (-0.116) 0.749 (+0.028)
+
 Table 1: Quantitative results. R-Prec. denotes R-precision,
 and CFS denotes cosine face similarity. We notate perfor-
 mance ranks as best and second best.
-TR↑
-VR ↑
-FP↑
-NERF + FT
-Nerfies + I
-HyperNeRF + I
-2.85
-0.18
-0.79
-0.33
-3.61
-4.03
-2.52
-4.42
-4.39
-Ours
-4.67 (+0.28)
-4.15 (+1.30) 4.58 (+0.16)
+
+TRt VRt FP +
+
+NeRF + FT 2.85 0.18 0.79
+
+Nerfies + J 0.33 3.61 4.03
+
+HyperNeRF + / 2.52 4.42 4.39
+Ours 4.15 (+1.30) 4.58 (+0.16) 4.67 (+0.28)
+
 Table 2: User study results. TR, VR, and FP denote text
 reflectivity, visual realism, and face identity preservability,
 respectively. Best and second best are highlighted.
+
 from one anchor code and neutral mouth from other anchor
 codes. In the cases of crying, angry, scared, and disap-
 pointed face, PAC learns to produce complicated composi-
 tions of learned deformations, which are inexpressible with
 a single latent code.
+
 Quantitative Results First of all, we measured R-
-precision [40] to measure the text attribute reflectivity of
-Image Renderings by Anchor Codes
+precision[40] to measure the text attribute reflectivity of
+
+--- Page 8 ---
 Manipulated Results
-"happy"
-"angry"
-"surprised" "crying"
-"disapp-
-ointed'
-"sleeping" "scared"
-Rendered ACR Maps by Anchor Codes
-w/ Llip
-w/o Llip
-Start
-End
-Figure 9: Renderings from linearly interpolated latent
-codes. Lipschitz-regularized scene manipulator interpolates
-unseen shapes more naturally.
+‘aisanp-
+
+“happy” — “angry” — “surprised” —“erving sleeping” —“scared’
+
+Image Renderings by Anchor Codes
+sopoz z0ysuy <q sdeyl YOV Paropudy,
+
 Figure 8: Renderings of learned ACR maps for each anchor
 codes over different manipulation texts.
+
 the manipulations. We used facial expression recogni-
 tion model[30] pre-trained with AffectNet[21] for top-R
 retrievals of each text. Specifically, 1000 novel view im-
 ages are rendered per face, where 200 images are rendered
 from a face manipulated with each of the five texts that
-are distinguishable and exist in AffectNet labels: "happy",
-"surprised", "fearful", "angry", and "sad". Also, to es-
+are distinguishable and exist in AffectNet labels: “happy”,
+”surprised”, fearful”, ’angry”, and ”sad”. Also, to es-
 timate the visual quality after manipulation, we measured
 LPIPS[46] between faces with no facial expressions (neu-
 tral faces) without any manipulations and faces manipu-
@@ -694,11 +740,12 @@ novel views. Note that LPIPS was our best estimate of vi-
 sual quality since there can be no pixel-wise ground truth of
 text-driven manipulations. Lastly, to measure how much of
 the facial identity is preserved after manipulation, we mea-
-sured the cosine similarity between face identity features¹
+sured the cosine similarity between face identity features!
 extracted from neutral faces and text-manipulated faces, all
-of which are rendered from 200 novel views. Table 1 re-
+of which are rendered from 200 novel views. Table | re-
 ports the average results over all texts, which shows that
 our method outperforms in all criteria.
+
 User Study Users were asked to score from 0 to 5 on 3
 criteria; (i) Text Reflectivity: how well the manipulated ren-
 derings reflect the target texts, (ii) Visual Realism: how re-
@@ -707,41 +754,48 @@ tity Preservability: how well do the manipulated images
 preserve the identity of the original face, over our method
 and the baselines. The following results are reported in Ta-
 ble. 2. Our method outperforms all baselines, and espe-
-https://github.com/ronghuaiyang/arcface-pytorch
-W/O LACR
-w/o Llip
-W/O LACR
-(a)
-Ours
-W/ LACR
-(b)
+
+'https://github.com/ronghuaiyang/arcface-pytorch
+
+Figure 9: Renderings from linearly interpolated latent
+codes. Lipschitz-regularized scene manipulator interpolates
+
+unseen shapes more naturally.
+— 5 =
+
 Figure 10: (a) Qualitative results of the ablation study. Ma-
-nipulations are done using "crying face" as target text. (b)
-Rendered ACR maps with and without LACR.
+nipulations are done using ”crying face” as target text. (b)
+Rendered ACR maps with and without Lacr.
+
 cially in text reflectivity by a large margin. Note that the
 out-performance in user responses align with that from the
 quantitative results, which supports the consistency of eval-
 uations.
+
 Interpolation We experiment with the effect of Lipschitz
 regularization on the scene manipulator by comparing the
 visual quality of images rendered from linearly interpolated
 latent codes, and report the results in Fig. 9. Lipschitz-
 regularized scene manipulator yields more visually nat-
 ural images, which implies that learned set of anchor-
-composited latent codes [w*] are more likely to render re-
+composited latent codes [w%] are more likely to render re-
 alistically interpolated local deformations under Lipschitz-
 regularized scene manipulator.
+
 Ablation Study We conducted an ablation study on our
-regularization methods: Llip and LACR. As shown in
-Fig. 10a, manipulation without Llip suffers from low visual
-quality. Manipulation without LACR yields unnatural ren-
+regularization methods: Lj, and Lace. As shown in
+Fig. 10a, manipulation without £;;, suffers from low visual
+quality. Manipulation without £4cr yields unnatural ren-
 derings of face parts with large deformation range such as
 mouth and eyebrows. This can be interpreted with learned
 ACR maps of PAC in Fig. 10b. ACR maps learned with
-LACR introduces reasonable continuities of latent codes on
+Lacr introduces reasonable continuities of latent codes on
 boundaries of the dynamic face parts, thus yielding natu-
 rally interpolated face parts.
+
+--- Page 9 ---
 6. Conclusion
+
 We have presented FaceCLIPNeRF, a text-driven ma-
 nipulation pipeline of a 3D face using deformable NeRF.
 We first proposed a Lipshitz-regularized scene manipula-
@@ -756,6 +810,7 @@ larity with target text in CLIP embedding space. Our ex-
 periments showed that our method could faithfully reflect
 the visual attributes of both descriptive and emotional texts
 while preserving visual quality and identity of 3D face.
+
 Acknowledgement This material is based upon work
 supported by the Air Force Office of Scientific Research
 under award number FA2386-22-1-4024, KAIST-NAVER
@@ -764,218 +819,356 @@ communications Technology Planning & Evaluation (IITP)
 grant funded by the Korea government (MSIT) (No.2019-
 0-00075, Artificial Intelligence Graduate School Program
 (KAIST)).
+
 References
-[1] Jonathan T Barron, Ben Mildenhall, Matthew Tancik, Peter
+
+{1] Jonathan T Barron, Ben Mildenhall, Matthew Tancik, Peter
 Hedman, Ricardo Martin-Brualla, and Pratul P Srinivasan.
 Mip-nerf: A multiscale representation for anti-aliasing neu-
 ral radiance fields. In Proceedings of the IEEE/CVF Inter-
-national Conference on Computer Vision, pages 5855–5864,
+national Conference on Computer Vision, pages 5855-5864,
 2021. 2
-[2] Volker Blanz and Thomas Vetter. A morphable model for
+
+2] Volker Blanz and Thomas Vetter. A morphable model for
+
 the synthesis of 3d faces. In Proceedings of the 26th an-
+
 nual conference on Computer graphics and interactive tech-
+
 niques, pages 187-194, 1999. 3
-[3] Martin Ester, Hans-Peter Kriegel, Jörg Sander, Xiaowei Xu,
+
+3] Martin Ester, Hans-Peter Kriegel, Jorg Sander, Xiaowei Xu,
+
 et al. A density-based algorithm for discovering clusters in
+
 large spatial databases with noise. In kdd, volume 96, pages
+
 226-231, 1996. 5
-[4] Zhiwen Fan, Yifan Jiang, Peihao Wang, Xinyu Gong, Dejia
+
+4] Zhiwen Fan, Yifan Jiang, Peihao Wang, Xinyu Gong, Dejia
+
 Xu, and Zhangyang Wang. Unified implicit neural styliza-
+
 tion. arXiv preprint arXiv:2204.01943, 2022. 1
-[5] Yao Feng, Haiwen Feng, Michael J. Black, and Timo
+
+5] Yao Feng, Haiwen Feng, Michael J. Black, and Timo
+
 Bolkart. Learning an animatable detailed 3D face model
+
 from in-the-wild images. volume 40, 2021. 5
-[6] Guy Gafni, Justus Thies, Michael Zollhofer, and Matthias
-Nießner. Dynamic neural radiance fields for monocular 4d
+
+6] Guy Gafni, Justus Thies, Michael Zollhofer, and Matthias
+
+NieBner. Dynamic neural radiance fields for monocular 4d
+
 facial avatar reconstruction. In Proceedings of the IEEE/CVF
+
 Conference on Computer Vision and Pattern Recognition,
+
 pages 8649-8658, 2021. 2
-[7] Yang Hong, Bo Peng, Haiyao Xiao, Ligang Liu, and Juy-
+
+7] Yang Hong, Bo Peng, Haiyao Xiao, Ligang Liu, and Juy-
 ong Zhang. Headnerf: A real-time nerf-based parametric
 head model. In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 20374-
+
+[8
+
+[9
+
+10
+
+11
+
+12
+
+13
+
+14
+
+15
+
+16
+
+[18]
+
+[20]
+
+i)
+
+on Computer Vision and Pattern Recognition, pages 20374—
 20384, 2022. 3
-[8] Kai Hormann. Barycentric interpolation. In Approximation
-Theory XIV: San Antonio 2013, pages 197–218. Springer,
+
+Kai Hormann. Barycentric interpolation. In Approximation
+Theory XIV: San Antonio 2013, pages 197-218. Springer,
 2014. 5
-[9] Ajay Jain, Ben Mildenhall, Jonathan T Barron, Pieter
+
+Ajay Jain, Ben Mildenhall, Jonathan T Barron, Pieter
 Abbeel, and Ben Poole. Zero-shot text-guided object genera-
 tion with dream fields. In Proceedings of the IEEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, pages
 867-876, 2022. 3
-[10] Ajay Jain, Ben Mildenhall, Jonathan T. Barron, Pieter
+
+Ajay Jain, Ben Mildenhall, Jonathan T. Barron, Pieter
 Abbeel, and Ben Poole. Zero-shot text-guided object gen-
 eration with dream fields. 2022. 3
-[11] Nikolay Jetchev. Clipmatrix: Text-controlled creation of 3d
+
+Nikolay Jetchev. Clipmatrix: Text-controlled creation of 3d
 textured meshes. arXiv preprint arXiv:2109.12922, 2021. 3
-[12] James T Kajiya and Brian P Von Herzen. Ray tracing volume
-densities. ACM SIGGRAPH computer graphics, 18(3):165–
+James T Kajiya and Brian P Von Herzen. Ray tracing volume
+densities. ACM SIGGRAPH computer graphics, 18(3):165-
 174, 1984. 2
-[13] Kacper Kania, Kwang Moo Yi, Marek Kowalski, Tomasz
-Trzciński, and Andrea Tagliasacchi. CoNeRF: Controllable
+
+Kacper Kania, Kwang Moo Yi, Marek Kowalski, Tomasz
+Trzcitiski, and Andrea Tagliasacchi. CoNeRF: Controllable
 Neural Radiance Fields. In Proceedings of the IEEE Confer-
 ence on Computer Vision and Pattern Recognition, 2022. 2,
 3
-[14] Sosuke Kobayashi, Eiichi Matsumoto, and Vincent Sitz-
+
+Sosuke Kobayashi, Eiichi Matsumoto, and Vincent Sitz-
 mann. Decomposing nerf for editing via feature field distilla-
 tion. In Advances in Neural Information Processing Systems,
 volume 35, 2022. 2
-[15] Verica Lazova, Vladimir Guzov, Kyle Olszewski, Sergey
+
+Verica Lazova, Vladimir Guzov, Kyle Olszewski, Sergey
 Tulyakov, and Gerard Pons-Moll. Control-nerf: Editable fea-
 ture volumes for scene rendering and manipulation. arXiv
-preprint arXiv:2204.10850, 2022. 2, 3
-[16] Tianye Li, Mira Slavcheva, Michael Zollhoefer, Simon
+preprint arXiv:2204.10850, 2022. 2,3
+
+Tianye Li, Mira Slavcheva, Michael Zollhoefer, Simon
 Green, Christoph Lassner, Changil Kim, Tanner Schmidt,
 Steven Lovegrove, Michael Goesele, Richard Newcombe,
 et al. Neural 3d video synthesis from multi-view video. In
 Proceedings of the IEEE/CVF Conference on Computer Vi-
 sion and Pattern Recognition, pages 5521-5531, 2022. 2
-[17] Hsueh-Ti Derek Liu, Francis Williams, Alec Jacobson, Sanja
+Hsueh-Ti Derek Liu, Francis Williams, Alec Jacobson, Sanja
 Fidler, and Or Litany. Learning smooth neural functions via
 lipschitz regularization. arXiv preprint arXiv:2202.08345,
 2022. 4
-[18] Steven Liu, Xiuming Zhang, Zhoutong Zhang, Richard
+
+Steven Liu, Xiuming Zhang, Zhoutong Zhang, Richard
 Zhang, Jun-Yan Zhu, and Bryan Russell. Editing conditional
 radiance fields. In Proceedings of the IEEE/CVF Interna-
 tional Conference on Computer Vision, pages 5773-5783,
 2021. 3
-[19] Ben Mildenhall, Peter Hedman, Ricardo Martin-Brualla,
+
+Ben Mildenhall, Peter Hedman, Ricardo Martin-Brualla,
 Pratul P Srinivasan, and Jonathan T Barron. Nerf in the dark:
 High dynamic range view synthesis from noisy raw images.
 In Proceedings of the IEEE/CVF Conference on Computer
-Vision and Pattern Recognition, pages 16190–16199, 2022.
+Vision and Pattern Recognition, pages 16190-16199, 2022.
 2
-[20] Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik,
+
+Ben Mildenhall, Pratul P. Srinivasan, Matthew Tancik,
 Jonathan T. Barron, Ravi Ramamoorthi, and Ren Ng. Nerf:
 Representing scenes as neural radiance fields for view syn-
-thesis. In ECCV, 2020. 1, 2, 3, 6
-[21] Ali Mollahosseini, Behzad Hasani, and Mohammad H Ma-
+thesis. In ECCV, 2020. 1, 2, 3,6
+
+Ali Mollahosseini, Behzad Hasani, and Mohammad H Ma-
 hoor. Affectnet: A database for facial expression, valence,
-and arousal computing in the wild. IEEE Transactions on
+
+
+--- Page 10 ---
+[22]
+
+[23]
+
+24
+
+25
+
+26
+
+27
+
+[28]
+
+30
+
+31
+
+32
+
+33
+
+34
+
+and arousal computing in the wild. JEEE Transactions on
 Affective Computing, 10(1):18-31, 2017. 8
-[22] Keunhong Park, Utkarsh Sinha, Jonathan T Barron, Sofien
+
+Keunhong Park, Utkarsh Sinha, Jonathan T Barron, Sofien
 Bouaziz, Dan B Goldman, Steven M Seitz, and Ricardo
 Martin-Brualla. Nerfies: Deformable neural radiance fields.
 In Proceedings of the IEEE/CVF International Conference
 on Computer Vision, pages 5865-5874, 2021. 2, 6
-[23] Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T.
+Keunhong Park, Utkarsh Sinha, Peter Hedman, Jonathan T.
 Barron, Sofien Bouaziz, Dan B Goldman, Ricardo Martin-
 Brualla, and Steven M. Seitz. Hypernerf: A higher-
 dimensional representation for topologically varying neural
 radiance fields. ACM Trans. Graph., 40(6), dec 2021. 2, 3,
 4,6
-[24] Or Patashnik, Zongze Wu, Eli Shechtman, Daniel Cohen-Or,
+
+Or Patashnik, Zongze Wu, Eli Shechtman, Daniel Cohen-Or,
 and Dani Lischinski. Styleclip: Text-driven manipulation of
 stylegan imagery. In International Conference of Computer
 Vision, pages 2085-2094, 2021. 6
-[25] Ben Poole, Ajay Jain, Jonathan T Barron, and Ben Milden-
+
+Ben Poole, Ajay Jain, Jonathan T Barron, and Ben Milden-
 hall. Dreamfusion: Text-to-3d using 2d diffusion. arXiv
-preprint arXiv:2209.14988, 2022. 3
-[26] Albert Pumarola, Enric Corona, Gerard Pons-Moll, and
+preprint arXiv:2209. 14988, 2022. 3
+
+Albert Pumarola, Enric Corona, Gerard Pons-Moll, and
 Francesc Moreno-Noguer. D-nerf: Neural radiance fields for
 dynamic scenes. arXiv preprint arXiv:2011.13961, 2020. 2
-[27] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
+Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
 Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry,
 Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learn-
 ing transferable visual models from natural language super-
-vision. In International Conference on Machine Learning,
+vision. In Jnternational Conference on Machine Learning,
 pages 8748-8763. PMLR, 2021. 2, 3, 4
-[28] Eduard Ramon, Gil Triginer, Janna Escur, Albert Pumarola,
+
+Eduard Ramon, Gil Triginer, Janna Escur, Albert Pumarola,
 Jaime Garcia, Xavier Giro-i Nieto, and Francesc Moreno-
 Noguer. H3d-net: Few-shot high-fidelity 3d head reconstruc-
 tion. In Proceedings of the IEEE/CVF International Confer-
 ence on Computer Vision, pages 5620-5629, 2021. 3
-[29] Aditya Sanghi, Hang Chu, Joseph G Lambourne, Ye Wang,
+Aditya Sanghi, Hang Chu, Joseph G Lambourne, Ye Wang,
 Chin-Yi Cheng, Marco Fumero, and Kamal Rahimi Malek-
 shan. Clip-forge: Towards zero-shot text-to-shape genera-
 tion. In Proceedings of the IEEE/CVF Conference on Com-
-puter Vision and Pattern Recognition, pages 18603–18613,
+puter Vision and Pattern Recognition, pages 18603-18613,
 2022. 3
-[30] Andrey V Savchenko. Frame-level prediction of facial ex-
+
+Andrey V Savchenko. Frame-level prediction of facial ex-
 pressions, valence, arousal and action units for mobile de-
-vices. arXiv preprint arXiv:2203.13436, 2022. 8
-[31] Johannes Lutz Schönberger, Enliang Zheng, Marc Pollefeys,
+vices. arXiv preprint arXiv:2203. 13436, 2022. 8
+
+Johannes Lutz Schénberger, Enliang Zheng, Marc Pollefeys,
 and Jan-Michael Frahm. Pixelwise View Selection for Un-
 structured Multi-View Stereo. In European Conference on
 Computer Vision (ECCV), 2016. 6
-[32] Sahil Sharma and Vijay Kumar. 3d face reconstruction in
+
+Sahil Sharma and Vijay Kumar. 3d face reconstruction in
 deep learning era: A survey. Archives of Computational
 Methods in Engineering, pages 1-33, 2022. 1
-[33] Jingxiang Sun, Xuan Wang, Yichun Shi, Lizhen Wang, Jue
+
+Jingxiang Sun, Xuan Wang, Yichun Shi, Lizhen Wang, Jue
 Wang, and Yebin Liu. Ide-3d: Interactive disentangled edit-
 ing for high-resolution 3d-aware portrait synthesis. arXiv
 preprint arXiv:2205.15517, 2022. 3
-[34] Jingxiang Sun, Xuan Wang, Yong Zhang, Xiaoyu Li, Qi
+
+Jingxiang Sun, Xuan Wang, Yong Zhang, Xiaoyu Li, Qi
 Zhang, Yebin Liu, and Jue Wang. Fenerf: Face editing in
 neural radiance fields. In Proceedings of the IEEE/CVF Con-
+
+[35]
+
+36
+
+37
+
+38
+
+39
+
+[40]
+
+[42]
+
+[43]
+
+[44]
+
+[45]
+
 ference on Computer Vision and Pattern Recognition, pages
-7672-7682, 2022. 1, 3
-[35] Matthew Tancik, Ben Mildenhall, Terrance Wang, Divi
+7672-1682, 2022. 1,3
+
+Matthew Tancik, Ben Mildenhall, Terrance Wang, Divi
 Schmidt, Pratul P Srinivasan, Jonathan T Barron, and Ren
 Ng. Learned initializations for optimizing coordinate-based
 neural representations. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition,
 pages 2846-2855, 2021. 2
-[36] Justus Thies, Michael Zollhofer, Marc Stamminger, Chris-
-tian Theobalt, and Matthias Nießner. Face2face: Real-time
+
+Justus Thies, Michael Zollhofer, Marc Stamminger, Chris-
+tian Theobalt, and Matthias NieBner. Face2face: Real-time
 face capture and reenactment of rgb videos. In Proceed-
 ings of the IEEE conference on computer vision and pattern
 recognition, pages 2387-2395, 2016. 2, 3
-[37] Dor Verbin, Peter Hedman, Ben Mildenhall, Todd Zickler,
+
+Dor Verbin, Peter Hedman, Ben Mildenhall, Todd Zickler,
 Jonathan T. Barron, and Pratul P. Srinivasan. Ref-NeRF:
 Structured view-dependent appearance for neural radiance
 fields. CVPR, 2022. 2
-[38] Can Wang, Menglei Chai, Mingming He, Dongdong Chen,
+
+Can Wang, Menglei Chai, Mingming He, Dongdong Chen,
 and Jing Liao. Clip-nerf: Text-and-image driven manip-
 ulation of neural radiance fields. In Proceedings of the
 IEEE/CVF Conference on Computer Vision and Pattern
 Recognition, pages 3835-3844, 2022. 3
-[39] Ziyan Wang, Timur Bagautdinov, Stephen Lombardi, Tomas
+
+Ziyan Wang, Timur Bagautdinov, Stephen Lombardi, Tomas
 Simon, Jason Saragih, Jessica Hodgins, and Michael Zoll-
 hofer. Learning compositional radiance fields of dynamic
 human heads. In Proceedings of the IEEE/CVF Conference
-on Computer Vision and Pattern Recognition, pages 5704-
+on Computer Vision and Pattern Recognition, pages 5704—
 5713, 2021. 3
-[40] Tao Xu, Pengchuan Zhang, Qiuyuan Huang, Han Zhang,
+
+Tao Xu, Pengchuan Zhang, Qiuyuan Huang, Han Zhang,
 Zhe Gan, Xiaolei Huang, and Xiaodong He. Attngan: Fine-
 grained text to image generation with attentional generative
 adversarial networks. In Proceedings of the IEEE conference
-on computer vision and pattern recognition, pages 1316-
+on computer vision and pattern recognition, pages 1316—
 1324, 2018. 7
-[41] Bangbang Yang, Yinda Zhang, Yinghao Xu, Yijin Li, Han
+
+Bangbang Yang, Yinda Zhang, Yinghao Xu, Yijin Li, Han
 Zhou, Hujun Bao, Guofeng Zhang, and Zhaopeng Cui.
 Learning object-compositional neural radiance field for ed-
 itable scene rendering. In International Conference on Com-
 puter Vision (ICCV), October 2021. 2
-[42] Tarun Yenamandra, Ayush Tewari, Florian Bernard, Hans-
+
+Tarun Yenamandra, Ayush Tewari, Florian Bernard, Hans-
 Peter Seidel, Mohamed Elgharib, Daniel Cremers, and
 Christian Theobalt. i3dmm: Deep implicit 3d morphable
 model of human heads. In Proceedings of the IEEE/CVF
 Conference on Computer Vision and Pattern Recognition,
 pages 12803-12813, 2021. 3
-[43] Yuichi Yoshida and Takeru Miyato. Spectral norm regular-
+
+Yuichi Yoshida and Takeru Miyato. Spectral norm regular-
 ization for improving the generalizability of deep learning.
 arXiv preprint arXiv:1705.10941, 2017. 4
-[44] Alex Yu, Ruilong Li, Matthew Tancik, Hao Li, Ren Ng,
+
+Alex Yu, Ruilong Li, Matthew Tancik, Hao Li, Ren Ng,
 and Angjoo Kanazawa. Plenoctrees for real-time rendering
 of neural radiance fields. In Proceedings of the IEEE/CVF
 International Conference on Computer Vision, pages 5752-
 5761, 2021. 2
-[45] Yu-Jie Yuan, Yang-Tian Sun, Yu-Kun Lai, Yuewen Ma,
+
+Yu-Jie Yuan, Yang-Tian Sun, Yu-Kun Lai, Yuewen Ma,
 Rongfei Jia, and Lin Gao. Nerf-editing: geometry editing of
 neural radiance fields. In Proceedings of the IEEE/CVF Con-
 ference on Computer Vision and Pattern Recognition, pages
 18353-18364, 2022. 2, 3
-[46] Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shecht-
+
+--- Page 11 ---
+46
+
+47
+
+48
+
+Richard Zhang, Phillip Isola, Alexei A Efros, Eli Shecht-
 man, and Oliver Wang. The unreasonable effectiveness of
 deep features as a perceptual metric. In Proceedings of the
 IEEE conference on computer vision and pattern recogni-
-tion, pages 586-595, 2018. 7,8
-[47] Yufeng Zheng, Victoria Fernández Abrevaya, Marcel C
-Bühler, Xu Chen, Michael J Black, and Otmar Hilliges. Im
+tion, pages 586-595, 2018. 7, 8
+
+Yufeng Zheng, Victoria Fernandez Abrevaya, Marcel C
+Biihler, Xu Chen, Michael J Black, and Otmar Hilliges. Im
 avatar: Implicit morphable head avatars from videos. In Pro-
 ceedings of the IEEE/CVF Conference on Computer Vision
-and Pattern Recognition, pages 13545-13555, 2022. 2, 3
-[48] Yiyu Zhuang, Hao Zhu, Xusen Sun, and Xun Cao. Mofan-
+and Pattern Recognition, pages 13545-13555, 2022. 2,3
+Yiyu Zhuang, Hao Zhu, Xusen Sun, and Xun Cao. Mofan-
 erf: Morphable facial neural radiance field. arXiv preprint
 arXiv:2112.02308, 2021. 3
+

@@ -1,0 +1,1266 @@
+arXiv:2306.07954v2 [cs.CV] 17 Sep 2023
+result
+result
+result
+Rerender A Video: Zero-Shot Text-Guided Video-to-Video Translation
+Shuai Yang
+Yifan Zhou Ziwei Liu Chen Change Loy
+S-Lab, Nanyang Technological University
+{shuai.yang, yifan.zhou, ziwei.liu, ccloy}@ntu.edu.sg
+☑
+-------------
+-------………………
+a traditional woman in Chinese ink painting, bright clean face, black and white
+a beautiful woman in CG style, pink hair
+--------………………
+-------⠀⠀⠀⠀⠀
+colorful impasto painting, a beautiful woman, peacock blue
+Figure 1. We present a novel video-to-video translation framework that can render a source input video into a temporal-coherent video
+with the style specified by a target textual description.
+Abstract
+Large text-to-image diffusion models have exhibited
+impressive proficiency in generating high-quality images.
+However, when applying these models to video domain, en-
+suring temporal consistency across video frames remains a
+formidable challenge. This paper proposes a novel zero-
+shot text-guided video-to-video translation framework to
+adapt image models to videos. The framework includes two
+parts: key frame translation and full video translation. The
+first part uses an adapted diffusion model to generate key
+frames, with hierarchical cross-frame constraints applied
+to enforce coherence in shapes, textures and colors. The
+second part propagates the key frames to other frames with
+temporal-aware patch matching and frame blending. Our
+framework achieves global style and local texture tempo-
+ral consistency at a low cost (without re-training or opti-
+mization). The adaptation is compatible with existing im-
+age diffusion techniques, allowing our framework to take
+advantage of them, such as customizing a specific subject
+with LORA, and introducing extra spatial guidance with
+ControlNet. Extensive experimental results demonstrate
+the effectiveness of our proposed framework over existing
+methods in rendering high-quality and temporally-coherent
+videos. Code is available at our project page: https:
+//www.mmlab-ntu.com/project/rerender/
+1. Introduction
+Recent text-to-image diffusion models such as DALLE-
+2 [30], Imagen [34], Stable Diffusion [32] demonstrate ex-
+ceptional ability in generating diverse and high-quality im-
+ages guided by natural language. Based on it, a multitude
+of image editing methods have emerged, including model
+fine-tuning for customized object generation [33], image-
+to-image translation [23], image inpainting [1], and object
+editing [12]. These applications allow users to synthesize
+and edit images effortlessly, using natural language within
+a unified diffusion framework, greatly improving creation
+efficiency. As video content surges in popularity on social
+media platforms, the demand for more streamlined video
+creation tools has concurrently risen. Yet, a critical chal-
+lenge remains: the direct application of existing image dif-
+fusion models to videos leads to severe flickering issues.
+Researchers have recently turned to text-guided video
+diffusion models and proposed three solutions. The first so-
+lution involves training a video model on large-scale video
+data [14], which requires significant computing resources.
+Additionally, the re-designed video model is incompatible
+with existing off-the-shelf image models. The second so-
+lution is to fine-tune image models on a single video [40],
+which is less efficient for long videos. Overfitting to a sin-
+gle video may also degrade the performance of the original
+1
+a handsome man,
+Ghibli style
+general model
+customized model
+general model
+customized model
+a beautiful mountain in
+general model
+Chinese ink wash painting
+customized model
+general model
+(a) input
+(b) Translation results w/o ControlNet
+customized model
+(c) Translation results w/ ControlNet
+Figure 2. Customized model and ControlNet generate high-quality
+results with better consistency with both prompt and content. Our
+method is designed to be compatible with these existing image
+diffusion techniques, and thus can take advantage of them to strike
+a good balance between the style (prompt) and the content.
+models. The third solution involves zero-shot methods [20]
+that require no training. During the diffusion sampling pro-
+cess, cross-frame constraints are imposed on the latent fea-
+tures for temporal consistency. The zero-shot strategy re-
+quires fewer computing resources and is mostly compati-
+ble with existing image models, showing promising poten-
+tial. However, current cross-frame constraints are limited
+to global styles and are unable to preserve low-level consis-
+tency, e.g., the overall style may be consistent, but the local
+structures and textures may still flicker.
+Achieving successful application of image diffusion
+models to the video domain is a challenging task. It re-
+quires 1) Temporal consistency: cross-frame constraints for
+low-level consistency; 2) Zero-shot: no training or fine-
+tuning required; 3) Flexibility: compatible with off-the-
+shelf image models for customized generation. As men-
+tioned above, image models can be customized by fine-
+tuning on specific objects to capture the target style more
+precisely than general models. Figure 2 shows two exam-
+ples. To take advantage of it, in this paper, we employ
+zero-shot strategy for model compatibility and aim to fur-
+ther solve the key issue of this strategy in maintaining low-
+level temporal consistency.
+To achieve this goal, we propose novel hierarchical
+cross-frame constraints for pre-trained image models to pro-
+duce coherent video frames. Our key idea is to use opti-
+cal flow to apply dense cross-frame constraints, with the
+previous rendered frame serving as a low-level reference
+for the current frame and the first rendered frame acting
+as an anchor to regulate the rendering process to prevent
+deviations from the initial appearance. Hierarchical cross-
+frame constraints are realized at different stages of diffu-
+sion sampling. In addition to global style consistency, our
+method enforces consistency in shapes, textures and colors
+at early, middle and late stages, respectively. This innova-
+tive and lightweight modification achieves both global and
+local temporal consistency. Figure 1 presents our coher-
+ent video translation results over off-the-shelf image models
+customized for six unique styles.
+Based on the insight, this paper introduces a novel zero-
+shot framework for text-guided video-to-video translation,
+consisting of two parts: key frame translation and full video
+translation. In the first part, we adapt pre-trained image dif-
+fusion models with hierarchical cross-frame constraints for
+generating key frames. In the second part, we propagate the
+rendered key frames to other frames using temporal-aware
+patch matching and frame blending. The diffusion-based
+generation is excellent at content creation, but its multi-step
+sampling process is inefficient. The patch-based propaga-
+tion, on the other hand, can efficiently infer pixel-level co-
+herent frames but is not capable of creating new content. By
+combining these two parts, our framework strikes a balance
+between quality and efficiency. To summarize, our main
+contributions are as follows:
+• A novel zero-shot framework for text-guided video-to-
+video translation, which achieves both global and local
+temporal consistency, requires no training, and is com-
+patible with pre-trained image diffusion models.
+• Hierarchical cross-frame consistency constraints to en-
+force temporal consistency in shapes, textures and col-
+ors, which adapt image diffusion models to videos.
+•
+• Hybrid diffusion-based generation and patch-based
+propagation to strike a balance between quality and ef-
+ficiency.
+2. Related Work
+2.1. Text Driven Image Generation
+Generating images with descriptive sentences is intuitive
+and flexible. Early attempts explore GAN [42-44, 46] to
+synthesize realistic images. With the powerful expressiv-
+ity of Transformer [38], autoregressive models [6,9,31] are
+proposed to model image pixels as a sequence with autore-
+gressive dependency between each pixel. DALL-E [31] and
+CogView [6] train an autoregressive transformer on image
+and text tokens. Make-A-Scene [9] further considers seg-
+mentation masks as condition.
+Recent studies focus on diffusion models [15] for text-
+to-image generation, where images are synthesized via a
+gradual denoising process. DALLE-2 [30] and Imagen [34]
+introduce pretrained large language models [28, 29] as
+text encoder to better align the image with text, and cas-
+cade diffusion models for high resolution image genera-
+tion. GLIDE [26] introduces classifier-free guidance to im-
+prove text conditioning. Instead of applying denoising in
+the image space, Latent Diffusion Models [32] uses the low-
+resolution latent space of VQ-GAN [7] to improve the effi-
+ciency. We refer to [4] for a thorough survey.
+In addition to diffusion models for general images, cus-
+tomized models are studied. Textual Inversion [10] and
+DreamBooth [33] learn special tokens to capture novel con-
+cepts and generate related images given a small number
+of example images. LORA [17] accelerates the fine-tuning
+2
+large models by learning low-rank weight matrices added
+to existing weights. ControlNet [45] fine-tunes a new con-
+trol path to provide pixel-level conditions such as edge
+maps and pose, enabling fine-grained image generation.
+Our method does not alter the pre-trained model, thus is
+orthogonal to these existing techniques. This empowers
+our method to leverage DreamBooth and LoRA for bet-
+ter customized video translation and to use ControlNet for
+temporal-consistent structure guidance as in Fig. 2.
+2.2. Video Editing with Diffusion Models
+Video Diffusion
+For text-to-video generation,
+Model [16] proposes to extend the 2D U-Net in im-
+age model to a factorized space-time UNet. Imagen
+Video [14] scales up the Video Diffusion Model with a
+cascade of spatial and temporal video super-resolution
+models, which is further extended to video editing by
+Dreamix [25]. Make-A-Video [36] leverages video data
+in an unsupervised manner to learn the movement to drive
+the image model. Although promising, the above methods
+need large-scale video data for training.
+Tune-A-Video [40] instead inflates an image diffusion
+model into a video model with cross-frame attention, and
+fine-tunes it on a single video to generate videos with
+related motion. Based on it, Edit-A-Video [35], Video-
+P2P [22] and vid2vid-zero [39] utilize Null-Text Inver-
+sion [24] for precise inversion to preserve the unedited re-
+gion. However, these models need fine-tuning of the pre-
+trained model or optimization over the input video, which
+is less efficient.
+Recent developments have seen the introduction of zero-
+shot methods that, by design, operate without any train-
+ing phase. Thus, these methods are naturally compatible
+with pre-trained diffusion variants like InstructPix2Pix [2]
+or ControlNet to accept more flexible conditions like depth
+and edges.
+Based on the editing masks detected by
+Prompt2Prompt [12] to indicate the channel and spatial re-
+gion to preserve, FateZero [27] blends the attention features
+before and after editing. Text2Video-Zero [20] translates
+the latent to directly simulate motions and Pix2Video [3]
+matches the latent of the current frame to that of the previ-
+ous frame. All the above methods largely rely on cross-
+frame attention and early-step latent fusion to improve
+temporal consistency. However, as we will show later,
+these strategies predominantly cater to high-level styles
+and shapes, and being less effective in maintaining cross-
+frame consistency at the level of texture and detail. In
+contrast to these approaches, our method proposes a novel
+pixel-aware cross-frame latent fusion, which non-trivially
+achieves pixel-level temporal consistency.
+Another zero-shot solution is to apply frame interpola-
+tion to infer the videos based on one or more diffusion-
+edited frames. The seminal work of image analogy [13] mi-
+grates the style effect from an exemplar pair to other images
+I
+Key Frame Translation
+Ik
+Full Video Translation
+First frame; First key frame; Anchor frame
+Cross-frame Attn; Pixel-aware Fusion
+12K
+Key frame
+Non-key frame
+Frame interpolation
+→ Cross-frame Attn; Shape-aware Fusion; Pixel-aware Fusion; Color AdaIN
+Figure 3. Illustration of the interaction between different frames
+to impose temporal constraints in our framework.
+with patch matching. Fišer et al. [8] extend image analogy
+to facial video translation with the guidance of facial fea-
+tures. Later, Jamrivška et al. [19] propose an improved Eb-
+Synth for general video translation based on multiple ex-
+emplar frames with a novel temporal blending approach.
+Although these patch-based methods can preserve fine de-
+tails, their temporal consistency largely relies on the coher-
+ence across the exemplar frames. Thus, our adapted dif-
+fusion model for generating coherent frames is well suited
+for these methods, as we will show later in Fig. 11. In this
+paper, we integrate the zero-shot EbSynth into our frame-
+work to achieve better temporal consistency and accelerate
+inference without any further training.
+3. Preliminary: Diffusion Models
+Stable Diffusion Stable Diffusion is a latent diffusion
+model operating in the latent space of an autoencoder
+D(E()), where & and are the encoder and decoder, respec-
+tively. Specifically, for an image I with its latent feature
+X 0 = E(I), the diffusion forward process iteratively add
+noises to the latent
+_
+q(2t|2t−1)=N(2t;Vatt-1,(1 - a)I), (1)
+where t = 1, ..., T is the time step, q(xt|xt−1) is the condi-
+tional density of xt given. It-1, and at is hyperparameters.
+Alternatively, we can directly sample xt at any time step
+from xo with,
+q(xt|xo) = N(xt; √ātxo, (1 — āt)Ī),
+where ā₁ = [[±1 αi.
+(2)
+Then the diffusion backward process, a U-Net €0 is
+trained to predict the noise of the latent to iteratively re-
+cover x from xT. Given a large T, xo will be completely
+destroyed in the forward process so that x approximates
+a standard Gaussian distribution. Therefore, e correspond-
+ingly learns to infer valid xo from random Gaussian noises.
+Once trained, we can sample xt-1 based on xt with a deter-
+ministic DDIM sampling [37]:
+–1€0(2t,t,Cp), (3)
+at-1
+predicted xo
+direction pointing to x+-1
+3
+DDIM sampling T
+4,1
+xt→0
+x}-1,x橈=1
+"A beautiful girl in Ghibli style",
+DDPM
+forward
+E
+Pretrained Image
+Diffusion Model ε
+warp
+Sec. 4.1.1
+Cross-Frame
+Attention
+Sec.
+4.1.4
+Sec. 4.1.2
+Shape-Aware
+AdaIN Latent Fusion
+11, 12, ..., IN
+Pretrained Image
+Diffusion Model ε
+"A beautiful girl in Ghibli style",
+Sec. 4.1.3
+Pixel-Aware
+Latent Fusion
+Sec. 4.1.3
+E Fidelity-Oriented
+Image Encoding
+warp
+I; and Mi
+1,12,..., IN
+D
+aggregate
+x²-1
+I
+Cross-Frame Attention
+T
+Tpo
+Shape-aware
+Latent Fusion
+Pixel-aware
+Latent Fusion
+Τρι
+T₂
+Adaptive
+Latent Adjust
+(a) Diffusion-based key frame translation with hierarchical cross-frame consistency constraints
+(b) Sampling pipeline
+Figure 4. Framework of the proposed zero-shot text-guided video translation. (a) We adapt the pre-trained image diffusion model (Stable
+Diffusion + ControlNet) with hierarchical cross-frame constraints to render coherent frames. The red dotted lines denote the sampling
+process of the original image diffusion model. The black lines denote our adapted process for video translation. (b) We apply different
+constraints at different sampling steps.
+where to is the predicted xo at time step t,
+xt→0
+t
+(x+- √1-α+€ (xt, t, Cp))/√√αt,
+and 0 (xt, t, Cp) is the predicted noise of xt based on the
+time step t and the text prompt condition Cp.
+=
+~
+Table 1. Notation summary.
+Description
+image encoder and decoder of Stable Diffusion
+the i-th key frame (Sec. 4.1); the i-th video frame (Sec. 4.2)
+translation result of I; with the proposed method
+translation result of I; without PA fusion (Fig. 11(b))
+(4)
+Notation
+E, D
+E*
+the proposed fidelity-oriented image encoder
+Ii
+I
+I'
+I, Mi
+I'
+x
+x²
+wi, M
+latent feature of I; at the diffusion backward denoising step t
+estimated x of I; at the diffusion backward denoising step t
+latent feature of I at the diffusion forward sampling step t
+optical flow and occlusion mask from I; to Ii
+During inference, we can sample a valid xo from the
+standard Guassian noise XT ZT, ZT N(0, 1) with
+DDIM sampling, and decode xo to the final generated im-
+age I' = D(x0).
+ControlNet Although flexible, natural language has lim-
+ited spatial control over the output. To improve spatial
+controllability, [45] introduce a side path called ControlNet
+to Stable Diffusion to accept extra conditions like edges,
+depth and human pose. Let cf be the extra condition,
+the noise prediction of U-Net with ControlNet becomes
+€0 (xt, t, Cp, Cf). Compared to InstructPix2Pix, ControlNet
+is orthogonal to customized Stable Diffusion models. To
+build a general zero-shot V2V framework, we use Control-
+Net to provide structure guidance from the input video to
+improve temporal consistency.
+4. Zero-Shot Text-Guided Video Translation
+N
+Given a video with N frames {I}0, our goal is to ren-
+der it into a new video {I} in another artistic expression
+specified by text prompts and/or off-the-shelf customized
+Stable Diffusion models. Our framework consists of two
+parts: Key Frame Translation (Sec. 4.1) and Full Video
+Translation (Sec. 4.2). In the first part, we introduce four
+hierarchical cross-frame constraints into pre-trained image
+diffusion models, guiding the rendering of coherent key
+frames using anchor and previous key frames, as as illus-
+trated in Fig. 3. Then in the second part, non-key frames
+are interpolated based on their neighboring two key frames.
+Thus our framework can fully exploit the relationship be-
+tween different frames to enhance temporal consistency of
+the outputs.
+result of warping I and I₁ to I, and its occlusion mask
+result of propagating the translated key frame I'₁ to I₂
+latent feature of I; encoded by E
+4.1. Key Frame Translation
+~
+Figure 4 illustrates the T-step sampling pipeline for the
+key frame translation. Following SDEdit [23], the pipeline
+begins with XT = √āτx0+ (1āT) ZT, ZT N(0, 1),
+the noisy latent code of the input video frame rather than
+the
+pure Gaussian noise. It enables users to determine how
+much detail of the input frame is preserved in the output by
+adjusting T, i.e., smaller T retain more detail. Then, during
+sampling each frame, we use the first frame as anchor frame
+and its previous frame to constrain global style consistency
+and local temporal consistency.
+Specifically, cross-frame attention [40] is applied to all
+sampling steps for global style consistency (Sec. 4.1.1). In
+addition, in early steps, we fuse the latent feature with the
+aligned latent feature of previous frame to achieve rough
+shape alignments (Sec. 4.1.2). Then in mid steps, we use
+the latent feature with the encoded warped anchor and pre-
+vious outputs to realize fine texture alignments (Sec. 4.1.3).
+Finally, in late steps, we adjust the latent feature distribu-
+tion for color consistency (Sec. 4.1.4). For simplicity, we
+will use {I} to refer to the key frames in this section.
+We summarize important notations in Table 1.
+4
+4.1.1 Style-aware cross-frame attention
+Similar to other zero-shot video editing methods [3, 20],
+we replace self-attention layers in the U-Net with cross-
+frame attention layers to regularize the global style of I
+to match that of I½ and I'½{_₁. In Stable Diffusion, each self-
+attention layer receives the latent feature vi (for simplicity
+we omit the time step t) of I¿, and linearly projects v¿ into
+query, key and value Q, K, V to produce the output by
+Self Attn(Q, K, V) = Softmax(QK). V with
+(a) Input image
+(b) D(ε(•)) x 10
+(c) D(ε'()) × 10
+(d) D(ε* (•)) × 10
+I
+Q = Wavi, K WK vi
+V WV vi
+(5)
+=
+where WQ, WK, WV are pre-trained matrices for feature
+projection. Cross-frame attention, by comparison, uses the
+key K' and value V' from other frames (we use the first
+and previous frames), i.e., CrossFrame Attn(Q, K', V')
+Softmax(). V' with
+√d
+Q = Wºvi, K' = WK [v1; Vi−1], V' = WV [v1; Vi−1].
+(6)
+Intuitively, self-attention can be thought as patch match-
+ing and voting within a single frame, while cross-frame at-
+tention seeks similar patches and fuses the corresponding
+patches from other frames, meaning the style of I will in-
+herit that of I and I½{-1-
+4.1.2 Shape-aware cross-frame latent fusion
+Cross-frame attention is limited to global style. To constrain
+the cross-frame local shape and texture consistency, we use
+optical flow to warp and fuse the latent features. Let w¹); and
+M denote the optical flow and occlusion mask from I; to
+Iį, respectively. Let x be the latent feature for I½ at time
+step t. We update the predicted t→o in Eq. (3) by
+07
+→0← M² · 0+ (1 − M²) · w¹³ (x0). (7)
+=
+w and M are downsampled to match the resolution of x (we
+omit the downsampling operation for simplicity in this pa-
+per). For the reference frame I;, we experimentally find that
+the anchor frame (j 0) provides better guidance than the
+previous frame (j i - 1). We observe that interpolating
+elements in the latent space can lead to blurring and shape
+distortion in the late steps. Therefore, we limit the fusion to
+only early steps for rough shape guidance.
+4.1.3 Pixel-aware cross-frame latent fusion
+To constrain the low-level texture features in mid steps, in-
+stead warping the latent feature, we can alternatively warp
+previous frames and encode them back to the latent space
+for fusion in an inpainting manner. However, the lossy au-
+toencoder introduces distortions and color bias that easily
+accumulate along the frame sequence. Figure 5(b) shows
+E'
+(e) Mε
+(g) Error map of (c)
+(h) Error map of (d)
+(f) Error map of (b)
+Figure 5. Fidelity-oriented image encoding.
+D
+Eq. (9)
+E
++x
+D
+ε*
+Extr
+D(E'(I))
+Mε
+Eq. (8)++
+E' (I)-D
+compute the low-error mask
+Figure 6. Pipeline of the fidelity-oriented image encoding.
+an example of the distorted result after encoding and de-
+coding 10 times. [1] solved this problem by fine-tuning the
+decoder's weights to fit each image, which is impractical for
+long videos. To efficiently solve this problem, we propose
+a novel fidelity-oriented zero-shot image encoding method.
+Fidelity-oriented image encoding Our key insight is the
+observation that the amount of information lost each time
+in the iterative auto-encoding process is consistent. There-
+fore, we can predict the information loss for compensa-
+tion. Specifically, for arbitrary image I, we encode and
+decode it twice, obtaining x E(I), Ir D(x) and
+x = E(Ir), Irr D(x). We assume the loss from the
+target lossless xo to x is linear to that from x to x. Then
+we define the encoding &' with compensation as
+=
+=
+E' (I) = x + ε (x − x),
+=:
+where we find the linear coefficient ε
+=
+=
+(8)
+1 works well.
+We further add a mask Mε to prevent the possible artifacts
+introduced by compensation (e.g., blue artifact near the eyes
+in Fig. 5(c)). Mε indicates where the error between I and
+D(E'(I)) is under a pre-defined threshold. Then, our novel
+fidelity-oriented image encoding ε* takes the form of
+E* (I) := x² + Mɛ · λɛ(x − x˜˜¯ ).
+-
+(9)
+The encoding pipeline is summarized in Fig. 6. As shown
+in Fig. 5(d), our method preserves image information well
+even after encoding and decoding 10 times.
+Structure-guided inpainting As illustrated in Fig. 7, for
+pixel-level coherence, we warp the anchor frame I and the
+5
+I', {-1
+M-1, M
+union
+I
+warp and overlay
+(Eq. (10))
+sample
+(Eq. (2))
+X-1
+Mi
+downsample
+x-1
+DDIM sampling × T
+x
+inpaint (Eq. (3))
+updated x-1
+Figure 7. Pipeline of the pixel-aware latent fusion.
+-1
+previous frame I½{_₁ to the i-th frame and overlay them on
+a rough rendered frame I obtained without the pixel-aware
+cross-frame latent fusion as
+Mổ (M_r I+(1–M_1) _1(I_1))+(1−M%) (6)
+i-1
+(10)
+The resulting fused frame Ï½ provides pixel reference for the
+sampling of I, i.e., we would like I to match I outside
+the mask area M¿ = M₁¦ M²_₁ and to match the structure
+guidance from ControlNet inside Mi. We formulate it as
+a structure-guided inpainting task and follow [1] to update
+x²-1 in Eq. (3) as
+-1
+x²-1 ← Mi • x² −1 + (1 − M¿) ⋅ xț −1, (11)
+E* (I) based
+where x1 is the sampled xt-1
+on Eq. (2).
+from xo =
+4.1.4 Color-aware adaptive latent adjustment
+Finally, we apply AdaIN [18] to
+wise mean and variance to ✰
+to to match its channel-
+t→0
+in the late steps. It can
+further keep the color style coherent throughout the whole
+key frames.
+4.2. Full Video Translation
+For frames with similar content, existing frame interpo-
+lation methods like Ebsynth [19] can generate plausible
+results by propagating the rendered frames to their neigh-
+bors efficiently. However, compared to diffusion models,
+frame interpolation cannot create new content. To bal-
+ance between quality and efficiency, we propose a hybrid
+framework to render key frames and other frames with the
+adapted diffusion model and Ebsynth, respectively.
+Specifically, we sample the key frames uniformly for
+every K frame, i.e., Io, IK, I2K,... and render them to
+To, IK, 2K... by our adapted diffusion model. We then
+render the remaining non-key frames. Taking I¿ (0 < i <
+K) for example, we adopt Ebsynth to interpolate I½ with its
+neighboring stylized key frames I and I. Ebsynth has
+two steps of frame propagation and frame blending. In the
+following, we will briefly introduce the main idea of these
+two steps and discuss how we adapt Ebsynth to our frame-
+work. For implementation details, please refer to [19].
+4.2.1 Single key frame propagation
+Frame propagation aims to warp the stylized key frame to
+its neighboring non-key frames based on their dense corre-
+spondences. We directly follow Ebsynth to adopt a guided
+path-matching algorithm with color, positional, edge, and
+temporal guidance for dense correspondence prediction and
+frame warping. Our framework propagates each key frame
+to its preceding K 1 and succeeding K - 1 frames. We
+-
+denote the result of propagating I'; to I¿ as I. For I¿
+(0 < i < K), we will obtain two results I and IK from
+its nearby key frames I and I'κk.
+4.2.2 Temporal-aware blending
+Frame blending aims to blend I/O and I to a final result I{.
+Ebsynth proposes a three-step blending scheme: 1) Com-
+bining colors and gradients of I10 and I!K by selecting the
+ones with lower errors during patch matching (Sec. 4.2.1)
+for each location; 2) Using the combined color image as
+a histogram reference for contrast-preserving blending [11]
+over I and IK to generate an initial blended image; 3)
+Employing the combined gradient as a gradient reference
+for screened Poisson blending [5] over the initial blended
+image to obtain the final result. Differently, our framework
+only adopts the first two blending steps and uses the initial
+blended image as I½. We do not apply Poisson blending,
+which we find sometimes causes artifacts in non-flat regions
+and is relatively time-consuming.
+5. Experimental Results
+5.1. Implementation Details
+=
+=
+=
+=
+The experiment is conducted on one NVIDIA Tesla
+V100 GPU. We employ the fine-tuned and LoRA models
+based on Stable Diffusion 1.5 from https://civitai.
+com/. We use Stable Diffusion originally uses Tmax
+1000 steps. For the sampling pipeline in Fig. 4(b), by de-
+fault, we set Ts 0.1Tmax, Tpo 0.5Tmax, Tp1
+0.8Tmax and Ta 0.8Tmax and use 20 steps of DDIM
+sampling. We tune T for each video. ControlNet [45]
+is used to provide structure guidance in terms of edges,
+with the control weight tuned for each video.
+We use
+GMFlow [41] for optical flow estimation and compute the
+occlusion masks by forward-backward consistency check.
+For full video translation, by default, we sample key
+frames for every K = 10 frames. The testing videos
+are from https://www.pexels.com/ and https:
+//pixabay.com/, with their short side resized to 512.
+In terms of running time for 512×512 videos, key frame
+and non-key frame translations take about 14.23s and 1.49s
+6
+(I)
+Our
+(e)
+(P)
+Text2Video-Zero Pix2Video
+(၁)
+Fate Zero
+(9)
+vid2vid-zero
+(a)
+RRRR
+Prompt: white ancient Greek sculpture, Venus de Milo, light pink and blue background
+Prompt: a swan in Chinese ink wash painting, monochrome
+Figure 8. Visual comparison with zero-shot video translation methods. The magenta box indicates the inconsistent region. For Text2 Video-
+Zero and our method, we further enlarge the region to better visualize the pixel-level consistency.
+per frame, respectively. Overall, a full video translation
+takes about (14.23 +1.49(K − 1))/K = 1.49+12.74/Ks
+per frame.
+We will release our code upon publication of the paper.
+5.2. Comparison with State-of-the-Art Methods
+=
+We compare with four recent zero-shot methods:
+vid2vid-zero [39], Fate Zero [27], Pix2Video [3],
+Text2 Video-Zero [20] on key frame translation with
+K 5. The official code of the first three methods does
+not support ControlNet, and when loading customized
+models, we find they fail to generate plausible results, e.g.,
+vid2vid-zero will generate frames totally different from the
+input. Therefore, only Text2Video-Zero and our method
+use the customized model with ControlNet. Figure 8 and
+Figure 9 present the visual results. FateZero successfully
+reconstructs the input frame but fails to adjust it to match
+the prompt. On the other hand, vid2vid-zero and Pix2 Video
+excessively modify the input frame, leading to significant
+shape distortion and discontinuity across frames. While
+each frame generated by Text2Video-Zero exhibits high
+quality, they lack coherence in local textures as indicated
+by the black boxes. Finally, our proposed method demon-
+strates clear superiority in terms of output quality, content
+and prompt matching and temporal consistency.
+For quantitative evaluation, we follow FateZero and
+Pix2Video to report Fram-Acc (CLIP-based frame-wise
+Table 2. Quantitative comparison and user preference rates.
+Metric
+v2v-zero
+Fate Zero Pix2Video T2V-Zero Ours
+Fram-Acc
+0.862
+0.556
+0.995
+0.963
+0.979
+Tem-Con
+0.975
+0.979
+0.953
+0.983
+0.983
+Pixel-MSE
+0.098
+0.085
+0.216
+0.084
+0.069
+User-Balance
+3.8%
+5.9%
+9.2%
+15.4% 65.8%
+User-Temporal 3.8%
+User-Overall
+9.6%
+4.2%
+10.8% 71.6%
+2.9%
+4.2%
+4.2%
+15.0% 73.7%
+editing accuracy), Tmp-Con (CLIP-based cosine similarity
+between consecutive frames), Pixel-MSE (averaged mean-
+squared pixel error between aligned consecutive frames) in
+Table 2. Our method achieves the best temporal consistency
+and the second best frame editing accuracy. We further con-
+duct a user study with 30 participants. The participants
+are asked to select the best results among the five meth-
+ods based on three criteria: 1) how well the result balance
+between the prompt and the input frame, 2) the temporal
+consistency of the result, and 3) the overall quality of the
+video translation. Table 2 presents the average preference
+rates across 8 testing videos, and our method achieves the
+highest rates in all three metrics.
+5.3. Ablation Study
+Hierarchical cross-frame consistency constraints Fig-
+ure 10 compares the results with and without different
+7
+Table 3. Effect of key frame sampling interval K
+(c) Our
+(b) Text2Video-Zero
+(a) Input
+Prompt: a butterfly in cartoon style
+(a) Input
+Prompt: a beautiful woman in CG style
+Prompt: a clean simple white jade sculpture
+(b) Text2Video-Zero
+(c) Our
+Figure 9. Visual comparison with Text2Video-Zero. Text2Video-
+Zero and our method use the same customized model and Control-
+Net for a fair comparison. Our method outperforms Text2Video-
+Zero in terms of local texture temporal consistency. The red box
+indicates the inconsistent region.
+cross-frame consistency constraints. We demonstrate the
+efficacy of our approach on a video containing simple trans-
+lational motion in the first half and complex 3D rotation
+transformations in the latter half. To better evaluate the
+temporal consistency, we encourage readers to watch the
+videos on the project webpage. The cross-frame attention
+ensures consistency in global style, while the adaptive la-
+tent adjustment in Sec. 4.1.4 maintains the same hair color
+as the first frame, or the hair color will follow the input
+frame to turn dark. Note that the adaptive latent adjust-
+ment is optional to allow users to decide which color to
+follow. The above two global constraints cannot capture
+local movement. The shape-aware latent fusion (SA fusion)
+in Sec. 4.1.2 addresses this by translating the latent features
+to translate the neck ring, but cannot maintain pixel-level
+consistency for complex motion. Only the proposed pixel-
+aware latent fusion (PA fusion) can coherently render local
+details such as hair styles and acne.
+We provide additional examples in Figs. 11-12 to
+demonstrate the effectiveness of PA fusion. While Con-
+trolNet can guide the structure well, the inherent random-
+ness introduced by noise addition and denoising makes it
+difficult to maintain coherence in local textures, resulting
+in missing elements and altered details. The proposed PA
+fusion restores these details by utilizing the corresponding
+pixel information from previous frames. Moreover, such
+consistency between key frames can effectively reduce the
+ghosting artifacts in interpolated non key frames.
+Fidelity-oriented image encoding We present a detailed
+analysis of our fidelity-oriented image encoding in Figs. 13-
+Metric
+K = 1
+Fram-Acc 1.000 1.000 1.000
+Tem-Con 0.992 0.993
+Pixel-MSE 0.037 0.028 0.025
+K = 5
+K = 10
+K = 20
+K = 50
+K = 100
+1.000
+0.990
+0.890
+0.994
+0.994
+0.993
+0.993
+0.022
+0.020
+0.020
+15, in addition to Fig. 5. Two Stable Diffusion's officially
+released autoencoders, the fine-tuned f8-ft-MSE VAE and
+the original more lossy kl-f8 VAE, are used for testing our
+method. The fine-tuned VAE introduces artifacts and the
+original VAE results in great color bias as in Fig. 13(b). Our
+proposed fidelity-oriented image encoding effectively alle-
+viates these issues. For quantitative evaluation, we report
+the MSE between the input image and the reconstructed re-
+sult after multiple encoding and decoding in Fig. 14, us-
+ing the first 1,000 images of the MS-COCO [21] valida-
+tion set. The results are consistent with the visual observa-
+tions: our proposed method significantly reduces error ac-
+cumulation compared to raw encoding methods. Finally, we
+validate our encoding method in the video translation pro-
+cess in Fig. 15(b)(c), where we use only the previous frame
+without the anchor frame in Eq. (10) to better visualize er-
+ror accumulation. Our method mostly reduces the loss of
+details and color bias caused by lossy encoding. Besides,
+our pipeline includes an anchor frame and adaptive latent
+adjustment to further regulate the translation, as shown in
+Fig. 15(d), where no obvious errors are observed.
+Frequency of key frames K We report the quantitative
+full video translation results of Fig. 10(a) under different
+K in Table 3. With large K, more frame interpolation
+improves pixel-level temporal consistency, which however
+harms the quality, leading to low Fram-Acc. A broad range
+of K = [5,20] is recommended for balance.
+5.4. More Results
+Flexible structure and color control The proposed
+pipeline allows flexible control over content preservation
+through the initialization of x. Rather than setting xã to a
+Gaussian noise (Fig. 16(b)), we use a noisy latent version
+of the input frame to better preserve details (Fig. 16(c)).
+Users can adjust the value of T to balance content and
+prompt. Moreover, if the input frame introduces unwanted
+color bias (e.g., blue sky in Chinese ink painting), a color
+correction option is provided: the input frame is adjusted
+to match the color histogram of the frame generated by
+XT = ZT (Fig. 16(b)). With the adjusted frame as input
+(bottom row of Fig. 16(a)), the rendered results (bottom row
+of Figs. 16(c)-(f)) better match the color indicated by the
+prompt.
+Applications Figure 17 shows some applications of our
+method. With prompts ‘a cute cat/fox/hamster/rabbit', we
+8
+(b) w/o PA fusion
+(a) full
+BEBEBE
+→>
+Legend
+acne is preserved
+neck ring
+translates with
+the neck
+consistent hair
+styles
+consistent strand
+of hair next to the
+ear
+(a) input video
+(b) baseline (image model)(c) (b)+cross frame attn
+(d) (c)+AdaIN
+(e) (d)+SA fusion
+(f) full
+Figure 10. Effect of the proposed hierarchical cross-frame constraints. (a) Input frames #1, #55, #94. (b) Image diffusion model renders
+each frame independently. (c) Cross frame attention keeps the overall style consistent. (d) AdaIN preserves the hair color. (e) Shape-aware
+latent fusion keeps the overall movement of the objects coherent. (f) Pixel-aware latent fusion achieves pixel-level temporal consistency.
+key frame
+-propagated frames.
+key frame
+#80
+#83 #85
+#87 #90
+Figure 11. Effect of the pixel-aware latent fusion on frame prop-
+agation. The proposed pixel-aware latent fusion helps generate
+consistent key frames. Without it, the pixel level inconsistency be-
+tween key frames leads to ghosting artifacts on the non-key frames
+during the frame blending.
+can perform text-guided editing to translate a dog into other
+kinds of pets in Fig. 17(a). By using customized modes
+for generating cartoons or photos, we can achieve non-
+photorealistic and photorealistic rendering in Fig. 17(b) and
+Figs. 17(c)(d), respectively. In Fig. 18, we present our syn-
+thesized dynamic virtual characters of novels and manga,
+based on a real human video and a prompt to describe the
+appearance. Additional results are shown in Fig. 19.
+5.5. Limitations
+Figures 20-22 illustrate typical failure cases of our
+method. First, our method relies on optical flow and there-
+fore, inaccurate optical flow can lead to artifacts. In Fig. 20,
+our method can only preserve the embroidery if the cross-
+frame correspondence is available. Otherwise, the proposed
+PA fusion will have no effect. Second, our method assumes
+the optical flow remains unchanged before and after trans-
+lation, which may not hold true for significant appearance
+changes as in Fig. 21(b), where the resulting movement may
+be wrong. Although setting a smaller T can address this is-
+sue, it may compromise the desired styles. Meanwhile, the
+(a) input (b) result of frame #1 (c) w/o PA fusion
+(d) full
+Figure 12. Effect of the pixel-aware latent fusion. Prompts (from
+top to bottom): 'Arcane style, a handsome man', 'Loving Vincent,
+hiking, grass', 'Disco Elysium, street view'. Local regions are en-
+larged and shown in the top right.
+mismatches of the optical flow mean the mismatches in the
+translated key frames, which may lead to ghosting artifacts
+(Fig. 21(d)) after temporal-aware blending. Also, we find
+that small details and subtle motions like accessories and
+eye movement cannot be well preserved during the trans-
+lation. Lastly, we uniformly sample the key frames, which
+may not optimal. Ideally, the key frames should contain
+9
+Original kl-f8 VAE
+f8-ft-MSE VAE
+Mean Squared Error
+Original kl-f8 VAE
+f8-ft-MSE VAE
+(a) D(ε())
+(b) D(ε(-)) x 10
+(c) D(ε*(•))
+Figure 13. The fidelity-oriented image encoding on two VAES.
+0.13
+D(ε(•)) kl-f8 VAE
+0.11
+D(ε'(•)) kl-f8 VAE
+0.09
+0.07
+D(ε* (*)) kl-f8 VAE
+☛ D(ε(•)) f8-ft-MSE VAE
+D('()) f8-ft-MSE VAE
+D(E*()) f8-ft-MSE VAE
+0.05
+0.03
+祝賀
+麗麗
+(a) text-guided editing
+(d) D(ε*()) × 10
+0.01
+1234 5 6 7 8 9 10
+Iterations of Encoding-Decoding
+Figure 14. Quantitative evaluation of image encoding schemes.
+(a) frame #1
+(b) frame #6 by D(ε()) (c) frame #6 by D(ε*(-)) (d) (c)+AdaIN+anchor
+Figure 15. Different constraints to prevent error accumulation.
+(c) 2D-to-real
+(b) real-to-2D
+(d) 3D-to-real
+Figure 17. Applications of the proposed method.
+Input
+Galadriel, the royal Elf, silver-golden hair
+Hermione Granger, brown hair and eyes
+Wonder Woman, black hair
+Input
+Galadriel, the royal Elf, silver-golden hair
+Hermione Granger, brown hair and eyes
+Wonder Woman, black hair
+Input
+มา
+w/ color correction w/o color correction
+(a) input frame (b) x = ZT (c) T = Tmax (d) T = 0.9Tmax (e) T=0.8Tmax
+Figure 16. Effect of the initialization of xT. Prompt: a traditional
+mountain in Chinese ink wash painting. The proposed framework
+enables flexible content and color control by adjusting T and color
+correction.
+all unique objects; otherwise, the propagation cannot create
+unseen content such as the hand in Fig. 22(b). One poten-
+tial solution is user-interactive translation, where users can
+manually assign new key frames based on the previous re-
+sults.
+T'Challa, Black Panther
+Figure 18. Applications: text-guided virtual character generation.
+Results are generated with a single image diffusion model.
+6. Conclusion
+This
+paper presents a zero-shot framework to adapt im-
+age
+diffusion models for video translation. Our method uti-
+lizes hierarchical cross-frame constraints to enforce tempo-
+ral consistency in both global style and low-level textures,
+leveraging the key optical flow. The compatibility with ex-
+isting image diffusion techniques indicates that our idea
+might be applied to other text-guided video editing tasks,
+such as video super-resolution and inpainting. Addition-
+ally, our proposed fidelity-oriented image encoding could
+benefit existing diffusion-based methods. We believe that
+our approach can facilitate the creation of high-quality and
+10
+Input
+Prompt
+a beautiful
+woman +
+cartoon
+style
+Chinese
+ink
+painting
+style
+Ghibli
+cartoon
+style
+input
+a handsome man + painting of Van Gogh
+Figure 19. Applications: video stylization. Thanks to the com-
+patible design, our method can use off-the-shelf pre-trained image
+models customized for different styles to accurately stylize videos.
+(a) frame #1
+frame #41
+frame #181
+frame #41
+frame #181
+(b) Results w/ pixel-aware fusion (c) Results w/o pixel-aware fusion
+Figure 20. Limitation: failure optical flow due to large motions.
+Our method is not suitable for processing videos where it is diffi-
+cult to estimate the optical flow.
+rerendered frame
+input frame
+(a) input frames
+(b) results with T=0.75Tmax (c) results with T=0.6Tax (d) ghosting
+Figure 21. Limitation: trade-off between content and prompt.
+key frame1
+non-key frame
+propagate
+(a)
+(b)
+new key frame2
+propagate
+(c)
+(d)
+Figure 22. Limitation: failed propagation w/o good key frames.
+temporally-coherent videos and inspire further research in
+this field.
+Acknowledgments. This study is supported under the
+RIE2020 Industry Alignment Fund Industry Collabora-
+tion Projects (IAF-ICP) Funding Initiative, as well as
+cash and in-kind contribution from the industry part-
+ner(s). It is also supported by Singapore MOE ACRF Tier
+2 (MOE-T2EP20221-0011, MOE-T2EP20221-0012) and
+NTU NAP.
+References
+[1] Omri Avrahami, Ohad Fried, and Dani Lischinski. Blended
+latent diffusion. arXiv preprint arXiv:2206.02779, 2022. 1,
+5,6
+[2] Tim Brooks, Aleksander Holynski, and Alexei A Efros. In-
+structPix2Pix: Learning to follow image editing instructions.
+arXiv preprint arXiv:2211.09800, 2022. 3
+[3] Duygu Ceylan, Chun-Hao Paul Huang, and Niloy J Mi-
+tra. Pix2video: Video editing using image diffusion. arXiv
+preprint arXiv:2303.12688, 2023. 3, 5, 7
+[4] Florinel-Alin Croitoru, Vlad Hondru, Radu Tudor Ionescu,
+and Mubarak Shah. Diffusion models in vision: A survey.
+IEEE Transactions on Pattern Analysis and Machine Intelli-
+gence, 2023. 2
+[5] Soheil Darabi, Eli Shechtman, Connelly Barnes, Dan B
+Goldman, and Pradeep Sen. Image melding: Combining in-
+consistent images using patch-based synthesis. ACM Trans-
+actions on Graphics, 31(4):82–1, 2012. 6
+[6] Ming Ding, Zhuoyi Yang, Wenyi Hong, Wendi Zheng,
+Chang Zhou, Da Yin, Junyang Lin, Xu Zou, Zhou Shao,
+Hongxia Yang, et al. Cogview: Mastering text-to-image gen-
+eration via transformers. In Advances in Neural Information
+Processing Systems, volume 34, pages 19822–19835, 2021.
+2
+[7] Patrick Esser, Robin Rombach, and Bjorn Ommer. Tam-
+ing transformers for high-resolution image synthesis. In
+Proc. IEEE Int'l Conf. Computer Vision and Pattern Recog-
+nition, pages 12873-12883, 2021. 2
+[8] Jakub Fišer, Ondřej Jamriška, David Simons, Eli Shechtman,
+Jingwan Lu, Paul Asente, Michal Lukáč, and Daniel Sykora.
+Example-based synthesis of stylized facial animations. ACM
+Transactions on Graphics (TOG), 36(4):1–11, 2017. 3
+[9] Oran Gafni, Adam Polyak, Oron Ashual, Shelly Sheynin,
+Devi Parikh, and Yaniv Taigman. Make-a-scene: Scene-
+based text-to-image generation with human priors. In
+Proc. European Conf. Computer Vision, pages 89–106.
+Springer, 2022. 2
+[10] Rinon Gal, Yuval Alaluf, Yuval Atzmon, Or Patash-
+nik, Amit H Bermano, Gal Chechik, and Daniel Cohen-
+Or. An image is worth one word: Personalizing text-to-
+image generation using textual inversion. arXiv preprint
+arXiv:2208.01618, 2022. 2
+[11] Eric Heitz and Fabrice Neyret.
+High-performance by-
+example noise using a histogram-preserving blending oper-
+ator. Proceedings of the ACM on Computer Graphics and
+Interactive Techniques, 1(2):1-25, 2018. 6
+[12] Amir Hertz, Ron Mokady, Jay Tenenbaum, Kfir Aberman,
+Yael Pritch, and Daniel Cohen-Or. Prompt-to-prompt im-
+age editing with cross attention control. arXiv preprint
+arXiv:2208.01626, 2022. 1, 3
+[13] Aaron Hertzmann, Charles E. Jacobs, Nuria Oliver, Brian
+Curless, and David H. Salesin. Image analogies. In Proc.
+Conf. Computer Graphics and Interactive Techniques, pages
+327-340, 2001. 3
+11
+[14] Jonathan Ho, William Chan, Chitwan Saharia, Jay Whang,
+Ruiqi Gao, Alexey Gritsenko, Diederik P Kingma, Ben
+Poole, Mohammad Norouzi, David J Fleet, et al. Imagen
+video: High definition video generation with diffusion mod-
+els. arXiv preprint arXiv:2210.02303, 2022. 1, 3
+[15] Jonathan Ho, Ajay Jain, and Pieter Abbeel. Denoising dif-
+fusion probabilistic models. In Advances in Neural Infor-
+mation Processing Systems, volume 33, pages 6840–6851,
+2020. 2
+[16] Jonathan Ho, Tim Salimans, Alexey A Gritsenko, William
+Chan, Mohammad Norouzi, and David J Fleet. Video diffu-
+sion models. In Advances in Neural Information Processing
+Systems, 2022. 3
+[17] Edward J Hu, Phillip Wallis, Zeyuan Allen-Zhu, Yuanzhi Li,
+Shean Wang, Lu Wang, Weizhu Chen, et al. Lora: Low-
+rank adaptation of large language models. In Proc. Int'l
+Conf. Learning Representations, 2021. 2
+[18] Xun Huang and Serge Belongie. Arbitrary style transfer in
+real-time with adaptive instance normalization. In Proc. Int'l
+Conf. Computer Vision, pages 1510–1519, 2017. 6
+[19] Ondřej Jamriška, Šárka Sochorová, Ondřej Texler, Michal
+Lukáč, Jakub Fišer, Jingwan Lu, Eli Shechtman, and Daniel
+Sýkora. Stylizing video by example. ACM Transactions on
+Graphics, 38(4):1-11, 2019. 3,6
+[20] Levon Khachatryan, Andranik Movsisyan, Vahram Tade-
+vosyan, Roberto Henschel, Zhangyang Wang, Shant
+Navasardyan, and Humphrey Shi. Text2video-zero: Text-to-
+image diffusion models are zero-shot video generators. arXiv
+preprint arXiv:2303.13439, 2023. 2, 3, 5, 7
+[21] Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
+Pietro Perona, Deva Ramanan, Piotr Dollár, and C Lawrence
+Zitnick. Microsoft coco: Common objects in context. In
+Proc. European Conf. Computer Vision, pages 740-755.
+Springer, 2014. 8
+[22] Shaoteng Liu, Yuechen Zhang, Wenbo Li, Zhe Lin, and Jiaya
+Jia. Video-p2p: Video editing with cross-attention control.
+arXiv preprint arXiv:2303.04761, 2023. 3
+[23] Chenlin Meng, Yutong He, Yang Song, Jiaming Song, Jia-
+jun Wu, Jun-Yan Zhu, and Stefano Ermon. Sdedit: Guided
+image synthesis and editing with stochastic differential equa-
+tions. In Proc. Int'l Conf. Learning Representations, 2021.
+1,4
+[24] Ron Mokady, Amir Hertz, Kfir Aberman, Yael Pritch,
+and Daniel Cohen-Or. Null-text inversion for editing real
+images using guided diffusion models. arXiv preprint
+arXiv:2211.09794, 2022. 3
+[25] Eyal Molad, Eliahu Horwitz, Dani Valevski, Alex Rav
+Acha, Yossi Matias, Yael Pritch, Yaniv Leviathan, and Yedid
+Hoshen. Dreamix: Video diffusion models are general video
+editors. arXiv preprint arXiv:2302.01329, 2023. 3
+[26] Alexander Quinn Nichol, Prafulla Dhariwal, Aditya Ramesh,
+Pranav Shyam, Pamela Mishkin, Bob Mcgrew, Ilya
+Sutskever, and Mark Chen. Glide: Towards photorealis-
+tic image generation and editing with text-guided diffusion
+models. In Proc. IEEE Int'l Conf. Machine Learning, pages
+16784-16804, 2022. 2
+[27] Chenyang Qi, Xiaodong Cun, Yong Zhang, Chenyang Lei,
+Xintao Wang, Ying Shan, and Qifeng Chen. Fatezero: Fus-
+ing attentions for zero-shot text-based video editing. arXiv
+preprint arXiv:2303.09535, 2023. 3, 7
+[28] Alec Radford, Jong Wook Kim, Chris Hallacy, Aditya
+Ramesh, Gabriel Goh, Sandhini Agarwal, Girish Sastry,
+Amanda Askell, Pamela Mishkin, Jack Clark, et al. Learn-
+ing transferable visual models from natural language super-
+vision. In Proc. IEEE Int'l Conf. Machine Learning, pages
+8748-8763. PMLR, 2021. 2
+[29] Colin Raffel, Noam Shazeer, Adam Roberts, Katherine Lee,
+Sharan Narang, Michael Matena, Yanqi Zhou, Wei Li, and
+Peter J Liu. Exploring the limits of transfer learning with
+a unified text-to-text transformer. The Journal of Machine
+Learning Research, 21(1):5485-5551, 2020. 2
+[30] Aditya Ramesh, Prafulla Dhariwal, Alex Nichol, Casey Chu,
+and Mark Chen. Hierarchical text-conditional image gen-
+eration with clip latents. arXiv preprint arXiv:2204.06125,
+2022. 1,2
+[31] Aditya Ramesh, Mikhail Pavlov, Gabriel Goh, Scott Gray,
+Chelsea Voss, Alec Radford, Mark Chen, and Ilya Sutskever.
+Zero-shot text-to-image generation. In Proc. IEEE Int'l
+Conf. Machine Learning, pages 8821-8831, 2021. 2
+[32] Robin Rombach, Andreas Blattmann, Dominik Lorenz,
+Patrick Esser, and Björn Ommer. High-resolution image
+synthesis with latent diffusion models. In Proc. IEEE
+Int'l Conf. Computer Vision and Pattern Recognition, pages
+10684-10695, 2022. 1, 2
+[33] Nataniel Ruiz, Yuanzhen Li, Varun Jampani, Yael Pritch,
+Michael Rubinstein, and Kfir Aberman. Dreambooth: Fine
+tuning text-to-image diffusion models for subject-driven
+generation. arXiv preprint arXiv:2208.12242, 2022. 1,2
+[34] Chitwan Saharia, William Chan, Saurabh Saxena, Lala
+Li, Jay Whang, Emily L Denton, Kamyar Ghasemipour,
+Raphael Gontijo Lopes, Burcu Karagol Ayan, Tim Salimans,
+et al. Photorealistic text-to-image diffusion models with deep
+language understanding. In Advances in Neural Information
+Processing Systems, volume 35, pages 36479-36494, 2022.
+1,2
+[35] Chaehun Shin, Heeseung Kim, Che Hyun Lee, Sang-gil Lee,
+and Sungroh Yoon. Edit-a-video: Single video editing with
+object-aware consistency. arXiv preprint arXiv:2303.07945,
+2023. 3
+[36] Uriel Singer, Adam Polyak, Thomas Hayes, Xi Yin, Jie An,
+Songyang Zhang, Qiyuan Hu, Harry Yang, Oron Ashual,
+Oran Gafni, et al. Make-a-video: Text-to-video generation
+without text-video data. In Proc. Int'l Conf. Learning Rep-
+resentations, 2023. 3
+[37] Jiaming Song, Chenlin Meng, and Stefano Ermon. Denois-
+ing diffusion implicit models. In Proc. Int'l Conf. Learning
+Representations, 2021. 3
+[38] Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszko-
+reit, Llion Jones, Aidan N Gomez, Łukasz Kaiser, and Illia
+Polosukhin. Attention is all you need. In Advances in Neural
+Information Processing Systems, volume 30, 2017. 2
+[39] Wen Wang, Kangyang Xie, Zide Liu, Hao Chen, Yue Cao,
+Xinlong Wang, and Chunhua Shen. Zero-shot video editing
+using off-the-shelf image diffusion models. arXiv preprint
+arXiv:2303.17599, 2023. 3,7
+[40] Jay Zhangjie Wu, Yixiao Ge, Xintao Wang, Weixian Lei,
+Yuchao Gu, Wynne Hsu, Ying Shan, Xiaohu Qie, and
+12
+Mike Zheng Shou. Tune-a-video: One-shot tuning of image
+diffusion models for text-to-video generation. arXiv preprint
+arXiv:2212.11565, 2022. 1, 3, 4
+[41] Haofei Xu, Jing Zhang, Jianfei Cai, Hamid Rezatofighi, and
+Dacheng Tao. Gmflow: Learning optical flow via global
+matching. In Proc. IEEE Int'l Conf. Computer Vision and
+Pattern Recognition, pages 8121-8130, 2022. 6
+[42] Tao Xu, Pengchuan Zhang, Qiuyuan Huang, Han Zhang,
+Zhe Gan, Xiaolei Huang, and Xiaodong He. Attngan: Fine-
+grained text to image generation with attentional generative
+adversarial networks. In Proc. IEEE Int'l Conf. Computer
+Vision and Pattern Recognition, pages 1316–1324, 2018. 2
+[43] Han Zhang, Jing Yu Koh, Jason Baldridge, Honglak Lee, and
+Yinfei Yang. Cross-modal contrastive learning for text-to-
+image generation. In Proc. IEEE Int'l Conf. Computer Vision
+and Pattern Recognition, pages 833-842, 2021. 2
+[44] Han Zhang, Tao Xu, Hongsheng Li, Shaoting Zhang, Xiao-
+gang Wang, Xiaolei Huang, and Dimitris N Metaxas. Stack-
+GAN: Text to photo-realistic image synthesis with stacked
+generative adversarial networks. In Proceedings of the IEEE
+international conference on computer vision, pages 5907-
+5915, 2017. 2
+[45] Lvmin Zhang and Maneesh Agrawala. Adding conditional
+control to text-to-image diffusion models. arXiv preprint
+arXiv:2302.05543, 2023. 3, 4, 6
+[46] Minfeng Zhu, Pingbo Pan, Wei Chen, and Yi Yang. DM-
+GAN: Dynamic memory generative adversarial networks for
+text-to-image synthesis. In Proc. IEEE Int'l Conf. Computer
+Vision and Pattern Recognition, pages 5802-5810, 2019. 2
+13

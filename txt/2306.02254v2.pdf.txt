@@ -1,10 +1,16 @@
+--- Page 1 ---
 arXiv:2306.02254v2 [cs.CL] 6 Jun 2023
+
 A Technical Report for Polyglot-Ko: Open-Source Large-Scale Korean
 Language Models
-Hyunwoong Ko*, Kichang Yang*, Minho Ryu*, Taekyoon Choi*
-Seungmu Yang*, Jiwung Hyun*, Sungho Park*, Kyubyong Park
+
+Hyunwoong Ko* , Kichang Yang* , Minho Ryu* , Taekyoon Choi*
+Seungmu Yang* , Jiwung Hyun* , Sungho Park* , Kyubyong Park‘
+
 EleutherAI
+
 Abstract
+
 Polyglot is a pioneering project aimed at en-
 hancing the non-English language performance
 of multilingual language models. Despite the
@@ -14,7 +20,7 @@ such as mBERT (Devlin et al., 2019), XGLM
 2022), researchers and developers often resort
 to building monolingual models in their respec-
 tive languages due to the dissatisfaction with
-the current multilingual models' non-English
+the current multilingual models’ non-English
 language capabilities. Addressing this gap,
 we seek to develop advanced multilingual lan-
 guage models that offer improved performance
@@ -22,7 +28,7 @@ in non-English languages. In this paper, we
 introduce the Polyglot Korean models, which
 represent a specific focus rather than being
 multilingual in nature. In collaboration with
-TUNiB¹, our team collected 1.2TB of Korean
+TUNiB’, our team collected 1.2TB of Korean
 data meticulously curated for our research
 journey. We made a deliberate decision
 to prioritize the development of Korean
@@ -37,16 +43,21 @@ work in developing the Polyglot Korean
 models, which propose some steps towards
 addressing the non-English language perfor-
 mance gap in multilingual language models.
+
 1 Introduction
+
 The advent of large-scale language models has rev-
 olutionized the field of natural language processing,
 leading to significant advancements in various ap-
 plications, such as language translation and text
 classification (Devlin et al., 2019; Radford et al.,
-t
-*Equal contribution
-Affiliation: TUNiB
-https://tunib.ai/
+
+* Equal contribution
+
+' Affiliation: TUNiB
+
+‘https: //tunib.ai/
+
 2019; Liu et al., 2019; Clark et al., 2020; Chowdh-
 ery et al., 2022; Anil et al., 2023). While numerous
 large language models for English have been pub-
@@ -59,6 +70,7 @@ els have also been released (Lin et al., 2022; Scao
 et al., 2022), they are typically trained on English-
 centric corpora, resulting in lower performance on
 other languages.
+
 However, with the increasing interest in non-
 English languages, there is a growing need for high-
 performance language models that are specifically
@@ -84,22 +96,27 @@ of text data, incorporating diverse sources such as
 web pages, news articles, and social media posts to
 ensure its versatility across different domains and
 styles.
+
 In this technical report, we provide a compre-
 hensive description of the architecture and train-
 ing process for four distinct Polyglot-Ko models,
 differing in parameter sizes: 1.3B (billion), 3.8B,
+
+--- Page 2 ---
 5.8B, and 12.8B. Notably, our 12.8 billion parame-
 ter model represents the largest publicly available
 Korean language model suitable for commercial
 applications, making it an invaluable resource for
 researchers and practitioners engaged in Korean
 natural language processing tasks.
+
 We assess the zero-shot and few-shot per-
 formance of our Polyglot-Ko models using the
 KOBEST benchmark (Kim et al., 2022). Through
 our experiments, we have successfully demon-
 strated that Polyglot-Ko attains competitive results
 across various benchmark datasets.
+
 In addition to presenting our achievements, we
 also acknowledge potential limitations and identify
 areas that warrant future improvement. By offering
@@ -111,7 +128,9 @@ munity, enabling the development of innovative
 applications and contributing to a deeper under-
 standing of the intricacies and dynamics of the
 Korean language.
+
 2 Datasets
+
 We collaborated with TUNiB to collect a large-
 scale Korean language dataset for our research. The
 dataset, totaling 1.2TB, was meticulously gathered
@@ -119,41 +138,28 @@ through our collaborative efforts. Subsequently, we
 performed preprocessing on this dataset, resulting
 in 863GB of text data that served as the foundation
 for our analysis and model training.
-Source
-Size (GB)
-Korean blog posts
-682.3
-Korean news dataset
-87.0
-Modu corpus
-26.4
-Korean patent dataset
-19.0
-Korean Q&A dataset
-18.1
-KcBert dataset
-12.7
-Korean fiction dataset
-6.1
-Korean online comments
-4.2
-Korean wikipedia
-1.4
-Clova call
-< 1.0
-Naver Sentiment Movie Corpus
-< 1.0
-Korean hate speech dataset
-< 1.0
-Open subtitles
-< 1.0
-AIHub various tasks datasets
-< 1.0
-Standard Korean dictionary
-< 1.0
+
+Source Size (GB)
+Korean blog posts 682.3
+Korean news dataset 87.0
+Modu corpus 26.4
+Korean patent dataset 19.0
+Korean Q&A dataset 18.1
+KcBert dataset 12.7
+Korean fiction dataset 6.1
+Korean online comments 4.2
+Korean wikipedia 1.4
+Clova call < 1.0
+Naver Sentiment Movie Corpus < 1.0
+Korean hate speech dataset < 1.0
+Open subtitles < 1.0
+ATHub various tasks datasets < 1.0
+Standard Korean dictionary < 1.0
+
 Table 1: Datasets for the Korean language.
-2.1
-Data Analysis
+
+2.1 Data Analysis
+
 The primary motivation behind our data analysis
 is to mitigate potential risks that may arise during
 both training and inference stages. We strive to
@@ -172,29 +178,33 @@ compliance of our models. Through a meticulous
 examination of the data with the aim of mitigating
 these risks, we successfully categorized them into
 four distinct types:
-•
-Data available for training: This category
+
+¢ Data available for training: This category
 predominantly comprises news and Wikipedia
 data, which provide substantial information
 with sufficiently long text sequences.
-• Data requiring contextual information for
+
+¢ Data requiring contextual information for
 training: In this category, we primarily en-
 countered blog data and news data. These
 datasets contained numerous short texts that
 were incorrectly scraped, necessitating the in-
 clusion of contextual information during the
 training process.
-• Data containing hate speech: We observed a
+
+¢ Data containing hate speech: We observed a
 significant presence of hate speech in datasets
 sourced from certain community websites,
 highlighting the importance of addressing this
 issue during model training.
-• NLP task-specific data: This category en-
+
+* NLP task-specific data: This category en-
 compasses data specifically designed for NLP
 tasks such as text classification or entity recog-
 nition. While this data can be utilized for
 model training, it necessitates separate han-
 dling during model evaluation.
+
 During the examination of data types, we en-
 countered various quality issues that required pre-
 processing to ensure optimal learning. Recogniz-
@@ -202,29 +212,34 @@ ing the potential detrimental impact of these issues
 on model training, we organized them and incor-
 porated them into our text preprocessing pipeline.
 The specific quality issues we addressed include:
-•
-•
+
+--- Page 3 ---
 Empty text: Instances with no text content.
+
 Unnecessary spaces: Instances containing
 multiple unnecessary spaces.
-• De-identification: Identification and removal
+
+De-identification: Identification and removal
 of personally identifiable information within
 the data instances.
-• Uncleaned HTML tags: Removal of HTML
+
+Uncleaned HTML tags: Removal of HTML
 tags that had not been properly cleaned.
-•
+
 Deduplication: Identification and removal
 of duplicated data instances based on exact
 matches.
-• Broken code: Handling instances where
+
+Broken code: Handling instances where
 only fragments of HTML or Markdown were
 present.
-•
-•
+
 Short text: Detection and handling of exces-
 sively short data instances.
+
 Repeated characters: Identification and ad-
 dressing of instances with repeated characters.
+
 By addressing these quality issues as part of our
 text preprocessing workflow, we aimed to enhance
 the quality and reliability of the data used for model
@@ -237,26 +252,32 @@ cessing efforts. Longer text lengths provide more
 contextual information for model training, while
 shorter text lengths limit the available context for
 text generation.
+
 3 Models
-To train the polyglot models, we used EleutherAI's
+
+To train the polyglot models, we used EleutherAI’s
 GPT-NeoX codebase (Andonian et al., 2021). This
 codebase provided a solid foundation for our train-
 ing process. Additionally, we received invaluable
-assistance from Stability AI², who provided access
-to 256 A100s (8 * 32 nodes) on HPC clusters³.
+assistance from Stability AI’, who provided access
+to 256 A100s (8 * 32 nodes) on HPC clusters’.
 This computational infrastructure played a crucial
 role in efficiently training our models. The training
 tokens information for each model is as follows:
-• The 1.3B model was trained on 213B tokens.
-• The 3.8B model was trained on 219B tokens.
-2https://stability.ai/
-https://hpc.stability.ai/
-•
-The 5.8B model was trained on 172B tokens.
-• The 12.8B model was trained on 167B tokens.
+
+¢ The 1.3B model was trained on 213B tokens.
+
+¢ The 3.8B model was trained on 219B tokens.
+
+*https://stability.ai/
+3https://hpc.stability.ai/
+
+¢ The 5.8B model was trained on 172B tokens.
+¢ The 12.8B model was trained on 167B tokens.
+
 Due to the limitations of available computational
 resources, the models were trained with varying
-numbers of tokens. Despite our efforts 4, more-
+numbers of tokens. Despite our efforts 4” more-
 over, broken generation (e.g generate same tokens
 repeatedly) occurred as the loss sharply dropped
 near the 1 epoch boundary for 1.3B and 3.8B mod-
@@ -264,17 +285,20 @@ els. Consequently, we made the decision to select
 and early stop the model checkpoints prior to the
 epoch boundary, as they exhibited better generation
 performance.
+
 A consistent tokenizer was utilized across all
 models, featuring a vocabulary size of 30003. The
 tokenizer was trained using morpheme-aware Byte-
 Level BPE (Byte-Pair Encoding). We performed
-morpheme analysis using MeCab5, a widely-used
+morpheme analysis using MeCab”, a widely-used
 morphological analysis tool for Korean text. This
 ensured that the models were equipped with an ef-
 fective and consistent tokenization scheme tailored
 to the Korean language.
-Now, let's delve into the details of each model's
+
+Now, let’s delve into the details of each model’s
 training process:
+
 1.3B Model The 1.3B model was trained without
 model parallelism, utilizing a total batch size of
 1024. However, broken generation was observed as
@@ -282,6 +306,7 @@ the loss sharply dropped around the 100,000 steps.
 To handle this, model checkpoints were evaluated
 and verified prior to the onset of it to ensure optimal
 model selection.
+
 3.8B Model Similar to the 1.3B model, the 3.8B
 model also experienced same symptoms at around
 100,000 steps. Model parallelism was applied dur-
@@ -289,111 +314,91 @@ ing training, and the overall batch size remained
 the same as that of the 1.3B model. As a result,
 the decision was made to halt the model training
 process.
+
 5.8B Model The 5.8B model utilized model par-
 allelism, and the overall batch size was reduced by
 1/4 compared to the 1.3B and 3.8B models. We
 trained with 172B tokens, which consisted of a to-
 tal of 320,000 steps. As it was trained with lower
-tokens compared with 1.3B and 3.8B, The model's
+tokens compared with 1.3B and 3.8B, The model’s
 performance consistently improved as the number
 of training steps increased.
+
 4We suspect it was overtrained or overfitting, but there are
 not any sciencific evidence.
-Shttps://bitbucket.org/eunjeon/mecab-ko-dic/
+
+Shttps: //bitbucket .org/eunjeon/mecab-ko-dic/
 src/master/
-24
-2,048
-Hyperparameter
-1.3B
-3.8B
-5.8B
-12.8B
-nparameters
-1,331,810,304 3,809,974,272 5,885,059,072 12,898,631,680
-nlayers
-dmodel
-32
-28
-40
-3,072
-4,096
-5,120
-8,192
-12,288
-16,384
-20,480
-16
-24
-16
-40
-128
-128
-256
-128
-30,003 / 30,080
-Rotary (ROPE)
-64
-30,003 / 30,080
-Rotary (ROPE)
-64
-30,003 / 30,080
-Rotary (ROPE)
-64
-30,003 / 30,080
-Rotary (ROPE)
-64
-dff
-nheads
-dhead
-nvocab
-Positional Encoding
-ROPE Dimensions
+
+--- Page 4 ---
+Hyperparameter 1.3B 3.8B 5.8B 12.8B
+Nparameters 1,331,810,304  3,809,974,272 5,885,059,072  12,898,631,680
+Nayers 24 32 28 40
+dmodel 2,048 3,072 4,096 5,120
+
+dy 8,192 12,288 16,384 20,480
+Nheads 16 24 16 40
+
+dhead 128 128 256 128
+Nvocab 30,003 / 30,080 30,003 / 30,080 30,003 / 30,080 30,003 / 30,080
+Positional Encoding Rotary (RoPE) Rotary (RoPE) Rotary (RoPE) Rotary (RoPE)
+RoPE Dimensions 64 64 64 64
+
 Table 2: The configuration settings of the Polyglot-Ko model.
+
 12.8B Model For the 12.8B model, model paral-
 lelism was employed, with a scale of 2 times larger
 than the 5.8B model. The overall batch size was
 maintained through the use of gradient accumula-
 tion steps (GAS). The model was trained for a total
 of 301,000 steps.
+
 4 Experiments
+
 We conducted an evaluation of Polyglot-Ko on the
 KOBEST dataset (Kim et al., 2022), which encom-
 passes five downstream tasks: COPA, HellaSwag,
 SentiNeg, BoolQ, and WiC. Each task focuses on
 different aspects of language understanding and
 reasoning.
-• COPA requires the selection of an alternative
+
+¢ COPA requires the selection of an alternative
 that is a cause/effect of a given premise.
-•
-•
-•
+
 HellaSwag evaluates commonsense reasoning
 and natural language inference.
-BoolQ is designed to test the models' abil-
+
+BoolQ is designed to test the models’ abil-
 ity to answer questions that require reasoning
 over multiple sentences.
+
 SentiNeg focuses on sentiment analysis in the
 Korean language.
-• WiC requires identifying whether the mean-
+
+¢ WiC requires identifying whether the mean-
 ing of a target word is the same or different in
 two given contexts.
+
 During the evaluation, we compared the perfor-
 mance of Polyglot-Ko with other similar models,
-including ko-gpt-trinity-1.2B6, KoGPT (Kim et al.,
+including ko-gpt-trinity-1.2B°, KoGPT (Kim et al.,
 2021), and XGLM-7.5B (Lin et al., 2022). These
 models were chosen as they are currently the only
-"https://huggingface.co/skt/ko-gpt-trinity-1.
-2B-v0.5
+
+°https: //huggingface.co/skt/ko-gpt-trinity-1.
+2B-v@.5
+
 publicly available billion-scale Korean language
 models, excluding other multilingual models. The
 evaluation process involved using the provided
-prompts, and F1-scores were used as the evalu-
-ation metric for all tasks. We utilized the polylgot7
-branch of EleutherAI's Im-evaluation-harness (Gao
+prompts, and Fl-scores were used as the evalu-
+ation metric for all tasks. We utilized the polylgot”
+branch of EleutherAI’s lm-evaluation-harness (Gao
 et al., 2021) repository, which provided the evalua-
 tion codebase for our experiments. This allowed for
 consistent and standardized evaluation procedures
 across different models, ensuring fair comparisons.
+
 Note that we have chosen not to report the perfor-
 mance of Polyglot-Ko on the WiC task in this sec-
 tion due to nearly random performance observed
@@ -401,7 +406,9 @@ across all models. However, detailed results for the
 WiC task can be found in the Appendix B. Figure
 1 illustrates the results obtained when varying the
 number of few-shot examples.
+
 4.1 COPA
+
 The experiment was conducted on the COPA task,
 and the results are presented in the left portion of
 Table 3. The table provides a comprehensive com-
@@ -412,74 +419,39 @@ and using identical prompts. The results clearly
 demonstrate that our 12.8B model outperforms the
 other models across all scenarios. Specifically, our
 12.8B model achieves the highest F1 score in both
-0-shot and 50-shot settings. For O-shot, our model
+0-shot and 50-shot settings. For 0-shot, our model
 achieves an impressive F1 score of 0.7937, sur-
 passing all other models. Similarly, in the 50-shot
-scenario, our 12.8B model achieves the highest F1
+scenario, our 12.8B model achieves the highest Fl
 score of 0.8368. These results highlight the superi-
 ority of our 12.8B model over comparable models
-https://github.com/EleutherAI/
+
+Thttps://github.com/EleutherAI/
 1m-evaluation-harness/tree/polyglot
-COPA (n=shot)
-HellaSwag
-Model
-Params
-n=0
-Ko-GPT-Trinity
-1.2B
-Polyglot-Ko (ours)
-1.3B
-Polyglot-Ko (ours)
-3.8B
-0.760 0.761
-Polyglot-Ko (ours)
-5.8B
-0.775 0.768
-KOGPT
-6.0B
-XGLM
-7.5B
-Polyglot-Ko (ours) 12.8B
-0.670 0.648 0.642 0.651 0.524
-0.720 0.719 0.720 0.721 0.525 0.526 0.528 0.543
-0.764 0.779 0.571 0.583 0.567 0.579
-0.778 0.789 0.598 0.600 0.598 0.621
-0.735 0.729 0.728 0.748 0.559 0.583 0.583 0.591
-0.672 0.673 0.677 0.712 0.566 0.569 0.556 0.562
-0.794 0.811 0.804 0.837 0.595 0.631 0.610 0.612
-n=5 n=10 n=50 n=0 n=5 n=10 n=50
-0.527 0.517 0.535
+
+--- Page 5 ---
+COPA (n=shot) HellaSwag
+Model Params  n=0 n=5 n=10 n=50  n=0 n=5 n=10 n=50
+Ko-GPT-Trinity 1.2B 0.670 0.648 0.642 0.651 0.524 0.527 0.517 0.535
+Polyglot-Ko (ours) 1.3B 0.720 0.719 0.720 0.721 0.525 0.526 0.528 0.543
+Polyglot-Ko (ours) 3.8B 0.760 0.761 0.764 0.779 0.571 0.583 0.567 0.579
+Polyglot-Ko (ours) 5.8B 0.775. 0.768 0.778 0.789 0.598 0.600 0.598 0.621
+KoGPT 6.0B 0.735 0.729 0.728 0.748 0.559 0.583 0.583 0.591
+xGLM 7.5B 0.672 0.673 0.677 0.712 0.566 0.569 0.556 0.562
+Polyglot-Ko (ours) 12.8B 0.794 0.811 0.804 0.837 0.595 0.631 0.610 0.612
+
 Table 3: Comparative results of the performance (F1 score) on the COPA and HellaSwag tasks.
-BoolQ (n=shot)
-SentiNeg
-Model
-Params n=0 n=5 n=10 n=50 n=0 n=5 n=10 n=50
-Ko-GPT-Trinity
-1.2B
-Polyglot-Ko (ours)
-1.3B
-0.336 0.401 0.364
-0.355 0.475 0.411
-Polyglot-Ko (ours)
-3.8B
-0.432 0.526 0.493
-Polyglot-Ko (ours)
-5.8B
-KoGPT
-6.0B
-XGLM
-Polyglot-Ko (ours)
-0.606 0.688 0.728 0.841
-0.404 0.679 0.626 0.551 0.785
-0.404 0.486 0.795 0.732 0.785
-0.436 0.570 0.519 0.524 0.339
-0.451 0.598 0.550 0.520 0.375
-7.5B 0.446 0.332 0.332 0.332 0.358 0.447 0.396 0.527
-12.8B 0.482 0.604 0.629 0.645 0.912 0.902 0.934 0.972
-0.356
-0.884 0.881 0.952
-0.894 0.929 0.970
-Table 4: Comparative results of the performance (F1 score) on the BoolQ and SentiNeg tasks.
+
+BoolQ (n=shot) SentiNeg
+Model Params  n=0 n=5 n=10 n=50  n=0 n=5 n=10 n=50
+Ko-GPT-Trinity 1.2B 0.336 0.401 0.364 0.356 0.606 0.688 0.728 0.841
+Polyglot-Ko (ours) 1.3B 0.355 0.475 0.411 0.404 0.679 0.626 0.551 0.785
+Polyglot-Ko (ours) 3.8B 0.432 0.526 0.493 0.404 0.486 0.795 0.732 0.785
+Polyglot-Ko (ours) 5.8B 0.436 0.570 0.519 0.524 0.339 0.884 0.881 0.952
+KoGPT 6.0B 0.451 0.598 0.550 0.520 0.375 0.894 0.929 0.970
+xGLM 7.5B 0.446 0.332 0.332 0.332 0.358 0.447 0.396 0.527
+Polyglot-Ko (ours) 12.8B 0.482 0.604 0.629 0.645 0.912 0.902 0.934 0.972
+
 0.85
 0.83
 0.81
@@ -492,105 +464,122 @@ Table 4: Comparative results of the performance (F1 score) on the BoolQ and Sent
 0.67
 0.65
 0.63
-0-shot
-COPA (F1)
-5-shot
-10-shot
-skt/ko-gpt-trinity-1.2B-v0.5
-facebook/xglm-7.5B
--EleutherAI/polyglot-ko-3.8b
-EleutherAI/polyglot-ko-12.8b
-0.64
-0.62
-0.6
-0.58
-0.56
-0.54
-0.52
-0.5
-50-shot
-0-shot
-kakaobrain/kogpt
-EleutherAI/polyglot-ko-1.3b
-EleutherAI/polyglot-ko-5.8b
-HellaSwag (F1)
-5-shot
-10-shot
-skt/ko-gpt-trinity-1.2B-v0.5
-facebook/xglm-7.5B
-EleutherAI/polyglot-ko-3.8b
-EleutherAI/polyglot-ko-12.8b
-SentiNeg (F1)
-1
-0.67
+
 0.92
-0.63
-0.84
-0.59
+
 0.76
-0.55
 0.68
-0.51
+
 0.6
-0.47
-0.52
-0.43
-0.44
-0.39
+@.52
+
 0.36
-0.35
 0.28
-0.31
-0-shot
-50-shot
-0-shot
-5-shot
-10-shot
-skt/ko-gpt-trinity-1.2B-v0.5
-kakaobrain/kogpt
-facebook/xglm-7.5B
-EleutherAI/polyglot-ko-1.3b
-EleutherAI/polyglot-ko-3.8b
--EleutherAI/polyglot-ko-5.8b
--EleutherAI/polyglot-ko-12.8b
-50-shot
-kakaobrain/kogpt
-EleutherAI/polyglot-ko-1.3b
--EleutherAI/polyglot-ko-5.8b
-BoolQ (F1)
-5-shot
-10-shot
-50-shot
-skt/ko-gpt-trinity-1.2B-v0.5
-kakaobrain/kogpt
-facebook/xglm-7.5B
--EleutherAI/polyglot-ko-3.8b
-EleutherAI/polyglot-ko-1.3b
-EleutherAI/polyglot-ko-5.8b
-EleutherAI/polyglot-ko-12.8b
+
 Figure 1: The performance metrics of COPA (top left), HellaSwag (top right), SentiNeg (bottom left), and BoolQ
+
+Table 4: Comparative results of the performance (F1 score) on the BoolQ and SentiNeg tasks.
+
+COPA (F1)
+
+TO
+See
+
+@-shot 5-shot 10-shot
+——skt/ko-gpt-trinity-1.28-v0.5 ——kekaobrain/kogpt
+
+Facebook /xgin-7.58
+—EleutherAl/polyglot-ko-3.86
+—EleutherAl/polyglot-ko-12.8b
+
+SentiNeg (F1)
+
+@-shot
+——skt/ko-gpt-trinity-1.28-v0.5
+—Facebook/xglm-7 5B
+
+——FleutherAl /polyglot-ko-3.8b
+——EleutherAl /polyglot-ko-12. 8b
+
+S-shot 10-shot
+
+——kakaobrain/kogpt
+
+50-shot
+
+—FleutherA1/polyglot-ko-1-3b
+—EleutherAl/polyglot-ko-5.8b
+
+50-shot
+
+——EleutherAl /polyglot-ko-1.3b
+——FleutherAl /polyglot-ko-5.8b
+
+HeLlaSwag (F1)
+
+a
+es
+ee
+
+@-shot S-shot 10-shot 5Q-shot
+
+—skt/ko-gpt-trinity-1.28-v0.5 - ——kakaobrain/kogpt
+Facebook /xgtn-7.58
+—EleutherAl/polyglot-ko-3..8
+—EleutherAl/polyglot-ko-12.8b
+
+—EleutherAI/polyglot-ko-1..3b
+—EleutherAI/polyglot-ko-5.8b
+
+Boold (F1)
+
+@-shot S-shot
+
+——skt/ko-gpt-trinity-1.28-v0.5
+
+10-shot 50-shot
+——kakaobrain/kogpt
+
+—Facebook/xglm-7.58 “——EleutherAl/polyglot-ko-1.3b
+——EleutherAI/polyglot-ko-3.8b
+
+——FleutherAl/polyglot-ko-12.8)
+
+—EleutherAl/polyglot-ko-5.8b
+
 (bottom right) tasks using the KOBEST dataset, with all metrics measured using the F1 score.
+
+--- Page 6 ---
+0.94 —® COPA
+—e- Hellaswag
+—e BoolQ
+
+—e- SentiNeg
+
+°
+Ey
+
 Performance (F1-Score)
-0.9
-0.8
-0.7-
-0.6
-0.5-
-COPA
-HellaSwag
-BoolQ
-SentiNeg
-8
-10
-12
-Compute (1021 FLOPS)
+2
+x
+
+3
+
+05
+
+2 4 6 8 10 2
+Compute (102? FLOPS)
+
 Figure 2: The 5-shot performance of Polyglot-Ko mod-
 els on each task demonstrates a clear trend that as the
 compute increases, the performance improves.
-in the COPA task. It showcases the model's excep-
+
+in the COPA task. It showcases the model’s excep-
 tional performance and reinforces its effectiveness
 in understanding and reasoning tasks.
+
 4.2 HellaSwag
+
 The right portion of Table 3 presents the perfor-
 mance of different language models on the Hel-
 laSwag task for the Korean language. The table
@@ -602,7 +591,7 @@ used is the F1 score. According to the table, our
 12.8B model achieves the highest scores for the 5-
 shot, 10-shot, and 50-shot scenarios, with F1 scores
 of 0.6306, 0.6098, and 0.6118, respectively. How-
-ever, in the 0-shot scenario, kakaobrain's kogpt
+ever, in the 0-shot scenario, kakaobrain’s kogpt
 model achieves the highest score of 0.5590. Over-
 all, our 12.8B model demonstrates the best perfor-
 mance among the listed models on the HellaSwag
@@ -614,20 +603,25 @@ performance in the majority of the shot scenarios
 showcases its ability to handle complex language
 understanding tasks and generate contextually ap-
 propriate responses.
+
 4.3 BoolQ
+
 In the BoolQ task, which focuses on answering
 boolean questions, a thorough analysis of the re-
 sults demonstrates that our models outperformed
 the others. Specifically, our largest model, Polyglot-
+
 ko-12.8B, achieved the highest F1 scores. This
 indicates that the model possesses exceptional ac-
 curacy in predicting answers to boolean questions.
-Conversely, SKT's ko-gpt-trinity model exhibited
+Conversely, SKT’s ko-gpt-trinity model exhibited
 relatively lower F1 scores across all prompt num-
-bers, while Facebook's XGLM model consistently
+bers, while Facebook’s XGLM model consistently
 underperformed. As a result, our models demon-
 strate strong performance in the BoolQ task.
+
 4.4 SentiNeg
+
 The SentiNeg task results are also presented in
 the left portion of Table 4. This task focuses on
 sentiment analysis for negation detection. A com-
@@ -635,29 +629,33 @@ prehensive analysis of the results reveals that our
 models exhibited superior performance. In par-
 ticular, our 12.8B model achieved the highest F1
 scores, indicating its excellent ability to accurately
-detect negated sentiment. SKT's ko-gpt-trinity
+detect negated sentiment. SKT’s ko-gpt-trinity
 model also showed consistent improvement, while
-kakaobrain's KoGPT model demonstrated varied
+kakaobrain’s KoGPT model demonstrated varied
 performance with slight increases or decreases in
 F1 scores depending on the prompt number. How-
-ever, Facebook's XGLM model consistently dis-
+ever, Facebook’s XGLM model consistently dis-
 played lower performance in the SentiNeg task.
+
 Furthermore, during our investigation, we dis-
 covered that the default prompt used for this task
 introduced significant instability, particularly in
 zero-shot performance. To address this issue, we
 devised a modified prompt, which led to substantial
-improvements in the model's performance. For de-
+improvements in the model’s performance. For de-
 tailed results, please refer to the Appendix. Overall,
 our models demonstrate strong performance in the
 SentiNeg task, showcasing their effectiveness in
 sentiment analysis and negation detection.
+
 When analyzing the performance of Polyglot-
 Ko models only in the 5-shot evaluation across all
 four tasks, it becomes clear that the performance
 improves with increasing compute(Kaplan et al.,
 2020) as depicted in Figure 2.
+
 5 Limitations and Disclaimers
+
 Polyglot-Ko has been primarily trained to optimize
 next token prediction, which makes it suitable for
 a wide range of tasks. However, it is crucial to ac-
@@ -665,9 +663,12 @@ knowledge the potential for unexpected outcomes.
 While Polyglot-Ko strives to generate the most sta-
 tistically likely response, it may not always provide
 the most accurate or factual answer. It is important
-to exercise caution when relying on the model's
+to exercise caution when relying on the model’s
 outputs.
+
 Additionally, it is worth noting that Polyglot-Ko
+
+--- Page 7 ---
 may generate content that is socially unacceptable
 or offensive. To mitigate this risk, we strongly rec-
 ommend implementing a human curator or employ-
@@ -679,6 +680,7 @@ relatively low TFLOPS compared to the upcoming
 versions of Polyglot that we are currently preparing.
 This resulted in longer training time and resources
 to complete the training process successfully.
+
 Furthermore, we discovered mistakes in the
 data preprocessing phase during our experiments.
 Specifically, the data was incorrectly stripped of
@@ -693,7 +695,9 @@ ing process and addressing any limitations or errors
 that arise. By doing so, we can enhance the per-
 formance and reliability of Polyglot-Ko for a wide
 range of tasks and applications.
+
 6 Conclusion
+
 Currently, we are actively working on training
 the new version of the Polyglot Korean language
 model. Our aim is to expand its capacity to even-
@@ -701,6 +705,7 @@ tually reach 40B parameters. This process has in-
 volved significant trial and error as we strive to
 enhance the performance and capabilities of the
 model.
+
 Based on our experience and expertise in de-
 veloping Korean language models, we have also
 embarked on the creation of two types of multi-
@@ -709,38 +714,47 @@ model, which includes Korean, Chinese, Japanese,
 Indonesian, Malay, Vietnamese, Thai, and English.
 This model aims to cater to the linguistic needs of
 countries in the East-Asian region.
+
 The second type is a Romance model, which
 incorporates Spanish, Portuguese, French, Roma-
 nian, and Italian. This model is designed to support
 the linguistic requirements of Romance language-
 speaking countries.
+
 By developing these multilingual models, we
 aim to democratize and promote access to language
 model technology across the globe. We believe
 that this will contribute to the advancement of re-
+
 search and academics in various countries, allow-
 ing users to leverage the power of language models
 for diverse applications and linguistic contexts. We
 are excited about the potential impact and benefits
 these models can bring to researchers, practitioners,
 and language enthusiasts worldwide.
+
 Acknowledgements
+
 We are grateful to Stability AI for generously pro-
 viding the essential computing resources that were
 instrumental in the successful execution of this
 project. Their support and infrastructure were cru-
 cial for training and evaluating our models.
+
 Additionally, we would like to extend our appre-
 ciation to TUNiB for their invaluable contribution
 in providing a large-scale Korean dataset. This
 dataset played a pivotal role in the development
 and training of our language models, and we are
 grateful for their collaboration and partnership.
+
 Finally, we would like to thank Stella Bider-
 man for her valuable feedback on the paper, which
 greatly enhanced the quality and clarity of our
 work.
+
 References
+
 Alex Andonian, Quentin Anthony, Stella Biderman, Sid
 Black, Preetham Gali, Leo Gao, Eric Hallahan, Josh
 Levy-Kramer, Connor Leahy, Lucas Nestler, Kip
@@ -748,6 +762,7 @@ Parker, Michael Pieler, Shivanshu Purohit, Tri Songz,
 Wang Phil, and Samuel Weinbach. 2021. GPT-NeoX:
 Large Scale Autoregressive Language Modeling in
 PyTorch.
+
 Rohan Anil, Andrew M. Dai, Orhan Firat, Melvin John-
 son, Dmitry Lepikhin, Alexandre Passos, Siamak
 Shakeri, Emanuel Taropa, Paige Bailey, Zhifeng
@@ -761,7 +776,7 @@ Jan Botha, James Bradbury, Siddhartha Brahma,
 Kevin Brooks, Michele Catasta, Yong Cheng, Colin
 Cherry, Christopher A. Choquette-Choo, Aakanksha
 Chowdhery, Clément Crepy, Shachi Dave, Mostafa
-Dehghani, Sunipa Dev, Jacob Devlin, Mark Díaz,
+Dehghani, Sunipa Dev, Jacob Devlin, Mark Diaz,
 Nan Du, Ethan Dyer, Vlad Feinberg, Fangxiaoyu
 Feng, Vlad Fienber, Markus Freitag, Xavier Gar-
 cia, Sebastian Gehrmann, Lucas Gonzalez, Guy Gur-
@@ -771,6 +786,8 @@ witz, Michael Isard, Abe Ittycheriah, Matthew Jagiel-
 ski, Wenhao Jia, Kathleen Kenealy, Maxim Krikun,
 Sneha Kudugunta, Chang Lan, Katherine Lee, Ben-
 jamin Lee, Eric Li, Music Li, Wei Li, YaGuang Li,
+
+--- Page 8 ---
 Jian Li, Hyeontaek Lim, Hanzhao Lin, Zhongtao Liu,
 Frederick Liu, Marcello Maggioni, Aroma Mahendru,
 Joshua Maynez, Vedant Misra, Maysam Moussalem,
@@ -778,7 +795,7 @@ Zachary Nado, John Nham, Eric Ni, Andrew Nys-
 trom, Alicia Parrish, Marie Pellat, Martin Polacek,
 Alex Polozov, Reiner Pope, Siyuan Qiao, Emily Reif,
 Bryan Richter, Parker Riley, Alex Castro Ros, Au-
-rko Roy, Brennan Saeta, Rajkumar Samuel, Renee
+tko Roy, Brennan Saeta, Rajkumar Samuel, Renee
 Shelby, Ambrose Slone, Daniel Smilkov, David R.
 So, Daniel Sohn, Simon Tokumine, Dasha Valter,
 Vijay Vasudevan, Kiran Vodrahalli, Xuezhi Wang,
@@ -788,13 +805,15 @@ Xue, Pengcheng Yin, Jiahui Yu, Qiao Zhang, Steven
 Zheng, Ce Zheng, Weikang Zhou, Denny Zhou, Slav
 Petrov, and Yonghui Wu. 2023. Palm 2 technical
 report.
+
 Stella Biderman, Hailey Schoelkopf, Quentin Anthony,
-Herbie Bradley, Kyle O'Brien, Eric Hallahan, Mo-
+Herbie Bradley, Kyle O’Brien, Eric Hallahan, Mo-
 hammad Aflah Khan, Shivanshu Purohit, USVSN Sai
 Prashanth, Edward Raff, Aviya Skowron, Lintang
 Sutawika, and Oskar van der Wal. 2023. Pythia:
 A suite for analyzing large language models across
 training and scaling.
+
 Sid Black, Stella Biderman, Eric Hallahan, Quentin An-
 thony, Leo Gao, Laurence Golding, Horace He, Con-
 nor Leahy, Kyle McDonell, Jason Phang, Michael
@@ -802,6 +821,7 @@ Pieler, USVSN Sai Prashanth, Shivanshu Purohit,
 Laria Reynolds, Jonathan Tow, Ben Wang, and
 Samuel Weinbach. 2022. Gpt-neox-20b: An open-
 source autoregressive language model.
+
 Aakanksha Chowdhery, Sharan Narang, Jacob Devlin,
 Maarten Bosma, Gaurav Mishra, Adam Roberts,
 Paul Barham, Hyung Won Chung, Charles Sutton,
@@ -825,65 +845,80 @@ Diaz, Orhan Firat, Michele Catasta, Jason Wei, Kathy
 Meier-Hellstern, Douglas Eck, Jeff Dean, Slav Petrov,
 and Noah Fiedel. 2022. Palm: Scaling language mod-
 eling with pathways.
+
 Kevin Clark, Minh-Thang Luong, Quoc V. Le, and
 Christopher D. Manning. 2020. Electra: Pre-training
 text encoders as discriminators rather than genera-
 tors.
+
 Together Computer. 2023. Redpajama: An open source
 recipe to reproduce llama training dataset.
+
 Jacob Devlin, Ming-Wei Chang, Kenton Lee, and
 Kristina Toutanova. 2019. Bert: Pre-training of deep
 bidirectional transformers for language understand-
 ing.
+
 Leo Gao, Jonathan Tow, Stella Biderman, Sid Black,
 Anthony DiPofi, Charles Foster, Laurence Golding,
 Jeffrey Hsu, Kyle McDonell, Niklas Muennighoff,
 Jason Phang, Laria Reynolds, Eric Tang, Anish Thite,
 Ben Wang, Kevin Wang, and Andy Zou. 2021. A
 framework for few-shot language model evaluation.
+
 Jared Kaplan, Sam McCandlish, Tom Henighan, Tom B.
 Brown, Benjamin Chess, Rewon Child, Scott Gray,
 Alec Radford, Jeffrey Wu, and Dario Amodei. 2020.
 Scaling laws for neural language models.
+
 Dohyeong Kim, Myeongjun Jang, Deuk Sin Kwon, and
 Eric Davis. 2022. Kobest: Korean balanced evalua-
 tion of significant tasks.
+
 Ildoo Kim, Gunsoo Han, Jiyeon Ham, and Woonhyuk
 Baek. 2021. Kogpt: Kakaobrain korean(hangul) gen-
 erative pre-trained transformer. https://github.
 com/kakaobrain/kogpt.
+
 Xi Victoria Lin, Todor Mihaylov, Mikel Artetxe, Tianlu
 Wang, Shuohui Chen, Daniel Simig, Myle Ott, Na-
 man Goyal, Shruti Bhosale, Jingfei Du, Ramakanth
 Pasunuru, Sam Shleifer, Punit Singh Koura, Vishrav
-Chaudhary, Brian O'Horo, Jeff Wang, Luke Zettle-
+Chaudhary, Brian O’ Horo, Jeff Wang, Luke Zettle-
 moyer, Zornitsa Kozareva, Mona Diab, Veselin Stoy-
 anov, and Xian Li. 2022. Few-shot learning with
 multilingual language models.
+
 Yinhan Liu, Myle Ott, Naman Goyal, Jingfei Du, Man-
-dar Joshi, Danqi Chen, Omer Levy, Mike Lewis,
+dar Joshi, Dangi Chen, Omer Levy, Mike Lewis,
 Luke Zettlemoyer, and Veselin Stoyanov. 2019.
 Roberta: A robustly optimized bert pretraining ap-
 proach.
+
 Alec Radford, Jeffrey Wu, Rewon Child, David Luan,
 Dario Amodei, Ilya Sutskever, et al. 2019. Language
 models are unsupervised multitask learners. OpenAI
 blog, 1(8):9.
+
 Teven Le Scao, Angela Fan, Christopher Akiki, El-
-lie Pavlick, Suzana Ilić, Daniel Hesslow, Roman
-Castagné, Alexandra Sasha Luccioni, François Yvon,
+lie Pavlick, Suzana Ili¢é, Daniel Hesslow, Roman
+Castagné, Alexandra Sasha Luccioni, Frangois Yvon,
 Matthias Gallé, et al. 2022. Bloom: A 176b-
 parameter open-access multilingual language model.
 arXiv preprint arXiv:2211.05100.
-Mosaic ML NLP Team. 2023. Introducing mpt-7b: A
+
+MosaicML NLP Team. 2023. Introducing mpt-7b: A
 new standard for open-source, ly usable llms. Ac-
 cessed: 2023-03-28.
+
 Hugo Touvron, Thibaut Lavril, Gautier Izacard, Xavier
 Martinet, Marie-Anne Lachaux, Timothée Lacroix,
-Baptiste Rozière, Naman Goyal, Eric Hambro, Faisal
+Baptiste Roziére, Naman Goyal, Eric Hambro, Faisal
 Azhar, Aurelien Rodriguez, Armand Joulin, Edouard
 Grave, and Guillaume Lample. 2023. Llama: Open
 and efficient foundation language models.
+
+--- Page 9 ---
 Susan Zhang, Stephen Roller, Naman Goyal, Mikel
 Artetxe, Moya Chen, Shuohui Chen, Christopher De-
 wan, Mona Diab, Xian Li, Xi Victoria Lin, Todor Mi-
@@ -891,9 +926,11 @@ haylov, Myle Ott, Sam Shleifer, Kurt Shuster, Daniel
 Simig, Punit Singh Koura, Anjali Sridhar, Tianlu
 Wang, and Luke Zettlemoyer. 2022. Opt: Open pre-
 trained transformer language models.
+
 A Prompt Modification for SentiNeg Task
+
 In the case of SentiNeg, we observed that the
-prompt used in the KOBEST paper employed a
+prompt used in the KoBEST paper employed a
 simple classification task. However, the range of
 questions encompassed a wide spectrum and of-
 ten exhibited ambiguity. Consequently, we made
@@ -906,7 +943,9 @@ substantially higher on average than those achieved
 with the original prompt. This demonstrates the
 importance of prompt design and customization in
 achieving better performance in the SentiNeg task.
-B Results for the WiC task
+
+B_ Results for the WiC task
+
 The results of the WiC task are presented in the
 right portion of Table 5 and visualized in Figure
 3b. Notably, all models demonstrated random per-
@@ -917,87 +956,43 @@ formance. The consistent random performance
 across all models indicates that they encountered
 challenges in making accurate predictions for the
 WiC task. Therefore, further investigation and im-
-provements are necessary to enhance the models'
+provements are necessary to enhance the models’
 capability to effectively tackle this task.
-Modified SentiNeg (n=shot)
-WiC
-Model
-Params
-n=0 n=5 n=10 n=50
-n=0 n=5 n=10 n=50
-Ko-GPT-Trinity
-1.2B
-koGPT
-6B
-0.927 0.955
-0.767 0.699 0.713 0.836 0.487
-0.955
-0.492 0.479 0.475
-0.952
-0.484
-0.495 0.479 0.475
-XGLM
-7.5B
-0.835 0.745
-0.797
-0.727
-Polyglot-Ko (ours)
-Polyglot-Ko (ours)
-Polyglot-Ko (ours) 5.8B
-Polyglot-Ko (ours) 12.8B
-1.3B
-3.8B
-0.488
-0.889 0.850 0.887 0.907 0.489 0.486 0.506 0.487
-0.942 0.894 0.906 0.952 0.489 0.499 0.491 0.488
-0.878 0.927 0.906 0.960 0.484 0.494 0.480 0.479
-0.893 0.985 0.982 0.982 0.493 0.494 0.488 0.487
-0.490 0.498 0.514
+
+--- Page 10 ---
+Modified SentiNeg (n=shot) WiC
+
+Model Params  n=0 n=5 n=10 n=50  n=0 n=5 n=10 n=50
+Ko-GPT-Trinity 1.2B 0.767 0.699 0.713 0.836 0.487 0.492 0.479 0.475
+koGPT 6B 0.927 0.955 0.955 0.952 0.484 0.495 0.479 0.475
+xGLM 7.5B 0.835 0.745 0.797 0.727 0.488 0.490 0.498 0.514
+
+Polyglot-Ko (ours) 1.3B 0.889 0.850 0.887 0.907 0.489 0.486 0.506 0.487
+Polyglot-Ko (ours) 3.8B 0.942 0.894 0.906 0.952 0.489 0.499 0.491 0.488
+Polyglot-Ko (ours) 5.8B 0.878 0.927 0.906 0.960 0.484 0.494 0.480 0.479
+Polyglot-Ko (ours) 12.8B 0.893 0.985 0.982 0.982 0.493 0.494 0.488 0.487
+
 Table 5: Comparative results of the performance on the SentiNeg task with a modified prompt and the WiC task,
 with the F1 scores for SentiNeg while the accuracy for WiC to show random performance.
-SentiNeg (F1)
-WiC (F1)
-0.54
-1
-0.53
-0.96
-0.52
-0.92
+
+SentiNeg (F1) WiC (F1)
+0.96 0.53
+0.92 a
 0.51
+
 0.88
 0.5
-0.84
-0.49
-0.8
-0.48
-0.76
-0.47
-0.72
-0.46
-0.68
-0.45
-0-shot
-5-shot
-10-shot
--kakaobrain/kogpt
-50-shot
-0-shot
-―skt/ko-gpt-trinity-1.2B-v0.5
-facebook/xglm-7.5B
-EleutherAI/polyglot-ko-3.8b
-—EleutherAI/polyglot-ko-12.8b
--EleutherAI/polyglot-ko-1.3b
-EleutherAI/polyglot-ko-5.8b
-5-shot
-10-shot
-50-shot
-skt/ko-gpt-trinity-1.2B-v0.5
-kakaobrain/kogpt
-facebook/xglm-7.5B
-EleutherAI/polyglot-ko-3.8b
-EleutherAI/polyglot-ko-12.8b
-EleutherAI/polyglot-ko-1.3b
-EleutherAI/polyglot-ko-5.8b
------ random
+. 0.49
+eS 0.48
+0.76 0.47
+0.72 eas
+
+@-shot 5-shot 10-shot 50-shot @-shot S-shot 10-shot 50-shot
+——skt /ko-gpt-trinity-1.28-v0.5 ——kakaobrain/kogpt —— skt/ko-gpt-trinity-1,28-0.5 = kakaobrain/kogpt
+—Facebook/xglm-7.58 ——EleutherAI/polyglot-ko-1.3b — facebook/xgin-7.58 ——EleutherAL/polyglot-ko-1.30
+—EleutherAl/polyglot-ko-3.8b —EleutherAI/polyglot-ko-5.8b ——FleutherAT/polyglot-ko-3.80  ——EleutherAT/polyglot-ko-5.8b
+—EleutherAl/polyglot-ko-12.8b ——EleutherAI/polyglot-ko-12.86  ----~ random
+
 Figure 3: The performance metrics of the SentiNeg task with a modified prompt (left) and WiC task (right) using
 the KOBEST dataset, with the F1 scores for SentiNeg while the accuracy for WiC to show random performance.
+

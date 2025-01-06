@@ -1,0 +1,1353 @@
+arXiv:2305.09664v2 [cs.CV] 4 Aug 2023
+Understanding 3D Object Interaction from a Single Image
+Shengyi Qian+
+†University of Michigan
+syqian@umich.edu
+David F. Fouhey**
+#New York University
+david. fouhey@nyu.edu
+https://jasonqsy.github.io/3D0I/
+Movable: 1 hand
+Rigid: Yes
+Movable: No
+Action: Pull
+Movable: 2 hands
+Rigid: No
+Image with query points
+(a) Localization and properties
+Figure 1. Given a single image and a set of query points
+moved, its rigidity and articulation class, and location
+(b) Affordance and action
+(c) Potential interaction
+our approach predicts: (a) whether the object at the location can be
+(b) an affordance and action and (c) potential 3D interaction for
+articulated objects. This ability can assist intelligent agents to better manipulate objects or explore the 3D scene.
+Abstract
+Humans can easily understand a single image as depict-
+ing multiple potential objects permitting interaction. We
+use this skill to plan our interactions with the world and
+accelerate understanding new objects without engaging in
+interaction. In this paper, we would like to endow machines
+with the similar ability, so that intelligent agents can bet-
+ter explore the 3D scene or manipulate objects. Our ap-
+proach is a transformer-based model that predicts the 3D
+location, physical properties and affordance of objects. To
+power this model, we collect a dataset with Internet videos,
+egocentric videos and indoor images to train and validate
+our approach. Our model yields strong performance on our
+data, and generalizes well to robotics data.
+1. Introduction
+What can you do in Figure 1? This single RGB image
+conveys a rich, interactive 3D world where you can interact
+with many objects. For instance, if you grab the chair with
+two hands, you can move it as a rigid object; the pillow can
+be picked up freely and squished; and door can be moved,
+but only rotated. This ability to recognize and interpret po-
+tential affordances in scenes helps humans plan our interac-
+tions and more quickly learn to interact with objects. The
+goal of this work is to give the same ability to computers.
+Obtaining such an understanding of potential interac-
+tions from a single 3D image is beyond the current state
+of the art in scene understanding because it spans multiple
+disparate subfields of computer vision. For instance, single
+image 3D has made substantial progress [54, 51, 73, 20], but
+primarily focuses on the scene as it exists, as opposed to as
+it could be. There has been an increasing interest in under-
+standing articulation [37, 70, 53], but these works primarily
+focus on articulation as it occurs in a 3D model or carefully
+collected demonstrations, instead of as it could occur. Fi-
+nally, while there is long-standing work on enabling robots
+to learn interaction and potential interaction points [52, 61],
+these works focus primarily on evaluation in primarily the
+same environment (e.g. the lab) and do not focus on apply-
+ing the understanding in entirely new environments.
+We propose to bootstrap this interactive understand-
+ing by developing (1) a problem formulation, (2) a rich
+dataset of annotations on challenging images, and (3) a
+transformer-based approach. We frame the problem of rec-
+ognizing the articulation as a prediction-at-a-query-location
+problem: given an image and 2D location, our method aims
+to answer "what can I do here?” in the style of classic point-
+and-click games like Myst. We frame "what can I do here"
+via a set of common questions: whether the object can be
+moved, its extent when moved and location in 3D, rigid-
+ity, whether there are constrains on its motion, as well as
+estimates of how one would interact the object. To max-
+imize the potential for downstream transfer, our questions
+are chosen to be generic rather than specific to particular
+hands or end-effectors: knowing where to act or the degrees
+of freedom of an object may accelerate reinforcement learn-
+ing even if one must still learn end-effector-specific skills.
+In order to tackle the task, we introduce a transformer-
+based model. Our approach, described in Section 5 builds
+on a detection backbone such as Segment-Anything [33] in
+order to build on the advances and expertise of object de-
+tection. We extend the backbone with additional heads that
+predict each of our “what I can I do here” tasks, and which
+can be trained end-to-end. As an advantage of our formu-
+lation, we can train the system on sparse annotations; we
+believe this will be helpful for eventually converting our di-
+rect supervision to supervision via video.
+Powering our approach is a new dataset, described in
+Section 4, which we name the 3D Object Interaction dataset
+(3DOI). In order to maximize the likelihood of generaliz-
+ing to new environments, the underlying data comes from
+diverse sources, namely Internet and egocentric videos as
+well as 3D renderings of scene layouts. We provide annota-
+tions of our tasks on this data and, due to the source of the
+data, we also naturally obtain 3D supervision in the form of
+depth and normals. In total, the dataset has over 50K ob-
+jects across 10K images, as well as over 31K annotations of
+non-interactable objects (e.g., floor, wall).
+Our experiments in Section 6 test how well our ap-
+proach recognizes potential interaction, testing on both un-
+seen data in 3DOI as well as robotics data. We compare
+with a number of alternatives, including generalizing from
+data of demonstrations [53, 50] and synthetic data [70],
+as well alternate network designs. Our approach outper-
+forms these models and shows strong generalization to the
+robotics dataset WHIRL [1].
+To summarize, we see our primary contributions as: (1)
+the novel task of detecting 3D object interactions from a sin-
+gle RGB image; (2) 3D Object Interaction dataset, which
+is the first large-scale dataset containing objects that can
+be interacted and their corresponding locations, affordance
+and physical properties; (3) A transformer-based model to
+tackle this problem, which has strong performance on the
+3DOI dataset and robotics data.
+2. Related Works
+Our paper proposes to extract 3D object interaction from
+a single image. This problem lies at the intersection of
+3D vision, object detection, human-object interaction and
+scene understanding. It is also closely related to down-
+stream robotics applications.
+Interactive scene understanding. Recently, the com-
+puter vision community is increasingly interested in un-
+derstanding 3D dynamics of objects. It is motivated by
+human-object interaction [5, 19, 58], although humans do
+not need to be present in our setting. Researchers try
+to understand the 3D shapes, axes, movable parts and af-
+fordance on synthetic data [48, 70, 49, 29, 68, 37, 66],
+videos [53, 24, 21, 50, 45, 36] or point clouds [30, 28]. Our
+work is mainly related to [53, 24, 21] since they work on
+real images, but is different from them on two aspectives:
+(1) they need video or multi-view inputs, but our input is
+only a single image; (2) their approaches recover objects
+which are being interacted, while our approach understands
+potential interactions before any interactions happen. Fi-
+nally, OPD [29, 62] tackles a similar problem for articulated
+objects, but ours also work for non-articulated objects.
+Object detection. The training anchor-based object de-
+tection pipeline basically follows the pipeline of Mask R-
+CNN [26, 34, 56, 32]. As the development of transformer-
+based models goes, DETR [4], AnchorDETR [67] and
+MaskFormer [7] approach object detection as a direct set
+prediction problem. Recently, Kirillov et al. proposes Seg-
+ment Anything Model [33], which predicts object masks
+from input prompts such as points or boxes. Our network
+needs to be built on decoder-based backbones [4, 7, 33], and
+we choose SAM [33] due to its state-of-the-art performance.
+Single image 3D. Since our problem requires us recover
+3D object interaction instead of 2D from a single image, it
+is also related to single image 3D. In the recent few years,
+researchers have developed many different approaches to
+recover 3D from a single image, including depth [73, 54, 39,
+6, 15], surface normals [64, 16], 3D planes [43, 42, 31] and
+shapes [9, 46, 20, 51]. Our work is built upon their works.
+Especially, our architecture is motivated by DPT [54] which
+trains ViT for both segmentation and depth estimation.
+Robotics manipulation. Manipulation of objects is a long-
+term goal of robotics. Researchers have developed various
+solutions for different kinds of objects in different scenes,
+ranging from articulated objects [61, 52, 10, 12, 69, 23] to
+deformable objects [71, 72, 65, 8]. While manipulation is
+not the goal of our paper, understanding objects and the en-
+vironment in 3D is typically an important part of a manip-
+ulation pipeline. Our paper mainly improves the perception
+part, which can potentially improve manipulation. There-
+fore, we also test our approach on robotics data [1], to show
+it can generalize.
+3. Overview
+Given a single image, our goal is to be able to answer
+"What could I do here?" with the object at a query point.
+We introduce annotations in Section 4 as well as a method
+for the task in Section 5. Before we do so, we present a
+unified explanation for the questions we answer as well as
+the rationale for choosing these questions. We group our
+questions into six property types, some of which are further
+subdivided. Not all objects support all questions: objects
+that cannot be moved, for instance, do not have other prop-
+erties and objects that can be freely moved do not have ro-
+tation axes. We further note that some objects defy these
+2.2.24
+onehand rigid_tral
+twohand nonrigid
+twohand nonrigid
+twohand rigid trans_pull
+onehand ntwohand
+vohand nonrigidionrigiɗonehand_no
+twohand rigid free
+onehand rigid_rot_pull
+wohand rigid freel r
+twohand nonrigid
+onehand nonri
+twohand nonrigidnehand nonrigid
+twohand rigid fre
+onehand rigid rot push
+twohand rigid free
+onehand_nonrigid
+onehand_nonr
+twohand nonrigid
+onehand rigid free
+Figure 2. Example annotations of our 3DOI dataset. Our images come from Internet videos [53], egocentric videos [11] and renderings of
+3D dataset [14]. is the query point, and is the affordance.
+properties ball joints, for example, permit a 2D subspace
+- our goal is to identify a large subspace of po-
+of motion
+-
+tential interactions.
+Movable The most important subdivision is whether the
+object at the query point can be moved. This follows work
+in both 3D scene understanding [60] and human-object in-
+teraction [58] that subdivide objects into how movable they
+are. We group objects into three categories based on how
+easily the object can be moved: (1) fixtures which effec-
+tively cannot be moved, such as walls and floor; (2) one
+hand objects that can be moved with a single hand, such as
+a water bottle or cabinet door; (3) two hand objects that re-
+quire two hands to move, such as a large TV. We frame the
+task as three-way classification.
+Localization Understanding the extent of an object is
+important, and so we localize the object in the world. Since
+our objects consist of a wide variety of categories, we frame
+localization as 2D instance segmentation as in [26, 4], as
+well as a depthmap to localize the object in 3D [54, 73].
+These properties can be estimated for most objects.
+Rigidity To understand action, one primary distinction
+is rigid-vs-non-rigid since rigid objects are subject to sub-
+stantially simpler rules of motion [38]. We therefore clas-
+sify whether the object is rigid or not.
+Articulation Most rigid objects can further decomposed
+as permitting freeform, rotational / revolute, or translation /
+prismatic motion [61]. Each of these requires different end-
+effector interactions to effectively interact with. We frame
+the articulation category as a three-way classification prob-
+lem, and recognizing the rotation axis as a line prediction
+problem following [53].
+Action We also want to understand what the potential
+action could be to interact with the object. Here we focus
+on three types of actions: pull, push or other.
+Affordance Finally, we want to know where we should
+interact with the object. For example, we need to manipu-
+late the handle if we want to open a door. We predict a prob-
+ability map which is over the location of the affordance.
+4. 3D Object Interaction Dataset
+One critical component of our contribution is accurate
+annotations of object interactions, as there is no publicly
+available data. In this paper, we introduces 3D Object Inter-
+action dataset (3DOI), which is the first dataset. We picked
+data that can can be easily integrated with 3D, including a
+3D dataset, so that we have accurate 3D ground truth to train
+our approach. Examples of our data are shown in Figure 2.
+Images. Our goal is to pick up diverse images representing
+real-world scenarios. In particular, we want our images con-
+tain a lot of everyday objects we can interact with. There-
+fore, we sample 10K images from a collection of publicly
+available datasets: (1) Articulation [53] comes from third-
+person Creative Commons Internet videos. Typically, a
+video clip contains humans manipulating an articulated ob-
+jects in households. We randomly sample 3K images from
+the articulation dataset; (2) EpicKitchen [11] contains ego-
+centric videos making foods in kitchen environments. We
+sample 2K images from EpicKitchen; (3) Taskonomy [74]
+is an indoor 3D dataset with real 2D image and corre-
+sponding 3D ground truth. We use the renderings by Om-
+nidata [14]. We sample 5k images from the taskonomy split
+of Omnidata starter dataset. Overall, there are 10K images.
+Annotation. With a collection of images with potential
+objects we can interact, we then turn to manual annota-
+tion. For a single image, we select around 5 interactable
+query points, including both large and small objects. For
+each query point, we annotate: (Movable ;) one hand,
+two hand, or fixture. (Localization 1) The bounding box
+and mask of the part this point belonging to. (Rigidity )
+Rigid, or nonrigid. (Articulation ) Rotation, translation
+or freeform. We also annotate their rotation axes. (Ac-
+tion Pull, push or others. (Affordance ) A keypoint
+which indicates where we should interact with the object.
+At the same time, our taskonomy [74] images come with
+3D ground truth, including depth and surface normals. We
+also annotate 31K query points of fixtures. Finally, we split
+10K images into a train/val/test set of 8k/1k/1k split, respec-
+tively.
+Image Encoder
+Transformer
+Decoder
+Depth Query
+Movable: 1 hand
+Rigid: No
+Articulation: Free
+Action: Free
+Movable: 1 hand
+Rigid: Yes
+Articulation: Rot
+Action: Pull
+Localization, Affordance
+Localization, Affordance
+Depth
+For each query point,
+and affordance . In
+Figure 3. Overview of our approach. The inputs of our network is a single image and a set of query points ●●.
+it predicts the potential 3D interaction, in terms of movable, location 1, rigidity , articulation L, action
+addition, the input of transformer decoder includes a learnable depth query, which estimates the dense depth to recover 3D object interaction
+for articulated objects.
+Availability and Ethics. Our images come from three pub-
+licly available datasets. Taskonomy does not contain any
+humans. The video articulation dataset comes from Cre-
+ative Commons Internet videos. We do not foresee any eth-
+ical issues in our dataset.
+5. Approach
+We now introduce a model which can take an image and
+a set of query point and answer all of questions we asked
+in Section 3, including movable, localization, rigidity, ar-
+ticulation, action and affordance. A brief overview of our
+approach is shown in Figure 3.
+Since our inputs include a set of query points and our
+outputs include both bounding boxes and segmentation
+masks, we mainly extend SAM [33] to build our model.
+Compared with traditional detection pipeline such as Mask
+R-CNN [26], we can use a query point to naturally guide
+SAM to detect the corresponding object. Mask R-CNN
+generates thousands of anchors for each image, which is
+challenging to find the correct matching. However, we also
+compare with alternative network architectures in our ex-
+periments for completeness. We find they can also work
+despite being worse than SAM. For simplicity, we assume
+there is only a single query point. But our model can accept
+hundreds of query points at a time.
+5.1. Backbone
+The goal of our backbone is to map an image I and a
+query point [x, y] to a pooled feature h = f(I; [x, y]). Full
+details are in the supplemental.
+Image Encoder. Our image encoder is a MAE [25]
+pretrained Vision Transformer (ViT) [13], following
+SAM [33]. They map a single image I to the memory of
+the transformer decoder.
+Query Point Encoder. We transfer the query point [x, y] to
+positional encodings [63], which is then feed into the trans-
+former decoder. We use the embedding k to guide the trans-
+former to produce the feature h for different query points.
+Transformer Decoder. The decoder accepts inputs of the
+memory from the encoder, and an embedding k of the query
+point. It produces a embedding h for each query point, and
+we use it to predict all the properties, like a ROI feature.
+5.2. Prediction Heads
+We now describe how to map from the pooled feature h
+to the features. Each prediction is done by a separate head
+that handles each output type.
+Movable We add a linear layer and map the hidden em-
+bedding h to the prediction of movable. We use the standard
+cross entropy loss to train it.
+Localization We follow SAM standard practice to pre-
+dict segmentation masks. We predict segmentation masks
+using mask decoder and train them using focal loss [40] and
+DICE [47] as loss functions. For depth, we have a separate
+depth transformer decoder with a corresponding learnable
+depth query. We train depth using scale- and shift-invariant
+L1 loss and gradient-matching loss following [73, 54, 39].
+The shift and scale are normalized per image.
+Rigidity Similar to movable, we add a linear layer to
+predict whether the object is rigid or not. We train the linear
+layer using a standard binary cross entropy loss.
+Articulation We first add a linear layer to predict
+whether the interactive object is rotation, translation or
+freeform, and we use the standard cross entropy loss to train
+it. For the rotation axis, we follow [53, 75] to represent
+an axis as a 2D line (0, r). Any points on this line satisfy
+x cos(0) + y sin(0) = r where 0 represents the angle and r
+represents the diatance from the object center to the line. In
+training, we represent the 2D line as (sin 20, cos 20, r), so
+that the axis angle is in a continuous space [76]. We use a
+3-layer MLP to predict the axis, similar to bounding boxes
+as both tasks require localization. We use L1 loss to train it.
+Action Similar to movable, we add a linear layer to pre-
+dict what the potential action is to interact with the object.
+We train the linear layer using a standard binary cross en-
+tropy loss.
+Affordance Our prediction of affordance is a probabil-
+ity map, while our annotation is a single keypoint. How-
+ever, affordance can have multiple solutions. Therefore,
+we transform the annotation of affordance to a 2D gaus-
+sian bump [35] and train the network using a binary focal
+loss [40]. We set the weight of positive examples to be 0.95
+and that of negative ones to be 0.05 to balance positives and
+negatives, as there are more negatives than positives.
+Our total loss is a weighted linear combination of all
+losses mentioned above. Details are in supplemental.
+5.3. Implementation Details
+Full architectural details of our approach are in the sup-
+plemental. In practice, we use three different transformer
+decoders for mask, depth and affordance. The image en-
+coder, query point encoder and mask decoder are pretrained
+on SAM [33]. Other parts, including affordance head and
+depth head, are trained from scratch. We use an AdamW
+optimizer of the learning rate 10-4, and train our model for
+200 epochs.
+6. Experiments
+We have introduced an approach that can localize and
+predict the properties of the moving part from an image. In
+the experiments, we aim to answer the following questions:
+(1) how well can one localize and predict the properties of
+the moving part from an image; (2) how well do alternative
+approaches to the problem do? We evaluate our approach
+on our 3DOI dataset and test the generalization to robotics
+data WHIRL [1].
+6.1. Experimental Setup
+We first describe the setup of our experiments. Our
+method aims to look at a single RGB image and infer infor-
+mation about the moving part given a keypoint. We there-
+fore evaluate our approach on two challenging datasets, us-
+ing metrics that capture various aspects.
+Datasets. We train and validate our approach on two
+datasets: 3DOI dataset (described in Section 4), and the
+WHIRL dataset [1]. WHIRL [1] is a robotics dataset in-
+cluding every-day objects and settings, for example draw-
+ers, dishwashers, fridges in different kitchens, doors to var-
+ious cabinets. We use WHIRL to validate the generalization
+of our approach and downstream applications in the robotics
+settings. We split the first frame of all WHIRL videos and
+annotate them using the same pipeline as our datasets. Typ-
+ically, humans are not present in the first frame and it's be-
+fore any manipulation.
+Metrics. We report standard practices of evaluation for all
+of our predictions. For all metrics, the higher the better.
+These metrics are detailed as follows:
+• Movable, Rigidity , and Action : We report accu-
+racy as these are multiple choice questions.
+• Localization : We report Intersection-over-Union (IoU)
+for our predictions of bounding boxes and masks [41]. We
+report threshold accuracy for depth [15].
+.
+Articulation : We report accuracy for articulation type.
+The rotation axis is a 2D line. Therefore, we report EA-
+Score between the prediction and the ground truth, follow-
+ing [53, 75]. EA-Score [75] is a score in [0, 1] to measure
+the angle and euclidean distance between two lines.
+.
+Affordance : It's a probablity map and we report the
+histogram intersection (or SIM) following [50, 3, 36, 45].
+Baselines. We compare our approach with a series of base-
+lines, to evaluate how well alternative approaches work on
+our problem. We first evaluate 3DADN [53], SAPIEN [70],
+and InteractionHotspots [50] using their pretrained check-
+points, to test how well learning from videos or synthetic
+data works on our problem. We then train two query-point-
+based model, ResNet MLP [27] and COHESIV [59], to
+test how well alternative network architectures work on our
+problem. The details are introduced as follows.
+• (3DADN [53]): 3DADN detects articulated objects which
+humans are interacting with, extending Mask R-CNN [26].
+It is trained on Internet videos. We drop the temporal op-
+timization part since we work on a single image. For each
+image, it can detect articulated objects, as well as the type
+(translation or rotation), bounding boxes, masks and axes.
+Since the inputs of 3DADN do not include a query point,
+we compare the predicted bounding boxes and the ground
+truth to find the matching detection, and evaluate other met-
+rics. We lower the detection threshold to 0.05 to ensure we
+have enough detections to match our ground truth.
+•
+(SAPIEN [70]): The training frames of 3DADN [53] typ-
+ically have human activities. However, our dataset does not
+require humans to be present, which may lead to general-
+ization issues. Alternatively, we are interested in whether
+we can just learn the skill from synthetic data. We train
+3DADN [53] on renderings of synthetic objects generated
+by SAPIEN. SAPIEN is a simulator which contains a large
+scale set of articulated objects. We use the renderings pro-
+vided by 3DADN and the same evaluation strategies.
+•
+(InteractionHotspots [50]): While 3DADN and SAPIEN
+can detect articulated objects as well as their axes, they
+cannot tell the affordance. InteractionHotspots learns af-
+fordance from watching OPRA [17] or Epic-Kitchen [11]
+videos. Since InteractionHotspots cannot detect objects, we
+apply a center crop of the input image based on the query
+point, and resize it to the standard input shape (224, 224).
+We use the model trained on Epic-Kitchen as it transfers
+better than OPRA.
+Additionally, we want to test alternative network archi-
+tectures trained on our 3DOI dataset. We use the same loss
+as ours to train it on 3DOI, to ensure fair comparison.
+•
+(ResNet MLP [27]): ResNet MLP uses a ResNet-50 en-
+coder to extract features from input images. We then sample
+Properties
+Image + Query
+Prediction
+Rigid: Yes
+Localization
+Affordance
+GT
+Prediction
+GT
+Prediction
+GT
+Rigid: Yes
+Mov: 1 hand
+Mov: 1 hand
+Arti: Rot
+Action: Pull
+Arti: Rot
+Action: Pull
+Rigid: Yes
+Mov: 1 hand
+Arti: Trans
+Action: Pull
+Rigid: Yes
+Mov: 1 hand
+Arti: Trans
+Action: Pull
+Rigid: Yes
+Mov: 1 hand
+Arti: Free
+Action: Free
+Rigid: Yes
+Mov: 1 hand
+Arti: Free
+Action: Free
+Rigid: No
+Mov: 1 hand
+Arti: Free
+Action: Free
+Rigid: No
+Mov: 1 hand
+Arti: Free
+Action: Free
+Rigid: Yes
+Mov: 2 hands
+Arti: Free
+Action: Free
+Rigid: Yes
+Mov: 2 hands
+Arti: Free
+Action: Free
+Figure 4. Results on our 3DOI dataset.
+indicates the query point. (Row 1, 2) Our approach can correctly recognize articulated objects,
+as well as its type (rotation or translation), axes, and affordance. (Row 3, 4) Our approach can recognize rigid and nonrigid objects in
+egocentric video. (Row 5) Our approach can recognize objects need to be moved by two hands, such as a TV. We note that the affordance
+of these objects have multiple solutions. Affordance is zoomed manually for better visualization. Affordance colormap: minı
+the corresponding spatial features from the feature map us-
+ing the 2D corrdinates of keypoints. We train ResNet MLP
+on all tasks except mask, affordance and depth, as these
+tasks requires dense predictions for each pixel. Adding a
+separate decoder to ResNet makes it a UNet-like architec-
+ture [57], which is beyond the scope of ResNet.
+•
+⚫ (COHESIV [59]): We also pick another model COHESIV,
+which designed for the prediction-at-a-query-location prob-
+lem. Given an input image and corresponding hand location
+as a query, COHESIV predicts the segmentation of hands
+and hand-held objects. We adopt the network, as it pro-
+duces a feature map of queries. we sample an embedding
+from the feature map according to the query point, concate-
+nate it with image features, and produce multiple outputs.
+6.2. Results
+First, we show qualitative results in Figure 4. For ar-
+ticulated objects (drawers, cabinets, etc.), our approach can
+recognize its location, kinematic model (rotation or transla-
+tion), axes and handle. It can also recognize rigid or non-
+rigid objects, as well as light or heavy ones. It works on
+both third-person images or egocentric videos. And all of
+these are achieved in a single model. For articulated ob-
+max.
+Image + Query
+Prediction 1
+Prediction 2
+Prediction 3
+Figure 5. Prediction of 3D potential interaction of articulated ob-
+jects. indicates the query point. In prediction 1, 2, and 3, we ro-
+tate the object along its rotation axis, or translate the object along
+its normal direction.
+jects, we utilize the outputs and further show their potential
+3D interaction in Figure 5. Full details in supplemental.
+We then compare our approach with a set of base-
+lines. The quantitative results are reported in Table 1.
+3DADN [53] is much worse than our approach, since it can
+only detect objects which are being articulated. It fails to
+detect objects humans are not interacting. Instead, our ap-
+Table 1. Quantitative results on our 3DOI dataset. Cat. means category. We report accuracy for all category classification, including
+movable, rigid, articulation and action. We report mean IoU for box and mask, EA-Score for articulation axis, and SIM for affordance. For
+all metrics, the higher the better.
+Movable
+Localization Rigidity →
+Articulation
+Methods
+Cat.
+Box
+Mask
+Cat.
+Cat.
+Axis
+Action
+Cat.
+Affordance
+Probability
+3DADN [53]
+8.53
+6.45
+44.3
+5.63
+SAPIEN [70]
+5.94
+4.57
+41.6
+1.79
+InteractionHotspots [50]
+0.047
+ResNet MLP [27]
+72.5
+21.4
+81.9
+51.9
+68.3
+58.8
+COHESIV [59]
+71.5
+28.3
+35.2
+81.2
+68.0
+67.2
+71.5
+0.013
+Ours
+85.3
+69.9
+77.1
+90.1
+89.4
+80.3
+89.7
+0.167
+Image + Query
+3DADN
+SAPIEN
+Ours
+Ground Truth
+Image Query InteractionHotspots
+Ours
+Ground Truth
+Figure 6. Comparison of 3DADN [53], SAPIEN [70] and our ap-
+proach. indicates the query point. 3DADN has a strong perfor-
+mance when humans are present. However, it has difficulty detect-
+ing objects without human activities. SAPIEN does not generalize
+well to real images. However, it is sometimes better than 3DADN
+when humans are not present.
+proach can detect any objects can be interacted, regardless
+of human activities. SAPIEN is worse than 3DADN, which
+suggests learning from synthetic objects has a huge domain
+gap. This is consistent with the observation of 3DADN. Vi-
+sual comparisons are shown in Figure 6.
+We compare our prediction of the affordance map with
+InteractionHotspots [50]. Our approach outperforms In-
+teractionHotspots significantly, with a 3.5x improvement.
+A visual comparison is shown in Figure 7. While Inter-
+actionHotspots predicts a cloud-like probability map, our
+approach is typically very confident about its prediction.
+However, the overall performance is relatively low, mainly
+due to ambiguity of affordance on deformable objects.
+To explore alternative network architectures, we com-
+pare our approach with ResNet MLP [27] and COHE-
+SIV [59], which are trained on our data with the same loss
+functions. ResNet MLP is reasonable on movable, rigid-
+ity, and action. It is especially bad on bounding box lo-
+calization, which is why we typically rely on a detection
+pipeline such as Mask R-CNN [26]. COHESIV learns rea-
+sonable bounding boxes and masks, which is a huge im-
+provement over ResNet MLP. The performance of movable
+drops compared with ResNet MLP, while that of kinematic
+and action improves. Overall, our approach outperforms
+both ResNet MLP and COHESIV, mainly due to the intro-
+duction of transformers.
+Finally, we evaluate depth on our data. Having state-
+of-the-art depth estimation is orthogonal to our goal, since
+Figure 7. Comparison of InteractionHotspots [50] and our ap-
+proach. indicates the query point. We find InteractionHotspots
+typically makes a cloud like probability map on our data. Our
+model is very confident about its prediction, while there can be
+multiple solutions. Prediction and GT are zoomed manually for
+better visualization. Affordance colormap: min|
+max.
+we only need reasonable depth to localize objects in 3D
+and render potential 3D interactions. In fact, state-of-the-
+art depth estimation models are trained on over ten datasets
+and one million images [54, 73, 14], while our dataset only
+has 5K images with depth ground truth. We just report the
+evaluation of depth estimation, in order to show our model
+has learned reasonable depth. On our data, 96.7% pixels are
+within the 1.25 threshold, 99.3% pixels are within the 1.252
+threshold.
+6.3. Generalization Results
+To test whether our approach and models trained on
+our 3DOI dataset can generalize, we further evaluate our
+approach on WHIRL [1], a robotics dataset manipulating
+every-day objects. Since WHIRL is a small-scale dataset,
+we test our model on WHIRL without finetuning. Our re-
+sults are shown in Figure 8. For both articulated objects and
+deformable objects, our approach can successfully recover
+its kinematic model, location and affordance.
+We also quantitatively evaluate our approach on
+WHIRL. We report our results in Table 2. Similar to
+our 3DOI dataset, our approach outperforms 3DADN [53],
+SAPIEN [70] and InteractionHotspots [50] significantly.
+Table 2. Quantitative results on robotics data [1]. Cat. means category. We report accuracy for all category classification, including
+movable, rigid, articulation and action. We report mean IoU for the boxes and masks, EA-Score for articulation axis, and SIM for
+affordance probablity map. For all metrics, the higher the better.
+Methods
+Movable
+Cat.
+Localization
+Box
+Mask
+Rigidity
+Cat.
+Articulation
+Cat.
+Axis
+Action
+Cat.
+Affordance
+Probability
+3DADN [53]
+13.8
+10.1
+53.3
+4.03
+SAPIEN [70]
+9.14
+6.15
+51.1
+0.0
+InteractionHotspots [50]
+0.045
+-
+ResNet MLP [27]
+88.8
+14.1
+80.0
+51.1
+57.1
+51.1
+COHESIV [59]
+86.7
+37.1
+38.7
+82.2
+73.3
+66.1
+73.3
+0.015
+Ours
+91.1
+68.7
+70.2
+95.6
+80.0
+68.5
+84.4
+0.148
+Image + Query
+Properties
+Localization
+Rigid: Yes
+Mov: 1 hand
+Arti: Trans
+Action: Pull
+Rigid: Yes
+Mov: 1 hand
+Arti: Rot
+Action: Pull
+Rigid: No
+Mov: 1 hand
+Arti: Free
+Action: Free
+Affordance
+Properties
+Localization
+Image + Query
+Prediction
+GT
+Prediction
+GT
+Rigid: Yes
+Mov: 1 hand
+Arti: Rot
+Action: Pull
+Rigid: Yes
+Mov: 1 hand
+Arti: Rot
+Action: Pull
+Rigid: Yes
+Mov: 1 hand
+Arti: Free
+Action: Free
+Rigid: Yes
+Mov: 1 hand
+Arti: Free
+Action: Free
+Rigid: Yes
+Mov: 1 hand
+Arti: Free
+Action: Free
+Rigid: Yes
+Mov: 2 hands
+Arti: Free
+Action: Free
+Rigid: No
+Mov: 1 hand
+Arti: Free
+Action: Free
+Figure 8. Results on robotics data [1]. indicates the query point.
+Without finetuning, our approach generalizes well to robotics data,
+which indicates its potential to help intelligent agents to better ma-
+nipulate objects. Row 1 and 2 are articulated objects. Row 3 and
+Row 4 are deformable objects. Affordance is zoomed manually for
+better visualization. Affordance colormap: min
+max.
+The performance gap is even larger. We believe it is be-
+cause humans are not present in most images of the dataset.
+We compare our approach with ResNet MLP [27] and
+COHESIV [58], which are also trained on our 3DOI dataset.
+Our model outperforms both ResNet MLP and COHESIV
+consistently. The improvement on dense predictions (Lo-
+calization and Affordance) is significant, due to the design
+of mask decoder. The improvement on other properties is
+relatively small. It illustrates models trained on our 3DOI
+dataset generalize well to robotics data, regardless of net-
+work architectures.
+6.4. Limitations and Failure Modes
+We finally discuss our limitations and failure modes. In
+Figure 9, we show some predictions are hard to make from
+visual cues: Some articulated objects are symmetric and
+humans rely on common sense to guess its rotation axis.
+There are also hard examples when predicting the rigidity
+and movable. Finally, we only annotate a single keypoint
+Figure 9. Typical failure modes of our approach. indicates the
+query point. Row 1: Our predicted rotation axis is on the wrong
+side when the objects look symmetric. Row 2: Our predicted
+mask is partial when the scissors are occluded. Row 3:
+Our
+model thinks the trash bin can be picked up by 1 hand, potentially
+since its material looks plastic.
+for each object instance as affordance. But some objects
+may have multiple keypoints as affordance.
+7. Conclusion
+We have presented a novel task of predicting 3D object
+interactions from a single RGB image. To solve the task, we
+collected the 3D Object Interaction dataset, and proposed a
+transformer-based model which predicts the potential inter-
+actions of any objects according to query points. Our ex-
+periments show that our approach outperforms existing ap-
+proaches on our data and generalizes well to robotics data.
+Our approach can have positive impacts by helping build
+smart robots that are able to understand the 3D scene and
+manipulate everyday objects. On the other hand, our ap-
+proach may be useful for surveillance activities.
+Acknowledgments This work was supported by the
+DARPA Machine Common Sense Program. This material is
+based upon work supported by the National Science Foun-
+dation under Grant No. 2142529. We thank Shikhar Bahl
+and Deepak Pathak for their help with WHIRL data, Geor-
+gia Gkioxari for her help with the figure, and Tiange Luo,
+Ang Cao, Cheng Chi, Yixuan Wang, Mohamed El Banani,
+Linyi Jin, Nilesh Kulkarni, Chris Rockwell, Dandan Shan,
+Siyi Chen for helpful discussions.
+References
+[1] Shikhar Bahl, Abhinav Gupta, and Deepak Pathak. Human-
+to-robot imitation in the wild. 2022. 2, 5, 7, 8
+[2] Garrick Brazil, Abhinav Kumar, Julian Straub, Nikhila Ravi,
+Justin Johnson, and Georgia Gkioxari. Omni3d: A large
+benchmark and model for 3d object detection in the wild.
+In CVPR, 2023. 12
+[3] Zoya Bylinskii, Tilke Judd, Aude Oliva, Antonio Torralba,
+and Frédo Durand. What do different evaluation metrics tell
+us about saliency models? IEEE transactions on pattern
+analysis and machine intelligence, 41(3):740-757, 2018. 5
+[4] Nicolas Carion, Francisco Massa, Gabriel Synnaeve, Nicolas
+Usunier, Alexander Kirillov, and Sergey Zagoruyko. End-to-
+end object detection with transformers. In ECCV, 2020. 2,
+3,12
+[5] Yu-Wei Chao, Zhan Wang, Yugeng He, Jiaxuan Wang, and
+Jia Deng. Hico: A benchmark for recognizing human-object
+interactions in images. In ICCV, 2015. 2
+[6] Weifeng Chen, Shengyi Qian, and Jia Deng. Learning single-
+image depth from videos using quality assessment networks.
+In CVPR, 2019. 2
+[7] Bowen Cheng, Alex Schwing, and Alexander Kirillov. Per-
+pixel classification is not all you need for semantic segmen-
+tation. In NeurIPS, 2021. 2
+[8] Cheng Chi and Dmitry Berenson.
+Occlusion-robust de-
+formable object tracking without physics simulation. In
+IROS, 2019. 2
+[9] Christopher B Choy, Danfei Xu, Jun Young Gwak, Kevin
+Chen, and Silvio Savarese. 3D-R2N2: A unified approach
+for single and multi-view 3d object reconstruction. In ECCV,
+2016. 2
+[10] Cristina Garcia Cifuentes, Jan Issac, Manuel Wüthrich, Ste-
+fan Schaal, and Jeannette Bohg. Probabilistic articulated
+real-time tracking for robot manipulation. IEEE Robotics
+and Automation Letters, 2(2):577-584, 2016. 2
+[11] Dima Damen, Hazel Doughty, Giovanni Maria Farinella,
+Antonino Furnari, Jian Ma, Evangelos Kazakos, Davide
+Moltisanti, Jonathan Munro, Toby Perrett, Will Price, and
+Michael Wray. Rescaling egocentric vision: Collection,
+pipeline and challenges for epic-kitchens-100. International
+Journal of Computer Vision (IJCV), 130:33–55, 2022. 3, 5,
+13
+[12] Karthik Desingh, Shiyang Lu, Anthony Opipari, and
+Odest Chadwicke Jenkins. Factored pose estimation of ar-
+ticulated objects using efficient nonparametric belief propa-
+gation. In ICRA, 2019. 2
+[13] Alexey Dosovitskiy, Lucas Beyer, Alexander Kolesnikov,
+Dirk Weissenborn, Xiaohua Zhai, Thomas Unterthiner,
+Mostafa Dehghani, Matthias Minderer, Georg Heigold, Syl-
+vain Gelly, et al. An image is worth 16x16 words: Trans-
+formers for image recognition at scale. arXiv preprint
+arXiv:2010.11929, 2020. 4
+[14] Ainaz Eftekhar, Alexander Sax, Jitendra Malik, and Amir
+Zamir. Omnidata: A scalable pipeline for making multi-task
+mid-level vision datasets from 3d scans. In ICCV, 2021. 3,
+7,13
+[15] David Eigen and Rob Fergus. Predicting depth, surface nor-
+mals and semantic labels with a common multi-scale convo-
+lutional architecture. In ICCV, 2015. 2, 5
+[16] Rui Fan, Hengli Wang, Bohuan Xue, Huaiyang Huang, Yuan
+Wang, Ming Liu, and Ioannis Pitas. Three-filters-to-normal:
+An accurate and ultrafast surface normal estimator. IEEE
+Robotics and Automation Letters, 6(3):5405-5412, 2021. 2
+[17] Kuan Fang, Te-Lin Wu, Daniel Yang, Silvio Savarese, and
+Joseph J Lim. Demo2vec: Reasoning object affordances
+from online videos. In CVPR, 2018. 5
+[18] Martin A Fischler and Robert C Bolles. Random sample
+consensus: a paradigm for model fitting with applications to
+image analysis and automated cartography. Communications
+of the ACM, 1981. 12
+[19] Georgia Gkioxari, Ross Girshick, Piotr Dollar, and Kaiming
+He. Detecting and recognizing human-object interactions. In
+CVPR, 2018. 2
+[20] Georgia Gkioxari, Jitendra Malik, and Justin Johnson. Mesh
+r-cnn. In ICCV, 2019. 1, 2
+[21] Mohit Goyal, Sahil Modi, Rishabh Goyal, and Saurabh
+Gupta. Human hands as probes for interactive object un-
+derstanding. In CVPR, 2022. 2
+[22] Agrim Gupta, Piotr Dollar, and Ross Girshick. Lvis: A
+dataset for large vocabulary instance segmentation. In CVPR,
+2019. 12
+[23] Arjun Gupta, Max E Shepherd, and Saurabh Gupta. Predict-
+ing motion plans for articulating everyday objects. In ICRA,
+2023. 2
+[24] Sanjay Haresh, Xiaohao Sun, Hanxiao Jiang, Angel X
+Chang, and Manolis Savva. Articulated 3d human-object
+interactions from rgb videos: An empirical analysis of ap-
+proaches and challenges. arXiv preprint arXiv:2209.05612,
+2022. 2
+[25] Kaiming He, Xinlei Chen, Saining Xie, Yanghao Li, Piotr
+Dollár, and Ross Girshick. Masked autoencoders are scalable
+vision learners. In CVPR, 2022. 4
+[26] Kaiming He, Georgia Gkioxari, Piotr Dollár, and Ross Gir-
+shick. Mask r-cnn. In ICCV, 2017. 2, 3, 4, 5, 7
+[27] Kaiming He, Xiangyu Zhang, Shaoqing Ren, and Jian Sun.
+Deep residual learning for image recognition. In CVPR,
+2016. 5, 7, 8
+[28] Cheng-Chun Hsu, Zhenyu Jiang, and Yuke Zhu. Ditto in
+the house: Building articulation models of indoor scenes
+through interactive perception. In ICRA, 2023. 2
+[29] Hanxiao Jiang, Yongsen Mao, Manolis Savva, and Angel X
+Chang. Opd: Single-view 3d openable part detection. In
+ECCV, 2022. 2
+[30] Zhenyu Jiang, Cheng-Chun Hsu, and Yuke Zhu. Ditto:
+Building digital twins of articulated objects from interaction.
+In CVPR, 2022. 2
+[31] Linyi Jin, Shengyi Qian, Andrew Owens, and David F.
+Fouhey. Planar surface reconstruction from sparse views. In
+ICCV, 2021. 2
+[32] Alexander Kirillov, Kaiming He, Ross Girshick, Carsten
+Rother, and Piotr Dollár. Panoptic segmentation. In CVPR,
+2019. 2
+[33] Alexander Kirillov, Eric Mintun, Nikhila Ravi, Hanzi Mao,
+Chloe Rolland, Laura Gustafson, Tete Xiao, Spencer White-
+head, Alexander C. Berg, Wan-Yen Lo, Piotr Dollár, and
+Ross Girshick. Segment anything. In ICCV, 2023. 2, 4,
+5,12
+[34] Alexander Kirillov, Yuxin Wu, Kaiming He, and Ross Gir-
+shick. Pointrend: Image segmentation as rendering. In
+CVPR, 2020. 2
+[35] Hei Law and Jia Deng. Cornernet: Detecting objects as
+paired keypoints. In ECCV, 2018. 5, 12
+[36] Gen Li, Varun Jampani, Deqing Sun, and Laura Sevilla-Lara.
+Locate: Localize and transfer object parts for weakly super-
+vised affordance grounding. In CVPR, 2023. 2,5
+[37] Xiaolong Li, He Wang, Li Yi, Leonidas J Guibas, A Lynn
+Abbott, and Shuran Song. Category-level articulated object
+pose estimation. In CVPR, 2020. 1,2
+[38] Yunzhu Li, Jiajun Wu, Russ Tedrake, Joshua B Tenenbaum,
+and Antonio Torralba. Learning particle dynamics for ma-
+nipulating rigid bodies, deformable objects, and fluids. arXiv
+preprint arXiv:1810.01566, 2018. 3
+[39] Zhengqi Li and Noah Snavely. Megadepth: Learning single-
+view depth prediction from internet photos. In CVPR, 2018.
+2,4
+[40] Tsung-Yi Lin, Priya Goyal, Ross Girshick, Kaiming He, and
+Piotr Dollár. Focal loss for dense object detection. In ICCV,
+2017. 4, 5, 12
+[41] Tsung-Yi Lin, Michael Maire, Serge Belongie, James Hays,
+Pietro Perona, Deva Ramanan, Piotr Dollár, and C Lawrence
+Zitnick. Microsoft COCO: Common objects in context. In
+ECCV, 2014. 5
+[42] Chen Liu, Kihwan Kim, Jinwei Gu, Yasutaka Furukawa, and
+Jan Kautz. PlaneRCNN: 3D plane detection and reconstruc-
+tion from a single image. In CVPR, 2019. 2, 12
+[43] Chen Liu, Jimei Yang, Duygu Ceylan, Ersin Yumer, and Ya-
+sutaka Furukawa. Planenet: Piece-wise planar reconstruc-
+tion from a single rgb image. In CVPR, 2018. 2, 12
+[44] Ilya Loshchilov and Frank Hutter. Decoupled weight decay
+regularization. arXiv preprint arXiv:1711.05101, 2017. 12
+[45] Hongchen Luo, Wei Zhai, Jing Zhang, Yang Cao, and
+Dacheng Tao. Learning affordance grounding from exocen-
+tric images. In CVPR, 2022. 2, 5
+[46] Tiange Luo, Honglak Lee, and Justin Johnson. Neural shape
+compiler: A unified framework for transforming between
+text, point cloud, and program. 2022. 2
+[47] Fausto Milletari, Nassir Navab, and Seyed-Ahmad Ahmadi.
+V-net: Fully convolutional neural networks for volumetric
+medical image segmentation. In 3DV, 2016. 4, 12
+[48] Kaichun Mo, Leonidas Guibas, Mustafa Mukadam, Abhinav
+Gupta, and Shubham Tulsiani. Where2act: From pixels to
+actions for articulated 3d objects. In ICCV, 2021. 2
+[49] Jiteng Mu, Weichao Qiu, Adam Kortylewski, Alan Yuille,
+Nuno Vasconcelos, and Xiaolong Wang. A-sdf: Learning
+disentangled signed distance functions for articulated shape
+representation. In ICCV, 2021. 2
+[50] Tushar Nagarajan, Christoph Feichtenhofer, and Kristen
+Grauman. Grounded human-object interaction hotspots from
+video. In ICCV, 2019. 2, 5, 7, 8
+[51] Yinyu Nie, Xiaoguang Han, Shihui Guo, Yujian Zheng, Jian
+Chang, and Jian Jun Zhang. Total3dunderstanding: Joint lay-
+out, object pose and mesh reconstruction for indoor scenes
+from a single image. In CVPR, 2020. 1,2
+[52] Sudeep Pillai, Matthew R Walter, and Seth Teller. Learning
+articulated motions from visual demonstration. In RSS, 2014.
+1,2
+[53] Shengyi Qian, Linyi Jin, Chris Rockwell, Siyi Chen, and
+David F. Fouhey. Understanding 3d object articulation in
+internet videos. In CVPR, 2022. 1, 2, 3, 4, 5, 6, 7, 8, 12, 13
+[54] René Ranftl, Alexey Bochkovskiy, and Vladlen Koltun. Vi-
+sion transformers for dense prediction. In ICCV, 2021. 1, 2,
+3, 4, 7
+[55] Nikhila Ravi, Jeremy Reizenstein, David Novotny, Tay-
+lor Gordon, Wan-Yen Lo, Justin Johnson, and Georgia
+Gkioxari. Accelerating 3d deep learning with pytorch3d.
+arXiv:2007.08501, 2020. 12
+[56] Shaoqing Ren, Kaiming He, Ross Girshick, and Jian Sun.
+Faster r-cnn: Towards real-time object detection with region
+proposal networks. In Advances in neural information pro-
+cessing systems, pages 91-99, 2015. 2
+[57] Olaf Ronneberger, Philipp Fischer, and Thomas Brox. U-net:
+Convolutional networks for biomedical image segmentation.
+In MICCAI, 2015. 6
+[58] Dandan Shan, Jiaqi Geng, Michelle Shu, and David Fouhey.
+Understanding human hands in contact at internet scale. In
+CVPR, 2020. 2, 3, 8
+[59] Dandan Shan, Richard E.L. Higgins, and David F. Fouhey.
+COHESIV: Contrastive object and hand embedding segmen-
+tation in video. In NeurIPS, 2021. 5, 6, 7, 8
+[60] Nathan Silberman, Derek Hoiem, Pushmeet Kohli, and Rob
+Fergus. Indoor segmentation and support inference from
+rgbd images. In European Conference on Computer Vision,
+pages 746-760. Springer, 2012. 3
+[61] Jürgen Sturm, Cyrill Stachniss, and Wolfram Burgard. A
+probabilistic framework for learning kinematic models of ar-
+ticulated objects. Journal of Artificial Intelligence Research,
+41:477-526, 2011. 1, 2, 3
+[62] Xiaohao Sun, Hanxiao Jiang, Manolis Savva, and An-
+gel Xuan Chang. Opdmulti: Openable part detection for
+multiple objects. arXiv preprint arXiv:2303.14087, 2023.
+2
+[63] Matthew Tancik, Pratul Srinivasan, Ben Mildenhall, Sara
+Fridovich-Keil, Nithin Raghavan, Utkarsh Singhal, Ravi Ra-
+mamoorthi, Jonathan Barron, and Ren Ng. Fourier features
+let networks learn high frequency functions in low dimen-
+sional domains. In NeurIPS, 2020. 4
+[64] Xiaolong Wang, David F. Fouhey, and Abhinav Gupta. De-
+signing deep networks for surface normal estimation. In
+CVPR, 2015. 2
+[65] Yixuan Wang, Dale McConachie, and Dmitry Berenson.
+Tracking partially-occluded deformable objects while en-
+forcing geometric constraints. In ICRA, 2021. 2
+[66] Yian Wang, Ruihai Wu, Kaichun Mo, Jiaqi Ke, Qingnan Fan,
+Leonidas J Guibas, and Hao Dong. Adaafford: Learning to
+adapt manipulation affordance for 3d articulated objects via
+few-shot interactions. In ECCV, 2022. 2
+[67] Yingming Wang, Xiangyu Zhang, Tong Yang, and Jian Sun.
+Anchor detr: Query design for transformer-based object de-
+tection. arXiv preprint arXiv:2109.07107, 3(6), 2021. 2
+[68] Fangyin Wei, Rohan Chabra, Lingni Ma, Christoph Lassner,
+Michael Zollhöfer, Szymon Rusinkiewicz, Chris Sweeney,
+Richard Newcombe, and Mira Slavcheva. Self-supervised
+neural articulated shape and appearance models. In CVPR,
+2022. 2
+[69] Ruihai Wu, Yan Zhao, Kaichun Mo, Zizheng Guo, Yian
+Wang, Tianhao Wu, Qingnan Fan, Xuelin Chen, Leonidas
+Guibas, and Hao Dong. Vat-mart: Learning visual action
+trajectory proposals for manipulating 3d articulated objects.
+arXiv preprint arXiv:2106.14440, 2021. 2
+[70] Fanbo Xiang, Yuzhe Qin, Kaichun Mo, Yikuan Xia, Hao
+Zhu, Fangchen Liu, Minghua Liu, Hanxiao Jiang, Yifu Yuan,
+He Wang, et al. Sapien: A simulated part-based interactive
+environment. In CVPR, 2020. 1, 2, 5, 7, 8
+[71] Zhenjia Xu, Cheng Chi, Benjamin Burchfiel, Eric
+Cousineau, Siyuan Feng, and Shuran Song. Dextairity:
+Deformable manipulation can be a breeze. arXiv preprint
+arXiv:2203.01197, 2022. 2
+[72] Fengyu Yang, Chenyang Ma, Jiacheng Zhang, Jing Zhu,
+Wenzhen Yuan, and Andrew Owens. Touch and go: Learn-
+ing from human-collected vision and touch. In NeurIPS,
+2022. 2, 12
+[73] Wei Yin, Jianming Zhang, Oliver Wang, Simon Niklaus,
+Long Mai, Simon Chen, and Chunhua Shen. Learning to
+recover 3d scene shape from a single image. In CVPR, 2021.
+1, 2, 3, 4, 7
+[74] Amir R Zamir, Alexander Sax, William Shen, Leonidas J
+Guibas, Jitendra Malik, and Silvio Savarese. Taskonomy:
+Disentangling task transfer learning. In CVPR, 2018. 3
+[75] Kai Zhao, Qi Han, Chang-Bin Zhang, Jun Xu, and Ming-
+Ming Cheng. Deep hough transform for semantic line detec-
+tion. IEEE Transactions on Pattern Analysis and Machine
+Intelligence, 2021. 4,5
+[76] Yi Zhou, Connelly Barnes, Jingwan Lu, Jimei Yang, and Hao
+Li. On the continuity of rotation representations in neural
+networks. In CVPR, 2019. 4
+A. Implementation
+Transformer Decoder. The transformer decoder D takes
+the memory m from encoder and a set of queries, including
+N point queries kp and one depth query kɖ. It predicts a
+set of point pooled features h₁, ..., hN and depth pooled
+features hd, i.e.
+.k(N),ka) (1)
+h1, h2,...,hy,ha= D(m;k,1),k2),...k
+We set N = 15, as all images have lower than 15 query
+points. For images without 15 query points, we pad the
+input to 15 and do not train on these padding examples. The
+depth query kd is a learnable embedding, similar to object
+queries in DETR [4]. All queries are feed into the decoder
+in parallel, as they are indepedent of each other.
+Prediction heads. DETR [4] uses a linear layer to pre-
+dict the object classes and a three-layer MLP to regress the
+bounding boxes, based on h. Motivated by DETR, we use a
+linear layer for the prediction of movable, rigidity, articula-
+tion class and action. We use a three-layer MLP to predict
+the bounding boxes and rotation axes, as they require local-
+ization. We add a gaussian bump [35] for affordance ground
+truth, where the radius is 5.
+Balance of loss functions. Since we use multiple loss func-
+tions for each prediction and each loss has a different range,
+they need to be balanced. We treat the weights of losses as
+hyperparameters and tune them accordingly. The weights
+of movable, rigidity, articulation class, and action losses are
+0.5. The weights of mask losses (both focal loss [40] and
+DICE [47]) are 2.0. The weights of box L1 loss is 5.0 and
+generalized IoU loss is 2.0. The weights of axis angle loss
+is 1.0 and axis offset loss is 10.0. The weights of affordance
+loss is 100.0. The weights of depth losses are 1.0. For both
+focal losses of segmentation masks and affordance map, we
+use Y = 2. For the focal loss of segmentation mask, we
+use a = 0.25 to balance positive and negative examples.
+In affordance we use the standard a = 0.95 since there are
+much more negatives than positives.
+Training details. The image encoder, prompt encoder and
+the mask decoder are pretrained on Segment-Anything [33].
+To save gpu memory, we use SAM-VIT-b as the image en-
+coder, which is the lightest pretrained model. The other
+heads (e.g. affordance) are trained from scratch. We use an
+Adam W optimizer [44] of the learning rate 10-4 and train
+the model for 200 epochs. The input and output resolution
+is 768×1024. The batch size is 2. We train the model on
+four NVIDIA A40 gpu, with distributed data parallel.
+Rendering 3D Interaction. Given all these predictions, we
+are able to predict the potential 3D object interaction of ar-
+ticulated objects from a single image. For articulated ob-
+jects with a rotation axis, we first backproject the predicted
+2D axis to 3D, based on the predicted depth [53]. We then
+rotate the object point cloud along the 3D axis and project
+Normalized height
+20
+10
+Query Point
+BBox Center
+Affordance
+Articulated Rigid, Non-articulated Deformable
+Object type
+Normalized width
+75.1%
+Rotation
+Translation
+Articulation type
+14.5%
+10
+38.1%
+Two hands
+Movable type
+Fixture
+Figure 10. Statistics of our 3DOI dataset. (Row 1) We show the
+distribution of query points, box centers, and affordance in nor-
+malized image coordinates, similar to LVIS [22] and Omni3D [2].
+(Row 2) We show the distribution of object types, articulation
+types and movable types.
+it back to 2D. We fit a homography between the rotated ob-
+ject points and the original one, using RANSAC [18]. Fi-
+nally, we warp the homography on the original object mask.
+There is a similar procedure for articulated objects with a
+translation axis. Instead, we estimate an average surface
+normal of the object, and use it as the direction of trans-
+lation axis [43, 42, 53]. Moreover, the interaction of de-
+formable objects is high dependent of its material, which
+is difficult to predict from pure visual cues [72]. On the
+other hand, freeform objects can be moved without any con-
+straints. Therefore, in this paper, we only render 3D inter-
+action for articulated objects. We use pytorch3D [55] and
+opencv to implement the projection and homography fitting.
+Final results are shown in the animation video.
+B. Data Collection
+In this section, we introduce steps of the data annotation.
+We show the statistics of our dataset in Figure 10. We also
+show additional annotations in Figure 11.
+Selecting query points. We first ask workers to select ap-
+proximately five query points for each image. The query
+point should be on an interactive object. Some query point
+should be on large objects, while others should be on small
+objects. We annotate more query points of fixtures later, as
+fixtures do not need additional annotations.
+Bounding boxes. According to the query point, we ask
+workers to draw a bounding box. The bounding box should
+only cover the movable part of an object. For example, if
+the query point is on the door of a refrigerator, the bounding
+box should only cover the door, instead of the whole refrig-
+erator. It is because we are asking "what can I do here”.
+Properties of the object. We then annotate properties of
+the object. It is a series of multiple choice questions: (1)
+can the object be moved by one hand, or two hands? (2) is
+onehand nonrigid
+onehand nonrigid
+onehand rigid trans puonehand rigid_rot_pull
+onehand rigid_rot pull
+onehand rigid rot pull
+onehand rigid rot push
+onehand rigid_rot_pull
+onehand rigid free
+onehand rigid rot push
+onehand rigid trans p
+Rilakk
+onehand rigid free
+oreriano rigid free
+onehand rigid rot
+onehand rigid rot pull
+lonehand rigid rot pull
+onehand rigid rot
+twohand rigid free
+(各种状况从这里开始出现……….)
+onehand rigid free
+onehand rigid_rot_pus
+twohand nonrigid
+onehand nonrigid
+onehand rigid trans_pull
+id rconehand rigid rot pull
+Janehand rigid_rot_pullit pull
+onehand rigid free
+onehand_rigid_free
+onehand rigid free
+nehonehand rigid free
+onehand rigid fronehand rigid free
+onehand rigid free
+onehand rigid_free
+onehand rigid free
+onehand rigid free
+onehand_nonrigid-
+onehand rigid_trans_pull
+onehand rigid free
+onehand
+onehand rigid free
+onehand rigid free
+twohand rigid free
+onehand rigid rot pull
+onehand rigid freel
+lonehand rigid free
+onehand rigid free
+onehand nonrigid
+onehand ri
+onehand rigid free
+twohand rigid free
+onehand rigid free
+twohand_rigid_free
+onehand rigid free
+onehand rigid_rot_pull
+onehand_rigid_rot_pull
+onehand rigid_rot_pull
+onehand rigid tonehand rigid
+oneh onehand
+onehand rigid_free
+onehand rigidtwohand_rigid_free
+twohand rigid free
+twoha
+twohand rigid
+twohand rigid free
+onehand nonrigid
+twohand rigid_free|
+twohand rigid free
+twohand nonrigid gid
+onehand_rigid_rot_pull
+twohand
+twohand_nonrigid"
+onehand rigid free
+Itwohand_nonrigid
+onehand rigid free
+onehand rigid_rot_pull
+onehand rigid rot p
+onehand
+onehand_nonrigid
+onehand_nonri
+onehand rigid free
+oneha
+twohand nonrigid
+twohand_nonrigid
+twohand_nonrigid
+twohand rigid free
+twohand_rigid_f
+onehand_nonrigid
+onehand rigid_rot_pull
+twohand
+onehand_rigid_rot_pull
+onehand rigid fr
+onehand rigiconehand rigid rot pull twohand_nonrigid
+onehand rigid trans_pull
+onehand rigid rot_puil
+onehand_rigid-rot_pull
+twohand_nonrigid
+twohand nitwohand nonrinid
+twohand
+twohar
+Figure 11. Example annotations of our 3DOI dataset. Row 1-2 come from Internet videos [53]. Row 3-4 come from egocentric videos [11].
+Row 5-6 come from renderings of 3D dataset [14]. is the query point, and is the affordance.
+the object rigid or not? (3) if it is rigid, is it articulated or
+freeform? (4) if it is articulated, is the motion rotation or
+translation? (5) if we want to interact with the articulated
+object, should I push or pull?
+Rotation Axes. For objects which can be rotated, we ask
+workers to draw a 2D line to represent the rotation axis.
+Segmentation Masks. For all objects, we further ask work-
+ers to draw the segmentation mask of the movable part.
+Fixtures. Finally, we collect another 10K images and ran-
+domly sample 5 query points for each image. We ask work-
+ers to annotate whether they are fixtures or not. We mix the
+dataset with these annotations.

@@ -1,0 +1,837 @@
+arXiv:2305.09636v1 [cs.SD] 16 May 2023
+SoundStorm: Efficient Parallel Audio Generation
+Zalán Borsos
+1
+Matt Sharifi
+1
+Abstract
+1
+Damien Vincent Eugene Kharitonov¹ Neil Zeghidour¹ Marco Tagliasacchi ¹
+We present SoundStorm, a model for efficient,
+non-autoregressive audio generation. Sound-
+Storm receives as input the semantic tokens of
+AudioLM, and relies on bidirectional attention
+and confidence-based parallel decoding to gen-
+erate the tokens of a neural audio codec. Com-
+pared to the autoregressive generation approach
+of AudioLM, our model produces audio of the
+same quality and with higher consistency in
+voice and acoustic conditions, while being two
+orders of magnitude faster. SoundStorm gen-
+erates 30 seconds of audio in 0.5 seconds on
+a TPU-v4. We demonstrate the ability of our
+model to scale audio generation to longer se-
+quences by synthesizing high-quality, natural di-
+alogue segments, given a transcript annotated
+with speaker turns and a short prompt with the
+speakers' voices. Audio samples are available
+at https://google-research.github.
+io/seanet/soundstorm/examples/
+1. Introduction
+Modeling discrete representations of audio produced by
+neural codecs (Zeghidour et al., 2022; Défossez et al., 2022)
+makes the task of audio generation amenable to the pow-
+erful Transformer-based sequence-to-sequence modeling
+approaches (Vaswani et al., 2017). Casting unconditional
+and conditional audio generation as sequence-to-sequence
+modeling has unlocked rapid progress in speech continu-
+ation (Borsos et al., 2022), text-to-speech (Wang et al.,
+2023; Kharitonov et al., 2023), and general audio and music
+generation (Kreuk et al., 2022; Agostinelli et al., 2023).
+For generating high-quality audio by modeling the tokens
+of a neural codec, the rate of the discrete representation
+must be increased, resulting in either an exponential growth
+in codebook size or in long token sequences. While the
+exponential growth of the codebook is prohibitive due to
+memory limitations, in turn, long token sequences also
+present computational challenges for autoregressive models.
+Google Research.
+In particular, attention-based models, which are the main
+focus of this work, will incur quadratic runtime complexity
+with respect to the sequence length for calculating the
+self-attention. Thus, addressing the trade-off between
+perceptual quality and runtime is one of the core challenges
+for audio generation.
+The problem of generating long audio token sequences can
+be addressed by at least three orthogonal approaches, or
+a combination thereof: i) efficient attention mechanisms
+(Kitaev et al., 2020; Choromanski et al., 2021; Xiong
+et al., 2021; Hawthorne et al., 2022), ii) non-autoregressive,
+parallel decoding schemes (Gu et al., 2017; Ghazvininejad
+et al., 2019; Chang et al., 2022), iii) custom architectures
+adapted to the special structure of the tokens produced
+by neural audio codecs (Kreuk et al., 2022; Wang et al.,
+2023; Lee et al., 2022). However, in the context of
+modeling the token sequence of neural audio codecs, either
+unconditionally or based on weak conditioning such as
+text, the efficient generation of long, high-quality audio
+segments remains an open problem.
+We believe that it is the special structure of the audio token
+sequence that holds the most promise for future advances
+in long-sequence audio modeling. Concretely, both Sound-
+Stream (Zeghidour et al., 2022) and EnCodec (Défossez
+et al., 2022) rely on Residual Vector Quantization (RVQ),
+where each compressed audio frame is quantized by a series
+of quantizers, with each quantizer operating on the residual
+of the previous one, and the number of quantizers control-
+ling the overall bitrate. This induces a hierarchical token
+structure, where tokens from finer RVQ levels contribute
+less to the perceptual quality, allowing for efficient factor-
+izations and approximations of the joint distribution of the
+token sequence. Hence, the models and decoding schemes
+should take this special structure of the input into account
+for efficient training and inference.
+In this work, we present SoundStorm, a method for ef-
+ficient and high-quality audio generation. SoundStorm
+addresses the problem of generating long audio token se-
+quences by relying on: i) an architecture adapted to the
+hierarchical structure of the audio tokens, ii) a parallel,
+non-autoregressive, confidence-based decoding scheme in-
+spired by MaskGIT (Chang et al., 2022) for residual vector-
+quantized token sequences.
+SoundStorm: Efficient Parallel Audio Generation
+SoundStorm relies on a bidirectional attention-based Con-
+former (Gulati et al., 2020) that is trained to predict masked
+audio tokens produced by SoundStream given a condition-
+ing signal such as the semantic tokens of AudioLM (Borsos
+et al., 2022). On the input side, it sums up the embeddings
+of the tokens corresponding to the same SoundStream frame,
+such that the internal sequence length for the self-attention
+is identical to the number of SoundStream frames, and in-
+dependent of the number of quantizers in the RVQ. The
+output embeddings are then processed by separate heads per
+RVQ level to predict the masked target tokens. At inference
+time, given the conditioning signal, SoundStorm starts with
+all audio tokens masked out, and fills in the masked tokens
+RVQ level-by-level over several iterations, predicting multi-
+ple tokens in parallel during a single iteration within a level.
+To support this inference scheme, we propose a masking
+scheme for training that mimics the inference procedure.
+We demonstrate that SoundStorm can serve as AudioLM's
+acoustic generator, replacing both AudioLM's stage two
+(coarse acoustic model) and stage three (fine acoustic
+model). SoundStorm produces audio two orders of mag-
+nitude faster than AudioLM's hierarchical autoregressive
+acoustic generator with matching quality and improved con-
+sistency in terms of speaker identity and acoustic condi-
+tions. Furthermore, we show that SoundStorm, coupled
+with the text-to-semantic modeling stage of SPEAR-TTS
+(Kharitonov et al., 2023), can synthesize high-quality, nat-
+ural dialogues, allowing one to control the spoken content
+(via transcripts), speaker voices (via short voice prompts)
+and speaker turns (via transcript annotations). When synthe-
+sizing dialogues of 30 seconds, we measure a runtime of 2
+seconds on a single TPU-v4 (Jouppi et al., 2023).
+2. Related work
+Modeling the tokens of neural audio codecs. Unsuper-
+vised speech embeddings (Baevski et al., 2020; Hsu et al.,
+2021; Chung et al., 2021) have provided a low-framerate
+representation of the underlying signal which remains rich
+enough after discretization for language models to generate
+intelligible speech from a specific speaker as a sequence of
+tokens (Lakhotia et al., 2021). Neural audio codecs (Zeghi-
+dour et al., 2022; Défossez et al., 2022), with their ability of
+reconstructing high-quality audio at very low bitrates, sub-
+sequently allowed for extending discrete modeling to audio
+signals as diverse as multi-speaker speech and piano (Bor-
+sos et al., 2022; Kharitonov et al., 2023), music (Agostinelli
+et al., 2023) or sound effects (Kreuk et al., 2022). In particu-
+lar, AudioLM (Borsos et al., 2022) introduces a hierarchical
+sequence-to-sequence approach where high-level seman-
+tic tokens are generated as an intermediate representation,
+which is then used as a conditioning signal for predicting
+tokens of a SoundStream (Zeghidour et al., 2022) codec.
+While this hierarchical approach has demonstrated remark-
+able results for speech (Kharitonov et al., 2023) and music
+modeling (Agostinelli et al., 2023; Donahue et al., 2023),
+the computational cost of modeling flattened SoundStream
+tokens with self-attention scales quadratically with the se-
+quence length and thus the bitrate of the neural codec, pre-
+venting these models from generating long-form audio with
+high quality. SoundStorm alleviates this issue by modeling
+the multi-level tokens of the neural codec in parallel, induc-
+ing a two-order of magnitude speed-up over autoregressive
+modeling and unlocking the ability to scale audio generation
+abilities both in quality and in sequence length.
+RVQ-aware architectures. A common design choice for
+modeling RVQ token sequences is to sum the embeddings
+corresponding to the same RVQ input embedding (frame)
+in order to reduce the sequence length. Operating on such
+sequences, AudioGen (Kreuk et al., 2022) proposes a Trans-
+former with Q separate heads for the different RVQ levels,
+predicting the tokens for an RVQ frame in parallel. While
+providing a significant speedup for inference, the authors
+found that, for text-to-audio generation, this approach has
+an inferior performance compared to modeling the token
+sequence of a neural audio codec with similar bitrate and re-
+construction quality, but with a single level of quantization.
+VALL-E (Wang et al., 2023) instead relies on a hybrid
+approach, where the tokens corresponding to the first RVQ
+level are predicted autoregressively, and the subsequent
+levels are produced non-autoregressively. The latter is
+achieved by a model that sums up the embeddings from
+the same RVQ input frame, and applies bidirectional
+self-attention to predict all tokens from RVQ level 9 + 1
+given all tokens from levels 1,. q, the acoustic prompt
+and the phoneme sequence. During inference, tokens
+starting from the second level of the RVQ are produced
+iteratively, performing greedy decoding (choosing the most
+likely tokens) level-by-level. Level-wise greedy decoding
+represents the baseline for our method.
+Modeling sequences produced by RVQ has been also inves-
+tigated in domains other than audio. For example, the RQ-
+Transformer (Lee et al., 2022) also adds
+up
+the embeddings
+corresponding to the same RVQ input frame, but factorizes
+the full joint distribution efficiently with a spatial and a
+depth Transformer, for modeling autoregressively the RVQ
+frames and tokens within the frames, respectively. While
+it has not been demonstrated yet, this approach, potentially
+coupled with parallel decoding schemes, is a promising
+future avenue for audio generation.
+Parallel decoding. In order to improve the inference time
+and to allow bidirectional non-causal attention on the input
+sequence, parallel decoding schemes have been proposed
+for text (Gu et al., 2017; Ghazvininejad et al., 2019), im-
+SoundStorm: Efficient Parallel Audio Generation
+SoundStream tokens
+Head
+Head
+Head
+Head
+92
+|
+91
+Conformer
+with bidirectional self-attention
+A
+t₁
+た
+***
+Conditioning tokens
+Masked tokens
+Tokens considered
+in the loss
+Figure 1. SoundStorm architecture and masking scheme for training (without prompting). The model reduces the input sequence length
+by summing up the embeddings of the tokens corresponding to the same SoundStream frame. During training, an RVQ level q is sampled
+(q = 2 out of Q = 3 levels in the figure), and a subset of randomly sampled tokens at level q are masked together with all tokens at RVQ
+levels g+1,..., Q. The loss is computed only on the masked tokens at level q.
+age (Chang et al., 2022) and video generation (Villegas et al.,
+2022). Of particular relevance to our work is the parallel,
+iterative sampling scheme of MaskGIT (Chang et al., 2022).
+During inference time, MaskGIT starts from masked tokens,
+and in each round, predicts a portion of the tokens based on
+confidence scores. The portion of the predicted tokens in
+each round is controlled by a schedule, and usually progres-
+sively increases over the iterations once predicted, the
+tokens are treated as fixed. Our proposed decoding scheme
+can be seen as the extension of MaskGIT's decoding to
+token sequences produced by residual quantization.
+3. Method
+SoundStorm receives as input a sequence of discrete tokens
+representing the conditioning signal and produces as output
+a sequence of SoundStream tokens, which can be decoded
+back to audio waveforms. We assume that the conditioning
+signal is time-aligned with the SoundStream frames or can
+be upsampled to the same rate. Such a conditioning signal is,
+for example, the semantic token sequence used in AudioLM,
+SPEAR-TTS or MusicLM, which makes our method a drop-
+in replacement for the acoustic generators of these models.
+We leave the extension to other types of conditioning sig-
+nals via cross-attention or to unconditional sampling for
+future work, and focus our presentation of SoundStorm
+as the acoustic generator within AudioLM, replacing both
+AudioLM's coarse and fine acoustic modeling stages.
+3.1. Architecture
+The architecture of the model is illustrated in Figure 1. At
+the input side, we interleave the time-aligned conditioning
+tokens with the SoundStream tokens at the frame level,
+embed the resulting sequence, sum the embeddings
+corresponding to the same frame, including the embedding
+of the conditioning token, and pass the resulting continuous
+embeddings to a Conformer. Consequently, the sequence
+length for bidirectional self-attention in the Conformer is
+determined by the number of SoundStream frames (typi-
+cally 50 per second), and thus is independent of the number
+of RVQ levels Q, allowing one to handle audio with length
+on the order of minutes. At the output side, we use Q dense
+layers as heads to produce the target SoundStream tokens.
+3.2. Masking
+For designing our masking and decoding, we extend the
+masking and confidence-based parallel decoding scheme of
+MaskGIT (Chang et al., 2022) to token sequences produced
+by RVQ. At a high level, our approach can be seen as follow-
+ing the strategy of Chang et al. (2022) per RVQ level in a
+coarse-to-fine order. The coarse-to-fine ordering is of partic-
+ular importance, since it not only respects the conditional de-
+pendencies between levels of the RVQ hierarchy, but also ex-
+ploits the conditional independence of tokens from finer lev-
+els given all tokens from coarser levels. The tokens of finer
+levels are responsible for local, fine acoustic details and can
+thus be sampled in parallel without a loss of audio quality.
+We design our masking scheme for training accordingly. To
+enable voice prompting, we randomly sample a timestep
+t = {1,………‚T}, where T denotes the maximum sequence
+length, and we do not mask any tokens before this timestep.
+The conditioning tokens are never masked. Let YЄ
+{1,..., C}xQ denote the SoundStream tokens, where C
+indicates the codebook size used in each RVQ level out of
+the Q levels. Our masking scheme proceeds as follows:
+•
+Sample the prompt delimiter timestep t~ ~U{0,T−1};
+Sample the current RVQ level q ~U{1,Q};
+•
+SoundStorm: Efficient Parallel Audio Generation
+• Sample the mask M = {0,1}ª according to a cosine
+schedule (Chang et al., 2022) for level q, i.e., sample
+the masking ratio p = cos(u) where u ~ U[0, π/2],
+and sample iid M¿ ~ Bernoulli(p).
+=
+• Mask the selected non-prompt tokens at the current
+RVQ level q (mask Yt'¸g if Mt' 1 and t' > t) and all
+non-prompt tokens at finer RVQ levels (Y>t,>q).
+,9
+Given a masked token sequence, we train the model with
+cross-entropy loss with the ground-truth tokens as target,
+where the loss is only calculated on the masked tokens
+within the q-th RVQ level. An example of this masking
+scheme is illustrated in Figure 1, with T = 4, Q = 3, t = 0
+and q = 2.
+3.3. Iterative Parallel Decoding
+Given a conditioning signal, our decoding scheme starts
+with all SoundStream tokens masked out except for the ones
+of the prompt (if provided). Then, it proceeds to sampling
+the tokens RVQ level-wise in a coarse-to-fine order, only
+proceeding to level q + 1 when all tokens for levels 1, ..., q
+have been sampled. Within an RVQ level, we use the
+confidence-based sampling scheme of Chang et al. (2022).
+Namely, we perform multiple forward passes, and at each
+iteration i, we sample candidates for the masked positions,
+retaining på of them based on confidence scores, where
+Pi follows a cosine schedule. Compared to Chang et al.
+(2022), we use greedy decoding instead of confidence-based
+sampling for the last iteration within each RVQ level, which
+we found to improve the perceived audio quality.
+Performing the decoding RVQ level-wise makes it possible
+to exploit the conditional independence assumption in finer
+levels, namely that multiple finer tokens can be sampled
+in parallel since they represent local, fine acoustic details.
+This implies that we can decrease the number of forward
+passes significantly as we progress to finer RVQ levels
+during decoding.
+4. Experiments
+4.1. Model Training and Inference Setup
+=
+=
+In our experiments, we rely on a SoundStream codec that
+produces 50 frames per second and uses an RVQ with Q
+12 levels, with 1024 codebook size per level, resulting in a
+bitrate of 50-12-log2 1024 6000 bps. We use the semantic
+tokens of AudioLM as conditioning, which originate from
+w2v-BERT (Chung et al., 2021) embeddings quantized with
+k-means with 1024 cluster centers. These tokens have a rate
+of 25 tokens per second, so we duplicate them to match the
+framerate of SoundStream.
+We use a Conformer with 350M parameters, with 12 layers,
+16 attention heads, embedding size and model dimension of
+1024, feedforward dimension of 4096, convolution kernel
+size of 5, and rotary positional embeddings (Su et al., 2021).
+During decoding, we use (16, 1, 1, ..., 1) iterations for
+the RVQ levels, that is, 16 iterations in the first level and
+greedily choosing the tokens with the highest probability in
+the subsequent levels, level-by-level. This strategy results in
+27 forward passes with the model to predict 30 seconds of
+audio, or the equivalent of 30.50·12 = 18000 SoundStream
+tokens. We train the model on LibriLight (Kahn et al.,
+2020) (60k hours), with 10 epochs over the data, sampling
+random windows of length between 0 and 30 seconds from
+each example.
+4.2. Speech Intelligibility, Audio Quality, Voice
+Preservation and Acoustic Consistency
+In a series of subjective evaluation experiments, Borsos et al.
+(2022) and Kharitonov et al. (2023) have shown that the
+acoustic generation stage of AudioLM produces audio with
+quality indistinguishable from the quality of the ground-
+truth samples. Hence, we consider AudioLM's hierarchical
+acoustic generation stages (coarse and fine stages) as a base-
+line in our experiment. One important difference compared
+to the AudioLM acoustic stage experiments of Borsos et al.
+(2022) is that we require the conditioning signal to be time-
+aligned with the SoundStream frames, whereas the experi-
+ments of Borsos et al. (2022) use semantic tokens with dupli-
+cates removed. For a fair comparison, so that both methods
+use the same conditioning, we repeat the acoustic stage
+experiments of Borsos et al. (2022) without removing dupli-
+cate semantic tokens, thus making the conditioning stronger.
+We also use the same SoundStream codec for both methods.
+Speech intelligibility. We quantify speech intelligibility
+by measuring the word error rate (WER) and character error
+rate (CER) of the generated audio after transcribing it with
+ASR. The generation is conditioned on the ground-truth se-
+mantic tokens from LibriSpeech test-clean split (Panayotov
+et al., 2015). We perform these experiments both in the
+unprompted setup, where the methods can randomly sample
+speakers, and in the prompted setup, where the methods
+should respect the speaker identity provided in the form of
+ground-truth SoundStream tokens corresponding to the first
+3-seconds. We use a Conformer Transducer-L (Gulati et al.,
+2020) ASR model for transcription.
+We report the results separately on short (4-10 seconds),
+medium (10-20 seconds) and long (20-30 seconds) seg-
+ments. Since AudioLM's acoustic generation stage is au-
+toregressive in the flattened token sequence of the first 4
+RVQ levels, it is prohibitively expensive to generate 30 sec-
+onds in a single pass. Hence, we generate segments longer
+than 10 seconds with a slide-and-prompt approach, where
+we generate 10-second chunks and use the last 3 seconds
+as the prompt for the next chunk. The results in Table 1
+SoundStorm: Efficient Parallel Audio Generation
+Table 1. Comparing intelligibility, quality, voice preservation, and acoustic consistency of AudioLM's acoustic generator and SoundStorm.
+We report metric values for the ‘short' (4-10 s), ‘mid' (10-20 s), and ‘long' (20-30 s) splits of LibriSpeech test-clean separately.
+SoundStorm matches AudioLM's acoustic generator in terms of audio quality, and outperforms it in terms of speech intelligibility and
+acoustic consistency.
+Audio
+WER↓
+CER↓
+quality
+Voice
+preservation
+Acoustic
+consistency
+short
+mid
+long
+short
+mid
+long
+short
+mid
+long
+short
+mid
+long
+short
+mid
+long
+Original
+2.62 1.95 2.20
+0.89
+0.55
+0.69 3.72 3.91 3.99
+0.63 0.65 0.66 0.97
+0.95
+0.93
+SoundStream rec.
+AudioLM
+SoundStorm
+4.65 3.59 4.79 2.15
+3.48 2.55 3.33 1.39
+1.57
+0.89
+Without a speaker prompt
+2.30 3.93 4.04 4.08
+1.29 4.01 4.16 4.20
+With a speaker prompt
+AudioLM
+SoundStorm
+3.77 3.40 3.75 1.50
+2.99 2.43 3.36 1.10
+1.47
+0.81
+1.54
+1.24
+3.91 4.06 4.10 0.46 0.48 0.48 0.96 0.91 0.86
+3.81 4.05 4.15 0.57 0.59 0.59 0.96 0.94 0.91
+Acoustic consistency
+1.0
+0.9
+0.8
+Original
+· SoundStorm
+AudioLM
+0.6
+0.5
+5
+10
+15
+20
+25
+Time (s)
+Figure 2. Acoustic consistency between the prompt and the gen-
+erated audio for the samples in the ‘'long' split of LibriSpeech
+test-clean. The shaded area represents the inter-quartile range.
+show that SoundStorm improves over AudioLM's acoustic
+generation significantly in terms of WER and CER on all
+splits, both for the prompted and unprompted scenario.
+Voice preservation. Next, we measure the capability of
+SoundStorm to maintain the speaker identity of the prompt.
+To do so, we extract speaker embeddings from the prompt
+and the generated audio and compute their cosine similarity.
+As in Wang et al. (2023) and Kharitonov et al. (2023), we
+compute embeddings with a publicly available¹ speaker
+verification system based on WavLM (Chen et al., 2022).
+Table 1 shows that SoundStorm significantly outperforms
+the AudioLM baseline.
+Acoustic consistency drift. In the case of long genera-
+tion, it is interesting to measure to what extent the acoustic
+properties of the prompt (e.g., speaker identity, recording
+conditions) are preserved along time in the generated audio.
+To this end, we train a model capable of assessing whether
+'https://github.com/microsoft/UniSpeech/
+tree/main/downstreams/speaker_verification #
+pre-trained-models
+two short segments come from the same recording. Specifi-
+cally, we consider a speech corpus in which each example
+contains a recording from a single speaker (e.g., LibriLight)
+and extract two random, non-overlapping crops with du-
+ration of 2-5 seconds. Then, from each crop, we extract
+a sequence of embeddings from an intermediate layer of
+a BEST-RQ model (Chiu et al., 2022) pre-trained on the
+same corpus. We use layer 4 in our experiments. Each
+sequence of embeddings is fed to a model that consists of a
+Conformer layer, followed by global average pooling along
+the temporal dimension and a linear projection layer, so that
+each crop is represented with a single 1024-dimensional
+embedding. We train this model using the same contrastive
+loss as Radford et al. (2021).
+To measure acoustic consistency drift, we compute the co-
+sine similarity between the embedding computed from the
+prompt of 3 seconds, and the embeddings computed from
+subsequent crops of 3 seconds along the temporal axis. As
+an illustration, Figure 2 shows the measured drift on the
+'long' split of Libri Speech test-clean. We observe that for the
+audio generated by SoundStorm, the acoustic consistency
+score is close to the one measured for the original samples,
+while for AudioLM we observe a more significant drift over
+time. Table 1 reports the average acoustic consistency scores
+on the 'short', 'mid' and 'long' splits, where the averaging
+is done over non-overlapping crops. Unsurprisingly, the
+improvement is more evident for longer audio samples.
+Audio Quality. We use a MOS estimator similar to DNS-
+MOS (Reddy et al., 2021) to estimate the perceived audio
+quality of the generated samples. The results in Table 1
+show that, according to the MOS estimator, SoundStorm is
+on par with AudioLM's acoustic generator, which in turn
+has been shown to match the quality of the ground-truth
+audio in the subjective studies of Borsos et al. (2022) and
+Kharitonov et al. (2023).
+Runtime (s)
+102
+101
+10°
+10-1.
+10-2.
+10
+SoundStorm: Efficient Parallel Audio Generation
+SoundStream Dec
+AudioLM Stage 1
+AudioLM Stage 2&3|
+SoundStorm
+20
+30
+Sequence length (s)
+Figure 3. Runtimes of SoundStream decoding, SoundStorm and
+different stages of AudioLM on a TPU-v4.
+Audio quality
+4.2
+4.1-
+4.0-
+3.9-
+3.8
+3.7
+Long
+Mid
++ Short
+16
+32
+Number of iterations
+Figure 4. Audio quality with respect to the number of decoding
+iterations in the first RVQ level.
+4.3. Runtime and Ablations
+Runtime. We measure the runtime of the different meth-
+ods to generate up to 30 seconds of audio on a single TPU-
+v4. Figure 3 shows that SoundStorm can generate audio
+two orders of magnitude faster than AudioLM's acoustic
+generator ("AudioLM Stage 2&3" in the figure), with a real
+time factor of 0.017, including decoding to waveform by the
+SoundStream decoder. We also measure the runtime of the
+semantic generation stage of AudioLM ("AudioLM Stage 1"
+in the figure), and conclude that by coupling the semantic
+generation stage with SoundStream, we can generate 30 sec-
+onds of speech continuation within 2 seconds (1.4 seconds
+for semantic generation, 0.5 seconds for SoundStorm and
+0.1 seconds for SoundStream decoding).
+Number of decoding steps. In the former experiments,
+we used 16 iterations for decoding the first RVQ level, and
+performed greedy decoding for the subsequent levels. We
+now investigate the effect of the number of decoding itera-
+tions for the different RVQ levels.
+To achieve this, we repeat the speaker-prompted experiment
+on LibriSpeech test-clean with different number of decoding
+iterations in the first level. Figure 4 shows that, according
+to the audio quality estimator, our strategy of using 16 iter-
+ations achieves an increase of 0.1-0.2 in the quality score
+compared to level-wise greedy decoding, whereas further
+increasing the number of iterations does not improve the
+score. The artifacts produced by the greedy strategy are
+clearly perceivable; we provide samples produced by this
+strategy on the accompanying webpage.
+We have also experimented with increasing the number of
+iterations for RVQ levels 2-12, and we have found no sta-
+tistically significant improvement in the audio quality score
+when synthesizing samples from LibriSpeech test-clean.
+We note that this observation is in line with the decoding
+strategy of Wang et al. (2023), which is autoregressive in
+the first RVQ level, and level-wise greedy beyond. We hy-
+pothesize that performing multiple iterations on finer levels
+becomes relevant when generating audio beyond speech,
+where the semantic tokens and first RVQ level SoundStream
+tokens will not capture all the important acoustic details.
+5. Dialogue Synthesis
+Spoken dialogue synthesis is an important application where
+maintaining speaker identities over multiple speaker turns
+and long time spans is of paramount importance. This makes
+it an ideal use-case for SoundStorm. In this section, we
+show that, by coupling SoundStorm with a text-to-semantic
+token model, we can synthesize high-quality multi-turn di-
+alogues with duration of up to 30 seconds. This approach is
+similar to the one of SPEAR-TTS (Kharitonov et al., 2023).
+We collected a corpus of approximately 100,000 hours of
+dialogues, segmented into 30-second chunks. By running an
+off-the-shelf ASR system, we generated a transcript for each
+segment. In these transcripts, speaker turns are annotated
+with a turn marker symbol in the appropriate location in
+the transcript. To extract semantic tokens, we train a 0.6B
+parameter BEST-RQ (Chiu et al., 2022) on this dataset and
+fit k-means with 4096 cluster centers to the activations of
+layer 13 of the BEST-RQ model. This results in 25 semantic
+tokens per seconds, with a codebook size of 4096. We train
+a SoundStream codec operating at 24 kHz, producing 50
+frames per second with 12 RVQ on this corpus.
+To model the text-to-semantic token mapping, we train a
+ByT5-large Transformer (Xue et al., 2022). This is an
+encoder-decoder model with 36 encoder and 12 decoder
+layers, embedding size of 1536 and feed-forward dimension
+of 3840. In total, the model has 1.2B parameters. We only
+train the decoder and use a text-pretrained encoder from a
+published ByT5 checkpoint (Xue et al., 2022). As input,
+this model takes a byte-level representation of the text and
+predicts non-deduplicated semantic tokens. Decoding is
+done by temperature sampling, with temperature of 0.9 and
+top-k set to 125. Due to the modest size of the decoder and
+the short target sequence length (only 750 semantic tokens
+for 30 seconds), running inference with this model takes 1.4
+seconds on a TPU-v4.
+SoundStorm: Efficient Parallel Audio Generation
+We train both the text-to-semantic model and SoundStorm
+on the dialogue corpus for 10 epochs. For inference, we
+recorded short exchanges from speakers not seen during
+training, serving as prompts for our models, and we cre-
+ated text transcripts that are continuations of the prompts.
+We then feed the transcripts to the text-to-semantic model,
+the output of which is fed to SoundStorm, while using the
+speaker prompts for both stages.
+We find that this approach generates high-quality, natural
+dialogue sequences, generating disfluencies at the occur-
+rence of filler words in the transcript, and allowing for
+controlled speaker turns through the insertion of the turn
+marker symbols in the transcript. The total runtime for
+synthesizing a segment of 30 seconds segment is 2 seconds.
+We invite the reader to listen to the generated samples on
+the accompanying webpage.²
+6. Conclusion
+In this paper we present SoundStorm, a model that can syn-
+thesize high-quality audio from discrete conditioning tokens
+efficiently. When compared to the acoustic generator of
+AudioLM, SoundStorm is two orders of magnitude faster
+and achieves higher temporal consistency when generating
+long audio samples. By combining a text-to-semantic token
+model similar to SPEAR-TTS with SoundStorm, we can
+scale text-to-speech synthesis to longer contexts and gener-
+ate natural dialogues with multiple speaker turns, controlling
+both the voices of the speakers and the generated content.
+7. Broader Impact
+SoundStorm is a model for high-quality, efficient generation
+of neural audio codec-derived representations of audio.
+In this work, we use it as a replacement for the acoustic
+generation pipeline of AudioLM and SPEAR-TTS. We
+acknowledge that the audio samples produced by the model
+may be influenced by the biases present in the training
+data, for instance in terms of represented accents and voice
+characteristics. In our generated samples, we demonstrate
+that we can reliably control speaker characteristics via
+prompting. However, a more thorough analysis of any
+training data and its limitations would be an area of future
+work in line with our responsible AI principles.
+In turn, the ability to mimic a voice can have numerous
+malicious applications, including bypassing biometric iden-
+tification and for the purpose of impersonation. Thus, it is
+crucial to put in place safeguards against potential misuse: to
+this end, we have verified that the audio generated by Sound-
+Storm remains detectable by a dedicated classifier (98.5%
+2https://google-research.github.io/
+seanet/soundstorm/examples/
+using the same classifier as Borsos et al. (2022)). Hence, as
+a component of a larger system, we believe that SoundStorm
+would be unlikely to introduce additional risks to those dis-
+cussed previously by Borsos et al. (2022) and Kharitonov
+et al. (2023). At the same time, relaxing the memory and
+computational requirements of AudioLM would make re-
+search in the domain of audio generation more accessible to
+a wider community. In the future, we plan to explore other
+approaches for detecting synthesized speech, e.g., audio
+watermarking, so that any potential product usage of this
+technology strictly follows our responsible AI principles.
+8. Acknowledgements
+The authors would like to thank Aren Jansen and RJ
+Skerry-Ryan for technical discussions and helpful feedback;
+Jelena Antić, Brian McWilliams, Paul Rubenstein, Michael
+Dooley and other voice actor volunteers for donating speech
+samples.
+References
+Agostinelli, A., Denk, T. I., Borsos, Z., Engel, J. H.,
+Verzetti, M., Caillon, A., Huang, Q., Jansen, A., Roberts,
+A., Tagliasacchi, M., Sharifi, M., Zeghidour, N., and
+Frank, C. H. MusicLM: Generating music from text.
+arXiv:2301.11325, 2023.
+Baevski, A., Zhou, H., Mohamed, A., and Auli, M. wav2vec
+2.0: A framework for self-supervised learning of speech
+representations. arXiv:2006.11477, 2020.
+Borsos, Z., Marinier, R., Vincent, D., Kharitonov, E.,
+Pietquin, O., Sharifi, M., Teboul, O., Grangier, D.,
+Tagliasacchi, M., and Zeghidour, N. AudioLM:
+A language modeling approach to audio generation.
+arXiv:2209.03143, 2022.
+Chang, H., Zhang, H., Jiang, L., Liu, C., and Freeman,
+W. T. MaskGIT: Masked generative image transformer. In
+Proceedings of the IEEE/CVF Conference on Computer
+Vision and Pattern Recognition (CVPR), 2022.
+Chen, S., Wang, C., Chen, Z., Wu, Y., Liu, S., Chen, Z., Li,
+J., Kanda, N., Yoshioka, T., Xiao, X., Wu, J., Zhou, L.,
+Ren, S., Qian, Y., Qian, Y., Wu, J., Zeng, M., Yu, X., and
+Wei, F. WavLM: Large-scale self-supervised pre-training
+for full stack speech processing. IEEE Journal of Selected
+Topics in Signal Processing, 2022.
+Chiu, C., Qin, J., Zhang, Y., Yu, J., and Wu, Y. Self-
+supervised learning with random-projection quantizer
+for speech recognition. In International Conference on
+Machine Learning (ICML), 2022.
+Choromanski, K. M., Likhosherstov, V., Dohan, D., Song,
+X., Gane, A., Sarlós, T., Hawkins, P., Davis, J. Q., Mo-
+SoundStorm: Efficient Parallel Audio Generation
+hiuddin, A., Kaiser, L., Belanger, D. B., Colwell, L. J.,
+and Weller, A. Rethinking attention with Performers. In
+International Conference on Learning Representations
+(ICLR), 2021.
+Chung, Y., Zhang, Y., Han, W., Chiu, C., Qin, J., Pang, R.,
+and Wu, Y. w2v-BERT: Combining contrastive learn-
+ing and masked language modeling for self-supervised
+speech pre-training. In IEEE Automatic Speech Recogni-
+tion and Understanding Workshop, ASRU, 2021.
+Défossez, A., Copet, J., Synnaeve, G., and Adi, Y. High
+fidelity neural audio compression. arXiv:2210.13438,
+2022.
+Donahue, C., Caillon, A., Roberts, A., Manilow, E., Esling,
+P., Agostinelli, A., Verzetti, M., Simon, I., Pietquin, O.,
+Zeghidour, N., and Engel, J. H. Singsong: Generating mu-
+sical accompaniments from singing. arXiv:2301.12662,
+2023.
+Ghazvininejad, M., Levy, O., Liu, Y., and Zettlemoyer, L.
+Mask-predict: Parallel decoding of conditional masked
+language models. arXiv:1904.09324, 2019.
+Gu, J., Bradbury, J., Xiong, C., Li, V. O., and Socher,
+R. Non-autoregressive neural machine translation.
+arXiv:1711.02281, 2017.
+Gulati, A., Qin, J., Chiu, C., Parmar, N., Zhang, Y., Yu,
+J., Han, W., Wang, S., Zhang, Z., Wu, Y., and Pang,
+R. Conformer: Convolution-augmented transformer for
+speech recognition. In Interspeech, 2020.
+Hawthorne, C., Jaegle, A., Cangea, C., Borgeaud, S., Nash,
+C., Malinowski, M., Dieleman, S., Vinyals, O., Botvinick,
+M. M., Simon, I., Sheahan, H., Zeghidour, N., Alayrac,
+J., Carreira, J., and Engel, J. H. General-purpose, long-
+context autoregressive modeling with Perceiver AR. In
+International Conference on Machine Learning (ICML),
+2022.
+Hsu, W., Bolte, B., Tsai, Y. H., Lakhotia, K., Salakhutdinov,
+R., and Mohamed, A. HuBERT: Self-supervised speech
+representation learning by masked prediction of hidden
+units. arXiv:2106.07447, 2021.
+Jouppi, N. P., Kurian, G., Li, S., Ma, P., Nagarajan, R., Nai,
+L., Patil, N., Subramanian, S., Swing, A., Towles, B., et al.
+TPU v4: An optically reconfigurable supercomputer for
+machine learning with hardware support for embeddings.
+arXiv preprint arXiv:2304.01433, 2023.
+Kahn, J., Rivière, M., Zheng, W., Kharitonov, E., Xu, Q.,
+Mazaré, P., Karadayi, J., Liptchinsky, V., Collobert, R.,
+Fuegen, C., Likhomanenko, T., Synnaeve, G., Joulin, A.,
+Mohamed, A., and Dupoux, E. Libri-Light: A benchmark
+for ASR with limited or no supervision. In IEEE Inter-
+national Conference on Acoustics, Speech and Signal
+Processing (ICASSP), 2020.
+Kharitonov, E., Vincent, D., Borsos, Z., Marinier, R., Gir-
+gin, S., Pietquin, O., Sharifi, M., Tagliasacchi, M., and
+Zeghidour, N. Speak, read and prompt: High-fidelity text-
+to-speech with minimal supervision. arXiv:2301.03540,
+2023.
+Kitaev, N., Kaiser, Ł., and Levskaya, A. Reformer: The
+efficient transformer. arXiv:2001.04451, 2020.
+Kreuk, F., Synnaeve, G., Polyak, A., Singer, U., Défossez,
+A., Copet, J., Parikh, D., Taigman, Y., and Adi,
+Y. AudioGen: Textually guided audio generation.
+arXiv:2209.15352, 2022.
+Lakhotia, K., Kharitonov, E., Hsu, W.-N., Adi, Y., Polyak,
+A., Bolte, B., Nguyen, T.-A., Copet, J., Baevski, A., Mo-
+hamed, A., et al. On generative spoken language model-
+ing from raw audio. Transactions of the Association for
+Computational Linguistics, 2021.
+Lee, D., Kim, C., Kim, S., Cho, M., and Han, W.-S. Autore-
+gressive image generation using residual quantization. In
+Proceedings of the IEEE/CVF Conference on Computer
+Vision and Pattern Recognition, 2022.
+Panayotov, V., Chen, G., Povey, D., and Khudanpur, S. Lib-
+rispeech: An ASR corpus based on public domain audio
+books. In IEEE International Conference on Acoustics,
+Speech and Signal Processing (ICASSP). IEEE, 2015.
+Radford, A., Kim, J. W., Hallacy, C., Ramesh, A., Goh, G.,
+Agarwal, S., Sastry, G., Askell, A., Mishkin, P., Clark,
+J., Krueger, G., and Sutskever, I. Learning transferable
+visual models from natural language supervision. In
+Proceedings of the 38th International Conference on Ma-
+chine Learning (ICML), 2021.
+Reddy, C. K. A., Gopal, V., and Cutler, R. DNSMOS: A
+non-intrusive perceptual objective speech quality metric
+to evaluate noise suppressors. In IEEE International
+Conference on Acoustics, Speech and Signal Processing
+(DNSMOS), 2021.
+Su, J., Lu, Y., Pan, S., Wen, B., and Liu, Y. Roformer:
+Enhanced transformer with rotary position embedding.
+arXiv:2104.09864, 2021.
+Vaswani, A., Shazeer, N., Parmar, N., Uszkoreit, J., Jones,
+L., Gomez, A. N., Kaiser, L., and Polosukhin, I. Atten-
+tion is all you need. In Advances in Neural Information
+Processing Systems (NeurIPS), 2017.
+Villegas, R., Babaeizadeh, M., Kindermans, P.-J., Moraldo,
+H., Zhang, H., Saffar, M. T., Castro, S., Kunze, J., and
+SoundStorm: Efficient Parallel Audio Generation
+Erhan, D. Phenaki: Variable length video generation
+from open domain textual description. arXiv:2210.02399,
+2022.
+Wang, C., Chen, S., Wu, Y., Zhang, Z., Zhou, L., Liu, S.,
+Chen, Z., Liu, Y., Wang, H., Li, J., He, L., Zhao, S., and
+Wei, F. Neural codec language models are zero-shot text
+to speech synthesizers. arXiv:2301.02111, 2023.
+Xiong, Y., Zeng, Z., Chakraborty, R., Tan, M., Fung, G., Li,
+Y., and Singh, V. Nyströmformer: A Nyström-based al-
+gorithm for approximating self-attention. In Proceedings
+of the AAAI Conference on Artificial Intelligence, 2021.
+Xue, L., Barua, A., Constant, N., Al-Rfou, R., Narang, S.,
+Kale, M., Roberts, A., and Raffel, C. Byt5: Towards
+a token-free future with pre-trained byte-to-byte mod-
+els. Transactions of the Association for Computational
+Linguistics, 10:291–306, 2022.
+Zeghidour, N., Luebs, A., Omran, A., Skoglund, J., and
+Tagliasacchi, M. Soundstream: An end-to-end neural
+audio codec. IEEE Transactions on Audio, Speech, and
+Language Processing, 2022.
